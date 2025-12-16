@@ -20,23 +20,14 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 
+@Getter
 public class MyElderGuardian extends MyPet implements de.Keyle.MyPet.api.entity.types.MyElderGuardian {
+
     public MyElderGuardian(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.ElderGuardian;
-    }
-
-    @Override
-    public String toString() {
-        return "MyElderGuardian{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

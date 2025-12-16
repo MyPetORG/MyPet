@@ -26,37 +26,23 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftMob;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftEntityEquipment;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.SpawnCategory;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Field;
 
 @Compat("v1_20_R1")
 public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
     protected MyPetPlayer petOwner;
-    protected de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet petEntity;
-    protected CraftEntityEquipment fakeEquipment;
+    protected EntityMyPet petEntity;
 
-    public CraftMyPet(CraftServer server, de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet entityMyPet) {
+    public CraftMyPet(CraftServer server, EntityMyPet entityMyPet) {
         super(server, entityMyPet);
         petEntity = entityMyPet;
-        fakeEquipment = new FakeEquipment(this);
-
-        Field typeValue = ReflectionUtil.getField(CraftEntity.class, "entityType");
-        ReflectionUtil.setFieldValue(typeValue, this, EntityType.BLOCK_DISPLAY);
     }
 
     @Override
@@ -84,7 +70,7 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
     }
 
     @Override
-    public de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet getHandle() {
+    public EntityMyPet getHandle() {
         return petEntity;
     }
 
@@ -144,8 +130,6 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
     @Override
     public void remove() {
-        // do nothing to prevent other plugins from removing the MyPet
-        // user removeEntity() to remove the MyPet
     }
 
     @Override
@@ -175,7 +159,6 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
     @Override
     public void setArrowCooldown(int i) {
-
     }
 
     @Override
@@ -185,14 +168,7 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
     @Override
     public void setArrowsInBody(int i) {
-
     }
-
-    @Override
-    public EntityEquipment getEquipment() {
-        return fakeEquipment;
-    }
-
 
     @Override
     public void attack(@NotNull Entity entity) {
@@ -234,57 +210,5 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
     @Override
     public String toString() {
         return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",type=" + getPetType() + "}";
-    }
-
-    private class FakeEquipment extends CraftEntityEquipment {
-
-        public FakeEquipment(CraftLivingEntity entity) {
-            super(entity);
-        }
-
-        @NotNull
-        @Override
-        public ItemStack getItemInMainHand() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @NotNull
-        @Override
-        public ItemStack getItemInOffHand() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @NotNull
-        @Override
-        public ItemStack getItemInHand() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @Override
-        public ItemStack getHelmet() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @Override
-        public ItemStack getChestplate() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @Override
-        public ItemStack getLeggings() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @Override
-        public ItemStack getBoots() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @NotNull
-        @Override
-        public ItemStack[] getArmorContents() {
-            ItemStack empty = CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-            return new ItemStack[]{empty, empty, empty, empty};
-        }
     }
 }

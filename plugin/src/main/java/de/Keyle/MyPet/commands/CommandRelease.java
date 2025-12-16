@@ -86,12 +86,14 @@ public class CommandRelease implements CommandTabCompleter {
                     MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.Release);
                     Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
+                    boolean entityConverted = false;
                     if (!MyPetApi.getMyPetInfo().getRemoveAfterRelease(myPet.getPetType())) {
                         LivingEntity normalEntity = (LivingEntity) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.valueOf(myPet.getPetType().getBukkitName()));
 
                         Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
                         try {
                             converter.ifPresent(entityConverterService -> entityConverterService.convertEntity(myPet, normalEntity));
+                            entityConverted = true;
                         } catch (Exception e) {
                             normalEntity.remove();
                             return true;
@@ -102,7 +104,8 @@ public class CommandRelease implements CommandTabCompleter {
                         myPet.getSkills().get(Backpack.class).getInventory().dropContentAt(myPet.getLocation().get());
                     }
 
-                    if (myPet instanceof MyPetEquipment) {
+                    // Only drop equipment if the entity wasn't converted (equipment already transferred to the converted entity)
+                    if (myPet instanceof MyPetEquipment && !entityConverted) {
                         ((MyPetEquipment) myPet).dropEquipment();
                     }
 

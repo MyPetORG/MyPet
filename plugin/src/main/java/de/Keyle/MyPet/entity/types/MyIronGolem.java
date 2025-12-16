@@ -21,16 +21,17 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+@Getter
 public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.types.MyIronGolem {
+
     protected ItemStack flower;
 
     public MyIronGolem(MyPetPlayer petOwner) {
@@ -48,6 +49,7 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKeyAs("Flower", TagCompound.class)) {
             TagCompound itemTag = info.get("Flower");
             try {
@@ -57,15 +59,6 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
                 MyPetApi.getLogger().warning("Could not load Flower item from pet data!");
             }
         }
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.IronGolem;
-    }
-
-    public ItemStack getFlower() {
-        return flower;
     }
 
     public void setFlower(ItemStack item) {
@@ -83,10 +76,5 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
 
     public boolean hasFlower() {
         return flower != null;
-    }
-
-    @Override
-    public String toString() {
-        return "MyIronGolem{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

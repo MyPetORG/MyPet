@@ -21,19 +21,18 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+@Getter
 public class MyStrider extends MyPet implements de.Keyle.MyPet.api.entity.types.MyStrider {
 
-    public ItemStack saddle = null;
-    protected boolean isBaby = false;
+    protected ItemStack saddle = null;
 
     public MyStrider(MyPetPlayer petOwner) {
         super(petOwner);
@@ -45,12 +44,12 @@ public class MyStrider extends MyPet implements de.Keyle.MyPet.api.entity.types.
         if (hasSaddle()) {
             info.getCompoundData().put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle()));
         }
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKeyAs("Saddle", TagByte.class)) {
             boolean saddle = info.getAs("Saddle", TagByte.class).getBooleanData();
             if (saddle) {
@@ -66,29 +65,6 @@ public class MyStrider extends MyPet implements de.Keyle.MyPet.api.entity.types.
                 MyPetApi.getLogger().warning("Could not load Saddle item from pet data!");
             }
         }
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Strider;
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    public ItemStack getSaddle() {
-        return saddle;
     }
 
     public void setSaddle(ItemStack item) {
@@ -108,10 +84,5 @@ public class MyStrider extends MyPet implements de.Keyle.MyPet.api.entity.types.
 
     public boolean hasSaddle() {
         return saddle != null;
-    }
-
-    @Override
-    public String toString() {
-        return "MyStrider{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", saddle=" + hasSaddle() + ", baby=" + isBaby() + "}";
     }
 }

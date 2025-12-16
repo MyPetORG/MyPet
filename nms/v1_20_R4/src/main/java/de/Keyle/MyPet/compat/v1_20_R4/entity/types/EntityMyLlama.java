@@ -157,6 +157,9 @@ public class EntityMyLlama extends EntityMyPet {
 			this.getEntityData().set(COLOR_WATCHER, -1);
 		}*/
         this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
+
+        // Sync decor (carpet) via Bukkit equipment API for visual rendering
+        getBukkitEntity().getEquipment().setItem(org.bukkit.inventory.EquipmentSlot.BODY, getMyPet().getDecor());
     }
 
     @Override

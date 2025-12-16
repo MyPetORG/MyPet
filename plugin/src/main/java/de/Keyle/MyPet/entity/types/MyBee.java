@@ -20,19 +20,18 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 
+@Getter
 public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBee {
 
-    protected boolean isBaby = false;
-    protected boolean hasStrung = false;
+    protected boolean hasStung = false;
     protected boolean hasNectar = false;
-    protected boolean isAngry = false;
+    protected boolean angry = false;
 
     public MyBee(MyPetPlayer petOwner) {
         super(petOwner);
@@ -41,7 +40,6 @@ public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBe
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("HasNectar", new TagByte(hasNectar()));
         info.getCompoundData().put("HasStung", new TagByte(hasStung()));
         info.getCompoundData().put("Angry", new TagByte(isAngry()));
@@ -50,9 +48,7 @@ public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBe
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
+        super.readExtendedInfo(info);
         if (info.containsKey("HasNectar")) {
             setHasNectar(info.getAs("HasNectar", TagByte.class).getBooleanData());
         }
@@ -65,32 +61,10 @@ public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBe
     }
 
     @Override
-    public MyPetType getPetType() {
-        return MyPetType.Bee;
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "MyBee{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", baby=" + isBaby() + "}";
-    }
-
-    @Override
     public boolean hasNectar() {
-        return hasNectar;
+        return false;
     }
 
-    @Override
     public void setHasNectar(boolean flag) {
         this.hasNectar = flag;
         if (status == PetState.Here) {
@@ -100,25 +74,20 @@ public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBe
 
     @Override
     public boolean hasStung() {
-        return hasStrung;
+        return hasStung;
     }
 
     @Override
     public void setHasStung(boolean flag) {
-        this.hasStrung = flag;
+        this.hasStung = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
     @Override
-    public boolean isAngry() {
-        return isAngry;
-    }
-
-    @Override
     public void setAngry(boolean flag) {
-        this.isAngry = flag;
+        this.angry = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }

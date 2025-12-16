@@ -20,15 +20,16 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 
+@Getter
 public class MyParrot extends MyPet implements de.Keyle.MyPet.api.entity.types.MyParrot {
-    int variant = 0;
+
+    protected int variant = 0;
 
     public MyParrot(MyPetPlayer petOwner) {
         super(petOwner);
@@ -36,16 +37,6 @@ public class MyParrot extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     public double getYSpawnOffset() {
         return 1;
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Parrot;
-    }
-
-    @Override
-    public int getVariant() {
-        return variant;
     }
 
     public void setVariant(int variant) {
@@ -64,21 +55,9 @@ public class MyParrot extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagInt.class).getIntData());
         }
-    }
-
-    @Override
-    public String toString() {
-        return "MyParrot{owner=" + getOwner().getName() +
-                ", name=" + ChatColor.stripColor(petName) +
-                ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() +
-                ", lv=" + experience.getLevel() +
-                ", status=" + status.name() +
-                ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") +
-                ", worldgroup=" + worldGroup +
-                ", variant=" + variant +
-                "}";
     }
 }

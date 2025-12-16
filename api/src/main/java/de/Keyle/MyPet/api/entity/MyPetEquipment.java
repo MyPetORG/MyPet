@@ -20,8 +20,10 @@
 
 package de.Keyle.MyPet.api.entity;
 
-
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Set;
 
 public interface MyPetEquipment {
     ItemStack[] getEquipment();
@@ -31,4 +33,26 @@ public interface MyPetEquipment {
     void setEquipment(EquipmentSlot slot, ItemStack item);
 
     void dropEquipment();
+
+    /**
+     * Returns the set of equipment slot names this pet type can use.
+     * Uses string names instead of EquipmentSlot enum values for version compatibility,
+     * since SADDLE and BODY slots don't exist in older Bukkit versions.
+     *
+     * @return set of slot names (e.g., "HAND", "OFF_HAND", "HEAD", "CHEST", "LEGS", "FEET", "SADDLE", "BODY")
+     */
+    default Set<String> getAllowedSlotNames() {
+        // Default: standard humanoid equipment slots
+        return Set.of("HAND", "OFF_HAND", "HEAD", "CHEST", "LEGS", "FEET");
+    }
+
+    /**
+     * Checks if this pet type can use the given equipment slot.
+     *
+     * @param slot the equipment slot to check
+     * @return true if the pet can equip items in this slot
+     */
+    default boolean canUseSlot(EquipmentSlot slot) {
+        return getAllowedSlotNames().contains(slot.name());
+    }
 }

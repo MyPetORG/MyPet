@@ -21,15 +21,15 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagString;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
+@Getter
 public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCopperGolem {
 
     protected OxidationState oxidationState = OxidationState.UNAFFECTED;
@@ -53,6 +53,7 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("OxidationState")) {
             try {
                 oxidationState = OxidationState.valueOf(info.getAs("OxidationState", TagString.class).getStringData());
@@ -74,16 +75,6 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     }
 
     @Override
-    public MyPetType getPetType() {
-        return MyPetType.CopperGolem;
-    }
-
-    @Override
-    public OxidationState getOxidationState() {
-        return oxidationState;
-    }
-
-    @Override
     public void setOxidationState(OxidationState state) {
         if (state == null) {
             state = OxidationState.UNAFFECTED;
@@ -95,21 +86,11 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     }
 
     @Override
-    public boolean isWaxed() {
-        return waxed;
-    }
-
-    @Override
     public void setWaxed(boolean waxed) {
         this.waxed = waxed;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-    }
-
-    @Override
-    public ItemStack getPoppy() {
-        return poppy;
     }
 
     @Override
@@ -123,10 +104,5 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     @Override
     public boolean hasPoppy() {
         return poppy != null;
-    }
-
-    @Override
-    public String toString() {
-        return "MyCopperGolem{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", oxidation=" + oxidationState + ", waxed=" + waxed + ", hasPoppy=" + hasPoppy() + "}";
     }
 }

@@ -20,18 +20,16 @@
 
  package de.Keyle.MyPet.entity.types;
 
- import de.Keyle.MyPet.api.entity.MyPetType;
  import de.Keyle.MyPet.api.player.MyPetPlayer;
  import de.Keyle.MyPet.entity.MyPet;
- import de.keyle.knbt.TagByte;
  import de.keyle.knbt.TagCompound;
  import de.keyle.knbt.TagInt;
- import org.bukkit.ChatColor;
+ import lombok.Getter;
 
+ @Getter
  public class MyAxolotl extends MyPet implements de.Keyle.MyPet.api.entity.types.MyAxolotl {
 
-     protected boolean isBaby = false;
-     protected int axolotlType = 0;
+     protected int variant = 0;
 
      public MyAxolotl(MyPetPlayer petOwner) {
          super(petOwner);
@@ -40,60 +38,23 @@
      @Override
      public TagCompound writeExtendedInfo() {
          TagCompound info = super.writeExtendedInfo();
-         info.getCompoundData().put("Baby", new TagByte(isBaby()));
          info.getCompoundData().put("Variant", new TagInt(getVariant()));
          return info;
      }
 
      @Override
      public void readExtendedInfo(TagCompound info) {
+         super.readExtendedInfo(info);
          if (info.containsKey("Variant")) {
              setVariant(info.getAs("Variant", TagInt.class).getIntData());
          }
-         if (info.containsKey("Baby")) {
-             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-         }
-
-     }
-
-     @Override
-     public MyPetType getPetType() {
-         return MyPetType.Axolotl;
-     }
-
-     @Override
-     public int getVariant() {
-         return axolotlType;
      }
 
      @Override
      public void setVariant(int variant) {
-         this.axolotlType = Math.min(4, Math.max(0, variant));
+         this.variant = Math.min(4, Math.max(0, variant));
          if (status == PetState.Here) {
              getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
          }
-     }
-
-     public boolean isBaby() {
-         return isBaby;
-     }
-
-     public void setBaby(boolean flag) {
-         this.isBaby = flag;
-         if (status == PetState.Here) {
-             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-         }
-     }
-
-     @Override
-     public String toString() {
-         return "MyAxolotl{owner=" + getOwner().getName() +
-                 ", name=" + ChatColor.stripColor(petName) +
-                 ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() +
-                 ", lv=" + experience.getLevel() +
-                 ", status=" + status.name() +
-                 ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") +
-                 ", worldgroup=" + worldGroup +
-                 ", baby=" + isBaby() + "}";
      }
  }

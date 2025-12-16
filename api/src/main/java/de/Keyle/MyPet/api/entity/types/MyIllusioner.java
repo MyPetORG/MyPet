@@ -24,7 +24,12 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
+import java.util.Set;
 
 @DefaultInfo(food = {"apple"})
 public interface MyIllusioner extends MyPet, MyPetEquipment {
+    @Override
+    default Set<String> getAllowedSlotNames() {
+        return Set.of("HAND", "OFF_HAND");
+    }
 }

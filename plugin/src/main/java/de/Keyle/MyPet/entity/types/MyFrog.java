@@ -20,13 +20,13 @@
 
  package de.Keyle.MyPet.entity.types;
 
- import de.Keyle.MyPet.api.entity.MyPetType;
  import de.Keyle.MyPet.api.player.MyPetPlayer;
  import de.Keyle.MyPet.entity.MyPet;
  import de.keyle.knbt.TagCompound;
  import de.keyle.knbt.TagInt;
- import org.bukkit.ChatColor;
+ import lombok.Getter;
 
+ @Getter
  public class MyFrog extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFrog {
 
      protected int frogVariant = 0;
@@ -44,19 +44,10 @@
 
      @Override
      public void readExtendedInfo(TagCompound info) {
+         super.readExtendedInfo(info);
          if (info.containsKey("FrogType")) {
              setFrogVariant(info.getAs("FrogType", TagInt.class).getIntData());
          }
-     }
-
-     @Override
-     public MyPetType getPetType() {
-         return MyPetType.Frog;
-     }
-
-     @Override
-     public int getFrogVariant() {
-         return frogVariant;
      }
 
      @Override
@@ -65,16 +56,5 @@
          if (status == PetState.Here) {
              getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
          }
-     }
-
-     @Override
-     public String toString() {
-         return "MyFrog{owner=" + getOwner().getName() +
-                 ", name=" + ChatColor.stripColor(petName) +
-                 ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() +
-                 ", lv=" + experience.getLevel() +
-                 ", status=" + status.name() +
-                 ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") +
-                 ", worldgroup=" + worldGroup + "}";
      }
  }

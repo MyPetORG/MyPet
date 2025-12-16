@@ -21,31 +21,26 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+@Getter
 public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.MyLlama {
 
-    public boolean baby = false;
-    public ItemStack armor = null;
-    public ItemStack chest = null;
-    public ItemStack decor = null;
+    protected ItemStack armor = null;
+    protected ItemStack chest = null;
+    protected ItemStack decor = null;
     protected byte horseType = 0;
     protected int variant = 0;
 
     public MyLlama(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    public ItemStack getChest() {
-        return chest;
     }
 
     public void setChest(ItemStack item) {
@@ -63,10 +58,6 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     public boolean hasChest() {
         return chest != null;
-    }
-
-    public ItemStack getDecor() {
-        return decor;
     }
 
     public void setDecor(ItemStack item) {
@@ -111,7 +102,6 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Variant", new TagInt(getVariant()));
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         if (hasChest()) {
             info.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(getChest()));
         }
@@ -123,9 +113,7 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
+        super.readExtendedInfo(info);
         if (info.containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagInt.class).getIntData());
         }
@@ -155,15 +143,6 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         }
     }
 
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Llama;
-    }
-
-    public int getVariant() {
-        return variant;
-    }
-
     public void setVariant(int variant) {
         if (horseType != 0) {
             this.variant = 0;
@@ -183,22 +162,5 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-    }
-
-    @Override
-    public boolean isBaby() {
-        return baby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.baby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "MyLlama{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", type=" + horseType + ", variant=" + variant + ", armor=" + armor + ", decor=" + decor + ", chest=" + chest + "}";
     }
 }

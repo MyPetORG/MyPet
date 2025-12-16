@@ -20,17 +20,18 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagString;
-import org.bukkit.ChatColor;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public class MyCow extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCow {
-    protected boolean isBaby = false;
-    protected String variantString = "temperate";
+
+    @Setter
+    protected String variant = "temperate";
 
     public MyCow(MyPetPlayer petOwner) {
         super(petOwner);
@@ -39,49 +40,15 @@ public class MyCow extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCo
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("Variant", new TagString(getVariant()));
         return info;
     }
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
+        super.readExtendedInfo(info);
         if (info.containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagString.class).getStringData());
         }
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Cow;
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    @Override
-    public String getVariant() {
-        return variantString;
-    }
-
-    @Override
-    public void setVariant(String variant) {
-        this.variantString = variant;
-    }
-
-    @Override
-    public String toString() {
-        return "MyCow{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", baby=" + isBaby() + ", variant=" + getVariant() + "}";
     }
 }

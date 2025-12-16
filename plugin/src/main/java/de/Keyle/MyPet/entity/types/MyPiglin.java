@@ -20,146 +20,48 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.EquipmentSlot;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.*;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+@Getter
 public class MyPiglin extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPiglin {
 
-    protected boolean isBaby = false;
-    protected boolean isShakeImmune = false;
-    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
+    protected boolean shakeImmune = false;
 
     public MyPiglin(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public ItemStack[] getEquipment() {
-        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
-        for (int i = 0; i < EquipmentSlot.values().length; i++) {
-            equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
-        }
-        return equipment;
-    }
-
-    public ItemStack getEquipment(EquipmentSlot slot) {
-        return equipment.get(slot);
-    }
-
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("ShakeImmune", new TagByte(isShakeImmune()));
-
-        List<TagCompound> itemList = new ArrayList<>();
-        for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (getEquipment(slot) != null) {
-                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(slot));
-                item.getCompoundData().put("Slot", new TagInt(slot.getSlotId()));
-                itemList.add(item);
-            }
-        }
-        info.getCompoundData().put("Equipment", new TagList(itemList));
         return info;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
+        super.readExtendedInfo(info);
         if (info.containsKey("ShakeImmune")) {
             setShakeImmune(info.getAs("ShakeImmune", TagByte.class).getBooleanData());
-        }
-        if (info.containsKey("Equipment")) {
-            TagList equipment = info.getAs("Equipment", TagList.class);
-            List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
-            for (TagBase tag : equipmentList) {
-                if (tag instanceof TagCompound item) {
-                    try {
-                        ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
-                        setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
-                    } catch (Exception e) {
-                        MyPetApi.getLogger().warning("Could not load Equipment item from pet data!");
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Piglin;
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
     public boolean isShakeImmune() {
         if (Configuration.MyPet.Piglin.WILL_SHAKE) {
-            return isShakeImmune;
+            return shakeImmune;
         }
         return true;
     }
 
     public void setShakeImmune(boolean flag) {
-        this.isShakeImmune = flag;
+        this.shakeImmune = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-    }
-
-    public void setEquipment(EquipmentSlot slot, ItemStack item) {
-        if (item == null) {
-            equipment.remove(slot);
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-            return;
-        }
-        item = item.clone();
-        item.setAmount(1);
-        equipment.put(slot, item);
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    @Override
-    public void dropEquipment() {
-        if (getStatus() == PetState.Here) {
-            Location dropLocation = getLocation().get();
-            for (ItemStack itemStack : equipment.values()) {
-                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                    dropLocation.getWorld().dropItem(dropLocation, itemStack);
-                }
-            }
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "MyPiglin{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

@@ -21,26 +21,28 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.ChatColor;
+import de.keyle.knbt.TagList;
+import de.keyle.knbt.TagString;
+import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
 public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.MyDonkey {
-    public boolean baby = false;
-    public ItemStack chest = null;
-    public ItemStack saddle = null;
+
+    protected ItemStack chest = null;
+    protected ItemStack saddle = null;
 
     public MyDonkey(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    public ItemStack getChest() {
-        return chest;
     }
 
     public void setChest(ItemStack item) {
@@ -58,10 +60,6 @@ public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     public boolean hasChest() {
         return chest != null;
-    }
-
-    public ItemStack getSaddle() {
-        return saddle;
     }
 
     public void setSaddle(ItemStack item) {
@@ -84,21 +82,28 @@ public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        // Chest is not an equipment slot, write separately
         if (hasChest()) {
             info.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(getChest()));
         }
-        if (hasSaddle()) {
-            info.getCompoundData().put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle()));
+        // Write saddle with string slot name for MC versions before 1.21 (which lack EquipmentSlot.SADDLE)
+        if (hasSaddle() && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21") < 0) {
+            List<TagCompound> itemList = new ArrayList<>();
+            if (info.containsKey("Equipment")) {
+                itemList.addAll((List<TagCompound>) info.getAs("Equipment", TagList.class).getData());
+            }
+            TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle());
+            item.getCompoundData().put("Slot", new TagString("SADDLE"));
+            itemList.add(item);
+            info.put("Equipment", new TagList(itemList));
         }
         return info;
     }
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
+        super.readExtendedInfo(info);
+        // Chest is not an equipment slot, read separately
         if (info.containsKeyAs("Chest", TagByte.class)) {
             boolean chest = info.getAs("Chest", TagByte.class).getBooleanData();
             if (chest) {
@@ -114,42 +119,48 @@ public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.M
                 MyPetApi.getLogger().warning("Could not load Chest item from pet data!");
             }
         }
-        if (info.containsKeyAs("Saddle", TagByte.class)) {
-            boolean saddle = info.getAs("Saddle", TagByte.class).getBooleanData();
-            if (saddle) {
-                ItemStack item = new ItemStack(Material.SADDLE);
-                setSaddle(item);
-            }
-        } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
-            TagCompound itemTag = info.get("Saddle");
-            try {
-                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-                setSaddle(item);
-            } catch (Exception e) {
-                MyPetApi.getLogger().warning("Could not load Saddle item from pet data!");
-            }
+    }
+
+    // MyPetEquipment implementation
+
+    @Override
+    public ItemStack[] getEquipment() {
+        return new ItemStack[]{saddle};
+    }
+
+    @Override
+    public ItemStack getEquipment(EquipmentSlot slot) {
+        if (slot.name().equals("SADDLE")) return saddle;
+        return null;
+    }
+
+    @Override
+    public void setEquipment(EquipmentSlot slot, ItemStack item) {
+        setEquipmentBySlotName(slot.name(), item);
+    }
+
+    @Override
+    protected void setEquipmentBySlotName(String slotName, ItemStack item) {
+        if (slotName.equals("SADDLE")) {
+            setSaddle(item);
+        } else {
+            super.setEquipmentBySlotName(slotName, item);
         }
     }
 
     @Override
-    public MyPetType getPetType() {
-        return MyPetType.Donkey;
-    }
-
-    @Override
-    public boolean isBaby() {
-        return baby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.baby = flag;
+    public void dropEquipment() {
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            getEntity().ifPresent(entity -> {
+                if (hasSaddle()) {
+                    entity.getWorld().dropItem(entity.getLocation(), getSaddle());
+                }
+                if (hasChest()) {
+                    entity.getWorld().dropItem(entity.getLocation(), getChest());
+                }
+            });
+            setSaddle(null);
+            setChest(null);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "MyMule{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", chest=" + chest + "}";
     }
 }

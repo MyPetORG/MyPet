@@ -20,35 +20,14 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import lombok.Getter;
 
+@Getter
 public class MyCreaking extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCreaking {
 
     public MyCreaking(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    public void setSaddle(ItemStack item) {
-        if (item != null && item.getType() != Material.SADDLE) {
-            return;
-        }
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Creaking;
-    }
-
-    @Override
-    public String toString() {
-        return "MyCreaking{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

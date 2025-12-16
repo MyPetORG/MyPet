@@ -20,25 +20,20 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 import org.bukkit.entity.Ocelot.Type;
 
+@Getter
 public class MyOcelot extends MyPet implements de.Keyle.MyPet.api.entity.types.MyOcelot {
-    protected boolean isBaby = false;
+
     protected Type catType = Type.WILD_OCELOT;
 
     public MyOcelot(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    public Type getCatType() {
-        return catType;
     }
 
     public void setCatType(Type value) {
@@ -52,38 +47,14 @@ public class MyOcelot extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("CatType", new TagInt(getCatType().getId()));
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("CatType")) {
             setCatType(Type.getType(info.getAs("CatType", TagInt.class).getIntData()));
         }
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Ocelot;
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", cattype=" + getCatType().name() + ", baby=" + isBaby() + "}";
     }
 }

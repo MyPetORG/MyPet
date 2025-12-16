@@ -26,7 +26,7 @@ import com.mojang.serialization.Dynamic;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.types.*;
@@ -49,7 +49,6 @@ import org.bukkit.craftbukkit.entity.CraftVillager;
 import org.bukkit.craftbukkit.entity.CraftVillagerZombie;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -82,6 +81,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 break;
             case HORSE:
                 convertHorse((Horse) entity, properties);
+                break;
             case SKELETON_HORSE:
             case ZOMBIE_HORSE:
                 convertSaddledHorse((AbstractHorse) entity, properties);
@@ -89,6 +89,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             case MULE:
             case DONKEY:
                 convertChestedHorse((ChestedHorse) entity, properties);
+                break;
+            case CAMEL:
+                convertCamel((Camel) entity, properties);
                 break;
             case ZOMBIE_VILLAGER:
                 convertZombieVillager((ZombieVillager) entity, properties);
@@ -197,7 +200,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             Villager.Type type = Villager.Type.values()[villagerPet.getType().ordinal()];
             villagerEntity.setVillagerType(type);
             villagerEntity.setProfession(profession);
-            villagerEntity.setVillagerLevel(villagerPet.getVillagerLevel());
+            villagerEntity.setVillagerLevel(villagerPet.getLevel());
 
             if (villagerPet.hasOriginalData()) {
                 TagCompound villagerTag = villagerPet.getOriginalData();
@@ -290,9 +293,36 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             }
             ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MySkeletonHorse) {
+            if (((MySkeletonHorse) myPet).hasSaddle()) {
+                ((SkeletonHorse) normalEntity).getInventory().setSaddle(((MySkeletonHorse) myPet).getSaddle().clone());
+            }
             ((SkeletonHorse) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MyZombieHorse) {
+            if (((MyZombieHorse) myPet).hasSaddle()) {
+                ((ZombieHorse) normalEntity).getInventory().setSaddle(((MyZombieHorse) myPet).getSaddle().clone());
+            }
             ((ZombieHorse) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyDonkey) {
+            if (((MyDonkey) myPet).hasSaddle()) {
+                ((Donkey) normalEntity).getInventory().setSaddle(((MyDonkey) myPet).getSaddle().clone());
+            }
+            if (((MyDonkey) myPet).hasChest()) {
+                ((Donkey) normalEntity).setCarryingChest(true);
+            }
+            ((Donkey) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyMule) {
+            if (((MyMule) myPet).hasSaddle()) {
+                ((Mule) normalEntity).getInventory().setSaddle(((MyMule) myPet).getSaddle().clone());
+            }
+            if (((MyMule) myPet).hasChest()) {
+                ((Mule) normalEntity).setCarryingChest(true);
+            }
+            ((Mule) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyCamel) {
+            if (((MyCamel) myPet).hasSaddle()) {
+                ((Camel) normalEntity).getInventory().setSaddle(((MyCamel) myPet).getSaddle().clone());
+            }
+            ((Camel) normalEntity).setOwner(myPet.getOwner().getPlayer());
         } else if (myPet instanceof MyLlama) {
             ((Llama) normalEntity).setColor(Llama.Color.values()[Math.max(0, Math.min(3, ((MyLlama) myPet).getVariant()))]);
             ((Llama) normalEntity).setCarryingChest(((MyLlama) myPet).hasChest());
@@ -383,7 +413,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ItemStack itemStack = entity.getEquipment().getChestplate();
             if (itemStack != null && itemStack.getType() != Material.AIR) {
                 TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
-                item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Chestplate.getSlotId()));
+                item.getCompoundData().put("Slot", new TagString(EquipmentSlot.CHEST.name()));
                 equipmentList.add(item);
             }
         }
@@ -391,7 +421,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ItemStack itemStack = entity.getEquipment().getHelmet();
             if (itemStack != null && itemStack.getType() != Material.AIR) {
                 TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
-                item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Helmet.getSlotId()));
+                item.getCompoundData().put("Slot", new TagString(EquipmentSlot.HEAD.name()));
                 equipmentList.add(item);
             }
         }
@@ -399,7 +429,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ItemStack itemStack = entity.getEquipment().getLeggings();
             if (itemStack != null && itemStack.getType() != Material.AIR) {
                 TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
-                item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Leggins.getSlotId()));
+                item.getCompoundData().put("Slot", new TagString(EquipmentSlot.LEGS.name()));
                 equipmentList.add(item);
             }
         }
@@ -407,7 +437,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             ItemStack itemStack = entity.getEquipment().getBoots();
             if (itemStack != null && itemStack.getType() != Material.AIR) {
                 TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
-                item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Boots.getSlotId()));
+                item.getCompoundData().put("Slot", new TagString(EquipmentSlot.FEET.name()));
                 equipmentList.add(item);
             }
         }
@@ -452,13 +482,23 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         int style = horse.getStyle().ordinal();
         int color = horse.getColor().ordinal();
         int variant = color & 255 | style << 8;
-
-        if (horse.getInventory().getArmor() != null) {
-            TagCompound armor = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getArmor());
-            properties.getCompoundData().put("Armor", armor);
-        }
-
         properties.getCompoundData().put("Variant", new TagInt(variant));
+
+        // Write equipment using unified Equipment list format
+        List<TagCompound> equipmentList = new ArrayList<>();
+        if (horse.getInventory().getArmor() != null && horse.getInventory().getArmor().getType() != Material.AIR) {
+            TagCompound armor = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getArmor());
+            armor.getCompoundData().put("Slot", new TagString(EquipmentSlot.BODY.name()));
+            equipmentList.add(armor);
+        }
+        if (horse.getInventory().getSaddle() != null && horse.getInventory().getSaddle().getType() != Material.AIR) {
+            TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getSaddle());
+            saddle.getCompoundData().put("Slot", new TagString("SADDLE"));
+            equipmentList.add(saddle);
+        }
+        if (!equipmentList.isEmpty()) {
+            properties.getCompoundData().put("Equipment", new TagList(equipmentList));
+        }
 
         if (horse.isCarryingChest()) {
             ItemStack[] contents = horse.getInventory().getContents();
@@ -472,16 +512,28 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
     }
 
     public void convertSaddledHorse(AbstractHorse horse, TagCompound properties) {
-        if (horse.getInventory() instanceof HorseInventory) {
-            if (horse.getInventory().getSaddle() != null) {
-                TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getSaddle());
-                properties.getCompoundData().put("Saddle", saddle);
-            }
+        // Write equipment using unified Equipment list format
+        if (horse.getInventory().getSaddle() != null && horse.getInventory().getSaddle().getType() != Material.AIR) {
+            List<TagCompound> equipmentList = new ArrayList<>();
+            TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getSaddle());
+            saddle.getCompoundData().put("Slot", new TagString("SADDLE"));
+            equipmentList.add(saddle);
+            properties.getCompoundData().put("Equipment", new TagList(equipmentList));
         }
     }
 
     public void convertChestedHorse(ChestedHorse horse, TagCompound properties) {
         properties.getCompoundData().put("Chest", new TagByte(horse.isCarryingChest()));
+
+        // Write saddle using unified Equipment list format
+        if (horse.getInventory().getSaddle() != null && horse.getInventory().getSaddle().getType() != Material.AIR) {
+            List<TagCompound> equipmentList = new ArrayList<>();
+            TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getSaddle());
+            saddle.getCompoundData().put("Slot", new TagString("SADDLE"));
+            equipmentList.add(saddle);
+            properties.getCompoundData().put("Equipment", new TagList(equipmentList));
+        }
+
         if (horse.isCarryingChest()) {
             ItemStack[] contents = horse.getInventory().getContents();
             for (int i = 2; i < contents.length; i++) {
@@ -490,6 +542,17 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     horse.getWorld().dropItem(horse.getLocation(), item);
                 }
             }
+        }
+    }
+
+    public void convertCamel(Camel camel, TagCompound properties) {
+        // Write saddle using unified Equipment list format
+        if (camel.getInventory().getSaddle() != null && camel.getInventory().getSaddle().getType() != Material.AIR) {
+            List<TagCompound> equipmentList = new ArrayList<>();
+            TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(camel.getInventory().getSaddle());
+            saddle.getCompoundData().put("Slot", new TagString("SADDLE"));
+            equipmentList.add(saddle);
+            properties.getCompoundData().put("Equipment", new TagList(equipmentList));
         }
     }
 

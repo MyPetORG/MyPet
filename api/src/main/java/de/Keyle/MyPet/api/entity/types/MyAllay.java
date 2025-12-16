@@ -25,6 +25,12 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 
+import java.util.Set;
+
 @DefaultInfo(food = {"apple"})
 public interface MyAllay extends MyPet, MyPetEquipment, MyPetFlyingEntity {
+    @Override
+    default Set<String> getAllowedSlotNames() {
+        return Set.of("HAND");
+    }
 }

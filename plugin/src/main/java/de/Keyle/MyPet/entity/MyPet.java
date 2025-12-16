@@ -33,11 +33,7 @@ import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.ConfigItem;
-import de.Keyle.MyPet.api.util.MinecraftVersion;
-import de.Keyle.MyPet.api.util.NBTStorage;
-import de.Keyle.MyPet.api.util.NameFilter;
-import de.Keyle.MyPet.api.util.Scheduler;
+import de.Keyle.MyPet.api.util.*;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.DamageImpl;
@@ -46,12 +42,16 @@ import de.Keyle.MyPet.skill.skills.RangedImpl;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.hooks.WorldGuardHook;
 import de.keyle.knbt.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -65,8 +65,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     protected final MyPetPlayer petOwner;
     protected MyPetBukkitEntity bukkitEntity;
+    @Getter
     protected String petName;
     protected double health;
+    @Getter
     protected int respawnTime = 0;
     protected int hungerTime;
     protected double saturation = 100;
@@ -74,11 +76,20 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     protected String worldGroup = "";
     protected TagCompound storage = new TagCompound();
     protected PetState status = PetState.Despawned;
+    @Setter
     protected boolean wantsToRespawn = false;
+    @Getter
     protected Skilltree skilltree = null;
+    @Getter
     protected Skills skills;
+    @Getter
     protected MyPetExperience experience;
+    @Setter
     protected long lastUsed = -1;
+    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
+    @Getter
+    protected boolean isBaby = false;
+    private MyPetType petType;
 
     protected MyPet(MyPetPlayer petOwner) {
         if (petOwner == null) {
@@ -175,17 +186,104 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         getExperience().setExp(exp);
     }
 
-    public MyPetExperience getExperience() {
-        return experience;
-    }
-
     public TagCompound writeExtendedInfo() {
         TagCompound newTag = new TagCompound();
         newTag.put("Version", new TagShort(MinecraftVersion.valueOf(MyPetApi.getCompatUtil().getInternalVersion()).ordinal()));
+
+        List<TagCompound> itemList = new ArrayList<>();
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (getEquipment(slot) != null) {
+                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(slot));
+                item.getCompoundData().put("Slot", new TagString(slot.name()));
+                itemList.add(item);
+            }
+        }
+        if (!itemList.isEmpty()) {
+            newTag.put("Equipment", new TagList(itemList));
+        }
+        if (this instanceof MyPetBaby) {
+            newTag.put("Baby", new TagByte(isBaby()));
+        }
         return newTag;
     }
 
     public void readExtendedInfo(TagCompound info) {
+        if (info.containsKey("Equipment")) {
+            List<TagCompound> equipmentList = (List<TagCompound>) info.getAs("Equipment", TagList.class).getData();
+            for (TagCompound itemTag : equipmentList) {
+                if (itemTag.containsKey("Slot")) {
+                    String slotName = itemTag.getAs("Slot", TagString.class).getStringData();
+                    try {
+                        ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
+                        setEquipmentBySlotName(slotName, itemStack);
+                    } catch (Exception e) {
+                        MyPetApi.getLogger().warning("Could not load Equipment item from pet data!");
+                    }
+                }
+            }
+        }
+        if (info.containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
+    }
+
+    /**
+     * Sets equipment by slot name string. Subclasses can override this to handle
+     * special slot names (like "BODY" for horses) that may not exist as EquipmentSlot
+     * enums in all Minecraft versions.
+     */
+    protected void setEquipmentBySlotName(String slotName, ItemStack item) {
+        try {
+            EquipmentSlot slot = EquipmentSlot.valueOf(slotName);
+            setEquipment(slot, item);
+        } catch (IllegalArgumentException e) {
+            // Slot doesn't exist in this MC version - subclasses can override to handle
+        }
+    }
+
+    public ItemStack[] getEquipment() {
+        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            equipment[slot.ordinal()] = getEquipment(slot);
+        }
+        return equipment;
+    }
+
+    public ItemStack getEquipment(EquipmentSlot slot) {
+        return equipment.get(slot);
+    }
+
+    public void setEquipment(EquipmentSlot slot, ItemStack item) {
+        ItemStack finalItem = null;
+        if (item == null) {
+            equipment.remove(slot);
+        } else {
+            finalItem = item.clone();
+            finalItem.setAmount(1);
+            equipment.put(slot, finalItem);
+        }
+        if (status == PetState.Here) {
+            ItemStack itemToSet = finalItem;
+            getEntity().ifPresent(entity -> entity.getEquipment().setItem(slot, itemToSet));
+        }
+    }
+
+    public void dropEquipment() {
+        if (getStatus() == PetState.Here) {
+            Location dropLocation = getLocation().get();
+            for (ItemStack itemStack : equipment.values()) {
+                if (itemStack != null && itemStack.getType() != Material.AIR) {
+                    dropLocation.getWorld().dropItem(dropLocation, itemStack);
+                }
+            }
+        }
+    }
+
+    public void setBaby(boolean flag) {
+        this.isBaby = flag;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
     }
 
     public double getMaxHealth() {
@@ -217,12 +315,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getSaturation() {
-        //TODO remove when interaction is fixed
-        switch (getPetType()) {
-            case Giant:
-            case Ghast:
-                return 100;
-        }
         if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
             return saturation;
         } else {
@@ -231,13 +323,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public void setSaturation(double value) {
-        //TODO remove when interaction is fixed
-        switch (getPetType()) {
-            case Giant:
-            case Ghast:
-                saturation = 100;
-                return;
-        }
         if (!Double.isNaN(value) && !Double.isInfinite(value)) {
             saturation = Math.max(1, Math.min(100, value));
             hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
@@ -247,22 +332,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public void decreaseSaturation(double value) {
-        //TODO remove when interaction is fixed
-        switch (getPetType()) {
-            case Giant:
-            case Ghast:
-                saturation = 100;
-                return;
-        }
         if (!Double.isNaN(value) && !Double.isInfinite(value)) {
             saturation = Math.max(1, Math.min(100, saturation - value));
         } else {
             MyPetApi.getLogger().warning("Saturation was decreased by an invalid number!\n" + Util.stackTraceToString());
         }
-    }
-
-    public String getPetName() {
-        return this.petName;
     }
 
     public void setPetName(String newName) {
@@ -282,15 +356,21 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
     }
 
-    public abstract MyPetType getPetType();
+    public MyPetType getPetType() {
+        if (petType == null) {
+            for (MyPetType type : MyPetType.values()) {
+                if (type.getMyPetClass().isAssignableFrom(this.getClass())) {
+                    petType = type;
+                    break;
+                }
+            }
+        }
+        return petType;
+    }
 
     @Override
     public void setPetType(MyPetType petType) {
         throw new UnsupportedOperationException("You can't change the type for an active MyPet!");
-    }
-
-    public int getRespawnTime() {
-        return respawnTime;
     }
 
     public void setRespawnTime(int time) {
@@ -320,10 +400,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return true;
     }
 
-    public Skilltree getSkilltree() {
-        return skilltree;
-    }
-
     public TagCompound getSkillInfo() {
         TagCompound skillsNBT = new TagCompound();
         Collection<Skill> skillList = this.getSkills().all();
@@ -338,10 +414,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             }
         }
         return skillsNBT;
-    }
-
-    public Skills getSkills() {
-        return skills;
     }
 
     @Override
@@ -396,10 +468,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     @Override
     public long getLastUsed() {
         return lastUsed;
-    }
-
-    public void setLastUsed(long date) {
-        this.lastUsed = date;
     }
 
     @Override
@@ -561,6 +629,14 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     }
                 }
 
+                // Sync equipment before spawning so it's included in the spawn packet
+                if (this instanceof MyPetEquipment equipmentPet) {
+                    EntityEquipment equipment = bukkitEntity.getEquipment();
+                    for (org.bukkit.inventory.EquipmentSlot slot : EquipmentSlot.values()) {
+                        equipment.setItem(slot, equipmentPet.getEquipment(slot));
+                    }
+                }
+
                 WorldGuardHook wgHook = MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class);
                 if (wgHook != null) {
                     wgHook.fixMissingEntityType(loc.getWorld(), true);
@@ -644,10 +720,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     @Override
     public void setOwner(MyPetPlayer owner) {
         throw new UnsupportedOperationException("You can't change the owner for an active MyPet!");
-    }
-
-    public void setWantsToRespawn(boolean wantsToRespawn) {
-        this.wantsToRespawn = wantsToRespawn;
     }
 
     public boolean wantsToRespawn() {
@@ -757,11 +829,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         petNBT.getCompoundData().put("Skills", skillsNBT);
 
         return petNBT;
-    }
-
-    @Override
-    public String toString() {
-        return "MyPet{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skilltree.getName() + ", worldgroup=" + worldGroup + "}";
     }
 
     public boolean setSkilltree(Skilltree skilltree, MyPetSelectSkilltreeEvent.Source source) {

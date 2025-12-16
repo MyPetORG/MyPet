@@ -20,31 +20,14 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 
+@Getter
 public class MyBreeze extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBreeze {
 
     public MyBreeze(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Breeze;
-    }
-
-    @Override
-    public String toString() {
-        return "MyBreeze{owner=" + getOwner().getName() +
-                ", name=" + ChatColor.stripColor(petName) +
-                ", exp=" + experience.getExp() +
-                "/" + experience.getRequiredExp() +
-                ", lv=" + experience.getLevel() +
-                ", status=" + status.name() +
-                ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") +
-                ", worldgroup=" + worldGroup + "}";
     }
 }

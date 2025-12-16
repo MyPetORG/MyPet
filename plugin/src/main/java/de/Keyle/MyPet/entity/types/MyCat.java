@@ -20,28 +20,23 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Cat.Type;
 
+@Getter
 public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCat {
 
-    protected boolean isBaby = false;
-    protected boolean isTamed = false;
+    protected boolean tamed = false;
     protected Type catType = Type.TABBY;
     protected DyeColor collarColor = DyeColor.RED;
     public MyCat(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    public Type getCatType() {
-        return catType;
     }
 
     public void setCatType(Type value) {
@@ -51,12 +46,6 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
         }
     }
 
-    @Override
-    public DyeColor getCollarColor() {
-        return collarColor;
-    }
-
-    @Override
     public void setCollarColor(DyeColor value) {
         this.collarColor = value;
         if (status == PetState.Here) {
@@ -64,23 +53,8 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
         }
     }
 
-    public boolean isTamed() {
-        return isTamed;
-    }
-
     public void setTamed(boolean flag) {
-        this.isTamed = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
+        this.tamed = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
@@ -92,12 +66,12 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
         info.getCompoundData().put("CatType", new TagInt(getCatType().ordinal()));
         info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().ordinal()));
         info.getCompoundData().put("Tamed", new TagByte(isTamed()));
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("CatType")) {
             Type leType = OwnCatType.values()[info.getAs("CatType", TagInt.class).getIntData()].getBukkitType();
             setCatType(leType);
@@ -110,19 +84,6 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
         if (info.containsKey("Tamed")) {
             setTamed(info.getAs("Tamed", TagByte.class).getBooleanData());
         }
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Cat;
-    }
-
-    @Override
-    public String toString() {
-        return "MyCat{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", cattype=" + getCatType().name() + ", tamed=" + isTamed() + ", collar=" + getCollarColor() + ", baby=" + isBaby() + "}";
     }
 
     // Needed as some newer versions have integer -> Type mismatches

@@ -150,15 +150,10 @@ public class EntityMyLlama extends EntityMyPet {
     public void updateVisuals() {
         this.getEntityData().set(CHEST_WATCHER, getMyPet().hasChest());
         this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		/*if (getMyPet().hasDecor()) {
-			ItemStack is = CraftItemStack.asNMSCopy(getMyPet().getDecor());
-			Block block = Block.byItem(is.getItem());
-			int color = block instanceof WoolCarpetBlock ? ((WoolCarpetBlock) block).getColor().getId() : 0;
-			this.getEntityData().set(COLOR_WATCHER, color);
-		} else {
-			this.getEntityData().set(COLOR_WATCHER, -1);
-		}*/
         this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
+
+        // Sync decor (carpet) via Bukkit equipment API for visual rendering
+        getBukkitEntity().getEquipment().setItem(org.bukkit.inventory.EquipmentSlot.BODY, getMyPet().getDecor());
     }
 
     @Override

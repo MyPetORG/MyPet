@@ -134,26 +134,26 @@ public class EntityMyZombieHorse extends EntityMyPet {
                     entityitem.pickupDelay = 10;
                     entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.level.addFreshEntity(entityitem);
-                }
 
-                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-                getMyPet().setSaddle(null);
-                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
-                            try {
-                                CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
-                            } catch (IllegalAccessException | InvocationTargetException ex) {
-                                ErrorUtil.report(ex);
-                            }
-                        });
+                    getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                    getMyPet().setSaddle(null);
+                    if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                        try {
+                            itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
+                        } catch (Error e) {
+                            // TODO REMOVE
+                            itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
+                                try {
+                                    CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+                                } catch (IllegalAccessException | InvocationTargetException ex) {
+                                    ErrorUtil.report(ex);
+                                }
+                            });
+                        }
                     }
-                }
 
-                return InteractionResult.CONSUME;
+                    return InteractionResult.CONSUME;
+                }
             } else if (Configuration.MyPet.ZombieHorse.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                     itemStack.shrink(1);

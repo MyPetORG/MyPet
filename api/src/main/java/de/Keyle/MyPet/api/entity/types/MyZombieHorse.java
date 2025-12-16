@@ -23,11 +23,18 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Set;
 
 @DefaultInfo(food = {"rotten_flesh"})
-public interface MyZombieHorse extends MyPet, MyPetBaby {
+public interface MyZombieHorse extends MyPet, MyPetBaby, MyPetEquipment {
+    @Override
+    default Set<String> getAllowedSlotNames() {
+        return Set.of("SADDLE");
+    }
+
     ItemStack getSaddle();
 
     void setSaddle(ItemStack item);

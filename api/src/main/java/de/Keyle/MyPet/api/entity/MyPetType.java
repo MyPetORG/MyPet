@@ -55,7 +55,7 @@ public enum MyPetType {
     Breeze("BREEZE", "1.21", MyBreeze.class, new Compat<>()
             .v("1.21", "breeze")
             .search()),
-    Camel("CAMEL", "1.20", MyCat.class, new Compat<>()
+    Camel("CAMEL", "1.20", MyCamel.class, new Compat<>()
             .v("1.20", "camel")
             .search()),
     Cat("CAT", "1.14", MyCat.class, new Compat<>()

@@ -26,19 +26,4 @@ import de.Keyle.MyPet.api.entity.MyPetEquipment;
 
 @DefaultInfo(food = {"bone"})
 public interface MySkeleton extends MyPet, MyPetEquipment {
-    boolean isWither();
-
-    void setWither(boolean flag);
-
-    boolean isStray();
-
-    void setStray(boolean flag);
-
-    boolean isBogged();
-
-    void setBogged(boolean flag);
-
-    int getType();
-
-    void setType(int type);
 }

@@ -27,9 +27,14 @@ import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.keyle.knbt.TagCompound;
 import lombok.Getter;
 
+import java.util.Set;
 
 @DefaultInfo(food = {"apple"})
 public interface MyVillager extends MyPet, MyPetBaby, MyPetEquipment {
+    @Override
+    default Set<String> getAllowedSlotNames() {
+        return Set.of("HAND");
+    }
 
     int getProfession();
 
@@ -39,9 +44,9 @@ public interface MyVillager extends MyPet, MyPetBaby, MyPetEquipment {
 
     void setType(Type value);
 
-    int getVillagerLevel();
+    int getLevel();
 
-    void setVillagerLevel(int level);
+    void setLevel(int level);
 
     TagCompound getOriginalData();
 

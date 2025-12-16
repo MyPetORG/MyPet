@@ -20,29 +20,26 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagString;
-import org.bukkit.ChatColor;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.DyeColor;
 
+@Getter
 public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWolf {
 
-    protected boolean isBaby = false;
-    protected boolean isTamed = false;
-    protected boolean isAngry = false;
+    protected boolean tamed = false;
+    protected boolean angry = false;
     protected DyeColor collarColor = DyeColor.RED;
-    protected String variantString = "pale";
+    @Setter
+    protected String variant = "pale";
 
     public MyWolf(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    public DyeColor getCollarColor() {
-        return collarColor;
     }
 
     public void setCollarColor(DyeColor value) {
@@ -55,7 +52,6 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("Tamed", new TagByte(isTamed()));
         info.getCompoundData().put("Angry", new TagByte(isAngry()));
         info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().ordinal()));
@@ -65,14 +61,12 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("CollarColor")) {
             setCollarColor(DyeColor.values()[info.getAs("CollarColor", TagByte.class).getByteData()]);
         }
         if (info.containsKey("Tamed")) {
             setTamed(info.getAs("Tamed", TagByte.class).getBooleanData());
-        }
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
         if (info.containsKey("Angry")) {
             setAngry(info.getAs("Angry", TagByte.class).getBooleanData());
@@ -82,56 +76,17 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
         }
     }
 
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Wolf;
-    }
-
-    public boolean isAngry() {
-        return isAngry;
-    }
-
     public void setAngry(boolean flag) {
-        this.isAngry = flag;
+        this.angry = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    public boolean isTamed() {
-        return isTamed;
     }
 
     public void setTamed(boolean flag) {
-        this.isTamed = flag;
+        this.tamed = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-    }
-
-    @Override
-    public String getVariant() {
-        return variantString;
-    }
-
-    @Override
-    public void setVariant(String variant) {
-        this.variantString = variant;
-    }
-
-    @Override
-    public String toString() {
-        return "MyWolf{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", collarcolor=" + getCollarColor() + ", baby=" + isBaby() + "}";
     }
 }

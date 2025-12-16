@@ -160,7 +160,6 @@ public class EntityMyCamel extends EntityMyPet {
     @Override
     public void updateVisuals() {
         this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-        applyVisual(4, getMyPet().hasSaddle());
     }
 
     @Override
@@ -171,19 +170,5 @@ public class EntityMyCamel extends EntityMyPet {
     @Override
     public MyCamel getMyPet() {
         return (MyCamel) myPet;
-    }
-
-    /**
-     * Saddle things
-     * Possible visual camel effects:
-     * 4 saddle
-     */
-    protected void applyVisual(int value, boolean flag) {
-        int i = this.getEntityData().get(SADDLE_CHEST_WATCHER);
-        if (flag) {
-            this.getEntityData().set(SADDLE_CHEST_WATCHER, (byte) (i | value));
-        } else {
-            this.getEntityData().set(SADDLE_CHEST_WATCHER, (byte) (i & (~value)));
-        }
     }
 }

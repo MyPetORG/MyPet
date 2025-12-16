@@ -20,14 +20,15 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 
+@Getter
 public class MyBlaze extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBlaze {
+
     protected boolean isOnFire = false;
 
     public MyBlaze(MyPetPlayer petOwner) {
@@ -43,18 +44,10 @@ public class MyBlaze extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("Fire")) {
             setOnFire(info.getAs("Fire", TagByte.class).getBooleanData());
         }
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Blaze;
-    }
-
-    public boolean isOnFire() {
-        return isOnFire;
     }
 
     public void setOnFire(boolean flag) {
@@ -62,10 +55,5 @@ public class MyBlaze extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-    }
-
-    @Override
-    public String toString() {
-        return "MyBlaze{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", isOnFire=" + isOnFire + "}";
     }
 }

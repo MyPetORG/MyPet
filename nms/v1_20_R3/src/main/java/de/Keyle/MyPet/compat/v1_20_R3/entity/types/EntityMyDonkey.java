@@ -123,34 +123,36 @@ public class EntityMyDonkey extends EntityMyPet {
                 }
                 return InteractionResult.CONSUME;
             } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
-                if (getMyPet().hasChest()) {
-                    ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getChest()));
-                    entityitem.pickupDelay = 10;
-                    entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-                    this.level().addFreshEntity(entityitem);
-                }
-                if (getMyPet().hasSaddle()) {
-                    ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
-                    entityitem.pickupDelay = 10;
-                    entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-                    this.level().addFreshEntity(entityitem);
-                }
+                if (getMyPet().hasChest() || getMyPet().hasSaddle()) {
+                    if (getMyPet().hasChest()) {
+                        ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getChest()));
+                        entityitem.pickupDelay = 10;
+                        entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                        this.level().addFreshEntity(entityitem);
+                    }
+                    if (getMyPet().hasSaddle()) {
+                        ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
+                        entityitem.pickupDelay = 10;
+                        entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
+                        this.level().addFreshEntity(entityitem);
+                    }
 
-                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-                getMyPet().setChest(null);
-                getMyPet().setSaddle(null);
-                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
-                            try {
-                                CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
-                            } catch (IllegalAccessException | InvocationTargetException ex) {
-                                ErrorUtil.report(ex);
-                            }
-                        });
+                    getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                    getMyPet().setChest(null);
+                    getMyPet().setSaddle(null);
+                    if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                        try {
+                            itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
+                        } catch (Error e) {
+                            // TODO REMOVE
+                            itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
+                                try {
+                                    CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
+                                } catch (IllegalAccessException | InvocationTargetException ex) {
+                                    ErrorUtil.report(ex);
+                                }
+                            });
+                        }
                     }
                 }
 

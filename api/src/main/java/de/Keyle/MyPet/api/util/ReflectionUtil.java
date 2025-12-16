@@ -93,6 +93,27 @@ public class ReflectionUtil {
     }
 
     /**
+     * Retrieves a declared field from a class using multiple possible field names.
+     * This is useful for NMS code where field names differ between Mojang and Spigot mappings.
+     * The method tries each field name in order and returns the first one found.
+     *
+     * @param clazz      the class containing the field
+     * @param fieldNames the possible names of the field (e.g., Mojang name first, then obfuscated names)
+     * @return the Field object, or null if none of the field names are found
+     */
+    public static Field getField(Class<?> clazz, String... fieldNames) {
+        for (String fieldName : fieldNames) {
+            try {
+                Field f = clazz.getDeclaredField(fieldName);
+                f.setAccessible(true);
+                return f;
+            } catch (Throwable ignored) {
+            }
+        }
+        return null;
+    }
+
+    /**
      * Retrieves the value of a field from a target object by field name.
      * The field is accessed reflectively and can be private, protected, or package-private.
      *

@@ -20,14 +20,16 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.ChatColor;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public class MyWanderingTrader extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWanderingTrader {
 
+    @Setter
     protected TagCompound originalData = null;
 
     public MyWanderingTrader(MyPetPlayer petOwner) {
@@ -45,30 +47,13 @@ public class MyWanderingTrader extends MyPet implements de.Keyle.MyPet.api.entit
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("OriginalData")) {
             originalData = info.getAs("OriginalData", TagCompound.class);
         }
     }
 
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.WanderingTrader;
-    }
-
-    public TagCompound getOriginalData() {
-        return this.originalData;
-    }
-
-    public void setOriginalData(TagCompound compound) {
-        this.originalData = compound;
-    }
-
     public boolean hasOriginalData() {
         return this.originalData != null;
-    }
-
-    @Override
-    public String toString() {
-        return "MyWanderingTrader{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

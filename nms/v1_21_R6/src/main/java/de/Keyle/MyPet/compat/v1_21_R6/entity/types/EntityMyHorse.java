@@ -20,41 +20,28 @@
 
 package de.Keyle.MyPet.compat.v1_21_R6.entity.types;
 
-import com.mojang.datafixers.util.Pair;
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
-import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyHorse;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_21_R6.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerEntity;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
-
-import java.util.List;
-
-import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
+import org.bukkit.inventory.EquipmentSlot;
 
 @EntitySize(width = 1.3965F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
@@ -125,59 +112,7 @@ public class EntityMyHorse extends EntityMyPet {
         }
 
         if (itemStack != null && canUseItem()) {
-            org.bukkit.inventory.ItemStack is = CraftItemStack.asBukkitCopy(itemStack);
-            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking() && canEquip()) {
-                getMyPet().setSaddle(is);
-                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.shrink(1);
-                    if (itemStack.getCount() <= 0) {
-                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-                    }
-                }
-                return InteractionResult.CONSUME;
-            } else if (!getMyPet().hasArmor() && getOwner().getPlayer().isSneaking() && canEquip() && isArmor(is)) {
-                getMyPet().setArmor(is);
-                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.shrink(1);
-                    if (itemStack.getCount() <= 0) {
-                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
-                    }
-                }
-                return InteractionResult.CONSUME;
-            } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
-                if (getMyPet().hasArmor()) {
-                    ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getArmor()));
-                    entityitem.pickupDelay = 10;
-                    entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-                    this.level().addFreshEntity(entityitem);
-                }
-                if (getMyPet().hasChest()) {
-                    ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getChest()));
-                    entityitem.pickupDelay = 10;
-                    entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-                    this.level().addFreshEntity(entityitem);
-                }
-                if (getMyPet().hasSaddle()) {
-                    ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
-                    entityitem.pickupDelay = 10;
-                    entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-                    this.level().addFreshEntity(entityitem);
-                }
-
-                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-                getMyPet().setChest(null);
-                getMyPet().setSaddle(null);
-                getMyPet().setArmor(null);
-                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
-                    }
-                }
-
-                return InteractionResult.CONSUME;
-            } else if (Configuration.MyPet.Horse.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            if (Configuration.MyPet.Horse.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                     itemStack.shrink(1);
                     if (itemStack.getCount() <= 0) {
@@ -189,19 +124,6 @@ public class EntityMyHorse extends EntityMyPet {
             }
         }
         return InteractionResult.PASS;
-    }
-
-    protected boolean isArmor(org.bukkit.inventory.ItemStack item) {
-        if (item != null) {
-            switch (item.getType()) {
-                case LEATHER_HORSE_ARMOR:
-                case IRON_HORSE_ARMOR:
-                case GOLDEN_HORSE_ARMOR:
-                case DIAMOND_HORSE_ARMOR:
-                    return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -216,12 +138,9 @@ public class EntityMyHorse extends EntityMyPet {
     public void updateVisuals() {
         this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
         this.getEntityData().set(VARIANT_WATCHER, getMyPet().getVariant());
-        applyVisual(4, getMyPet().hasSaddle());
-        Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
-            if (getMyPet().getStatus() == MyPet.PetState.Here) {
-                setPetEquipment(EquipmentSlot.Chestplate, CraftItemStack.asNMSCopy(getMyPet().getArmor()));
-            }
-        }, 5L);
+
+        this.getBukkitEntity().getEquipment().setItem(EquipmentSlot.SADDLE, getMyPet().getSaddle());
+        this.getBukkitEntity().getEquipment().setItem(EquipmentSlot.BODY, getMyPet().getArmor());
     }
 
     @Override
@@ -265,21 +184,6 @@ public class EntityMyHorse extends EntityMyPet {
                 playSound(SoundEvents.HORSE_STEP, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
             }
         }
-    }
-
-    public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-        ((ServerLevel) this.level()).getChunkSource().sendToTrackingPlayersAndSelf(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
-    }
-
-    @Override
-    public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
-        if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2)) {
-            EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getId());
-            if (slot == EquipmentSlot.Chestplate && getMyPet().getArmor() != null) {
-                return CraftItemStack.asNMSCopy(getMyPet().getArmor());
-            }
-        }
-        return super.getItemBySlot(vanillaSlot);
     }
 
     @Override

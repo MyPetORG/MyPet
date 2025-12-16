@@ -20,14 +20,15 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 
+@Getter
 public class MyMagmaCube extends MyPet implements de.Keyle.MyPet.api.entity.types.MyMagmaCube {
+
     protected int size = 1;
 
     public MyMagmaCube(MyPetPlayer petOwner) {
@@ -43,18 +44,10 @@ public class MyMagmaCube extends MyPet implements de.Keyle.MyPet.api.entity.type
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("Size")) {
             setSize(info.getAs("Size", TagInt.class).getIntData());
         }
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.MagmaCube;
-    }
-
-    public int getSize() {
-        return size;
     }
 
     public void setSize(int value) {
@@ -62,10 +55,5 @@ public class MyMagmaCube extends MyPet implements de.Keyle.MyPet.api.entity.type
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-    }
-
-    @Override
-    public String toString() {
-        return "MyMagmaCube{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", size=" + getSize() + "}";
     }
 }

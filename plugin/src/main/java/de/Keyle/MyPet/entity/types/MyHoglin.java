@@ -21,17 +21,16 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 
+@Getter
 public class MyHoglin extends MyPet implements de.Keyle.MyPet.api.entity.types.MyHoglin {
 
-    protected boolean isBaby = false;
-    protected boolean isShakeImmune = false;
+    protected boolean shakeImmune = false;
 
     public MyHoglin(MyPetPlayer petOwner) {
         super(petOwner);
@@ -40,53 +39,29 @@ public class MyHoglin extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("ShakeImmune", new TagByte(isShakeImmune()));
         return info;
     }
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
+        super.readExtendedInfo(info);
         if (info.containsKey("ShakeImmune")) {
             setShakeImmune(info.getAs("ShakeImmune", TagByte.class).getBooleanData());
         }
     }
 
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Hoglin;
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
     public boolean isShakeImmune() {
         if (Configuration.MyPet.Hoglin.WILL_SHAKE) {
-            return isShakeImmune;
+            return shakeImmune;
         }
         return true;
     }
 
     public void setShakeImmune(boolean flag) {
-        this.isShakeImmune = flag;
+        this.shakeImmune = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-    }
-
-    @Override
-    public String toString() {
-        return "MyHoglin{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", baby=" + isBaby() + "}";
     }
 }

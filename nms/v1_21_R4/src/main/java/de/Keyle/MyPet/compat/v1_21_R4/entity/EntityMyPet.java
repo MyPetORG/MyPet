@@ -52,20 +52,16 @@ import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -76,10 +72,8 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -89,7 +83,6 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -107,7 +100,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.bukkit.attribute.Attribute.*;
@@ -151,7 +143,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         try {
             this.replaceCraftAttributes();
             this.setBukkitEntity();
-
             this.myPet = myPet;
             this.isMyPet = true;
             this.refreshDimensions();
@@ -177,10 +168,19 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     }
 
     protected void replaceCraftAttributes() {
+        // Replace the internal NMS attributes field with our properly initialized AttributeMap
+        // This is critical because LivingEntity's constructor creates AttributeMap with
+        // DefaultAttributes.getSupplier(type), which returns null for custom entity types.
+        // Without this, equipment attribute modifiers cause NPE in collectEquipmentChanges().
+        Field attributesField = ReflectionUtil.getField(LivingEntity.class, "attributes");
+        ReflectionUtil.setFinalFieldValue(attributesField, this, this.getAttributes());
+
+        // Also replace the Bukkit wrapper to ensure consistency
         Field craftAttributesField = ReflectionUtil.getField(LivingEntity.class, "craftAttributes");
         CraftAttributeMap craftAttributes = new CraftAttributeMap(this.getAttributes());
         ReflectionUtil.setFinalFieldValue(craftAttributesField, this, craftAttributes);
     }
+
 
     protected void initAttributes() {
     }
@@ -327,7 +327,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 if (!Permissions.has(getOwner(), "MyPet.command.name.color")) {
                     name = ChatColor.stripColor(name);
                 }
-                super.setCustomName(CraftChatMessage.fromStringOrNull(Util.cutString(prefix + name + suffix, 64)));
+                super.setCustomName(Component.literal(Util.cutString(prefix + name + suffix, 64)));
             }
         } catch (Exception e) {
             ErrorUtil.report(e);
@@ -441,6 +441,33 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
     @Override
     public void updateVisuals() {
+        syncEquipment();
+    }
+
+    protected boolean canUseSlot(org.bukkit.inventory.EquipmentSlot slot) {
+        // Delegate to API layer for slot restrictions
+        if (getMyPet() instanceof MyPetEquipment equipmentPet) {
+            return equipmentPet.canUseSlot(slot);
+        }
+        return false;
+    }
+
+    protected void playUnequipSound() {
+        // Default: no sound. Subclasses can override for custom sounds.
+    }
+
+    protected void syncEquipment() {
+        if (!(getMyPet() instanceof MyPetEquipment equipmentPet) || getMyPet().getStatus() != MyPet.PetState.Here) {
+            return;
+        }
+        org.bukkit.inventory.EntityEquipment equipment = getBukkitEntity().getEquipment();
+        for (org.bukkit.inventory.EquipmentSlot slot : org.bukkit.inventory.EquipmentSlot.values()) {
+            if (!canUseSlot(slot)) {
+                continue;
+            }
+            org.bukkit.inventory.ItemStack item = equipmentPet.getEquipment(slot);
+            equipment.setItem(slot, item != null ? item : new org.bukkit.inventory.ItemStack(org.bukkit.Material.AIR));
+        }
     }
 
     public boolean toggleSitting() {
@@ -514,7 +541,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 }
             }
         }.runTaskLater(MyPetApi.getPlugin(), 5);
-        if (itemStack != null && itemStack.getItem() == Items.LEAD) {
+        if (itemStack != null && CraftItemStack.asCraftMirror(itemStack).getType() == Material.LEAD) {
             ((ServerPlayer) entityhuman).connection.send(new ClientboundSetEntityLinkPacket(this, null));
         }
 
@@ -542,13 +569,14 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 }
             }
             if (itemStack != null) {
-                if (itemStack.getItem() == Items.NAME_TAG && itemStack.has(DataComponents.CUSTOM_NAME)) {
+                org.bukkit.inventory.ItemStack bukkitItem = CraftItemStack.asCraftMirror(itemStack);
+                if (bukkitItem.getType() == Material.NAME_TAG && bukkitItem.hasItemMeta() && bukkitItem.getItemMeta().hasDisplayName()) {
                     if (Permissions.has(getOwner(), "MyPet.command.name") && Permissions.hasExtended(getOwner(), "MyPet.extended.nametag")) {
                         final String name = itemStack.getHoverName().getString();
                         getMyPet().setPetName(name);
-                        EntityMyPet.super.setCustomName(CraftChatMessage.fromStringOrNull("-"));
+                        getBukkitEntity().customName(net.kyori.adventure.text.Component.text("-"));
                         myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Command.Name.New", myPet.getOwner()), name));
-                        if (!entityhuman.getAbilities().instabuild) {
+                        if (((ServerPlayer) entityhuman).getBukkitEntity().getGameMode() != GameMode.CREATIVE) {
                             itemStack.shrink(1);
                         }
                         if (itemStack.getCount() <= 0) {
@@ -602,7 +630,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                     }
 
                     if (used) {
-                        if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                        if (itemStack != ItemStack.EMPTY && ((ServerPlayer) entityhuman).getBukkitEntity().getGameMode() != GameMode.CREATIVE) {
                             itemStack.shrink(1);
                             if (itemStack.getCount() <= 0) {
                                 entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
@@ -610,6 +638,63 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                         }
                         myPet.getLocation().get().getWorld().spawnParticle(Particle.HEART, myPet.getLocation().get().add(0, getEyeHeight(), 0), 5, 0.5F, 0.5F, 0.5F, 0.5F);
 
+                        return InteractionResult.CONSUME;
+                    }
+                }
+            }
+            // Equipment handling for pets that implement MyPetEquipment
+            if (getMyPet() instanceof MyPetEquipment equipmentPet && owner.isSneaking() && canEquip()) {
+                org.bukkit.inventory.ItemStack heldItem = owner.getInventory().getItemInMainHand();
+                if (heldItem.getType() == Material.SHEARS) {
+                    // Shearing removes all equipment
+                    boolean hadEquipment = false;
+                    for (org.bukkit.inventory.EquipmentSlot slot : org.bukkit.inventory.EquipmentSlot.values()) {
+                        org.bukkit.inventory.ItemStack storedItem = equipmentPet.getEquipment(slot);
+                        if (storedItem != null && storedItem.getType() != Material.AIR) {
+                            getBukkitEntity().getWorld().dropItem(getBukkitEntity().getLocation().add(0, 1, 0), storedItem);
+                            equipmentPet.setEquipment(slot, null);
+                            hadEquipment = true;
+                        }
+                    }
+                    if (hadEquipment) {
+                        if (heldItem.getType() != Material.AIR && owner.getGameMode() != GameMode.CREATIVE) {
+                            if (heldItem.getItemMeta() instanceof org.bukkit.inventory.meta.Damageable damageable) {
+                                damageable.setDamage(damageable.getDamage() + 1);
+                                heldItem.setItemMeta(damageable);
+                                if (damageable.getDamage() >= heldItem.getType().getMaxDurability()) {
+                                    heldItem.setAmount(0);
+                                }
+                            }
+                        }
+                        playUnequipSound();
+                        updateVisuals();
+                        return InteractionResult.CONSUME;
+                    }
+                } else if (MyPetApi.getPlatformHelper().isEquipment(heldItem)) {
+                    // Equipping items
+                    org.bukkit.inventory.EquipmentSlot slot = heldItem.getType().getEquipmentSlot();
+                    if (canUseSlot(slot)) {
+                        org.bukkit.inventory.ItemStack storedItem = equipmentPet.getEquipment(slot);
+                        if (storedItem != null && storedItem.getType() != Material.AIR && owner.getGameMode() != GameMode.CREATIVE) {
+                            getBukkitEntity().getWorld().dropItem(getBukkitEntity().getLocation().add(0, 1, 0), storedItem);
+                        }
+                        equipmentPet.setEquipment(slot, heldItem.clone());
+                        if (heldItem.getType() != Material.AIR) {
+                            if (owner.getGameMode() != GameMode.CREATIVE) {
+                                heldItem.setAmount(heldItem.getAmount() - 1);
+                            } else {
+                                // Remove item until next tick to prevent vanilla armor auto-equip in creative
+                                org.bukkit.inventory.ItemStack backup = heldItem.clone();
+                                owner.getInventory().setItemInMainHand(null);
+                                Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                                    owner.getInventory().setItemInMainHand(backup);
+                                });
+                            }
+                        }
+                        updateVisuals();
+                        return InteractionResult.SUCCESS;
+                    } else {
+                        // Slot not allowed for this entity - consume to prevent sitting toggle
                         return InteractionResult.CONSUME;
                     }
                 }
@@ -626,11 +711,17 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 command = command.replaceAll("%pet_skilltree_name%", myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : "");
                 return owner.performCommand(command) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
+            // Sitting toggle - only when sneaking with empty hand
+            // (holding items should let subclass entity handle equipment interactions)
+            if (owner.isSneaking() && owner.getInventory().getItemInMainHand().getType() == Material.AIR) {
+                return toggleSitting() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+            }
         } else {
             if (itemStack != null) {
-                if (itemStack.getItem() == Items.NAME_TAG) {
-                    if (itemStack.has(DataComponents.CUSTOM_NAME)) {
-                        EntityMyPet.super.setCustomName(CraftChatMessage.fromStringOrNull("-"));
+                org.bukkit.inventory.ItemStack otherBukkitItem = CraftItemStack.asCraftMirror(itemStack);
+                if (otherBukkitItem.getType() == Material.NAME_TAG) {
+                    if (otherBukkitItem.hasItemMeta() && otherBukkitItem.getItemMeta().hasDisplayName()) {
+                        getBukkitEntity().customName(net.kyori.adventure.text.Component.text("-"));
                         new BukkitRunnable() {
                             @Override
                             public void run() {
@@ -717,7 +808,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         boolean silent = getBukkitAttribute(MAX_HEALTH).getValue() != maxHealth;
         getBukkitAttribute(MAX_HEALTH).setBaseValue(maxHealth);
 
-        super.setHealth(Mth.clamp(f, 0.0F, (float) maxHealth));
+        super.setHealth(Math.max(0.0F, Math.min(f, (float) maxHealth)));
 
         if (!silent && !Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
             net.kyori.adventure.text.Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, getHealth(), maxHealth);
@@ -768,27 +859,23 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     }
 
     private void makeLivingSound() {
-        if (getLivingSound() != null) {
-            SoundEvent se = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.tryParse(getLivingSound())).get().value();
-            if (se != null) {
-                for (int j = 0; j < this.level().players().size(); ++j) {
-                    ServerPlayer entityplayer = (ServerPlayer) this.level().players().get(j);
+        String soundName = getLivingSound();
+        if (soundName == null) {
+            return;
+        }
 
-                    float volume = 1f;
-                    if (MyPetApi.getPlayerManager().isMyPetPlayer(entityplayer.getBukkitEntity())) {
-                        volume = MyPetApi.getPlayerManager().getMyPetPlayer(entityplayer.getBukkitEntity()).getPetLivingSoundVolume();
-                    }
+        Location loc = getBukkitEntity().getLocation();
+        float pitch = getSoundSpeed();
 
-                    double deltaX = getX() - entityplayer.getX();
-                    double deltaY = getY() - entityplayer.getY();
-                    double deltaZ = getZ() - entityplayer.getZ();
-                    double maxDistance = volume > 1.0F ? (double) (16.0F * volume) : 16.0D;
-                    if (deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ < maxDistance * maxDistance) {
-                        entityplayer.connection.send(new ClientboundSoundPacket(Holder.direct(se), SoundSource.HOSTILE, getX(), getY(), getZ(), volume, getSoundSpeed(), 1)); //TODO: check if this works.
-                    }
-                }
-            } else {
-                MyPetApi.getLogger().warning("Sound \"" + getLivingSound() + "\" not found. Please report this to the developer.");
+        for (Player player : loc.getWorld().getPlayers()) {
+            float volume = 1f;
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+                volume = MyPetApi.getPlayerManager().getMyPetPlayer(player).getPetLivingSoundVolume();
+            }
+
+            double maxDistance = volume > 1.0F ? 16.0F * volume : 16.0D;
+            if (player.getLocation().distanceSquared(loc) < maxDistance * maxDistance) {
+                player.playSound(loc, soundName, org.bukkit.SoundCategory.HOSTILE, volume, pitch);
             }
         }
     }
@@ -806,7 +893,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         float speed;
         float swimmSpeed;
 
-        if (this.isEyeInFluid(FluidTags.WATER)) {
+        if (getBukkitEntity().isUnderWater()) {
             locY = this.getY();
             speed = 0.8F;
             swimmSpeed = 0.02F;
@@ -821,7 +908,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 motY = 0.30000001192092896D;
             }
             this.setDeltaMovement(motX, motY, motZ);
-        } else if (this.isEyeInFluid(FluidTags.LAVA)) {
+        } else if (getBukkitEntity().getEyeLocation().getBlock().getType() == Material.LAVA) {
             locY = this.getY();
             this.moveRelative(0.02F, new Vec3(motionSideways, motionUpwards, motionForward));
             this.move(MoverType.SELF, this.getDeltaMovement());
@@ -839,7 +926,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
             float friction = 0.91F;
             if (this.onGround) {
-                friction = this.level().getBlockState(new BlockPos(Mth.floor(this.getX()), Mth.floor(minY) - 1, Mth.floor(this.getZ()))).getBlock().getFriction() * 0.91F;
+                friction = this.level().getBlockState(new BlockPos((int) Math.floor(this.getX()), (int) Math.floor(minY) - 1, (int) Math.floor(this.getZ()))).getBlock().getFriction() * 0.91F;
             }
 
             speed = speedModifier * (0.16277136F / (friction * friction * friction));
@@ -852,8 +939,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
             if (this.onClimbable()) {
                 swimmSpeed = 0.16F;
-                motX = Mth.clamp(motX, -swimmSpeed, swimmSpeed);
-                motZ = Mth.clamp(motZ, -swimmSpeed, swimmSpeed);
+                motX = Math.max(-swimmSpeed, Math.min(motX, swimmSpeed));
+                motZ = Math.max(-swimmSpeed, Math.min(motZ, swimmSpeed));
                 this.flyDist = 0.0F;
                 if (motY < -0.16D) {
                     motY = -0.16D;
@@ -881,12 +968,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
     @Override
     public void makeSound(String sound, float volume, float pitch) {
-        Optional<SoundEvent> soundEvent = BuiltInRegistries.SOUND_EVENT.getOptional(ResourceLocation.tryParse(sound));
-        if (soundEvent.isPresent()) {
-            this.playSound(soundEvent.get(), volume, pitch);
-        } else {
-            MyPetApi.getLogger().warning("Sound \"" + sound + "\" not found. Please report this to the developer.");
-        }
+        getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), sound, volume, pitch);
     }
 
     /**
@@ -941,11 +1023,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
         try {
             ItemStack itemstack = entityhuman.getItemInHand(enumhand);
-            InteractionResult result = handlePlayerInteraction(entityhuman, enumhand, itemstack);
-            if (!result.consumesAction() && getMyPet().getOwner().equals(entityhuman) && entityhuman.isShiftKeyDown()) {
-                result = toggleSitting() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
-            }
-            return result;
+            return handlePlayerInteraction(entityhuman, enumhand, itemstack);
         } catch (Exception e) {
             ErrorUtil.report(e);
         }
@@ -1021,7 +1099,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             double newX = this.getX() + (this.useItemRemaining - this.getX()) / this.lerpX;
             double newY = this.getY() + (this.fallFlyTicks - this.getY()) / this.lerpX;
             double newZ = this.getZ() + (this.autoSpinAttackTicks - this.getZ()) / this.lerpX;
-            double d3 = Mth.frac(this.rotA - (double) this.getYRot());
+            double rotDiff = this.rotA - (double) this.getYRot();
+            double d3 = rotDiff - Math.floor(rotDiff);
             this.setYRot((float) ((double) this.getYRot() + d3 / this.lerpX));
             this.setXRot((float) ((double) this.getXRot() + (this.walkAnimation.position() - (double) this.getXRot()) / this.lerpX));
             --this.lerpX;
@@ -1138,7 +1217,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     protected boolean removePassenger(Entity entity) {
         boolean result = super.removePassenger(entity);
 
-        if ((this.isInWater() || this.getInBlockState().is(Blocks.BUBBLE_COLUMN)) && this instanceof EntityMyAquaticPet
+        if ((this.isInWater() || getBukkitEntity().isInBubbleColumn()) && this instanceof EntityMyAquaticPet
                 && !(this.getMoveControl() instanceof MyPetAquaticMoveControl)) {
             this.switchMovement(new MyPetAquaticMoveControl(this));
         }
@@ -1257,7 +1336,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             return;
         }
 
-        if (this.isEyeInFluid(FluidTags.WATER) && this.dismountsUnderwater()) {
+        if (getBukkitEntity().isUnderWater() && this.dismountsUnderwater()) {
             this.setDeltaMovement(this.getDeltaMovement().add(0, 0.4, 0));
         }
 
@@ -1359,7 +1438,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                             this.isFlying = true;
                         }
                     }
-                } else if (!this.dismountsUnderwater() && (this.isInWater()) || this.getInBlockState().is(Blocks.BUBBLE_COLUMN)) {
+                } else if (!this.dismountsUnderwater() && (this.isInWater()) || getBukkitEntity().isInBubbleColumn()) {
                     if (this.getDeltaMovement().y() < ascendSpeed) {
                         this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed, this.getDeltaMovement().z());
                     }
@@ -1381,7 +1460,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             if (dX != 0 || dY != 0 || dZ != 0) {
                 double distance = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
                 if (isFlying && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
-                    limitCounter -= distance;
+                    limitCounter -= (float) distance;
                 }
                 myPet.decreaseSaturation(Configuration.Skilltree.Skill.Ride.HUNGER_PER_METER * distance);
                 double factor = Math.log10(myPet.getSaturation()) / 2;

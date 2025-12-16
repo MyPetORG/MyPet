@@ -20,24 +20,14 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 
+@Getter
 public class MyRavager extends MyPet implements de.Keyle.MyPet.api.entity.types.MyRavager {
 
     public MyRavager(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Ravager;
-    }
-
-    @Override
-    public String toString() {
-        return "MyRavager{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

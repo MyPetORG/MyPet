@@ -21,30 +21,26 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.*;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import static org.bukkit.Material.AIR;
 
+@Getter
 public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types.MyEnderman {
 
-    public boolean isScreaming = false;
-    public boolean isPermaScreaming = false;
-    public ItemStack block = null;
+    protected boolean screaming = false;
+    protected boolean permaScreaming = false;
+    protected ItemStack block = null;
 
     public MyEnderman(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    public ItemStack getBlock() {
-        return block;
     }
 
     public void setBlock(ItemStack block) {
@@ -69,12 +65,13 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
         if (block != null && block.getType() != AIR) {
             info.getCompoundData().put("Block", MyPetApi.getPlatformHelper().itemStackToCompund(block));
         }
-        info.getCompoundData().put("Screaming", new TagByte(isPermaScreaming));
+        info.getCompoundData().put("Screaming", new TagByte(permaScreaming));
         return info;
     }
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("BlockName")) {
             ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
             String id = info.getAs("BlockName", TagString.class).getStringData();
@@ -119,36 +116,27 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
         }
     }
 
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Enderman;
-    }
-
+    // Custom logic - Lombok would return field directly but we need to combine both flags
     public boolean isScreaming() {
-        return isScreaming || isPermaScreaming;
+        return screaming || permaScreaming;
     }
 
     public void setScreaming(boolean flag) {
-        if (!flag && isPermaScreaming)
+        if (!flag && permaScreaming)
             return;
 
-        this.isScreaming = flag;
+        this.screaming = flag;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 
     public void setPermaScreaming(boolean flag) {
-        this.isPermaScreaming = flag;
+        this.permaScreaming = flag;
         this.setScreaming(flag);
     }
 
     public boolean hasBlock() {
         return block != null;
-    }
-
-    @Override
-    public String toString() {
-        return "MyEnderman{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ",Block=" + block + "}";
     }
 }

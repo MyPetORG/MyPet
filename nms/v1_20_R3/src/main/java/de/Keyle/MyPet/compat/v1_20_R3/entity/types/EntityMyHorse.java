@@ -24,7 +24,6 @@ import com.mojang.datafixers.util.Pair;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
-import de.Keyle.MyPet.api.entity.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyHorse;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -35,7 +34,6 @@ import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -151,12 +149,6 @@ public class EntityMyHorse extends EntityMyPet {
                     entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.level().addFreshEntity(entityitem);
                 }
-                if (getMyPet().hasChest()) {
-                    ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getChest()));
-                    entityitem.pickupDelay = 10;
-                    entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
-                    this.level().addFreshEntity(entityitem);
-                }
                 if (getMyPet().hasSaddle()) {
                     ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
                     entityitem.pickupDelay = 10;
@@ -165,7 +157,6 @@ public class EntityMyHorse extends EntityMyPet {
                 }
 
                 getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-                getMyPet().setChest(null);
                 getMyPet().setSaddle(null);
                 getMyPet().setArmor(null);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
@@ -226,7 +217,7 @@ public class EntityMyHorse extends EntityMyPet {
         applyVisual(4, getMyPet().hasSaddle());
         Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
             if (getMyPet().getStatus() == MyPet.PetState.Here) {
-                setPetEquipment(EquipmentSlot.Chestplate, CraftItemStack.asNMSCopy(getMyPet().getArmor()));
+                setPetEquipment(6, CraftItemStack.asNMSCopy(getMyPet().getArmor())); // 6 = BODY slot index
             }
         }, 5L);
     }
@@ -274,19 +265,8 @@ public class EntityMyHorse extends EntityMyPet {
         }
     }
 
-    public void setPetEquipment(EquipmentSlot slot, ItemStack itemStack) {
-        ((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slot.get19Slot()], itemStack))));
-    }
-
-    @Override
-    public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
-        if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2)) {
-            EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getFilterFlag());
-            if (slot == EquipmentSlot.Chestplate && getMyPet().getArmor() != null) {
-                return CraftItemStack.asNMSCopy(getMyPet().getArmor());
-            }
-        }
-        return super.getItemBySlot(vanillaSlot);
+    public void setPetEquipment(int slotIndex, ItemStack itemStack) {
+        ((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(net.minecraft.world.entity.EquipmentSlot.values()[slotIndex], itemStack))));
     }
 
     @Override

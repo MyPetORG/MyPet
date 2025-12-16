@@ -26,8 +26,14 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import org.bukkit.entity.Fox.Type;
 
+import java.util.Set;
+
 @DefaultInfo(food = {"sweet_berries"})
 public interface MyFox extends MyPet, MyPetBaby, MyPetEquipment {
+    @Override
+    default Set<String> getAllowedSlotNames() {
+        return Set.of("HAND");
+    }
 
     Type getFoxType();
 

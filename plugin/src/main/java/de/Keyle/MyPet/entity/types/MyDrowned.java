@@ -20,127 +20,14 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.EquipmentSlot;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.*;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+@Getter
 public class MyDrowned extends MyPet implements de.Keyle.MyPet.api.entity.types.MyDrowned {
-
-    protected boolean isBaby = false;
-    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyDrowned(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
-
-        List<TagCompound> itemList = new ArrayList<>();
-        for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (getEquipment(slot) != null) {
-                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(slot));
-                item.getCompoundData().put("Slot", new TagInt(slot.getSlotId()));
-                itemList.add(item);
-            }
-        }
-        info.getCompoundData().put("Equipment", new TagList(itemList));
-        return info;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
-        if (info.containsKey("Equipment")) {
-            TagList equipment = info.get("Equipment");
-            List<TagBase> equipmentList = (List<TagBase>) equipment.getData();
-            for (TagBase tag : equipmentList) {
-                if (tag instanceof TagCompound item) {
-                    try {
-                        ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(item);
-                        setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
-                    } catch (Exception e) {
-                        MyPetApi.getLogger().warning("Could not load Eqipment item from pet data!");
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Drowned;
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    public ItemStack[] getEquipment() {
-        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
-        for (int i = 0; i < EquipmentSlot.values().length; i++) {
-            equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
-        }
-        return equipment;
-    }
-
-    public ItemStack getEquipment(EquipmentSlot slot) {
-        return equipment.get(slot);
-    }
-
-    public void setEquipment(EquipmentSlot slot, ItemStack item) {
-        if (item == null) {
-            equipment.remove(slot);
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-            return;
-        }
-
-        item = item.clone();
-        item.setAmount(1);
-        equipment.put(slot, item);
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    @Override
-    public void dropEquipment() {
-        if (getStatus() == PetState.Here) {
-            Location dropLocation = getLocation().get();
-            for (ItemStack itemStack : equipment.values()) {
-                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                    dropLocation.getWorld().dropItem(dropLocation, itemStack);
-                }
-            }
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "MyDrowned{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", baby=" + isBaby() + "}";
     }
 }

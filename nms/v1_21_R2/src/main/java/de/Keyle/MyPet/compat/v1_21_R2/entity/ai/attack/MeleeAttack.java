@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.compat.v1_21_R2.entity.ai.attack;
 
-import de.Keyle.MyPet.api.entity.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
@@ -146,7 +146,7 @@ public class MeleeAttack implements AIGoal {
             if (this.petEntity.getSensing().hasLineOfSight(targetEntity)) {
                 this.ticksUntilNextHitLeft = ticksUntilNextHit;
                 if (this.petEntity instanceof MyPetEquipment) {
-                    if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.MainHand) != null) {
+                    if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.HAND) != null) {
                         this.petEntity.swing(InteractionHand.MAIN_HAND); // -> swingItem()
                     }
                 }

@@ -20,16 +20,16 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 
+@Getter
 public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGoat {
-    protected boolean isBaby = false;
-    protected boolean isScreaming = false;
+
+    protected boolean screaming = false;
     protected boolean leftHorn = true;
     protected boolean rightHorn = true;
 
@@ -40,7 +40,6 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("Screaming", new TagByte(isScreaming()));
         info.getCompoundData().put("LeftHorn", new TagByte(hasLeftHorn()));
         info.getCompoundData().put("RightHorn", new TagByte(hasRightHorn()));
@@ -49,9 +48,7 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
-        }
+        super.readExtendedInfo(info);
         if (info.containsKey("Screaming")) {
             setScreaming(info.getAs("Screaming", TagByte.class).getBooleanData());
         }
@@ -63,39 +60,20 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
         }
     }
 
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Goat;
-    }
-
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    public boolean isScreaming() {
-        return isScreaming;
-    }
-
-    public void setScreaming(boolean flag) {
-        this.isScreaming = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
+    // Manual getters needed - Lombok generates isLeftHorn()/isRightHorn() but API requires hasLeftHorn()/hasRightHorn()
     public boolean hasLeftHorn() {
         return leftHorn;
     }
 
     public boolean hasRightHorn() {
         return rightHorn;
+    }
+
+    public void setScreaming(boolean flag) {
+        this.screaming = flag;
+        if (status == PetState.Here) {
+            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+        }
     }
 
     public void setLeftHorn(boolean leftHorn) {
@@ -110,10 +88,5 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
-    }
-
-    @Override
-    public String toString() {
-        return "MyGoat{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", baby=" + isBaby() + "}";
     }
 }

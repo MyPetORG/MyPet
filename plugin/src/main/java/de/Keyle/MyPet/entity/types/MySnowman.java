@@ -20,28 +20,19 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 
+@Getter
 public class MySnowman extends MyPet implements de.Keyle.MyPet.api.entity.types.MySnowman {
-    boolean sheared = false;
+
+    protected boolean sheared = false;
 
     public MySnowman(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Snowman;
-    }
-
-    @Override
-    public boolean isSheared() {
-        return sheared;
     }
 
     @Override
@@ -61,13 +52,9 @@ public class MySnowman extends MyPet implements de.Keyle.MyPet.api.entity.types.
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("Sheared")) {
             setSheared(info.getAs("Sheared", TagByte.class).getBooleanData());
         }
-    }
-
-    @Override
-    public String toString() {
-        return "MySnowman{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

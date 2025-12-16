@@ -28,16 +28,11 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Compat;
 import org.bukkit.craftbukkit.v1_19_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftMob;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftEntityEquipment;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.SpawnCategory;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 @Compat("v1_19_R1_2")
@@ -45,12 +40,10 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
     protected MyPetPlayer petOwner;
     protected EntityMyPet petEntity;
-    protected CraftEntityEquipment fakeEquipment;
 
     public CraftMyPet(CraftServer server, EntityMyPet entityMyPet) {
         super(server, entityMyPet);
         petEntity = entityMyPet;
-        fakeEquipment = new FakeEquipment(this);
     }
 
     @Override
@@ -105,22 +98,17 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
         return getMyPet().getPetType();
     }
 
-    //I saw other plugins do it this way - it should be fine and solve problems with p2 and wg
-    //Update - It wasn't! - GriefPrevention didn't like the previous solution!
-    //So now this ugly bs will solve it. Hopefully
     @Override
     public EntityType getType() {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         String class1 = stackTraceElements[2].getClassName();
         String class2 = stackTraceElements[3].getClassName();
-        //all special cases here
         if (class1.contains("worldedit") || class2.contains("worldedit") ||
                 class1.contains("plotsquared") || class2.contains("plotsquared") ||
                 class1.contains("worldguard") || class2.contains("worldguard") ||
                 class1.contains("towny") || class2.contains("towny")) {
             return EntityType.valueOf(this.getPetType().getBukkitName());
         }
-
         return EntityType.UNKNOWN;
     }
 
@@ -137,8 +125,6 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
     @Override
     public void remove() {
-        // do nothing to prevent other plugins from removing the MyPet
-        // user removeEntity() to remove the MyPet
     }
 
     @Override
@@ -168,7 +154,6 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
     @Override
     public void setArrowCooldown(int i) {
-
     }
 
     @Override
@@ -178,14 +163,7 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
     @Override
     public void setArrowsInBody(int i) {
-
     }
-
-    @Override
-    public EntityEquipment getEquipment() {
-        return fakeEquipment;
-    }
-
 
     @Override
     public void attack(@NotNull Entity entity) {
@@ -227,57 +205,5 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
     @Override
     public String toString() {
         return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",type=" + getPetType() + "}";
-    }
-
-    private class FakeEquipment extends CraftEntityEquipment {
-
-        public FakeEquipment(CraftLivingEntity entity) {
-            super(entity);
-        }
-
-        @NotNull
-        @Override
-        public ItemStack getItemInMainHand() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @NotNull
-        @Override
-        public ItemStack getItemInOffHand() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @NotNull
-        @Override
-        public ItemStack getItemInHand() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @Override
-        public ItemStack getHelmet() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @Override
-        public ItemStack getChestplate() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @Override
-        public ItemStack getLeggings() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @Override
-        public ItemStack getBoots() {
-            return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-        }
-
-        @NotNull
-        @Override
-        public ItemStack[] getArmorContents() {
-            ItemStack empty = CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
-            return new ItemStack[]{empty, empty, empty, empty};
-        }
     }
 }

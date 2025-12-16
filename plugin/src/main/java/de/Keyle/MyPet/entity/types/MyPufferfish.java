@@ -20,24 +20,21 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
-import org.bukkit.ChatColor;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public class MyPufferfish extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPufferfish {
 
+    @Setter
     protected PuffState puffState = PuffState.Unpuffed;
 
     public MyPufferfish(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public MyPetType getPetType() {
-        return MyPetType.Pufferfish;
     }
 
     @Override
@@ -49,23 +46,9 @@ public class MyPufferfish extends MyPet implements de.Keyle.MyPet.api.entity.typ
 
     @Override
     public void readExtendedInfo(TagCompound info) {
+        super.readExtendedInfo(info);
         if (info.containsKey("PuffState")) {
             setPuffState(PuffState.values()[info.getAs("PuffState", TagInt.class).getIntData()]);
         }
-    }
-
-    @Override
-    public PuffState getPuffState() {
-        return puffState;
-    }
-
-    @Override
-    public void setPuffState(PuffState state) {
-        this.puffState = state;
-    }
-
-    @Override
-    public String toString() {
-        return "MyPufferfish{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", puff=" + puffState + "}";
     }
 }

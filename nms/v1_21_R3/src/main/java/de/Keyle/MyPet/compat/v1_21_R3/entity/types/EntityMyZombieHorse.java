@@ -128,19 +128,19 @@ public class EntityMyZombieHorse extends EntityMyPet {
                     entityitem.pickupDelay = 10;
                     entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
                     this.level().addFreshEntity(entityitem);
-                }
 
-                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-                getMyPet().setSaddle(null);
-                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
+                    getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                    getMyPet().setSaddle(null);
+                    if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
+                        try {
+                            itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                        } catch (Error e) {
+                            // TODO REMOVE
+                        }
                     }
-                }
 
-                return InteractionResult.CONSUME;
+                    return InteractionResult.CONSUME;
+                }
             } else if (Configuration.MyPet.ZombieHorse.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                     itemStack.shrink(1);

@@ -21,25 +21,26 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
-import org.bukkit.ChatColor;
+import de.keyle.knbt.TagList;
+import de.keyle.knbt.TagString;
+import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
 public class MyCamel extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCamel {
-    public boolean isBaby = false;
-    public ItemStack saddle = null;
+
+    protected ItemStack saddle = null;
 
     public MyCamel(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    public ItemStack getSaddle() {
-        return saddle;
     }
 
     public void setSaddle(ItemStack item) {
@@ -62,54 +63,57 @@ public class MyCamel extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Baby", new TagByte(isBaby()));
-        if (hasSaddle()) {
-            info.getCompoundData().put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle()));
+
+        // Write saddle with string slot name for MC versions before 1.21 (which lack EquipmentSlot.SADDLE)
+        if (hasSaddle() && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21") < 0) {
+            List<TagCompound> itemList = new ArrayList<>();
+            if (info.containsKey("Equipment")) {
+                itemList.addAll((List<TagCompound>) info.getAs("Equipment", TagList.class).getData());
+            }
+            TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle());
+            item.getCompoundData().put("Slot", new TagString("SADDLE"));
+            itemList.add(item);
+            info.put("Equipment", new TagList(itemList));
         }
         return info;
     }
 
+    // MyPetEquipment implementation
+
     @Override
-    public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+    public ItemStack[] getEquipment() {
+        return new ItemStack[]{saddle};
+    }
+
+    @Override
+    public ItemStack getEquipment(EquipmentSlot slot) {
+        if (slot.name().equals("SADDLE")) return saddle;
+        return null;
+    }
+
+    @Override
+    public void setEquipment(EquipmentSlot slot, ItemStack item) {
+        setEquipmentBySlotName(slot.name(), item);
+    }
+
+    @Override
+    protected void setEquipmentBySlotName(String slotName, ItemStack item) {
+        if (slotName.equals("SADDLE")) {
+            setSaddle(item);
+        } else {
+            super.setEquipmentBySlotName(slotName, item);
         }
-        if (info.containsKeyAs("Saddle", TagByte.class)) {
-            boolean saddle = info.getAs("Saddle", TagByte.class).getBooleanData();
-            if (saddle) {
-                ItemStack item = new ItemStack(Material.SADDLE);
-                setSaddle(item);
-            }
-        } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
-            TagCompound itemTag = info.get("Saddle");
-            try {
-                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-                setSaddle(item);
-            } catch (Exception e) {
-                MyPetApi.getLogger().warning("Could not load Saddle item from pet data!");
-            }
-        }
     }
 
     @Override
-    public MyPetType getPetType() {
-        return MyPetType.Camel;
-    }
-
-    @Override
-    public boolean isBaby() {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag) {
-        this.isBaby = flag;
+    public void dropEquipment() {
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            getEntity().ifPresent(entity -> {
+                if (hasSaddle()) {
+                    entity.getWorld().dropItem(entity.getLocation(), getSaddle());
+                }
+            });
+            setSaddle(null);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "MyHorse{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skilltree != null ? skilltree.getName() : "-") + ", worldgroup=" + worldGroup + ", saddle=" + saddle + ", baby=" + isBaby() + "}";
     }
 }
