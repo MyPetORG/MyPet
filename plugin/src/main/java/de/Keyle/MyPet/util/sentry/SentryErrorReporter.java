@@ -61,7 +61,7 @@ public class SentryErrorReporter implements ErrorReporter {
             options.setDsn("https://14aec086f95d4fbe8a378638c80b68fa@o221805.ingest.us.sentry.io/1368849");
             options.setSendDefaultPii(true);
             options.setTracesSampleRate(1.0);
-            options.setDebug(true);
+            options.setDebug(false);
 
             // Set release and environment
             options.setRelease(MyPetVersion.getVersion());
