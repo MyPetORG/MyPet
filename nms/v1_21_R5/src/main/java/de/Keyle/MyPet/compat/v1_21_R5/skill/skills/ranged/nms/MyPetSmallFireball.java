@@ -34,6 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 @Compat("v1_21_R5")
 public class MyPetSmallFireball extends SmallFireball implements EntityMyPetProjectile {
@@ -47,8 +48,10 @@ public class MyPetSmallFireball extends SmallFireball implements EntityMyPetProj
     }
 
     @Override
-    public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getOwner();
+    @Nullable
+    public org.bukkit.entity.Entity getShooter() {
+        Entity owner = super.getOwner();
+        return owner != null ? owner.getBukkitEntity() : null;
     }
 
     public void setDamage(float damage) {
@@ -78,7 +81,7 @@ public class MyPetSmallFireball extends SmallFireball implements EntityMyPetProj
         if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) movingObjectPosition).getEntity();
             if (entity instanceof LivingEntity) {
-                entity.hurtServer(this.level().getMinecraftWorld(), this.damageSources().fireball(this, getShooter()), damage);
+                entity.hurtServer(this.level().getMinecraftWorld(), this.damageSources().fireball(this, super.getOwner()), damage);
             }
         }
         discard();

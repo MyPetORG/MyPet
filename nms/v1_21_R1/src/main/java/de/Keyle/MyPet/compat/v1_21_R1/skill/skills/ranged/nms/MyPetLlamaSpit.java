@@ -36,6 +36,7 @@ import net.minecraft.world.entity.projectile.LlamaSpit;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.Nullable;
 
 @Compat("v1_21_R1")
 public class MyPetLlamaSpit extends LlamaSpit implements EntityMyPetProjectile {
@@ -54,8 +55,10 @@ public class MyPetLlamaSpit extends LlamaSpit implements EntityMyPetProjectile {
     }
 
     @Override
-    public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getOwner();
+    @Nullable
+    public org.bukkit.entity.Entity getShooter() {
+        Entity owner = super.getOwner();
+        return owner != null ? owner.getBukkitEntity() : null;
     }
 
     @Override
@@ -83,8 +86,9 @@ public class MyPetLlamaSpit extends LlamaSpit implements EntityMyPetProjectile {
     public void onHit(HitResult movingObjectPosition) {
         if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) movingObjectPosition).getEntity();
-            if (entity instanceof LivingEntity) {
-                entity.hurt(this.damageSources().mobProjectile(this, getShooter()), damage);
+            Entity owner = super.getOwner();
+            if (entity instanceof LivingEntity && owner instanceof LivingEntity livingOwner) {
+                entity.hurt(this.damageSources().mobProjectile(this, livingOwner), damage);
             }
         }
         this.discard();

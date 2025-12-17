@@ -35,7 +35,7 @@ import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-
+import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 
 @Compat("v1_21_R1")
@@ -49,8 +49,10 @@ public class MyPetEnderPearl extends ThrownEnderpearl implements EntityMyPetProj
     }
 
     @Override
-    public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getOwner();
+    @Nullable
+    public org.bukkit.entity.Entity getShooter() {
+        Entity owner = super.getOwner();
+        return owner != null ? owner.getBukkitEntity() : null;
     }
 
     public void setDamage(float damage) {
@@ -78,7 +80,7 @@ public class MyPetEnderPearl extends ThrownEnderpearl implements EntityMyPetProj
         if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) movingObjectPosition).getEntity();
             if (entity instanceof LivingEntity) {
-                entity.hurt(this.damageSources().thrown(this, getShooter()), damage);
+                entity.hurt(this.damageSources().thrown(this, super.getOwner()), damage);
             }
         }
         for (int i = 0; i < 32; ++i) {

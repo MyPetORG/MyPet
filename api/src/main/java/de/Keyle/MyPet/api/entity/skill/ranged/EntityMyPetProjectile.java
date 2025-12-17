@@ -20,8 +20,15 @@
 
 package de.Keyle.MyPet.api.entity.skill.ranged;
 
-import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
+import org.bukkit.entity.Entity;
 
 public interface EntityMyPetProjectile {
-    MyPetMinecraftEntity getShooter();
+    /**
+     * Returns the entity that shot this projectile.
+     * Note: This may not be a MyPet entity if the projectile was deflected.
+     * Callers should check instanceof MyPetBukkitEntity if they need MyPet-specific behavior.
+     *
+     * @return the shooter entity, or null if unknown
+     */
+    Entity getShooter();
 }

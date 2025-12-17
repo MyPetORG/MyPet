@@ -27,10 +27,12 @@ import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_20_R1.skill.skills.ranged.bukkit.CraftMyPetTrident;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 @Compat("v1_20_R1")
 public class MyPetTrident extends ThrownTrident implements EntityMyPetProjectile {
@@ -42,8 +44,10 @@ public class MyPetTrident extends ThrownTrident implements EntityMyPetProjectile
     }
 
     @Override
-    public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getOwner();
+    @Nullable
+    public org.bukkit.entity.Entity getShooter() {
+        Entity owner = super.getOwner();
+        return owner != null ? owner.getBukkitEntity() : null;
     }
 
     @Override

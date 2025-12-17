@@ -34,6 +34,7 @@ import net.minecraft.world.entity.projectile.WitherSkull;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.Nullable;
 
 @Compat("v1_18_R2")
 public class MyPetWitherSkull extends WitherSkull implements EntityMyPetProjectile {
@@ -47,8 +48,10 @@ public class MyPetWitherSkull extends WitherSkull implements EntityMyPetProjecti
     }
 
     @Override
-    public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getOwner();
+    @Nullable
+    public org.bukkit.entity.Entity getShooter() {
+        Entity owner = super.getOwner();
+        return owner != null ? owner.getBukkitEntity() : null;
     }
 
     public void setDamage(float damage) {
@@ -87,7 +90,7 @@ public class MyPetWitherSkull extends WitherSkull implements EntityMyPetProjecti
         if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) movingObjectPosition).getEntity();
             if (entity instanceof LivingEntity) {
-                entity.hurt(DamageSource.thrown(this, getShooter()), damage);
+                entity.hurt(DamageSource.thrown(this, super.getOwner()), damage);
             }
         }
         discard();

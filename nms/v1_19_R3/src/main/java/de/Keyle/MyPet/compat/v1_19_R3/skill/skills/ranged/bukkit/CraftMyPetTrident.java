@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_19_R3.skill.skills.ranged.bukkit;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
-import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
@@ -30,6 +29,7 @@ import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftTrident;
 import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.entity.SpawnCategory;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,8 +47,8 @@ public class CraftMyPetTrident extends CraftTrident implements CraftMyPetProject
 
     @Override
     public MyPetBukkitEntity getShootingMyPet() {
-        MyPetMinecraftEntity shooter = getMyPetProjectile().getShooter();
-        return shooter != null ? shooter.getBukkitEntity() : null;
+        Entity shooter = getMyPetProjectile().getShooter();
+        return shooter instanceof MyPetBukkitEntity myPetBukkit ? myPetBukkit : null;
     }
 
     @Override

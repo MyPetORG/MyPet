@@ -37,6 +37,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.Nullable;
 
 @Compat("v1_21_R4")
 public class MyPetEgg extends ThrownEgg implements EntityMyPetProjectile {
@@ -49,8 +50,10 @@ public class MyPetEgg extends ThrownEgg implements EntityMyPetProjectile {
     }
 
     @Override
-    public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getOwner();
+    @Nullable
+    public org.bukkit.entity.Entity getShooter() {
+        Entity owner = super.getOwner();
+        return owner != null ? owner.getBukkitEntity() : null;
     }
 
     public void setDamage(float damage) {
@@ -78,7 +81,7 @@ public class MyPetEgg extends ThrownEgg implements EntityMyPetProjectile {
         if (movingObjectPosition.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) movingObjectPosition).getEntity();
             if (entity instanceof LivingEntity) {
-                entity.hurtServer(this.level().getMinecraftWorld(), this.damageSources().thrown(this, getShooter()), damage);
+                entity.hurtServer(this.level().getMinecraftWorld(), this.damageSources().thrown(this, super.getOwner()), damage);
             }
         }
         for (int i = 0; i < 8; ++i) {

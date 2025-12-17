@@ -48,6 +48,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -245,18 +246,17 @@ public class PlayerListener implements Listener {
                 return;
             }
             if (event.getDamager() instanceof CraftMyPetProjectile projectile) {
-                if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
-                    MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
-                    if (myPetPlayerDamagee.hasMyPet()) {
-                        if (projectile != null && projectile.getMyPetProjectile().getShooter() != null) {
-                            if (myPetPlayerDamagee.getMyPet() == projectile.getMyPetProjectile().getShooter().getMyPet()) {
+                Entity shooter = projectile.getMyPetProjectile().getShooter();
+                if (shooter instanceof MyPetBukkitEntity myPetShooter) {
+                    if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
+                        MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
+                        if (myPetPlayerDamagee.hasMyPet()) {
+                            if (myPetPlayerDamagee.getMyPet() == myPetShooter.getMyPet()) {
                                 event.setCancelled(true);
                             }
                         }
                     }
-                }
-                if (projectile.getMyPetProjectile().getShooter() != null) {
-                    if (!MyPetApi.getHookHelper().canHurt(projectile.getShootingMyPet().getOwner().getPlayer(), victim, true)) {
+                    if (!MyPetApi.getHookHelper().canHurt(myPetShooter.getOwner().getPlayer(), victim, true)) {
                         event.setCancelled(true);
                     }
                 }

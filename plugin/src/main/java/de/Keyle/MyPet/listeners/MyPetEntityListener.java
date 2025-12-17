@@ -278,11 +278,11 @@ public class MyPetEntityListener implements Listener {
             if (event.getDamager() instanceof CraftMyPetProjectile) {
                 EntityMyPetProjectile projectile = ((CraftMyPetProjectile) event.getDamager()).getMyPetProjectile();
 
-                if (projectile != null && projectile.getShooter() != null) {
-                    if (myPet == projectile.getShooter().getMyPet()) {
+                if (projectile != null && projectile.getShooter() instanceof MyPetBukkitEntity myPetShooter) {
+                    if (myPet == myPetShooter.getMyPet()) {
                         event.setCancelled(true);
                     }
-                    if (!MyPetApi.getHookHelper().canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
+                    if (!MyPetApi.getHookHelper().canHurt(myPetShooter.getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
                         event.setCancelled(true);
                     }
                 }

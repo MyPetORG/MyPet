@@ -28,10 +28,12 @@ import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.bukkit.CraftMyPetArrow
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 @Compat("v1_21_R3")
 public class MyPetArrow extends Arrow implements EntityMyPetProjectile {
@@ -43,8 +45,10 @@ public class MyPetArrow extends Arrow implements EntityMyPetProjectile {
     }
 
     @Override
-    public EntityMyPet getShooter() {
-        return (EntityMyPet) super.getOwner();
+    @Nullable
+    public org.bukkit.entity.Entity getShooter() {
+        Entity owner = super.getOwner();
+        return owner != null ? owner.getBukkitEntity() : null;
     }
 
     @Override
