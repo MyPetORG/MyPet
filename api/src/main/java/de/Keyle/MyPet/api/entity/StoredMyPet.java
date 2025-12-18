@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.entity;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 import java.util.UUID;
 
@@ -39,9 +39,9 @@ public interface StoredMyPet {
 
     void setSaturation(double value);
 
-    TagCompound getInfo();
+    CompoundBinaryTag getInfo();
 
-    void setInfo(TagCompound info);
+    void setInfo(CompoundBinaryTag info);
 
     MyPetPlayer getOwner();
 
@@ -67,9 +67,9 @@ public interface StoredMyPet {
 
     boolean setSkilltree(Skilltree skilltree);
 
-    TagCompound getSkillInfo();
+    CompoundBinaryTag getSkillInfo();
 
-    void setSkills(TagCompound skills);
+    void setSkills(CompoundBinaryTag skills);
 
     UUID getUUID();
 

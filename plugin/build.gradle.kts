@@ -16,7 +16,7 @@ dependencies {
     compileOnly(project(":skills"))
 
     compileOnly("com.zaxxer:HikariCP:3.4.2")
-    compileOnly("de.keyle:knbt:0.0.5")
+    compileOnly("net.kyori:adventure-nbt:4.17.0")
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
     compileOnly("org.mozilla:rhino:1.7.12")
     compileOnly("com.mojang:brigadier:1.0.18")
@@ -81,7 +81,6 @@ dependencies {
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")
-    compileOnly("de.keyle:knbt:0.0.5")
     compileOnly("ch.qos.logback:logback-classic:1.2.11")
     compileOnly("org.slf4j:slf4j-api:1.7.36")
     compileOnly("org.apache.logging.log4j:log4j-core:2.17.1")

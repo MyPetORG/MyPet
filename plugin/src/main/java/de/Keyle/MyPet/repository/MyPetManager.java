@@ -30,7 +30,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.entity.MyPetClass;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 
@@ -96,10 +96,11 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         myPet.setSkilltree(storedMyPet.getSkilltree());
         Collection<Skill> skills = myPet.getSkills().all();
         if (!skills.isEmpty()) {
+            CompoundBinaryTag skillInfo = storedMyPet.getSkillInfo();
             for (Skill skill : skills) {
                 if (skill instanceof NBTStorage storageSkill) {
-                    if (storedMyPet.getSkillInfo().getCompoundData().containsKey(skill.getName())) {
-                        storageSkill.load(storedMyPet.getSkillInfo().getAs(skill.getName(), TagCompound.class));
+                    if (skillInfo.keySet().contains(skill.getName())) {
+                        storageSkill.load(skillInfo.getCompound(skill.getName()));
                     }
                 }
             }

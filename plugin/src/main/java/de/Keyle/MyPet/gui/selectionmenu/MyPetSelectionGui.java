@@ -31,8 +31,7 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 
 import java.util.*;
@@ -106,10 +105,10 @@ public class MyPetSelectionGui {
             }
 
             boolean levelFound = false;
-            if (currentPet.getInfo().containsKey("storage")) {
-                TagCompound storage = currentPet.getInfo().getAs("storage", TagCompound.class);
-                if (storage.containsKey("level")) {
-                    lore.add(RESET + Translation.getString("Name.Level", player) + ": " + GOLD + storage.getAs("level", TagInt.class).getIntData());
+            if (currentPet.getInfo().keySet().contains("storage")) {
+                CompoundBinaryTag storage = currentPet.getInfo().getCompound("storage");
+                if (storage.keySet().contains("level")) {
+                    lore.add(RESET + Translation.getString("Name.Level", player) + ": " + GOLD + storage.getInt("level"));
                     levelFound = true;
                 }
             }

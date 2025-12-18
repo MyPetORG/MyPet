@@ -13,7 +13,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
 
-    compileOnly("de.keyle:knbt:0.0.5")
+    compileOnly("net.kyori:adventure-nbt:4.17.0")
     compileOnly("org.jetbrains:annotations:16.0.2")
     compileOnly("net.kyori:adventure-text-minimessage:4.17.0")
     compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0")

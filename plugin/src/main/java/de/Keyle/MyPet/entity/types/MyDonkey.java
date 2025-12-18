@@ -23,11 +23,11 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagList;
-import de.keyle.knbt.TagString;
 import lombok.Getter;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.BinaryTagTypes;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -80,43 +80,53 @@ public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
+        for (String key : info.keySet()) {
+            builder.put(key, info.get(key));
+        }
         // Chest is not an equipment slot, write separately
         if (hasChest()) {
-            info.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(getChest()));
+            builder.put("Chest", MyPetApi.getPlatformHelper().itemStackToCompound(getChest()));
         }
         // Write saddle with string slot name for MC versions before 1.21 (which lack EquipmentSlot.SADDLE)
         if (hasSaddle() && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21") < 0) {
-            List<TagCompound> itemList = new ArrayList<>();
-            if (info.containsKey("Equipment")) {
-                itemList.addAll((List<TagCompound>) info.getAs("Equipment", TagList.class).getData());
+            List<BinaryTag> itemList = new ArrayList<>();
+            if (info.keySet().contains("Equipment")) {
+                ListBinaryTag existingEquip = info.getList("Equipment");
+                for (int i = 0; i < existingEquip.size(); i++) {
+                    itemList.add(existingEquip.getCompound(i));
+                }
             }
-            TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle());
-            item.getCompoundData().put("Slot", new TagString("SADDLE"));
+            CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(getSaddle());
+            item = item.putString("Slot", "SADDLE");
             itemList.add(item);
-            info.put("Equipment", new TagList(itemList));
+            builder.put("Equipment", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, itemList));
         }
-        return info;
+        return builder.build();
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
         // Chest is not an equipment slot, read separately
-        if (info.containsKeyAs("Chest", TagByte.class)) {
-            boolean chest = info.getAs("Chest", TagByte.class).getBooleanData();
-            if (chest) {
-                ItemStack item = new ItemStack(Material.CHEST);
-                setChest(item);
-            }
-        } else if (info.containsKeyAs("Chest", TagCompound.class)) {
-            TagCompound itemTag = info.get("Chest");
-            try {
-                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-                setChest(item);
-            } catch (Exception e) {
-                MyPetApi.getLogger().warning("Could not load Chest item from pet data!");
+        BinaryTag chestTag = info.get("Chest");
+        if (chestTag != null) {
+            if (chestTag.type() == BinaryTagTypes.BYTE) {
+                boolean chest = info.getBoolean("Chest");
+                if (chest) {
+                    ItemStack item = new ItemStack(Material.CHEST);
+                    setChest(item);
+                }
+            } else if (chestTag.type() == BinaryTagTypes.COMPOUND) {
+                CompoundBinaryTag itemTag = info.getCompound("Chest");
+                try {
+                    ItemStack item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
+                    setChest(item);
+                } catch (Exception e) {
+                    MyPetApi.getLogger().warning("Could not load Chest item from pet data!");
+                }
             }
         }
     }

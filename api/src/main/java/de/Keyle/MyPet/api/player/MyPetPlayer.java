@@ -25,8 +25,8 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
-import de.keyle.knbt.TagBase;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
@@ -77,13 +77,13 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     boolean hasMyPetInWorldGroup(WorldGroup worldGroup);
 
-    void addExtendedInfo(String key, TagBase tag);
+    void addExtendedInfo(String key, BinaryTag tag);
 
-    Optional<TagBase> getExtendedInfo(String key);
+    Optional<BinaryTag> getExtendedInfo(String key);
 
-    TagCompound getExtendedInfo();
+    CompoundBinaryTag getExtendedInfo();
 
-    void setExtendedInfo(TagCompound compound);
+    void setExtendedInfo(CompoundBinaryTag compound);
 
     // -----------------------------------------------------------------------------
 

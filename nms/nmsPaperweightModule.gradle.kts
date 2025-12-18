@@ -16,7 +16,7 @@ dependencies {
     add("compileOnly", "net.kyori:adventure-text-minimessage:4.17.0")
 
     add("compileOnly", "org.jetbrains:annotations:13.0")
-    add("compileOnly", "de.keyle:knbt:0.0.5")
+    add("compileOnly", "net.kyori:adventure-nbt:4.17.0")
 }
 
 afterEvaluate {

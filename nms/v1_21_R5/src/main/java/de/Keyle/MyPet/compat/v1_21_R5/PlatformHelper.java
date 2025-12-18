@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R5.util.VillagerNbtIO;
 import de.Keyle.MyPet.compat.v1_21_R5.util.inventory.ItemStackNBTConverter;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -129,7 +129,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public TagCompound entityToTag(Entity bukkitEntity) {
+    public CompoundBinaryTag entityToTag(Entity bukkitEntity) {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         CompoundTag vanillaNBT = new CompoundTag();
 
@@ -153,11 +153,11 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         } catch (Exception e) {
             ErrorUtil.report(e);
         }
-        return (TagCompound) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
+        return (CompoundBinaryTag) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
     }
 
     @Override
-    public void applyTagToEntity(TagCompound tag, Entity bukkitEntity) {
+    public void applyTagToEntity(CompoundBinaryTag tag, Entity bukkitEntity) {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         CompoundTag nbtData = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(tag);
 
@@ -172,12 +172,12 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public TagCompound itemStackToCompund(org.bukkit.inventory.ItemStack itemStack) {
+    public CompoundBinaryTag itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
         return ItemStackNBTConverter.itemStackToCompound(itemStack);
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack compundToItemStack(TagCompound compound) {
+    public org.bukkit.inventory.ItemStack compoundToItemStack(CompoundBinaryTag compound) {
         return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
     }
 

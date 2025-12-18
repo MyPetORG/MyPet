@@ -28,8 +28,7 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -630,11 +629,11 @@ public class Util {
                 .append(Component.newline());
 
         // Level (if available)
-        if (mypet.getInfo().containsKey("storage")) {
-            TagCompound storage = mypet.getInfo().getAs("storage", TagCompound.class);
-            if (storage != null && storage.containsKey("level")) {
+        if (mypet.getInfo().keySet().contains("storage")) {
+            CompoundBinaryTag storage = mypet.getInfo().getCompound("storage");
+            if (storage.keySet().contains("level")) {
                 builder.append(Component.text(Translation.getString("Name.Level", lang) + ": "))
-                        .append(Component.text(storage.getAs("level", TagInt.class).getIntData())
+                        .append(Component.text(storage.getInt("level"))
                                 .color(NamedTextColor.GOLD))
                         .append(Component.newline());
             }

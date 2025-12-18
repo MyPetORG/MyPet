@@ -37,11 +37,10 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
+import de.Keyle.MyPet.api.util.NbtUtil;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagStream;
-import de.keyle.knbt.TagString;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -388,8 +387,8 @@ public class MySqlRepository implements Repository {
             statement.setString(9, myPet.getWorldGroup());
             statement.setBoolean(10, myPet.wantsToRespawn());
             statement.setString(11, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
-            statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(myPet.getSkillInfo(), true)));
-            statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(myPet.getInfo(), true)));
+            statement.setBlob(12, new ByteArrayInputStream(NbtUtil.writeCompressed(myPet.getSkillInfo())));
+            statement.setBlob(13, new ByteArrayInputStream(NbtUtil.writeCompressed(myPet.getInfo())));
 
             statement.setString(14, myPet.getUUID().toString());
 
@@ -432,7 +431,7 @@ public class MySqlRepository implements Repository {
             statement.setBoolean(5, player.isCaptureHelperActive());
             statement.setBoolean(6, player.isHealthBarActive());
             statement.setFloat(7, player.getPetLivingSoundVolume());
-            statement.setBlob(8, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+            statement.setBlob(8, new ByteArrayInputStream(NbtUtil.writeCompressed(player.getExtendedInfo())));
 
             JsonObject multiWorldObject = new JsonObject();
             for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
@@ -474,12 +473,12 @@ public class MySqlRepository implements Repository {
                 }
 
                 try {
-                    pet.setSkills(TagStream.readTag(resultSet.getBlob("skills").getBinaryStream(), true));
+                    pet.setSkills(NbtUtil.readCompressed(resultSet.getBlob("skills").getBinaryStream()));
                 } catch (ZipException exception) {
                     MyPetApi.getMyPetLogger().warning("Pet skills of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
                 }
                 try {
-                    pet.setInfo(TagStream.readTag(resultSet.getBlob("info").getBinaryStream(), true));
+                    pet.setInfo(NbtUtil.readCompressed(resultSet.getBlob("info").getBinaryStream()));
                 } catch (ZipException exception) {
                     MyPetApi.getMyPetLogger().warning("Pet info of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
                 }
@@ -531,8 +530,8 @@ public class MySqlRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(TagStream.readTag(resultSet.getBlob("skills").getBinaryStream(), true));
-                pet.setInfo(TagStream.readTag(resultSet.getBlob("info").getBinaryStream(), true));
+                pet.setSkills(NbtUtil.readCompressed(resultSet.getBlob("skills").getBinaryStream()));
+                pet.setInfo(NbtUtil.readCompressed(resultSet.getBlob("info").getBinaryStream()));
 
                 pets.add(pet);
             }
@@ -691,8 +690,8 @@ public class MySqlRepository implements Repository {
                     statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
 
                     try {
-                        statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getSkillInfo(), true)));
-                        statement.setBlob(14, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getInfo(), true)));
+                        statement.setBlob(13, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getSkillInfo())));
+                        statement.setBlob(14, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getInfo())));
                     } catch (IOException e) {
                         ErrorUtil.reportError("MySQL database operation failed", e);
                     }
@@ -746,12 +745,12 @@ public class MySqlRepository implements Repository {
                 statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
 
                 try {
-                    statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getSkillInfo(), true)));
+                    statement.setBlob(13, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getSkillInfo())));
                 } catch (IOException e) {
                     ErrorUtil.reportError("MySQL database operation failed", e);
                 }
                 try {
-                    statement.setBlob(14, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getInfo(), true)));
+                    statement.setBlob(14, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getInfo())));
                 } catch (IOException e) {
                     ErrorUtil.reportError("MySQL database operation failed", e);
                 }
@@ -803,8 +802,8 @@ public class MySqlRepository implements Repository {
                     statement.setString(9, storedMyPet.getWorldGroup());
                     statement.setBoolean(10, storedMyPet.wantsToRespawn());
                     statement.setString(11, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
-                    statement.setBlob(12, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getSkillInfo(), true)));
-                    statement.setBlob(13, new ByteArrayInputStream(TagStream.writeTag(storedMyPet.getInfo(), true)));
+                    statement.setBlob(12, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getSkillInfo())));
+                    statement.setBlob(13, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getInfo())));
 
                     statement.setString(14, storedMyPet.getUUID().toString());
 
@@ -851,7 +850,7 @@ public class MySqlRepository implements Repository {
                 petPlayer.setHealthBarActive(resultSet.getBoolean("health_bar"));
                 petPlayer.setPetLivingSoundVolume(resultSet.getFloat("pet_idle_volume"));
                 try {
-                    petPlayer.setExtendedInfo(TagStream.readTag(resultSet.getBlob("extended_info").getBinaryStream(), true));
+                    petPlayer.setExtendedInfo(NbtUtil.readCompressed(resultSet.getBlob("extended_info").getBinaryStream()));
                 } catch (ZipException exception) {
                     MyPetApi.getMyPetLogger().warning("Extended info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
                 }
@@ -862,9 +861,9 @@ public class MySqlRepository implements Repository {
                 switch (metaData.getColumnTypeName(column)) {
                     case "BLOB":
                         try {
-                            TagCompound worldGroups = TagStream.readTag(resultSet.getBlob(column).getBinaryStream(), true);
-                            for (String worldGroupName : worldGroups.getCompoundData().keySet()) {
-                                String petUUID = worldGroups.getAs(worldGroupName, TagString.class).getStringData();
+                            CompoundBinaryTag worldGroups = NbtUtil.readCompressed(resultSet.getBlob(column).getBinaryStream());
+                            for (String worldGroupName : worldGroups.keySet()) {
+                                String petUUID = worldGroups.getString(worldGroupName);
                                 petPlayer.setMyPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
                             }
                         } catch (ZipException exception) {
@@ -1023,7 +1022,7 @@ public class MySqlRepository implements Repository {
             statement.setBoolean(5, player.isCaptureHelperActive());
             statement.setBoolean(6, player.isHealthBarActive());
             statement.setFloat(7, player.getPetLivingSoundVolume());
-            statement.setBlob(8, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+            statement.setBlob(8, new ByteArrayInputStream(NbtUtil.writeCompressed(player.getExtendedInfo())));
 
             JsonObject multiWorldObject = new JsonObject();
             for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
@@ -1070,7 +1069,7 @@ public class MySqlRepository implements Repository {
                     statement.setBoolean(7, player.isHealthBarActive());
                     statement.setFloat(8, player.getPetLivingSoundVolume());
                     try {
-                        statement.setBlob(9, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+                        statement.setBlob(9, new ByteArrayInputStream(NbtUtil.writeCompressed(player.getExtendedInfo())));
                     } catch (IOException e) {
                         ErrorUtil.reportError("MySQL database operation failed", e);
                     }
@@ -1131,7 +1130,7 @@ public class MySqlRepository implements Repository {
                 statement.setBoolean(6, player.isCaptureHelperActive());
                 statement.setBoolean(7, player.isHealthBarActive());
                 statement.setFloat(8, player.getPetLivingSoundVolume());
-                statement.setBlob(9, new ByteArrayInputStream(TagStream.writeTag(player.getExtendedInfo(), true)));
+                statement.setBlob(9, new ByteArrayInputStream(NbtUtil.writeCompressed(player.getExtendedInfo())));
 
                 JsonObject multiWorldObject = new JsonObject();
                 for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {

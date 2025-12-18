@@ -23,9 +23,9 @@ package de.Keyle.MyPet.api.util.inventory.meta;
 import com.google.common.io.BaseEncoding;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagList;
-import de.keyle.knbt.TagString;
+import net.kyori.adventure.nbt.BinaryTagTypes;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
 
 public class SkullMeta implements IconMeta {
     String name = null;
@@ -102,18 +102,13 @@ public class SkullMeta implements IconMeta {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
-    public void applyTo(TagCompound tag) {
+    @Override
+    public CompoundBinaryTag applyTo(CompoundBinaryTag tag) {
         if (hasOwner()) {
-            TagCompound ownerTag = new TagCompound();
-
-
-            ownerTag.put("Name", new TagString(getOwner()));
+            CompoundBinaryTag.Builder ownerBuilder = CompoundBinaryTag.builder()
+                    .putString("Name", getOwner());
 
             if (hasTexture()) {
-                TagCompound propertiesTag = new TagCompound();
-                TagList textureList = new TagList();
-                TagCompound textureTag = new TagCompound();
                 JsonObject jsonObject = new JsonObject();
                 JsonObject texturesObject = new JsonObject();
                 JsonObject skinObject = new JsonObject();
@@ -121,14 +116,23 @@ public class SkullMeta implements IconMeta {
                 texturesObject.add("SKIN", skinObject);
                 skinObject.addProperty("url", getTexture());
                 String base64 = BaseEncoding.base64Url().encode(new Gson().toJson(jsonObject).getBytes());
-                textureTag.put("Value", new TagString(base64));
-                textureList.addTag(textureTag);
-                propertiesTag.put("textures", textureList);
-                ownerTag.put("Properties", propertiesTag);
+
+                CompoundBinaryTag textureTag = CompoundBinaryTag.builder()
+                        .putString("Value", base64)
+                        .build();
+
+                ListBinaryTag textureList = ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, java.util.List.of(textureTag));
+
+                CompoundBinaryTag propertiesTag = CompoundBinaryTag.builder()
+                        .put("textures", textureList)
+                        .build();
+
+                ownerBuilder.put("Properties", propertiesTag);
             }
 
-            tag.put("SkullOwner", ownerTag);
+            return tag.put("SkullOwner", ownerBuilder.build());
         }
+        return tag;
     }
 
     public SkullMeta clone() {

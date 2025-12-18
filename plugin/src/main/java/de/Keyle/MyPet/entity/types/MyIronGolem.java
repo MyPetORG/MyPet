@@ -24,8 +24,8 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,24 +39,30 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
         if (hasFlower()) {
-            info.getCompoundData().put("Flower", MyPetApi.getPlatformHelper().itemStackToCompund(getFlower()));
+            info = info.put("Flower", MyPetApi.getPlatformHelper().itemStackToCompound(getFlower()));
         }
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKeyAs("Flower", TagCompound.class)) {
-            TagCompound itemTag = info.get("Flower");
+        if (info.keySet().contains("Flower")) {
             try {
-                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-                setFlower(item);
+                if (info.get("Flower").type().id() == 10) { // COMPOUND type
+                    CompoundBinaryTag itemTag = info.getCompound("Flower");
+                    try {
+                        ItemStack item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
+                        setFlower(item);
+                    } catch (Exception e) {
+                        MyPetApi.getLogger().warning("Could not load Flower item from pet data!");
+                    }
+                }
             } catch (Exception e) {
-                MyPetApi.getLogger().warning("Could not load Flower item from pet data!");
+                // Ignore if can't determine type
             }
         }
     }

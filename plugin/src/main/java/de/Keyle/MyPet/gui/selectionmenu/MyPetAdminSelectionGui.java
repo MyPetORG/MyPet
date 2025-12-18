@@ -31,8 +31,7 @@ import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -132,10 +131,10 @@ public class MyPetAdminSelectionGui {
                     lore.add(RESET + Translation.getString("Name.HP", admin) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
                 }
                 boolean levelFound = false;
-                if (mypet.getInfo().containsKey("storage")) {
-                    TagCompound storage = mypet.getInfo().getAs("storage", TagCompound.class);
-                    if (storage.containsKey("level")) {
-                        lore.add(RESET + Translation.getString("Name.Level", admin) + ": " + GOLD + storage.getAs("level", TagInt.class).getIntData());
+                if (mypet.getInfo().keySet().contains("storage")) {
+                    CompoundBinaryTag storage = mypet.getInfo().getCompound("storage");
+                    if (storage.keySet().contains("level")) {
+                        lore.add(RESET + Translation.getString("Name.Level", admin) + ": " + GOLD + storage.getInt("level"));
                         levelFound = true;
                     }
                 }

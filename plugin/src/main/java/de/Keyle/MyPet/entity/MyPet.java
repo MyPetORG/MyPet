@@ -41,8 +41,11 @@ import de.Keyle.MyPet.skill.skills.LifeImpl;
 import de.Keyle.MyPet.skill.skills.RangedImpl;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.hooks.WorldGuardHook;
-import de.keyle.knbt.*;
 import lombok.Getter;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.BinaryTagTypes;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -74,7 +77,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     protected double saturation = 100;
     protected UUID uuid = null;
     protected String worldGroup = "";
-    protected TagCompound storage = new TagCompound();
+    protected CompoundBinaryTag storage = CompoundBinaryTag.empty();
     protected PetState status = PetState.Despawned;
     @Setter
     protected boolean wantsToRespawn = false;
@@ -111,26 +114,32 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     @Override
-    public TagCompound getInfo() {
-        TagCompound tag = writeExtendedInfo();
+    public CompoundBinaryTag getInfo() {
+        CompoundBinaryTag tag = writeExtendedInfo();
 
         // TODO replace with proper storage
-        storage.put("level", new TagInt(getExperience().getLevel()));
-        tag.put("storage", storage);
+        storage = storage.putInt("level", getExperience().getLevel());
+        tag = tag.put("storage", storage);
 
         return tag;
     }
 
     @Override
-    public void setInfo(TagCompound info) {
+    public void setInfo(CompoundBinaryTag info) {
         readExtendedInfo(info);
 
         // TODO replace with proper storage
-        if (info.containsKey("storage")) {
-            TagCompound storage = info.getAs("storage", TagCompound.class).clone();
-            for (String key : storage.getCompoundData().keySet()) {
-                this.storage.put(key, storage.get(key));
+        if (info.keySet().contains("storage")) {
+            CompoundBinaryTag loadedStorage = info.getCompound("storage");
+            // Merge loaded storage into our storage
+            CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
+            for (String key : this.storage.keySet()) {
+                builder.put(key, this.storage.get(key));
             }
+            for (String key : loadedStorage.keySet()) {
+                builder.put(key, loadedStorage.get(key));
+            }
+            this.storage = builder.build();
         }
     }
 
@@ -186,35 +195,35 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         getExperience().setExp(exp);
     }
 
-    public TagCompound writeExtendedInfo() {
-        TagCompound newTag = new TagCompound();
-        newTag.put("Version", new TagShort(MinecraftVersion.valueOf(MyPetApi.getCompatUtil().getInternalVersion()).ordinal()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
 
-        List<TagCompound> itemList = new ArrayList<>();
+        List<BinaryTag> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (getEquipment(slot) != null) {
-                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getEquipment(slot));
-                item.getCompoundData().put("Slot", new TagString(slot.name()));
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(getEquipment(slot));
+                item = item.putString("Slot", slot.name());
                 itemList.add(item);
             }
         }
         if (!itemList.isEmpty()) {
-            newTag.put("Equipment", new TagList(itemList));
+            builder.put("Equipment", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, itemList));
         }
         if (this instanceof MyPetBaby) {
-            newTag.put("Baby", new TagByte(isBaby()));
+            builder.putBoolean("Baby", isBaby());
         }
-        return newTag;
+        return builder.build();
     }
 
-    public void readExtendedInfo(TagCompound info) {
-        if (info.containsKey("Equipment")) {
-            List<TagCompound> equipmentList = (List<TagCompound>) info.getAs("Equipment", TagList.class).getData();
-            for (TagCompound itemTag : equipmentList) {
-                if (itemTag.containsKey("Slot")) {
-                    String slotName = itemTag.getAs("Slot", TagString.class).getStringData();
+    public void readExtendedInfo(CompoundBinaryTag info) {
+        if (info.keySet().contains("Equipment")) {
+            ListBinaryTag equipmentList = info.getList("Equipment", BinaryTagTypes.COMPOUND);
+            for (int i = 0; i < equipmentList.size(); i++) {
+                CompoundBinaryTag itemTag = equipmentList.getCompound(i);
+                String slotName = itemTag.getString("Slot");
+                if (!slotName.isEmpty()) {
                     try {
-                        ItemStack itemStack = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
+                        ItemStack itemStack = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
                         setEquipmentBySlotName(slotName, itemStack);
                     } catch (Exception e) {
                         MyPetApi.getLogger().warning("Could not load Equipment item from pet data!");
@@ -222,8 +231,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
             }
         }
-        if (info.containsKey("Baby")) {
-            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        if (info.keySet().contains("Baby")) {
+            setBaby(info.getBoolean("Baby"));
         }
     }
 
@@ -400,24 +409,24 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return true;
     }
 
-    public TagCompound getSkillInfo() {
-        TagCompound skillsNBT = new TagCompound();
+    public CompoundBinaryTag getSkillInfo() {
+        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
         Collection<Skill> skillList = this.getSkills().all();
         if (!skillList.isEmpty()) {
             for (Skill skill : skillList) {
                 if (skill instanceof NBTStorage storageSkill) {
-                    TagCompound s = storageSkill.save();
+                    CompoundBinaryTag s = storageSkill.save();
                     if (s != null) {
-                        skillsNBT.getCompoundData().put(skill.getName(), s);
+                        builder.put(skill.getName(), s);
                     }
                 }
             }
         }
-        return skillsNBT;
+        return builder.build();
     }
 
     @Override
-    public void setSkills(TagCompound skills) {
+    public void setSkills(CompoundBinaryTag skills) {
     }
 
     public PetState getStatus() {
@@ -792,43 +801,44 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     @Override
-    public void load(TagCompound myPetNBT) {
+    public void load(CompoundBinaryTag myPetNBT) {
     }
 
     @Override
-    public TagCompound save() {
-        TagCompound petNBT = new TagCompound();
+    public CompoundBinaryTag save() {
+        CompoundBinaryTag.Builder petNBT = CompoundBinaryTag.builder();
 
-        petNBT.getCompoundData().put("UUID", new TagString(getUUID().toString()));
-        petNBT.getCompoundData().put("Type", new TagString(this.getPetType().name()));
-        petNBT.getCompoundData().put("Health", new TagDouble(this.getHealth()));
-        petNBT.getCompoundData().put("Respawntime", new TagInt(this.respawnTime));
-        petNBT.getCompoundData().put("Hunger", new TagDouble(this.saturation));
-        petNBT.getCompoundData().put("Name", new TagString(this.petName));
-        petNBT.getCompoundData().put("WorldGroup", new TagString(this.worldGroup));
-        petNBT.getCompoundData().put("Exp", new TagDouble(this.getExp()));
-        petNBT.getCompoundData().put("LastUsed", new TagLong(this.lastUsed));
-        petNBT.getCompoundData().put("Info", writeExtendedInfo());
-        petNBT.getCompoundData().put("Internal-Owner-UUID", new TagString(this.petOwner.getInternalUUID().toString()));
-        petNBT.getCompoundData().put("Wants-To-Respawn", new TagByte(wantsToRespawn));
+        petNBT.putString("UUID", getUUID().toString());
+        petNBT.putString("Type", this.getPetType().name());
+        petNBT.putDouble("Health", this.getHealth());
+        petNBT.putInt("Respawntime", this.respawnTime);
+        petNBT.putDouble("Hunger", this.saturation);
+        petNBT.putString("Name", this.petName);
+        petNBT.putString("WorldGroup", this.worldGroup);
+        petNBT.putDouble("Exp", this.getExp());
+        petNBT.putLong("LastUsed", this.lastUsed);
+        petNBT.put("Info", writeExtendedInfo());
+        petNBT.putString("Internal-Owner-UUID", this.petOwner.getInternalUUID().toString());
+        petNBT.putBoolean("Wants-To-Respawn", wantsToRespawn);
         if (this.skilltree != null) {
-            petNBT.getCompoundData().put("Skilltree", new TagString(skilltree.getName()));
+            petNBT.putString("Skilltree", skilltree.getName());
         }
-        TagCompound skillsNBT = new TagCompound();
+
+        CompoundBinaryTag.Builder skillsBuilder = CompoundBinaryTag.builder();
         Collection<Skill> skillList = this.getSkills().all();
         if (!skillList.isEmpty()) {
             for (Skill skill : skillList) {
                 if (skill instanceof NBTStorage storageSkill) {
-                    TagCompound s = storageSkill.save();
+                    CompoundBinaryTag s = storageSkill.save();
                     if (s != null) {
-                        skillsNBT.getCompoundData().put(skill.getName(), s);
+                        skillsBuilder.put(skill.getName(), s);
                     }
                 }
             }
         }
-        petNBT.getCompoundData().put("Skills", skillsNBT);
+        petNBT.put("Skills", skillsBuilder.build());
 
-        return petNBT;
+        return petNBT.build();
     }
 
     public boolean setSkilltree(Skilltree skilltree, MyPetSelectSkilltreeEvent.Source source) {

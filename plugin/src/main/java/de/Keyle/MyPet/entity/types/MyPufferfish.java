@@ -22,10 +22,9 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 @Getter
 public class MyPufferfish extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPufferfish {
@@ -38,17 +37,16 @@ public class MyPufferfish extends MyPet implements de.Keyle.MyPet.api.entity.typ
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("PuffState", new TagInt(puffState.ordinal()));
-        return info;
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        return info.putInt("PuffState", puffState.ordinal());
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("PuffState")) {
-            setPuffState(PuffState.values()[info.getAs("PuffState", TagInt.class).getIntData()]);
+        if (info.keySet().contains("PuffState")) {
+            setPuffState(PuffState.values()[info.getInt("PuffState")]);
         }
     }
 }

@@ -32,10 +32,8 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationNBT;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagList;
-import de.keyle.knbt.TagString;
-import de.keyle.knbt.TagString;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -43,29 +41,31 @@ import java.io.File;
 import java.util.*;
 
 public class NbtRepository implements Repository {
-    protected Map<UUID, TagCompound> petTags = new HashMap<>();
-    protected Map<UUID, TagCompound> playerTags = new HashMap<>();
+    protected Map<UUID, CompoundBinaryTag> petTags = new HashMap<>();
+    protected Map<UUID, CompoundBinaryTag> playerTags = new HashMap<>();
     protected Multimap<UUID, UUID> petPlayerMultiMap = HashMultimap.create();
 
-    public static MyPetPlayer createMyPetPlayer(TagCompound playerTag) {
+    public static MyPetPlayer createMyPetPlayer(CompoundBinaryTag playerTag) {
         MyPetPlayerImpl petPlayer = null;
         UUID mojangUUID = null;
         UUID internalUUID = null;
         String playerName = null;
-        if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
-            TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
-            if (uuidTag.getCompoundData().containsKey("Internal-UUID")) {
-                internalUUID = UUID.fromString(uuidTag.getAs("Internal-UUID", TagString.class).getStringData());
+        if (playerTag.keySet().contains("UUID")) {
+            CompoundBinaryTag uuidTag = playerTag.getCompound("UUID");
+            if (uuidTag.keySet().contains("Internal-UUID")) {
+                internalUUID = UUID.fromString(uuidTag.getString("Internal-UUID"));
             }
-            if (uuidTag.getCompoundData().containsKey("Mojang-UUID")) {
-                mojangUUID = UUID.fromString(uuidTag.getAs("Mojang-UUID", TagString.class).getStringData());
+            if (uuidTag.keySet().contains("Mojang-UUID")) {
+                mojangUUID = UUID.fromString(uuidTag.getString("Mojang-UUID"));
             }
-            if (uuidTag.containsKeyAs("Name", TagString.class)) {
-                playerName = uuidTag.getAs("Name", TagString.class).getStringData();
+            String name = uuidTag.getString("Name");
+            if (!name.isEmpty()) {
+                playerName = name;
             }
         }
-        if (playerTag.containsKeyAs("Name", TagString.class)) {
-            playerName = playerTag.getAs("Name", TagString.class).getStringData();
+        String tagName = playerTag.getString("Name");
+        if (!tagName.isEmpty()) {
+            playerName = tagName;
         }
         if (internalUUID == null) {
             return null;
@@ -111,12 +111,13 @@ public class NbtRepository implements Repository {
             return;
         }
 
-        if (nbtConfiguration.getNBTCompound().containsKeyAs("Players", TagList.class)) {
-            int playerCount = loadPlayers(nbtConfiguration.getNBTCompound().getAs("Players", TagList.class));
+        CompoundBinaryTag root = nbtConfiguration.getNBTCompound();
+        if (root.keySet().contains("Players")) {
+            int playerCount = loadPlayers(root.getList("Players"));
             MyPetApi.getLogger().info("[NBT] " + ChatColor.YELLOW + playerCount + ChatColor.RESET + " PetPlayer(s) loaded");
         }
 
-        int petCount = loadPets(nbtConfiguration.getNBTCompound().getAs("Pets", TagList.class));
+        int petCount = loadPets(root.getList("Pets"));
         MyPetApi.getLogger().info("[NBT] " + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) loaded");
     }
 
@@ -130,8 +131,8 @@ public class NbtRepository implements Repository {
     @Override
     public void countMyPets(MyPetType type, final RepositoryCallback<Integer> callback) {
         int counter = 0;
-        for (TagCompound petTag : petTags.values()) {
-            if (petTag.getAs("Type", TagString.class).equals(type.name())) {
+        for (CompoundBinaryTag petTag : petTags.values()) {
+            if (petTag.getString("Type").equals(type.name())) {
                 counter++;
             }
         }
@@ -149,9 +150,10 @@ public class NbtRepository implements Repository {
 
         List<StoredMyPet> pets = new ArrayList<>();
         for (UUID petUUID : petTags.keySet()) {
-            TagCompound petTag = petTags.get(petUUID);
-            if (petTag.containsKeyAs("Internal-Owner-UUID", TagString.class)) {
-                UUID ownerUUID = UUID.fromString(petTag.getAs("Internal-Owner-UUID", TagString.class).getStringData());
+            CompoundBinaryTag petTag = petTags.get(petUUID);
+            String ownerUUIDStr = petTag.getString("Internal-Owner-UUID");
+            if (!ownerUUIDStr.isEmpty()) {
+                UUID ownerUUID = UUID.fromString(ownerUUIDStr);
 
                 if (owners.containsKey(ownerUUID)) {
                     InactiveMyPet myPet = new InactiveMyPet(owners.get(ownerUUID));
@@ -200,10 +202,11 @@ public class NbtRepository implements Repository {
     public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
         if (callback != null) {
             if (petTags.containsKey(uuid)) {
-                TagCompound petTag = petTags.get(uuid);
+                CompoundBinaryTag petTag = petTags.get(uuid);
                 UUID ownerUUID;
-                if (petTag.containsKeyAs("Internal-Owner-UUID", TagString.class)) {
-                    ownerUUID = UUID.fromString(petTag.getAs("Internal-Owner-UUID", TagString.class).getStringData());
+                String ownerUUIDStr = petTag.getString("Internal-Owner-UUID");
+                if (!ownerUUIDStr.isEmpty()) {
+                    ownerUUID = UUID.fromString(ownerUUIDStr);
                 } else {
                     return;
                 }
@@ -252,21 +255,22 @@ public class NbtRepository implements Repository {
         return false;
     }
 
-    private int loadPets(TagList petList) {
+    private int loadPets(ListBinaryTag petList) {
         int petCount = 0;
         boolean oldPets = false;
-        for (int i = 0; i < petList.getReadOnlyList().size(); i++) {
-            TagCompound petTag = petList.getTagAs(i, TagCompound.class);
+        for (int i = 0; i < petList.size(); i++) {
+            CompoundBinaryTag petTag = petList.getCompound(i);
             UUID ownerUUID;
 
-            if (petTag.containsKeyAs("Internal-Owner-UUID", TagString.class)) {
-                ownerUUID = UUID.fromString(petTag.getAs("Internal-Owner-UUID", TagString.class).getStringData());
+            String ownerUUIDStr = petTag.getString("Internal-Owner-UUID");
+            if (!ownerUUIDStr.isEmpty()) {
+                ownerUUID = UUID.fromString(ownerUUIDStr);
             } else {
                 oldPets = true;
                 continue;
             }
             if (!playerTags.containsKey(ownerUUID)) {
-                MyPetApi.getLogger().warning("Owner for a pet (" + petTag.getAs("Name", TagString.class) + " not found, pet loading skipped.");
+                MyPetApi.getLogger().warning("Owner for a pet (" + petTag.getString("Name") + " not found, pet loading skipped.");
                 continue;
             }
 
@@ -284,15 +288,15 @@ public class NbtRepository implements Repository {
 
     // Players ---------------------------------------------------------------------------------------------------------
 
-    public UUID getPetUUID(TagCompound petTag) {
-        return UUID.fromString(petTag.getAs("UUID", TagString.class).getStringData());
+    public UUID getPetUUID(CompoundBinaryTag petTag) {
+        return UUID.fromString(petTag.getString("UUID"));
     }
 
     @Override
     public List<MyPetPlayer> getAllMyPetPlayers() {
         List<MyPetPlayer> playerList = new ArrayList<>();
 
-        for (TagCompound playerTag : playerTags.values()) {
+        for (CompoundBinaryTag playerTag : playerTags.values()) {
             MyPetPlayer player = createMyPetPlayer(playerTag);
             if (player != null) {
                 playerList.add(player);
@@ -305,24 +309,27 @@ public class NbtRepository implements Repository {
     @Override
     public void isMyPetPlayer(final Player player, final RepositoryCallback<Boolean> callback) {
         if (callback != null) {
-            for (TagCompound playerTag : playerTags.values()) {
-                if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
-                    TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
+            for (CompoundBinaryTag playerTag : playerTags.values()) {
+                if (playerTag.keySet().contains("UUID")) {
+                    CompoundBinaryTag uuidTag = playerTag.getCompound("UUID");
 
-                    if (uuidTag.getCompoundData().containsKey("Mojang-UUID")) {
-                        if (UUID.fromString(uuidTag.getAs("Mojang-UUID", TagString.class).getStringData()).equals(player.getUniqueId())) {
+                    String mojangUUID = uuidTag.getString("Mojang-UUID");
+                    if (!mojangUUID.isEmpty()) {
+                        if (UUID.fromString(mojangUUID).equals(player.getUniqueId())) {
                             callback.run(true);
                             return;
                         }
                     }
-                    if (uuidTag.getCompoundData().containsKey("Name")) {
-                        if (Util.getOfflinePlayerUUID(uuidTag.getAs("Name", TagString.class).getStringData()).equals(player.getUniqueId())) {
+                    String name = uuidTag.getString("Name");
+                    if (!name.isEmpty()) {
+                        if (Util.getOfflinePlayerUUID(name).equals(player.getUniqueId())) {
                             callback.run(true);
                             return;
                         }
                     }
-                    if (playerTag.getCompoundData().containsKey("Name")) {
-                        if (Util.getOfflinePlayerUUID(playerTag.getAs("Name", TagString.class).getStringData()).equals(player.getUniqueId())) {
+                    String tagName = playerTag.getString("Name");
+                    if (!tagName.isEmpty()) {
+                        if (Util.getOfflinePlayerUUID(tagName).equals(player.getUniqueId())) {
                             callback.run(true);
                             return;
                         }
@@ -345,26 +352,29 @@ public class NbtRepository implements Repository {
     @Override
     public void getMyPetPlayer(final Player player, final RepositoryCallback<MyPetPlayer> callback) {
         if (callback != null) {
-            for (TagCompound playerTag : playerTags.values()) {
-                if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
-                    TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
+            for (CompoundBinaryTag playerTag : playerTags.values()) {
+                if (playerTag.keySet().contains("UUID")) {
+                    CompoundBinaryTag uuidTag = playerTag.getCompound("UUID");
 
-                    if (uuidTag.getCompoundData().containsKey("Mojang-UUID")) {
-                        if (UUID.fromString(uuidTag.getAs("Mojang-UUID", TagString.class).getStringData()).equals(player.getUniqueId())) {
+                    String mojangUUID = uuidTag.getString("Mojang-UUID");
+                    if (!mojangUUID.isEmpty()) {
+                        if (UUID.fromString(mojangUUID).equals(player.getUniqueId())) {
                             MyPetPlayer myPetPlayer = createMyPetPlayer(playerTag);
                             callback.run(myPetPlayer);
                             return;
                         }
                     }
-                    if (uuidTag.getCompoundData().containsKey("Name")) {
-                        if (uuidTag.getAs("Name", TagString.class).getStringData().equals(player.getName())) {
+                    String name = uuidTag.getString("Name");
+                    if (!name.isEmpty()) {
+                        if (name.equals(player.getName())) {
                             MyPetPlayer myPetPlayer = createMyPetPlayer(playerTag);
                             callback.run(myPetPlayer);
                             return;
                         }
                     }
-                    if (playerTag.getCompoundData().containsKey("Name")) {
-                        if (playerTag.getAs("Name", TagString.class).getStringData().equals(player.getName())) {
+                    String tagName = playerTag.getString("Name");
+                    if (!tagName.isEmpty()) {
+                        if (tagName.equals(player.getName())) {
                             MyPetPlayer myPetPlayer = createMyPetPlayer(playerTag);
                             callback.run(myPetPlayer);
                             return;
@@ -396,11 +406,11 @@ public class NbtRepository implements Repository {
         }
     }
 
-    private int loadPlayers(TagList playerList) {
+    private int loadPlayers(ListBinaryTag playerList) {
         int playerCount = 0;
 
-        for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
-            TagCompound playerTag = playerList.getTagAs(i, TagCompound.class);
+        for (int i = 0; i < playerList.size(); i++) {
+            CompoundBinaryTag playerTag = playerList.getCompound(i);
             UUID internalUUID = getInternalUUID(playerTag);
             if (internalUUID != null) {
                 playerTags.put(internalUUID, playerTag);
@@ -410,11 +420,12 @@ public class NbtRepository implements Repository {
         return playerCount;
     }
 
-    private UUID getInternalUUID(TagCompound playerTag) {
-        if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
-            TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
-            if (uuidTag.getCompoundData().containsKey("Internal-UUID")) {
-                return UUID.fromString(uuidTag.getAs("Internal-UUID", TagString.class).getStringData());
+    private UUID getInternalUUID(CompoundBinaryTag playerTag) {
+        if (playerTag.keySet().contains("UUID")) {
+            CompoundBinaryTag uuidTag = playerTag.getCompound("UUID");
+            String internalUUID = uuidTag.getString("Internal-UUID");
+            if (!internalUUID.isEmpty()) {
+                return UUID.fromString(internalUUID);
             }
         }
         return null;

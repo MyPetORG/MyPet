@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.api.util;
 
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 public interface NBTStorage {
-    TagCompound save();
+    CompoundBinaryTag save();
 
-    void load(TagCompound compound);
+    void load(CompoundBinaryTag compound);
 }

@@ -22,8 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import lombok.Getter;
 
 @Getter
@@ -38,25 +37,25 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Screaming", new TagByte(isScreaming()));
-        info.getCompoundData().put("LeftHorn", new TagByte(hasLeftHorn()));
-        info.getCompoundData().put("RightHorn", new TagByte(hasRightHorn()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putBoolean("Screaming", isScreaming());
+        info = info.putBoolean("LeftHorn", hasLeftHorn());
+        info = info.putBoolean("RightHorn", hasRightHorn());
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("Screaming")) {
-            setScreaming(info.getAs("Screaming", TagByte.class).getBooleanData());
+        if (info.keySet().contains("Screaming")) {
+            setScreaming(info.getBoolean("Screaming"));
         }
-        if (info.containsKey("LeftHorn")) {
-            setLeftHorn(info.getAs("LeftHorn", TagByte.class).getBooleanData());
+        if (info.keySet().contains("LeftHorn")) {
+            setLeftHorn(info.getBoolean("LeftHorn"));
         }
-        if (info.containsKey("RightHorn")) {
-            setRightHorn(info.getAs("RightHorn", TagByte.class).getBooleanData());
+        if (info.keySet().contains("RightHorn")) {
+            setRightHorn(info.getBoolean("RightHorn"));
         }
     }
 

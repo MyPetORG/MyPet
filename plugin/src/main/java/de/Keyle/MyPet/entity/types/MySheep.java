@@ -22,11 +22,9 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.DyeColor;
 
 @Getter
@@ -57,27 +55,25 @@ public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Color", new TagByte(getColor().getDyeData()));
-        info.getCompoundData().put("Sheared", new TagByte(isSheared()));
-        info.getCompoundData().put("Rainbow", new TagByte(isRainbow()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putByte("Color", getColor().getDyeData());
+        info = info.putBoolean("Sheared", isSheared());
+        info = info.putBoolean("Rainbow", isRainbow());
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKeyAs("Color", TagInt.class)) {
-            setColor(DyeColor.getByDyeData((byte) info.getAs("Color", TagInt.class).getIntData()));
-        } else if (info.containsKeyAs("Color", TagByte.class)) {
-            setColor(DyeColor.getByDyeData(info.getAs("Color", TagByte.class).getByteData()));
+        if (info.keySet().contains("Color")) {
+            setColor(DyeColor.getByDyeData(info.getByte("Color")));
         }
-        if (info.containsKey("Sheared")) {
-            setSheared(info.getAs("Sheared", TagByte.class).getBooleanData());
+        if (info.keySet().contains("Sheared")) {
+            setSheared(info.getBoolean("Sheared"));
         }
-        if (info.containsKey("Rainbow")) {
-            setRainbow(info.getAs("Rainbow", TagByte.class).getBooleanData());
+        if (info.keySet().contains("Rainbow")) {
+            setRainbow(info.getBoolean("Rainbow"));
         }
     }
 

@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.api.gui;
 
 import de.Keyle.MyPet.api.util.inventory.meta.IconMeta;
-import de.keyle.knbt.TagBase;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -42,7 +42,7 @@ public class IconMenuItem implements Cloneable {
     protected boolean glowing = false;
     protected ItemMeta bukkitMeta;
     protected IconMeta meta = null;
-    protected TagCompound tag;
+    protected CompoundBinaryTag tag;
 
     protected boolean hasChanged = true;
 
@@ -206,15 +206,16 @@ public class IconMenuItem implements Cloneable {
         return bukkitMeta;
     }
 
-    public IconMenuItem addTag(String key, TagBase tag) {
+    public IconMenuItem addTag(String key, BinaryTag tag) {
         if (this.tag == null) {
-            this.tag = new TagCompound();
+            this.tag = CompoundBinaryTag.builder().put(key, tag).build();
+        } else {
+            this.tag = this.tag.put(key, tag);
         }
-        this.tag.put(key, tag);
         return this;
     }
 
-    public TagCompound getTags() {
+    public CompoundBinaryTag getTags() {
         return tag;
     }
 
@@ -232,9 +233,8 @@ public class IconMenuItem implements Cloneable {
         if (this.meta != null) {
             newItem.meta = this.meta.clone();
         }
-        if (this.tag != null) {
-            newItem.tag = this.tag.clone();
-        }
+        // CompoundBinaryTag is immutable, so we can share the reference safely
+        newItem.tag = this.tag;
         newItem.hasChanged = true;
 
         return newItem;

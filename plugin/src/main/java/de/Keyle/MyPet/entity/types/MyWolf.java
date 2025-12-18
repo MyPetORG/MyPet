@@ -22,11 +22,9 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagString;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.DyeColor;
 
 @Getter
@@ -50,29 +48,29 @@ public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyW
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Tamed", new TagByte(isTamed()));
-        info.getCompoundData().put("Angry", new TagByte(isAngry()));
-        info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().ordinal()));
-        info.getCompoundData().put("Variant", new TagString(getVariant()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putBoolean("Tamed", isTamed());
+        info = info.putBoolean("Angry", isAngry());
+        info = info.putByte("CollarColor", (byte) getCollarColor().ordinal());
+        info = info.putString("Variant", getVariant());
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("CollarColor")) {
-            setCollarColor(DyeColor.values()[info.getAs("CollarColor", TagByte.class).getByteData()]);
+        if (info.keySet().contains("CollarColor")) {
+            setCollarColor(DyeColor.values()[info.getByte("CollarColor")]);
         }
-        if (info.containsKey("Tamed")) {
-            setTamed(info.getAs("Tamed", TagByte.class).getBooleanData());
+        if (info.keySet().contains("Tamed")) {
+            setTamed(info.getBoolean("Tamed"));
         }
-        if (info.containsKey("Angry")) {
-            setAngry(info.getAs("Angry", TagByte.class).getBooleanData());
+        if (info.keySet().contains("Angry")) {
+            setAngry(info.getBoolean("Angry"));
         }
-        if (info.containsKey("Variant")) {
-            setVariant(info.getAs("Variant", TagString.class).getStringData());
+        if (info.keySet().contains("Variant")) {
+            setVariant(info.getString("Variant"));
         }
     }
 

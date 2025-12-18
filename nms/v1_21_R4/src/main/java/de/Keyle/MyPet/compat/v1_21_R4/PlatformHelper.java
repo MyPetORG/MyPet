@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R4.util.VillagerNbtIO;
 import de.Keyle.MyPet.compat.v1_21_R4.util.inventory.ItemStackNBTConverter;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.BlockPos;
@@ -130,54 +130,46 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public TagCompound entityToTag(Entity bukkitEntity) {
+    public CompoundBinaryTag entityToTag(Entity bukkitEntity) {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         CompoundTag vanillaNBT = new CompoundTag();
 
-        // For villagers and wandering traders we need to use the special NBT IO helpers
-        try {
-            if (bukkitEntity instanceof Villager || bukkitEntity instanceof WanderingTrader) {
-                // VillagerNbtIO.writeFrom returns a CompoundTag -> use it
-                CompoundTag written = VillagerNbtIO.writeFrom(bukkitEntity);
-                if (written != null) {
-                    vanillaNBT = written;
-                }
-            } else {
-                // Fallback: use entity's internal writer method (named "b" in obfuscated mappings)
-                Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
-                try {
-                    b.invoke(entity, vanillaNBT);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    ErrorUtil.report(e);
-                }
+        if (entity instanceof net.minecraft.world.entity.LivingEntity) {
+            VillagerNbtIO.writeFrom(bukkitEntity);
+        } else {
+            Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
+            try {
+                b.invoke(entity, vanillaNBT);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                ErrorUtil.report(e);
             }
-        } catch (Exception e) {
-            ErrorUtil.report(e);
         }
-        return (TagCompound) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
+
+        return (CompoundBinaryTag) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
     }
 
     @Override
-    public void applyTagToEntity(TagCompound tag, Entity bukkitEntity) {
+    public void applyTagToEntity(CompoundBinaryTag tag, Entity bukkitEntity) {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
-        CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(tag);
-        if (vanillaNBT != null) {
+        CompoundTag nbtData = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(tag);
+
+        if (nbtData != null) {
             if (bukkitEntity instanceof Villager) {
-                VillagerNbtIO.readInto(bukkitEntity, vanillaNBT);
-            } else if (bukkitEntity instanceof WanderingTrader) {
-                // Wandering traders are handled the same way as villagers for NBT read
-                VillagerNbtIO.readInto(bukkitEntity, vanillaNBT);
+                VillagerNbtIO.readInto(bukkitEntity, nbtData);
+            } else if (bukkitEntity instanceof net.minecraft.world.entity.npc.WanderingTrader) {
+                net.minecraft.world.entity.npc.WanderingTrader villager = (net.minecraft.world.entity.npc.WanderingTrader) entity;
+                VillagerNbtIO.writeFrom(bukkitEntity);
             }
         }
     }
 
     @Override
-    public TagCompound itemStackToCompund(org.bukkit.inventory.ItemStack itemStack) {
+    public CompoundBinaryTag itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
         return ItemStackNBTConverter.itemStackToCompound(itemStack);
     }
 
     @Override
-    public org.bukkit.inventory.ItemStack compundToItemStack(TagCompound compound) {
+    public org.bukkit.inventory.ItemStack compoundToItemStack(CompoundBinaryTag compound) {
         return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
     }
 

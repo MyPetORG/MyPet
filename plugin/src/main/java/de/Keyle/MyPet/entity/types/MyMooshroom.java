@@ -22,9 +22,8 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 @Getter
 public class MyMooshroom extends MyPet implements de.Keyle.MyPet.api.entity.types.MyMooshroom {
@@ -36,17 +35,16 @@ public class MyMooshroom extends MyPet implements de.Keyle.MyPet.api.entity.type
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("CowType", new TagInt(getType().ordinal()));
-        return info;
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        return info.putInt("CowType", getType().ordinal());
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("CowType")) {
-            setType(Type.values()[info.getAs("CowType", TagInt.class).getIntData()]);
+        if (info.keySet().contains("CowType")) {
+            setType(Type.values()[info.getInt("CowType")]);
         }
     }
 

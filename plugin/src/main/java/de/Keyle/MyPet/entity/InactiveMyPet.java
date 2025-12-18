@@ -29,7 +29,11 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.NBTStorage;
-import de.keyle.knbt.*;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.BinaryTagTypes;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.DoubleBinaryTag;
+import net.kyori.adventure.nbt.IntBinaryTag;
 import org.bukkit.Bukkit;
 
 import java.util.Collection;
@@ -48,8 +52,8 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
     private double exp = 0;
     private MyPetType petType = MyPetType.Wolf;
     private Skilltree skilltree = null;
-    private TagCompound NBTSkills;
-    private TagCompound NBTextendetInfo;
+    private CompoundBinaryTag NBTSkills;
+    private CompoundBinaryTag NBTextendetInfo;
 
     public InactiveMyPet(MyPetPlayer petOwner) throws IllegalArgumentException {
         if (petOwner == null) {
@@ -92,14 +96,14 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         return getSaturation();
     }
 
-    public TagCompound getInfo() {
+    public CompoundBinaryTag getInfo() {
         if (NBTextendetInfo == null) {
-            NBTextendetInfo = new TagCompound();
+            NBTextendetInfo = CompoundBinaryTag.empty();
         }
         return NBTextendetInfo;
     }
 
-    public void setInfo(TagCompound info) {
+    public void setInfo(CompoundBinaryTag info) {
         NBTextendetInfo = info;
     }
 
@@ -163,14 +167,14 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         return true;
     }
 
-    public TagCompound getSkillInfo() {
+    public CompoundBinaryTag getSkillInfo() {
         if (NBTSkills == null) {
-            NBTSkills = new TagCompound();
+            NBTSkills = CompoundBinaryTag.empty();
         }
         return NBTSkills;
     }
 
-    public void setSkills(TagCompound skills) {
+    public void setSkills(CompoundBinaryTag skills) {
         NBTSkills = skills;
     }
 
@@ -207,93 +211,108 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
     }
 
     @Override
-    public void load(TagCompound myPetNBT) {
-        if (myPetNBT.getCompoundData().containsKey("UUID")) {
-            uuid = UUID.fromString(myPetNBT.getAs("UUID", TagString.class).getStringData());
+    public void load(CompoundBinaryTag myPetNBT) {
+        if (myPetNBT.keySet().contains("UUID")) {
+            uuid = UUID.fromString(myPetNBT.getString("UUID"));
         }
 
-        exp = myPetNBT.getAs("Exp", TagDouble.class).getDoubleData();
-        if (myPetNBT.containsKeyAs("Health", TagInt.class)) {
-            health = myPetNBT.getAs("Health", TagInt.class).getIntData();
-        } else if (myPetNBT.containsKeyAs("Health", TagDouble.class)) {
-            health = myPetNBT.getAs("Health", TagDouble.class).getDoubleData();
+        exp = myPetNBT.getDouble("Exp");
+
+        // Health can be stored as int (legacy) or double
+        BinaryTag healthTag = myPetNBT.get("Health");
+        if (healthTag != null) {
+            if (healthTag.type() == BinaryTagTypes.INT) {
+                health = ((IntBinaryTag) healthTag).value();
+            } else if (healthTag.type() == BinaryTagTypes.DOUBLE) {
+                health = ((DoubleBinaryTag) healthTag).value();
+            }
         }
 
-        respawnTime = myPetNBT.getAs("Respawntime", TagInt.class).getIntData();
-        petName = myPetNBT.getAs("Name", TagString.class).getStringData();
+        respawnTime = myPetNBT.getInt("Respawntime");
+        petName = myPetNBT.getString("Name");
 
-        if (myPetNBT.getCompoundData().containsKey("Type")) {
-            petType = MyPetType.valueOf(myPetNBT.getAs("Type", TagString.class).getStringData());
+        if (myPetNBT.keySet().contains("Type")) {
+            petType = MyPetType.valueOf(myPetNBT.getString("Type"));
         }
 
-        if (myPetNBT.getCompoundData().containsKey("LastUsed")) {
-            lastUsed = myPetNBT.getAs("LastUsed", TagLong.class).getLongData();
+        if (myPetNBT.keySet().contains("LastUsed")) {
+            lastUsed = myPetNBT.getLong("LastUsed");
         }
 
-        if (myPetNBT.getCompoundData().containsKey("Skilltree")) {
-            String skillTreeName = myPetNBT.getAs("Skilltree", TagString.class).getStringData();
-            if (skillTreeName != null) {
+        if (myPetNBT.keySet().contains("Skilltree")) {
+            String skillTreeName = myPetNBT.getString("Skilltree");
+            if (!skillTreeName.isEmpty()) {
                 Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skillTreeName);
-                if (skilltree.getMobTypes().contains(getPetType())) {
+                if (skilltree != null && skilltree.getMobTypes().contains(getPetType())) {
                     this.skilltree = skilltree;
                 }
             }
         }
 
-        if (myPetNBT.containsKeyAs("Hunger", TagInt.class)) {
-            saturation = myPetNBT.getAs("Hunger", TagInt.class).getIntData();
-        } else if (myPetNBT.containsKeyAs("Hunger", TagDouble.class)) {
-            saturation = myPetNBT.getAs("Hunger", TagDouble.class).getDoubleData();
+        // Hunger/saturation can be stored as int (legacy) or double
+        BinaryTag hungerTag = myPetNBT.get("Hunger");
+        if (hungerTag != null) {
+            if (hungerTag.type() == BinaryTagTypes.INT) {
+                saturation = ((IntBinaryTag) hungerTag).value();
+            } else if (hungerTag.type() == BinaryTagTypes.DOUBLE) {
+                saturation = ((DoubleBinaryTag) hungerTag).value();
+            }
         }
 
-        if (myPetNBT.getCompoundData().containsKey("WorldGroup")) {
-            worldGroup = myPetNBT.getAs("WorldGroup", TagString.class).getStringData();
+        if (myPetNBT.keySet().contains("WorldGroup")) {
+            worldGroup = myPetNBT.getString("WorldGroup");
         }
 
-        if (myPetNBT.getCompoundData().containsKey("Wants-To-Respawn")) {
-            wantsToRespawn = myPetNBT.getAs("Wants-To-Respawn", TagByte.class).getBooleanData();
+        if (myPetNBT.keySet().contains("Wants-To-Respawn")) {
+            wantsToRespawn = myPetNBT.getBoolean("Wants-To-Respawn");
         }
 
-        setSkills(myPetNBT.getAs("Skills", TagCompound.class));
-        setInfo(myPetNBT.getAs("Info", TagCompound.class));
+        setSkills(myPetNBT.getCompound("Skills"));
+        setInfo(myPetNBT.getCompound("Info"));
     }
 
     @Override
-    public TagCompound save() {
-        TagCompound petNBT = new TagCompound();
+    public CompoundBinaryTag save() {
+        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder()
+                .putString("UUID", getUUID().toString())
+                .putString("Type", this.petType.name())
+                .putDouble("Health", this.health)
+                .putInt("Respawntime", this.respawnTime)
+                .putDouble("Hunger", this.saturation)
+                .putString("Name", this.petName)
+                .putString("WorldGroup", this.worldGroup)
+                .putDouble("Exp", this.exp)
+                .putLong("LastUsed", this.lastUsed)
+                .put("Info", getInfo())
+                .putString("Internal-Owner-UUID", this.petOwner.getInternalUUID().toString())
+                .putBoolean("Wants-To-Respawn", wantsToRespawn);
 
-        petNBT.getCompoundData().put("UUID", new TagString(getUUID().toString()));
-        petNBT.getCompoundData().put("Type", new TagString(this.petType.name()));
-        petNBT.getCompoundData().put("Health", new TagDouble(this.health));
-        petNBT.getCompoundData().put("Respawntime", new TagInt(this.respawnTime));
-        petNBT.getCompoundData().put("Hunger", new TagDouble(this.saturation));
-        petNBT.getCompoundData().put("Name", new TagString(this.petName));
-        petNBT.getCompoundData().put("WorldGroup", new TagString(this.worldGroup));
-        petNBT.getCompoundData().put("Exp", new TagDouble(this.exp));
-        petNBT.getCompoundData().put("LastUsed", new TagLong(this.lastUsed));
-        petNBT.getCompoundData().put("Info", getInfo());
-        petNBT.getCompoundData().put("Internal-Owner-UUID", new TagString(this.petOwner.getInternalUUID().toString()));
-        petNBT.getCompoundData().put("Wants-To-Respawn", new TagByte(wantsToRespawn));
         if (this.skilltree != null) {
-            petNBT.getCompoundData().put("Skilltree", new TagString(skilltree.getName()));
+            builder.putString("Skilltree", skilltree.getName());
         }
-        petNBT.getCompoundData().put("Skills", getSkillInfo());
 
-        return petNBT;
+        builder.put("Skills", getSkillInfo());
+
+        return builder.build();
     }
 
     public void setSkills(Collection<Skill> skills) {
-        if (NBTSkills == null) {
-            NBTSkills = new TagCompound();
+        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
+        if (NBTSkills != null) {
+            // Preserve existing entries
+            for (String key : NBTSkills.keySet()) {
+                builder.put(key, NBTSkills.get(key));
+            }
         }
         for (Skill skill : skills) {
             if (skill instanceof NBTStorage storageSkill) {
-                TagCompound s = storageSkill.save();
+                CompoundBinaryTag s = storageSkill.save();
                 if (s != null) {
-                    this.NBTSkills.getCompoundData().put(skill.getName(), s);
+                    builder.put(skill.getName(), s);
                 }
             }
         }
+        this.NBTSkills = builder.build();
     }
 
     @Override

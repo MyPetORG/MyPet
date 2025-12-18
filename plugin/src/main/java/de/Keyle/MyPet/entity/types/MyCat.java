@@ -22,9 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import lombok.Getter;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Cat.Type;
@@ -61,28 +59,30 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("CatType", new TagInt(getCatType().ordinal()));
-        info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().ordinal()));
-        info.getCompoundData().put("Tamed", new TagByte(isTamed()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putInt("CatType", getCatType().ordinal());
+        info = info.putInt("CollarColor", getCollarColor().ordinal());
+        info = info.putBoolean("Tamed", isTamed());
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("CatType")) {
-            Type leType = OwnCatType.values()[info.getAs("CatType", TagInt.class).getIntData()].getBukkitType();
+        if (info.keySet().contains("CatType")) {
+            Type leType = OwnCatType.values()[info.getInt("CatType")].getBukkitType();
             setCatType(leType);
         }
-        if (info.containsKeyAs("CollarColor", TagInt.class)) {
-            setCollarColor(DyeColor.values()[info.getAs("CollarColor", TagInt.class).getIntData()]);
-        } else if (info.containsKeyAs("CollarColor", TagByte.class)) {
-            setCollarColor(DyeColor.values()[info.getAs("CollarColor", TagByte.class).getByteData()]);
+        if (info.keySet().contains("CollarColor")) {
+            if (info.get("CollarColor") instanceof net.kyori.adventure.nbt.IntBinaryTag) {
+                setCollarColor(DyeColor.values()[info.getInt("CollarColor")]);
+            } else if (info.get("CollarColor") instanceof net.kyori.adventure.nbt.ByteBinaryTag) {
+                setCollarColor(DyeColor.values()[info.getByte("CollarColor")]);
+            }
         }
-        if (info.containsKey("Tamed")) {
-            setTamed(info.getAs("Tamed", TagByte.class).getBooleanData());
+        if (info.keySet().contains("Tamed")) {
+            setTamed(info.getBoolean("Tamed"));
         }
     }
 

@@ -31,7 +31,8 @@ import de.Keyle.MyPet.api.skill.skills.Beacon;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.inventory.meta.SkullMeta;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.keyle.knbt.*;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.IntArrayBinaryTag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -615,24 +616,24 @@ public class BeaconImpl implements Beacon {
     }
 
     @Override
-    public TagCompound save() {
-        TagCompound nbtTagCompound = new TagCompound();
-        nbtTagCompound.getCompoundData().put("Buffs", new TagIntArray(selectedBuffs.stream().mapToInt(Buff::getId).toArray()));
-        nbtTagCompound.getCompoundData().put("Active", new TagByte(this.active));
-        nbtTagCompound.getCompoundData().put("Receiver", new TagString(this.receiver.name()));
-        return nbtTagCompound;
+    public CompoundBinaryTag save() {
+        return CompoundBinaryTag.builder()
+                .put("Buffs", IntArrayBinaryTag.intArrayBinaryTag(selectedBuffs.stream().mapToInt(Buff::getId).toArray()))
+                .putBoolean("Active", this.active)
+                .putString("Receiver", this.receiver.name())
+                .build();
     }
 
     @Override
-    public void load(TagCompound compound) {
-        if (compound.getCompoundData().containsKey("Buff")) {
-            Buff selectedBuff = Buff.getBuffByID(compound.getAs("Buff", TagInt.class).getIntData());
+    public void load(CompoundBinaryTag compound) {
+        if (compound.keySet().contains("Buff")) {
+            Buff selectedBuff = Buff.getBuffByID(compound.getInt("Buff"));
             if (selectedBuff != null) {
                 this.selectedBuffs.add(selectedBuff);
             }
         }
-        if (compound.getCompoundData().containsKey("Buffs")) {
-            int[] selectedBuffs = compound.getAs("Buffs", TagIntArray.class).getIntArrayData();
+        if (compound.keySet().contains("Buffs")) {
+            int[] selectedBuffs = compound.getIntArray("Buffs");
             for (int selectedBuffId : selectedBuffs) {
                 Buff selectedBuff = Buff.getBuffByID(selectedBuffId);
                 if (selectedBuff != null) {
@@ -640,11 +641,11 @@ public class BeaconImpl implements Beacon {
                 }
             }
         }
-        if (compound.getCompoundData().containsKey("Active")) {
-            this.active = compound.getAs("Active", TagByte.class).getBooleanData();
+        if (compound.keySet().contains("Active")) {
+            this.active = compound.getBoolean("Active");
         }
-        if (compound.getCompoundData().containsKey("Receiver")) {
-            this.receiver = BuffReceiver.valueOf(compound.getAs("Receiver", TagString.class).getStringData());
+        if (compound.keySet().contains("Receiver")) {
+            this.receiver = BuffReceiver.valueOf(compound.getString("Receiver"));
         }
     }
 

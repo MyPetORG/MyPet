@@ -22,8 +22,8 @@ package de.Keyle.MyPet.api.util.configuration;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagStream;
+import net.kyori.adventure.nbt.BinaryTagIO;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,19 +33,19 @@ import java.nio.file.Files;
 
 public class ConfigurationNBT {
     private File NBTFile;
-    private TagCompound nbtTagCompound;
+    private CompoundBinaryTag nbtTagCompound;
 
     public ConfigurationNBT(File file) {
         NBTFile = file;
     }
 
-    public static boolean save(File file, TagCompound tag) {
+    public static boolean save(File file, CompoundBinaryTag tag) {
         ConfigurationNBT config = new ConfigurationNBT(file);
         config.nbtTagCompound = tag;
         return config.save();
     }
 
-    public TagCompound getNBTCompound() {
+    public CompoundBinaryTag getNBTCompound() {
         if (nbtTagCompound == null) {
             clearConfig();
         }
@@ -53,10 +53,8 @@ public class ConfigurationNBT {
     }
 
     public boolean save() {
-        try {
-            OutputStream os = Files.newOutputStream(NBTFile.toPath());
-            TagStream.writeTag(nbtTagCompound, os, true);
-            os.close();
+        try (OutputStream os = Files.newOutputStream(NBTFile.toPath())) {
+            BinaryTagIO.writer().write(nbtTagCompound, os, BinaryTagIO.Compression.GZIP);
             return true;
         } catch (IOException e) {
             ErrorUtil.report(e);
@@ -68,28 +66,31 @@ public class ConfigurationNBT {
         if (!NBTFile.exists()) {
             return false;
         }
-        try {
-            InputStream is = Files.newInputStream(NBTFile.toPath());
-            TagCompound tag = TagStream.readTag(is, true);
-            if (tag != null) {
+        try (InputStream is = Files.newInputStream(NBTFile.toPath())) {
+            // Try compressed first
+            try {
+                CompoundBinaryTag tag = BinaryTagIO.reader().read(is, BinaryTagIO.Compression.GZIP);
                 nbtTagCompound = tag;
                 return true;
+            } catch (IOException ignored) {
+                // Try uncompressed
             }
-            tag = TagStream.readTag(is, false);
-            if (tag != null) {
-                nbtTagCompound = tag;
-                return true;
-            } else {
-                MyPetApi.getLogger().warning("Could not parse/load " + NBTFile.getName());
-                return false;
-            }
-
         } catch (IOException e) {
+            return false;
+        }
+
+        // Retry with uncompressed
+        try (InputStream is = Files.newInputStream(NBTFile.toPath())) {
+            CompoundBinaryTag tag = BinaryTagIO.reader().read(is, BinaryTagIO.Compression.NONE);
+            nbtTagCompound = tag;
+            return true;
+        } catch (IOException e) {
+            MyPetApi.getLogger().warning("Could not parse/load " + NBTFile.getName());
             return false;
         }
     }
 
     public void clearConfig() {
-        nbtTagCompound = new TagCompound();
+        nbtTagCompound = CompoundBinaryTag.empty();
     }
 }

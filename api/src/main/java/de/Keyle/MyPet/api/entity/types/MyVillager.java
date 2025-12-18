@@ -24,8 +24,8 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
-import de.keyle.knbt.TagCompound;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 import java.util.Set;
 
@@ -48,9 +48,9 @@ public interface MyVillager extends MyPet, MyPetBaby, MyPetEquipment {
 
     void setLevel(int level);
 
-    TagCompound getOriginalData();
+    CompoundBinaryTag getOriginalData();
 
-    void setOriginalData(TagCompound compound);
+    void setOriginalData(CompoundBinaryTag compound);
 
     boolean hasOriginalData();
 

@@ -24,11 +24,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
-import de.keyle.knbt.TagList;
-import de.keyle.knbt.TagString;
 import lombok.Getter;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.BinaryTagTypes;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -88,42 +88,49 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Variant", new TagInt(getVariant()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
+        for (String key : info.keySet()) {
+            builder.put(key, info.get(key));
+        }
+        builder.putInt("Variant", getVariant());
 
         // Write horse-specific equipment with string slot names for MC versions before 1.21
         // (which lack EquipmentSlot.BODY and EquipmentSlot.SADDLE)
         if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21") < 0) {
-            List<TagCompound> itemList = new ArrayList<>();
+            List<BinaryTag> itemList = new ArrayList<>();
 
             // Preserve any existing equipment from parent
-            if (info.containsKey("Equipment")) {
-                itemList.addAll((List<TagCompound>) info.getAs("Equipment", TagList.class).getData());
+            if (info.keySet().contains("Equipment")) {
+                ListBinaryTag existingEquip = info.getList("Equipment");
+                for (int i = 0; i < existingEquip.size(); i++) {
+                    itemList.add(existingEquip.getCompound(i));
+                }
             }
 
             if (hasArmor()) {
-                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getArmor());
-                item.getCompoundData().put("Slot", new TagString("BODY"));
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(getArmor());
+                item = item.putString("Slot", "BODY");
                 itemList.add(item);
             }
             if (hasSaddle()) {
-                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle());
-                item.getCompoundData().put("Slot", new TagString("SADDLE"));
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(getSaddle());
+                item = item.putString("Slot", "SADDLE");
                 itemList.add(item);
             }
             if (!itemList.isEmpty()) {
-                info.put("Equipment", new TagList(itemList));
+                builder.put("Equipment", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, itemList));
             }
         }
-        return info;
+        return builder.build();
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("Variant")) {
-            setVariant(info.getAs("Variant", TagInt.class).getIntData());
+        if (info.keySet().contains("Variant")) {
+            setVariant(info.getInt("Variant"));
         }
     }
 

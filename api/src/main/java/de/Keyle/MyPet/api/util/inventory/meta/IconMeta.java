@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.api.util.inventory.meta;
 
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 public interface IconMeta extends Cloneable {
-    void applyTo(TagCompound tag);
+    CompoundBinaryTag applyTo(CompoundBinaryTag tag);
 
     IconMeta clone();
 }

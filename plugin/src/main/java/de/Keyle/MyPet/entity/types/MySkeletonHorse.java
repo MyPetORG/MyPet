@@ -23,10 +23,11 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagList;
-import de.keyle.knbt.TagString;
 import lombok.Getter;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.BinaryTagTypes;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -61,19 +62,27 @@ public class MySkeletonHorse extends MyPet implements de.Keyle.MyPet.api.entity.
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
 
         // Write saddle with string slot name for MC versions before 1.21 (which lack EquipmentSlot.SADDLE)
         if (hasSaddle() && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21") < 0) {
-            List<TagCompound> itemList = new ArrayList<>();
-            if (info.containsKey("Equipment")) {
-                itemList.addAll((List<TagCompound>) info.getAs("Equipment", TagList.class).getData());
+            CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
+            for (String key : info.keySet()) {
+                builder.put(key, info.get(key));
             }
-            TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle());
-            item.getCompoundData().put("Slot", new TagString("SADDLE"));
+            List<BinaryTag> itemList = new ArrayList<>();
+            if (info.keySet().contains("Equipment")) {
+                ListBinaryTag existingEquip = info.getList("Equipment");
+                for (int i = 0; i < existingEquip.size(); i++) {
+                    itemList.add(existingEquip.getCompound(i));
+                }
+            }
+            CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(getSaddle());
+            item = item.putString("Slot", "SADDLE");
             itemList.add(item);
-            info.put("Equipment", new TagList(itemList));
+            builder.put("Equipment", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, itemList));
+            return builder.build();
         }
         return info;
     }

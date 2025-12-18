@@ -22,9 +22,8 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 @Getter
 public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBee {
@@ -38,25 +37,24 @@ public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBe
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("HasNectar", new TagByte(hasNectar()));
-        info.getCompoundData().put("HasStung", new TagByte(hasStung()));
-        info.getCompoundData().put("Angry", new TagByte(isAngry()));
-        return info;
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        return info.putBoolean("HasNectar", hasNectar())
+                .putBoolean("HasStung", hasStung())
+                .putBoolean("Angry", isAngry());
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("HasNectar")) {
-            setHasNectar(info.getAs("HasNectar", TagByte.class).getBooleanData());
+        if (info.keySet().contains("HasNectar")) {
+            setHasNectar(info.getBoolean("HasNectar"));
         }
-        if (info.containsKey("HasStung")) {
-            setHasStung(info.getAs("HasStung", TagByte.class).getBooleanData());
+        if (info.keySet().contains("HasStung")) {
+            setHasStung(info.getBoolean("HasStung"));
         }
-        if (info.containsKey("Angry")) {
-            setAngry(info.getAs("Angry", TagByte.class).getBooleanData());
+        if (info.keySet().contains("Angry")) {
+            setAngry(info.getBoolean("Angry"));
         }
     }
 

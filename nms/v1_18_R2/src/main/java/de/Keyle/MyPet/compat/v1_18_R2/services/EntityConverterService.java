@@ -33,7 +33,7 @@ import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_18_R2.util.inventory.ItemStackNBTConverter;
-import de.keyle.knbt.*;
+import net.kyori.adventure.nbt.*;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -55,102 +55,102 @@ import java.util.*;
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
 
     @Override
-    public TagCompound convertEntity(LivingEntity entity) {
-        TagCompound properties = new TagCompound();
+    public CompoundBinaryTag convertEntity(LivingEntity entity) {
+        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
         switch (entity.getType()) {
             case WOLF:
-                convertWolf((Wolf) entity, properties);
+                convertWolf((Wolf) entity, builder);
                 break;
             case SHEEP:
-                convertSheep((Sheep) entity, properties);
+                convertSheep((Sheep) entity, builder);
                 break;
             case VILLAGER:
-                convertVillager((Villager) entity, properties);
+                convertVillager((Villager) entity, builder);
                 break;
             case PIG:
-                convertPig((Pig) entity, properties);
+                convertPig((Pig) entity, builder);
                 break;
             case MAGMA_CUBE:
             case SLIME:
-                convertSlime((Slime) entity, properties);
+                convertSlime((Slime) entity, builder);
                 break;
             case CREEPER:
-                convertCreeper((Creeper) entity, properties);
+                convertCreeper((Creeper) entity, builder);
                 break;
             case HORSE:
-                convertHorse((Horse) entity, properties);
+                convertHorse((Horse) entity, builder);
                 break;
             case SKELETON_HORSE:
             case ZOMBIE_HORSE:
-                convertSaddledHorse((AbstractHorse) entity, properties);
+                convertSaddledHorse((AbstractHorse) entity, builder);
                 break;
             case MULE:
             case DONKEY:
-                convertChestedHorse((ChestedHorse) entity, properties);
+                convertChestedHorse((ChestedHorse) entity, builder);
                 break;
             case ZOMBIE_VILLAGER:
-                convertZombieVillager((ZombieVillager) entity, properties);
+                convertZombieVillager((ZombieVillager) entity, builder);
             case HUSK:
             case ZOMBIE:
             case ZOMBIFIED_PIGLIN:
             case DROWNED:
-                convertZombie((Zombie) entity, properties);
+                convertZombie((Zombie) entity, builder);
                 if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
-                    convertEquipable(entity, properties);
+                    convertEquipable(entity, builder);
                 }
                 break;
             case ENDERMAN:
-                convertEnderman((Enderman) entity, properties);
+                convertEnderman((Enderman) entity, builder);
                 break;
             case RABBIT:
-                convertRabbit((Rabbit) entity, properties);
+                convertRabbit((Rabbit) entity, builder);
                 break;
             case LLAMA:
-                convertLlama((Llama) entity, properties);
+                convertLlama((Llama) entity, builder);
                 break;
             case AXOLOTL:
-                convertAxolotl((Axolotl) entity, properties);
+                convertAxolotl((Axolotl) entity, builder);
                 break;
             case PARROT:
-                convertParrot((Parrot) entity, properties);
+                convertParrot((Parrot) entity, builder);
                 break;
             case TROPICAL_FISH:
-                convertTropicalFish((TropicalFish) entity, properties);
+                convertTropicalFish((TropicalFish) entity, builder);
                 break;
             case PUFFERFISH:
-                convertPufferFish((PufferFish) entity, properties);
+                convertPufferFish((PufferFish) entity, builder);
                 break;
             case PHANTOM:
-                convertPhantom((Phantom) entity, properties);
+                convertPhantom((Phantom) entity, builder);
                 break;
             case CAT:
-                convertCat((Cat) entity, properties);
+                convertCat((Cat) entity, builder);
                 break;
             case MUSHROOM_COW:
-                convertMushroomCow((MushroomCow) entity, properties);
+                convertMushroomCow((MushroomCow) entity, builder);
                 break;
             case FOX:
-                convertFox((Fox) entity, properties);
+                convertFox((Fox) entity, builder);
                 break;
             case PANDA:
-                convertPanda((Panda) entity, properties);
+                convertPanda((Panda) entity, builder);
                 break;
             case WANDERING_TRADER:
-                convertWanderingTrader((WanderingTrader) entity, properties);
+                convertWanderingTrader((WanderingTrader) entity, builder);
                 break;
             case BEE:
-                convertBee((Bee) entity, properties);
+                convertBee((Bee) entity, builder);
                 break;
             case TRADER_LLAMA:
-                convertTraderLlama((TraderLlama) entity, properties);
+                convertTraderLlama((TraderLlama) entity, builder);
                 break;
         }
 
         if (entity instanceof Ageable) {
-            convertAgable((Ageable) entity, properties);
+            convertAgable((Ageable) entity, builder);
         }
 
-        return properties;
+        return builder.build();
     }
 
     @Override
@@ -186,18 +186,18 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             villagerEntity.setVillagerLevel(villagerPet.getLevel());
 
             if (villagerPet.hasOriginalData()) {
-                TagCompound villagerTag = villagerPet.getOriginalData();
+                CompoundBinaryTag villagerTag = villagerPet.getOriginalData();
 
                 net.minecraft.world.entity.npc.Villager entityVillager = ((CraftVillager) villagerEntity).getHandle();
 
                 try {
-                    if (villagerTag.containsKey("Offers")) {
-                        TagCompound offersTag = villagerTag.get("Offers");
+                    if (villagerTag.keySet().contains("Offers")) {
+                        CompoundBinaryTag offersTag = villagerTag.getCompound("Offers");
                         CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
                         entityVillager.setOffers(new MerchantOffers(vanillaNBT));
                     }
-                    if (villagerTag.containsKey("Inventory")) {
-                        TagList inventoryTag = villagerTag.get("Inventory");
+                    if (villagerTag.keySet().contains("Inventory")) {
+                        ListBinaryTag inventoryTag = villagerTag.getList("Inventory");
                         ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
                         for (int i = 0; i < vanillaNBT.size(); ++i) {
                             net.minecraft.world.item.ItemStack itemstack = net.minecraft.world.item.ItemStack.of(vanillaNBT.getCompound(i));
@@ -208,35 +208,35 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                             }
                         }
                     }
-                    if (villagerTag.containsKey("FoodLevel")) {
-                        byte foodLevel = villagerTag.getAs("FoodLevel", TagByte.class).getByteData();
+                    if (villagerTag.keySet().contains("FoodLevel")) {
+                        byte foodLevel = villagerTag.getByte("FoodLevel");
                         ReflectionUtil.setFieldValue("cn", entityVillager, foodLevel);        // Field: foodLevel
                     }
-                    if (villagerTag.containsKey("Gossips")) {
-                        TagList inventoryTag = villagerTag.get("Gossips");
+                    if (villagerTag.keySet().contains("Gossips")) {
+                        ListBinaryTag inventoryTag = villagerTag.getList("Gossips");
                         ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
                         //This might be useful for later/following versions
                         //((GossipContainer) ReflectionUtil.getFieldValue(net.minecraft.world.entity.npc.Villager.class, entityVillager, "cr")) //Field: gossips
                         entityVillager.getGossips().update(new Dynamic<>(NbtOps.INSTANCE, vanillaNBT));
                     }
-                    if (villagerTag.containsKey("LastRestock")) {
-                        long lastRestock = villagerTag.getAs("LastRestock", TagLong.class).getLongData();
+                    if (villagerTag.keySet().contains("LastRestock")) {
+                        long lastRestock = villagerTag.getLong("LastRestock");
                         ReflectionUtil.setFieldValue("cs", entityVillager, lastRestock);    //Field: lastRestockGameTime
                     }
-                    if (villagerTag.containsKey("LastGossipDecay")) {
-                        long lastGossipDecay = villagerTag.getAs("LastGossipDecay", TagLong.class).getLongData();
+                    if (villagerTag.keySet().contains("LastGossipDecay")) {
+                        long lastGossipDecay = villagerTag.getLong("LastGossipDecay");
                         ReflectionUtil.setFieldValue("cq", entityVillager, lastGossipDecay);    //Field: lastGossipDecayTime
                     }
-                    if (villagerTag.containsKey("RestocksToday")) {
-                        int restocksToday = villagerTag.getAs("RestocksToday", TagInt.class).getIntData();
+                    if (villagerTag.keySet().contains("RestocksToday")) {
+                        int restocksToday = villagerTag.getInt("RestocksToday");
                         ReflectionUtil.setFieldValue("ct", entityVillager, restocksToday);        //Field: numberOfRestocksToday
                     }
                     ReflectionUtil.setFieldValue("cv", entityVillager, true); // Field: AssignProfessionWhenSpawned
                 } catch (Exception e) {
                     ErrorUtil.report(e);
                 }
-                if (villagerTag.containsKey("Xp")) {
-                    int xp = villagerTag.getAs("Xp", TagInt.class).getIntData();
+                if (villagerTag.keySet().contains("Xp")) {
+                    int xp = villagerTag.getInt("Xp");
                     entityVillager.setVillagerXp(xp);
                 }
             }
@@ -323,11 +323,20 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof WanderingTrader) {
             MyWanderingTrader traderPet = (MyWanderingTrader) myPet;
             if (traderPet.hasOriginalData()) {
-                TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(normalEntity);
-                for (String key : traderPet.getOriginalData().getCompoundData().keySet()) {
-                    villagerTag.put(key, traderPet.getOriginalData().get(key));
+                CompoundBinaryTag.Builder mergedBuilder = CompoundBinaryTag.builder();
+                CompoundBinaryTag villagerTag = MyPetApi.getPlatformHelper().entityToTag(normalEntity);
+
+                // Start with all keys from the current entity tag
+                for (String key : villagerTag.keySet()) {
+                    mergedBuilder.put(key, villagerTag.get(key));
                 }
-                MyPetApi.getPlatformHelper().applyTagToEntity(villagerTag, normalEntity);
+
+                // Overwrite/add keys from the original data
+                for (String key : traderPet.getOriginalData().keySet()) {
+                    mergedBuilder.put(key, traderPet.getOriginalData().get(key));
+                }
+
+                MyPetApi.getPlatformHelper().applyTagToEntity(mergedBuilder.build(), normalEntity);
             }
         } else if (myPet instanceof MyBee) {
             ((Bee) normalEntity).setHasNectar(((MyBee) myPet).hasNectar());
@@ -345,123 +354,124 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         }
     }
 
-    private void convertLlama(Llama llama, TagCompound properties) {
-        properties.getCompoundData().put("Variant", new TagInt(llama.getColor().ordinal()));
+    private void convertLlama(Llama llama, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Variant", llama.getColor().ordinal());
         if (llama.getInventory().getDecor() != null && llama.getInventory().getDecor().getType() != Material.AIR) {
-            properties.getCompoundData().put("Decor", MyPetApi.getPlatformHelper().itemStackToCompund(llama.getInventory().getDecor()));
+            builder.put("Decor", MyPetApi.getPlatformHelper().itemStackToCompound(llama.getInventory().getDecor()));
         }
         if (llama.isCarryingChest()) {
-            properties.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(new ItemStack(Material.CHEST)));
+            builder.put("Chest", MyPetApi.getPlatformHelper().itemStackToCompound(new ItemStack(Material.CHEST)));
         }
     }
 
-    private void convertTraderLlama(TraderLlama tLlama, TagCompound properties) {
-        properties.getCompoundData().put("Variant", new TagInt(tLlama.getColor().ordinal()));
+    private void convertTraderLlama(TraderLlama tLlama, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Variant", tLlama.getColor().ordinal());
     }
 
-    private void convertAxolotl(Axolotl axolotl, TagCompound properties) {
-        properties.getCompoundData().put("Variant", new TagInt(axolotl.getVariant().ordinal()));
+    private void convertAxolotl(Axolotl axolotl, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Variant", axolotl.getVariant().ordinal());
     }
 
-    private void convertParrot(Parrot parrot, TagCompound properties) {
-        properties.getCompoundData().put("Variant", new TagInt(parrot.getVariant().ordinal()));
+    private void convertParrot(Parrot parrot, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Variant", parrot.getVariant().ordinal());
     }
 
-    public void convertRabbit(Rabbit rabbit, TagCompound properties) {
-        properties.getCompoundData().put("Variant", new TagByte(MyRabbit.RabbitType.getTypeByBukkitEnum(rabbit.getRabbitType()).getId()));
+    public void convertRabbit(Rabbit rabbit, CompoundBinaryTag.Builder builder) {
+        builder.putByte("Variant", MyRabbit.RabbitType.getTypeByBukkitEnum(rabbit.getRabbitType()).getId());
     }
 
-    public void convertEquipable(LivingEntity entity, TagCompound properties) {
-        List<TagCompound> equipmentList = new ArrayList<>();
+    public void convertEquipable(LivingEntity entity, CompoundBinaryTag.Builder builder) {
+        List<CompoundBinaryTag> equipmentList = new ArrayList<>();
         if (random.nextFloat() <= entity.getEquipment().getChestplateDropChance()) {
             ItemStack itemStack = entity.getEquipment().getChestplate();
             if (itemStack != null && itemStack.getType() != Material.AIR) {
-                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
-                item.getCompoundData().put("Slot", new TagString(EquipmentSlot.CHEST.name()));
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(itemStack);
+                item = item.putString("Slot", EquipmentSlot.CHEST.name());
                 equipmentList.add(item);
             }
         }
         if (random.nextFloat() <= entity.getEquipment().getHelmetDropChance()) {
             ItemStack itemStack = entity.getEquipment().getHelmet();
             if (itemStack != null && itemStack.getType() != Material.AIR) {
-                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
-                item.getCompoundData().put("Slot", new TagString(EquipmentSlot.HEAD.name()));
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(itemStack);
+                item = item.putString("Slot", EquipmentSlot.HEAD.name());
                 equipmentList.add(item);
             }
         }
         if (random.nextFloat() <= entity.getEquipment().getLeggingsDropChance()) {
             ItemStack itemStack = entity.getEquipment().getLeggings();
             if (itemStack != null && itemStack.getType() != Material.AIR) {
-                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
-                item.getCompoundData().put("Slot", new TagString(EquipmentSlot.LEGS.name()));
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(itemStack);
+                item = item.putString("Slot", EquipmentSlot.LEGS.name());
                 equipmentList.add(item);
             }
         }
         if (random.nextFloat() <= entity.getEquipment().getBootsDropChance()) {
             ItemStack itemStack = entity.getEquipment().getBoots();
             if (itemStack != null && itemStack.getType() != Material.AIR) {
-                TagCompound item = MyPetApi.getPlatformHelper().itemStackToCompund(itemStack);
-                item.getCompoundData().put("Slot", new TagString(EquipmentSlot.FEET.name()));
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(itemStack);
+                item = item.putString("Slot", EquipmentSlot.FEET.name());
                 equipmentList.add(item);
             }
         }
-        properties.getCompoundData().put("Equipment", new TagList(equipmentList));
+        builder.put("Equipment", ListBinaryTag.from(equipmentList));
     }
 
-    public void convertAgable(Ageable ageable, TagCompound properties) {
-        properties.getCompoundData().put("Baby", new TagByte(!ageable.isAdult()));
+    public void convertAgable(Ageable ageable, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Baby", !ageable.isAdult());
     }
 
-    public void convertEnderman(Enderman enderman, TagCompound properties) {
+    public void convertEnderman(Enderman enderman, CompoundBinaryTag.Builder builder) {
         if (enderman.getCarriedBlock() != null) {
             ItemStack block = enderman.getCarriedMaterial().toItemStack(1);
-            properties.getCompoundData().put("Block", MyPetApi.getPlatformHelper().itemStackToCompund(block));
+            builder.put("Block", MyPetApi.getPlatformHelper().itemStackToCompound(block));
         }
     }
 
-    public void convertZombieVillager(ZombieVillager zombie, TagCompound properties) {
-        properties.getCompoundData().put("Profession", new TagInt(zombie.getVillagerProfession().ordinal()));
+    public void convertZombieVillager(ZombieVillager zombie, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Profession", zombie.getVillagerProfession().ordinal());
 
-        TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(zombie);
+        CompoundBinaryTag villagerTag = MyPetApi.getPlatformHelper().entityToTag(zombie);
         Set<String> allowedTags = Sets.newHashSet("VillagerData");
-        Set<String> keys = new HashSet<>(villagerTag.getCompoundData().keySet());
-        for (String key : keys) {
+
+        // Build a new filtered compound with only allowed tags
+        CompoundBinaryTag.Builder filteredBuilder = CompoundBinaryTag.builder();
+        for (String key : villagerTag.keySet()) {
             if (allowedTags.contains(key)) {
-                continue;
+                filteredBuilder.put(key, villagerTag.get(key));
             }
-            villagerTag.remove(key);
         }
-        properties.getCompoundData().put("VillagerData", villagerTag);
+        builder.put("VillagerData", filteredBuilder.build());
     }
 
-    public void convertZombie(Zombie zombie, TagCompound properties) {
-        properties.getCompoundData().put("Baby", new TagByte(zombie.isBaby()));
+    public void convertZombie(Zombie zombie, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Baby", zombie.isBaby());
     }
 
-    public void convertCreeper(Creeper creeper, TagCompound properties) {
-        properties.getCompoundData().put("Powered", new TagByte(creeper.isPowered()));
+    public void convertCreeper(Creeper creeper, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Powered", creeper.isPowered());
     }
 
-    public void convertHorse(Horse horse, TagCompound properties) {
+    public void convertHorse(Horse horse, CompoundBinaryTag.Builder builder) {
         int style = horse.getStyle().ordinal();
         int color = horse.getColor().ordinal();
         int variant = color & 255 | style << 8;
-        properties.getCompoundData().put("Variant", new TagInt(variant));
+        builder.putInt("Variant", variant);
 
         // Write equipment using unified Equipment list format
-        List<TagCompound> equipmentList = new ArrayList<>();
+        List<CompoundBinaryTag> equipmentList = new ArrayList<>();
         if (horse.getInventory().getArmor() != null && horse.getInventory().getArmor().getType() != Material.AIR) {
-            TagCompound armor = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getArmor());
-            armor.getCompoundData().put("Slot", new TagString("BODY"));
+            CompoundBinaryTag armor = MyPetApi.getPlatformHelper().itemStackToCompound(horse.getInventory().getArmor());
+            armor = armor.putString("Slot", "BODY");
             equipmentList.add(armor);
         }
         if (horse.getInventory().getSaddle() != null && horse.getInventory().getSaddle().getType() != Material.AIR) {
-            TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getSaddle());
-            saddle.getCompoundData().put("Slot", new TagString("SADDLE"));
+            CompoundBinaryTag saddle = MyPetApi.getPlatformHelper().itemStackToCompound(horse.getInventory().getSaddle());
+            saddle = saddle.putString("Slot", "SADDLE");
             equipmentList.add(saddle);
         }
         if (!equipmentList.isEmpty()) {
-            properties.getCompoundData().put("Equipment", new TagList(equipmentList));
+            builder.put("Equipment", ListBinaryTag.from(equipmentList));
         }
 
         if (horse.isCarryingChest()) {
@@ -475,27 +485,27 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         }
     }
 
-    public void convertSaddledHorse(AbstractHorse horse, TagCompound properties) {
+    public void convertSaddledHorse(AbstractHorse horse, CompoundBinaryTag.Builder builder) {
         // Write equipment using unified Equipment list format
         if (horse.getInventory().getSaddle() != null && horse.getInventory().getSaddle().getType() != Material.AIR) {
-            List<TagCompound> equipmentList = new ArrayList<>();
-            TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getSaddle());
-            saddle.getCompoundData().put("Slot", new TagString("SADDLE"));
+            List<CompoundBinaryTag> equipmentList = new ArrayList<>();
+            CompoundBinaryTag saddle = MyPetApi.getPlatformHelper().itemStackToCompound(horse.getInventory().getSaddle());
+            saddle = saddle.putString("Slot", "SADDLE");
             equipmentList.add(saddle);
-            properties.getCompoundData().put("Equipment", new TagList(equipmentList));
+            builder.put("Equipment", ListBinaryTag.from(equipmentList));
         }
     }
 
-    public void convertChestedHorse(ChestedHorse horse, TagCompound properties) {
-        properties.getCompoundData().put("Chest", new TagByte(horse.isCarryingChest()));
+    public void convertChestedHorse(ChestedHorse horse, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Chest", horse.isCarryingChest());
 
         // Write saddle using unified Equipment list format
         if (horse.getInventory().getSaddle() != null && horse.getInventory().getSaddle().getType() != Material.AIR) {
-            List<TagCompound> equipmentList = new ArrayList<>();
-            TagCompound saddle = MyPetApi.getPlatformHelper().itemStackToCompund(horse.getInventory().getSaddle());
-            saddle.getCompoundData().put("Slot", new TagString("SADDLE"));
+            List<CompoundBinaryTag> equipmentList = new ArrayList<>();
+            CompoundBinaryTag saddle = MyPetApi.getPlatformHelper().itemStackToCompound(horse.getInventory().getSaddle());
+            saddle = saddle.putString("Slot", "SADDLE");
             equipmentList.add(saddle);
-            properties.getCompoundData().put("Equipment", new TagList(equipmentList));
+            builder.put("Equipment", ListBinaryTag.from(equipmentList));
         }
 
         if (horse.isCarryingChest()) {
@@ -509,23 +519,23 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         }
     }
 
-    public void convertSlime(Slime slime, TagCompound properties) {
-        properties.getCompoundData().put("Size", new TagInt(slime.getSize()));
+    public void convertSlime(Slime slime, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Size", slime.getSize());
     }
 
-    public void convertPig(Pig pig, TagCompound properties) {
-        properties.getCompoundData().put("Saddle", new TagByte(pig.hasSaddle()));
+    public void convertPig(Pig pig, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Saddle", pig.hasSaddle());
     }
 
-    public void convertVillager(Villager villager, TagCompound properties) {
+    public void convertVillager(Villager villager, CompoundBinaryTag.Builder builder) {
         int profession = villager.getProfession().ordinal();
-        properties.getCompoundData().put("Profession", new TagInt(profession));
+        builder.putInt("Profession", profession);
         int type = villager.getVillagerType().ordinal();
-        properties.getCompoundData().put("VillagerType", new TagInt(type));
+        builder.putInt("VillagerType", type);
         int level = villager.getVillagerLevel();
-        properties.getCompoundData().put("VillagerLevel", new TagInt(level));
+        builder.putInt("VillagerLevel", level);
 
-        TagCompound villagerTag = MyPetApi.getPlatformHelper().entityToTag(villager);
+        CompoundBinaryTag villagerTag = MyPetApi.getPlatformHelper().entityToTag(villager);
         Set<String> allowedTags = Sets.newHashSet(
                 "RestocksToday",
                 "FoodLevel",
@@ -535,73 +545,75 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 "Inventory",
                 "Xp"
         );
-        Set<String> keys = new HashSet<>(villagerTag.getCompoundData().keySet());
-        for (String key : keys) {
+
+        // Build a new filtered compound with only allowed tags
+        CompoundBinaryTag.Builder filteredBuilder = CompoundBinaryTag.builder();
+        for (String key : villagerTag.keySet()) {
             if (allowedTags.contains(key)) {
-                continue;
+                filteredBuilder.put(key, villagerTag.get(key));
             }
-            villagerTag.remove(key);
         }
-        properties.getCompoundData().put("OriginalData", villagerTag);
+        builder.put("OriginalData", filteredBuilder.build());
     }
 
-    public void convertWanderingTrader(WanderingTrader wanderingTrader, TagCompound properties) {
-        TagCompound traderTag = MyPetApi.getPlatformHelper().entityToTag(wanderingTrader);
+    public void convertWanderingTrader(WanderingTrader wanderingTrader, CompoundBinaryTag.Builder builder) {
+        CompoundBinaryTag traderTag = MyPetApi.getPlatformHelper().entityToTag(wanderingTrader);
         Set<String> allowedTags = Sets.newHashSet("DespawnDelay", "WanderTarget", "Offers", "Inventory");
-        Set<String> keys = new HashSet<>(traderTag.getCompoundData().keySet());
-        for (String key : keys) {
+
+        // Build a new filtered compound with only allowed tags
+        CompoundBinaryTag.Builder filteredBuilder = CompoundBinaryTag.builder();
+        for (String key : traderTag.keySet()) {
             if (allowedTags.contains(key)) {
-                continue;
+                filteredBuilder.put(key, traderTag.get(key));
             }
-            traderTag.remove(key);
         }
-        properties.getCompoundData().put("OriginalData", traderTag);
+        builder.put("OriginalData", filteredBuilder.build());
     }
 
-    public void convertSheep(Sheep sheep, TagCompound properties) {
-        properties.getCompoundData().put("Color", new TagInt(sheep.getColor().getDyeData()));
-        properties.getCompoundData().put("Sheared", new TagByte(sheep.isSheared()));
+    public void convertSheep(Sheep sheep, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Color", sheep.getColor().getDyeData());
+        builder.putBoolean("Sheared", sheep.isSheared());
     }
 
-    public void convertWolf(Wolf wolf, TagCompound properties) {
-        properties.getCompoundData().put("Tamed", new TagByte(wolf.isTamed()));
-        properties.getCompoundData().put("CollarColor", new TagByte(wolf.getCollarColor().ordinal()));
+    public void convertWolf(Wolf wolf, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Tamed", wolf.isTamed());
+        builder.putByte("CollarColor", (byte) wolf.getCollarColor().ordinal());
     }
 
-    public void convertTropicalFish(TropicalFish tropicalFish, TagCompound properties) {
+    public void convertTropicalFish(TropicalFish tropicalFish, CompoundBinaryTag.Builder builder) {
         CraftTropicalFish fish = (CraftTropicalFish) tropicalFish;
-        properties.getCompoundData().put("Variant", new TagInt(fish.getHandle().getVariant()));
+        builder.putInt("Variant", fish.getHandle().getVariant());
     }
 
-    public void convertPufferFish(PufferFish pufferFish, TagCompound properties) {
-        properties.getCompoundData().put("PuffState", new TagInt(Util.clamp(pufferFish.getPuffState(), 0, 2)));
+    public void convertPufferFish(PufferFish pufferFish, CompoundBinaryTag.Builder builder) {
+        builder.putInt("PuffState", Util.clamp(pufferFish.getPuffState(), 0, 2));
     }
 
-    public void convertPhantom(Phantom phantom, TagCompound properties) {
-        properties.getCompoundData().put("Size", new TagInt(phantom.getSize()));
+    public void convertPhantom(Phantom phantom, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Size", phantom.getSize());
     }
 
-    public void convertCat(Cat cat, TagCompound properties) {
-        properties.getCompoundData().put("CollarColor", new TagInt(cat.getCollarColor().ordinal()));
-        properties.getCompoundData().put("CatType", new TagInt(cat.getCatType().ordinal()));
+    public void convertCat(Cat cat, CompoundBinaryTag.Builder builder) {
+        builder.putInt("CollarColor", cat.getCollarColor().ordinal());
+        builder.putInt("CatType", cat.getCatType().ordinal());
     }
 
-    public void convertMushroomCow(MushroomCow mushroomCow, TagCompound properties) {
-        properties.getCompoundData().put("CowType", new TagInt(mushroomCow.getVariant().ordinal()));
+    public void convertMushroomCow(MushroomCow mushroomCow, CompoundBinaryTag.Builder builder) {
+        builder.putInt("CowType", mushroomCow.getVariant().ordinal());
     }
 
-    public void convertFox(Fox fox, TagCompound properties) {
-        properties.getCompoundData().put("FoxType", new TagInt(fox.getFoxType().ordinal()));
+    public void convertFox(Fox fox, CompoundBinaryTag.Builder builder) {
+        builder.putInt("FoxType", fox.getFoxType().ordinal());
     }
 
-    public void convertPanda(Panda panda, TagCompound properties) {
-        properties.getCompoundData().put("MainGene", new TagInt(panda.getMainGene().ordinal()));
-        properties.getCompoundData().put("HiddenGene", new TagInt(panda.getHiddenGene().ordinal()));
+    public void convertPanda(Panda panda, CompoundBinaryTag.Builder builder) {
+        builder.putInt("MainGene", panda.getMainGene().ordinal());
+        builder.putInt("HiddenGene", panda.getHiddenGene().ordinal());
     }
 
-    public void convertBee(Bee bee, TagCompound properties) {
-        properties.getCompoundData().put("Angry", new TagByte(bee.getAnger() > 1));
-        properties.getCompoundData().put("HasStung", new TagByte(bee.hasStung()));
-        properties.getCompoundData().put("HasNectar", new TagByte(bee.hasNectar()));
+    public void convertBee(Bee bee, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Angry", bee.getAnger() > 1);
+        builder.putBoolean("HasStung", bee.hasStung());
+        builder.putBoolean("HasNectar", bee.hasNectar());
     }
 }

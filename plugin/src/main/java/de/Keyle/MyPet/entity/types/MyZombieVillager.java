@@ -23,9 +23,8 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.types.MyVillager;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 @Getter
 public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombieVillager {
@@ -39,25 +38,25 @@ public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Profession", new TagInt(getProfession()));
-        info.getCompoundData().put("VillagerType", new TagInt(getType().ordinal()));
-        info.getCompoundData().put("TradingLevel", new TagInt(getTradingLevel()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putInt("Profession", getProfession());
+        info = info.putInt("VillagerType", getType().ordinal());
+        info = info.putInt("TradingLevel", getTradingLevel());
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("Profession")) {
-            setProfession(info.getAs("Profession", TagInt.class).getIntData());
+        if (info.keySet().contains("Profession")) {
+            setProfession(info.getInt("Profession"));
         }
-        if (info.containsKey("VillagerType")) {
-            setType(MyVillager.Type.values()[info.getAs("VillagerType", TagInt.class).getIntData()]);
+        if (info.keySet().contains("VillagerType")) {
+            setType(MyVillager.Type.values()[info.getInt("VillagerType")]);
         }
-        if (info.containsKey("TradingLevel")) {
-            setTradingLevel(info.getAs("TradingLevel", TagInt.class).getIntData());
+        if (info.keySet().contains("TradingLevel")) {
+            setTradingLevel(info.getInt("TradingLevel"));
         }
     }
 

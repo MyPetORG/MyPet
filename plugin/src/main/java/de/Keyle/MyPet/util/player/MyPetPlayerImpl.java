@@ -36,7 +36,8 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
-import de.keyle.knbt.*;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.AnimalTamer;
@@ -64,7 +65,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     protected BiMap<String, UUID> petWorldUUID = HashBiMap.create();
     protected BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
-    protected TagCompound extendedInfo = new TagCompound();
+    protected CompoundBinaryTag extendedInfo = CompoundBinaryTag.empty();
     Map<Component, Long> sentMessages = new HashMap<>();
 
     private volatile DonateCheck.DonationRank rank = DonateCheck.DonationRank.None;
@@ -105,7 +106,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             return true;
         } else if (captureHelperMode) {
             return true;
-        } else if (!extendedInfo.getCompoundData().isEmpty()) {
+        } else if (!extendedInfo.keySet().isEmpty()) {
             return true;
         } else if (!petWorldUUID.isEmpty()) {
             return true;
@@ -211,23 +212,23 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return petWorldUUID.containsKey(worldGroup.getName());
     }
 
-    public void addExtendedInfo(String key, TagBase tag) {
-        extendedInfo.getCompoundData().put(key, tag);
+    public void addExtendedInfo(String key, BinaryTag tag) {
+        extendedInfo = extendedInfo.put(key, tag);
     }
 
-    public Optional<TagBase> getExtendedInfo(String key) {
-        if (extendedInfo.getCompoundData().containsKey(key)) {
-            return Optional.ofNullable(extendedInfo.getCompoundData().get(key));
+    public Optional<BinaryTag> getExtendedInfo(String key) {
+        if (extendedInfo.keySet().contains(key)) {
+            return Optional.ofNullable(extendedInfo.get(key));
         }
         return Optional.empty();
     }
 
-    public TagCompound getExtendedInfo() {
+    public CompoundBinaryTag getExtendedInfo() {
         return extendedInfo;
     }
 
-    public void setExtendedInfo(TagCompound compound) {
-        if (extendedInfo.getCompoundData().isEmpty()) {
+    public void setExtendedInfo(CompoundBinaryTag compound) {
+        if (extendedInfo.keySet().isEmpty()) {
             extendedInfo = compound;
         }
     }
@@ -328,97 +329,101 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     }
 
     @Override
-    public TagCompound save() {
-        TagCompound playerNBT = new TagCompound();
+    public CompoundBinaryTag save() {
+        CompoundBinaryTag settingsTag = CompoundBinaryTag.builder()
+                .putBoolean("AutoRespawn", hasAutoRespawnEnabled())
+                .putInt("AutoRespawnMin", getAutoRespawnMin())
+                .putBoolean("CaptureMode", isCaptureHelperActive())
+                .putBoolean("HealthBar", isHealthBarActive())
+                .putFloat("PetLivingSoundVolume", getPetLivingSoundVolume())
+                .build();
 
-        TagCompound settingsTag = new TagCompound();
-        settingsTag.getCompoundData().put("AutoRespawn", new TagByte(hasAutoRespawnEnabled()));
-        settingsTag.getCompoundData().put("AutoRespawnMin", new TagInt(getAutoRespawnMin()));
-        settingsTag.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
-        settingsTag.getCompoundData().put("HealthBar", new TagByte(isHealthBarActive()));
-        settingsTag.getCompoundData().put("PetLivingSoundVolume", new TagFloat(getPetLivingSoundVolume()));
-        playerNBT.getCompoundData().put("Settings", settingsTag);
-
-        playerNBT.getCompoundData().put("ExtendedInfo", getExtendedInfo());
-
-        TagCompound playerUUIDTag = new TagCompound();
+        CompoundBinaryTag.Builder uuidBuilder = CompoundBinaryTag.builder();
         if (mojangUUID != null) {
-            playerUUIDTag.getCompoundData().put("Mojang-UUID", new TagString(mojangUUID.toString()));
+            uuidBuilder.putString("Mojang-UUID", mojangUUID.toString());
         }
-        playerUUIDTag.getCompoundData().put("Name", new TagString(getName()));
-        playerUUIDTag.getCompoundData().put("Internal-UUID", new TagString(internalUUID.toString()));
-        playerNBT.getCompoundData().put("UUID", playerUUIDTag);
+        uuidBuilder.putString("Name", getName());
+        uuidBuilder.putString("Internal-UUID", internalUUID.toString());
 
-        TagCompound multiWorldCompound = new TagCompound();
+        CompoundBinaryTag.Builder multiWorldBuilder = CompoundBinaryTag.builder();
         for (String worldGroupName : petWorldUUID.keySet()) {
-            multiWorldCompound.getCompoundData().put(worldGroupName, new TagString(petWorldUUID.get(worldGroupName).toString()));
+            multiWorldBuilder.putString(worldGroupName, petWorldUUID.get(worldGroupName).toString());
         }
-        playerNBT.getCompoundData().put("MultiWorld", multiWorldCompound);
 
-        return playerNBT;
+        return CompoundBinaryTag.builder()
+                .put("Settings", settingsTag)
+                .put("ExtendedInfo", getExtendedInfo())
+                .put("UUID", uuidBuilder.build())
+                .put("MultiWorld", multiWorldBuilder.build())
+                .build();
     }
 
     @Override
-    public void load(TagCompound myplayerNBT) {
-        if (myplayerNBT.containsKeyAs("UUID", TagCompound.class)) {
-            TagCompound uuidTag = myplayerNBT.getAs("UUID", TagCompound.class);
+    public void load(CompoundBinaryTag myplayerNBT) {
+        if (myplayerNBT.keySet().contains("UUID")) {
+            CompoundBinaryTag uuidTag = myplayerNBT.getCompound("UUID");
 
-            if (uuidTag.getCompoundData().containsKey("Mojang-UUID")) {
-                mojangUUID = UUID.fromString(uuidTag.getAs("Mojang-UUID", TagString.class).getStringData());
+            if (uuidTag.keySet().contains("Mojang-UUID")) {
+                mojangUUID = UUID.fromString(uuidTag.getString("Mojang-UUID"));
             }
-            if (uuidTag.getCompoundData().containsKey("Name") && lastKnownPlayerName == null) {
-                lastKnownPlayerName = uuidTag.getAs("Name", TagString.class).getStringData();
+            if (uuidTag.keySet().contains("Name") && lastKnownPlayerName == null) {
+                lastKnownPlayerName = uuidTag.getString("Name");
             }
         }
-        if (myplayerNBT.getCompoundData().containsKey("Settings")) {
-            TagCompound settingsTag = myplayerNBT.getAs("Settings", TagCompound.class);
+        if (myplayerNBT.keySet().contains("Settings")) {
+            CompoundBinaryTag settingsTag = myplayerNBT.getCompound("Settings");
 
-            if (settingsTag.getCompoundData().containsKey("AutoRespawn")) {
-                setAutoRespawnEnabled(settingsTag.getAs("AutoRespawn", TagByte.class).getBooleanData());
+            if (settingsTag.keySet().contains("AutoRespawn")) {
+                setAutoRespawnEnabled(settingsTag.getBoolean("AutoRespawn"));
             }
-            if (settingsTag.getCompoundData().containsKey("AutoRespawnMin")) {
-                setAutoRespawnMin(settingsTag.getAs("AutoRespawnMin", TagInt.class).getIntData());
+            if (settingsTag.keySet().contains("AutoRespawnMin")) {
+                setAutoRespawnMin(settingsTag.getInt("AutoRespawnMin"));
             }
-            if (settingsTag.containsKeyAs("CaptureMode", TagByte.class)) {
-                setCaptureHelperActive(settingsTag.getAs("CaptureMode", TagByte.class).getBooleanData());
+            if (settingsTag.keySet().contains("CaptureMode")) {
+                setCaptureHelperActive(settingsTag.getBoolean("CaptureMode"));
             }
-            if (settingsTag.getCompoundData().containsKey("HealthBar")) {
-                setHealthBarActive(settingsTag.getAs("HealthBar", TagByte.class).getBooleanData());
+            if (settingsTag.keySet().contains("HealthBar")) {
+                setHealthBarActive(settingsTag.getBoolean("HealthBar"));
             }
-            if (settingsTag.getCompoundData().containsKey("PetLivingSoundVolume")) {
-                setPetLivingSoundVolume(settingsTag.getAs("PetLivingSoundVolume", TagFloat.class).getFloatData());
+            if (settingsTag.keySet().contains("PetLivingSoundVolume")) {
+                setPetLivingSoundVolume(settingsTag.getFloat("PetLivingSoundVolume"));
             }
         } else {
-            if (myplayerNBT.getCompoundData().containsKey("Name") && lastKnownPlayerName == null) {
-                lastKnownPlayerName = myplayerNBT.getAs("Name", TagString.class).getStringData();
+            // Legacy fallback for old data format
+            if (myplayerNBT.keySet().contains("Name") && lastKnownPlayerName == null) {
+                lastKnownPlayerName = myplayerNBT.getString("Name");
             }
-            if (myplayerNBT.getCompoundData().containsKey("AutoRespawn")) {
-                setAutoRespawnEnabled(myplayerNBT.getAs("AutoRespawn", TagByte.class).getBooleanData());
+            if (myplayerNBT.keySet().contains("AutoRespawn")) {
+                setAutoRespawnEnabled(myplayerNBT.getBoolean("AutoRespawn"));
             }
-            if (myplayerNBT.getCompoundData().containsKey("AutoRespawnMin")) {
-                setAutoRespawnMin(myplayerNBT.getAs("AutoRespawnMin", TagInt.class).getIntData());
+            if (myplayerNBT.keySet().contains("AutoRespawnMin")) {
+                setAutoRespawnMin(myplayerNBT.getInt("AutoRespawnMin"));
             }
-            if (myplayerNBT.containsKeyAs("CaptureMode", TagString.class)) {
-                if (!myplayerNBT.getAs("CaptureMode", TagString.class).getStringData().equals("Deactivated")) {
-                    setCaptureHelperActive(true);
+            if (myplayerNBT.keySet().contains("CaptureMode")) {
+                // Legacy: CaptureMode could be string "Deactivated" or boolean
+                BinaryTag captureModeTag = myplayerNBT.get("CaptureMode");
+                if (captureModeTag instanceof net.kyori.adventure.nbt.StringBinaryTag stringTag) {
+                    if (!stringTag.value().equals("Deactivated")) {
+                        setCaptureHelperActive(true);
+                    }
+                } else {
+                    setCaptureHelperActive(myplayerNBT.getBoolean("CaptureMode"));
                 }
-            } else if (myplayerNBT.containsKeyAs("CaptureMode", TagByte.class)) {
-                setCaptureHelperActive(myplayerNBT.getAs("CaptureMode", TagByte.class).getBooleanData());
             }
-            if (myplayerNBT.getCompoundData().containsKey("HealthBar")) {
-                setHealthBarActive(myplayerNBT.getAs("HealthBar", TagByte.class).getBooleanData());
+            if (myplayerNBT.keySet().contains("HealthBar")) {
+                setHealthBarActive(myplayerNBT.getBoolean("HealthBar"));
             }
-            if (myplayerNBT.getCompoundData().containsKey("PetLivingSoundVolume")) {
-                setPetLivingSoundVolume(myplayerNBT.getAs("PetLivingSoundVolume", TagFloat.class).getFloatData());
+            if (myplayerNBT.keySet().contains("PetLivingSoundVolume")) {
+                setPetLivingSoundVolume(myplayerNBT.getFloat("PetLivingSoundVolume"));
             }
         }
-        if (myplayerNBT.getCompoundData().containsKey("ExtendedInfo")) {
-            setExtendedInfo(myplayerNBT.getAs("ExtendedInfo", TagCompound.class));
+        if (myplayerNBT.keySet().contains("ExtendedInfo")) {
+            setExtendedInfo(myplayerNBT.getCompound("ExtendedInfo"));
         }
-        if (myplayerNBT.getCompoundData().containsKey("MultiWorld")) {
-            TagCompound worldGroups = myplayerNBT.getAs("MultiWorld", TagCompound.class);
-            for (String worldGroupName : worldGroups.getCompoundData().keySet()) {
-                String petUUID = worldGroups.getAs(worldGroupName, TagString.class).getStringData();
+        if (myplayerNBT.keySet().contains("MultiWorld")) {
+            CompoundBinaryTag worldGroups = myplayerNBT.getCompound("MultiWorld");
+            for (String worldGroupName : worldGroups.keySet()) {
+                String petUUID = worldGroups.getString(worldGroupName);
                 setMyPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
             }
         }

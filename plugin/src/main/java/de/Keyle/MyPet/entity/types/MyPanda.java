@@ -22,9 +22,8 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Panda;
 
 @Getter
@@ -54,21 +53,21 @@ public class MyPanda extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("MainGene", new TagInt(getMainGene().ordinal()));
-        info.getCompoundData().put("HiddenGene", new TagInt(getHiddenGene().ordinal()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putInt("MainGene", getMainGene().ordinal());
+        info = info.putInt("HiddenGene", getHiddenGene().ordinal());
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("MainGene")) {
-            setMainGene(Panda.Gene.values()[info.getAs("MainGene", TagInt.class).getIntData()]);
+        if (info.keySet().contains("MainGene")) {
+            setMainGene(Panda.Gene.values()[info.getInt("MainGene")]);
         }
-        if (info.containsKey("HiddenGene")) {
-            setHiddenGene(Panda.Gene.values()[info.getAs("HiddenGene", TagInt.class).getIntData()]);
+        if (info.keySet().contains("HiddenGene")) {
+            setHiddenGene(Panda.Gene.values()[info.getInt("HiddenGene")]);
         }
     }
 }

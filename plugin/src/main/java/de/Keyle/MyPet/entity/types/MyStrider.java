@@ -23,8 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -39,30 +38,32 @@ public class MyStrider extends MyPet implements de.Keyle.MyPet.api.entity.types.
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
         if (hasSaddle()) {
-            info.getCompoundData().put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompund(getSaddle()));
+            info = info.put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompound(getSaddle()));
         }
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKeyAs("Saddle", TagByte.class)) {
-            boolean saddle = info.getAs("Saddle", TagByte.class).getBooleanData();
-            if (saddle) {
-                ItemStack item = new ItemStack(Material.SADDLE);
-                setSaddle(item);
-            }
-        } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
-            TagCompound itemTag = info.get("Saddle");
-            try {
-                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-                setSaddle(item);
-            } catch (Exception e) {
-                MyPetApi.getLogger().warning("Could not load Saddle item from pet data!");
+        if (info.keySet().contains("Saddle")) {
+            if (info.get("Saddle") instanceof net.kyori.adventure.nbt.ByteBinaryTag) {
+                boolean saddle = info.getBoolean("Saddle");
+                if (saddle) {
+                    ItemStack item = new ItemStack(Material.SADDLE);
+                    setSaddle(item);
+                }
+            } else if (info.get("Saddle") instanceof CompoundBinaryTag) {
+                CompoundBinaryTag itemTag = info.getCompound("Saddle");
+                try {
+                    ItemStack item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
+                    setSaddle(item);
+                } catch (Exception e) {
+                    MyPetApi.getLogger().warning("Could not load Saddle item from pet data!");
+                }
             }
         }
     }

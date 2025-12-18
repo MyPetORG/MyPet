@@ -25,8 +25,8 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.*;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -60,21 +60,20 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
         if (block != null && block.getType() != AIR) {
-            info.getCompoundData().put("Block", MyPetApi.getPlatformHelper().itemStackToCompund(block));
+            info = info.put("Block", MyPetApi.getPlatformHelper().itemStackToCompound(block));
         }
-        info.getCompoundData().put("Screaming", new TagByte(permaScreaming));
-        return info;
+        return info.putBoolean("Screaming", permaScreaming);
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("BlockName")) {
+        if (info.keySet().contains("BlockName")) {
             ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-            String id = info.getAs("BlockName", TagString.class).getStringData();
+            String id = info.getString("BlockName");
             MaterialHolder materialHolder = itemDatabase.getByID(id);
             if (materialHolder != null) {
                 Material material = materialHolder.getMaterial();
@@ -82,18 +81,11 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
                     setBlock(new ItemStack(material, 1));
                 }
             }
-        } else if (info.containsKey("BlockID")) {
-            int id;
+        } else if (info.keySet().contains("BlockID")) {
+            int id = info.getInt("BlockID");
             byte data = 0;
-            if (info.containsKeyAs("BlockID", TagShort.class)) {
-                id = info.getAs("BlockID", TagShort.class).getShortData();
-            } else {
-                id = info.getAs("BlockID", TagInt.class).getIntData();
-            }
-            if (info.containsKeyAs("BlockData", TagShort.class)) {
-                data = (byte) info.getAs("BlockData", TagShort.class).getShortData();
-            } else if (info.containsKeyAs("BlockData", TagInt.class)) {
-                data = (byte) info.getAs("BlockData", TagInt.class).getIntData();
+            if (info.keySet().contains("BlockData")) {
+                data = (byte) info.getInt("BlockData");
             }
 
             ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
@@ -102,17 +94,17 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
                 Material material = materialHolder.getMaterial();
                 setBlock(new ItemStack(material, 1));
             }
-        } else if (info.containsKey("Block")) {
-            TagCompound itemStackCompund = info.getAs("Block", TagCompound.class);
+        } else if (info.keySet().contains("Block")) {
+            CompoundBinaryTag itemStackCompund = info.getCompound("Block");
             try {
-                ItemStack block = MyPetApi.getPlatformHelper().compundToItemStack(itemStackCompund);
+                ItemStack block = MyPetApi.getPlatformHelper().compoundToItemStack(itemStackCompund);
                 setBlock(block);
             } catch (Exception e) {
                 MyPetApi.getLogger().warning("Could not load Block item from pet data!");
             }
         }
-        if (info.containsKey("Screaming")) {
-            setPermaScreaming(info.getAs("Screaming", TagByte.class).getBooleanData());
+        if (info.keySet().contains("Screaming")) {
+            setPermaScreaming(info.getBoolean("Screaming"));
         }
     }
 

@@ -22,8 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import lombok.Getter;
 
 @Getter
@@ -36,17 +35,17 @@ public class MySlime extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Size", new TagInt(getSize()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putInt("Size", getSize());
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("Size")) {
-            setSize(info.getAs("Size", TagInt.class).getIntData());
+        if (info.keySet().contains("Size")) {
+            setSize(info.getInt("Size"));
         }
     }
 

@@ -22,9 +22,8 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Ocelot.Type;
 
 @Getter
@@ -44,17 +43,16 @@ public class MyOcelot extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("CatType", new TagInt(getCatType().getId()));
-        return info;
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        return info.putInt("CatType", getCatType().getId());
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("CatType")) {
-            setCatType(Type.getType(info.getAs("CatType", TagInt.class).getIntData()));
+        if (info.keySet().contains("CatType")) {
+            setCatType(Type.getType(info.getInt("CatType")));
         }
     }
 }

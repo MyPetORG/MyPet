@@ -22,11 +22,11 @@ package de.Keyle.MyPet.api.util.inventory;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagList;
-import de.keyle.knbt.TagString;
 import lombok.Getter;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.BinaryTagTypes;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -360,34 +360,33 @@ public class CustomInventory implements InventoryHolder {
     }
 
     /**
-     * Serializes the inventory contents into the provided K-NBT compound.
+     * Serializes the inventory contents into an Adventure NBT compound.
      * <p>
      * Each non-empty slot is stored as a Base64-encoded ItemStack using Paper's
      * native {@code serializeAsBytes()} method under the key "PaperItem".
      *
-     * @param compound destination compound to write into (must not be null)
-     * @return the same compound instance for chaining
+     * @param compound destination compound to merge into (must not be null)
+     * @return a new compound with the "Items" list added
      */
-    public TagCompound save(TagCompound compound) {
+    public CompoundBinaryTag save(CompoundBinaryTag compound) {
         createInventoryIfNeeded();
-        List<TagCompound> itemList = new ArrayList<>();
+        List<BinaryTag> itemList = new ArrayList<>();
         if (this.bukkitInventory == null) {
-            compound.getCompoundData().put("Items", new TagList(itemList));
-            return compound;
+            return compound.put("Items", ListBinaryTag.from(itemList));
         }
         for (int i = 0; i < this.bukkitInventory.getSize(); i++) {
             ItemStack itemStack = this.bukkitInventory.getItem(i);
             if (itemStack != null && !itemStack.getType().isAir()) {
-                TagCompound item = new TagCompound();
                 byte[] serialized = itemStack.serializeAsBytes();
                 String b64 = Base64.getEncoder().encodeToString(serialized);
-                item.getCompoundData().put("Slot", new TagByte((byte) i));
-                item.getCompoundData().put("PaperItem", new TagString(b64));
+                CompoundBinaryTag item = CompoundBinaryTag.builder()
+                        .putByte("Slot", (byte) i)
+                        .putString("PaperItem", b64)
+                        .build();
                 itemList.add(item);
             }
         }
-        compound.getCompoundData().put("Items", new TagList(itemList));
-        return compound;
+        return compound.put("Items", ListBinaryTag.from(itemList));
     }
 
     /**
@@ -399,26 +398,25 @@ public class CustomInventory implements InventoryHolder {
      *
      * @param nbtTagCompound source compound containing an "Items" list
      */
-    public void load(TagCompound nbtTagCompound) {
+    public void load(CompoundBinaryTag nbtTagCompound) {
         createInventoryIfNeeded();
-        TagList items = nbtTagCompound.getAs("Items", TagList.class);
-        if (items == null) return;
+        ListBinaryTag items = nbtTagCompound.getList("Items", BinaryTagTypes.COMPOUND);
+        if (items.size() == 0) return;
         if (this.bukkitInventory == null) return;
 
         for (int i = 0; i < items.size(); i++) {
-            TagCompound itemCompound = items.getTagAs(i, TagCompound.class);
-            TagByte slotTag = itemCompound.getAs("Slot", TagByte.class);
-            if (slotTag == null) {
+            CompoundBinaryTag itemCompound = items.getCompound(i);
+            if (!itemCompound.keySet().contains("Slot")) {
                 MyPetApi.getLogger().warning("Skipped item in pet inventory: missing Slot tag");
                 continue;
             }
-            int slot = slotTag.getByteData();
+            int slot = itemCompound.getByte("Slot");
 
             // Current format: Paper's serializeAsBytes()
-            TagString paperTag = itemCompound.getAs("PaperItem", TagString.class);
-            if (paperTag != null) {
+            String paperData = itemCompound.getString("PaperItem");
+            if (!paperData.isEmpty()) {
                 try {
-                    byte[] bytes = Base64.getDecoder().decode(paperTag.getStringData());
+                    byte[] bytes = Base64.getDecoder().decode(paperData);
                     ItemStack itemStack = ItemStack.deserializeBytes(bytes);
                     if (slot >= 0 && slot < this.size) {
                         this.bukkitInventory.setItem(slot, itemStack);
@@ -430,7 +428,7 @@ public class CustomInventory implements InventoryHolder {
             }
 
             // Old incompatible formats - log warning and skip
-            if (itemCompound.containsKey("BukkitItem") || itemCompound.containsKey("id")) {
+            if (itemCompound.keySet().contains("BukkitItem") || itemCompound.keySet().contains("id")) {
                 MyPetApi.getLogger().warning("Removed item in slot " + slot + ": incompatible format from v3.");
                 continue;
             }

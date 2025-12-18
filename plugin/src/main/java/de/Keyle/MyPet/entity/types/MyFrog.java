@@ -22,9 +22,8 @@
 
  import de.Keyle.MyPet.api.player.MyPetPlayer;
  import de.Keyle.MyPet.entity.MyPet;
- import de.keyle.knbt.TagCompound;
- import de.keyle.knbt.TagInt;
  import lombok.Getter;
+ import net.kyori.adventure.nbt.CompoundBinaryTag;
 
  @Getter
  public class MyFrog extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFrog {
@@ -36,17 +35,16 @@
      }
 
      @Override
-     public TagCompound writeExtendedInfo() {
-         TagCompound info = super.writeExtendedInfo();
-         info.getCompoundData().put("FrogType", new TagInt(getFrogVariant()));
-         return info;
+     public CompoundBinaryTag writeExtendedInfo() {
+         CompoundBinaryTag info = super.writeExtendedInfo();
+         return info.putInt("FrogType", getFrogVariant());
      }
 
      @Override
-     public void readExtendedInfo(TagCompound info) {
+     public void readExtendedInfo(CompoundBinaryTag info) {
          super.readExtendedInfo(info);
-         if (info.containsKey("FrogType")) {
-             setFrogVariant(info.getAs("FrogType", TagInt.class).getIntData());
+         if (info.keySet().contains("FrogType")) {
+             setFrogVariant(info.getInt("FrogType"));
          }
      }
 

@@ -22,9 +22,8 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 @Getter
 public class MyRabbit extends MyPet implements de.Keyle.MyPet.api.entity.types.MyRabbit {
@@ -36,17 +35,17 @@ public class MyRabbit extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Variant", new TagByte(variant.getId()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putByte("Variant", variant.getId());
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKeyAs("Variant", TagByte.class)) {
-            setVariant(RabbitType.getTypeByID(info.getAs("Variant", TagByte.class).getByteData()));
+        if (info.keySet().contains("Variant")) {
+            setVariant(RabbitType.getTypeByID(info.getByte("Variant")));
         }
     }
 

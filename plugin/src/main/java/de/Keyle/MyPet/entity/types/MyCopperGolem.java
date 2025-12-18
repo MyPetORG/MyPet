@@ -23,10 +23,8 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagString;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.inventory.ItemStack;
 
 @Getter
@@ -41,33 +39,33 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("OxidationState", new TagString(oxidationState.name()));
-        info.getCompoundData().put("Waxed", new TagByte(waxed ? 1 : 0));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putString("OxidationState", oxidationState.name())
+                   .putBoolean("Waxed", waxed);
         if (hasPoppy()) {
-            info.getCompoundData().put("Poppy", MyPetApi.getPlatformHelper().itemStackToCompund(poppy));
+            info = info.put("Poppy", MyPetApi.getPlatformHelper().itemStackToCompound(poppy));
         }
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("OxidationState")) {
+        if (info.keySet().contains("OxidationState")) {
             try {
-                oxidationState = OxidationState.valueOf(info.getAs("OxidationState", TagString.class).getStringData());
+                oxidationState = OxidationState.valueOf(info.getString("OxidationState"));
             } catch (IllegalArgumentException e) {
                 oxidationState = OxidationState.UNAFFECTED;
             }
         }
-        if (info.containsKey("Waxed")) {
-            waxed = info.getAs("Waxed", TagByte.class).getBooleanData();
+        if (info.keySet().contains("Waxed")) {
+            waxed = info.getBoolean("Waxed");
         }
-        if (info.containsKey("Poppy")) {
-            TagCompound poppyCompound = info.getAs("Poppy", TagCompound.class);
+        if (info.keySet().contains("Poppy")) {
+            CompoundBinaryTag poppyCompound = info.getCompound("Poppy");
             try {
-                poppy = MyPetApi.getPlatformHelper().compundToItemStack(poppyCompound);
+                poppy = MyPetApi.getPlatformHelper().compoundToItemStack(poppyCompound);
             } catch (Exception e) {
                 poppy = null;
             }

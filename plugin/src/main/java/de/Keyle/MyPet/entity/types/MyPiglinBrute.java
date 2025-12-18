@@ -23,9 +23,8 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 @Getter
 public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPiglinBrute {
@@ -37,9 +36,9 @@ public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.ty
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("ShakeImmune", new TagByte(isShakeImmune()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putBoolean("ShakeImmune", isShakeImmune());
         return info;
     }
 
@@ -58,10 +57,10 @@ public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.ty
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("ShakeImmune")) {
-            setShakeImmune(info.getAs("ShakeImmune", TagByte.class).getBooleanData());
+        if (info.keySet().contains("ShakeImmune")) {
+            setShakeImmune(info.getBoolean("ShakeImmune"));
         }
     }
 }

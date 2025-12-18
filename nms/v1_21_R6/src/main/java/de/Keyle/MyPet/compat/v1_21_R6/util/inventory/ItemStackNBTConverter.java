@@ -26,8 +26,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.keyle.knbt.*;
-import de.keyle.knbt.TagType;
+import net.kyori.adventure.nbt.*;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.*;
@@ -42,7 +41,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Compat("v1_21_R6")
 public class ItemStackNBTConverter {
@@ -57,12 +55,12 @@ public class ItemStackNBTConverter {
         EMPTY_ITEM_COMPOUND.putInt("count", 1);
     }
 
-    public static TagCompound itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
+    public static CompoundBinaryTag itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
         return itemStackToCompound(CraftItemStack.asNMSCopy(itemStack));
     }
 
-    public static TagCompound itemStackToCompound(ItemStack itemStack) {
-        return (TagCompound) vanillaCompoundToCompound(itemStackToVanillaCompound(itemStack));
+    public static CompoundBinaryTag itemStackToCompound(ItemStack itemStack) {
+        return (CompoundBinaryTag) vanillaCompoundToCompound(itemStackToVanillaCompound(itemStack));
     }
 
     public static CompoundTag itemStackToVanillaCompound(ItemStack itemStack) {
@@ -78,12 +76,12 @@ public class ItemStackNBTConverter {
         return (out instanceof CompoundTag ct) ? ct : new CompoundTag();
     }
 
-    public static ItemStack compoundToItemStack(TagCompound compound) {
+    public static ItemStack compoundToItemStack(CompoundBinaryTag compound) {
         CompoundTag tagCompound = (CompoundTag) compoundToVanillaCompound(compound);
         return vanillaCompoundToItemStack(tagCompound);
     }
 
-    public static org.bukkit.inventory.ItemStack compoundToBukkitItemStack(TagCompound compound) {
+    public static org.bukkit.inventory.ItemStack compoundToBukkitItemStack(CompoundBinaryTag compound) {
         return CraftItemStack.asBukkitCopy(compoundToItemStack(compound));
     }
 
@@ -236,88 +234,85 @@ public class ItemStackNBTConverter {
         return (CompoundTag) updatedDyn.getValue();
     }
 
-    public static Tag compoundToVanillaCompound(TagBase tag) {
-        switch (TagType.getTypeById(tag.getTagTypeId())) {
-            case Int:
-                return IntTag.valueOf(((TagInt) tag).getIntData());
-            case Short:
-                return ShortTag.valueOf(((TagShort) tag).getShortData());
-            case String:
-                return StringTag.valueOf(((TagString) tag).getStringData());
-            case Byte:
-                return ByteTag.valueOf(((TagByte) tag).getByteData());
-            case Byte_Array:
-                return new ByteArrayTag(((TagByteArray) tag).getByteArrayData());
-            case Double:
-                return DoubleTag.valueOf(((TagDouble) tag).getDoubleData());
-            case Float:
-                return FloatTag.valueOf(((TagFloat) tag).getFloatData());
-            case Int_Array:
-                return new IntArrayTag(((TagIntArray) tag).getIntArrayData());
-            case Long:
-                return LongTag.valueOf(((TagLong) tag).getLongData());
-            case List:
-                TagList TagList = (TagList) tag;
-                ListTag tagList = new ListTag();
-                for (TagBase tagInList : TagList.getReadOnlyList()) {
-                    tagList.add(compoundToVanillaCompound(tagInList));
-                }
-                return tagList;
-            case Compound:
-                TagCompound TagCompound = (TagCompound) tag;
-                CompoundTag tagCompound = new CompoundTag();
-                for (String name : TagCompound.getCompoundData().keySet()) {
-                    tagCompound.put(name, compoundToVanillaCompound(TagCompound.getCompoundData().get(name)));
-                }
-                return tagCompound;
-            case End:
-                return null;
+    public static Tag compoundToVanillaCompound(BinaryTag tag) {
+        if (tag == null) {
+            return null;
         }
-        throw new IllegalArgumentException("Not a valid tag type");
+        if (tag instanceof IntBinaryTag intTag) {
+            return IntTag.valueOf(intTag.value());
+        } else if (tag instanceof ShortBinaryTag shortTag) {
+            return ShortTag.valueOf(shortTag.value());
+        } else if (tag instanceof StringBinaryTag stringTag) {
+            return StringTag.valueOf(stringTag.value());
+        } else if (tag instanceof ByteBinaryTag byteTag) {
+            return ByteTag.valueOf(byteTag.value());
+        } else if (tag instanceof ByteArrayBinaryTag byteArrayTag) {
+            return new ByteArrayTag(byteArrayTag.value());
+        } else if (tag instanceof DoubleBinaryTag doubleTag) {
+            return DoubleTag.valueOf(doubleTag.value());
+        } else if (tag instanceof FloatBinaryTag floatTag) {
+            return FloatTag.valueOf(floatTag.value());
+        } else if (tag instanceof IntArrayBinaryTag intArrayTag) {
+            return new IntArrayTag(intArrayTag.value());
+        } else if (tag instanceof LongBinaryTag longTag) {
+            return LongTag.valueOf(longTag.value());
+        } else if (tag instanceof LongArrayBinaryTag longArrayTag) {
+            return new LongArrayTag(longArrayTag.value());
+        } else if (tag instanceof ListBinaryTag listTag) {
+            ListTag nbtList = new ListTag();
+            for (BinaryTag element : listTag) {
+                nbtList.add(compoundToVanillaCompound(element));
+            }
+            return nbtList;
+        } else if (tag instanceof CompoundBinaryTag compoundTag) {
+            CompoundTag nbtCompound = new CompoundTag();
+            for (String key : compoundTag.keySet()) {
+                nbtCompound.put(key, compoundToVanillaCompound(compoundTag.get(key)));
+            }
+            return nbtCompound;
+        } else if (tag instanceof EndBinaryTag) {
+            return null;
+        }
+        throw new IllegalArgumentException("Not a valid tag type: " + tag.type());
     }
 
-    public static TagBase vanillaCompoundToCompound(Tag vanillaTag) {
-        switch (vanillaTag.getId()) {
-            case 1:
-                return new TagByte(((ByteTag) vanillaTag).byteValue());
-            case 2:
-                return new TagShort(((ShortTag) vanillaTag).shortValue());
-            case 3:
-                return new TagInt(((IntTag) vanillaTag).intValue());
-            case 4:
-                return new TagLong(((LongTag) vanillaTag).longValue());
-            case 5:
-                return new TagFloat(((FloatTag) vanillaTag).floatValue());
-            case 6:
-                return new TagDouble(((DoubleTag) vanillaTag).doubleValue());
-            case 7:
-                return new TagByteArray(((ByteArrayTag) vanillaTag).getAsByteArray());
-            case 8:
-                return new TagString(((StringTag) vanillaTag).value());
-            case 9:
+    public static BinaryTag vanillaCompoundToCompound(Tag vanillaTag) {
+        if (vanillaTag == null) {
+            return null;
+        }
+        return switch (vanillaTag.getId()) {
+            case 1 -> ByteBinaryTag.byteBinaryTag(((ByteTag) vanillaTag).byteValue());
+            case 2 -> ShortBinaryTag.shortBinaryTag(((ShortTag) vanillaTag).shortValue());
+            case 3 -> IntBinaryTag.intBinaryTag(((IntTag) vanillaTag).intValue());
+            case 4 -> LongBinaryTag.longBinaryTag(((LongTag) vanillaTag).longValue());
+            case 5 -> FloatBinaryTag.floatBinaryTag(((FloatTag) vanillaTag).floatValue());
+            case 6 -> DoubleBinaryTag.doubleBinaryTag(((DoubleTag) vanillaTag).doubleValue());
+            case 7 -> ByteArrayBinaryTag.byteArrayBinaryTag(((ByteArrayTag) vanillaTag).getAsByteArray());
+            case 8 -> StringBinaryTag.stringBinaryTag(((StringTag) vanillaTag).value());
+            case 9 -> {
                 ListTag tagList = (ListTag) vanillaTag;
-                List compoundList = new ArrayList();
+                List<BinaryTag> elements = new ArrayList<>();
                 try {
-                    ArrayList list = (ArrayList) TAG_LIST_LIST.get(tagList);
-                    for (Object aList : list) {
-                        compoundList.add(vanillaCompoundToCompound((Tag) aList));
+                    ArrayList<?> list = (ArrayList<?>) TAG_LIST_LIST.get(tagList);
+                    for (Object element : list) {
+                        elements.add(vanillaCompoundToCompound((Tag) element));
                     }
                 } catch (IllegalAccessException e) {
                     ErrorUtil.report(e);
                 }
-
-                return new TagList(compoundList);
-            case 10:
-                TagCompound compound = new TagCompound();
-                CompoundTag tagCompound = ((CompoundTag) vanillaTag);
-                Set<String> keys = tagCompound.keySet();
-                for (String tagName : keys) {
-                    compound.getCompoundData().put(tagName, vanillaCompoundToCompound(tagCompound.get(tagName)));
+                yield ListBinaryTag.from(elements);
+            }
+            case 10 -> {
+                CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
+                CompoundTag tagCompound = (CompoundTag) vanillaTag;
+                for (String tagName : tagCompound.keySet()) {
+                    builder.put(tagName, vanillaCompoundToCompound(tagCompound.get(tagName)));
                 }
-                return compound;
-            case 11:
-                return new TagIntArray(((IntArrayTag) vanillaTag).getAsIntArray());
-        }
-        return null;
+                yield builder.build();
+            }
+            case 11 -> IntArrayBinaryTag.intArrayBinaryTag(((IntArrayTag) vanillaTag).getAsIntArray());
+            case 12 -> LongArrayBinaryTag.longArrayBinaryTag(((LongArrayTag) vanillaTag).getAsLongArray());
+            default -> null;
+        };
     }
 }

@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -62,9 +62,9 @@ public abstract class PlatformHelper {
         return locale;
     }
 
-    public abstract TagCompound entityToTag(Entity entity);
+    public abstract CompoundBinaryTag entityToTag(Entity entity);
 
-    public abstract void applyTagToEntity(TagCompound tag, Entity entity);
+    public abstract void applyTagToEntity(CompoundBinaryTag tag, Entity entity);
 
     public String getCommandSenderLanguage(CommandSender sender) {
         String lang = "en";
@@ -94,9 +94,9 @@ public abstract class PlatformHelper {
         }
     }
 
-    public abstract TagCompound itemStackToCompund(ItemStack itemStack);
+    public abstract CompoundBinaryTag itemStackToCompound(ItemStack itemStack);
 
-    public abstract ItemStack compundToItemStack(TagCompound compound);
+    public abstract ItemStack compoundToItemStack(CompoundBinaryTag compound);
 
     /**
      * Builds the action bar message for pet health updates so it can be reused by all NMS modules.

@@ -22,8 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import lombok.Getter;
 
 @Getter
@@ -36,17 +35,17 @@ public class MyCreeper extends MyPet implements de.Keyle.MyPet.api.entity.types.
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Powered", new TagByte(isPowered()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putBoolean("Powered", isPowered());
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("Powered")) {
-            setPowered(info.getAs("Powered", TagByte.class).getBooleanData());
+        if (info.keySet().contains("Powered")) {
+            setPowered(info.getBoolean("Powered"));
         }
     }
 

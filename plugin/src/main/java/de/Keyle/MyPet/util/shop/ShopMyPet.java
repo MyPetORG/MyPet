@@ -32,7 +32,7 @@ import de.Keyle.MyPet.api.util.NotImplemented;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -55,8 +55,8 @@ public class ShopMyPet implements StoredMyPet {
     protected double exp = 0;
     protected MyPetType petType = MyPetType.Wolf;
     protected Skilltree skilltree = null;
-    protected TagCompound NBTSkills;
-    protected TagCompound NBTextendetInfo;
+    protected CompoundBinaryTag NBTSkills = CompoundBinaryTag.empty();
+    protected CompoundBinaryTag NBTextendetInfo = CompoundBinaryTag.empty();
 
     public ShopMyPet(String name) {
         this.name = name;
@@ -117,15 +117,12 @@ public class ShopMyPet implements StoredMyPet {
     public void setSaturation(double value) {
     }
 
-    public TagCompound getInfo() {
-        if (NBTextendetInfo == null) {
-            NBTextendetInfo = new TagCompound();
-        }
+    public CompoundBinaryTag getInfo() {
         return NBTextendetInfo;
     }
 
-    public void setInfo(TagCompound info) {
-        NBTextendetInfo = info;
+    public void setInfo(CompoundBinaryTag info) {
+        NBTextendetInfo = info != null ? info : CompoundBinaryTag.empty();
     }
 
     public MyPetPlayer getOwner() {
@@ -185,15 +182,12 @@ public class ShopMyPet implements StoredMyPet {
         return true;
     }
 
-    public TagCompound getSkillInfo() {
-        if (NBTSkills == null) {
-            NBTSkills = new TagCompound();
-        }
+    public CompoundBinaryTag getSkillInfo() {
         return NBTSkills;
     }
 
-    public void setSkills(TagCompound skills) {
-        NBTSkills = skills;
+    public void setSkills(CompoundBinaryTag skills) {
+        NBTSkills = skills != null ? skills : CompoundBinaryTag.empty();
     }
 
     public UUID getUUID() {
@@ -245,10 +239,10 @@ public class ShopMyPet implements StoredMyPet {
         }
         List<String> options = config.getStringList("Options");
         if (options != null && !options.isEmpty()) {
-            TagCompound compound = new TagCompound();
+            CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
             String[] optionsArray = options.toArray(new String[0]);
-            CommandOptionCreate.createInfo(petType, optionsArray, compound);
-            this.NBTextendetInfo = compound;
+            CommandOptionCreate.createInfo(petType, optionsArray, builder);
+            this.NBTextendetInfo = builder.build();
         }
     }
 

@@ -23,10 +23,8 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -98,46 +96,59 @@ public class MyTraderLlama extends MyPet implements de.Keyle.MyPet.api.entity.ty
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Variant", new TagInt(getVariant()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putInt("Variant", getVariant());
         if (hasChest()) {
-            info.getCompoundData().put("Chest", MyPetApi.getPlatformHelper().itemStackToCompund(getChest()));
+            info = info.put("Chest", MyPetApi.getPlatformHelper().itemStackToCompound(getChest()));
         }
         if (hasDecor()) {
-            info.getCompoundData().put("Decor", MyPetApi.getPlatformHelper().itemStackToCompund(getDecor()));
+            info = info.put("Decor", MyPetApi.getPlatformHelper().itemStackToCompound(getDecor()));
         }
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("Variant")) {
-            setVariant(info.getAs("Variant", TagInt.class).getIntData());
+        if (info.keySet().contains("Variant")) {
+            setVariant(info.getInt("Variant"));
         }
-        if (info.containsKeyAs("Chest", TagByte.class)) {
-            boolean chest = info.getAs("Chest", TagByte.class).getBooleanData();
-            if (chest) {
-                ItemStack item = new ItemStack(Material.CHEST);
-                setChest(item);
-            }
-        } else if (info.containsKeyAs("Chest", TagCompound.class)) {
-            TagCompound itemTag = info.get("Chest");
+        if (info.keySet().contains("Chest")) {
             try {
-                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-                setChest(item);
+                // Check if it's a boolean (old format)
+                if (info.get("Chest").type().id() == 1) { // BYTE type
+                    boolean chest = info.getBoolean("Chest");
+                    if (chest) {
+                        ItemStack item = new ItemStack(Material.CHEST);
+                        setChest(item);
+                    }
+                } else if (info.get("Chest").type().id() == 10) { // COMPOUND type
+                    CompoundBinaryTag itemTag = info.getCompound("Chest");
+                    try {
+                        ItemStack item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
+                        setChest(item);
+                    } catch (Exception e) {
+                        MyPetApi.getLogger().warning("Could not load Chest item from pet data!");
+                    }
+                }
             } catch (Exception e) {
-                MyPetApi.getLogger().warning("Could not load Chest item from pet data!");
+                // Ignore if can't determine type
             }
         }
-        if (info.containsKeyAs("Decor", TagCompound.class)) {
-            TagCompound itemTag = info.get("Decor");
+        if (info.keySet().contains("Decor")) {
             try {
-                ItemStack item = MyPetApi.getPlatformHelper().compundToItemStack(itemTag);
-                setDecor(item);
+                if (info.get("Decor").type().id() == 10) { // COMPOUND type
+                    CompoundBinaryTag itemTag = info.getCompound("Decor");
+                    try {
+                        ItemStack item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
+                        setDecor(item);
+                    } catch (Exception e) {
+                        MyPetApi.getLogger().warning("Could not load Decor item from pet data!");
+                    }
+                }
             } catch (Exception e) {
-                MyPetApi.getLogger().warning("Could not load Decor item from pet data!");
+                // Ignore if can't determine type
             }
         }
     }

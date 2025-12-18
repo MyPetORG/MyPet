@@ -195,9 +195,7 @@ dependencies {
 
     // External libs to be shaded
     add("shade", "org.bstats:bstats-bukkit:1.7")
-    add("shade", "de.keyle:knbt:0.0.5")
-
-
+    add("shade", "net.kyori:adventure-nbt:4.17.0")
 }
 
 // Build the shaded jar strictly from the 'shade' configuration
@@ -218,7 +216,6 @@ tasks.shadowJar {
         // Exclude packages that use reflection or are loaded dynamically
         exclude(dependency("io.sentry:.*:.*"))
         exclude(dependency("org.bstats:.*:.*"))
-        exclude(dependency("de.keyle:knbt:.*"))
         // Adventure API uses reflection for serializers - must exclude to prevent runtime errors
         exclude(dependency("net.kyori:.*:.*"))
         exclude(project(":plugin"))
@@ -228,7 +225,6 @@ tasks.shadowJar {
     }
 
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
-    relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
 }
 
 tasks.assemble { dependsOn(tasks.shadowJar) }

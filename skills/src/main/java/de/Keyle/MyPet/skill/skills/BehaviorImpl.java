@@ -27,9 +27,8 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagString;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
@@ -311,13 +310,13 @@ public class BehaviorImpl implements Behavior {
      * <p>
      * Currently stores only the name of the selected behavior under the key "selectedBehavior".
      *
-     * @return a compound tag with this skill’s persisted data (never null)
+     * @return a compound tag with this skill's persisted data (never null)
      */
     @Override
-    public @NotNull TagCompound save() {
-        TagCompound nbtTagCompound = new TagCompound();
-        nbtTagCompound.getCompoundData().put("selectedBehavior", new TagString(this.selectedBehavior.name()));
-        return nbtTagCompound;
+    public @NotNull CompoundBinaryTag save() {
+        return CompoundBinaryTag.builder()
+                .putString("selectedBehavior", this.selectedBehavior.name())
+                .build();
     }
 
     /**
@@ -325,12 +324,12 @@ public class BehaviorImpl implements Behavior {
      * <p>
      * Unknown or currently unavailable modes are mapped to Normal to guarantee a valid state.
      *
-     * @param tagCompound the NBT data for this skill (must not be null)
+     * @param compound the NBT data for this skill (must not be null)
      */
     @Override
-    public void load(@NotNull TagCompound tagCompound) {
-        if (tagCompound.containsKey("selectedBehavior")) {
-            String behaviorString = tagCompound.getAs("selectedBehavior", TagString.class).getStringData();
+    public void load(@NotNull CompoundBinaryTag compound) {
+        if (compound.keySet().contains("selectedBehavior")) {
+            String behaviorString = compound.getString("selectedBehavior");
             switch (behaviorString) {
                 case "Friendly":
                     setBehavior(Friendly);

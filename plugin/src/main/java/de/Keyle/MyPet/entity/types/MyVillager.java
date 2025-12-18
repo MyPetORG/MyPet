@@ -22,10 +22,9 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,38 +35,38 @@ public class MyVillager extends MyPet implements de.Keyle.MyPet.api.entity.types
     protected Type type = Type.Plains;
     protected int level = 1;
     @Setter
-    protected TagCompound originalData = null;
+    protected CompoundBinaryTag originalData = null;
 
     public MyVillager(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("Profession", new TagInt(getProfession()));
-        info.getCompoundData().put("VillagerType", new TagInt(getType().ordinal()));
-        info.getCompoundData().put("VillagerLevel", new TagInt(this.getLevel()));
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
+        info = info.putInt("Profession", getProfession())
+                   .putInt("VillagerType", getType().ordinal())
+                   .putInt("VillagerLevel", this.getLevel());
         if (originalData != null) {
-            info.getCompoundData().put("OriginalData", originalData);
+            info = info.put("OriginalData", originalData);
         }
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("Profession")) {
-            setProfession(info.getAs("Profession", TagInt.class).getIntData());
+        if (info.keySet().contains("Profession")) {
+            setProfession(info.getInt("Profession"));
         }
-        if (info.containsKey("VillagerType")) {
-            setType(Type.values()[info.getAs("VillagerType", TagInt.class).getIntData()]);
+        if (info.keySet().contains("VillagerType")) {
+            setType(Type.values()[info.getInt("VillagerType")]);
         }
-        if (info.containsKey("VillagerLevel")) {
-            setLevel(info.getAs("VillagerLevel", TagInt.class).getIntData());
+        if (info.keySet().contains("VillagerLevel")) {
+            setLevel(info.getInt("VillagerLevel"));
         }
-        if (info.containsKey("OriginalData")) {
-            originalData = info.getAs("OriginalData", TagCompound.class);
+        if (info.keySet().contains("OriginalData")) {
+            originalData = info.getCompound("OriginalData");
         }
     }
 

@@ -36,7 +36,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
-import de.keyle.knbt.TagStream;
+import de.Keyle.MyPet.api.util.NbtUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -304,8 +304,8 @@ public class SqLiteRepository implements Repository {
             statement.setString(9, myPet.getWorldGroup());
             statement.setBoolean(10, myPet.wantsToRespawn());
             statement.setString(11, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
-            statement.setBytes(12, TagStream.writeTag(myPet.getSkillInfo(), true));
-            statement.setBytes(13, TagStream.writeTag(myPet.getInfo(), true));
+            statement.setBytes(12, NbtUtil.writeCompressed(myPet.getSkillInfo()));
+            statement.setBytes(13, NbtUtil.writeCompressed(myPet.getInfo()));
 
             statement.setString(14, myPet.getUUID().toString());
 
@@ -350,7 +350,7 @@ public class SqLiteRepository implements Repository {
             statement.setBoolean(5, player.isCaptureHelperActive());
             statement.setBoolean(6, player.isHealthBarActive());
             statement.setFloat(7, player.getPetLivingSoundVolume());
-            statement.setBytes(8, TagStream.writeTag(player.getExtendedInfo(), true));
+            statement.setBytes(8, NbtUtil.writeCompressed(player.getExtendedInfo()));
 
             JsonObject multiWorldObject = new JsonObject();
             for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
@@ -394,8 +394,8 @@ public class SqLiteRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(TagStream.readTag(resultSet.getBytes("skills"), true));
-                pet.setInfo(TagStream.readTag(resultSet.getBytes("info"), true));
+                pet.setSkills(NbtUtil.readCompressed(resultSet.getBytes("skills")));
+                pet.setInfo(NbtUtil.readCompressed(resultSet.getBytes("info")));
 
                 pets.add(pet);
             }
@@ -444,8 +444,8 @@ public class SqLiteRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(TagStream.readTag(resultSet.getBytes("skills"), true));
-                pet.setInfo(TagStream.readTag(resultSet.getBytes("info"), true));
+                pet.setSkills(NbtUtil.readCompressed(resultSet.getBytes("skills")));
+                pet.setInfo(NbtUtil.readCompressed(resultSet.getBytes("info")));
 
                 pets.add(pet);
             }
@@ -603,8 +603,8 @@ public class SqLiteRepository implements Repository {
                     statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
 
                     try {
-                        statement.setBytes(13, TagStream.writeTag(storedMyPet.getSkillInfo(), true));
-                        statement.setBytes(14, TagStream.writeTag(storedMyPet.getInfo(), true));
+                        statement.setBytes(13, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
+                        statement.setBytes(14, NbtUtil.writeCompressed(storedMyPet.getInfo()));
                     } catch (IOException e) {
                         ErrorUtil.reportError("SQLite database operation failed", e);
                     }
@@ -658,12 +658,12 @@ public class SqLiteRepository implements Repository {
                 statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
 
                 try {
-                    statement.setBytes(13, TagStream.writeTag(storedMyPet.getSkillInfo(), true));
+                    statement.setBytes(13, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
                 } catch (IOException e) {
                     ErrorUtil.reportError("SQLite database operation failed", e);
                 }
                 try {
-                    statement.setBytes(14, TagStream.writeTag(storedMyPet.getInfo(), true));
+                    statement.setBytes(14, NbtUtil.writeCompressed(storedMyPet.getInfo()));
                 } catch (IOException e) {
                     ErrorUtil.reportError("SQLite database operation failed", e);
                 }
@@ -715,8 +715,8 @@ public class SqLiteRepository implements Repository {
                     statement.setString(9, storedMyPet.getWorldGroup());
                     statement.setBoolean(10, storedMyPet.wantsToRespawn());
                     statement.setString(11, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
-                    statement.setBytes(12, TagStream.writeTag(storedMyPet.getSkillInfo(), true));
-                    statement.setBytes(13, TagStream.writeTag(storedMyPet.getInfo(), true));
+                    statement.setBytes(12, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
+                    statement.setBytes(13, NbtUtil.writeCompressed(storedMyPet.getInfo()));
 
                     statement.setString(14, storedMyPet.getUUID().toString());
 
@@ -764,7 +764,7 @@ public class SqLiteRepository implements Repository {
                 petPlayer.setCaptureHelperActive(resultSet.getBoolean("capture_mode"));
                 petPlayer.setHealthBarActive(resultSet.getBoolean("health_bar"));
                 petPlayer.setPetLivingSoundVolume(resultSet.getFloat("pet_idle_volume"));
-                petPlayer.setExtendedInfo(TagStream.readTag(resultSet.getBytes("extended_info"), true));
+                petPlayer.setExtendedInfo(NbtUtil.readCompressed(resultSet.getBytes("extended_info")));
 
                 try {
                     JsonObject jsonObject = gson.fromJson(resultSet.getString("multi_world"), JsonObject.class);
@@ -919,7 +919,7 @@ public class SqLiteRepository implements Repository {
             statement.setBoolean(5, player.isCaptureHelperActive());
             statement.setBoolean(6, player.isHealthBarActive());
             statement.setFloat(7, player.getPetLivingSoundVolume());
-            statement.setBytes(8, TagStream.writeTag(player.getExtendedInfo(), true));
+            statement.setBytes(8, NbtUtil.writeCompressed(player.getExtendedInfo()));
 
             JsonObject multiWorldObject = new JsonObject();
             for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
@@ -968,7 +968,7 @@ public class SqLiteRepository implements Repository {
                     statement.setBoolean(7, player.isHealthBarActive());
                     statement.setFloat(8, player.getPetLivingSoundVolume());
                     try {
-                        statement.setBytes(9, TagStream.writeTag(player.getExtendedInfo(), true));
+                        statement.setBytes(9, NbtUtil.writeCompressed(player.getExtendedInfo()));
                     } catch (IOException e) {
                         ErrorUtil.reportError("SQLite database operation failed", e);
                     }
@@ -1030,7 +1030,7 @@ public class SqLiteRepository implements Repository {
                 statement.setBoolean(6, player.isCaptureHelperActive());
                 statement.setBoolean(7, player.isHealthBarActive());
                 statement.setFloat(8, player.getPetLivingSoundVolume());
-                statement.setBytes(9, TagStream.writeTag(player.getExtendedInfo(), true));
+                statement.setBytes(9, NbtUtil.writeCompressed(player.getExtendedInfo()));
 
                 JsonObject multiWorldObject = new JsonObject();
                 for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {

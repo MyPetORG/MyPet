@@ -36,9 +36,9 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
+import de.Keyle.MyPet.api.util.NbtUtil;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
-import de.keyle.knbt.TagStream;
 import org.bson.Document;
 import org.bson.types.Binary;
 import org.bukkit.entity.Player;
@@ -285,12 +285,12 @@ public class MongoDbRepository implements Repository {
             }
 
             try {
-                pet.setSkills(TagStream.readTag(((Binary) document.get("skills")).getData(), true));
+                pet.setSkills(NbtUtil.readCompressed(((Binary) document.get("skills")).getData()));
             } catch (ZipException exception) {
                 MyPetApi.getMyPetLogger().warning("Pet skills of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
             }
             try {
-                pet.setInfo(TagStream.readTag(((Binary) document.get("info")).getData(), true));
+                pet.setInfo(NbtUtil.readCompressed(((Binary) document.get("info")).getData()));
             } catch (ZipException exception) {
                 MyPetApi.getMyPetLogger().warning("Pet info of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
             }
@@ -448,8 +448,8 @@ public class MongoDbRepository implements Repository {
         petDocument.append("skilltree", storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
 
         try {
-            petDocument.append("skills", TagStream.writeTag(storedMyPet.getSkillInfo(), true));
-            petDocument.append("info", TagStream.writeTag(storedMyPet.getInfo(), true));
+            petDocument.append("skills", NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
+            petDocument.append("info", NbtUtil.writeCompressed(storedMyPet.getInfo()));
         } catch (IOException e) {
             ErrorUtil.reportError("MongoDB database operation failed", e);
         }
@@ -500,8 +500,8 @@ public class MongoDbRepository implements Repository {
         petDocument.append("skilltree", storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
 
         try {
-            petDocument.append("skills", TagStream.writeTag(storedMyPet.getSkillInfo(), true));
-            petDocument.append("info", TagStream.writeTag(storedMyPet.getInfo(), true));
+            petDocument.append("skills", NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
+            petDocument.append("info", NbtUtil.writeCompressed(storedMyPet.getInfo()));
         } catch (IOException e) {
             ErrorUtil.reportError("MongoDB database operation failed", e);
         }
@@ -533,7 +533,7 @@ public class MongoDbRepository implements Repository {
             }
 
             try {
-                petPlayer.setExtendedInfo(TagStream.readTag(((Binary) document.get("extended_info")).getData(), true));
+                petPlayer.setExtendedInfo(NbtUtil.readCompressed(((Binary) document.get("extended_info")).getData()));
             } catch (ZipException exception) {
                 MyPetApi.getMyPetLogger().warning("Extended info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
             }
@@ -684,7 +684,7 @@ public class MongoDbRepository implements Repository {
         playerDocument.append("settings", settingsDocument);
 
         try {
-            playerDocument.append("extended_info", TagStream.writeTag(player.getExtendedInfo(), true));
+            playerDocument.append("extended_info", NbtUtil.writeCompressed(player.getExtendedInfo()));
         } catch (IOException e) {
             ErrorUtil.reportError("MongoDB database operation failed", e);
         }

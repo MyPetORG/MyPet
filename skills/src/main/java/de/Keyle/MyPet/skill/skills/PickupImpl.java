@@ -32,8 +32,7 @@ import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Pickup;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.keyle.knbt.TagByte;
-import de.keyle.knbt.TagCompound;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -168,15 +167,14 @@ public class PickupImpl implements Pickup {
         }
     }
 
-    public void load(TagCompound compound) {
-        pickup = compound.getAs("Active", TagByte.class).getBooleanData();
+    public void load(CompoundBinaryTag compound) {
+        pickup = compound.getBoolean("Active");
     }
 
-    public TagCompound save() {
-        TagCompound nbtTagCompound = new TagCompound();
-        nbtTagCompound.getCompoundData().put("Active", new TagByte(pickup));
-        return nbtTagCompound;
-
+    public CompoundBinaryTag save() {
+        return CompoundBinaryTag.builder()
+                .putBoolean("Active", pickup)
+                .build();
     }
 
     public UpgradeComputer<Number> getRange() {

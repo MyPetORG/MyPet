@@ -28,8 +28,8 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.keyle.knbt.TagCompound;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -183,7 +183,7 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
      *
      * @param tag the tag to load from
      */
-    public void load(TagCompound tag) {
+    public void load(CompoundBinaryTag tag) {
         // Ensure the underlying inventory exists with correct capacity before loading items
         inventory.setSize(rows.getValue().intValue() * 9);
         inventory.load(tag);
@@ -194,10 +194,8 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
      *
      * @return an NBT tag containing the inventory contents and metadata
      */
-    public TagCompound save() {
-        TagCompound nbtTagCompound = new TagCompound();
-        inventory.save(nbtTagCompound);
-        return nbtTagCompound;
+    public CompoundBinaryTag save() {
+        return inventory.save(CompoundBinaryTag.empty());
     }
 
     /**

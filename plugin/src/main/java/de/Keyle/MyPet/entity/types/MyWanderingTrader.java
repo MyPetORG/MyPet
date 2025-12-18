@@ -22,34 +22,34 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import de.keyle.knbt.TagCompound;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 @Getter
 public class MyWanderingTrader extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWanderingTrader {
 
     @Setter
-    protected TagCompound originalData = null;
+    protected CompoundBinaryTag originalData = null;
 
     public MyWanderingTrader(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public TagCompound writeExtendedInfo() {
-        TagCompound info = super.writeExtendedInfo();
+    public CompoundBinaryTag writeExtendedInfo() {
+        CompoundBinaryTag info = super.writeExtendedInfo();
         if (originalData != null) {
-            info.getCompoundData().put("OriginalData", originalData);
+            info = info.put("OriginalData", originalData);
         }
         return info;
     }
 
     @Override
-    public void readExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.containsKey("OriginalData")) {
-            originalData = info.getAs("OriginalData", TagCompound.class);
+        if (info.keySet().contains("OriginalData")) {
+            originalData = info.getCompound("OriginalData");
         }
     }
 
