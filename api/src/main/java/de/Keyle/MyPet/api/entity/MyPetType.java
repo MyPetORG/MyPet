@@ -407,4 +407,21 @@ public enum MyPetType {
         }
         throw new MyPetTypeNotFoundException(name);
     }
+
+    /**
+     * Returns a MyPetType by name, or null if not found.
+     * This method does NOT check Minecraft version compatibility.
+     * Use this when you want to gracefully handle invalid/unknown pet types.
+     *
+     * @param name the name to look up (case-insensitive)
+     * @return the MyPetType, or null if not found
+     */
+    public static MyPetType byNameOrNull(String name) {
+        for (MyPetType t : values()) {
+            if (t.name().equalsIgnoreCase(name)) {
+                return t;
+            }
+        }
+        return null;
+    }
 }

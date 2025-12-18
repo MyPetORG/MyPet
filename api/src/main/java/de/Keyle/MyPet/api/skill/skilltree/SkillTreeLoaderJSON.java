@@ -158,8 +158,10 @@ public class SkillTreeLoaderJSON {
                                 type = type.substring(1);
                                 negative = true;
                             }
-                            MyPetType mobType = MyPetType.byName(type, false);
-                            if (mobType != null && mobType.checkMinecraftVersion()) {
+                            MyPetType mobType = MyPetType.byNameOrNull(type);
+                            if (mobType == null) {
+                                MyPetApi.getLogger().warning("Skilltree '" + skilltreeID + "': Unknown mob type '" + type + "' - skipping (not a valid MyPet type or not available in this Minecraft version)");
+                            } else if (mobType.checkMinecraftVersion()) {
                                 if (negative) {
                                     mobTypes.remove(mobType);
                                 } else {
