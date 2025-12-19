@@ -29,6 +29,52 @@ import org.bukkit.entity.Cat.Type;
 @DefaultInfo(food = {"cod"}, leashFlags = {"Tamed"})
 public interface MyCat extends MyPet, MyPetBaby {
 
+    /**
+     * Stable cat type mapping that won't change across Minecraft versions.
+     * Bukkit's Cat.Type enum ordering has changed in some still-supported versions,
+     * so we maintain our own stable ordinal mapping for persistence until versions
+     * using integer IDs are dropped.
+     */
+    enum OwnCatType {
+        TABBY(Type.TABBY),
+        BLACK(Type.BLACK),
+        RED(Type.RED),
+        SIAMESE(Type.SIAMESE),
+        BRITISH_SHORTHAIR(Type.BRITISH_SHORTHAIR),
+        CALICO(Type.CALICO),
+        PERSIAN(Type.PERSIAN),
+        RAGDOLL(Type.RAGDOLL),
+        WHITE(Type.WHITE),
+        JELLIE(Type.JELLIE),
+        ALL_BLACK(Type.ALL_BLACK);
+
+        private final Type bukkitType;
+
+        OwnCatType(Type type) {
+            this.bukkitType = type;
+        }
+
+        public Type getBukkitType() {
+            return bukkitType;
+        }
+    }
+
+    /**
+     * Returns a stable ordinal for the given cat type that won't change across Minecraft versions.
+     *
+     * @param type the Bukkit Cat.Type to convert
+     * @return a stable ordinal value (0-10) that can be safely persisted
+     */
+    static int getOwnTypeOrdinal(Type type) {
+        if (type == null) return 0;
+        for (OwnCatType ownType : OwnCatType.values()) {
+            if (ownType.getBukkitType() == type) {
+                return ownType.ordinal();
+            }
+        }
+        return 0; // fallback to TABBY
+    }
+
     Type getCatType();
 
     void setCatType(Type value);

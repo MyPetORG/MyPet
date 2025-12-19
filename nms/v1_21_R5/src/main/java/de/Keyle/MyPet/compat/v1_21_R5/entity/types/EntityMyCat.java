@@ -137,7 +137,7 @@ public class EntityMyCat extends EntityMyPet {
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
 		Registry<CatVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CAT_VARIANT);
-		this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertCatVariant(getMyPet().getCatType().ordinal())));
+		this.getEntityData().set(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.convertCatVariant(MyCat.getOwnTypeOrdinal(getMyPet().getCatType()))));
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 
 		byte b0 = this.getEntityData().get(SIT_WATCHER);

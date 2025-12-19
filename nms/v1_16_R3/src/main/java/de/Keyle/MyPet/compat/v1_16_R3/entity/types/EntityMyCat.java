@@ -119,7 +119,7 @@ public class EntityMyCat extends EntityMyPet {
     @Override
     public void updateVisuals() {
         getDataWatcher().set(AGE_WATCHER, getMyPet().isBaby());
-        getDataWatcher().set(TYPE_WATCHER, getMyPet().getCatType().ordinal());
+        getDataWatcher().set(TYPE_WATCHER, MyCat.getOwnTypeOrdinal(getMyPet().getCatType()));
         getDataWatcher().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 
         byte b0 = getDataWatcher().get(SIT_WATCHER);

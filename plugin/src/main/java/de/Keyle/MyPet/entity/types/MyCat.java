@@ -32,31 +32,6 @@ import org.bukkit.entity.Cat.Type;
 
 public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCat {
 
-    // Needed as some newer versions have integer -> Type mismatches
-    static enum OwnCatType {
-        TABBY(Type.TABBY),
-        BLACK(Type.BLACK),
-        RED(Type.RED),
-        SIAMESE(Type.SIAMESE),
-        BRITISH_SHORTHAIR(Type.BRITISH_SHORTHAIR),
-        CALICO(Type.CALICO),
-        PERSIAN(Type.PERSIAN),
-        RAGDOLL(Type.RAGDOLL),
-        WHITE(Type.WHITE),
-        JELLIE(Type.JELLIE),
-        ALL_BLACK(Type.ALL_BLACK),;
-
-        private Type bukkitType;
-
-        OwnCatType(Type type) {
-            bukkitType = type;
-        }
-
-        public Type getBukkitType() {
-            return bukkitType;
-        }
-    }
-
     protected boolean isBaby = false;
     protected boolean isTamed = false;
     protected Type catType = Type.TABBY;
@@ -115,7 +90,7 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        info.getCompoundData().put("CatType", new TagInt(getCatType().ordinal()));
+        info.getCompoundData().put("CatType", new TagInt(de.Keyle.MyPet.api.entity.types.MyCat.getOwnTypeOrdinal(getCatType())));
         info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().ordinal()));
         info.getCompoundData().put("Tamed", new TagByte(isTamed()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
@@ -125,8 +100,13 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
     @Override
     public void readExtendedInfo(TagCompound info) {
         if (info.containsKey("CatType")) {
-            Type leType = OwnCatType.values()[info.getAs("CatType", TagInt.class).getIntData()].getBukkitType();
-            setCatType(leType);
+            de.Keyle.MyPet.api.entity.types.MyCat.OwnCatType[] ownTypes = de.Keyle.MyPet.api.entity.types.MyCat.OwnCatType.values();
+            int catTypeOrdinal = info.getAs("CatType", TagInt.class).getIntData();
+            if (catTypeOrdinal >= 0 && catTypeOrdinal < ownTypes.length) {
+                setCatType(ownTypes[catTypeOrdinal].getBukkitType());
+            } else {
+                setCatType(Type.TABBY); // fallback for invalid data
+            }
         }
         if (info.containsKeyAs("CollarColor", TagInt.class)) {
             setCollarColor(DyeColor.values()[info.getAs("CollarColor", TagInt.class).getIntData()]);
