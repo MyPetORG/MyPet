@@ -121,7 +121,7 @@ public class FollowOwner implements AIGoal {
 								if (!petEntity.hasTarget()) {
 									if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity)) {
 										this.petEntity.fallDistance = 0;
-										this.petEntity.moveTo(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.getYRot(), this.petEntity.getXRot());
+										this.petEntity.teleportTo(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ());
 										this.setPathTimer = 0;
 										return;
 									}
