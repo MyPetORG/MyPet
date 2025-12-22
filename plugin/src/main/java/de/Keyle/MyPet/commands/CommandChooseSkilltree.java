@@ -133,8 +133,11 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                             Skilltree selecedSkilltree = skilltreeSlotMap.get(event.getPosition());
                             if (selecedSkilltree != null) {
                                 int requiredLevel = selecedSkilltree.getRequiredLevel();
+                                int maxLevel = selectedSkilltree.getMaxLevel()
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", myPetOwner), myPet.getPetName(), requiredLevel));
+                                } else if(maxLevel > 1 && myPet.getExperience().getLevel() > maxLevel) {
+                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.MaxLevel.Message", myPetOwner), myPet.getPetName(), max));
                                 } else if (myPet.setSkilltree(selecedSkilltree, MyPetSelectSkilltreeEvent.Source.PlayerCommand)) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", myPetOwner), Colorizer.setColors(selecedSkilltree.getDisplayName())));
                                     if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
