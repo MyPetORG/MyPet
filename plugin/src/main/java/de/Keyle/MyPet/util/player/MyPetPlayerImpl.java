@@ -50,11 +50,8 @@ import java.util.*;
 
 public class MyPetPlayerImpl implements MyPetPlayer {
 
-    protected final UUID internalUUID;
-    protected String lastKnownPlayerName;
     protected String lastLanguage = "en_US";
-    protected UUID mojangUUID = null;
-    protected boolean onlineMode = false;
+    protected final UUID mojangUUID;
 
     protected boolean captureHelperMode = false;
     protected int captureHelperTimer = 90;
@@ -71,34 +68,16 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     private volatile DonateCheck.DonationRank rank = DonateCheck.DonationRank.None;
     private boolean donationChecked = false;
 
-    public MyPetPlayerImpl(UUID internalUUID, String playerName) {
-        this.internalUUID = internalUUID;
-        this.lastKnownPlayerName = playerName;
-    }
-
-    public MyPetPlayerImpl(UUID internalUUID, UUID mojangUUID) {
-        this.internalUUID = internalUUID;
+    public MyPetPlayerImpl(UUID mojangUUID) {
         this.mojangUUID = mojangUUID;
-    }
-
-    public MyPetPlayerImpl(UUID internalUUID, UUID mojangUUID, String playerName) {
-        this.internalUUID = internalUUID;
-        this.mojangUUID = mojangUUID;
-        this.lastKnownPlayerName = playerName;
-    }
-
-    public void setOnlineMode(boolean mode) {
-        onlineMode = mode;
-    }
-
-    public void setLastKnownName(String name) {
-        if (name != null) {
-            this.lastKnownPlayerName = name;
-        }
     }
 
     public String getName() {
-        return lastKnownPlayerName;
+        Player player = getPlayer();
+        if (player != null) {
+            return player.getName();
+        }
+        return Bukkit.getOfflinePlayer(mojangUUID).getName();
     }
 
     public boolean hasCustomData() {
@@ -240,30 +219,8 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return p != null && p.isOnline();
     }
 
-    public UUID getPlayerUUID() {
-        if (onlineMode) {
-            return mojangUUID;
-        } else {
-            return Util.getOfflinePlayerUUID(getName());
-        }
-    }
-
-    public UUID getInternalUUID() {
-        return internalUUID;
-    }
-
-    public UUID getOfflineUUID() {
-        return Util.getOfflinePlayerUUID(getName());
-    }
-
-    public UUID getMojangUUID() {
+    public UUID getUniqueId() {
         return mojangUUID;
-    }
-
-    public void setMojangUUID(UUID uuid) {
-        if (uuid != null) {
-            this.mojangUUID = uuid;
-        }
     }
 
     public String getLanguage() {
@@ -286,7 +243,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     }
 
     public Player getPlayer() {
-        return Bukkit.getPlayer(getPlayerUUID());
+        return Bukkit.getPlayer(getUniqueId());
     }
 
     public void sendMessage(Component message) {
@@ -339,11 +296,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                 .build();
 
         CompoundBinaryTag.Builder uuidBuilder = CompoundBinaryTag.builder();
-        if (mojangUUID != null) {
-            uuidBuilder.putString("Mojang-UUID", mojangUUID.toString());
-        }
-        uuidBuilder.putString("Name", getName());
-        uuidBuilder.putString("Internal-UUID", internalUUID.toString());
+        uuidBuilder.putString("Mojang-UUID", mojangUUID.toString());
 
         CompoundBinaryTag.Builder multiWorldBuilder = CompoundBinaryTag.builder();
         for (String worldGroupName : petWorldUUID.keySet()) {
@@ -360,16 +313,6 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     @Override
     public void load(CompoundBinaryTag myplayerNBT) {
-        if (myplayerNBT.keySet().contains("UUID")) {
-            CompoundBinaryTag uuidTag = myplayerNBT.getCompound("UUID");
-
-            if (uuidTag.keySet().contains("Mojang-UUID")) {
-                mojangUUID = UUID.fromString(uuidTag.getString("Mojang-UUID"));
-            }
-            if (uuidTag.keySet().contains("Name") && lastKnownPlayerName == null) {
-                lastKnownPlayerName = uuidTag.getString("Name");
-            }
-        }
         if (myplayerNBT.keySet().contains("Settings")) {
             CompoundBinaryTag settingsTag = myplayerNBT.getCompound("Settings");
 
@@ -390,9 +333,6 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             }
         } else {
             // Legacy fallback for old data format
-            if (myplayerNBT.keySet().contains("Name") && lastKnownPlayerName == null) {
-                lastKnownPlayerName = myplayerNBT.getString("Name");
-            }
             if (myplayerNBT.keySet().contains("AutoRespawn")) {
                 setAutoRespawnEnabled(myplayerNBT.getBoolean("AutoRespawn"));
             }
@@ -540,11 +480,11 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         if (obj == null) {
             return false;
         } else if (obj instanceof Player player) {
-            return getPlayerUUID().equals(player.getUniqueId()) || Util.stringsEqual(getName(), player.getName(), false);
+            return getUniqueId().equals(player.getUniqueId());
         } else if (obj instanceof OfflinePlayer offlinePlayer) {
-            return Objects.equals(getPlayer().getUniqueId(), offlinePlayer.getUniqueId()) || Util.stringsEqual(offlinePlayer.getName(), getName(), false);
+            return getUniqueId().equals(offlinePlayer.getUniqueId());
         } else if (obj instanceof AnimalTamer animalTamer) {
-            return Util.stringsEqual(animalTamer.getName(), getName(), false);
+            return getUniqueId().equals(animalTamer.getUniqueId());
         } else if (obj instanceof MyPetPlayerImpl) {
             return this == obj;
         }
@@ -553,6 +493,6 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     @Override
     public String toString() {
-        return "MyPetPlayer{name=" + getName() + ", internal-uuid=" + internalUUID + ", mojang-uuid=" + mojangUUID + "}";
+        return "MyPetPlayer{name=" + getName() + ", uuid=" + mojangUUID + "}";
     }
 }

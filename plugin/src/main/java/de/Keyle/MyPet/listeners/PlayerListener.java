@@ -170,14 +170,6 @@ public class PlayerListener implements Listener {
                     public void callback(final MyPetPlayer p) {
                         final MyPetPlayerImpl joinedPlayer = (MyPetPlayerImpl) p;
 
-                        joinedPlayer.setLastKnownName(event.getPlayer().getName());
-                        if (!event.getPlayer().getUniqueId().equals(joinedPlayer.getOfflineUUID())) {
-                            if (joinedPlayer.getMojangUUID() == null) {
-                                joinedPlayer.setMojangUUID(event.getPlayer().getUniqueId());
-                            }
-                            joinedPlayer.setOnlineMode(true);
-                        }
-
                         MyPetApi.getPlayerManager().setOnline(joinedPlayer);
 
                         final WorldGroup joinGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());

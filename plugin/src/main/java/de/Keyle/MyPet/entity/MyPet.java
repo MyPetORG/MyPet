@@ -561,7 +561,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), true));
 
                 if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
-                    Random r = new Random(petOwner.getInternalUUID().toString().hashCode());
+                    Random r = new Random(petOwner.getUniqueId().toString().hashCode());
                     final char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
                     StringBuilder sb = new StringBuilder(10);
 
@@ -818,7 +818,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         petNBT.putDouble("Exp", this.getExp());
         petNBT.putLong("LastUsed", this.lastUsed);
         petNBT.put("Info", writeExtendedInfo());
-        petNBT.putString("Internal-Owner-UUID", this.petOwner.getInternalUUID().toString());
+        petNBT.putString("Owner-UUID", this.petOwner.getUniqueId().toString());
         petNBT.putBoolean("Wants-To-Respawn", wantsToRespawn);
         if (this.skilltree != null) {
             petNBT.putString("Skilltree", skilltree.getName());

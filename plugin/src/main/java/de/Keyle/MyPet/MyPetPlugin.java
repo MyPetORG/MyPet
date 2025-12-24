@@ -493,14 +493,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                             if (p != null) {
                                 final MyPetPlayerImpl onlinePlayer = (MyPetPlayerImpl) p;
 
-                                onlinePlayer.setLastKnownName(player.getName());
-                                if (!player.getUniqueId().equals(onlinePlayer.getOfflineUUID())) {
-                                    if (onlinePlayer.getMojangUUID() == null) {
-                                        onlinePlayer.setMojangUUID(player.getUniqueId());
-                                    }
-                                    onlinePlayer.setOnlineMode(true);
-                                }
-
                                 playerManager.setOnline(onlinePlayer);
 
                                 final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());

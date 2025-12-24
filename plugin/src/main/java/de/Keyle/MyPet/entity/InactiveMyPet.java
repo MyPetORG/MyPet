@@ -284,7 +284,7 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
                 .putDouble("Exp", this.exp)
                 .putLong("LastUsed", this.lastUsed)
                 .put("Info", getInfo())
-                .putString("Internal-Owner-UUID", this.petOwner.getInternalUUID().toString())
+                .putString("Owner-UUID", this.petOwner.getUniqueId().toString())
                 .putBoolean("Wants-To-Respawn", wantsToRespawn);
 
         if (this.skilltree != null) {

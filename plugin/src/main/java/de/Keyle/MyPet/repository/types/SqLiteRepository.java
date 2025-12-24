@@ -137,9 +137,7 @@ public class SqLiteRepository implements Repository {
             createTimestampTrigger("pets", "last_update", "uuid");
 
             create.executeUpdate("CREATE TABLE players (" +
-                    "internal_uuid VARCHAR(36) NOT NULL PRIMARY KEY, " +
-                    "mojang_uuid VARCHAR(36) UNIQUE, " +
-                    "name VARCHAR(16) UNIQUE, " +
+                    "uuid VARCHAR(36) NOT NULL PRIMARY KEY, " +
                     "auto_respawn BOOLEAN, " +
                     "auto_respawn_min INTEGER , " +
                     "capture_mode BOOLEAN, " +
@@ -149,7 +147,7 @@ public class SqLiteRepository implements Repository {
                     "multi_world VARCHAR(2000), " +
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                     ")");
-            createTimestampTrigger("players", "last_update", "internal_uuid");
+            createTimestampTrigger("players", "last_update", "uuid");
 
             create.executeUpdate("CREATE TABLE info (" +
                     "version INTEGER UNIQUE, " +
@@ -293,7 +291,7 @@ public class SqLiteRepository implements Repository {
                     "skills=?, " +
                     "info=? " +
                     "WHERE uuid=?;");
-            statement.setString(1, myPet.getOwner().getInternalUUID().toString());
+            statement.setString(1, myPet.getOwner().getUniqueId().toString());
             statement.setDouble(2, myPet.getExp());
             statement.setDouble(3, myPet.getHealth());
             statement.setInt(4, myPet.getRespawnTime());
@@ -333,8 +331,6 @@ public class SqLiteRepository implements Repository {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE players SET " +
-                            "mojang_uuid=?, " +
-                            "name=?, " +
                             "auto_respawn=?, " +
                             "auto_respawn_min=?, " +
                             "capture_mode=?, " +
@@ -342,22 +338,20 @@ public class SqLiteRepository implements Repository {
                             "pet_idle_volume=?, " +
                             "extended_info=?, " +
                             "multi_world=? " +
-                            "WHERE internal_uuid=?;");
-            statement.setString(1, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
-            statement.setString(2, player.getName());
-            statement.setBoolean(3, player.hasAutoRespawnEnabled());
-            statement.setInt(4, player.getAutoRespawnMin());
-            statement.setBoolean(5, player.isCaptureHelperActive());
-            statement.setBoolean(6, player.isHealthBarActive());
-            statement.setFloat(7, player.getPetLivingSoundVolume());
-            statement.setBytes(8, NbtUtil.writeCompressed(player.getExtendedInfo()));
+                            "WHERE uuid=?;");
+            statement.setBoolean(1, player.hasAutoRespawnEnabled());
+            statement.setInt(2, player.getAutoRespawnMin());
+            statement.setBoolean(3, player.isCaptureHelperActive());
+            statement.setBoolean(4, player.isHealthBarActive());
+            statement.setFloat(5, player.getPetLivingSoundVolume());
+            statement.setBytes(6, NbtUtil.writeCompressed(player.getExtendedInfo()));
 
             JsonObject multiWorldObject = new JsonObject();
             for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
                 multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
             }
-            statement.setString(9, gson.toJson(multiWorldObject));
-            statement.setString(10, player.getInternalUUID().toString());
+            statement.setString(7, gson.toJson(multiWorldObject));
+            statement.setString(8, player.getUniqueId().toString());
 
             int result = statement.executeUpdate();
 
@@ -412,7 +406,7 @@ public class SqLiteRepository implements Repository {
             Map<UUID, MyPetPlayer> owners = new HashMap<>();
 
             for (MyPetPlayer player : playerList) {
-                owners.put(player.getInternalUUID(), player);
+                owners.put(player.getUniqueId(), player);
             }
 
             Statement statement = connection.createStatement();
@@ -465,7 +459,7 @@ public class SqLiteRepository implements Repository {
                 public void run() {
                     try {
                         PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE owner_uuid=?;");
-                        statement.setString(1, myPetPlayer.getInternalUUID().toString());
+                        statement.setString(1, myPetPlayer.getUniqueId().toString());
                         ResultSet resultSet = statement.executeQuery();
                         resultSet.next();
                         //MyPetLogger.write("HAS pet: " + (resultSet.getInt(1) > 0));
@@ -487,7 +481,7 @@ public class SqLiteRepository implements Repository {
                 public void run() {
                     try {
                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE owner_uuid=?;");
-                        statement.setString(1, owner.getInternalUUID().toString());
+                        statement.setString(1, owner.getUniqueId().toString());
                         ResultSet resultSet = statement.executeQuery();
                         List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet, true);
                         //MyPetLogger.write("LOAD pets: " + pets);
@@ -590,7 +584,7 @@ public class SqLiteRepository implements Repository {
                                     "info) " +
                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
                     statement.setString(1, storedMyPet.getUUID().toString());
-                    statement.setString(2, storedMyPet.getOwner().getInternalUUID().toString());
+                    statement.setString(2, storedMyPet.getOwner().getUniqueId().toString());
                     statement.setDouble(3, storedMyPet.getExp());
                     statement.setDouble(4, storedMyPet.getHealth());
                     statement.setInt(5, storedMyPet.getRespawnTime());
@@ -645,7 +639,7 @@ public class SqLiteRepository implements Repository {
             int i = 0;
             for (StoredMyPet storedMyPet : pets) {
                 statement.setString(1, storedMyPet.getUUID().toString());
-                statement.setString(2, storedMyPet.getOwner().getInternalUUID().toString());
+                statement.setString(2, storedMyPet.getOwner().getUniqueId().toString());
                 statement.setDouble(3, storedMyPet.getExp());
                 statement.setDouble(4, storedMyPet.getHealth());
                 statement.setInt(5, storedMyPet.getRespawnTime());
@@ -704,7 +698,7 @@ public class SqLiteRepository implements Repository {
                             "skills=?, " +
                             "info=? " +
                             "WHERE uuid=?;");
-                    statement.setString(1, storedMyPet.getOwner().getInternalUUID().toString());
+                    statement.setString(1, storedMyPet.getOwner().getUniqueId().toString());
                     statement.setDouble(2, storedMyPet.getExp());
                     statement.setDouble(3, storedMyPet.getHealth());
                     statement.setInt(4, storedMyPet.getRespawnTime());
@@ -743,21 +737,8 @@ public class SqLiteRepository implements Repository {
     private MyPetPlayer resultSetToMyPetPlayer(ResultSet resultSet) {
         try {
             if (resultSet.next()) {
-                MyPetPlayerImpl petPlayer;
-
-                UUID internalUUID = UUID.fromString(resultSet.getString("internal_uuid"));
-                String playerName = resultSet.getString("name");
-
-                UUID mojangUUID = resultSet.getString("mojang_uuid") != null ? UUID.fromString(resultSet.getString("mojang_uuid")) : null;
-                if (mojangUUID != null) {
-                    petPlayer = new MyPetPlayerImpl(internalUUID, mojangUUID);
-                    petPlayer.setLastKnownName(playerName);
-                } else if (playerName != null) {
-                    petPlayer = new MyPetPlayerImpl(internalUUID, playerName);
-                } else {
-                    MyPetApi.getLogger().warning("Player with no UUID or name found!");
-                    return null;
-                }
+                UUID mojangUUID = UUID.fromString(resultSet.getString("uuid"));
+                MyPetPlayerImpl petPlayer = new MyPetPlayerImpl(mojangUUID);
 
                 petPlayer.setAutoRespawnEnabled(resultSet.getBoolean("auto_respawn"));
                 petPlayer.setAutoRespawnMin(resultSet.getInt("auto_respawn_min"));
@@ -814,9 +795,8 @@ public class SqLiteRepository implements Repository {
                 @Override
                 public void run() {
                     try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(internal_uuid) FROM players WHERE mojang_uuid=? OR name=?;");
+                        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM players WHERE uuid=?;");
                         statement.setString(1, player.getUniqueId().toString());
-                        statement.setString(2, player.getName());
                         ResultSet resultSet = statement.executeQuery();
                         resultSet.next();
 
@@ -837,7 +817,7 @@ public class SqLiteRepository implements Repository {
                 @Override
                 public void run() {
                     try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE internal_uuid=?;");
+                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?;");
                         statement.setString(1, uuid.toString());
                         ResultSet resultSet = statement.executeQuery();
                         MyPetPlayer player = resultSetToMyPetPlayer(resultSet);
@@ -860,15 +840,14 @@ public class SqLiteRepository implements Repository {
                 @Override
                 public void run() {
                     try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE mojang_uuid=? OR name=?;");
+                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?;");
                         statement.setString(1, player.getUniqueId().toString());
-                        statement.setString(2, player.getName());
                         ResultSet resultSet = statement.executeQuery();
 
-                        MyPetPlayer player = resultSetToMyPetPlayer(resultSet);
-                        if (player != null) {
-                            //MyPetLogger.write("LOAD player: " + player);
-                            callback.runTask(MyPetApi.getPlugin(), player);
+                        MyPetPlayer myPetPlayer = resultSetToMyPetPlayer(resultSet);
+                        if (myPetPlayer != null) {
+                            //MyPetLogger.write("LOAD player: " + myPetPlayer);
+                            callback.runTask(MyPetApi.getPlugin(), myPetPlayer);
                         }
                     } catch (SQLException e) {
                         ErrorUtil.reportError("SQLite database operation failed", e);
@@ -880,7 +859,7 @@ public class SqLiteRepository implements Repository {
 
     @Override
     public void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        playersToBeSaved.put(player.getPlayerUUID(), player);
+        playersToBeSaved.put(player.getUniqueId(), player);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -902,8 +881,6 @@ public class SqLiteRepository implements Repository {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE players SET " +
-                            "mojang_uuid=?, " +
-                            "name=?, " +
                             "auto_respawn=?, " +
                             "auto_respawn_min=?, " +
                             "capture_mode=?, " +
@@ -911,22 +888,20 @@ public class SqLiteRepository implements Repository {
                             "pet_idle_volume=?, " +
                             "extended_info=?, " +
                             "multi_world=? " +
-                            "WHERE internal_uuid=?;");
-            statement.setString(1, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
-            statement.setString(2, player.getName());
-            statement.setBoolean(3, player.hasAutoRespawnEnabled());
-            statement.setInt(4, player.getAutoRespawnMin());
-            statement.setBoolean(5, player.isCaptureHelperActive());
-            statement.setBoolean(6, player.isHealthBarActive());
-            statement.setFloat(7, player.getPetLivingSoundVolume());
-            statement.setBytes(8, NbtUtil.writeCompressed(player.getExtendedInfo()));
+                            "WHERE uuid=?;");
+            statement.setBoolean(1, player.hasAutoRespawnEnabled());
+            statement.setInt(2, player.getAutoRespawnMin());
+            statement.setBoolean(3, player.isCaptureHelperActive());
+            statement.setBoolean(4, player.isHealthBarActive());
+            statement.setFloat(5, player.getPetLivingSoundVolume());
+            statement.setBytes(6, NbtUtil.writeCompressed(player.getExtendedInfo()));
 
             JsonObject multiWorldObject = new JsonObject();
             for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
                 multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
             }
-            statement.setString(9, gson.toJson(multiWorldObject));
-            statement.setString(10, player.getInternalUUID().toString());
+            statement.setString(7, gson.toJson(multiWorldObject));
+            statement.setString(8, player.getUniqueId().toString());
 
             int result = statement.executeUpdate();
 
@@ -948,9 +923,7 @@ public class SqLiteRepository implements Repository {
                 try {
                     PreparedStatement statement = connection.prepareStatement(
                             "INSERT INTO players (" +
-                                    "internal_uuid, " +
-                                    "mojang_uuid, " +
-                                    "name, " +
+                                    "uuid, " +
                                     "auto_respawn, " +
                                     "auto_respawn_min, " +
                                     "capture_mode, " +
@@ -958,17 +931,15 @@ public class SqLiteRepository implements Repository {
                                     "pet_idle_volume, " +
                                     "extended_info, " +
                                     "multi_world) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-                    statement.setString(1, player.getInternalUUID().toString());
-                    statement.setString(2, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
-                    statement.setString(3, player.getName());
-                    statement.setBoolean(4, player.hasAutoRespawnEnabled());
-                    statement.setInt(5, player.getAutoRespawnMin());
-                    statement.setBoolean(6, player.isCaptureHelperActive());
-                    statement.setBoolean(7, player.isHealthBarActive());
-                    statement.setFloat(8, player.getPetLivingSoundVolume());
+                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+                    statement.setString(1, player.getUniqueId().toString());
+                    statement.setBoolean(2, player.hasAutoRespawnEnabled());
+                    statement.setInt(3, player.getAutoRespawnMin());
+                    statement.setBoolean(4, player.isCaptureHelperActive());
+                    statement.setBoolean(5, player.isHealthBarActive());
+                    statement.setFloat(6, player.getPetLivingSoundVolume());
                     try {
-                        statement.setBytes(9, NbtUtil.writeCompressed(player.getExtendedInfo()));
+                        statement.setBytes(7, NbtUtil.writeCompressed(player.getExtendedInfo()));
                     } catch (IOException e) {
                         ErrorUtil.reportError("SQLite database operation failed", e);
                     }
@@ -977,7 +948,7 @@ public class SqLiteRepository implements Repository {
                     for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
                         multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                     }
-                    statement.setString(10, gson.toJson(multiWorldObject));
+                    statement.setString(8, gson.toJson(multiWorldObject));
 
 
                     boolean result = statement.executeUpdate() > 0;
@@ -998,9 +969,7 @@ public class SqLiteRepository implements Repository {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO players (" +
-                            "internal_uuid, " +
-                            "mojang_uuid, " +
-                            "name, " +
+                            "uuid, " +
                             "auto_respawn, " +
                             "auto_respawn_min, " +
                             "capture_mode, " +
@@ -1008,35 +977,37 @@ public class SqLiteRepository implements Repository {
                             "pet_idle_volume, " +
                             "extended_info, " +
                             "multi_world) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
 
             int i = 0;
 
-            HashSet<String> playerNames = new HashSet<>();
+            HashSet<UUID> playerUUIDs = new HashSet<>();
 
             for (MyPetPlayer player : players) {
-                String playerName = player.getName();
-                if (playerNames.contains(playerName)) {
+                UUID mojangUUID = player.getUniqueId();
+                if (mojangUUID == null) {
+                    MyPetApi.getLogger().warning("Skipping player with no uuid: " + player);
+                    continue;
+                }
+                if (playerUUIDs.contains(mojangUUID)) {
                     MyPetApi.getLogger().info("Found duplicate Player: " + player);
                     continue;
                 }
-                playerNames.add(playerName);
+                playerUUIDs.add(mojangUUID);
 
-                statement.setString(1, player.getInternalUUID().toString());
-                statement.setString(2, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
-                statement.setString(3, playerName);
-                statement.setBoolean(4, player.hasAutoRespawnEnabled());
-                statement.setInt(5, player.getAutoRespawnMin());
-                statement.setBoolean(6, player.isCaptureHelperActive());
-                statement.setBoolean(7, player.isHealthBarActive());
-                statement.setFloat(8, player.getPetLivingSoundVolume());
-                statement.setBytes(9, NbtUtil.writeCompressed(player.getExtendedInfo()));
+                statement.setString(1, mojangUUID.toString());
+                statement.setBoolean(2, player.hasAutoRespawnEnabled());
+                statement.setInt(3, player.getAutoRespawnMin());
+                statement.setBoolean(4, player.isCaptureHelperActive());
+                statement.setBoolean(5, player.isHealthBarActive());
+                statement.setFloat(6, player.getPetLivingSoundVolume());
+                statement.setBytes(7, NbtUtil.writeCompressed(player.getExtendedInfo()));
 
                 JsonObject multiWorldObject = new JsonObject();
                 for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
                     multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
                 }
-                statement.setString(10, gson.toJson(multiWorldObject));
+                statement.setString(8, gson.toJson(multiWorldObject));
 
                 statement.addBatch();
                 if (++i % 500 == 0 && i != players.size()) {
@@ -1057,8 +1028,8 @@ public class SqLiteRepository implements Repository {
             @Override
             public void run() {
                 try {
-                    PreparedStatement statement = connection.prepareStatement("DELETE FROM players WHERE internal_uuid=?;");
-                    statement.setString(1, player.getInternalUUID().toString());
+                    PreparedStatement statement = connection.prepareStatement("DELETE FROM players WHERE uuid=?;");
+                    statement.setString(1, player.getUniqueId().toString());
 
                     int result = statement.executeUpdate();
 

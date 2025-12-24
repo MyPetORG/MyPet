@@ -137,7 +137,7 @@ public class GriefPreventionHook implements PlayerVersusEntityHook, PlayerVersus
     @Override
     public boolean playerCanMount(MyPetPlayer player, Entity pet) {
         DataStore dataStore = griefPrevention.dataStore;
-        UUID playerUUID = player.getMojangUUID();
+        UUID playerUUID = player.getUniqueId();
 
         Claim claim = dataStore.getClaimAt(pet.getLocation(), true, dataStore.getPlayerData(playerUUID).lastClaim);
         return claim == null || claim.hasExplicitPermission(playerUUID, ClaimPermission.Access);

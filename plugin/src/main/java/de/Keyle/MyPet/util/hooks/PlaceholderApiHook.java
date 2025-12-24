@@ -270,13 +270,6 @@ public class PlaceholderApiHook implements PluginHook {
             }
         });
 
-        placeHolders.put("player_uuid_internal", new PlaceHolder<>(MyPetPlayer.class) {
-            @Override
-            public String getValue(MyPetPlayer player) {
-                return player.getInternalUUID().toString();
-            }
-        });
-
         placeHolders.put("has_pet", new PlaceHolder<>(Player.class) {
             @Override
             public String getValue(Player player) {

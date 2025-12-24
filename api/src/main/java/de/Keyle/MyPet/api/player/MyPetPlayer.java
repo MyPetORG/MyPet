@@ -89,13 +89,7 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     boolean isOnline();
 
-    UUID getPlayerUUID();
-
-    UUID getInternalUUID();
-
-    UUID getOfflineUUID();
-
-    UUID getMojangUUID();
+    UUID getUniqueId();
 
     String getLanguage();
 

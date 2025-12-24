@@ -30,30 +30,20 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class PlayerManager {
-    protected final Map<UUID, UUID> uuidToInternalUUID = new ConcurrentHashMap<>();
     protected final Map<UUID, MyPetPlayer> onlinePlayers = new ConcurrentHashMap<>();
 
-    public UUID getInternalUUID(Player player) {
-        return uuidToInternalUUID.get(player.getUniqueId());
-    }
-
-    public UUID getInternalUUID(UUID playerUUID) {
-        return uuidToInternalUUID.get(playerUUID);
-    }
-
-    public MyPetPlayer getMyPetPlayer(UUID internalUUID) {
-        if (internalUUID != null) {
-            return onlinePlayers.get(internalUUID);
+    public MyPetPlayer getMyPetPlayer(UUID playerUUID) {
+        if (playerUUID != null) {
+            return onlinePlayers.get(playerUUID);
         }
         return null;
     }
 
     public MyPetPlayer getMyPetPlayer(Player player) {
-        UUID internalUUID = getInternalUUID(player);
-        if (internalUUID == null) {
+        if (player == null) {
             return null;
         }
-        return getMyPetPlayer(internalUUID);
+        return getMyPetPlayer(player.getUniqueId());
     }
 
     public MyPetPlayer getMyPetPlayer(String name) {
@@ -62,13 +52,11 @@ public abstract class PlayerManager {
     }
 
     public void setOnline(MyPetPlayer player) {
-        onlinePlayers.put(player.getInternalUUID(), player);
-        uuidToInternalUUID.put(player.getPlayerUUID(), player.getInternalUUID());
+        onlinePlayers.put(player.getUniqueId(), player);
     }
 
     public void setOffline(MyPetPlayer player) {
-        onlinePlayers.remove(player.getInternalUUID());
-        uuidToInternalUUID.remove(player.getPlayerUUID());
+        onlinePlayers.remove(player.getUniqueId());
         MyPetApi.getRepository().updateMyPetPlayer(player, null);
     }
 
@@ -80,7 +68,7 @@ public abstract class PlayerManager {
     }
 
     public boolean isMyPetPlayer(Player player) {
-        return uuidToInternalUUID.containsKey(player.getUniqueId());
+        return onlinePlayers.containsKey(player.getUniqueId());
     }
 
     public MyPetPlayer[] getMyPetPlayers() {

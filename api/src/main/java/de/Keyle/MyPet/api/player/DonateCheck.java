@@ -62,12 +62,7 @@ public class DonateCheck {
             //   5 for creator
             //   6 for premium
             // no data will be saved on the server
-            String check;
-            if (player.getMojangUUID() != null) {
-                check = player.getName() + "," + player.getMojangUUID() + ",";
-            } else {
-                check = player.getName() + ",,";
-            }
+            String check = player.getName() + "," + player.getUniqueId() + ",";
 
             if (donMap.isEmpty()) {
                 fillDonMap();

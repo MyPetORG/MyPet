@@ -28,11 +28,10 @@ import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
-import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 
-import java.io.File;
 import java.util.HashSet;
+import java.util.UUID;
 import java.util.List;
 
 public class Converter {
@@ -45,9 +44,7 @@ public class Converter {
         Repository fromRepo;
         Repository toRepo;
 
-        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("NBT")) {
-            fromRepo = new NbtRepository();
-        } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MySQL")) {
+        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MySQL")) {
             fromRepo = new MySqlRepository();
         } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MongoDB")) {
             fromRepo = new MongoDbRepository();
@@ -68,21 +65,23 @@ public class Converter {
         toRepo = MyPetApi.getRepository();
 
         List<MyPetPlayer> playerList = fromRepo.getAllMyPetPlayers();
-        if (toRepo instanceof NbtRepository) {
-            return false;
-        } else if (toRepo instanceof MySqlRepository) {
+        if (toRepo instanceof MySqlRepository) {
             ((MySqlRepository) toRepo).addMyPetPlayers(playerList);
         } else if (toRepo instanceof SqLiteRepository) {
             ((SqLiteRepository) toRepo).addMyPetPlayers(playerList);
         } else if (toRepo instanceof MongoDbRepository) {
-            HashSet<String> playerNames = new HashSet<>();
+            HashSet<UUID> playerUUIDs = new HashSet<>();
             for (MyPetPlayer player : playerList) {
-                String playerName = player.getName();
-                if (playerNames.contains(playerName)) {
+                UUID mojangUUID = player.getUniqueId();
+                if (mojangUUID == null) {
+                    MyPetApi.getLogger().warning("Skipping player with no uuid: " + player);
+                    continue;
+                }
+                if (playerUUIDs.contains(mojangUUID)) {
                     MyPetApi.getLogger().info("Found duplicate Player: " + player);
                     continue;
                 }
-                playerNames.add(playerName);
+                playerUUIDs.add(mojangUUID);
                 ((MongoDbRepository) toRepo).addMyPetPlayer(player);
             }
         }
@@ -102,13 +101,6 @@ public class Converter {
         toRepo.save();
         fromRepo.disable();
 
-        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("NBT")) {
-            File nbtFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
-            File nbtFileOld = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets.old");
-            nbtFile.renameTo(nbtFileOld);
-            MyPetApi.getPlugin().getConfig().set("MyPet.Repository.Type", Configuration.Repository.REPOSITORY_TYPE);
-            MyPetApi.getPlugin().getConfig().set("MyPet.Repository.NBT", null);
-        }
         MyPetApi.getPlugin().getConfig().set("MyPet.Repository.ConvertFrom", "-");
         MyPetApi.getPlugin().saveConfig();
 

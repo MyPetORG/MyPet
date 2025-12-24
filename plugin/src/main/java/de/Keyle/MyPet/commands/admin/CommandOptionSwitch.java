@@ -102,7 +102,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                             messageBuilder.append(
                                     Component.text(mypet.getPetName())
                                             .color(NamedTextColor.AQUA)
-                                            .clickEvent(ClickEvent.runCommand("/petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID()))
+                                            .clickEvent(ClickEvent.runCommand("/petadmin switch " + owner.getUniqueId() + " " + mypet.getUUID()))
                                             .hoverEvent(Util.myPetToItemHover(mypet, lang))
                             );
                             if (!doComma) {
@@ -114,7 +114,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                         }
                     } else {
                         for (StoredMyPet mypet : value) {
-                            sender.sendMessage(mypet.getPetName() + "(" + mypet.getPetType().name() + ") -> /petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID());
+                            sender.sendMessage(mypet.getPetName() + "(" + mypet.getPetType().name() + ") -> /petadmin switch " + owner.getUniqueId() + " " + mypet.getUUID());
                         }
                     }
                 }
