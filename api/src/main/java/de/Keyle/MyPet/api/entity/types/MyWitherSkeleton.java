@@ -24,7 +24,9 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 
+@ShopInfo(displayName = "Wither Skeleton")
 @DefaultInfo(food = {"bone"})
 public interface MyWitherSkeleton extends MyPet, MyPetEquipment, MyPetLavaEntity {
 }

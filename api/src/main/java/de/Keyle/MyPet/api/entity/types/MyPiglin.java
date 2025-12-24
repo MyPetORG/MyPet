@@ -22,8 +22,7 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.*;
 
-
+@ShopInfo
 @DefaultInfo(food = {"gold_nugget"})
 public interface MyPiglin extends MyPet, MyPetEquipment, MyPetBaby, MyPetShake {
-
 }

@@ -22,8 +22,7 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.*;
 
-
+@ShopInfo(displayName = "Zombified Piglin")
 @DefaultInfo(food = {"rotten_flesh"})
 public interface MyZombifiedPiglin extends MyPet, MyPetEquipment, MyPetBaby, MyPetLavaEntity {
-
 }

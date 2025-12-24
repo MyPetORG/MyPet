@@ -23,9 +23,10 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import lombok.Getter;
 
-
+@ShopInfo
 @DefaultInfo(food = {"wheat"})
 public interface MyMooshroom extends MyPet, MyPetBaby {
 

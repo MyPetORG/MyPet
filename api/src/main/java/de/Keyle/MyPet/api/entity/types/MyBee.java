@@ -24,7 +24,9 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 
+@ShopInfo
 @DefaultInfo(food = {
         "poppy",
         "dandelion",

@@ -22,8 +22,10 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.inventory.ItemStack;
 
+@ShopInfo(displayName = "Iron Golem")
 @DefaultInfo(food = {"iron_ingot"}, leashFlags = {"UserCreated"})
 public interface MyIronGolem extends MyPet {
     ItemStack getFlower();

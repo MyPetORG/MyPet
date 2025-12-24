@@ -23,8 +23,10 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.entity.Rabbit;
 
+@ShopInfo
 @DefaultInfo(food = {"carrot"})
 public interface MyRabbit extends MyPet, MyPetBaby {
     RabbitType getVariant();

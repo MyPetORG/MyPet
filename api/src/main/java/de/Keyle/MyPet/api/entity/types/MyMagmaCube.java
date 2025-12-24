@@ -24,7 +24,9 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
 import de.Keyle.MyPet.api.entity.MyPetSize;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 
+@ShopInfo(displayName = "Magma Cube", options = {"size:2"})
 @DefaultInfo(food = {"redstone"})
 public interface MyMagmaCube extends MyPet, MyPetSize, MyPetLavaEntity {
 }

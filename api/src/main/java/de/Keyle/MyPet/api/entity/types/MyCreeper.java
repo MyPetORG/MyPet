@@ -22,7 +22,9 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 
+@ShopInfo
 @DefaultInfo(food = {"gunpowder"})
 public interface MyCreeper extends MyPet {
     boolean isPowered();

@@ -23,8 +23,9 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 
-
+@ShopInfo
 @DefaultInfo(food = {"bone"})
 public interface MyWarden extends MyPet, MyPetLavaEntity {
     void setHeartAttack(boolean flag);

@@ -23,10 +23,12 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 
 import java.util.Collections;
 import java.util.Set;
 
+@ShopInfo
 @DefaultInfo(food = {"apple"})
 public interface MyEvoker extends MyPet, MyPetEquipment {
     @Override

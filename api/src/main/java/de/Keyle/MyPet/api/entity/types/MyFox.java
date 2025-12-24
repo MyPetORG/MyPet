@@ -24,10 +24,12 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.entity.Fox.Type;
 
 import java.util.Set;
 
+@ShopInfo
 @DefaultInfo(food = {"sweet_berries"})
 public interface MyFox extends MyPet, MyPetBaby, MyPetEquipment {
     @Override

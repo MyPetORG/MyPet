@@ -60,6 +60,7 @@ import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
+import de.Keyle.MyPet.util.shop.ShopConfigGenerator;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
@@ -436,9 +437,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         }
 
         File shopConfig = new File(getDataFolder(), "pet-shops.yml");
-        if (!shopConfig.exists()) {
-            platformHelper.copyResource(this, "pet-shops.yml", shopConfig);
-        }
+        ShopConfigGenerator.generateIfMissing(shopConfig);
         new ShopManager();
 
         Timer.startTimer();

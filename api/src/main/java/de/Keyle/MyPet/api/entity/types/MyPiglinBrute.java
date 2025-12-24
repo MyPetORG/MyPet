@@ -24,9 +24,9 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.MyPetShake;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 
-
+@ShopInfo(displayName = "Piglin Brute")
 @DefaultInfo(food = {"gold_nugget"})
 public interface MyPiglinBrute extends MyPet, MyPetEquipment, MyPetShake {
-
 }

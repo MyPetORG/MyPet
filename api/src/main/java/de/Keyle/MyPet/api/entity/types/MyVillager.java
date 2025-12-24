@@ -24,11 +24,13 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 import java.util.Set;
 
+@ShopInfo
 @DefaultInfo(food = {"apple"})
 public interface MyVillager extends MyPet, MyPetBaby, MyPetEquipment {
     @Override

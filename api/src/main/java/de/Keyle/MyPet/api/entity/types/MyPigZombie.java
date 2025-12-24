@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.*;
 
-
+@ShopInfo(displayName = "Pig Zombie")
 @DefaultInfo(food = {"rotten_flesh"})
 public interface MyPigZombie extends MyPet, MyPetEquipment, MyPetBaby, MyPetLavaEntity {
 }

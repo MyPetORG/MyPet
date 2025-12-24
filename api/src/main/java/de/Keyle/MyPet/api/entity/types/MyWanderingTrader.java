@@ -22,9 +22,10 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 
-
+@ShopInfo(displayName = "Wandering Trader")
 @DefaultInfo(food = {"apple"})
 public interface MyWanderingTrader extends MyPet {
 

@@ -23,7 +23,9 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 
+@ShopInfo(displayName = "Polar Bear")
 @DefaultInfo(food = {"cod"})
 public interface MyPolarBear extends MyPet, MyPetBaby {
 }
