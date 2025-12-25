@@ -330,6 +330,14 @@ public class SkillTreeLoaderJSON {
                         .setRaidModifier(parseBooleanModifier(get(upgradeObject, "raid")));
                 break;
             }
+            case "bleed": {
+                upgrade = new BleedUpgrade()
+                        .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")))
+                        .setIntervalModifier(parseIntegerModifier(get(upgradeObject, "interval")))
+                        .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")))
+                        .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")));
+                break;
+            }
             case "control": {
                 upgrade = new ControlUpgrade()
                         .setActiveModifier(parseBooleanModifier(get(upgradeObject, "active")));

@@ -591,6 +591,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         MyPetApi.getSkillManager().registerSkill(SprintImpl.class);
         MyPetApi.getSkillManager().registerSkill(StompImpl.class);
         MyPetApi.getSkillManager().registerSkill(ShieldImpl.class);
+        MyPetApi.getSkillManager().registerSkill(BleedImpl.class);
     }
 
     public static void registerLeashFlags() {
