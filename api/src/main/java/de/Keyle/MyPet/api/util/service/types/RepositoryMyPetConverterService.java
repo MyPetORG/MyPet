@@ -69,6 +69,7 @@ public class RepositoryMyPetConverterService implements ServiceContainer {
         v1_21_R4,
         v1_21_R5,
         v1_21_R6,
+        v1_21_R7,
     }
 
     Version toVersion;
