@@ -41,6 +41,10 @@ public interface MyCopperGolem extends MyPet {
 
     void setPoppy(ItemStack item);
 
+    int getOxidationTickCounter();
+
+    void setOxidationTickCounter(int ticks);
+
     boolean hasPoppy();
 
     enum OxidationState {

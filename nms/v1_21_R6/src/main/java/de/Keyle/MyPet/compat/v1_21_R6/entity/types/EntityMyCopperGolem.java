@@ -43,7 +43,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WeatheringCopper;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
@@ -53,8 +52,6 @@ public class EntityMyCopperGolem extends EntityMyPet {
 
     protected static final EntityDataAccessor<WeatheringCopper.WeatherState> DATA_WEATHER_STATE = SynchedEntityData.defineId(EntityMyCopperGolem.class, EntityDataSerializers.WEATHERING_COPPER_STATE);
     protected static final EntityDataAccessor<CopperGolemState> COPPER_GOLEM_STATE = SynchedEntityData.defineId(EntityMyCopperGolem.class, EntityDataSerializers.COPPER_GOLEM_STATE);
-
-    private int oxidationTickCounter = 0;
 
     public EntityMyCopperGolem(Level world, MyPet myPet) {
         super(world, myPet);
@@ -67,7 +64,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
             this.level().broadcastEntityEvent(this, (byte) 4);
             flag = super.attack(entity);
             if (flag) {
-                this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_COPPER_GOLEM_HURT, 1.0F, 1.0F);
+                makeSound(getHurtSoundForOxidationState(), 1.0F, 1.0F);
             }
         } catch (Exception e) {
             ErrorUtil.report(e);
@@ -149,6 +146,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
             // Remove wax with axe
             else if (isAxe && getMyPet().isWaxed()) {
                 getMyPet().setWaxed(false);
+                getMyPet().setOxidationTickCounter(0);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                     try {
                         itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
@@ -172,6 +170,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
 
                 if (newState != currentState) {
                     getMyPet().setOxidationState(newState);
+                    getMyPet().setOxidationTickCounter(0);
                     if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                         try {
                             itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
@@ -203,7 +202,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
                 entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
                 this.level().addFreshEntity(entityitem);
 
-                getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+                makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setPoppy(null);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                     try {
@@ -225,10 +224,10 @@ public class EntityMyCopperGolem extends EntityMyPet {
         // Update poppy visual in antenna slot
         if (getMyPet().hasPoppy()) {
             org.bukkit.inventory.ItemStack bukkitPoppy = getMyPet().getPoppy();
-            net.minecraft.world.item.ItemStack nmsPoppy = org.bukkit.craftbukkit.inventory.CraftItemStack.asNMSCopy(bukkitPoppy);
+            ItemStack nmsPoppy = CraftItemStack.asNMSCopy(bukkitPoppy);
             this.setItemSlot(net.minecraft.world.entity.animal.coppergolem.CopperGolem.EQUIPMENT_SLOT_ANTENNA, nmsPoppy);
         } else {
-            this.setItemSlot(net.minecraft.world.entity.animal.coppergolem.CopperGolem.EQUIPMENT_SLOT_ANTENNA, net.minecraft.world.item.ItemStack.EMPTY);
+            this.setItemSlot(net.minecraft.world.entity.animal.coppergolem.CopperGolem.EQUIPMENT_SLOT_ANTENNA, ItemStack.EMPTY);
         }
     }
 
@@ -273,30 +272,34 @@ public class EntityMyCopperGolem extends EntityMyPet {
         super.onLivingUpdate();
 
         // Handle oxidation over time
-        if (Configuration.MyPet.CopperGolem.CAN_OXIDIZE && !getMyPet().isWaxed()) {
-            MyCopperGolem.OxidationState currentState = getMyPet().getOxidationState();
+        if (!Configuration.MyPet.CopperGolem.CAN_OXIDIZE || getMyPet().isWaxed()) {
+            return;
+        }
 
-            // Don't oxidize further if already fully oxidized
-            if (currentState != MyCopperGolem.OxidationState.OXIDIZED) {
-                oxidationTickCounter++;
+        // Don't oxidize further if already fully oxidized
+        MyCopperGolem.OxidationState currentState = getMyPet().getOxidationState();
+        if (currentState == MyCopperGolem.OxidationState.OXIDIZED) {
+            return;
+        }
 
-                // Check if it's time to oxidize
-                if (oxidationTickCounter >= Configuration.MyPet.CopperGolem.OXIDATION_TIME) {
-                    oxidationTickCounter = 0;
+        int oxidationTickCounter = getMyPet().getOxidationTickCounter() + 1;
 
-                    // Progress to next oxidation state
-                    MyCopperGolem.OxidationState newState = switch (currentState) {
-                        case UNAFFECTED -> MyCopperGolem.OxidationState.EXPOSED;
-                        case EXPOSED -> MyCopperGolem.OxidationState.WEATHERED;
-                        case WEATHERED -> MyCopperGolem.OxidationState.OXIDIZED;
-                        default -> currentState;
-                    };
+        // Check if it's time to oxidize
+        if (oxidationTickCounter >= Configuration.MyPet.CopperGolem.OXIDATION_TIME) {
+            oxidationTickCounter = 0;
 
-                    if (newState != currentState) {
-                        getMyPet().setOxidationState(newState);
-                    }
-                }
+            // Progress to next oxidation state
+            MyCopperGolem.OxidationState newState = switch (currentState) {
+                case UNAFFECTED -> MyCopperGolem.OxidationState.EXPOSED;
+                case EXPOSED -> MyCopperGolem.OxidationState.WEATHERED;
+                case WEATHERED -> MyCopperGolem.OxidationState.OXIDIZED;
+                default -> currentState;
+            };
+
+            if (newState != currentState) {
+                getMyPet().setOxidationState(newState);
             }
         }
+        getMyPet().setOxidationTickCounter(oxidationTickCounter);
     }
 }

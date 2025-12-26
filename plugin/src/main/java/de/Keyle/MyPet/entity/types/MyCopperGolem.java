@@ -33,6 +33,7 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     protected OxidationState oxidationState = OxidationState.UNAFFECTED;
     protected boolean waxed = false;
     protected ItemStack poppy = null;
+    protected int oxidationTickCounter = 0;
 
     public MyCopperGolem(MyPetPlayer petOwner) {
         super(petOwner);
@@ -46,6 +47,7 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
         if (hasPoppy()) {
             info = info.put("Poppy", MyPetApi.getPlatformHelper().itemStackToCompound(poppy));
         }
+        info = info.putInt("OxidationTickCounter", oxidationTickCounter);
         return info;
     }
 
@@ -69,6 +71,9 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
             } catch (Exception e) {
                 poppy = null;
             }
+        }
+        if (info.keySet().contains("OxidationTickCounter")) {
+            oxidationTickCounter = info.getInt("OxidationTickCounter");
         }
     }
 
@@ -97,6 +102,16 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    @Override
+    public int getOxidationTickCounter() {
+        return oxidationTickCounter;
+    }
+
+    @Override
+    public void setOxidationTickCounter(int ticks) {
+        this.oxidationTickCounter = ticks;
     }
 
     @Override
