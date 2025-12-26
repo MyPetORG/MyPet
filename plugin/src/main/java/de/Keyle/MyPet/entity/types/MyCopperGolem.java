@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
@@ -35,6 +36,7 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     protected OxidationState oxidationState = OxidationState.UNAFFECTED;
     protected boolean waxed = false;
     protected ItemStack poppy = null;
+    protected int oxidationTickCounter = 0;
 
     public MyCopperGolem(MyPetPlayer petOwner) {
         super(petOwner);
@@ -48,6 +50,7 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
         if (hasPoppy()) {
             info.getCompoundData().put("Poppy", MyPetApi.getPlatformHelper().itemStackToCompund(poppy));
         }
+        info.getCompoundData().put("OxidationTickCounter", new TagInt(oxidationTickCounter));
         return info;
     }
 
@@ -70,6 +73,9 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
             } catch (Exception e) {
                 poppy = null;
             }
+        }
+        if (info.containsKey("OxidationTickCounter")) {
+            oxidationTickCounter = info.getAs("OxidationTickCounter", TagInt.class).getIntData();
         }
     }
 
@@ -123,6 +129,16 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
+    }
+
+    @Override
+    public int getOxidationTickCounter() {
+        return oxidationTickCounter;
+    }
+
+    @Override
+    public void setOxidationTickCounter(int ticks) {
+        this.oxidationTickCounter = ticks;
     }
 
     @Override

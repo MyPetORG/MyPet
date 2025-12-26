@@ -52,8 +52,6 @@ public class EntityMyCopperGolem extends EntityMyPet {
 	protected static final EntityDataAccessor<WeatheringCopper.WeatherState> DATA_WEATHER_STATE = SynchedEntityData.defineId(EntityMyCopperGolem.class, EntityDataSerializers.WEATHERING_COPPER_STATE);
 	protected static final EntityDataAccessor<CopperGolemState> COPPER_GOLEM_STATE = SynchedEntityData.defineId(EntityMyCopperGolem.class, EntityDataSerializers.COPPER_GOLEM_STATE);
 
-	private int oxidationTickCounter = 0;
-
 	public EntityMyCopperGolem(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
@@ -272,30 +270,33 @@ public class EntityMyCopperGolem extends EntityMyPet {
 		super.onLivingUpdate();
 
 		// Handle oxidation over time
-		if (Configuration.MyPet.CopperGolem.CAN_OXIDIZE && !getMyPet().isWaxed()) {
-            MyCopperGolem.OxidationState currentState = getMyPet().getOxidationState();
+		if (!Configuration.MyPet.CopperGolem.CAN_OXIDIZE || getMyPet().isWaxed()) {
+			return;
+		}
 
-			// Don't oxidize further if already fully oxidized
-			if (currentState != MyCopperGolem.OxidationState.OXIDIZED) {
-				oxidationTickCounter++;
+		MyCopperGolem.OxidationState currentState = getMyPet().getOxidationState();
+		if (currentState == MyCopperGolem.OxidationState.OXIDIZED) {
+			return;
+		}
 
-				// Check if it's time to oxidize
-				if (oxidationTickCounter >= Configuration.MyPet.CopperGolem.OXIDATION_TIME) {
-					oxidationTickCounter = 0;
+		int tickCounter = getMyPet().getOxidationTickCounter() + 1;
 
-					// Progress to next oxidation state
-                    MyCopperGolem.OxidationState newState = switch (currentState) {
-						case UNAFFECTED -> MyCopperGolem.OxidationState.EXPOSED;
-						case EXPOSED -> MyCopperGolem.OxidationState.WEATHERED;
-						case WEATHERED -> MyCopperGolem.OxidationState.OXIDIZED;
-						default -> currentState;
-					};
+		// Check if it's time to oxidize
+		if (tickCounter >= Configuration.MyPet.CopperGolem.OXIDATION_TIME) {
+			tickCounter = 0;
 
-					if (newState != currentState) {
-						getMyPet().setOxidationState(newState);
-					}
-				}
+			// Progress to next oxidation state
+			MyCopperGolem.OxidationState newState = switch (currentState) {
+				case UNAFFECTED -> MyCopperGolem.OxidationState.EXPOSED;
+				case EXPOSED -> MyCopperGolem.OxidationState.WEATHERED;
+				case WEATHERED -> MyCopperGolem.OxidationState.OXIDIZED;
+				default -> currentState;
+			};
+
+			if (newState != currentState) {
+				getMyPet().setOxidationState(newState);
 			}
 		}
+		getMyPet().setOxidationTickCounter(tickCounter);
 	}
 }

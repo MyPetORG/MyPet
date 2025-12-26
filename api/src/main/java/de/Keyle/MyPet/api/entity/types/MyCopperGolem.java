@@ -44,4 +44,8 @@ public interface MyCopperGolem extends MyPet {
     boolean hasPoppy();
 
     void setPoppy(ItemStack item);
+
+    int getOxidationTickCounter();
+
+    void setOxidationTickCounter(int ticks);
 }
