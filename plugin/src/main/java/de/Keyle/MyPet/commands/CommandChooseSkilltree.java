@@ -79,11 +79,11 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                             Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName.toString());
                             if (skilltree.getMobTypes().contains(myPet.getPetType()) && skilltree.checkRequirements(myPet)) {
                                 int requiredLevel = skilltree.getRequiredLevel();
-                                int maxLevel = skilltree.getMaxLevel()
+                                int maxLevel = skilltree.getMaxLevel();
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", player), myPet.getPetName(), requiredLevel));
-                                } else if(maxLevel > 1 && myPet.getExperience().getLevel() > maxLevel) {
-                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.MaxLevel.Message", player), myPet.getPetName(), max));
+                                } else if (myPet.getExperience().getLevel() > maxLevel) {
+                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.MaxLevel.Message", player), myPet.getPetName(), maxLevel));
                                 } else if (myPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.PlayerCommand)) {
                                     sender.sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", player), Colorizer.setColors(skilltree.getDisplayName())));
                                     if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
@@ -133,16 +133,16 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                         if (myPet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
                             sender.sendMessage(Util.formatText(Translation.getString("Message.Command.ChooseSkilltree.OnlyOnce", myPet.getOwner()), myPet.getPetName()));
                         } else if (skilltreeSlotMap.containsKey(event.getPosition())) {
-                            Skilltree selecedSkilltree = skilltreeSlotMap.get(event.getPosition());
-                            if (selecedSkilltree != null) {
-                                int requiredLevel = selecedSkilltree.getRequiredLevel();
-                                int maxLevel = selectedSkilltree.getMaxLevel()
+                            Skilltree selectedSkilltree = skilltreeSlotMap.get(event.getPosition());
+                            if (selectedSkilltree != null) {
+                                int requiredLevel = selectedSkilltree.getRequiredLevel();
+                                int maxLevel = selectedSkilltree.getMaxLevel();
                                 if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
                                     myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.RequiresLevel.Message", myPetOwner), myPet.getPetName(), requiredLevel));
-                                } else if(maxLevel > 1 && myPet.getExperience().getLevel() > maxLevel) {
-                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.MaxLevel.Message", myPetOwner), myPet.getPetName(), max));
-                                } else if (myPet.setSkilltree(selecedSkilltree, MyPetSelectSkilltreeEvent.Source.PlayerCommand)) {
-                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", myPetOwner), Colorizer.setColors(selecedSkilltree.getDisplayName())));
+                                } else if (myPet.getExperience().getLevel() > maxLevel) {
+                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.MaxLevel.Message", myPetOwner), myPet.getPetName(), maxLevel));
+                                } else if (myPet.setSkilltree(selectedSkilltree, MyPetSelectSkilltreeEvent.Source.PlayerCommand)) {
+                                    myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.Skilltree.SwitchedTo", myPetOwner), Colorizer.setColors(selectedSkilltree.getDisplayName())));
                                     if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
                                         double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;
                                         switchPenalty += myPet.getExperience().getExp() * Configuration.Skilltree.SWITCH_FEE_PERCENT / 100.;
