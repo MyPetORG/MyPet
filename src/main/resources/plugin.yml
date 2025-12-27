@@ -1,9 +1,9 @@
 name: MyPet
 main: de.Keyle.MyPet.MyPetPlugin
-version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}
+version: ${mypetVersion}
 api-version: '1.13'
 author: Keyle
-website: ${project.url}
+website: https://mypet.plugin.de/
 softdepend:
   - GriefPrevention
   - GriefPreventionPlus
@@ -81,7 +81,7 @@ commands:
     aliases: [pstore, pst]
     description: Stores your current pet
   petlist:
-    aliases: [plist, pl]
+    aliases: [plist]
     description: Lists all your pet
     usage: '/<command> <player name>'
   pettrade:

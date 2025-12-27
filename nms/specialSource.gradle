@@ -1,0 +1,100 @@
+// Code copied from https://github.com/Shopkeepers/Shopkeepers/tree/master
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    configurations.create('specialSource')
+
+    dependencies {
+        specialSource 'net.md-5:SpecialSource:1.11.5:shaded'
+    }
+}
+
+// Spigot server code remapping: https://www.spigotmc.org/threads/spigot-bungeecord-1-17-1-17-1.510208/
+// These dependencies and mappings are installed into the local Maven repository when BuildTools builds the Spigot dependencies.
+def gradleCache = new File(System.getProperty("user.home"), '.gradle/caches/modules-2/files-2.1')
+def mavenLocal = new File(System.getProperty("user.home"), '.m2/repository')
+def findInCache = { group, module, version, fileName ->
+    // First, try Gradle cache
+    def gradleBaseDir = new File(gradleCache, "${group}/${module}/${version}")
+    if (gradleBaseDir.exists()) {
+        def result = gradleBaseDir.listFiles()?.findAll { it.isDirectory() }?.collectMany({ it.listFiles().flatten() })?.find { it.name == fileName }?.path
+        if (result != null) {
+            return result
+        }
+    }
+
+    // Fallback to Maven local repository
+    def groupPath = group.replace('.', '/')
+    def mavenBaseDir = new File(mavenLocal, "${groupPath}/${module}/${version}")
+    if (mavenBaseDir.exists()) {
+        def mavenFile = new File(mavenBaseDir, fileName)
+        if (mavenFile.exists()) {
+            return mavenFile.path
+        }
+    }
+
+    throw new Exception("Failed to resolve ${fileName} for ${group}:${module}:${version}. Checked Gradle cache (${gradleBaseDir}) and Maven local (${mavenBaseDir}). Run BuildTools to install the required Spigot artifacts.");
+}
+
+
+def specialSource = buildscript.configurations.specialSource.resolvedConfiguration.getFirstLevelModuleDependencies().find {
+    it.moduleGroup == 'net.md-5' && it.moduleName == 'SpecialSource'
+}.moduleArtifacts.first().file.path
+
+// Converts from Mojang's mappings to Minecraft's obfuscated mappings.
+ext.remapMojangToObfuscated = { inputFile, outputFile, craftbukkitVersion ->
+    def remappedMojang = findInCache("org.spigotmc", "spigot", craftbukkitVersion, "spigot-${craftbukkitVersion}-remapped-mojang.jar")
+    def mojangMappings = findInCache("org.spigotmc", "minecraft-server", craftbukkitVersion, "minecraft-server-${craftbukkitVersion}-maps-mojang.txt")
+
+    println '> remapMojangToObfuscated'
+    println '  Input: ' + inputFile.path
+    println '  Output: ' + outputFile.path
+    println '  CraftBukkit version: ' + craftbukkitVersion
+    def classpathSeparator = System.properties['path.separator']
+    exec {
+        commandLine 'java',
+                '-cp', "${specialSource}${classpathSeparator}${remappedMojang}".replace('{craftbukkitVersion}', craftbukkitVersion),
+                'net.md_5.specialsource.SpecialSource',
+                '--live',
+                '-i', inputFile.path,
+                '-o', outputFile.path,
+                '-m', mojangMappings,
+                '--reverse'
+    }
+}
+
+// Converts from Minecraft's obfuscated mappings to Spigot's mappings.
+ext.remapObfuscatedToSpigot = { inputFile, outputFile, craftbukkitVersion ->
+    def spigotMappings = findInCache("org.spigotmc", "minecraft-server", craftbukkitVersion, "minecraft-server-${craftbukkitVersion}-maps-spigot.csrg")
+    def remappedObf = findInCache("org.spigotmc", "spigot", craftbukkitVersion, "spigot-${craftbukkitVersion}-remapped-obf.jar")
+
+    println '> remapObfuscatedToSpigot'
+    println '  Input: ' + inputFile.path
+    println '  Output: ' + outputFile.path
+    println '  CraftBukkit version: ' + craftbukkitVersion
+    def classpathSeparator = System.properties['path.separator']
+    exec {
+        commandLine 'java',
+                '-cp', "${specialSource}${classpathSeparator}${remappedObf}".replace('{craftbukkitVersion}', craftbukkitVersion),
+                'net.md_5.specialsource.SpecialSource',
+                '--live',
+                '-i', inputFile.path,
+                '-o', outputFile.path,
+                '-m', spigotMappings
+    }
+}
+
+// Converts from Mojang's mappings to Spigot's mappings.
+ext.remapMojangToSpigot = { inputFile, intermediateFile, outputFile, craftbukkitVersion ->
+    println '> remapMojangToSpigot'
+    println '  Input: ' + inputFile.path
+    println '  Intermediate: ' + intermediateFile.path
+    println '  Output: ' + outputFile.path
+    println '  CraftBukkit version: ' + craftbukkitVersion
+    remapMojangToObfuscated(inputFile, intermediateFile, craftbukkitVersion)
+    remapObfuscatedToSpigot(intermediateFile, outputFile, craftbukkitVersion)
+}

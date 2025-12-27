@@ -1,0 +1,175 @@
+name: Build Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      JAVA_VERSION: '21'
+      PROJECT_VERSION: ""
+      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+      GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      POLYMART_TOKEN: ${{ secrets.POLYMART_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Read version from build.gradle.kts
+        id: ver
+        shell: bash
+        run: |
+            VERSION=$(grep -Po 'version\s*=\s*"([^"]+)' build.gradle.kts | cut -d'"' -f2)
+            echo "PROJECT_VERSION=$VERSION"
+            echo "PROJECT_VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Build MyPet
+        run: |
+          ./gradlew --no-daemon build -PbuildType=release -PSENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+
+      - name: Find shaded JAR
+        id: findjar
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          CANDIDATES=(build/libs/MyPet-*.jar)
+          # Filter out sources/javadoc/plain jars
+          FILTERED=()
+          for j in "${CANDIDATES[@]}"; do
+            [[ "$j" =~ -(sources|javadoc|plain)\.jar$ ]] || FILTERED+=("$j")
+          done
+          if (( ${#FILTERED[@]} == 0 )); then
+            echo "No candidate jar found in build/libs" >&2
+            ls -la build/libs || true
+            exit 1
+          fi
+          JAR="${FILTERED[0]}"
+          echo "jar=$JAR" >> "$GITHUB_OUTPUT"
+          echo "filename=$(basename "$JAR")" >> "$GITHUB_OUTPUT"
+          echo "Found: $JAR"
+
+      - name: Upload workflow artifact (jar)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mypet-release-jar
+          path: ${{ steps.findjar.outputs.jar }}
+          if-no-files-found: error
+          retention-days: 180
+
+      - name: Read changelog
+        id: changelog
+        shell: bash
+        run: |
+          CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}.md"
+          if [[ -f "$CHANGELOG_FILE" ]]; then
+            echo "Found changelog: $CHANGELOG_FILE"
+            {
+              echo 'content<<EOF'
+              cat "$CHANGELOG_FILE"
+              echo 'EOF'
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "No changelog found at $CHANGELOG_FILE"
+            echo "content=A changelog has not yet been uploaded. Please consider checking Discord!" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.PROJECT_VERSION }}
+          name: v${{ env.PROJECT_VERSION }}
+          prerelease: false
+          overwrite_files: false
+          files: ${{ steps.findjar.outputs.jar }}
+          body: ${{ steps.changelog.outputs.content }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to Modrinth
+        uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ env.MODRINTH_TOKEN }}
+          project: SnE2iTno
+          version: ${{ env.PROJECT_VERSION }}
+          name: v${{ env.PROJECT_VERSION }}
+          changelog: ${{ steps.changelog.outputs.content }}
+          channel: release
+          featured: true
+          loaders: paper, spigot
+          game-versions: 1.8.8, 1.12.2, 1.16.5, 1.17.1, 1.18.2, 1.19.x, 1.20.x, 1.21.x
+          files: ${{ steps.findjar.outputs.jar }}
+
+      - name: Publish to Hangar
+        uses: benwoo1110/hangar-upload-action@v1
+        with:
+          api_token: ${{ env.HANGAR_TOKEN }}
+          slug: MyPet
+          version: ${{ env.PROJECT_VERSION }}
+          channel: Release
+          description: ${{ steps.changelog.outputs.content }}
+          files: |
+            [
+              {
+                "path": "${{ steps.findjar.outputs.jar }}",
+                "platforms": ["PAPER"]
+              }
+            ]
+          platform_dependencies: |
+            {
+              "PAPER": ["1.8.8", "1.12.2", "1.16.5", "1.17.1", "1.18.2", "1.19.x", "1.20.x", "1.21.x"]
+            }
+
+      - name: Publish to Polymart
+        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_VERSION=${PROJECT_VERSION} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
+
+      - name: Send a Discord webhook notification
+        run: |
+          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d '{
+          "username": "MyPet Release",
+          "content": "<@&1428362555084116131>",
+          "embeds": [
+            {
+              "type": "rich",
+              "title": "${{ env.PROJECT_VERSION }}",
+              "description": "**A new version of MyPet has released!**",
+              "color": 439741,
+              "thumbnail": {
+                "url": "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
+              },
+              "author": {
+                "name": "${{ github.actor }}",
+                "url": "https://github.com/${{ github.actor_id }}",
+                "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
+              },
+              "url": "https://modrinth.com/plugin/mypet/version/${{ env.PROJECT_VERSION }}"
+            }
+          ]
+          }' ${{ secrets.WEBHOOK_URL }})
+          echo "Webhook server response: $RESPONSE"
