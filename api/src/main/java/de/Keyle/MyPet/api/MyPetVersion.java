@@ -35,6 +35,7 @@ public class MyPetVersion {
 
     private static String version = "0.0.0";
     private static String build = "0";
+    private static String buildType = "local";
     private static String minecraftVersion = "0.0.0";
     private static List<String> bukkitPackets = new ArrayList<>();
     private static List<String> specialMCVersions = new ArrayList<>();
@@ -49,6 +50,9 @@ public class MyPetVersion {
             }
             if (attr.getValue("Project-Build") != null) {
                 build = attr.getValue("Project-Build");
+            }
+            if (attr.getValue("Project-Type") != null) {
+                buildType = attr.getValue("Project-Type");
             }
             if (attr.getValue("Project-Minecraft-Version") != null) {
                 minecraftVersion = attr.getValue("Project-Minecraft-Version");
@@ -85,7 +89,11 @@ public class MyPetVersion {
     }
 
     public static boolean isDevBuild() {
-        return getVersion().contains("SNAPSHOT");
+        if (!updated) {
+            loadData();
+            updated = true;
+        }
+        return !"release".equalsIgnoreCase(buildType);
     }
 
     public static String getBuild() {

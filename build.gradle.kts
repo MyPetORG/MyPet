@@ -7,6 +7,7 @@ plugins {
     java
     id("com.gradleup.shadow") version "9.2.2"
     id("io.freefair.lombok") version "9.0.0"
+    id("com.cjcrafter.polymart-release") version "1.0.1"
     `maven-publish`
 }
 
@@ -215,4 +216,22 @@ java {
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(8)
     options.encoding = "UTF-8"
+}
+
+/* ---------- Polymart Release ---------- */
+
+polymart {
+    val polymartVersion = providers.gradleProperty("POLYMART_VERSION").orNull
+        ?: project.version.toString()
+    val polymartFile = providers.gradleProperty("POLYMART_FILE").orNull
+        ?: "build/libs/MyPet-${project.version}.jar"
+    apiKey = providers.gradleProperty("POLYMART_TOKEN").orNull
+        ?: System.getenv("POLYMART_TOKEN")
+        ?: ""
+    resourceId = 8915
+    version = polymartVersion
+    title = "MyPet $polymartVersion"
+    message = "View the full changelog on Modrinth: https://modrinth.com/plugin/mypet/version/$polymartVersion"
+    file.set(file(polymartFile))
+    beta = buildType != "release"
 }
