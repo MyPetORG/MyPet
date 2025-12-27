@@ -5,28 +5,39 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: build-pr-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
     env:
+      JAVA_VERSION: '21'
       BUILD_NUMBER: 1
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Set up JDK 21
+      - name: Set up Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
-          distribution: microsoft
-          java-version: 21
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
           cache: gradle
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Compile
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build MyPet
         run: |
           ./gradlew --no-daemon \
             -PBUILD_NUMBER="${BUILD_NUMBER}" \
