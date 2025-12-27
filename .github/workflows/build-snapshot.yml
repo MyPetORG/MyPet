@@ -201,7 +201,9 @@ jobs:
           changelog: ${{ steps.changelog.outputs.content }}
           channel: alpha
           featured: false
-          loaders: paper, spigot
+          loaders: |-
+            paper                                                                                                                                                                                       
+            spigot
           game-versions: 1.8.8, 1.12.2, 1.16.5, 1.17.1, 1.18.2, 1.19.x, 1.20.x, 1.21.x
           files: ${{ steps.findjar.outputs.jar }}
 
