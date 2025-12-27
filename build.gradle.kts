@@ -21,7 +21,7 @@ val versionSuffix = if (buildType == "dev") {
     if (buildNumber == "local") "-SNAPSHOT-local" else "-SNAPSHOT-b${buildNumber}"
 } else ""
 version = "$baseVersion$versionSuffix"
-val minecraftVersion by extra("1.21.10")
+val minecraftVersion by extra("1.21.11")
 
 val nmsModules: List<String> = File(rootDir, "nms")
     .listFiles()

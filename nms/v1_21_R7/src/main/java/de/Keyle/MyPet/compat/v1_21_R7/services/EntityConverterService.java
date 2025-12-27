@@ -1,0 +1,807 @@
+/*
+ * This file is part of MyPet
+ *
+ * Copyright © 2011-2025 Keyle
+ * MyPet is licensed under the GNU Lesser General Public License.
+ *
+ * MyPet is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MyPet is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package de.Keyle.MyPet.compat.v1_21_R7.services;
+
+import com.google.common.collect.Sets;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Dynamic;
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.Util;
+import org.bukkit.inventory.EquipmentSlot;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.types.*;
+import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.ErrorUtil;
+import de.Keyle.MyPet.api.util.ReflectionUtil;
+import de.Keyle.MyPet.compat.v1_21_R7.util.VariantConverter;
+import de.Keyle.MyPet.compat.v1_21_R7.util.inventory.ItemStackNBTConverter;
+import net.kyori.adventure.nbt.*;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.gossip.GossipContainer;
+import net.minecraft.world.entity.animal.cow.CowVariant;
+import net.minecraft.world.entity.npc.villager.VillagerData;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.VillagerType;
+import net.minecraft.world.item.trading.MerchantOffers;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.CraftRegistry;
+import org.bukkit.craftbukkit.entity.*;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
+
+import java.lang.reflect.Method;
+import java.util.*;
+
+@Compat("v1_21_R7")
+public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
+
+    public static final Registry<VillagerType> VILLAGER_TYPE_REGISTRY = CraftRegistry.getMinecraftRegistry(Registries.VILLAGER_TYPE);
+    public static final Registry<VillagerProfession> VILLAGER_PROFESSION_REGISTRY = CraftRegistry.getMinecraftRegistry(Registries.VILLAGER_PROFESSION);
+
+    @Override
+    public CompoundBinaryTag convertEntity(LivingEntity entity) {
+        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
+        switch (entity.getType()) {
+            case WOLF:
+                convertWolf((Wolf) entity, builder);
+                break;
+            case SHEEP:
+                convertSheep((Sheep) entity, builder);
+                break;
+            case VILLAGER:
+                convertVillager((Villager) entity, builder);
+                break;
+            case PIG:
+                convertPig((Pig) entity, builder);
+                break;
+            case COPPER_GOLEM:
+                convertCopperGolem((CopperGolem) entity, builder);
+                break;
+            case COW:
+                convertCow((Cow) entity, builder);
+                break;
+            case CHICKEN:
+                convertChicken((Chicken) entity, builder);
+                break;
+            case MAGMA_CUBE:
+            case SLIME:
+                convertSlime((Slime) entity, builder);
+                break;
+            case CREEPER:
+                convertCreeper((Creeper) entity, builder);
+                break;
+            case HORSE:
+                convertHorse((Horse) entity, builder);
+                break;
+            case SKELETON_HORSE:
+            case ZOMBIE_HORSE:
+                convertSaddledHorse((AbstractHorse) entity, builder);
+                break;
+            case MULE:
+            case DONKEY:
+                convertChestedHorse((ChestedHorse) entity, builder);
+                break;
+            case CAMEL:
+                convertCamel((Camel) entity, builder);
+                break;
+            case ZOMBIE_VILLAGER:
+                convertZombieVillager((ZombieVillager) entity, builder);
+            case HUSK:
+            case ZOMBIE:
+            case ZOMBIFIED_PIGLIN:
+            case DROWNED:
+                convertZombie((Zombie) entity, builder);
+                if (Configuration.Misc.RETAIN_EQUIPMENT_ON_TAME) {
+                    convertEquipable(entity, builder);
+                }
+                break;
+            case ENDERMAN:
+                convertEnderman((Enderman) entity, builder);
+                break;
+            case RABBIT:
+                convertRabbit((Rabbit) entity, builder);
+                break;
+            case LLAMA:
+                convertLlama((Llama) entity, builder);
+                break;
+            case AXOLOTL:
+                convertAxolotl((Axolotl) entity, builder);
+                break;
+            case GOAT:
+                convertGoat((Goat) entity, builder);
+                break;
+            case PARROT:
+                convertParrot((Parrot) entity, builder);
+                break;
+            case TROPICAL_FISH:
+                convertTropicalFish((TropicalFish) entity, builder);
+                break;
+            case SALMON:
+                convertSalmon((Salmon) entity, builder);
+                break;
+            case PUFFERFISH:
+                convertPufferFish((PufferFish) entity, builder);
+                break;
+            case PHANTOM:
+                convertPhantom((Phantom) entity, builder);
+                break;
+            case CAT:
+                convertCat((Cat) entity, builder);
+                break;
+            case MOOSHROOM:
+                convertMushroomCow((MushroomCow) entity, builder);
+                break;
+            case FOX:
+                convertFox((Fox) entity, builder);
+                break;
+            case FROG:
+                convertFrog((Frog) entity, builder);
+                break;
+            case PANDA:
+                convertPanda((Panda) entity, builder);
+                break;
+            case WANDERING_TRADER:
+                convertWanderingTrader((WanderingTrader) entity, builder);
+                break;
+            case BEE:
+                convertBee((Bee) entity, builder);
+                break;
+            case TRADER_LLAMA:
+                convertTraderLlama((TraderLlama) entity, builder);
+                break;
+        }
+
+        if (entity instanceof Ageable) {
+            convertAgable((Ageable) entity, builder);
+        }
+
+        return builder.build();
+    }
+
+    @Override
+    public void convertEntity(MyPet myPet, LivingEntity normalEntity) {
+        if (myPet instanceof MyCreeper) {
+            if (((MyCreeper) myPet).isPowered()) {
+                ((Creeper) normalEntity).setPowered(true);
+            }
+        } else if (myPet instanceof MyGoat) {
+            if (((MyGoat) myPet).isScreaming()) {
+                ((Goat) normalEntity).setScreaming(true);
+            }
+            if (!((MyGoat) myPet).hasLeftHorn()) {
+                ((Goat) normalEntity).setLeftHorn(false);
+            }
+            if (!((MyGoat) myPet).hasRightHorn()) {
+                ((Goat) normalEntity).setRightHorn(false);
+            }
+        } else if (myPet instanceof MyEnderman) {
+            if (((MyEnderman) myPet).hasBlock()) {
+                ((Enderman) normalEntity).setCarriedMaterial(((MyEnderman) myPet).getBlock().getData());
+            }
+        } else if (myPet instanceof MyIronGolem) {
+            ((IronGolem) normalEntity).setPlayerCreated(true);
+        } else if (myPet instanceof MyMagmaCube) {
+            ((MagmaCube) normalEntity).setSize(((MyMagmaCube) myPet).getSize());
+        } else if (myPet instanceof MyPig) {
+            ((Pig) normalEntity).setSaddle(((MyPig) myPet).hasSaddle());
+            ((Pig) normalEntity).setVariant(VariantConverter.getBukkitPigVariant(((MyPig) myPet).getVariant()));
+        } else if (myPet instanceof MyCow) {
+            // Use CraftCow to avoid AbstractCow#setVariant NoSuchMethodError on Paper
+            CraftCow craftCow = (CraftCow) normalEntity;
+            CowVariant cowVariant = VariantConverter.convertCowVariant(((MyCow) myPet).getVariant());
+            craftCow.getHandle().setVariant(VariantConverter.COW_REGISTRY.wrapAsHolder(cowVariant));
+        } else if (myPet instanceof MyChicken) {
+            ((Chicken) normalEntity).setVariant(VariantConverter.getBukkitChickenVariant(((MyChicken) myPet).getVariant()));
+        } else if (myPet instanceof MySheep) {
+            ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
+            ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
+        } else if (myPet instanceof MyVillager villagerPet) {
+            Villager villagerEntity = ((Villager) normalEntity);
+            net.minecraft.world.entity.npc.villager.Villager entityVillager = ((CraftVillager) villagerEntity).getHandle();
+
+            Holder<VillagerProfession> professionHolder = VILLAGER_PROFESSION_REGISTRY.wrapAsHolder(VILLAGER_PROFESSION_REGISTRY.byId(villagerPet.getProfession()));
+            Holder<VillagerType> typeHolder = VILLAGER_TYPE_REGISTRY.wrapAsHolder(VILLAGER_TYPE_REGISTRY.byId(villagerPet.getType().ordinal()));
+            VillagerData villagerData = new VillagerData(typeHolder, professionHolder, villagerPet.getLevel());
+            entityVillager.setVillagerData(villagerData);
+
+            if (villagerPet.hasOriginalData()) {
+                CompoundBinaryTag villagerTag = villagerPet.getOriginalData();
+
+                try {
+                    if (villagerTag.keySet().contains("Offers")) {
+                        CompoundBinaryTag offersTag = villagerTag.getCompound("Offers");
+                        CompoundTag vanillaNBT = (CompoundTag) ItemStackNBTConverter.compoundToVanillaCompound(offersTag);
+                        DataResult<MerchantOffers> dataresult = MerchantOffers.CODEC.parse(entityVillager.registryAccess().createSerializationContext(NbtOps.INSTANCE), vanillaNBT);
+                        if (dataresult.hasResultOrPartial() && dataresult.resultOrPartial().isPresent()) {
+                            entityVillager.setOffers(dataresult.resultOrPartial().get());
+                        }
+                    }
+                    if (villagerTag.keySet().contains("Inventory")) {
+                        ListBinaryTag inventoryTag = villagerTag.getList("Inventory");
+                        ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(inventoryTag);
+                        for (int i = 0; i < vanillaNBT.size(); ++i) {
+                            net.minecraft.world.item.ItemStack itemstack = ItemStackNBTConverter.vanillaCompoundToItemStack(vanillaNBT.getCompoundOrEmpty(i));
+                            ItemStack item = CraftItemStack.asCraftMirror(itemstack);
+                            if (!itemstack.isEmpty()) {
+                                Villager vill = ((Villager) Bukkit.getServer().getEntity(normalEntity.getUniqueId()));
+                                vill.getInventory().addItem(item);
+                            }
+                        }
+                    }
+                    if (villagerTag.keySet().contains("FoodLevel")) {
+                        byte foodLevel = villagerTag.getByte("FoodLevel");
+                        ReflectionUtil.setFieldValue("ch", entityVillager, (int) foodLevel);        // Field: foodLevel
+                    }
+                    if (villagerTag.keySet().contains("Gossips")) {
+                        ListBinaryTag gossipsTag = villagerTag.getList("Gossips");
+                        ListTag vanillaNBT = (ListTag) ItemStackNBTConverter.compoundToVanillaCompound(gossipsTag);
+                        //This might be useful for later/following versions
+                        //((GossipContainer) ReflectionUtil.getFieldValue(net.minecraft.world.entity.npc.Villager.class, entityVillager, "ci")) //Field: gossips
+
+                        entityVillager.setGossips(
+                                GossipContainer.CODEC
+                                        .decode(new Dynamic<>(NbtOps.INSTANCE, vanillaNBT))
+                                        .resultOrPartial()
+                                        .orElseThrow()
+                                        .getFirst()
+                        );
+                    }
+                    if (villagerTag.keySet().contains("LastRestock")) {
+                        long lastRestock = villagerTag.getLong("LastRestock");
+                        ReflectionUtil.setFieldValue("cm", entityVillager, lastRestock);    //Field: lastRestock(Game)Time
+                    }
+                    if (villagerTag.keySet().contains("LastGossipDecay")) {
+                        long lastGossipDecay = villagerTag.getLong("LastGossipDecay");
+                        ReflectionUtil.setFieldValue("ck", entityVillager, lastGossipDecay);    //Field: lastGossipDecayTime
+                    }
+                    if (villagerTag.keySet().contains("RestocksToday")) {
+                        int restocksToday = villagerTag.getInt("RestocksToday");
+                        ReflectionUtil.setFieldValue("cn", entityVillager, restocksToday);        //Field: numberOfRestocksToday or restocksToday
+                    }
+                    ReflectionUtil.setFieldValue("cr", entityVillager, true); // Field: AssignProfessionWhenSpawned (natural?)
+                } catch (Exception e) {
+                    ErrorUtil.report(e);
+                }
+                if (villagerTag.keySet().contains("Xp")) {
+                    int xp = villagerTag.getInt("Xp");
+                    entityVillager.setVillagerXp(xp);
+                }
+            }
+        } else if (myPet instanceof MySlime) {
+            ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
+        } else if (myPet instanceof MyZombieVillager) {
+            Villager.Profession profession = Villager.Profession.values()[((MyZombieVillager) myPet).getProfession()];
+            net.minecraft.world.entity.monster.zombie.ZombieVillager nmsEntity = ((CraftVillagerZombie) normalEntity).getHandle();
+            nmsEntity.setVillagerData(nmsEntity.getVillagerData()
+                    .withType(VILLAGER_TYPE_REGISTRY.wrapAsHolder(VILLAGER_TYPE_REGISTRY.getValue(Identifier.tryParse(((MyZombieVillager) myPet).getType().name().toLowerCase(Locale.ROOT)))))
+                    .withLevel(((MyZombieVillager) myPet).getTradingLevel())
+                    .withProfession(VILLAGER_PROFESSION_REGISTRY.wrapAsHolder(VILLAGER_PROFESSION_REGISTRY.getValue(Identifier.tryParse(profession.name().toLowerCase(Locale.ROOT))))));
+        } else if (myPet instanceof MyWitherSkeleton) {
+            normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SWORD));
+        } else if (myPet instanceof MySkeleton) {
+            normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.BOW));
+        } else if (myPet instanceof MyHorse) {
+            Horse.Style style = Horse.Style.values()[(((MyHorse) myPet).getVariant() >>> 8)];
+            Horse.Color color = Horse.Color.values()[(((MyHorse) myPet).getVariant() & 0xFF)];
+
+            ((Horse) normalEntity).setColor(color);
+            ((Horse) normalEntity).setStyle(style);
+
+            if (((MyHorse) myPet).hasSaddle()) {
+                ((Horse) normalEntity).getInventory().setSaddle(((MyHorse) myPet).getSaddle().clone());
+            }
+            if (((MyHorse) myPet).hasArmor()) {
+                ((Horse) normalEntity).getInventory().setArmor(((MyHorse) myPet).getArmor().clone());
+            }
+            ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MySkeletonHorse) {
+            if (((MySkeletonHorse) myPet).hasSaddle()) {
+                ((SkeletonHorse) normalEntity).getInventory().setSaddle(((MySkeletonHorse) myPet).getSaddle().clone());
+            }
+            ((SkeletonHorse) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyZombieHorse) {
+            if (((MyZombieHorse) myPet).hasSaddle()) {
+                ((ZombieHorse) normalEntity).getInventory().setSaddle(((MyZombieHorse) myPet).getSaddle().clone());
+            }
+            ((ZombieHorse) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyDonkey) {
+            if (((MyDonkey) myPet).hasSaddle()) {
+                ((Donkey) normalEntity).getInventory().setSaddle(((MyDonkey) myPet).getSaddle().clone());
+            }
+            if (((MyDonkey) myPet).hasChest()) {
+                ((Donkey) normalEntity).setCarryingChest(true);
+            }
+            ((Donkey) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyMule) {
+            if (((MyMule) myPet).hasSaddle()) {
+                ((Mule) normalEntity).getInventory().setSaddle(((MyMule) myPet).getSaddle().clone());
+            }
+            if (((MyMule) myPet).hasChest()) {
+                ((Mule) normalEntity).setCarryingChest(true);
+            }
+            ((Mule) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyCamel) {
+            if (((MyCamel) myPet).hasSaddle()) {
+                ((Camel) normalEntity).getInventory().setSaddle(((MyCamel) myPet).getSaddle().clone());
+            }
+            ((Camel) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyLlama) {
+            ((Llama) normalEntity).setColor(Llama.Color.values()[Math.max(0, Math.min(3, ((MyLlama) myPet).getVariant()))]);
+            ((Llama) normalEntity).setCarryingChest(((MyLlama) myPet).hasChest());
+
+            if (((MyLlama) myPet).hasDecor()) {
+                ((Llama) normalEntity).getInventory().setDecor(((MyLlama) myPet).getDecor());
+            }
+            ((Llama) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyTraderLlama) {
+            ((TraderLlama) normalEntity).setColor(TraderLlama.Color.values()[Math.max(0, Math.min(3, ((MyTraderLlama) myPet).getVariant()))]);
+            ((TraderLlama) normalEntity).setOwner(myPet.getOwner().getPlayer());
+        } else if (myPet instanceof MyRabbit) {
+            ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
+        } else if (myPet instanceof MyParrot) {
+            ((Parrot) normalEntity).setVariant(Parrot.Variant.values()[((MyParrot) myPet).getVariant()]);
+        } else if (myPet instanceof MyAxolotl) {
+            ((Axolotl) normalEntity).setVariant(Axolotl.Variant.values()[((MyAxolotl) myPet).getVariant()]);
+        } else if (myPet instanceof MyTropicalFish) {
+            ((CraftTropicalFish) normalEntity).getHandle().setPackedVariant(((MyTropicalFish) myPet).getVariant());
+        } else if (myPet instanceof MySalmon) {
+            ((Salmon) normalEntity).setVariant(Salmon.Variant.values()[((MySalmon) myPet).getVariant()]);
+        } else if (myPet instanceof MyPufferfish) {
+            ((PufferFish) normalEntity).setPuffState(((MyPufferfish) myPet).getPuffState().ordinal());
+        } else if (myPet instanceof MyPhantom) {
+            ((Phantom) normalEntity).setSize(((MyPhantom) myPet).getSize());
+        } else if (myPet instanceof MyCat) {
+            ((Cat) normalEntity).setCatType(((MyCat) myPet).getCatType());
+            ((Cat) normalEntity).setCollarColor(((MyCat) myPet).getCollarColor());
+        } else if (myPet instanceof MyMooshroom) {
+            ((MushroomCow) normalEntity).setVariant(MushroomCow.Variant.values()[((MyMooshroom) myPet).getType().ordinal()]);
+        } else if (myPet instanceof MyPanda) {
+            ((Panda) normalEntity).setMainGene(((MyPanda) myPet).getMainGene());
+            ((Panda) normalEntity).setHiddenGene(((MyPanda) myPet).getHiddenGene());
+        } else if (myPet instanceof WanderingTrader) {
+            MyWanderingTrader traderPet = (MyWanderingTrader) myPet;
+            if (traderPet.hasOriginalData()) {
+                CompoundBinaryTag entityTag = MyPetApi.getPlatformHelper().entityToTag(normalEntity);
+                CompoundBinaryTag originalData = traderPet.getOriginalData();
+                // Merge original data into entity tag
+                CompoundBinaryTag.Builder mergedBuilder = CompoundBinaryTag.builder();
+                for (String key : entityTag.keySet()) {
+                    mergedBuilder.put(key, entityTag.get(key));
+                }
+                for (String key : originalData.keySet()) {
+                    mergedBuilder.put(key, originalData.get(key));
+                }
+                MyPetApi.getPlatformHelper().applyTagToEntity(mergedBuilder.build(), normalEntity);
+            }
+        } else if (myPet instanceof MyBee) {
+            ((Bee) normalEntity).setHasNectar(((MyBee) myPet).hasNectar());
+            ((Bee) normalEntity).setHasStung(((MyBee) myPet).hasStung());
+        } else if (myPet instanceof MyFox) {
+            ((Fox) normalEntity).setFoxType(((MyFox) myPet).getFoxType());
+        } else if (myPet instanceof MyFrog) {
+            ((Frog) normalEntity).setVariant(VariantConverter.getBukkitFrogVariant(((MyFrog) myPet).getFrogVariant()));
+        } else if (myPet instanceof MyWolf) {
+            Method getVariant = ReflectionUtil.getMethod(Wolf.Variant.class, "getVariant", String.class);
+            try {
+                Wolf.Variant leVariant = (Wolf.Variant) getVariant.invoke(null, ((MyWolf) myPet).getVariant());
+                ((Wolf) normalEntity).setVariant(leVariant);
+            } catch (Exception e) {
+                ErrorUtil.report(e);
+            }
+        } else if (myPet instanceof MyCopperGolem) {
+            // Apply oxidation state, waxed status, and poppy back to the vanilla entity
+            try {
+                CraftCopperGolem craftGolem = (CraftCopperGolem) normalEntity;
+                net.minecraft.world.entity.animal.golem.CopperGolem nmsGolem = craftGolem.getHandle();
+
+                // Convert our OxidationState to NMS WeatherState
+                MyCopperGolem myCopperGolem = (MyCopperGolem) myPet;
+                net.minecraft.world.level.block.WeatheringCopper.WeatherState weatherState = switch (myCopperGolem.getOxidationState()) {
+                    case EXPOSED -> net.minecraft.world.level.block.WeatheringCopper.WeatherState.EXPOSED;
+                    case WEATHERED -> net.minecraft.world.level.block.WeatheringCopper.WeatherState.WEATHERED;
+                    case OXIDIZED -> net.minecraft.world.level.block.WeatheringCopper.WeatherState.OXIDIZED;
+                    default -> net.minecraft.world.level.block.WeatheringCopper.WeatherState.UNAFFECTED;
+                };
+
+                // Apply weathering state
+                nmsGolem.setWeatherState(weatherState);
+
+                // Apply waxed status (waxed = negative nextWeatheringTick)
+                if (myCopperGolem.isWaxed()) {
+                    nmsGolem.nextWeatheringTick = -2;
+                } else {
+                    nmsGolem.nextWeatheringTick = -1;
+                }
+
+                // Apply poppy (antenna slot)
+                if (myCopperGolem.hasPoppy()) {
+                    ItemStack bukkitPoppy = myCopperGolem.getPoppy();
+                    net.minecraft.world.item.ItemStack poppyStack = CraftItemStack.asNMSCopy(bukkitPoppy);
+                    nmsGolem.setItemSlot(net.minecraft.world.entity.animal.golem.CopperGolem.EQUIPMENT_SLOT_ANTENNA, poppyStack);
+                }
+            } catch (Exception e) {
+                ErrorUtil.report(e);
+            }
+        }
+
+        if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
+            if (((MyPetBaby) myPet).isBaby()) {
+                ((Ageable) normalEntity).setBaby();
+            } else {
+                ((Ageable) normalEntity).setAdult();
+            }
+        }
+    }
+
+    private void convertLlama(Llama llama, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Variant", llama.getColor().ordinal());
+        if (llama.getInventory().getDecor() != null && llama.getInventory().getDecor().getType() != Material.AIR) {
+            builder.put("Decor", MyPetApi.getPlatformHelper().itemStackToCompound(llama.getInventory().getDecor()));
+        }
+        if (llama.isCarryingChest()) {
+            builder.put("Chest", MyPetApi.getPlatformHelper().itemStackToCompound(new ItemStack(Material.CHEST)));
+        }
+    }
+
+    private void convertTraderLlama(TraderLlama tLlama, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Variant", tLlama.getColor().ordinal());
+    }
+
+    private void convertAxolotl(Axolotl axolotl, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Variant", axolotl.getVariant().ordinal());
+    }
+
+    private void convertParrot(Parrot parrot, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Variant", parrot.getVariant().ordinal());
+    }
+
+    public void convertRabbit(Rabbit rabbit, CompoundBinaryTag.Builder builder) {
+        builder.putByte("Variant", MyRabbit.RabbitType.getTypeByBukkitEnum(rabbit.getRabbitType()).getId());
+    }
+
+    public void convertEquipable(LivingEntity entity, CompoundBinaryTag.Builder builder) {
+        List<CompoundBinaryTag> equipmentList = new ArrayList<>();
+        if (random.nextFloat() <= entity.getEquipment().getChestplateDropChance()) {
+            ItemStack itemStack = entity.getEquipment().getChestplate();
+            if (itemStack != null && itemStack.getType() != Material.AIR) {
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(itemStack)
+                        .putString("Slot", EquipmentSlot.CHEST.name());
+                equipmentList.add(item);
+            }
+        }
+        if (random.nextFloat() <= entity.getEquipment().getHelmetDropChance()) {
+            ItemStack itemStack = entity.getEquipment().getHelmet();
+            if (itemStack != null && itemStack.getType() != Material.AIR) {
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(itemStack)
+                        .putString("Slot", EquipmentSlot.HEAD.name());
+                equipmentList.add(item);
+            }
+        }
+        if (random.nextFloat() <= entity.getEquipment().getLeggingsDropChance()) {
+            ItemStack itemStack = entity.getEquipment().getLeggings();
+            if (itemStack != null && itemStack.getType() != Material.AIR) {
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(itemStack)
+                        .putString("Slot", EquipmentSlot.LEGS.name());
+                equipmentList.add(item);
+            }
+        }
+        if (random.nextFloat() <= entity.getEquipment().getBootsDropChance()) {
+            ItemStack itemStack = entity.getEquipment().getBoots();
+            if (itemStack != null && itemStack.getType() != Material.AIR) {
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(itemStack)
+                        .putString("Slot", EquipmentSlot.FEET.name());
+                equipmentList.add(item);
+            }
+        }
+        builder.put("Equipment", ListBinaryTag.from(equipmentList));
+    }
+
+    public void convertAgable(Ageable ageable, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Baby", !ageable.isAdult());
+    }
+
+    public void convertEnderman(Enderman enderman, CompoundBinaryTag.Builder builder) {
+        if (enderman.getCarriedBlock() != null) {
+            ItemStack block = enderman.getCarriedMaterial().toItemStack(1);
+            builder.put("Block", MyPetApi.getPlatformHelper().itemStackToCompound(block));
+        }
+    }
+
+    public void convertZombieVillager(ZombieVillager zombie, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Profession", zombie.getVillagerProfession().ordinal());
+
+        CompoundBinaryTag villagerTag = MyPetApi.getPlatformHelper().entityToTag(zombie);
+        Set<String> allowedTags = Sets.newHashSet("VillagerData");
+        CompoundBinaryTag.Builder filteredBuilder = CompoundBinaryTag.builder();
+        for (String key : villagerTag.keySet()) {
+            if (allowedTags.contains(key)) {
+                filteredBuilder.put(key, villagerTag.get(key));
+            }
+        }
+        builder.put("VillagerData", filteredBuilder.build());
+    }
+
+    public void convertZombie(Zombie zombie, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Baby", zombie.isBaby());
+    }
+
+    public void convertCreeper(Creeper creeper, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Powered", creeper.isPowered());
+    }
+
+    public void convertHorse(Horse horse, CompoundBinaryTag.Builder builder) {
+        int style = horse.getStyle().ordinal();
+        int color = horse.getColor().ordinal();
+        int variant = color & 255 | style << 8;
+
+        builder.putInt("Variant", variant);
+
+        // Write equipment to unified Equipment list format
+        List<CompoundBinaryTag> equipmentList = new ArrayList<>();
+        if (horse.getInventory().getArmor() != null) {
+            CompoundBinaryTag armor = MyPetApi.getPlatformHelper().itemStackToCompound(horse.getInventory().getArmor())
+                    .putString("Slot", EquipmentSlot.BODY.name());
+            equipmentList.add(armor);
+        }
+        if (horse.getInventory().getSaddle() != null) {
+            CompoundBinaryTag saddle = MyPetApi.getPlatformHelper().itemStackToCompound(horse.getInventory().getSaddle())
+                    .putString("Slot", EquipmentSlot.SADDLE.name());
+            equipmentList.add(saddle);
+        }
+        if (!equipmentList.isEmpty()) {
+            builder.put("Equipment", ListBinaryTag.from(equipmentList));
+        }
+
+        if (horse.isCarryingChest()) {
+            ItemStack[] contents = horse.getInventory().getContents();
+            for (int i = 2; i < contents.length; i++) {
+                ItemStack item = contents[i];
+                if (item != null) {
+                    horse.getWorld().dropItem(horse.getLocation(), item);
+                }
+            }
+        }
+    }
+
+    public void convertSaddledHorse(AbstractHorse horse, CompoundBinaryTag.Builder builder) {
+        // Write saddle to unified Equipment list format
+        if (horse.getInventory().getSaddle() != null) {
+            List<CompoundBinaryTag> equipmentList = new ArrayList<>();
+            CompoundBinaryTag saddle = MyPetApi.getPlatformHelper().itemStackToCompound(horse.getInventory().getSaddle())
+                    .putString("Slot", EquipmentSlot.SADDLE.name());
+            equipmentList.add(saddle);
+            builder.put("Equipment", ListBinaryTag.from(equipmentList));
+        }
+    }
+
+    public void convertChestedHorse(ChestedHorse horse, CompoundBinaryTag.Builder builder) {
+        // Chest is not an equipment slot, write separately
+        builder.putBoolean("Chest", horse.isCarryingChest());
+        if (horse.isCarryingChest()) {
+            ItemStack[] contents = horse.getInventory().getContents();
+            for (int i = 2; i < contents.length; i++) {
+                ItemStack item = contents[i];
+                if (item != null) {
+                    horse.getWorld().dropItem(horse.getLocation(), item);
+                }
+            }
+        }
+        // Write saddle to unified Equipment list format
+        if (horse.getInventory().getSaddle() != null) {
+            List<CompoundBinaryTag> equipmentList = new ArrayList<>();
+            CompoundBinaryTag saddle = MyPetApi.getPlatformHelper().itemStackToCompound(horse.getInventory().getSaddle())
+                    .putString("Slot", EquipmentSlot.SADDLE.name());
+            equipmentList.add(saddle);
+            builder.put("Equipment", ListBinaryTag.from(equipmentList));
+        }
+    }
+
+    public void convertCamel(Camel camel, CompoundBinaryTag.Builder builder) {
+        // Write saddle to unified Equipment list format
+        if (camel.getInventory().getSaddle() != null) {
+            List<CompoundBinaryTag> equipmentList = new ArrayList<>();
+            CompoundBinaryTag saddle = MyPetApi.getPlatformHelper().itemStackToCompound(camel.getInventory().getSaddle())
+                    .putString("Slot", EquipmentSlot.SADDLE.name());
+            equipmentList.add(saddle);
+            builder.put("Equipment", ListBinaryTag.from(equipmentList));
+        }
+    }
+
+    public void convertSlime(Slime slime, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Size", slime.getSize());
+    }
+
+    public void convertPig(Pig pig, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Saddle", pig.hasSaddle());
+        builder.putString("Variant", pig.getVariant().getKey().getKey());
+    }
+
+    public void convertCow(Cow cow, CompoundBinaryTag.Builder builder) {
+        String key;
+        // We have to use NMS because Paper redirects Cow#getVariant() to AbstractCow#getVariant() due to paper.yml's api-version being set to 1.13.
+        // Related GitHub issue (labeled as "not a bug"): https://github.com/PaperMC/Paper/issues/13064
+        try {
+            CraftCow craftCow = (CraftCow) cow;
+            net.minecraft.world.entity.animal.cow.Cow nmsCow = craftCow.getHandle();
+
+            Holder<CowVariant> holder = nmsCow.getVariant();
+            Identifier rl = holder
+                    .unwrapKey()
+                    .orElseThrow(() -> new IllegalStateException("Cow variant missing ResourceKey"))
+                    .identifier();
+
+            key = rl.getPath();
+        } catch (Throwable nmsErr) {
+            // If, somehow, NMS fails, default to temperate
+            key = "temperate";
+        }
+
+        builder.putString("Variant", key);
+    }
+
+    public void convertChicken(Chicken chicken, CompoundBinaryTag.Builder builder) {
+        builder.putString("Variant", chicken.getVariant().getKey().getKey());
+    }
+
+    public void convertVillager(Villager villager, CompoundBinaryTag.Builder builder) {
+        net.minecraft.world.entity.npc.villager.Villager npcVillager = ((CraftVillager) villager).getHandle();
+        VillagerData villagerData = npcVillager.getVillagerData();
+
+        int profession = VILLAGER_PROFESSION_REGISTRY.getId(villagerData.profession().value());
+        builder.putInt("Profession", profession);
+        int type = VILLAGER_TYPE_REGISTRY.getId(villagerData.type().value());
+        builder.putInt("VillagerType", type);
+        int level = villager.getVillagerLevel();
+        builder.putInt("VillagerLevel", level);
+
+        CompoundBinaryTag villagerTag = MyPetApi.getPlatformHelper().entityToTag(villager);
+        Set<String> allowedTags = Sets.newHashSet(
+                "RestocksToday",
+                "FoodLevel",
+                "Gossips",
+                "Offers",
+                "LastRestock",
+                "Inventory",
+                "Xp"
+        );
+        CompoundBinaryTag.Builder filteredBuilder = CompoundBinaryTag.builder();
+        for (String key : villagerTag.keySet()) {
+            if (allowedTags.contains(key)) {
+                filteredBuilder.put(key, villagerTag.get(key));
+            }
+        }
+        builder.put("OriginalData", filteredBuilder.build());
+    }
+
+    public void convertWanderingTrader(WanderingTrader wanderingTrader, CompoundBinaryTag.Builder builder) {
+        CompoundBinaryTag traderTag = MyPetApi.getPlatformHelper().entityToTag(wanderingTrader);
+        Set<String> allowedTags = Sets.newHashSet("DespawnDelay", "WanderTarget", "Offers", "Inventory");
+        CompoundBinaryTag.Builder filteredBuilder = CompoundBinaryTag.builder();
+        for (String key : traderTag.keySet()) {
+            if (allowedTags.contains(key)) {
+                filteredBuilder.put(key, traderTag.get(key));
+            }
+        }
+        builder.put("OriginalData", filteredBuilder.build());
+    }
+
+    public void convertSheep(Sheep sheep, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Color", sheep.getColor().getDyeData());
+        builder.putBoolean("Sheared", sheep.isSheared());
+    }
+
+    public void convertWolf(Wolf wolf, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Tamed", wolf.isTamed());
+        builder.putByte("CollarColor", (byte) wolf.getCollarColor().ordinal());
+        builder.putString("Variant", wolf.getVariant().getKey().getKey());
+    }
+
+    public void convertTropicalFish(TropicalFish tropicalFish, CompoundBinaryTag.Builder builder) {
+        CraftTropicalFish fish = (CraftTropicalFish) tropicalFish;
+        builder.putInt("Variant", fish.getHandle().getPackedVariant());
+    }
+
+    public void convertSalmon(Salmon salmon, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Variant", salmon.getVariant().ordinal());
+    }
+
+    public void convertPufferFish(PufferFish pufferFish, CompoundBinaryTag.Builder builder) {
+        builder.putInt("PuffState", Util.clamp(pufferFish.getPuffState(), 0, 2));
+    }
+
+    public void convertPhantom(Phantom phantom, CompoundBinaryTag.Builder builder) {
+        builder.putInt("Size", phantom.getSize());
+    }
+
+    public void convertCat(Cat cat, CompoundBinaryTag.Builder builder) {
+        builder.putInt("CollarColor", cat.getCollarColor().ordinal());
+        builder.putInt("CatType", cat.getCatType().ordinal());
+    }
+
+    public void convertMushroomCow(MushroomCow mushroomCow, CompoundBinaryTag.Builder builder) {
+        builder.putInt("CowType", mushroomCow.getVariant().ordinal());
+    }
+
+    public void convertFox(Fox fox, CompoundBinaryTag.Builder builder) {
+        builder.putInt("FoxType", fox.getFoxType().ordinal());
+    }
+
+    public void convertFrog(Frog frog, CompoundBinaryTag.Builder builder) {
+        builder.putInt("FrogType", frog.getVariant().ordinal());
+    }
+
+    public void convertPanda(Panda panda, CompoundBinaryTag.Builder builder) {
+        builder.putInt("MainGene", panda.getMainGene().ordinal());
+        builder.putInt("HiddenGene", panda.getHiddenGene().ordinal());
+    }
+
+    public void convertBee(Bee bee, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("Angry", bee.getAnger() > 1);
+        builder.putBoolean("HasStung", bee.hasStung());
+        builder.putBoolean("HasNectar", bee.hasNectar());
+    }
+
+    public void convertGoat(Goat goat, CompoundBinaryTag.Builder builder) {
+        builder.putBoolean("screaming", goat.isScreaming());
+        builder.putBoolean("LeftHorn", goat.hasLeftHorn());
+        builder.putBoolean("RightHorn", goat.hasRightHorn());
+    }
+
+    public void convertCopperGolem(CopperGolem copperGolem, CompoundBinaryTag.Builder builder) {
+        // Bukkit CopperGolem API not available, access NMS directly
+        try {
+            CraftCopperGolem craftGolem = (CraftCopperGolem) copperGolem;
+            net.minecraft.world.entity.animal.golem.CopperGolem nmsGolem = craftGolem.getHandle();
+
+            // Get weathering state from NMS
+            net.minecraft.world.level.block.WeatheringCopper.WeatherState weatherState = nmsGolem.getWeatherState();
+            builder.putString("OxidationState", weatherState.name());
+
+            // Store waxed state based on nextWeatheringTick
+            // Waxed: nextWeatheringTick < 0
+            boolean waxed = nmsGolem.nextWeatheringTick < 0;
+            builder.putByte("Waxed", (byte) (waxed ? 1 : 0));
+
+            // Get poppy from antenna slot
+            net.minecraft.world.item.ItemStack poppyNMS = nmsGolem.getItemBySlot(net.minecraft.world.entity.animal.golem.CopperGolem.EQUIPMENT_SLOT_ANTENNA);
+
+            if (poppyNMS != null && !poppyNMS.isEmpty()) {
+                ItemStack poppyBukkit = CraftItemStack.asBukkitCopy(poppyNMS);
+                builder.put("Poppy", MyPetApi.getPlatformHelper().itemStackToCompound(poppyBukkit));
+            }
+        } catch (Exception e) {
+            ErrorUtil.report(e);
+            // Fallback: use default values
+            builder.putString("OxidationState", "UNAFFECTED");
+            builder.putByte("Waxed", (byte) 0);
+        }
+    }
+}
