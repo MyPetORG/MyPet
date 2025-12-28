@@ -166,7 +166,7 @@ jobs:
         id: changelog
         shell: bash
         run: |
-          CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}.md"
+          CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}-SNAPSHOT.md"
           if [[ -f "$CHANGELOG_FILE" ]]; then
             echo "Found changelog: $CHANGELOG_FILE"
             {
