@@ -48,9 +48,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.*;
-import java.util.zip.ZipException;
 
 public class MySqlRepository implements Repository {
 
@@ -59,6 +60,23 @@ public class MySqlRepository implements Repository {
     private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
     private HikariDataSource dataSource;
     private int version = 10;
+
+    private void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
+        if (data == null || data.length == 0) {
+            return;
+        }
+        try {
+            Path corruptedDir = MyPetApi.getPlugin().getDataFolder().toPath().resolve("corrupted");
+            Files.createDirectories(corruptedDir);
+            String safePetName = pet.getPetName().replaceAll("[^a-zA-Z0-9_-]", "_");
+            String filename = pet.getOwner().getPlayerUUID() + "_" + safePetName + "_" + fieldName + ".dat";
+            Path backupFile = corruptedDir.resolve(filename);
+            Files.write(backupFile, data);
+            MyPetApi.getLogger().info("Corrupted data backed up to: " + backupFile);
+        } catch (IOException e) {
+            MyPetApi.getLogger().warning("Failed to backup corrupted data for pet " + pet.getUUID() + ": " + e.getMessage());
+        }
+    }
 
     @Override
     public void disable() {
@@ -473,15 +491,22 @@ public class MySqlRepository implements Repository {
                     }
                 }
 
+                byte[] skillsData = resultSet.getBlob("skills").getBytes(1, (int) resultSet.getBlob("skills").length());
                 try {
-                    pet.setSkills(TagStream.readTag(resultSet.getBlob("skills").getBinaryStream(), true));
-                } catch (ZipException exception) {
-                    MyPetApi.getMyPetLogger().warning("Pet skills of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
+                    pet.setSkills(TagStream.readTag(skillsData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "skills", skillsData);
+                    pet.setSkills(new TagCompound());
                 }
+
+                byte[] infoData = resultSet.getBlob("info").getBytes(1, (int) resultSet.getBlob("info").length());
                 try {
-                    pet.setInfo(TagStream.readTag(resultSet.getBlob("info").getBinaryStream(), true));
-                } catch (ZipException exception) {
-                    MyPetApi.getMyPetLogger().warning("Pet info of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
+                    pet.setInfo(TagStream.readTag(infoData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "info", infoData);
+                    pet.setInfo(new TagCompound());
                 }
 
                 List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
@@ -491,7 +516,7 @@ public class MySqlRepository implements Repository {
 
                 pets.add(pet);
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return pets;
@@ -536,14 +561,29 @@ public class MySqlRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(TagStream.readTag(resultSet.getBlob("skills").getBinaryStream(), true));
-                pet.setInfo(TagStream.readTag(resultSet.getBlob("info").getBinaryStream(), true));
+                byte[] skillsData = resultSet.getBlob("skills").getBytes(1, (int) resultSet.getBlob("skills").length());
+                try {
+                    pet.setSkills(TagStream.readTag(skillsData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "skills", skillsData);
+                    pet.setSkills(new TagCompound());
+                }
+
+                byte[] infoData = resultSet.getBlob("info").getBytes(1, (int) resultSet.getBlob("info").length());
+                try {
+                    pet.setInfo(TagStream.readTag(infoData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "info", infoData);
+                    pet.setInfo(new TagCompound());
+                }
 
                 pets.add(pet);
             }
 
             return pets;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -857,8 +897,8 @@ public class MySqlRepository implements Repository {
                 petPlayer.setPetLivingSoundVolume(resultSet.getFloat("pet_idle_volume"));
                 try {
                     petPlayer.setExtendedInfo(TagStream.readTag(resultSet.getBlob("extended_info").getBinaryStream(), true));
-                } catch (ZipException exception) {
-                    MyPetApi.getMyPetLogger().warning("Extended info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Extended info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
                 }
 
                 ResultSetMetaData metaData = resultSet.getMetaData();
@@ -872,8 +912,8 @@ public class MySqlRepository implements Repository {
                                 String petUUID = worldGroups.getAs(worldGroupName, TagString.class).getStringData();
                                 petPlayer.setMyPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
                             }
-                        } catch (ZipException exception) {
-                            MyPetApi.getMyPetLogger().warning("Multiworld info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
+                        } catch (IOException e) {
+                            MyPetApi.getLogger().warning("Multiworld info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
                         }
                         break;
                     case "VARCHAR":
@@ -889,7 +929,7 @@ public class MySqlRepository implements Repository {
                 }
                 return petPlayer;
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

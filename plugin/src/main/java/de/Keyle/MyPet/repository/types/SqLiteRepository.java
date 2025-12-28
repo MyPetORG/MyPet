@@ -36,6 +36,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
+import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,6 +44,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.*;
 
@@ -53,6 +56,23 @@ public class SqLiteRepository implements Repository {
     private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
     private Connection connection;
     private int version = 1;
+
+    private void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
+        if (data == null || data.length == 0) {
+            return;
+        }
+        try {
+            Path corruptedDir = MyPetApi.getPlugin().getDataFolder().toPath().resolve("corrupted");
+            Files.createDirectories(corruptedDir);
+            String safePetName = pet.getPetName().replaceAll("[^a-zA-Z0-9_-]", "_");
+            String filename = pet.getOwner().getPlayerUUID() + "_" + safePetName + "_" + fieldName + ".dat";
+            Path backupFile = corruptedDir.resolve(filename);
+            Files.write(backupFile, data);
+            MyPetApi.getLogger().info("Corrupted data backed up to: " + backupFile);
+        } catch (IOException e) {
+            MyPetApi.getLogger().warning("Failed to backup corrupted data for pet " + pet.getUUID() + ": " + e.getMessage());
+        }
+    }
 
     @Override
     public void disable() {
@@ -394,8 +414,23 @@ public class SqLiteRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(TagStream.readTag(resultSet.getBytes("skills"), true));
-                pet.setInfo(TagStream.readTag(resultSet.getBytes("info"), true));
+                byte[] skillsData = resultSet.getBytes("skills");
+                try {
+                    pet.setSkills(TagStream.readTag(skillsData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "skills", skillsData);
+                    pet.setSkills(new TagCompound());
+                }
+
+                byte[] infoData = resultSet.getBytes("info");
+                try {
+                    pet.setInfo(TagStream.readTag(infoData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "info", infoData);
+                    pet.setInfo(new TagCompound());
+                }
 
                 List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
                 for (RepositoryMyPetConverterService converter : converters) {
@@ -404,7 +439,7 @@ public class SqLiteRepository implements Repository {
 
                 pets.add(pet);
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return pets;
@@ -449,14 +484,29 @@ public class SqLiteRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(TagStream.readTag(resultSet.getBytes("skills"), true));
-                pet.setInfo(TagStream.readTag(resultSet.getBytes("info"), true));
+                byte[] skillsData = resultSet.getBytes("skills");
+                try {
+                    pet.setSkills(TagStream.readTag(skillsData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "skills", skillsData);
+                    pet.setSkills(new TagCompound());
+                }
+
+                byte[] infoData = resultSet.getBytes("info");
+                try {
+                    pet.setInfo(TagStream.readTag(infoData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "info", infoData);
+                    pet.setInfo(new TagCompound());
+                }
 
                 pets.add(pet);
             }
 
             return pets;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
