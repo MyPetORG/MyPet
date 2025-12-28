@@ -37,12 +37,15 @@ import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.Keyle.MyPet.api.util.NbtUtil;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.*;
 
@@ -53,6 +56,23 @@ public class SqLiteRepository implements Repository {
     private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
     private Connection connection;
     private int version = 1;
+
+    private void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
+        if (data == null || data.length == 0) {
+            return;
+        }
+        try {
+            Path corruptedDir = MyPetApi.getPlugin().getDataFolder().toPath().resolve("corrupted");
+            Files.createDirectories(corruptedDir);
+            String safePetName = pet.getPetName().replaceAll("[^a-zA-Z0-9_-]", "_");
+            String filename = pet.getOwner().getUniqueId() + "_" + safePetName + "_" + fieldName + ".dat";
+            Path backupFile = corruptedDir.resolve(filename);
+            Files.write(backupFile, data);
+            MyPetApi.getLogger().info("Corrupted data backed up to: " + backupFile);
+        } catch (IOException e) {
+            MyPetApi.getLogger().warning("Failed to backup corrupted data for pet " + pet.getUUID() + ": " + e.getMessage());
+        }
+    }
 
     @Override
     public void disable() {
@@ -388,12 +408,27 @@ public class SqLiteRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(NbtUtil.readCompressed(resultSet.getBytes("skills")));
-                pet.setInfo(NbtUtil.readCompressed(resultSet.getBytes("info")));
+                byte[] skillsData = resultSet.getBytes("skills");
+                try {
+                    pet.setSkills(NbtUtil.readCompressed(skillsData));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "skills", skillsData);
+                    pet.setSkills(CompoundBinaryTag.empty());
+                }
+
+                byte[] infoData = resultSet.getBytes("info");
+                try {
+                    pet.setInfo(NbtUtil.readCompressed(infoData));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "info", infoData);
+                    pet.setInfo(CompoundBinaryTag.empty());
+                }
 
                 pets.add(pet);
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             ErrorUtil.reportError("SQLite database operation failed", e);
         }
         return pets;
@@ -438,14 +473,29 @@ public class SqLiteRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(NbtUtil.readCompressed(resultSet.getBytes("skills")));
-                pet.setInfo(NbtUtil.readCompressed(resultSet.getBytes("info")));
+                byte[] skillsData = resultSet.getBytes("skills");
+                try {
+                    pet.setSkills(NbtUtil.readCompressed(skillsData));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "skills", skillsData);
+                    pet.setSkills(CompoundBinaryTag.empty());
+                }
+
+                byte[] infoData = resultSet.getBytes("info");
+                try {
+                    pet.setInfo(NbtUtil.readCompressed(infoData));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "info", infoData);
+                    pet.setInfo(CompoundBinaryTag.empty());
+                }
 
                 pets.add(pet);
             }
 
             return pets;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             ErrorUtil.reportError("SQLite database operation failed", e);
         }
         return new ArrayList<>();
@@ -745,7 +795,11 @@ public class SqLiteRepository implements Repository {
                 petPlayer.setCaptureHelperActive(resultSet.getBoolean("capture_mode"));
                 petPlayer.setHealthBarActive(resultSet.getBoolean("health_bar"));
                 petPlayer.setPetLivingSoundVolume(resultSet.getFloat("pet_idle_volume"));
-                petPlayer.setExtendedInfo(NbtUtil.readCompressed(resultSet.getBytes("extended_info")));
+                try {
+                    petPlayer.setExtendedInfo(NbtUtil.readCompressed(resultSet.getBytes("extended_info")));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Extended info of player (" + mojangUUID + ") could not be loaded!");
+                }
 
                 try {
                     JsonObject jsonObject = gson.fromJson(resultSet.getString("multi_world"), JsonObject.class);
@@ -760,7 +814,7 @@ public class SqLiteRepository implements Repository {
 
                 return petPlayer;
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             ErrorUtil.reportError("SQLite database operation failed", e);
         }
         return null;

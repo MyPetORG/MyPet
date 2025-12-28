@@ -38,6 +38,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.NbtUtil;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bson.Document;
 import org.bson.types.Binary;
@@ -45,8 +46,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
-import java.util.zip.ZipException;
 
 public class MongoDbRepository implements Repository {
 
@@ -55,6 +57,23 @@ public class MongoDbRepository implements Repository {
     private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
     private MongoDatabase db;
     private int version = 4;
+
+    private void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
+        if (data == null || data.length == 0) {
+            return;
+        }
+        try {
+            Path corruptedDir = MyPetApi.getPlugin().getDataFolder().toPath().resolve("corrupted");
+            Files.createDirectories(corruptedDir);
+            String safePetName = pet.getPetName().replaceAll("[^a-zA-Z0-9_-]", "_");
+            String filename = pet.getOwner().getUniqueId() + "_" + safePetName + "_" + fieldName + ".dat";
+            Path backupFile = corruptedDir.resolve(filename);
+            Files.write(backupFile, data);
+            MyPetApi.getLogger().info("Corrupted data backed up to: " + backupFile);
+        } catch (IOException e) {
+            MyPetApi.getLogger().warning("Failed to backup corrupted data for pet " + pet.getUUID() + ": " + e.getMessage());
+        }
+    }
     // https://search.maven.org/remotecontent?filepath=org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
 
     @Override
@@ -280,19 +299,26 @@ public class MongoDbRepository implements Repository {
                 }
             }
 
+            byte[] skillsData = ((Binary) document.get("skills")).getData();
             try {
-                pet.setSkills(NbtUtil.readCompressed(((Binary) document.get("skills")).getData()));
-            } catch (ZipException exception) {
-                MyPetApi.getMyPetLogger().warning("Pet skills of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
+                pet.setSkills(NbtUtil.readCompressed(skillsData));
+            } catch (IOException e) {
+                MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                backupCorruptedData(pet, "skills", skillsData);
+                pet.setSkills(CompoundBinaryTag.empty());
             }
+
+            byte[] infoData = ((Binary) document.get("info")).getData();
             try {
-                pet.setInfo(NbtUtil.readCompressed(((Binary) document.get("info")).getData()));
-            } catch (ZipException exception) {
-                MyPetApi.getMyPetLogger().warning("Pet info of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
+                pet.setInfo(NbtUtil.readCompressed(infoData));
+            } catch (IOException e) {
+                MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                backupCorruptedData(pet, "info", infoData);
+                pet.setInfo(CompoundBinaryTag.empty());
             }
 
             return pet;
-        } catch (IOException e) {
+        } catch (Exception e) {
             ErrorUtil.reportError("MongoDB database operation failed", e);
         }
 
@@ -522,8 +548,8 @@ public class MongoDbRepository implements Repository {
 
             try {
                 petPlayer.setExtendedInfo(NbtUtil.readCompressed(((Binary) document.get("extended_info")).getData()));
-            } catch (ZipException exception) {
-                MyPetApi.getMyPetLogger().warning("Extended info of player (" + mojangUUID + ") could not be loaded!");
+            } catch (IOException e) {
+                MyPetApi.getLogger().warning("Extended info of player (" + mojangUUID + ") could not be loaded!");
             }
 
             Document jsonObject = (Document) document.get("multi_world");
@@ -543,7 +569,7 @@ public class MongoDbRepository implements Repository {
             petPlayer.setPetLivingSoundVolume(document.getDouble("pet_idle_volume").floatValue());
 
             return petPlayer;
-        } catch (IOException e) {
+        } catch (Exception e) {
             ErrorUtil.reportError("MongoDB database operation failed", e);
         }
 
