@@ -201,29 +201,27 @@ jobs:
           changelog: ${{ steps.changelog.outputs.content }}
           channel: alpha
           featured: false
-          loaders: paper, spigot
-          game-versions: 1.8.8, 1.12.2, 1.16.5, 1.17.1, 1.18.2, 1.19.x, 1.20.x, 1.21.x
+          loaders: |-
+            paper                                                                                                                                                                                       
+            spigot
+          game-versions: |-
+            1.8.8
+            1.12.2
+            1.16.5
+            1.17.1
+            1.18.2
+            1.19.x
+            1.20.x
+            1.21.x
           files: ${{ steps.findjar.outputs.jar }}
 
       - name: Publish to Hangar
-        uses: benwoo1110/hangar-upload-action@v1
-        with:
-          api_token: ${{ env.HANGAR_TOKEN }}
-          slug: MyPet
-          version: ${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}
-          channel: Snapshot
-          description: ${{ steps.changelog.outputs.content }}
-          files: |
-            [
-              {
-                "path": "${{ steps.findjar.outputs.jar }}",
-                "platforms": ["PAPER"]
-              }
-            ]
-          platform_dependencies: |
-            {
-              "PAPER": ["1.8.8", "1.12.2", "1.16.5", "1.17.1", "1.18.2", "1.19.x", "1.20.x", "1.21.x"]
-            }
+        run: |
+          ./gradlew publishPluginPublicationToHangar --no-daemon \
+            -PbuildType=dev \
+            -PHANGAR_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} \
+            -PHANGAR_FILE=${{ steps.findjar.outputs.jar }} \
+            -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
 
       - name: Publish to Polymart
         run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}

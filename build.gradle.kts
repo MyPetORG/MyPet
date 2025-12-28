@@ -8,6 +8,7 @@ plugins {
     id("com.gradleup.shadow") version "9.2.2"
     id("io.freefair.lombok") version "9.0.0"
     id("com.cjcrafter.polymart-release") version "1.0.1"
+    id("io.papermc.hangar-publish-plugin") version "0.1.4"
     `maven-publish`
 }
 
@@ -234,4 +235,37 @@ polymart {
     message = "View the full changelog on Modrinth: https://modrinth.com/plugin/mypet/version/$polymartVersion"
     file.set(file(polymartFile))
     beta = buildType != "release"
+}
+
+/* ---------- Hangar Release ---------- */
+
+hangarPublish {
+    publications.register("plugin") {
+        val hangarVersion = providers.gradleProperty("HANGAR_VERSION").orNull
+            ?: project.version.toString()
+        val hangarFile = providers.gradleProperty("HANGAR_FILE").orNull
+            ?: "build/libs/MyPet-${project.version}.jar"
+        val hangarChangelog = providers.gradleProperty("HANGAR_CHANGELOG").orNull
+            ?: "View the full changelog on Modrinth: https://modrinth.com/plugin/mypet/version/$hangarVersion"
+
+        version.set(hangarVersion)
+        id.set("MyPet")
+        channel.set(if (buildType == "release") "Release" else "Snapshot")
+        changelog.set(hangarChangelog)
+        apiKey.set(
+            providers.gradleProperty("HANGAR_TOKEN").orNull
+                ?: System.getenv("HANGAR_TOKEN")
+                ?: ""
+        )
+
+        platforms {
+            paper {
+                jar.set(file(hangarFile))
+                platformVersions.set(listOf(
+                    "1.8.8", "1.12.2", "1.16.5", "1.17.1", "1.18.2",
+                    "1.19.x", "1.20.x", "1.21.x"
+                ))
+            }
+        }
+    }
 }
