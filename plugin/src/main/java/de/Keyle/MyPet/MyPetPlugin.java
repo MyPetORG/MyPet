@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.*;
 import de.Keyle.MyPet.api.skill.SkillManager;
+import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
@@ -416,6 +417,28 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                         activatedHooks.put(hook.getPluginName(), 1);
                     }
                     return activatedHooks;
+                }
+                ));
+                metrics.addCustomChart(new Metrics.AdvancedPie("pet_types", () -> {
+                    Map<String, Integer> petTypes = new HashMap<>();
+                    for (MyPet pet : myPetManager.getAllActiveMyPets()) {
+                        petTypes.merge(pet.getPetType().name(), 1, Integer::sum);
+                    }
+                    return petTypes;
+                }
+                ));
+                metrics.addCustomChart(new Metrics.SimplePie("database_type",
+                        () -> Configuration.Repository.REPOSITORY_TYPE));
+                metrics.addCustomChart(new Metrics.AdvancedPie("active_skills", () -> {
+                    Map<String, Integer> skillCounts = new HashMap<>();
+                    for (MyPet pet : myPetManager.getAllActiveMyPets()) {
+                        for (Skill skill : pet.getSkills().all()) {
+                            if (skill.isActive()) {
+                                skillCounts.merge(skill.getName(), 1, Integer::sum);
+                            }
+                        }
+                    }
+                    return skillCounts;
                 }
                 ));
             }
