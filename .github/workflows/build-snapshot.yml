@@ -172,6 +172,7 @@ jobs:
             {
               echo 'content<<EOF'
               cat "$CHANGELOG_FILE"
+              echo ""
               echo 'EOF'
             } >> "$GITHUB_OUTPUT"
           else
