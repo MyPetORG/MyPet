@@ -216,13 +216,13 @@ jobs:
             1.21.x
           files: ${{ steps.findjar.outputs.jar }}
 
-      - name: Publish to Hangar
-        run: |
-          ./gradlew publishPluginPublicationToHangar --no-daemon \
-            -PbuildType=dev \
-            -PHANGAR_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} \
-            -PHANGAR_FILE=${{ steps.findjar.outputs.jar }} \
-            -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
+#      - name: Publish to Hangar
+#        run: |
+#          ./gradlew publishPluginPublicationToHangar --no-daemon \
+#            -PbuildType=dev \
+#            -PHANGAR_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} \
+#            -PHANGAR_FILE=${{ steps.findjar.outputs.jar }} \
+#            -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
 
       - name: Publish to Polymart
         run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
