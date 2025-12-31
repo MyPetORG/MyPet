@@ -133,15 +133,25 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
         CompoundTag vanillaNBT = new CompoundTag();
 
-        if (entity instanceof net.minecraft.world.entity.LivingEntity) {
-            VillagerNbtIO.writeFrom(bukkitEntity);
-        } else {
-            Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
-            try {
-                b.invoke(entity, vanillaNBT);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                ErrorUtil.report(e);
+        // For villagers and wandering traders we need to use the special NBT IO helpers
+        try {
+            if (bukkitEntity instanceof Villager || bukkitEntity instanceof WanderingTrader) {
+                // VillagerNbtIO.writeFrom returns a CompoundTag -> use it
+                CompoundTag written = VillagerNbtIO.writeFrom(bukkitEntity);
+                if (written != null) {
+                    vanillaNBT = written;
+                }
+            } else {
+                // Fallback: use entity's internal writer method (named "b" in obfuscated mappings)
+                Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
+                try {
+                    b.invoke(entity, vanillaNBT);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    ErrorUtil.report(e);
+                }
             }
+        } catch (Exception e) {
+            ErrorUtil.report(e);
         }
 
         return (CompoundBinaryTag) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
@@ -155,9 +165,9 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         if (nbtData != null) {
             if (bukkitEntity instanceof Villager) {
                 VillagerNbtIO.readInto(bukkitEntity, nbtData);
-            } else if (bukkitEntity instanceof net.minecraft.world.entity.npc.WanderingTrader) {
-                net.minecraft.world.entity.npc.WanderingTrader villager = (net.minecraft.world.entity.npc.WanderingTrader) entity;
-                VillagerNbtIO.writeFrom(bukkitEntity);
+            } else if (bukkitEntity instanceof WanderingTrader) {
+                // Wandering traders are handled the same way as villagers for NBT read
+                VillagerNbtIO.readInto(bukkitEntity, nbtData);
             }
         }
     }
