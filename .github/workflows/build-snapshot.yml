@@ -191,40 +191,40 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#      - name: Publish to Modrinth
-#        uses: cloudnode-pro/modrinth-publish@v2
-#        with:
-#          token: ${{ env.MODRINTH_TOKEN }}
-#          project: SnE2iTno
-#          version: ${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}
-#          name: v${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}
-#          changelog: ${{ steps.changelog.outputs.content }}
-#          channel: alpha
-#          featured: false
-#          loaders: |-
-#            paper
-#            spigot
-#          game-versions: |-
-#            1.8.8
-#            1.12.2
-#            1.16.5
-#            1.17.1
-#            1.18.2
-#            1.19.x
-#            1.20.x
-#            1.21.x
-#          files: ${{ steps.findjar.outputs.jar }}
-#
-#      - name: Publish to Hangar
-#        run: |
-#          ./gradlew publishPluginPublicationToHangar --no-daemon \
-#            -PbuildType=dev \
-#            -PHANGAR_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} \
-#            -PHANGAR_FILE=${{ steps.findjar.outputs.jar }} \
-#            -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
-#
-#      - name: Publish to Polymart
-#        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
+      - name: Publish to Modrinth
+        uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ env.MODRINTH_TOKEN }}
+          project: SnE2iTno
+          version: ${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}
+          name: v${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}
+          changelog: ${{ steps.changelog.outputs.content }}
+          channel: alpha
+          featured: false
+          loaders: |-
+            paper                                                                                                                                                                                       
+            spigot
+          game-versions: |-
+            1.8.8
+            1.12.2
+            1.16.5
+            1.17.1
+            1.18.2
+            1.19.x
+            1.20.x
+            1.21.x
+          files: ${{ steps.findjar.outputs.jar }}
+
+      - name: Publish to Hangar
+        run: |
+          ./gradlew publishPluginPublicationToHangar --no-daemon \
+            -PbuildType=dev \
+            -PHANGAR_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} \
+            -PHANGAR_FILE=${{ steps.findjar.outputs.jar }} \
+            -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
+
+      - name: Publish to Polymart
+        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
 
       - name: Send a Discord webhook notification
         run: |
@@ -245,7 +245,7 @@ jobs:
                 "url": "https://github.com/${{ github.actor_id }}",
                 "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
               },
-              "url": "https://github.com/MyPetORG/MyPet/releases/tag/${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}"
+              "url": "https://modrinth.com/plugin/mypet/version/${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}"
             }
           ]
           }' ${{ secrets.WEBHOOK_URL }})
