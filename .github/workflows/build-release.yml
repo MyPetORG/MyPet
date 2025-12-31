@@ -145,7 +145,7 @@ jobs:
             -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
 
       - name: Publish to Polymart
-        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_VERSION=${PROJECT_VERSION} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
+        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_TOKEN=${POLYMART_TOKEN} -PPOLYMART_VERSION=${PROJECT_VERSION} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
 
       - name: Send a Discord webhook notification
         run: |
