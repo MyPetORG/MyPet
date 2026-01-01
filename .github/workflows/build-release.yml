@@ -100,6 +100,14 @@ jobs:
             echo "content=A changelog has not yet been uploaded. Please consider checking Discord!" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Extract supported NMS modules
+        id: modules
+        shell: bash
+        run: |
+          # Extract bukkitPackets from build.gradle.kts for update checker compatibility
+          BUKKIT_PACKETS=$(grep -Po 'val bukkitPackets by extra\("([^"]+)"\)' build.gradle.kts | sed 's/.*("\(.*\)")/\1/')
+          echo "list=$BUKKIT_PACKETS" >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -108,7 +116,11 @@ jobs:
           prerelease: false
           overwrite_files: false
           files: ${{ steps.findjar.outputs.jar }}
-          body: ${{ steps.changelog.outputs.content }}
+          body: |
+            ${{ steps.changelog.outputs.content }}
+
+            ---
+            Supported NMS versions: ${{ steps.modules.outputs.list }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
