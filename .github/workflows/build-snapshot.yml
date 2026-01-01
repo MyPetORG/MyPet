@@ -228,10 +228,11 @@ jobs:
         run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_TOKEN=${POLYMART_TOKEN} -PPOLYMART_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
 
       - name: Send a Discord webhook notification
+        env:
+          CHANGELOG: ${{ steps.changelog.outputs.content }}
         run: |
           VERSION="${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}"
           MODRINTH_URL="https://modrinth.com/plugin/mypet/version/${VERSION}"
-          CHANGELOG='${{ steps.changelog.outputs.content }}'
 
           # Truncate changelog if it exceeds Discord's 4096 char limit
           if [[ ${#CHANGELOG} -gt 4000 ]]; then
