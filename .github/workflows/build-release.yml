@@ -149,25 +149,53 @@ jobs:
 
       - name: Send a Discord webhook notification
         run: |
-          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d '{
-          "username": "MyPet Release",
-          "content": "<@&1428362555084116131>",
-          "embeds": [
-            {
-              "type": "rich",
-              "title": "${{ env.PROJECT_VERSION }}",
-              "description": "**A new version of MyPet has released!**",
-              "color": 439741,
-              "thumbnail": {
-                "url": "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
-              },
-              "author": {
-                "name": "${{ github.actor }}",
-                "url": "https://github.com/${{ github.actor_id }}",
-                "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
-              },
-              "url": "https://modrinth.com/plugin/mypet/version/${{ env.PROJECT_VERSION }}"
-            }
-          ]
-          }' ${{ secrets.WEBHOOK_URL }})
+          VERSION="${{ env.PROJECT_VERSION }}"
+          MODRINTH_URL="https://modrinth.com/plugin/mypet/version/${VERSION}"
+          FULL_CHANGELOG='${{ steps.changelog.outputs.content }}'
+
+          # Extract only the "Full changelog" section for Discord (after "### Full changelog:" or "## Full changelog:")
+          CHANGELOG=$(echo "$FULL_CHANGELOG" | sed -n '/^##\?#\? Full [Cc]hangelog/,$p' | tail -n +2)
+
+          # If no "Full changelog" section found, use the full changelog
+          if [[ -z "$CHANGELOG" ]]; then
+            CHANGELOG="$FULL_CHANGELOG"
+          fi
+
+          # Truncate changelog if it exceeds Discord's 4096 char limit
+          if [[ ${#CHANGELOG} -gt 4000 ]]; then
+            CHANGELOG="${CHANGELOG:0:3997}..."
+          fi
+
+          # Build JSON payload safely with jq
+          PAYLOAD=$(jq -n \
+            --arg version "$VERSION" \
+            --arg changelog "$CHANGELOG" \
+            --arg modrinth_url "$MODRINTH_URL" \
+            '{
+              content: ("MyPet **" + $version + "** has released!\n<@&1428362555084116131>"),
+              embeds: [{
+                title: "Changelog",
+                description: $changelog,
+                color: 4429633,
+                fields: []
+              }],
+              components: [{
+                type: 1,
+                components: [{
+                  type: 2,
+                  style: 5,
+                  label: "Download from Modrinth",
+                  emoji: {
+                    id: "1444210367839473684",
+                    name: "unknown",
+                    animated: false
+                  },
+                  url: $modrinth_url
+                }]
+              }],
+              username: "MyPet Release",
+              avatar_url: "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
+            }')
+
+          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" ${{ secrets.WEBHOOK_URL }})
           echo "Webhook server response: $RESPONSE"
