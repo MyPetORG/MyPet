@@ -248,7 +248,11 @@ public class SkillTreeLoaderJSON {
                                     JsonObject upgradeObject = upgradesObject.getAsJsonObject(levelRuleString);
                                     tryToLoad("Skills." + skillName + ".Upgrades." + levelRuleString + ".Upgrade", () -> {
                                         Upgrade upgrade = loadUpgrade(skillName, upgradeObject);
-                                        skilltree.addUpgrade(levelRule, upgrade);
+                                        if (upgrade != null) {
+                                            skilltree.addUpgrade(levelRule, upgrade);
+                                        } else {
+                                            MyPetApi.getLogger().warning("Unknown skill '" + skillName + "' in skilltree '" + skilltree.getName() + "' - skipping upgrade");
+                                        }
                                     });
                                 });
                             }
