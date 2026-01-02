@@ -613,7 +613,7 @@ public class MySqlRepository implements Repository {
 
     @Override
     public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback) {
-        if (callback != null) {
+        if (callback != null && owner != null) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
