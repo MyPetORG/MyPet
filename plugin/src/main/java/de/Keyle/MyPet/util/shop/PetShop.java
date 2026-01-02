@@ -154,8 +154,7 @@ public class PetShop {
                                             } else {
                                                 petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
                                                 MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
-                                                MyPet activePet = MyPetApi.getMyPetManager().activateMyPet(clonedPet).get();
-                                                activePet.createEntity();
+                                                MyPetApi.getMyPetManager().activateMyPet(clonedPet).ifPresent(MyPet::createEntity);
                                             }
                                         }
                                     });
