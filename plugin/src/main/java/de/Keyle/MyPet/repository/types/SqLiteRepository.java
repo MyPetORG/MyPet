@@ -503,10 +503,13 @@ public class SqLiteRepository implements Repository {
 
     @Override
     public void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback) {
-        if (callback != null) {
+        if (callback != null && myPetPlayer != null) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    if (myPetPlayer == null) {
+                        return;
+                    }
                     try {
                         PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE owner_uuid=?;");
                         statement.setString(1, myPetPlayer.getUniqueId().toString());
@@ -529,6 +532,9 @@ public class SqLiteRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    if (owner == null) {
+                        return;
+                    }
                     try {
                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE owner_uuid=?;");
                         statement.setString(1, owner.getUniqueId().toString());
