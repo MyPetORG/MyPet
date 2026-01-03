@@ -93,6 +93,11 @@ public class PetShop {
                     if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
                         owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
+                        // Race condition: player may have disconnected between isMyPetPlayer and getMyPetPlayer
+                        if (owner == null) {
+                            return;
+                        }
+
                         if (owner.hasMyPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
                             p.sendMessage(Translation.getString("Message.Command.Trade.Receiver.HasPet", player));
                             return;
