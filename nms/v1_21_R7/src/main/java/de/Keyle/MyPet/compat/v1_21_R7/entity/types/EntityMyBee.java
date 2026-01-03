@@ -41,7 +41,7 @@ public class EntityMyBee extends EntityMyFlyingPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> BEE_STATUS_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BYTE);
-	private static final EntityDataAccessor<Integer> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Long> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.LONG);
 
 	protected boolean isAngry = false;
 
@@ -80,13 +80,14 @@ public class EntityMyBee extends EntityMyFlyingPet {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
 		builder.define(BEE_STATUS_WATCHER, (byte) 0);
-		builder.define(ANGER_WATCHER, 0);
+		builder.define(ANGER_WATCHER, -1L);
 	}
 
 	@Override
 	public void updateVisuals() {
 		this.getEntityData().set(AGE_WATCHER, getMyPet().isBaby());
-		this.getEntityData().set(ANGER_WATCHER, (getMyPet().isAngry() || isAngry) ? 1 : 0);
+		// In 1.21.11+, anger is stored as an end time (Long). Use -1L for not angry, positive value for angry.
+		this.getEntityData().set(ANGER_WATCHER, (getMyPet().isAngry() || isAngry) ? Long.MAX_VALUE : -1L);
 		this.setBeeStatus(8, getMyPet().hasNectar());
 		this.setBeeStatus(4, getMyPet().hasStung());
 	}

@@ -429,7 +429,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     public void hidePotionParticles() {
         int potionEffects = 0;
         if (!getActiveEffects().isEmpty()) {
-            potionEffects = PotionContents.getColorOptional(getActiveEffects()).getAsInt();
+            potionEffects = PotionContents.getColorOptional(getActiveEffects()).orElse(0);
         }
         getEntityData().set(POTION_PARTICLE_WATCHER, (byte) potionEffects);
     }

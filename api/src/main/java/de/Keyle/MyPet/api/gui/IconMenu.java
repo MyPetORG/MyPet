@@ -77,7 +77,9 @@ public class IconMenu implements Listener {
             return pageSizeInSlots;
 
         int size = maximumOptionPosition + 1;
-        return (int) (Math.ceil(size / 9.) * 9);
+        int roundedSize = (int) (Math.ceil(size / 9.) * 9);
+        // Clamp to Bukkit's valid inventory size range: 9-54 slots (1-6 rows)
+        return Math.max(9, Math.min(54, roundedSize));
     }
 
     public IconMenu setPaginationIdentifier(String identifier) {

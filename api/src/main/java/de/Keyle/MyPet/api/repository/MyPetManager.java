@@ -47,12 +47,7 @@ public abstract class MyPetManager {
     }
 
     public MyPet[] getAllActiveMyPets() {
-        MyPet[] allActiveMyPets = new MyPet[mActivePetsPlayer.keySet().size()];
-        int i = 0;
-        for (MyPet myPet : mActivePetsPlayer.keySet()) {
-            allActiveMyPets[i++] = myPet;
-        }
-        return allActiveMyPets;
+        return mActivePetsPlayer.keySet().toArray(new MyPet[0]);
     }
 
     public boolean hasActiveMyPet(MyPetPlayer player) {

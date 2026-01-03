@@ -83,6 +83,9 @@ public class LevelListener implements Listener {
                 Set<Skill> affectedSkills = new HashSet<>();
                 List<Upgrade> upgrades = skilltree.getUpgrades(i);
                 for (Upgrade upgrade : upgrades) {
+                    if (upgrade == null) {
+                        continue;
+                    }
                     SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
                     if (sn != null) {
                         Skill skill = myPet.getSkills().get(sn.value());
@@ -139,6 +142,9 @@ public class LevelListener implements Listener {
             for (int i = fromLvl; i > lvl; i--) {
                 List<Upgrade> upgrades = skilltree.getUpgrades(i);
                 for (Upgrade upgrade : upgrades) {
+                    if (upgrade == null) {
+                        continue;
+                    }
                     SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
                     if (sn != null) {
                         Skill skill = myPet.getSkills().get(sn.value());
@@ -185,6 +191,9 @@ public class LevelListener implements Listener {
             for (int i = 1; i <= lvl; i++) {
                 List<Upgrade> upgrades = skilltree.getUpgrades(i);
                 for (Upgrade upgrade : upgrades) {
+                    if (upgrade == null) {
+                        continue;
+                    }
                     SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
                     if (sn != null) {
                         Skill skill = myPet.getSkills().get(sn.value());
