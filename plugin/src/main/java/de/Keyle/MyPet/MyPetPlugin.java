@@ -427,8 +427,17 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     return petTypes;
                 }
                 ));
-                metrics.addCustomChart(new Metrics.SimplePie("database_type",
-                        () -> Configuration.Repository.REPOSITORY_TYPE));
+                metrics.addCustomChart(new Metrics.SimplePie("database_type", () -> {
+                    String type = null;
+                    if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("SQLite")) {
+                        type = "SQLite";
+                    } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
+                        type = "MySQL";
+                    } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
+                        type = "MongoDB";
+                    }
+                    return type;
+                }));
                 metrics.addCustomChart(new Metrics.AdvancedPie("active_skills", () -> {
                     Map<String, Integer> skillCounts = new HashMap<>();
                     for (MyPet pet : myPetManager.getAllActiveMyPets()) {
