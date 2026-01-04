@@ -79,10 +79,6 @@ public abstract class MyPetManager {
     public abstract Optional<MyPet> activateMyPet(StoredMyPet storedMyPet);
 
     public boolean deactivateMyPet(MyPetPlayer owner, boolean update) {
-        return deactivateMyPet(owner, update, false);
-    }
-
-    public boolean deactivateMyPet(MyPetPlayer owner, boolean update, boolean save) {
         if (mActivePlayerPets.containsKey(owner)) {
             final MyPet myPet = owner.getMyPet();
 
@@ -92,9 +88,6 @@ public abstract class MyPetManager {
             myPet.removePet();
             if (update) {
                 MyPetApi.getRepository().updateMyPet(myPet, null);
-            }
-            if (save) {
-                MyPetApi.getRepository().savePet(myPet);
             }
             mActivePetsPlayer.remove(myPet);
             return true;
