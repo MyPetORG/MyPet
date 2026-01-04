@@ -107,8 +107,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             }
             repo.disable();
             entityRegistry.unregisterEntityTypes();
+            Timer.reset();
         }
-        Timer.reset();
         Bukkit.getServer().getScheduler().cancelTasks(this);
 
         DebugLogHandler.disable(getLogger());
