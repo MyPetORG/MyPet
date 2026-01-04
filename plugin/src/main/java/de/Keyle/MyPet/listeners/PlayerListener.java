@@ -310,7 +310,7 @@ public class PlayerListener implements Listener {
                     myPet.removePet(true);
                 }
 
-                MyPetApi.getMyPetManager().deactivateMyPet(player, false, true);
+                MyPetApi.getMyPetManager().deactivateMyPet(player, true);
             }
 
             MyPetApi.getPlayerManager().setOffline(player);
