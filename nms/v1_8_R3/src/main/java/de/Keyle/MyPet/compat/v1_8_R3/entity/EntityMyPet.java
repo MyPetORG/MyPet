@@ -619,7 +619,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
         this.datawatcher.watch(6, MathHelper.a(f, 0.0F, (float) maxHealth));
 
         if (!silent && !Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
-            String msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, getHealth(), maxHealth);
+            String msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, super.getHealth(), maxHealth);
             MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
         }
     }

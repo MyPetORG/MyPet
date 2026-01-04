@@ -694,7 +694,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         super.setHealth(Mth.clamp(f, 0.0F, (float) maxHealth));
 
         if (!silent && !Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES) {
-            String msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, getHealth(), maxHealth);
+            String msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, super.getHealth(), maxHealth);
             MyPetApi.getPlatformHelper().sendMessageActionBar(getOwner().getPlayer(), msg);
         }
     }
