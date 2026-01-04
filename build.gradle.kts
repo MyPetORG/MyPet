@@ -9,6 +9,7 @@ plugins {
     id("io.freefair.lombok") version "9.0.0"
     id("com.cjcrafter.polymart-release") version "1.0.1"
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
+    id("io.sentry.jvm.gradle") version "5.12.2"
     `maven-publish`
 }
 
@@ -37,6 +38,7 @@ repositories {
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "io.freefair.lombok")
+    apply(plugin = "io.sentry.jvm.gradle")
 
     repositories {
         mavenCentral()
@@ -180,7 +182,8 @@ dependencies {
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.5")
     add("shade", "com.google.code.gson:gson:2.8.9")
-    add("shade", "io.sentry:sentry:1.7.30")
+    add("shade", "io.sentry:sentry:8.22.0")
+    add("shade", "io.sentry:sentry-logback:8.22.0")
     add("shade", "com.zaxxer:HikariCP:3.4.2")
 }
 
@@ -199,7 +202,6 @@ tasks.shadowJar {
     relocate("at.blvckbytes.raw_message", "de.Keyle.MyPet.util.raw_message")
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
-    relocate("io.sentry", "de.Keyle.MyPet.util.sentry")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
     relocate("org.bson", "de.Keyle.MyPet.util.bson")
     relocate("com.google.gson", "de.Keyle.MyPet.util.gson")
@@ -208,6 +210,16 @@ tasks.shadowJar {
 
 tasks.assemble { dependsOn(tasks.shadowJar) }
 tasks.build { dependsOn(tasks.shadowJar) }
+
+/* ---------- Sentry Configuration ---------- */
+
+sentry {
+    includeSourceContext = true
+
+    org = "mypet"
+    projectName = "mypet"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
 
 /* ---------- Root compilation settings (Java 8 output) ---------- */
 

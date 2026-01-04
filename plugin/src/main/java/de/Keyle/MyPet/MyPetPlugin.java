@@ -137,7 +137,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         if (getConfig().contains("MyPet.Log.Unique-ID")) {
             try {
-                UUID serverUUID = UUID.fromString(getConfig().getString("MyPet.Log.Report-Errors"));
+                UUID serverUUID = UUID.fromString(getConfig().getString("MyPet.Log.Unique-ID"));
                 SentryErrorReporter.setServerUUID(serverUUID);
             } catch (Throwable ignored) {
             }

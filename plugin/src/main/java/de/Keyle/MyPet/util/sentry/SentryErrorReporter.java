@@ -21,16 +21,15 @@
 package de.Keyle.MyPet.util.sentry;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
-import de.Keyle.MyPet.util.sentry.marshaller.gson.GsonSentryClientFactory;
-import io.sentry.SentryClient;
-import io.sentry.SentryClientFactory;
-import io.sentry.context.Context;
-import io.sentry.event.BreadcrumbBuilder;
-import io.sentry.event.UserBuilder;
+import io.sentry.Breadcrumb;
+import io.sentry.Sentry;
+import io.sentry.SentryLevel;
+import io.sentry.protocol.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
@@ -51,59 +50,247 @@ public class SentryErrorReporter implements ErrorReporter {
 
     @Getter @Setter private static UUID serverUUID = UUID.randomUUID();
 
-    protected SentryClient sentry;
-    protected Context context;
     protected Appender loggerAppender = null;
     protected boolean enabled = false;
     protected boolean hooksLoaded = false;
 
     public void onEnable() {
-        SentryClientFactory factory = new GsonSentryClientFactory();
-        sentry = SentryClientFactory.sentryClient("https://14aec086f95d4fbe8a378638c80b68fa@sentry.io/1368849?" +
-                "stacktrace.app.packages=", factory);
-        context = sentry.getContext();
+        // Initialize Sentry with modern 8.0.0+ API
+        Sentry.init(options -> {
+            options.setDsn("https://14aec086f95d4fbe8a378638c80b68fa@o221805.ingest.us.sentry.io/1368849");
+            options.setSendDefaultPii(true);
+            options.setTracesSampleRate(1.0);
+            options.setDebug(false);
 
-        context.addTag("plugin_build", "" + MyPetVersion.getBuild());
-        context.setUser(new UserBuilder().setId(serverUUID.toString()).build());
-        sentry.setServerName(Bukkit.getServer().getVersion());
-        sentry.setRelease(MyPetVersion.getVersion());
-        sentry.setEnvironment(MyPetVersion.isDevBuild() ? "development" : "production");
+            // Set release and environment
+            options.setRelease(MyPetVersion.getVersion());
+            options.setEnvironment(MyPetVersion.isDevBuild() ? "development" : "production");
 
+            // Set server name (appears as server_name in Sentry)
+            options.setServerName(Bukkit.getServer().getVersion());
+
+            // Ignored exception types (filtered before beforeSend)
+            options.addIgnoredExceptionForType(IOException.class);
+            options.addIgnoredExceptionForType(VirtualMachineError.class);
+            options.addIgnoredExceptionForType(LinkageError.class);
+            options.addIgnoredExceptionForType(FileNotFoundException.class);
+            options.addIgnoredExceptionForType(InvalidConfigurationException.class);
+
+            // Filter noisy breadcrumbs
+            options.setBeforeBreadcrumb((breadcrumb, hint) -> {
+                String category = breadcrumb.getCategory();
+                if (category == null) {
+                    return breadcrumb;
+                }
+
+                // Filter out noisy scheduler/tick-related logs
+                if (category.contains("Scheduler") ||
+                        category.contains("ChunkIO") ||
+                        category.contains("tick")) {
+                    return null;
+                }
+
+                return breadcrumb;
+            });
+
+            // beforeSend hook - filter and enrich events before sending
+            options.setBeforeSend((event, hint) -> {
+                Throwable throwable = event.getThrowable();
+                if (throwable == null) {
+                    return event;
+                }
+
+                // Check if MyPet is involved in the error
+                if (!isMyPetRelated(throwable)) {
+                    return null; // drop event
+                }
+
+                // Filter out noisy/irrelevant exception types
+                if (shouldFilterException(throwable)) {
+                    return null; // drop event
+                }
+
+                // Lazy-load plugin hooks on first error
+                if (!hooksLoaded) {
+                    addPluginHooks();
+                }
+
+                // Add repository type tag (searchable)
+                String repoType = Configuration.Repository.REPOSITORY_TYPE;
+                if (repoType != null && !repoType.isEmpty()) {
+                    event.setTag("repository_type", repoType);
+                }
+
+                // Add runtime context (viewable on issue page)
+                Map<String, Object> runtimeContext = new HashMap<>();
+                try {
+                    if (MyPetApi.getMyPetManager() != null) {
+                        runtimeContext.put("active_pets", MyPetApi.getMyPetManager().countActiveMyPets());
+                    }
+                } catch (Exception ignored) {
+                    // Manager may not be initialized yet
+                }
+                if (!runtimeContext.isEmpty()) {
+                    event.getContexts().put("runtime", runtimeContext);
+                }
+
+                return event;
+            });
+        });
+
+        // Set user and tags
+        Sentry.configureScope(scope -> {
+            // User (server UUID)
+            User user = new User();
+            user.setId(serverUUID.toString());
+            scope.setUser(user);
+
+            // Plugin build tag
+            String build = MyPetVersion.getBuild();
+            if (build != null && !build.isEmpty()) {
+                scope.setTag("plugin_build", build);
+            }
+
+            // Minecraft version tag
+            String mcVersion = MyPetVersion.getMinecraftVersion();
+            if (mcVersion != null && !mcVersion.isEmpty() && !mcVersion.equals("0.0.0")) {
+                scope.setTag("minecraft_version", mcVersion);
+            }
+
+            // Server type tag (Paper, Spigot, etc.)
+            scope.setTag("server_type", detectServerType());
+
+            // Java version tag
+            scope.setTag("java_version", System.getProperty("java.version"));
+        });
+
+        // Add plugins list to context
         addPlugins();
 
+        // Attach Log4j2 appender for automatic error capture
         loggerAppender = new MyPetExceptionAppender();
         loggerAppender.start();
         Logger logger = (Logger) LogManager.getRootLogger();
         logger.addAppender(loggerAppender);
 
+        // Start session for release health tracking
+        Sentry.startSession();
+
         enabled = true;
     }
 
+    /**
+     * Detects the server type (Paper, Spigot, CraftBukkit, etc.)
+     */
+    protected String detectServerType() {
+        String version = Bukkit.getServer().getVersion().toLowerCase();
+        String name = Bukkit.getServer().getName();
+
+        // Check for forks first (most specific)
+        if (version.contains("purpur")) {
+            return "Purpur";
+        } else if (version.contains("pufferfish")) {
+            return "Pufferfish";
+        } else if (version.contains("paper") || classExists("io.papermc.paper.configuration.Configuration")) {
+            return "Paper";
+        } else if (version.contains("spigot") || classExists("org.spigotmc.SpigotConfig")) {
+            return "Spigot";
+        } else if (name.contains("CraftBukkit")) {
+            return "CraftBukkit";
+        }
+
+        return name;
+    }
+
+    /**
+     * Checks if a class exists on the classpath.
+     */
+    private boolean classExists(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the throwable is related to MyPet.
+     */
+    protected boolean isMyPetRelated(Throwable t) {
+        // Check the main exception and all causes
+        Throwable current = t;
+        while (current != null) {
+            if (Util.findStringInThrowable(current, "MyPet")) {
+                return true;
+            }
+            // For NPEs, require MyPet in top 3 stack frames
+            if (current instanceof NullPointerException) {
+                long myPetInTop3 = Arrays.stream(current.getStackTrace())
+                        .limit(3)
+                        .filter(frame -> frame.getClassName().contains("MyPet"))
+                        .count();
+                if (myPetInTop3 > 0) {
+                    return true;
+                }
+            }
+            current = current.getCause();
+        }
+        return false;
+    }
+
+    /**
+     * Determines if an exception should be filtered out (not sent to Sentry).
+     * Note: Common exception types are handled by ignoredExceptions in init().
+     * This method handles more complex filtering logic.
+     */
+    protected boolean shouldFilterException(Throwable t) {
+        Throwable current = t;
+        while (current != null) {
+            // Filter by class name for exceptions we can't import
+            String className = current.getClass().getSimpleName();
+            if ("AuthenticationException".equals(className)) {
+                return true;
+            }
+
+            // Filter out WorldEdit/WorldGuard adapter issues
+            if (current instanceof NullPointerException) {
+                boolean hasBukkitAdapter = Arrays.stream(current.getStackTrace())
+                        .anyMatch(frame -> frame.toString().contains("BukkitAdapter.adapt"));
+                if (hasBukkitAdapter) {
+                    return true;
+                }
+            }
+
+            // Filter out NPC-related errors from Citizens etc.
+            boolean hasNpcTrace = Arrays.stream(current.getStackTrace())
+                    .anyMatch(frame -> {
+                        String name = frame.getClassName().toLowerCase();
+                        return name.contains("mypet") && name.contains("npc");
+                    });
+            if (hasNpcTrace) {
+                return true;
+            }
+
+            current = current.getCause();
+        }
+        return false;
+    }
+
     protected void addPlugins() {
-        List<String> plugins = Arrays
+        String plugins = Arrays
                 .stream(Bukkit.getPluginManager().getPlugins())
                 .map(plugin -> plugin.getName() + " (" + plugin.getDescription().getVersion() + ")")
-                .collect(Collectors.toList());
-        int pluginCounter = 1;
-        StringBuilder part = new StringBuilder();
-        for (String plugin : plugins) {
-            if (part.length() + plugin.length() + "\n".length() > 400) {
-                context.addExtra("plugins_" + pluginCounter, part.toString());
-                pluginCounter++;
-                part = new StringBuilder();
-            }
-            part.append(plugin).append("\n");
-        }
-        if (part.length() > 0) {
-            context.addExtra("plugins_" + pluginCounter, part.toString());
-        }
+                .collect(Collectors.joining("\n"));
+
+        Sentry.configureScope(scope -> scope.setExtra("plugins", plugins));
     }
 
     protected void addPluginHooks() {
         if (MyPetApi.getPluginHookManager() == null || MyPetApi.getPluginHookManager().getHooks() == null) {
             return;
         }
-        List<String> hooks = MyPetApi.getPluginHookManager().getHooks().stream()
+        String hooks = MyPetApi.getPluginHookManager().getHooks().stream()
                 .map(hook -> {
                     PluginHookName hookNameAnnotation = hook.getClass().getAnnotation(PluginHookName.class);
                     String message = hook.getPluginName();
@@ -114,20 +301,10 @@ public class SentryErrorReporter implements ErrorReporter {
                     message += hook.getActivationMessage();
                     return message;
                 })
-                .collect(Collectors.toList());
-        int hookCounter = 1;
-        StringBuilder part = new StringBuilder();
-        for (String hook : hooks) {
-            if (part.length() + hook.length() + "\n".length() > 400) {
-                context.addExtra("hooks_" + hookCounter, part.toString());
-                hookCounter++;
-                part = new StringBuilder();
-            }
-            part.append(hook).append("\n");
-        }
-        if (part.length() > 0) {
-            context.addExtra("hooks_" + hookCounter, part.toString());
-        }
+                .collect(Collectors.joining("\n"));
+
+        Sentry.configureScope(scope -> scope.setExtra("hooks", hooks));
+
         hooksLoaded = true;
     }
 
@@ -138,77 +315,34 @@ public class SentryErrorReporter implements ErrorReporter {
             logger.removeAppender(loggerAppender);
         }
         enabled = false;
+
+        // End session for release health tracking
+        Sentry.endSession();
+
+        // Close Sentry connection and flush pending events
+        Sentry.close();
     }
 
-    public void sendError(Throwable t, String... context) {
+    public void sendError(Throwable t, String... breadcrumbs) {
         if (!enabled) {
             return;
         }
-        boolean myPetWasCause = filter(t);
-        Throwable throwable = t;
-        while (throwable.getCause() != null) {
-            throwable = throwable.getCause();
-            myPetWasCause = myPetWasCause || filter(throwable);
-        }
-        if (!myPetWasCause) {
-            return;
-        }
 
-        for (String c : context) {
-            this.context.recordBreadcrumb(
-                    new BreadcrumbBuilder().setMessage(c).build()
-            );
-        }
-        if (!hooksLoaded) {
-            addPluginHooks();
-        }
-
-        sentry.sendException(t);
-        this.context.clearBreadcrumbs();
-    }
-
-    protected boolean filter(Throwable t) {
-        if (t instanceof ConcurrentModificationException ||
-                t instanceof IOException ||
-                t instanceof VirtualMachineError ||
-                t instanceof LinkageError ||
-                t instanceof FileNotFoundException ||
-                t instanceof InvalidConfigurationException
-        ) {
-            return false;
-        }
-        switch (t.getClass().getSimpleName()) {
-            case "AuthenticationException":
-                return false;
-        }
-        Optional<StackTraceElement> element;
-        if (t instanceof NullPointerException) {
-            element = Arrays.stream(t.getStackTrace())
-                    .limit(3)
-                    .filter(stackTraceElement -> stackTraceElement.getClassName().contains("MyPet"))
-                    .findFirst();
-            if (!element.isPresent()) {
-                return false;
+        // Add breadcrumbs to this event
+        Sentry.configureScope(scope -> {
+            for (String b : breadcrumbs) {
+                Breadcrumb breadcrumb = new Breadcrumb();
+                breadcrumb.setMessage(b);
+                breadcrumb.setLevel(SentryLevel.INFO);
+                scope.addBreadcrumb(breadcrumb);
             }
-            element = Arrays.stream(t.getStackTrace())
-                    .filter(trace -> trace.toString().contains("BukkitAdapter.adapt"))
-                    .findFirst();
-            if (element.isPresent()) {
-                return false;
-            }
-        }
+        });
 
-        element = Arrays.stream(t.getStackTrace())
-                .filter(trace -> trace.getClassName().contains("mypet") && trace.getClassName().contains("npc"))
-                .findFirst();
-        if (element.isPresent()) {
-            return false;
-        }
-        long myPetTraces = Arrays.stream(t.getStackTrace())
-                .limit(5)
-                .filter(stackTraceElement -> stackTraceElement.getClassName().contains("MyPet"))
-                .count();
-        return myPetTraces >= 1;
+        // Send exception to Sentry (beforeSend hook will filter if needed)
+        Sentry.captureException(t);
+
+        // Clear breadcrumbs after sending
+        Sentry.configureScope(scope -> scope.clearBreadcrumbs());
     }
 
     protected class MyPetExceptionAppender extends AbstractAppender {
@@ -227,17 +361,14 @@ public class SentryErrorReporter implements ErrorReporter {
 
     protected class MyPetFilter extends AbstractFilter {
 
-        protected Set<String> alreadySent = new HashSet<>();
-
         @Override
         public Result filter(LogEvent event) {
+            // Quick pre-filter: only accept if MyPet is in the stack trace
+            // The beforeSend hook will do the detailed filtering
             if (event.getThrown() != null) {
                 Throwable thrown = event.getThrown();
                 if (Util.findStringInThrowable(thrown, "MyPet")) {
-                    if (!alreadySent.contains(thrown.getMessage() + thrown.getStackTrace()[0])) {
-                        alreadySent.add(thrown.getMessage() + thrown.getStackTrace()[0]);
-                        return Result.ACCEPT;
-                    }
+                    return Result.ACCEPT;
                 }
             }
             return Result.DENY;
