@@ -40,7 +40,7 @@ import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.api.util.logger.MyPetLogger;
+import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.commands.*;
@@ -74,7 +74,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -164,9 +163,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         Timer.reset();
         Bukkit.getServer().getScheduler().cancelTasks(this);
 
-        if (getLogger() instanceof MyPetLogger) {
-            ((MyPetLogger) getLogger()).disableDebugLogger();
-        }
+        DebugLogHandler.disable(getLogger());
 
         if (pluginHookManager != null) {
             pluginHookManager.disableHooks();
@@ -181,7 +178,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
     public void onLoad() {
         MyPetApi.setPlugin(this);
-        replaceLogger();
         getDataFolder().mkdirs();
 
         // load version from manifest
@@ -249,9 +245,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         entityRegistry.registerEntityTypes();
 
-        if (getLogger() instanceof MyPetLogger) {
-            ((MyPetLogger) getLogger()).updateDebugLoggerLogLevel();
-        }
+        DebugLogHandler.setup(getLogger());
 
         compatManager.enable();
         getLogger().info("Compat mode for " + compatUtil.getInternalVersion() + " loaded.");
@@ -690,17 +684,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
     public SentryErrorReporter getErrorReporter() {
         return errorReporter;
-    }
-
-    private void replaceLogger() {
-        try {
-            Field logger = ReflectionUtil.getField(JavaPlugin.class, "logger");
-            if (logger != null) {
-                logger.set(this, new MyPetLogger(this));
-            }
-        } catch (Throwable e) {
-            ErrorUtil.reportWarning("Failed to replace default logger with MyPetLogger", e);
-        }
     }
 
     /**

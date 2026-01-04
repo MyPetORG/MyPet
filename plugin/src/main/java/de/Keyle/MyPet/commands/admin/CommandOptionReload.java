@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.api.util.logger.MyPetLogger;
+import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bukkit.Bukkit;
@@ -89,9 +89,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
         ConfigurationLoader.loadConfiguration();
         ConfigurationLoader.loadCompatConfiguration();
 
-        if (MyPetApi.getLogger() instanceof MyPetLogger) {
-            ((MyPetLogger) MyPetApi.getLogger()).updateDebugLoggerLogLevel();
-        }
+        DebugLogHandler.updateLogLevel();
 
         Translation.init();
 

@@ -149,7 +149,7 @@ public class ShopConfigGenerator {
 
         try {
             config.save(shopConfigFile);
-            MyPetApi.getMyPetLogger().info("Generated default pet-shops.yml configuration");
+            MyPetApi.getLogger().info("Generated default pet-shops.yml configuration");
         } catch (IOException e) {
             ErrorUtil.reportError("Failed to generate pet-shops.yml", e);
         }
