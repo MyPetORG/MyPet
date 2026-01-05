@@ -31,7 +31,7 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
-import de.Keyle.MyPet.api.player.DonateCheck;
+import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
@@ -65,8 +65,8 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     protected CompoundBinaryTag extendedInfo = CompoundBinaryTag.empty();
     Map<Component, Long> sentMessages = new HashMap<>();
 
-    private volatile DonateCheck.DonationRank rank = DonateCheck.DonationRank.None;
-    private boolean donationChecked = false;
+    private volatile ContributorCheck.ContributorRank rank = ContributorCheck.ContributorRank.None;
+    private boolean contributorChecked = false;
 
     public MyPetPlayerImpl(UUID mojangUUID) {
         this.mojangUUID = mojangUUID;
@@ -274,14 +274,14 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         }
     }
 
-    public DonateCheck.DonationRank getDonationRank() {
+    public ContributorCheck.ContributorRank getContributorRank() {
         return rank;
     }
 
-    public void checkForDonation() {
-        if (!donationChecked) {
-            donationChecked = true;
-            Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), () -> rank = DonateCheck.getDonationRank(MyPetPlayerImpl.this), 60L);
+    public void checkForContribution() {
+        if (!contributorChecked) {
+            contributorChecked = true;
+            Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), () -> rank = ContributorCheck.getContributorRank(MyPetPlayerImpl.this), 60L);
         }
     }
 

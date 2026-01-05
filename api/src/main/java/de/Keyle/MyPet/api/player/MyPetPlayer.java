@@ -107,7 +107,7 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     void sendActionBar(Component message);
 
-    DonateCheck.DonationRank getDonationRank();
+    ContributorCheck.ContributorRank getContributorRank();
 
-    void checkForDonation();
+    void checkForContribution();
 }

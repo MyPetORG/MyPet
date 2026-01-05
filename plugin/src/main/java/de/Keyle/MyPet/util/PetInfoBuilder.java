@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.player.DonateCheck;
+import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.util.ComponentColorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -373,11 +373,11 @@ public class PetInfoBuilder {
      * @return Component with donation rank info, or null if no donation rank
      */
     public static Component donationRankLine(MyPet myPet, CommandSender sender) {
-        if (myPet.getOwner().getDonationRank() == DonateCheck.DonationRank.None) {
+        if (myPet.getOwner().getContributorRank() == ContributorCheck.ContributorRank.None) {
             return null;
         }
 
-        DonateCheck.DonationRank rank = myPet.getOwner().getDonationRank();
+        ContributorCheck.ContributorRank rank = myPet.getOwner().getContributorRank();
         String icon = rank.getDefaultIcon();
 
         return Component.text()

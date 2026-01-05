@@ -26,12 +26,14 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.PetInfoBuilder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -180,12 +182,13 @@ public class CommandInfo implements CommandTabCompleter {
                     infoShown = true;
                 }
             }
-
-            // Donation rank line
-            Component donation = PetInfoBuilder.donationRankLine(myPet, sender);
-            if (donation != null) {
-                sender.sendMessage(donation);
+            if (myPet.getOwner().getContributorRank() != ContributorCheck.ContributorRank.None) {
                 infoShown = true;
+                String contributionMessage = "" + ChatColor.GOLD;
+                contributionMessage += myPet.getOwner().getContributorRank().getDefaultIcon();
+                contributionMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getContributorRank().name(), sender) + " ";
+                contributionMessage += myPet.getOwner().getContributorRank().getDefaultIcon();
+                sender.sendMessage("   " + contributionMessage);
             }
 
             if (!infoShown) {

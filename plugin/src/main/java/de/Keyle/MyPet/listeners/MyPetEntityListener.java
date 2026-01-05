@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
 import de.Keyle.MyPet.api.event.MyPetOnHitSkillEvent;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
+import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
@@ -256,12 +257,13 @@ public class MyPetEntityListener implements Listener {
                             infoShown = true;
                         }
                     }
-
-                    // Donation rank line
-                    Component donation = PetInfoBuilder.donationRankLine(myPet, damager);
-                    if (donation != null) {
-                        damager.sendMessage(donation);
+                    if (myPet.getOwner().getContributorRank() != ContributorCheck.ContributorRank.None) {
                         infoShown = true;
+                        String contributionMessage = "" + ChatColor.GOLD;
+                        contributionMessage += myPet.getOwner().getContributorRank().getDefaultIcon();
+                        contributionMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getContributorRank().name(), damager) + " ";
+                        contributionMessage += myPet.getOwner().getContributorRank().getDefaultIcon();
+                        damager.sendMessage("   " + contributionMessage);
                     }
 
                     if (!infoShown) {
