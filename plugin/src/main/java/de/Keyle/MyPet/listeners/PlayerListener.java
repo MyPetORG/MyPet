@@ -223,7 +223,7 @@ public class PlayerListener implements Listener {
                                 }
                             });
                         }
-                        joinedPlayer.checkForDonation();
+                        joinedPlayer.checkForContribution();
 
                         Bukkit.getServer().getPluginManager().callEvent(new MyPetPlayerJoinEvent(joinedPlayer));
                     }

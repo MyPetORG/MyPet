@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
+import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.*;
 import de.Keyle.MyPet.api.skill.SkillManager;
@@ -452,6 +453,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         getLogger().info("Version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
 
+        ContributorCheck.startRefreshTask();
+
         serviceManager.activate(Load.State.OnReady);
 
         // load pets for online players
@@ -530,7 +533,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                                         }
                                     });
                                 }
-                                onlinePlayer.checkForDonation();
+                                onlinePlayer.checkForContribution();
                             }
                         }
                     });

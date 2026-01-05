@@ -33,7 +33,7 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.event.MyPetFeedEvent;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.event.MyPetSitEvent;
-import de.Keyle.MyPet.api.player.DonateCheck;
+import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Ride;
@@ -100,7 +100,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 	protected int sitCounter = 0;
 	protected AbstractNavigation petNavigation;
 	protected Sit sitPathfinder;
-	protected int donatorParticleCounter = 0;
+	protected int contributorParticleCounter = 0;
 	protected float limitCounter = 0;
 	protected DamageSource deathReason = null;
 	protected CraftMyPet bukkitEntity = null;
@@ -629,8 +629,8 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 					isInvisible = false;
 				}
 			}
-			if (!this.isInvisible() && getOwner().getDonationRank() != DonateCheck.DonationRank.None && donatorParticleCounter-- <= 0) {
-				donatorParticleCounter = 20 + getRandom().nextInt(10);
+			if (!this.isInvisible() && getOwner().getContributorRank() != ContributorCheck.ContributorRank.None && contributorParticleCounter-- <= 0) {
+				contributorParticleCounter = 20 + getRandom().nextInt(10);
 				MyPetApi.getPlatformHelper().playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), ParticleCompat.VILLAGER_HAPPY.get(), 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
 			}
 		}

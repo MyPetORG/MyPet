@@ -31,7 +31,7 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
 import de.Keyle.MyPet.api.event.MyPetOnHitSkillEvent;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
-import de.Keyle.MyPet.api.player.DonateCheck;
+import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
@@ -278,13 +278,13 @@ public class MyPetEntityListener implements Listener {
                         damager.sendMessage("   " + Translation.getString("Name.Exp", damager) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
                         infoShown = true;
                     }
-                    if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
+                    if (myPet.getOwner().getContributorRank() != ContributorCheck.ContributorRank.None) {
                         infoShown = true;
-                        String donationMessage = "" + ChatColor.GOLD;
-                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
-                        donationMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getDonationRank().name(), damager) + " ";
-                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
-                        damager.sendMessage("   " + donationMessage);
+                        String contributionMessage = "" + ChatColor.GOLD;
+                        contributionMessage += myPet.getOwner().getContributorRank().getDefaultIcon();
+                        contributionMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getContributorRank().name(), damager) + " ";
+                        contributionMessage += myPet.getOwner().getContributorRank().getDefaultIcon();
+                        damager.sendMessage("   " + contributionMessage);
                     }
 
                     if (!infoShown) {

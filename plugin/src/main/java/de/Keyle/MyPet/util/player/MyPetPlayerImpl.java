@@ -32,7 +32,7 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
-import de.Keyle.MyPet.api.player.DonateCheck;
+import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
@@ -40,7 +40,6 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AnimalTamer;
@@ -70,8 +69,8 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     protected TagCompound extendedInfo = new TagCompound();
     Map<String, Long> sentMessages = new HashMap<>();
 
-    private volatile DonateCheck.DonationRank rank = DonateCheck.DonationRank.None;
-    private boolean donationChecked = false;
+    private volatile ContributorCheck.ContributorRank rank = ContributorCheck.ContributorRank.None;
+    private boolean contributorChecked = false;
 
     public MyPetPlayerImpl(UUID internalUUID, String playerName) {
         this.internalUUID = internalUUID;
@@ -316,14 +315,14 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return false;
     }
 
-    public DonateCheck.DonationRank getDonationRank() {
+    public ContributorCheck.ContributorRank getContributorRank() {
         return rank;
     }
 
-    public void checkForDonation() {
-        if (!donationChecked) {
-            donationChecked = true;
-            Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), () -> rank = DonateCheck.getDonationRank(MyPetPlayerImpl.this), 60L);
+    public void checkForContribution() {
+        if (!contributorChecked) {
+            contributorChecked = true;
+            Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), () -> rank = ContributorCheck.getContributorRank(MyPetPlayerImpl.this), 60L);
         }
     }
 
