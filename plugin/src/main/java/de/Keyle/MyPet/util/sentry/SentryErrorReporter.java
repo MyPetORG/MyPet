@@ -253,6 +253,26 @@ public class SentryErrorReporter implements ErrorReporter {
                 return true;
             }
 
+            // Filter out MySQL/database connection errors (server config issues, not plugin bugs)
+            if ("CommunicationsException".equals(className) ||
+                    "CJCommunicationsException".equals(className)) {
+                return true;
+            }
+            if (current instanceof java.net.ConnectException) {
+                // Only filter ConnectException if it's database-related
+                boolean isDatabaseRelated = Arrays.stream(current.getStackTrace())
+                        .anyMatch(frame -> {
+                            String frameName = frame.getClassName();
+                            return frameName.contains("mysql") ||
+                                    frameName.contains("hikari") ||
+                                    frameName.contains("mariadb") ||
+                                    frameName.contains("jdbc");
+                        });
+                if (isDatabaseRelated) {
+                    return true;
+                }
+            }
+
             // Filter out WorldEdit/WorldGuard adapter issues
             if (current instanceof NullPointerException) {
                 boolean hasBukkitAdapter = Arrays.stream(current.getStackTrace())
