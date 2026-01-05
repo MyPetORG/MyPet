@@ -214,7 +214,9 @@ tasks.build { dependsOn(tasks.shadowJar) }
 /* ---------- Sentry Configuration ---------- */
 
 sentry {
-    includeSourceContext = true
+    // Only bundle sources when auth token is available (snapshot/release builds)
+    // PR builds don't have the token and don't need source bundling
+    includeSourceContext = !System.getenv("SENTRY_AUTH_TOKEN").isNullOrEmpty()
 
     org = "mypet"
     projectName = "mypet"
