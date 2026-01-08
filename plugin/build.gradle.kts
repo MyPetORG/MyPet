@@ -55,7 +55,7 @@ dependencies {
     compileOnly("org.mcsg:survivalgames:0.6.7")
     compileOnly("com.bekvon.bukkit:residence:4.8.3.1")
     compileOnly("com.palmergames.bukkit:Towny:0.93.0.0")
-    compileOnly("net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.7.11")
+    compileOnly("net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.16.0")
     compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect:7.5.5")
     compileOnly("com.github.TechFortress:GriefPrevention:16.18")
     compileOnly("net.kaikk.mc:GriefPreventionPlus:12.28")
