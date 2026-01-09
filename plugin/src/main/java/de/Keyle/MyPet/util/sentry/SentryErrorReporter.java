@@ -72,6 +72,7 @@ public class SentryErrorReporter implements ErrorReporter {
             // Ignored exception types (filtered before beforeSend)
             options.addIgnoredExceptionForType(IOException.class);
             options.addIgnoredExceptionForType(VirtualMachineError.class);
+            options.addIgnoredExceptionForType(OutOfMemoryError.class); // Server memory config issue, not plugin bug
             options.addIgnoredExceptionForType(LinkageError.class);
             options.addIgnoredExceptionForType(FileNotFoundException.class);
             options.addIgnoredExceptionForType(InvalidConfigurationException.class);
