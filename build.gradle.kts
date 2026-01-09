@@ -76,6 +76,12 @@ subprojects {
 }
 
 val archivesBaseName = "MyPet"
+val versionSuffix = when (buildType) {
+    "release" -> ""
+    "snapshot", "dev" -> "-SNAPSHOT"
+    else -> "-SNAPSHOT-local"  // local builds
+}
+val fullVersion = "${project.version}$versionSuffix"
 
 val filteringProps = mapOf(
     "project" to project,
@@ -154,8 +160,8 @@ fun Manifest.attributesForMyPet() = attributes(
 
 tasks.jar {
     archiveBaseName.set(archivesBaseName)
-    archiveFileName.set("${archivesBaseName}-${project.version}.jar")
-    archiveVersion.set(project.version.toString())
+    archiveFileName.set("${archivesBaseName}-${fullVersion}.jar")
+    archiveVersion.set(fullVersion)
     manifest { attributesForMyPet() }
 }
 
@@ -190,7 +196,7 @@ dependencies {
 // Build the shaded jar strictly from the 'shade' configuration
 tasks.shadowJar {
     archiveBaseName.set(archivesBaseName)
-    archiveVersion.set(project.version.toString())
+    archiveVersion.set(fullVersion)
     archiveClassifier.set("")
     exclude("META-INF/**")
     manifest { attributesForMyPet() }
@@ -239,7 +245,7 @@ polymart {
     val polymartVersion = providers.gradleProperty("POLYMART_VERSION").orNull
         ?: project.version.toString()
     val polymartFile = providers.gradleProperty("POLYMART_FILE").orNull
-        ?: "build/libs/MyPet-${project.version}.jar"
+        ?: "build/libs/MyPet-${fullVersion}.jar"
     apiKey = providers.gradleProperty("POLYMART_TOKEN").orNull
         ?: System.getenv("POLYMART_TOKEN")
         ?: ""
@@ -258,7 +264,7 @@ hangarPublish {
         val hangarVersion = providers.gradleProperty("HANGAR_VERSION").orNull
             ?: project.version.toString()
         val hangarFile = providers.gradleProperty("HANGAR_FILE").orNull
-            ?: "build/libs/MyPet-${project.version}.jar"
+            ?: "build/libs/MyPet-${fullVersion}.jar"
         val hangarChangelog = providers.gradleProperty("HANGAR_CHANGELOG").orNull
             ?: "View the full changelog on Modrinth: https://modrinth.com/plugin/mypet/version/$hangarVersion"
 

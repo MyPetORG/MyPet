@@ -43,6 +43,10 @@ import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.ShieldImpl;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
+import at.blvckbytes.raw_message.MessageColor;
+import at.blvckbytes.raw_message.RawMessage;
+import at.blvckbytes.raw_message.click.OpenUrlAction;
+import at.blvckbytes.raw_message.hover.ShowTextAction;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -232,9 +236,18 @@ public class PlayerListener implements Listener {
         }.runTaskLater(MyPetApi.getPlugin(), delay);
 
         if (Configuration.Update.SHOW_OP && event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
-            event.getPlayer().sendMessage(Translation.getString("Message.Update.Available", event.getPlayer()) + " " + Updater.getLatest());
-            event.getPlayer().sendMessage(ChatColor.DARK_GREEN + "    https://mypet-plugin.de/download");
-
+            String versionUrl = "https://modrinth.com/plugin/mypet/version/" + Updater.getLatest().getVersion();
+            new RawMessage(Translation.getString("Message.Update.Available", event.getPlayer()) + " ")
+                .addExtra(
+                    new RawMessage("[" + Updater.getLatest().getVersion() + "]")
+                        .setColor(MessageColor.GREEN)
+                        .setClickAction(new OpenUrlAction(versionUrl))
+                        .setHoverAction(new ShowTextAction(
+                            new RawMessage(versionUrl)
+                                .setColor(MessageColor.GRAY)
+                        ))
+                )
+                .tellRawTo(event.getPlayer());
         }
     }
 

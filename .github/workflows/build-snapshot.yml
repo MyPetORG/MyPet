@@ -146,8 +146,8 @@ jobs:
           fi
           JAR="${FILTERED[0]}"
           DIR=$(dirname "$JAR")
-          BASE=$(basename "$JAR" .jar)
-          NEW_NAME="${BASE}-SNAPSHOT-b${BUILD_NUMBER}.jar"
+          # Replace -SNAPSHOT.jar with -SNAPSHOT-b#.jar
+          NEW_NAME=$(basename "$JAR" | sed "s/-SNAPSHOT\.jar$/-SNAPSHOT-b${BUILD_NUMBER}.jar/")
           NEW_PATH="${DIR}/${NEW_NAME}"
           mv "$JAR" "$NEW_PATH"
           echo "jar=$NEW_PATH" >> "$GITHUB_OUTPUT"
