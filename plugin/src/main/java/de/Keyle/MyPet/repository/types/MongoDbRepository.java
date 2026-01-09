@@ -42,6 +42,7 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
 import org.bson.Document;
 import org.bson.types.Binary;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -403,27 +404,35 @@ public class MongoDbRepository implements Repository {
     @SuppressWarnings("unchecked")
     public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
         if (callback != null) {
-            new BukkitRunnable() {
+            Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
+                private int retries = 0;
+                private static final int MAX_RETRIES = 100;
+
                 @Override
                 public void run() {
-                    if(petsToBeSaved.containsKey(uuid)) {
+                    if (!MyPetApi.getPlugin().isEnabled()) {
                         return;
                     }
 
+                    if (petsToBeSaved.containsKey(uuid)) {
+                        if (++retries >= MAX_RETRIES) {
+                            callback.runTask((StoredMyPet) null);
+                            return;
+                        }
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), this, 5);
+                        return;
+                    }
+
+                    StoredMyPet result = null;
                     MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                     Document petDocument = (Document) petCollection.find(new Document("uuid", uuid.toString())).first();
                     if (petDocument != null) {
                         MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(petDocument.getString("owner_uuid")));
-                        StoredMyPet pet = documentToMyPet(owner, petDocument);
-
-                        if (pet != null) {
-                            callback.runTask(pet);
-                        }
+                        result = documentToMyPet(owner, petDocument);
                     }
-
-                    this.cancel();
+                    callback.runTask(result);
                 }
-            }.runTaskTimerAsynchronously(MyPetApi.getPlugin(), 0, 5);
+            });
         }
     }
 
