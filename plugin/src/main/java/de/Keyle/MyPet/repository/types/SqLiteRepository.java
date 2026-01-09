@@ -38,6 +38,7 @@ import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.Keyle.MyPet.api.util.NbtUtil;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -553,13 +554,26 @@ public class SqLiteRepository implements Repository {
     @Override
     public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
         if (callback != null) {
-            new BukkitRunnable() {
+            Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
+                private int retries = 0;
+                private static final int MAX_RETRIES = 100;
+
                 @Override
                 public void run() {
-                    if (petsToBeSaved.containsKey(uuid)) {
+                    if (!MyPetApi.getPlugin().isEnabled()) {
                         return;
                     }
 
+                    if (petsToBeSaved.containsKey(uuid)) {
+                        if (++retries >= MAX_RETRIES) {
+                            callback.runTask(MyPetApi.getPlugin(), null);
+                            return;
+                        }
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), this, 5);
+                        return;
+                    }
+
+                    StoredMyPet result = null;
                     try {
                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE uuid=?;");
                         statement.setString(1, uuid.toString());
@@ -571,18 +585,16 @@ public class SqLiteRepository implements Repository {
                             if (owner != null) {
                                 List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet, false);
                                 if (!pets.isEmpty()) {
-                                    //MyPetLogger.write("LOAD pet: " + pets.get(0));
-                                    callback.runTask(MyPetApi.getPlugin(), pets.get(0));
+                                    result = pets.get(0);
                                 }
                             }
                         }
                     } catch (SQLException e) {
                         ErrorUtil.reportError("SQLite database operation failed", e);
                     }
-
-                    cancel();
+                    callback.runTask(MyPetApi.getPlugin(), result);
                 }
-            }.runTaskTimerAsynchronously(MyPetApi.getPlugin(), 0, 5);
+            });
         }
     }
 

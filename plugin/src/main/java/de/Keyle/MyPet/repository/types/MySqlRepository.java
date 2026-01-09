@@ -41,6 +41,7 @@ import de.Keyle.MyPet.api.util.NbtUtil;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -623,13 +624,26 @@ public class MySqlRepository implements Repository {
     @Override
     public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
         if (callback != null) {
-            new BukkitRunnable() {
+            Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
+                private int retries = 0;
+                private static final int MAX_RETRIES = 100;
+
                 @Override
                 public void run() {
-                    if (petsToBeSaved.containsKey(uuid)) {
+                    if (!MyPetApi.getPlugin().isEnabled()) {
                         return;
                     }
 
+                    if (petsToBeSaved.containsKey(uuid)) {
+                        if (++retries >= MAX_RETRIES) {
+                            callback.runTask(MyPetApi.getPlugin(), null);
+                            return;
+                        }
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), this, 5);
+                        return;
+                    }
+
+                    StoredMyPet result = null;
                     try (Connection connection = dataSource.getConnection();
                          PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE uuid=?;",
                                  ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -644,7 +658,7 @@ public class MySqlRepository implements Repository {
                                 resultSet.beforeFirst();
                                 List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet);
                                 if (!pets.isEmpty()) {
-                                    callback.runTask(MyPetApi.getPlugin(), pets.get(0));
+                                    result = pets.get(0);
                                 }
                             }
                         }
@@ -652,10 +666,9 @@ public class MySqlRepository implements Repository {
                     } catch (SQLException e) {
                         ErrorUtil.reportError("MySQL database operation failed", e);
                     }
-
-                    this.cancel();
+                    callback.runTask(MyPetApi.getPlugin(), result);
                 }
-            }.runTaskTimerAsynchronously(MyPetApi.getPlugin(), 0, 5);
+            });
         }
     }
 
