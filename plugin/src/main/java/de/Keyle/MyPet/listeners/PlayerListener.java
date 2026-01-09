@@ -43,6 +43,10 @@ import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.ShieldImpl;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -225,9 +229,16 @@ public class PlayerListener implements Listener {
         }.runTaskLater(MyPetApi.getPlugin(), delay);
 
         if (Configuration.Update.SHOW_OP && event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
-            event.getPlayer().sendMessage(Util.formatTranslation("Message.Update.Available", event.getPlayer(), Updater.getLatest()));
-            event.getPlayer().sendMessage(ChatColor.DARK_GREEN + "    https://mypet-plugin.de/download");
-
+            String versionUrl = "https://modrinth.com/plugin/mypet/version/" + Updater.getLatest().getVersion();
+            event.getPlayer().sendMessage(Component.text()
+                    .append(Util.formatTranslation("Message.Update.Available", event.getPlayer()))
+                    .append(Component.text(" [" + Updater.getLatest().getVersion() + "]")
+                            .color(NamedTextColor.GREEN)
+                            .clickEvent(ClickEvent.openUrl(versionUrl))
+                            .hoverEvent(HoverEvent.showText(
+                                    Component.text(versionUrl).color(NamedTextColor.GRAY)
+                            )))
+                    .build());
         }
     }
 
