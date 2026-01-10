@@ -117,6 +117,22 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
     description = "Downloads MyPet translations into build/resources/main/locale"
     val targetDir = layout.buildDirectory.dir("resources/main/locale").get().asFile
     outputs.dir(targetDir)
+
+    // Skip download if translations are less than 12 hours old
+    val maxAgeMillis = 12 * 60 * 60 * 1000L // 12 hours in milliseconds
+    onlyIf {
+        if (!targetDir.exists()) {
+            true
+        } else {
+            val ageMillis = System.currentTimeMillis() - targetDir.lastModified()
+            val shouldDownload = ageMillis > maxAgeMillis
+            if (!shouldDownload) {
+                logger.lifecycle("Skipping translation download - last updated ${ageMillis / (60 * 60 * 1000)} hours ago (max: 12 hours)")
+            }
+            shouldDownload
+        }
+    }
+
     doFirst {
         if (targetDir.exists()) targetDir.deleteRecursively()
         targetDir.mkdirs()
