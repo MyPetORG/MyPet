@@ -125,12 +125,13 @@ public class Updater {
             for (int i = 0; i < resultArr.size(); i++) {
                 JsonObject version = (JsonObject) resultArr.get(i);
 
-                // Check version type: "release" for stable, "alpha" for snapshots
+                // Check version type: "release" for stable, "alpha"/"beta" for snapshots
                 String versionType = version.get("version_type").getAsString();
                 boolean isAlpha = "alpha".equals(versionType) || "beta".equals(versionType);
 
-                // Match dev builds with alpha/beta, stable with release
-                if (isDevBuild != isAlpha) {
+                // Release builds should only see releases
+                // Dev builds can see both snapshots AND releases (to upgrade to final release)
+                if (!isDevBuild && isAlpha) {
                     continue;
                 }
 
@@ -309,6 +310,7 @@ public class Updater {
     /**
      * Compares two version strings to determine if the first is newer.
      * Handles formats like "3.14.1", "3.14.1-SNAPSHOT", and "3.14.1-SNAPSHOT-b42".
+     * A release (3.14.1) is always considered newer than snapshots of the same base (3.14.1-SNAPSHOT-b10).
      */
     private static boolean isNewerVersion(String newVersion, String currentVersion) {
         // Extract base version (before any dash)
@@ -320,7 +322,20 @@ public class Updater {
             return baseCompare > 0;
         }
 
-        // Base versions are equal, check for build numbers (e.g., -SNAPSHOT-b42)
+        // Base versions are equal - check if release vs snapshot
+        boolean newIsSnapshot = newVersion.contains("-SNAPSHOT");
+        boolean currentIsSnapshot = currentVersion.contains("-SNAPSHOT");
+
+        // A release is always newer than a snapshot of the same base version
+        if (!newIsSnapshot && currentIsSnapshot) {
+            return true;
+        }
+        // A snapshot is never newer than a release of the same base version
+        if (newIsSnapshot && !currentIsSnapshot) {
+            return false;
+        }
+
+        // Both are snapshots (or both releases), compare build numbers
         int newBuild = extractBuildNumber(newVersion);
         int currentBuild = extractBuildNumber(currentVersion);
 
