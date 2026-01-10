@@ -28,11 +28,14 @@ val nmsModules: List<String> = File(rootDir, "nms")
     ?.map { ":nms:${it.name}" }
     ?: emptyList()
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-    maven("https://hub.spigotmc.org/nexus/content/groups/public/")
-    maven("https://repo.mypet-plugin.de/")
+// Shared repositories for all projects (root + subprojects)
+allprojects {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+        maven("https://repo.mypet-plugin.de/")
+    }
 }
 
 subprojects {
@@ -41,27 +44,22 @@ subprojects {
     apply(plugin = "io.sentry.jvm.gradle")
 
     repositories {
-        mavenCentral()
-        mavenLocal()
-        maven { url = uri("https://mvn.lib.co.nz/spigot/") }
-        maven { url = uri("https://repo.md-5.net/content/groups/public/") }
-        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
-        maven { url = uri("https://repo.codemc.io/repository/maven-releases/") }
-        maven { url = uri("https://repo.codemc.io/repository/maven-snapshots/") }
-        maven { url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/") }
-        maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
-        maven { url = uri("https://maven.enginehub.org/repo/") }
-        maven { url = uri("https://hub.spigotmc.org/nexus/content/groups/public/") }
-        maven { url = uri("https://repo.md-5.net/content/repositories/public") }
-        maven { url = uri("https://jitpack.io") }
-        maven { url = uri("https://repo.mypet-plugin.de/") }
-
+        maven("https://mvn.lib.co.nz/spigot/")
+        maven("https://repo.md-5.net/content/groups/public/")
+        maven("https://repo.papermc.io/repository/maven-public/")
+        maven("https://repo.codemc.io/repository/maven-releases/")
+        maven("https://repo.codemc.io/repository/maven-snapshots/")
+        maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+        maven("https://oss.sonatype.org/content/groups/public/")
+        maven("https://maven.enginehub.org/repo/")
+        maven("https://repo.md-5.net/content/repositories/public")
+        maven("https://jitpack.io")
     }
 
-    tasks.processResources { enabled = false }
-    tasks.test { enabled = false }
-    tasks.compileTestJava { enabled = false }
-    tasks.processTestResources { enabled = false }
+    tasks.named("processResources") { enabled = false }
+    tasks.named("test") { enabled = false }
+    tasks.named("compileTestJava") { enabled = false }
+    tasks.named("processTestResources") { enabled = false }
 
     plugins.withId("maven-publish") {
         tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
@@ -141,17 +139,15 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
         "git", "clone", "--depth", "1", "--single-branch",
         "https://github.com/MyPetORG/MyPet-Translations.git", targetDir
     )
-    delete(fileTree("build/resources/main/locale") {
-        include(
-            "exclude",
-            ".git",
-            ".gitignore",
-            "README.md"
-        )
-    })
+    doLast {
+        // Clean up files we don't need in the final JAR
+        delete(fileTree(targetDir) {
+            include(".git/**", ".gitignore", "README.md", "exclude/**")
+        })
+    }
 }
 
-tasks.processResources {
+tasks.named<ProcessResources>("processResources") {
     dependsOn(downloadVersionmatcher, downloadTranslations)
     duplicatesStrategy = DuplicatesStrategy.WARN
 
@@ -174,7 +170,7 @@ fun Manifest.attributesForMyPet() = attributes(
     )
 )
 
-tasks.jar {
+tasks.named<Jar>("jar") {
     archiveBaseName.set(archivesBaseName)
     archiveFileName.set("${archivesBaseName}-${fullVersion}.jar")
     archiveVersion.set(fullVersion)
@@ -210,7 +206,7 @@ dependencies {
 }
 
 // Build the shaded jar strictly from the 'shade' configuration
-tasks.shadowJar {
+val shadowJar = tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     archiveBaseName.set(archivesBaseName)
     archiveVersion.set(fullVersion)
     archiveClassifier.set("")
@@ -231,8 +227,8 @@ tasks.shadowJar {
     relocate("io.sentry", "de.Keyle.MyPet.util.sentry")
 }
 
-tasks.assemble { dependsOn(tasks.shadowJar) }
-tasks.build { dependsOn(tasks.shadowJar) }
+tasks.named("assemble") { dependsOn(shadowJar) }
+tasks.named("build") { dependsOn(shadowJar) }
 
 /* ---------- Sentry Configuration ---------- */
 
