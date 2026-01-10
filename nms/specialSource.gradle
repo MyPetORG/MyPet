@@ -1,22 +1,24 @@
-// Code copied from https://github.com/Shopkeepers/Shopkeepers/tree/master
-
-buildscript {
-    repositories {
-        mavenCentral()
-        mavenLocal()
+// Create a project-level configuration for SpecialSource
+configurations {
+    create('specialSourceTool') {
+        canBeConsumed = false
+        canBeResolved = true
     }
+}
 
-    configurations.create('specialSource')
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
 
-    dependencies {
-        specialSource 'net.md-5:SpecialSource:1.11.5:shaded'
-    }
+dependencies {
+    specialSourceTool 'net.md-5:SpecialSource:1.11.5:shaded'
 }
 
 // Spigot server code remapping: https://www.spigotmc.org/threads/spigot-bungeecord-1-17-1-17-1.510208/
 // These dependencies and mappings are installed into the local Maven repository when BuildTools builds the Spigot dependencies.
 def gradleCache = new File(System.getProperty("user.home"), '.gradle/caches/modules-2/files-2.1')
-def mavenLocal = new File(System.getProperty("user.home"), '.m2/repository')
+def mavenLocalRepo = new File(System.getProperty("user.home"), '.m2/repository')
 def findInCache = { group, module, version, fileName ->
     // First, try Gradle cache
     def gradleBaseDir = new File(gradleCache, "${group}/${module}/${version}")
@@ -29,7 +31,7 @@ def findInCache = { group, module, version, fileName ->
 
     // Fallback to Maven local repository
     def groupPath = group.replace('.', '/')
-    def mavenBaseDir = new File(mavenLocal, "${groupPath}/${module}/${version}")
+    def mavenBaseDir = new File(mavenLocalRepo, "${groupPath}/${module}/${version}")
     if (mavenBaseDir.exists()) {
         def mavenFile = new File(mavenBaseDir, fileName)
         if (mavenFile.exists()) {
@@ -40,10 +42,18 @@ def findInCache = { group, module, version, fileName ->
     throw new Exception("Failed to resolve ${fileName} for ${group}:${module}:${version}. Checked Gradle cache (${gradleBaseDir}) and Maven local (${mavenBaseDir}). Run BuildTools to install the required Spigot artifacts.");
 }
 
+// Resolve SpecialSource from the project-level configuration
+def specialSourceFile = configurations.specialSourceTool.resolve().find { it.name.contains('SpecialSource') }
+def specialSource = specialSourceFile.path
 
-def specialSource = buildscript.configurations.specialSource.resolvedConfiguration.getFirstLevelModuleDependencies().find {
-    it.moduleGroup == 'net.md-5' && it.moduleName == 'SpecialSource'
-}.moduleArtifacts.first().file.path
+// Helper to run Java commands (Gradle 9 compatible - uses ProcessBuilder instead of deprecated project.exec)
+def runJavaCommand = { List<String> args ->
+    def process = new ProcessBuilder(args).inheritIO().start()
+    def exitCode = process.waitFor()
+    if (exitCode != 0) {
+        throw new GradleException("Command failed with exit code ${exitCode}: ${args.join(' ')}")
+    }
+}
 
 // Converts from Mojang's mappings to Minecraft's obfuscated mappings.
 ext.remapMojangToObfuscated = { inputFile, outputFile, craftbukkitVersion ->
@@ -55,16 +65,18 @@ ext.remapMojangToObfuscated = { inputFile, outputFile, craftbukkitVersion ->
     println '  Output: ' + outputFile.path
     println '  CraftBukkit version: ' + craftbukkitVersion
     def classpathSeparator = System.properties['path.separator']
-    exec {
-        commandLine 'java',
-                '-cp', "${specialSource}${classpathSeparator}${remappedMojang}".replace('{craftbukkitVersion}', craftbukkitVersion),
-                'net.md_5.specialsource.SpecialSource',
-                '--live',
-                '-i', inputFile.path,
-                '-o', outputFile.path,
-                '-m', mojangMappings,
-                '--reverse'
-    }
+    def classpath = "${specialSource}${classpathSeparator}${remappedMojang}".replace('{craftbukkitVersion}', craftbukkitVersion)
+
+    runJavaCommand([
+        'java',
+        '-cp', classpath,
+        'net.md_5.specialsource.SpecialSource',
+        '--live',
+        '-i', inputFile.path,
+        '-o', outputFile.path,
+        '-m', mojangMappings,
+        '--reverse'
+    ])
 }
 
 // Converts from Minecraft's obfuscated mappings to Spigot's mappings.
@@ -77,15 +89,17 @@ ext.remapObfuscatedToSpigot = { inputFile, outputFile, craftbukkitVersion ->
     println '  Output: ' + outputFile.path
     println '  CraftBukkit version: ' + craftbukkitVersion
     def classpathSeparator = System.properties['path.separator']
-    exec {
-        commandLine 'java',
-                '-cp', "${specialSource}${classpathSeparator}${remappedObf}".replace('{craftbukkitVersion}', craftbukkitVersion),
-                'net.md_5.specialsource.SpecialSource',
-                '--live',
-                '-i', inputFile.path,
-                '-o', outputFile.path,
-                '-m', spigotMappings
-    }
+    def classpath = "${specialSource}${classpathSeparator}${remappedObf}".replace('{craftbukkitVersion}', craftbukkitVersion)
+
+    runJavaCommand([
+        'java',
+        '-cp', classpath,
+        'net.md_5.specialsource.SpecialSource',
+        '--live',
+        '-i', inputFile.path,
+        '-o', outputFile.path,
+        '-m', spigotMappings
+    ])
 }
 
 // Converts from Mojang's mappings to Spigot's mappings.
@@ -95,6 +109,6 @@ ext.remapMojangToSpigot = { inputFile, intermediateFile, outputFile, craftbukkit
     println '  Intermediate: ' + intermediateFile.path
     println '  Output: ' + outputFile.path
     println '  CraftBukkit version: ' + craftbukkitVersion
-    remapMojangToObfuscated(inputFile, intermediateFile, craftbukkitVersion)
-    remapObfuscatedToSpigot(intermediateFile, outputFile, craftbukkitVersion)
+    ext.remapMojangToObfuscated(inputFile, intermediateFile, craftbukkitVersion)
+    ext.remapObfuscatedToSpigot(intermediateFile, outputFile, craftbukkitVersion)
 }

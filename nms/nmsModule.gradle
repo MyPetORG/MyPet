@@ -34,13 +34,18 @@ dependencies {
 
 afterEvaluate {
     if (remapServerCode) {
+        // Capture values at configuration time for Gradle 10 compatibility
+        // (accessing project.ext at execution time is deprecated)
+        def remapClosure = ext.remapMojangToSpigot
+        def cbVersion = craftbukkitVersion
+
         jar {
             doLast {
                 def outputFiles = outputs.files.files
                 for (inputFile in outputFiles) {
                     File intermediateFile = new File(temporaryDir, inputFile.name.replace('.jar', '-obf.jar'))
                     File outputFile = inputFile
-                    remapMojangToSpigot(inputFile, intermediateFile, outputFile, craftbukkitVersion)
+                    remapClosure.call(inputFile, intermediateFile, outputFile, cbVersion)
                 }
             }
         }

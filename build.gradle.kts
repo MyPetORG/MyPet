@@ -5,8 +5,8 @@ import java.net.URI
 
 plugins {
     java
-    id("com.gradleup.shadow") version "9.2.2"
-    id("io.freefair.lombok") version "9.0.0"
+    id("com.gradleup.shadow") version "9.3.1"
+    id("io.freefair.lombok") version "9.1.0"
     id("com.cjcrafter.polymart-release") version "1.0.1"
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
     id("io.sentry.jvm.gradle") version "5.12.2"
