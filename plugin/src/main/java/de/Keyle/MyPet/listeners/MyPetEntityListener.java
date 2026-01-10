@@ -612,30 +612,7 @@ public class MyPetEntityListener implements Listener {
                 }
             }
 
-            String deathMessageKey = MyPetApi.getPlatformHelper().getLastDamageSource(event.getEntity());
-            if (deathMessageKey == null) {
-                myPet.getOwner().sendMessage(Util.formatTranslation("Message.DeathMessage", myPet.getOwner(), myPet.getPetName(), killer));
-                return;
-            }
-
-            Component deathMessage;
-
-            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-                // Entity damage - death message with two arguments (pet name and killer)
-                deathMessage = Component.translatable(
-                        deathMessageKey,
-                        Component.text(myPet.getPetName()).color(NamedTextColor.AQUA),
-                        Component.text(killer)
-                );
-            } else {
-                // Environmental damage - death message with one argument (pet name only)
-                deathMessage = Component.translatable(
-                        deathMessageKey,
-                        Component.text(myPet.getPetName()).color(NamedTextColor.AQUA)
-                );
-            }
-
-            myPet.getOwner().sendMessage(deathMessage);
+            myPet.getOwner().sendMessage(Util.formatTranslation("Message.DeathMessage", myPet.getOwner(), myPet.getPetName(), killer));
         }
     }
 }
