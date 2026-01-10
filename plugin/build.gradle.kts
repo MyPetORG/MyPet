@@ -86,7 +86,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
 
-    compileOnly("io.sentry:sentry:1.7.30")
+    compileOnly("io.sentry:sentry:8.22.0")
 
 }
 

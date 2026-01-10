@@ -212,6 +212,7 @@ tasks.shadowJar {
     relocate("org.bson", "de.Keyle.MyPet.util.bson")
     relocate("com.google.gson", "de.Keyle.MyPet.util.gson")
     relocate("com.mongodb", "de.Keyle.MyPet.util.mongodb")
+    relocate("io.sentry", "de.Keyle.MyPet.util.sentry")
 }
 
 tasks.assemble { dependsOn(tasks.shadowJar) }
