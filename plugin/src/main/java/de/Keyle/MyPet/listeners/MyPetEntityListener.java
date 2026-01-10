@@ -66,9 +66,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 public class MyPetEntityListener implements Listener {
 
     boolean isSkillActive = false;
@@ -643,35 +640,7 @@ public class MyPetEntityListener implements Listener {
                 }
             }
 
-            String deathMessageKey = MyPetApi.getPlatformHelper().getLastDamageSource(event.getEntity());
-            if (deathMessageKey == null) {
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.DeathMessage", myPet.getOwner()), myPet.getPetName(), killer));
-                return;
-            }
-
-            RawMessage message = new RawMessage();
-
-            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-                message.setTranslate(
-                  deathMessageKey,
-                  Arrays.asList(
-                    new RawMessage(myPet.getPetName())
-                      .setColor(MessageColor.AQUA),
-                    new RawMessage(killer)
-                      .clearImplicitStyling()
-                  )
-                );
-            } else {
-                message.setTranslate(
-                  deathMessageKey,
-                  Collections.singletonList(
-                    new RawMessage(myPet.getPetName())
-                      .setColor(MessageColor.AQUA)
-                  )
-                );
-            }
-
-            message.tellRawTo(myPet.getOwner().getPlayer());
+            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.DeathMessage", myPet.getOwner()), myPet.getPetName(), killer));
         }
     }
 }
