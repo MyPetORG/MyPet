@@ -84,13 +84,7 @@ public abstract class PlayerManager {
     }
 
     public MyPetPlayer[] getMyPetPlayers() {
-        MyPetPlayer[] playerArray;
-        int playerCounter = 0;
-        playerArray = new MyPetPlayer[onlinePlayers.size()];
-        for (MyPetPlayer player : onlinePlayers.values()) {
-            playerArray[playerCounter++] = player;
-        }
-        return playerArray;
+        return onlinePlayers.values().toArray(new MyPetPlayer[0]);
     }
 
     public MyPetPlayer registerMyPetPlayer(Player player) {

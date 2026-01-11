@@ -26,9 +26,11 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
+import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.*;
 import de.Keyle.MyPet.api.skill.SkillManager;
+import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
@@ -39,7 +41,7 @@ import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.api.util.logger.MyPetLogger;
+import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.commands.*;
@@ -72,7 +74,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -107,13 +108,11 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             }
             repo.disable();
             entityRegistry.unregisterEntityTypes();
+            Timer.reset();
         }
-        Timer.reset();
         Bukkit.getServer().getScheduler().cancelTasks(this);
 
-        if (getLogger() instanceof MyPetLogger) {
-            ((MyPetLogger) getLogger()).disableDebugLogger();
-        }
+        DebugLogHandler.disable(getLogger());
 
         if (pluginHookManager != null) {
             pluginHookManager.disableHooks();
@@ -128,7 +127,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
     public void onLoad() {
         MyPetApi.setPlugin(this);
-        replaceLogger();
         getDataFolder().mkdirs();
 
         // load version from manifest
@@ -136,7 +134,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         if (getConfig().contains("MyPet.Log.Unique-ID")) {
             try {
-                UUID serverUUID = UUID.fromString(getConfig().getString("MyPet.Log.Report-Errors"));
+                UUID serverUUID = UUID.fromString(getConfig().getString("MyPet.Log.Unique-ID"));
                 SentryErrorReporter.setServerUUID(serverUUID);
             } catch (Throwable ignored) {
             }
@@ -194,9 +192,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         entityRegistry.registerEntityTypes();
 
-        if (getLogger() instanceof MyPetLogger) {
-            ((MyPetLogger) getLogger()).updateDebugLoggerLogLevel();
-        }
+        DebugLogHandler.setup(getLogger());
 
         compatManager.enable();
         getLogger().info("Compat mode for " + compatUtil.getInternalVersion() + " loaded.");
@@ -418,6 +414,37 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     return activatedHooks;
                 }
                 ));
+                metrics.addCustomChart(new Metrics.AdvancedPie("pet_types", () -> {
+                    Map<String, Integer> petTypes = new HashMap<>();
+                    for (MyPet pet : myPetManager.getAllActiveMyPets()) {
+                        petTypes.merge(pet.getPetType().name(), 1, Integer::sum);
+                    }
+                    return petTypes;
+                }
+                ));
+                metrics.addCustomChart(new Metrics.SimplePie("database_type", () -> {
+                    String type = null;
+                    if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("SQLite")) {
+                        type = "SQLite";
+                    } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
+                        type = "MySQL";
+                    } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
+                        type = "MongoDB";
+                    }
+                    return type;
+                }));
+                metrics.addCustomChart(new Metrics.AdvancedPie("active_skills", () -> {
+                    Map<String, Integer> skillCounts = new HashMap<>();
+                    for (MyPet pet : myPetManager.getAllActiveMyPets()) {
+                        for (Skill skill : pet.getSkills().all()) {
+                            if (skill.isActive()) {
+                                skillCounts.merge(skill.getName(), 1, Integer::sum);
+                            }
+                        }
+                    }
+                    return skillCounts;
+                }
+                ));
             }
         } catch (Throwable e) {
             e.printStackTrace();
@@ -425,6 +452,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         getLogger().info("Version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
+
+        ContributorCheck.startRefreshTask();
 
         serviceManager.activate(Load.State.OnReady);
 
@@ -504,7 +533,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                                         }
                                     });
                                 }
-                                onlinePlayer.checkForDonation();
+                                onlinePlayer.checkForContribution();
                             }
                         }
                     });
@@ -671,17 +700,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
     public ErrorReporter getErrorReporter() {
         return errorReporter;
-    }
-
-    private void replaceLogger() {
-        try {
-            Field logger = ReflectionUtil.getField(JavaPlugin.class, "logger");
-            if (logger != null) {
-                logger.set(this, new MyPetLogger(this));
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

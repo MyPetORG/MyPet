@@ -191,7 +191,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             }
         } else if (myPet instanceof MyEnderman) {
             if (((MyEnderman) myPet).hasBlock()) {
-                ((Enderman) normalEntity).setCarriedMaterial(((MyEnderman) myPet).getBlock().getData());
+                ((Enderman) normalEntity).setCarriedBlock(((MyEnderman) myPet).getBlock().getType().createBlockData());
             }
         } else if (myPet instanceof MyIronGolem) {
             ((IronGolem) normalEntity).setPlayerCreated(true);

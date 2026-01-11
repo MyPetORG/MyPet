@@ -18,11 +18,11 @@ public final class VillagerNbtIO {
         return (HolderLookup.Provider) ra; // RegistryAccess implements Provider
     }
 
-    /** Read/apply NBT into an existing villager */
+    /** Read/apply NBT into an existing villager or wandering trader */
     public static void readInto(Entity bukkitEntity, CompoundTag tag) {
         try {
             net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
-            net.minecraft.world.entity.npc.Villager villager = (net.minecraft.world.entity.npc.Villager) entity;
+            net.minecraft.world.entity.npc.AbstractVillager villager = (net.minecraft.world.entity.npc.AbstractVillager) entity;
 
             HolderLookup.Provider lookup = lookupFor(bukkitEntity.getWorld());
             ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, lookup, tag);
@@ -32,11 +32,11 @@ public final class VillagerNbtIO {
         }
     }
 
-    /** Write NBT out of a villager */
+    /** Write NBT out of a villager or wandering trader */
     public static CompoundTag writeFrom(Entity bukkitEntity) {
         try {
             net.minecraft.world.entity.Entity entity = ((CraftEntity) bukkitEntity).getHandle();
-            net.minecraft.world.entity.npc.Villager villager = (net.minecraft.world.entity.npc.Villager) entity;
+            net.minecraft.world.entity.npc.AbstractVillager villager = (net.minecraft.world.entity.npc.AbstractVillager) entity;
 
             HolderLookup.Provider lookup = lookupFor(bukkitEntity.getWorld());
             TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, lookup);

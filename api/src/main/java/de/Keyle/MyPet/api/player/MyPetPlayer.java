@@ -110,7 +110,7 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     boolean sendMessage(String message, int cooldown);
 
-    DonateCheck.DonationRank getDonationRank();
+    ContributorCheck.ContributorRank getContributorRank();
 
-    void checkForDonation();
+    void checkForContribution();
 }

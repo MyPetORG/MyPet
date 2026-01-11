@@ -146,8 +146,8 @@ jobs:
           fi
           JAR="${FILTERED[0]}"
           DIR=$(dirname "$JAR")
-          BASE=$(basename "$JAR" .jar)
-          NEW_NAME="${BASE}-SNAPSHOT-b${BUILD_NUMBER}.jar"
+          # Replace -SNAPSHOT.jar with -SNAPSHOT-b#.jar
+          NEW_NAME=$(basename "$JAR" | sed "s/-SNAPSHOT\.jar$/-SNAPSHOT-b${BUILD_NUMBER}.jar/")
           NEW_PATH="${DIR}/${NEW_NAME}"
           mv "$JAR" "$NEW_PATH"
           echo "jar=$NEW_PATH" >> "$GITHUB_OUTPUT"
@@ -166,18 +166,27 @@ jobs:
         id: changelog
         shell: bash
         run: |
-          CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}.md"
+          CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}-SNAPSHOT.md"
           if [[ -f "$CHANGELOG_FILE" ]]; then
             echo "Found changelog: $CHANGELOG_FILE"
             {
               echo 'content<<EOF'
               cat "$CHANGELOG_FILE"
+              echo ""
               echo 'EOF'
             } >> "$GITHUB_OUTPUT"
           else
             echo "No changelog found at $CHANGELOG_FILE, using default message"
             echo "content=Development snapshot. **Do NOT use in production!**" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Extract supported NMS modules
+        id: modules
+        shell: bash
+        run: |
+          # Extract bukkitPackets from build.gradle.kts for update checker compatibility
+          BUKKIT_PACKETS=$(grep -Po 'val bukkitPackets by extra\("([^"]+)"\)' build.gradle.kts | sed 's/.*("\(.*\)")/\1/')
+          echo "list=$BUKKIT_PACKETS" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -187,7 +196,12 @@ jobs:
           prerelease: true
           overwrite_files: false
           files: ${{ steps.findjar.outputs.jar }}
-          body: ${{ steps.changelog.outputs.content }}
+          body: |
+            ${{ steps.changelog.outputs.content }}
+
+            ---
+            Supported NMS Versions: 
+            ${{ steps.modules.outputs.list }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -215,38 +229,52 @@ jobs:
             1.21.x
           files: ${{ steps.findjar.outputs.jar }}
 
-      - name: Publish to Hangar
-        run: |
-          ./gradlew publishPluginPublicationToHangar --no-daemon \
-            -PbuildType=dev \
-            -PHANGAR_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} \
-            -PHANGAR_FILE=${{ steps.findjar.outputs.jar }} \
-            -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
+#      - name: Publish to Hangar
+#        run: |
+#          ./gradlew publishPluginPublicationToHangar --no-daemon \
+#            -PbuildType=dev \
+#            -PHANGAR_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} \
+#            -PHANGAR_FILE=${{ steps.findjar.outputs.jar }} \
+#            -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
 
       - name: Publish to Polymart
-        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
+        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_TOKEN=${POLYMART_TOKEN} -PPOLYMART_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
 
       - name: Send a Discord webhook notification
+        env:
+          CHANGELOG: ${{ steps.changelog.outputs.content }}
         run: |
-          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d '{
-          "username": "MyPet Snapshot",
-          "content": "<@&1431929679626895450>",
-          "embeds": [
-            {
-              "type": "rich",
-              "title": "${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}",
-              "description": "New snapshot released. **Do NOT use in production!**",
-              "color": 439741,
-              "thumbnail": {
-                "url": "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
-              },
-              "author": {
-                "name": "${{ github.actor }}",
-                "url": "https://github.com/${{ github.actor_id }}",
-                "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
-              },
-              "url": "https://modrinth.com/plugin/mypet/version/${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}"
-            }
-          ]
-          }' ${{ secrets.WEBHOOK_URL }})
+          VERSION="${{ env.PROJECT_VERSION }}-SNAPSHOT-b${{ env.BUILD_NUMBER }}"
+          MODRINTH_URL="https://modrinth.com/plugin/mypet/version/${VERSION}"
+
+          # Truncate changelog if it exceeds Discord's 4096 char limit
+          if [[ ${#CHANGELOG} -gt 4000 ]]; then
+            CHANGELOG="${CHANGELOG:0:3997}..."
+          fi
+
+          # Build JSON payload safely with jq
+          PAYLOAD=$(jq -n \
+            --arg version "$VERSION" \
+            --arg changelog "$CHANGELOG" \
+            --arg modrinth_url "$MODRINTH_URL" \
+            '{
+              content: ("MyPet **" + $version + "** has released!\n<@&1431929679626895450>\n**Please test on development servers only.**\n**We may be unable to help resolve issues when using snapshots on production servers!**"),
+              embeds: [
+                {
+                  title: "Changelog",
+                  description: $changelog,
+                  color: 4429633,
+                  fields: []
+                },
+                {
+                  title: "Download from Modrinth",
+                  url: $modrinth_url
+                }
+              ],
+              components: [],
+              username: "MyPet Snapshot",
+              avatar_url: "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
+            }')
+
+          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" ${{ secrets.WEBHOOK_URL }})
           echo "Webhook server response: $RESPONSE"
