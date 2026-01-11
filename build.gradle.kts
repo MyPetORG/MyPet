@@ -81,17 +81,6 @@ val versionSuffix = when (buildType) {
 }
 val fullVersion = "${project.version}$versionSuffix"
 
-val filteringProps = mapOf(
-    "project" to project,
-    "buildNumber" to providers.gradleProperty("BUILD_NUMBER").orElse(""),
-    "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
-    "minecraft" to mapOf("version" to minecraftVersion),
-    "bukkit" to mapOf("packets" to bukkitPackets),
-    "special" to mapOf("versions" to specialVersions),
-    "mypetVersion" to version,
-    "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
-)
-
 sourceSets {
     main {
         resources { srcDir("src/main/resources/") }
@@ -141,15 +130,28 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
     )
     doLast {
         // Clean up files we don't need in the final JAR
-        delete(fileTree(targetDir) {
-            include(".git/**", ".gitignore", "README.md", "exclude/**")
-        })
+        // Use direct File operations for configuration cache compatibility
+        File(targetDir, ".git").deleteRecursively()
+        File(targetDir, ".gitignore").delete()
+        File(targetDir, "README.md").delete()
+        File(targetDir, "exclude").deleteRecursively()
     }
 }
 
 tasks.named<ProcessResources>("processResources") {
     dependsOn(downloadVersionmatcher, downloadTranslations)
     duplicatesStrategy = DuplicatesStrategy.WARN
+
+    // Define filtering properties inline for configuration cache compatibility
+    val filteringProps = mapOf(
+        "buildNumber" to (providers.gradleProperty("BUILD_NUMBER").orNull ?: ""),
+        "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
+        "minecraft" to mapOf("version" to minecraftVersion),
+        "bukkit" to mapOf("packets" to bukkitPackets),
+        "special" to mapOf("versions" to specialVersions),
+        "mypetVersion" to version,
+        "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
+    )
 
     filesMatching("plugin.yml") { expand(filteringProps) }
     filesMatching("*.yml") { if (name != "plugin.yml") expand(filteringProps) }

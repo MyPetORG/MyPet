@@ -56,7 +56,7 @@ def runJavaCommand = { List<String> args ->
 }
 
 // Converts from Mojang's mappings to Minecraft's obfuscated mappings.
-ext.remapMojangToObfuscated = { inputFile, outputFile, craftbukkitVersion ->
+def remapMojangToObfuscated = { inputFile, outputFile, craftbukkitVersion ->
     def remappedMojang = findInCache("org.spigotmc", "spigot", craftbukkitVersion, "spigot-${craftbukkitVersion}-remapped-mojang.jar")
     def mojangMappings = findInCache("org.spigotmc", "minecraft-server", craftbukkitVersion, "minecraft-server-${craftbukkitVersion}-maps-mojang.txt")
 
@@ -80,7 +80,7 @@ ext.remapMojangToObfuscated = { inputFile, outputFile, craftbukkitVersion ->
 }
 
 // Converts from Minecraft's obfuscated mappings to Spigot's mappings.
-ext.remapObfuscatedToSpigot = { inputFile, outputFile, craftbukkitVersion ->
+def remapObfuscatedToSpigot = { inputFile, outputFile, craftbukkitVersion ->
     def spigotMappings = findInCache("org.spigotmc", "minecraft-server", craftbukkitVersion, "minecraft-server-${craftbukkitVersion}-maps-spigot.csrg")
     def remappedObf = findInCache("org.spigotmc", "spigot", craftbukkitVersion, "spigot-${craftbukkitVersion}-remapped-obf.jar")
 
@@ -103,12 +103,17 @@ ext.remapObfuscatedToSpigot = { inputFile, outputFile, craftbukkitVersion ->
 }
 
 // Converts from Mojang's mappings to Spigot's mappings.
-ext.remapMojangToSpigot = { inputFile, intermediateFile, outputFile, craftbukkitVersion ->
+def remapMojangToSpigot = { inputFile, intermediateFile, outputFile, craftbukkitVersion ->
     println '> remapMojangToSpigot'
     println '  Input: ' + inputFile.path
     println '  Intermediate: ' + intermediateFile.path
     println '  Output: ' + outputFile.path
     println '  CraftBukkit version: ' + craftbukkitVersion
-    ext.remapMojangToObfuscated(inputFile, intermediateFile, craftbukkitVersion)
-    ext.remapObfuscatedToSpigot(intermediateFile, outputFile, craftbukkitVersion)
+    remapMojangToObfuscated(inputFile, intermediateFile, craftbukkitVersion)
+    remapObfuscatedToSpigot(intermediateFile, outputFile, craftbukkitVersion)
 }
+
+// Export functions for use by subprojects
+ext.remapMojangToObfuscated = remapMojangToObfuscated
+ext.remapObfuscatedToSpigot = remapObfuscatedToSpigot
+ext.remapMojangToSpigot = remapMojangToSpigot
