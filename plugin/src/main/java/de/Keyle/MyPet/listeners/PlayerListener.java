@@ -39,6 +39,7 @@ import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
+import de.Keyle.MyPet.skill.skills.BeaconImpl;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.ShieldImpl;
 import de.Keyle.MyPet.util.Updater;
@@ -65,10 +66,61 @@ import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.spigotmc.event.entity.EntityMountEvent;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerListener implements Listener {
+
+    // Beacon zone state tracking (ConcurrentHashMap for thread safety)
+    private final Map<UUID, BeaconZoneState> beaconZoneStates = new ConcurrentHashMap<>();
+
+    private static final class BeaconZoneState {
+        private static final double EPSILON = 0.0001;
+        final boolean deny, selfDeny, shareDeny;
+        final double rangeMult, durationMult;
+        final int amplifierMod;
+
+        BeaconZoneState(boolean deny, boolean selfDeny, boolean shareDeny,
+                        double rangeMult, double durationMult, int amplifierMod) {
+            this.deny = deny;
+            this.selfDeny = selfDeny;
+            this.shareDeny = shareDeny;
+            this.rangeMult = rangeMult;
+            this.durationMult = durationMult;
+            this.amplifierMod = amplifierMod;
+        }
+
+        boolean hasModifications() {
+            return deny || selfDeny || shareDeny ||
+                   Math.abs(rangeMult - 1.0) > EPSILON ||
+                   Math.abs(durationMult - 1.0) > EPSILON ||
+                   amplifierMod != 0;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof BeaconZoneState)) return false;
+            BeaconZoneState other = (BeaconZoneState) o;
+            return deny == other.deny && selfDeny == other.selfDeny &&
+                   shareDeny == other.shareDeny &&
+                   Math.abs(rangeMult - other.rangeMult) < EPSILON &&
+                   Math.abs(durationMult - other.durationMult) < EPSILON &&
+                   amplifierMod == other.amplifierMod;
+        }
+
+        @Override
+        public int hashCode() {
+            // Use rounded values for hash to be consistent with equals
+            return Objects.hash(deny, selfDeny, shareDeny,
+                   Math.round(rangeMult * 10000),
+                   Math.round(durationMult * 10000),
+                   amplifierMod);
+        }
+    }
 
     @EventHandler
     public void on(PlayerInteractEvent event) {
@@ -311,6 +363,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void on(PlayerQuitEvent event) {
+        // Clean up beacon zone state
+        beaconZoneStates.remove(event.getPlayer().getUniqueId());
+
         if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
             return;
         }
@@ -492,6 +547,95 @@ public class PlayerListener implements Listener {
                         player.getMyPet().removePet(true);
                         player.getPlayer().sendMessage(Translation.getString("Message.No.AllowedHere", player.getPlayer()));
                     }
+                }
+
+                // Track beacon zone state changes
+                checkBeaconZoneState(event.getPlayer(), player, event.getTo());
+            }
+        }
+    }
+
+    private void checkBeaconZoneState(Player player, MyPetPlayer mpPlayer, org.bukkit.Location to) {
+        // Only process if zone messages are enabled
+        if (!Configuration.Skilltree.Skill.Beacon.ZONE_MESSAGES) {
+            return;
+        }
+
+        // Only process if player has a pet with beacon skill
+        if (!mpPlayer.hasMyPet() || mpPlayer.getMyPet().getStatus() != MyPet.PetState.Here) {
+            return;
+        }
+        if (!mpPlayer.getMyPet().getSkills().has(BeaconImpl.class)) {
+            return;
+        }
+
+        // Build current zone state (immutable)
+        BeaconZoneState current = new BeaconZoneState(
+            !MyPetApi.getHookHelper().isBeaconAllowed(to),
+            !MyPetApi.getHookHelper().isBeaconSelfAllowed(to),
+            !MyPetApi.getHookHelper().isBeaconShareAllowed(to),
+            MyPetApi.getHookHelper().getBeaconRangeMultiplier(to),
+            MyPetApi.getHookHelper().getBeaconDurationMultiplier(to),
+            MyPetApi.getHookHelper().getBeaconAmplifierModifier(to)
+        );
+
+        BeaconZoneState previous = beaconZoneStates.get(player.getUniqueId());
+
+        if (previous == null || !current.equals(previous)) {
+            beaconZoneStates.put(player.getUniqueId(), current);
+
+            // Don't message on first check (login/join)
+            if (previous == null) {
+                return;
+            }
+
+            if (!current.hasModifications() && previous.hasModifications()) {
+                // Left all modifications
+                player.sendMessage(Translation.getString("Message.Beacon.Zone.Leave", player));
+            } else if (current.hasModifications()) {
+                // Entered or changed zone - build multi-line message
+                List<String> lines = new ArrayList<>();
+                lines.add(Translation.getString("Message.Beacon.Zone.Enter", player));
+
+                if (current.deny) {
+                    lines.add(Translation.getString("Message.Beacon.Zone.Deny", player));
+                }
+                if (current.selfDeny) {
+                    lines.add(Translation.getString("Message.Beacon.Zone.SelfDeny", player));
+                }
+                if (current.shareDeny) {
+                    lines.add(Translation.getString("Message.Beacon.Zone.ShareDeny", player));
+                }
+                if (current.rangeMult < 1.0) {
+                    lines.add(Util.formatText(
+                        Translation.getString("Message.Beacon.Zone.RangeReduced", player),
+                        (int)(current.rangeMult * 100)));
+                } else if (current.rangeMult > 1.0) {
+                    lines.add(Util.formatText(
+                        Translation.getString("Message.Beacon.Zone.RangeIncreased", player),
+                        (int)(current.rangeMult * 100)));
+                }
+                if (current.durationMult < 1.0) {
+                    lines.add(Util.formatText(
+                        Translation.getString("Message.Beacon.Zone.DurationReduced", player),
+                        (int)(current.durationMult * 100)));
+                } else if (current.durationMult > 1.0) {
+                    lines.add(Util.formatText(
+                        Translation.getString("Message.Beacon.Zone.DurationIncreased", player),
+                        (int)(current.durationMult * 100)));
+                }
+                if (current.amplifierMod < 0) {
+                    lines.add(Util.formatText(
+                        Translation.getString("Message.Beacon.Zone.AmplifierReduced", player),
+                        Math.abs(current.amplifierMod)));
+                } else if (current.amplifierMod > 0) {
+                    lines.add(Util.formatText(
+                        Translation.getString("Message.Beacon.Zone.AmplifierIncreased", player),
+                        current.amplifierMod));
+                }
+
+                for (String line : lines) {
+                    player.sendMessage(line);
                 }
             }
         }
