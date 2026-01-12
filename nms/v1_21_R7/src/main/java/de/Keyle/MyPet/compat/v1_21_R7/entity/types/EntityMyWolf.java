@@ -58,7 +58,7 @@ public class EntityMyWolf extends EntityMyPet {
 	protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN); //Interested
 	private static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Long> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.LONG);
 	private static final EntityDataAccessor<Holder<WolfVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.WOLF_VARIANT);
 
 	protected boolean shaking;
@@ -143,7 +143,7 @@ public class EntityMyWolf extends EntityMyPet {
 		builder.define(OWNER_WATCHER, Optional.empty());
 		builder.define(UNUSED_WATCHER, false); // not used
 		builder.define(COLLAR_COLOR_WATCHER, 14);
-		builder.define(ANGER_WATCHER, 0);
+		builder.define(ANGER_WATCHER, -1L);
 
 		if (varRegistry == null)
 			this.varRegistry = this.registryAccess().lookupOrThrow(Registries.WOLF_VARIANT);
@@ -167,11 +167,8 @@ public class EntityMyWolf extends EntityMyPet {
 			this.getEntityData().set(SIT_WATCHER, (byte) (b0 & 0xFFFFFFFB));
 		}
 
-		if (getMyPet().isAngry()) {
-			this.getEntityData().set(ANGER_WATCHER, 1);
-		} else {
-			this.getEntityData().set(ANGER_WATCHER, 0);
-		}
+		// In 1.21.11+, anger is stored as an end time (Long). Use -1L for not angry, positive value for angry.
+		this.getEntityData().set(ANGER_WATCHER, getMyPet().isAngry() ? Long.MAX_VALUE : -1L);
 
 		this.getEntityData().set(COLLAR_COLOR_WATCHER, getMyPet().getCollarColor().ordinal());
 

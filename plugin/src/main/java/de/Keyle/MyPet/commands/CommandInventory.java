@@ -69,13 +69,13 @@ public class CommandInventory implements CommandTabCompleter {
                 } else {
                     sender.sendMessage(Translation.getString("Message.No.HasPet", player));
                 }
-            } else if (args.length == 1 && Permissions.has(player, "MyPet.admin", false)) {		//Active Pet
+            } else if (args.length == 1 && Permissions.has(player, "MyPet.admin", false)) {
             	Player petOwner = Bukkit.getServer().getOfflinePlayer(args[0]).getPlayer();
-            	MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
-            	
+
             	if (petOwner == null) {
                     sender.sendMessage(Translation.getString("Message.No.PlayerOnline", player));
-                } else if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) { 
+                } else if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+                    MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 	                if (myPet.getSkills().isActive(BackpackImpl.class)) {
 	                    myPet.getSkills().get(BackpackImpl.class).openInventory(player);
 	                }

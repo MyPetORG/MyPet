@@ -28,6 +28,7 @@ import com.sk89q.worldguard.config.ConfigurationManager;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DoubleFlag;
 import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.IntegerFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -64,7 +65,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @PluginHookName("WorldGuard")
-public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, AllowedHook, MountInsideHook {
+public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, AllowedHook, MountInsideHook, BeaconHook {
 
     public static final StateFlag FLY_FLAG = new StateFlag("mypet-fly", false);
     public static final StateFlag DAMAGE_FLAG = new StateFlag("mypet-damage", false);
@@ -72,6 +73,14 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     public static final StateFlag LEASH_FLAG = new StateFlag("mypet-leash", true);
     public static final DoubleFlag EXP_ADD_FLAG = new DoubleFlag("mypet-exp-add");
     public static final DoubleFlag EXP_MULT_FLAG = new DoubleFlag("mypet-exp-mult");
+
+    // Beacon flags
+    public static final StateFlag BEACON_DENY_FLAG = new StateFlag("mypet-beacon-deny", false);
+    public static final StateFlag BEACON_SHARE_DENY_FLAG = new StateFlag("mypet-beacon-share-deny", false);
+    public static final StateFlag BEACON_SELF_DENY_FLAG = new StateFlag("mypet-beacon-self-deny", false);
+    public static final DoubleFlag BEACON_RANGE_MULT_FLAG = new DoubleFlag("mypet-beacon-range-mult");
+    public static final DoubleFlag BEACON_DURATION_MULT_FLAG = new DoubleFlag("mypet-beacon-duration-mult");
+    public static final IntegerFlag BEACON_AMPLIFIER_ADD_FLAG = new IntegerFlag("mypet-beacon-amplifier-add");
 
     public static StateFlag PVP;
     public static StateFlag DAMAGE_ANIMALS;
@@ -120,20 +129,42 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
                 if (flagRegistry != null) {
                     try {
-                        flagRegistry.register(FLY_FLAG);
-                        flagRegistry.register(DAMAGE_FLAG);
-                        flagRegistry.register(DENY_FLAG);
-                        flagRegistry.register(LEASH_FLAG);
+                        // Register core flags
+                        registerFlag(flagRegistry, FLY_FLAG);
+                        registerFlag(flagRegistry, DAMAGE_FLAG);
+                        registerFlag(flagRegistry, DENY_FLAG);
+                        registerFlag(flagRegistry, LEASH_FLAG);
+
+                        // Register experience flags
+                        registerFlag(flagRegistry, EXP_ADD_FLAG);
+                        registerFlag(flagRegistry, EXP_MULT_FLAG);
+
+                        // Register beacon flags
+                        registerFlag(flagRegistry, BEACON_DENY_FLAG);
+                        registerFlag(flagRegistry, BEACON_SHARE_DENY_FLAG);
+                        registerFlag(flagRegistry, BEACON_SELF_DENY_FLAG);
+                        registerFlag(flagRegistry, BEACON_RANGE_MULT_FLAG);
+                        registerFlag(flagRegistry, BEACON_DURATION_MULT_FLAG);
+                        registerFlag(flagRegistry, BEACON_AMPLIFIER_ADD_FLAG);
 
                         MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
                         customFlags = true;
-                    } catch (IllegalStateException e) {
-                        MyPetApi.getLogger().warning("Could not register WorldGuard flags!");
+                    } catch (Exception e) {
+                        MyPetApi.getLogger().warning("Could not register WorldGuard flags: " + e.getMessage());
                     }
                 }
             } catch (NoSuchMethodError | IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void registerFlag(FlagRegistry flagRegistry, com.sk89q.worldguard.protection.flags.Flag<?> flag) {
+        try {
+            flagRegistry.register(flag);
+        } catch (IllegalStateException e) {
+            // Flag may already be registered (e.g., server reload) - this is OK
+            MyPetApi.getLogger().info("WorldGuard flag '" + flag.getName() + "' already registered or could not be registered: " + e.getMessage());
         }
     }
 
@@ -266,6 +297,98 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             return s == null || s == StateFlag.State.ALLOW;
         }
         return true;
+    }
+
+    // BeaconHook implementation
+
+    @Override
+    public boolean isBeaconAllowed(Location location) {
+        if (customFlags) {
+            StateFlag.State s = getState(location, null, BEACON_DENY_FLAG);
+            return s == null || s == StateFlag.State.ALLOW;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isBeaconShareAllowed(Location location) {
+        if (customFlags) {
+            StateFlag.State s = getState(location, null, BEACON_SHARE_DENY_FLAG);
+            return s == null || s == StateFlag.State.ALLOW;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isBeaconSelfAllowed(Location location) {
+        if (customFlags) {
+            StateFlag.State s = getState(location, null, BEACON_SELF_DENY_FLAG);
+            return s == null || s == StateFlag.State.ALLOW;
+        }
+        return true;
+    }
+
+    @Override
+    public double getBeaconRangeMultiplier(Location location) {
+        if (customFlags) {
+            Collection<Double> values = getDoubleValue(location, null, BEACON_RANGE_MULT_FLAG);
+            if (!values.isEmpty()) {
+                double multiplier = 1.0;
+                for (double d : values) {
+                    multiplier *= d;
+                }
+                return multiplier;
+            }
+        }
+        return 1.0;
+    }
+
+    @Override
+    public double getBeaconDurationMultiplier(Location location) {
+        if (customFlags) {
+            Collection<Double> values = getDoubleValue(location, null, BEACON_DURATION_MULT_FLAG);
+            if (!values.isEmpty()) {
+                double multiplier = 1.0;
+                for (double d : values) {
+                    multiplier *= d;
+                }
+                return multiplier;
+            }
+        }
+        return 1.0;
+    }
+
+    @Override
+    public int getBeaconAmplifierModifier(Location location) {
+        if (customFlags) {
+            Collection<Integer> values = getIntegerValue(location, null, BEACON_AMPLIFIER_ADD_FLAG);
+            if (!values.isEmpty()) {
+                int modifier = 0;
+                for (int i : values) {
+                    modifier += i;
+                }
+                return modifier;
+            }
+        }
+        return 0;
+    }
+
+    public Collection<Integer> getIntegerValue(Location loc, Player player, IntegerFlag flag) {
+        if (is7) {
+            RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
+            return rc.createQuery().queryAllValues(
+                    BukkitAdapter.adapt(loc),
+                    player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
+                    flag);
+        } else {
+            try {
+                RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
+                ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
+                return set.queryAllValues(player != null ? wgp.wrapPlayer(player) : null, flag);
+            } catch (Exception ignored) {
+                return Collections.emptyList();
+            }
+        }
     }
 
     @EventHandler

@@ -34,7 +34,6 @@ import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
-import de.Keyle.MyPet.api.util.logger.MyPetLogger;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 
 import java.util.logging.Logger;
@@ -73,13 +72,6 @@ public class MyPetApi {
         } else {
             return Logger.getLogger("MyPet");
         }
-    }
-
-    /**
-     * @return the pluginlogger or a logger instance called MyPet
-     */
-    public static MyPetLogger getMyPetLogger() {
-        return plugin != null ? (MyPetLogger) plugin.getLogger() : null;
     }
 
     /**

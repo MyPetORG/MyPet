@@ -100,6 +100,14 @@ jobs:
             echo "content=A changelog has not yet been uploaded. Please consider checking Discord!" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Extract supported NMS modules
+        id: modules
+        shell: bash
+        run: |
+          # Extract bukkitPackets from build.gradle.kts for update checker compatibility
+          BUKKIT_PACKETS=$(grep -Po 'val bukkitPackets by extra\("([^"]+)"\)' build.gradle.kts | sed 's/.*("\(.*\)")/\1/')
+          echo "list=$BUKKIT_PACKETS" >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -108,7 +116,11 @@ jobs:
           prerelease: false
           overwrite_files: false
           files: ${{ steps.findjar.outputs.jar }}
-          body: ${{ steps.changelog.outputs.content }}
+          body: |
+            ${{ steps.changelog.outputs.content }}
+
+            ---
+            Supported NMS versions: ${{ steps.modules.outputs.list }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -145,29 +157,51 @@ jobs:
             -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
 
       - name: Publish to Polymart
-        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_VERSION=${PROJECT_VERSION} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
+        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_TOKEN=${POLYMART_TOKEN} -PPOLYMART_VERSION=${PROJECT_VERSION} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
 
       - name: Send a Discord webhook notification
+        env:
+          FULL_CHANGELOG: ${{ steps.changelog.outputs.content }}
         run: |
-          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d '{
-          "username": "MyPet Release",
-          "content": "<@&1428362555084116131>",
-          "embeds": [
-            {
-              "type": "rich",
-              "title": "${{ env.PROJECT_VERSION }}",
-              "description": "**A new version of MyPet has released!**",
-              "color": 439741,
-              "thumbnail": {
-                "url": "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
-              },
-              "author": {
-                "name": "${{ github.actor }}",
-                "url": "https://github.com/${{ github.actor_id }}",
-                "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
-              },
-              "url": "https://modrinth.com/plugin/mypet/version/${{ env.PROJECT_VERSION }}"
-            }
-          ]
-          }' ${{ secrets.WEBHOOK_URL }})
+          VERSION="${{ env.PROJECT_VERSION }}"
+          MODRINTH_URL="https://modrinth.com/plugin/mypet/version/${VERSION}"
+
+          # Extract only the "Full changelog" section for Discord (after "### Full changelog:" or "## Full changelog:")
+          CHANGELOG=$(echo "$FULL_CHANGELOG" | sed -n '/^##\?#\? Full [Cc]hangelog/,$p' | tail -n +2)
+
+          # If no "Full changelog" section found, use the full changelog
+          if [[ -z "$CHANGELOG" ]]; then
+            CHANGELOG="$FULL_CHANGELOG"
+          fi
+
+          # Truncate changelog if it exceeds Discord's 4096 char limit
+          if [[ ${#CHANGELOG} -gt 4000 ]]; then
+            CHANGELOG="${CHANGELOG:0:3997}..."
+          fi
+
+          # Build JSON payload safely with jq
+          PAYLOAD=$(jq -n \
+            --arg version "$VERSION" \
+            --arg changelog "$CHANGELOG" \
+            --arg modrinth_url "$MODRINTH_URL" \
+            '{
+              content: ("MyPet **" + $version + "** has released!\n<@&1428362555084116131>"),
+              embeds: [
+                {
+                  title: "Changelog",
+                  description: $changelog,
+                  color: 4429633,
+                  fields: []
+                },
+                {
+                  title: "Download from Modrinth",
+                  url: $modrinth_url
+                }
+              ],
+              components: [],
+              username: "MyPet Release",
+              avatar_url: "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
+            }')
+
+          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" ${{ secrets.WEBHOOK_URL }})
           echo "Webhook server response: $RESPONSE"

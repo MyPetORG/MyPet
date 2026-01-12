@@ -73,10 +73,10 @@ public class ShopManager implements ShopService {
                     }
                     this.shops.put(name, shop);
                 } catch (InvalidSkilltreeException e) {
-                    MyPetApi.getMyPetLogger().warning("Your config file is invalid for shop:", name);
-                    MyPetApi.getMyPetLogger().warning(e.getMessage());
+                    MyPetApi.getLogger().warning("Your config file is invalid for shop: " + name);
+                    MyPetApi.getLogger().warning(e.getMessage());
                 } catch (Exception e) {
-                    MyPetApi.getMyPetLogger().warning("Your config file is invalid for shop:", name);
+                    MyPetApi.getLogger().warning("Your config file is invalid for shop: " + name);
                 }
             }
         }

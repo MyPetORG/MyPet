@@ -38,15 +38,18 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
+import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
 import org.bson.Document;
 import org.bson.types.Binary;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
-import java.util.zip.ZipException;
 
 public class MongoDbRepository implements Repository {
 
@@ -55,6 +58,23 @@ public class MongoDbRepository implements Repository {
     private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
     private MongoDatabase db;
     private int version = 4;
+
+    private void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
+        if (data == null || data.length == 0) {
+            return;
+        }
+        try {
+            Path corruptedDir = MyPetApi.getPlugin().getDataFolder().toPath().resolve("corrupted");
+            Files.createDirectories(corruptedDir);
+            String safePetName = pet.getPetName().replaceAll("[^a-zA-Z0-9_-]", "_");
+            String filename = pet.getOwner().getPlayerUUID() + "_" + safePetName + "_" + fieldName + ".dat";
+            Path backupFile = corruptedDir.resolve(filename);
+            Files.write(backupFile, data);
+            MyPetApi.getLogger().info("Corrupted data backed up to: " + backupFile);
+        } catch (IOException e) {
+            MyPetApi.getLogger().warning("Failed to backup corrupted data for pet " + pet.getUUID() + ": " + e.getMessage());
+        }
+    }
     // https://search.maven.org/remotecontent?filepath=org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
 
     @Override
@@ -284,15 +304,22 @@ public class MongoDbRepository implements Repository {
                 }
             }
 
+            byte[] skillsData = ((Binary) document.get("skills")).getData();
             try {
-                pet.setSkills(TagStream.readTag(((Binary) document.get("skills")).getData(), true));
-            } catch (ZipException exception) {
-                MyPetApi.getMyPetLogger().warning("Pet skills of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
+                pet.setSkills(TagStream.readTag(skillsData, true));
+            } catch (IOException e) {
+                MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                backupCorruptedData(pet, "skills", skillsData);
+                pet.setSkills(new TagCompound());
             }
+
+            byte[] infoData = ((Binary) document.get("info")).getData();
             try {
-                pet.setInfo(TagStream.readTag(((Binary) document.get("info")).getData(), true));
-            } catch (ZipException exception) {
-                MyPetApi.getMyPetLogger().warning("Pet info of player \"" + pet.getOwner().getName() + "\" (" + pet.getPetName() + ") could not be loaded!");
+                pet.setInfo(TagStream.readTag(infoData, true));
+            } catch (IOException e) {
+                MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                backupCorruptedData(pet, "info", infoData);
+                pet.setInfo(new TagCompound());
             }
 
             List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
@@ -301,7 +328,7 @@ public class MongoDbRepository implements Repository {
             }
 
             return pet;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -354,7 +381,7 @@ public class MongoDbRepository implements Repository {
     @Override
     @SuppressWarnings("unchecked")
     public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback) {
-        if (callback != null) {
+        if (callback != null && owner != null) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -377,27 +404,35 @@ public class MongoDbRepository implements Repository {
     @SuppressWarnings("unchecked")
     public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
         if (callback != null) {
-            new BukkitRunnable() {
+            Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
+                private int retries = 0;
+                private static final int MAX_RETRIES = 100;
+
                 @Override
                 public void run() {
-                    if(petsToBeSaved.containsKey(uuid)) {
+                    if (!MyPetApi.getPlugin().isEnabled()) {
                         return;
                     }
 
+                    if (petsToBeSaved.containsKey(uuid)) {
+                        if (++retries >= MAX_RETRIES) {
+                            callback.runTask((StoredMyPet) null);
+                            return;
+                        }
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), this, 5);
+                        return;
+                    }
+
+                    StoredMyPet result = null;
                     MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                     Document petDocument = (Document) petCollection.find(new Document("uuid", uuid.toString())).first();
                     if (petDocument != null) {
                         MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(petDocument.getString("owner_uuid")));
-                        StoredMyPet pet = documentToMyPet(owner, petDocument);
-
-                        if (pet != null) {
-                            callback.runTask(pet);
-                        }
+                        result = documentToMyPet(owner, petDocument);
                     }
-
-                    this.cancel();
+                    callback.runTask(result);
                 }
-            }.runTaskTimerAsynchronously(MyPetApi.getPlugin(), 0, 5);
+            });
         }
     }
 
@@ -539,8 +574,8 @@ public class MongoDbRepository implements Repository {
 
             try {
                 petPlayer.setExtendedInfo(TagStream.readTag(((Binary) document.get("extended_info")).getData(), true));
-            } catch (ZipException exception) {
-                MyPetApi.getMyPetLogger().warning("Extended info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
+            } catch (IOException e) {
+                MyPetApi.getLogger().warning("Extended info of player \"" + playerName + "\" (" + mojangUUID + ") could not be loaded!");
             }
 
             Document jsonObject = (Document) document.get("multi_world");
@@ -560,7 +595,7 @@ public class MongoDbRepository implements Repository {
             petPlayer.setPetLivingSoundVolume(document.getDouble("pet_idle_volume").floatValue());
 
             return petPlayer;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

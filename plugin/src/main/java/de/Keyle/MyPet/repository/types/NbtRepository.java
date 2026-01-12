@@ -145,7 +145,7 @@ public class NbtRepository implements Repository {
 
     @Override
     public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback) {
-        if (callback != null) {
+        if (callback != null && owner != null) {
             List<StoredMyPet> petList = new ArrayList<>();
 
             for (UUID petUUID : petPlayerMultiMap.get(owner.getInternalUUID())) {

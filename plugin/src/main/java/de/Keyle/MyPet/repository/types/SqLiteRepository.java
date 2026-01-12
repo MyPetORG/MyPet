@@ -36,13 +36,17 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
+import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagStream;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.*;
 
@@ -53,6 +57,23 @@ public class SqLiteRepository implements Repository {
     private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
     private Connection connection;
     private int version = 1;
+
+    private void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
+        if (data == null || data.length == 0) {
+            return;
+        }
+        try {
+            Path corruptedDir = MyPetApi.getPlugin().getDataFolder().toPath().resolve("corrupted");
+            Files.createDirectories(corruptedDir);
+            String safePetName = pet.getPetName().replaceAll("[^a-zA-Z0-9_-]", "_");
+            String filename = pet.getOwner().getPlayerUUID() + "_" + safePetName + "_" + fieldName + ".dat";
+            Path backupFile = corruptedDir.resolve(filename);
+            Files.write(backupFile, data);
+            MyPetApi.getLogger().info("Corrupted data backed up to: " + backupFile);
+        } catch (IOException e) {
+            MyPetApi.getLogger().warning("Failed to backup corrupted data for pet " + pet.getUUID() + ": " + e.getMessage());
+        }
+    }
 
     @Override
     public void disable() {
@@ -394,8 +415,23 @@ public class SqLiteRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(TagStream.readTag(resultSet.getBytes("skills"), true));
-                pet.setInfo(TagStream.readTag(resultSet.getBytes("info"), true));
+                byte[] skillsData = resultSet.getBytes("skills");
+                try {
+                    pet.setSkills(TagStream.readTag(skillsData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "skills", skillsData);
+                    pet.setSkills(new TagCompound());
+                }
+
+                byte[] infoData = resultSet.getBytes("info");
+                try {
+                    pet.setInfo(TagStream.readTag(infoData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "info", infoData);
+                    pet.setInfo(new TagCompound());
+                }
 
                 List<RepositoryMyPetConverterService> converters = MyPetApi.getServiceManager().getServices(RepositoryMyPetConverterService.class);
                 for (RepositoryMyPetConverterService converter : converters) {
@@ -404,7 +440,7 @@ public class SqLiteRepository implements Repository {
 
                 pets.add(pet);
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return pets;
@@ -449,14 +485,29 @@ public class SqLiteRepository implements Repository {
                     }
                 }
 
-                pet.setSkills(TagStream.readTag(resultSet.getBytes("skills"), true));
-                pet.setInfo(TagStream.readTag(resultSet.getBytes("info"), true));
+                byte[] skillsData = resultSet.getBytes("skills");
+                try {
+                    pet.setSkills(TagStream.readTag(skillsData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "skills", skillsData);
+                    pet.setSkills(new TagCompound());
+                }
+
+                byte[] infoData = resultSet.getBytes("info");
+                try {
+                    pet.setInfo(TagStream.readTag(infoData, true));
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                    backupCorruptedData(pet, "info", infoData);
+                    pet.setInfo(new TagCompound());
+                }
 
                 pets.add(pet);
             }
 
             return pets;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -464,10 +515,13 @@ public class SqLiteRepository implements Repository {
 
     @Override
     public void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback) {
-        if (callback != null) {
+        if (callback != null && myPetPlayer != null) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    if (myPetPlayer == null) {
+                        return;
+                    }
                     try {
                         PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE owner_uuid=?;");
                         statement.setString(1, myPetPlayer.getInternalUUID().toString());
@@ -486,10 +540,13 @@ public class SqLiteRepository implements Repository {
 
     @Override
     public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback) {
-        if (callback != null) {
+        if (callback != null && owner != null) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    if (owner == null) {
+                        return;
+                    }
                     try {
                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE owner_uuid=?;");
                         statement.setString(1, owner.getInternalUUID().toString());
@@ -508,13 +565,26 @@ public class SqLiteRepository implements Repository {
     @Override
     public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
         if (callback != null) {
-            new BukkitRunnable() {
+            Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
+                private int retries = 0;
+                private static final int MAX_RETRIES = 100;
+
                 @Override
                 public void run() {
-                    if(petsToBeSaved.containsKey(uuid)) {
+                    if (!MyPetApi.getPlugin().isEnabled()) {
                         return;
                     }
 
+                    if (petsToBeSaved.containsKey(uuid)) {
+                        if (++retries >= MAX_RETRIES) {
+                            callback.runTask(MyPetApi.getPlugin(), null);
+                            return;
+                        }
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), this, 5);
+                        return;
+                    }
+
+                    StoredMyPet result = null;
                     try {
                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE uuid=?;");
                         statement.setString(1, uuid.toString());
@@ -526,18 +596,16 @@ public class SqLiteRepository implements Repository {
                             if (owner != null) {
                                 List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet, false);
                                 if (!pets.isEmpty()) {
-                                    //MyPetLogger.write("LOAD pet: " + pets.get(0));
-                                    callback.runTask(MyPetApi.getPlugin(), pets.get(0));
+                                    result = pets.get(0);
                                 }
                             }
                         }
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-
-                    cancel();
+                    callback.runTask(MyPetApi.getPlugin(), result);
                 }
-            }.runTaskTimerAsynchronously(MyPetApi.getPlugin(), 0, 5);
+            });
         }
     }
 

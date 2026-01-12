@@ -5,10 +5,11 @@ import java.net.URI
 
 plugins {
     java
-    id("com.gradleup.shadow") version "9.2.2"
-    id("io.freefair.lombok") version "9.0.0"
+    id("com.gradleup.shadow") version "9.3.1"
+    id("io.freefair.lombok") version "9.1.0"
     id("com.cjcrafter.polymart-release") version "1.0.1"
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
+    id("io.sentry.jvm.gradle") version "5.12.2"
     `maven-publish`
 }
 
@@ -19,7 +20,7 @@ val minecraftVersion by extra("1.21.11")
 val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6;v1_21_R7")
 val specialVersions by extra("")
 
-version = "3.14.0"
+version = "3.14.1"
 
 val nmsModules: List<String> = File(rootDir, "nms")
     .listFiles()
@@ -27,39 +28,38 @@ val nmsModules: List<String> = File(rootDir, "nms")
     ?.map { ":nms:${it.name}" }
     ?: emptyList()
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-    maven("https://hub.spigotmc.org/nexus/content/groups/public/")
-    maven("https://repo.mypet-plugin.de/")
+// Shared repositories for all projects (root + subprojects)
+allprojects {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+        maven("https://repo.mypet-plugin.de/")
+    }
 }
 
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "io.freefair.lombok")
+    apply(plugin = "io.sentry.jvm.gradle")
 
     repositories {
-        mavenCentral()
-        mavenLocal()
-        maven { url = uri("https://mvn.lib.co.nz/spigot/") }
-        maven { url = uri("https://repo.md-5.net/content/groups/public/") }
-        maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
-        maven { url = uri("https://repo.codemc.io/repository/maven-releases/") }
-        maven { url = uri("https://repo.codemc.io/repository/maven-snapshots/") }
-        maven { url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/") }
-        maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
-        maven { url = uri("https://maven.enginehub.org/repo/") }
-        maven { url = uri("https://hub.spigotmc.org/nexus/content/groups/public/") }
-        maven { url = uri("https://repo.md-5.net/content/repositories/public") }
-        maven { url = uri("https://jitpack.io") }
-        maven { url = uri("https://repo.mypet-plugin.de/") }
-
+        maven("https://mvn.lib.co.nz/spigot/")
+        maven("https://repo.md-5.net/content/groups/public/")
+        maven("https://repo.papermc.io/repository/maven-public/")
+        maven("https://repo.codemc.io/repository/maven-releases/")
+        maven("https://repo.codemc.io/repository/maven-snapshots/")
+        maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+        maven("https://oss.sonatype.org/content/groups/public/")
+        maven("https://maven.enginehub.org/repo/")
+        maven("https://repo.md-5.net/content/repositories/public")
+        maven("https://jitpack.io")
     }
 
-    tasks.processResources { enabled = false }
-    tasks.test { enabled = false }
-    tasks.compileTestJava { enabled = false }
-    tasks.processTestResources { enabled = false }
+    tasks.named("processResources") { enabled = false }
+    tasks.named("test") { enabled = false }
+    tasks.named("compileTestJava") { enabled = false }
+    tasks.named("processTestResources") { enabled = false }
 
     plugins.withId("maven-publish") {
         tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
@@ -74,17 +74,12 @@ subprojects {
 }
 
 val archivesBaseName = "MyPet"
-
-val filteringProps = mapOf(
-    "project" to project,
-    "buildNumber" to providers.gradleProperty("BUILD_NUMBER").orElse(""),
-    "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
-    "minecraft" to mapOf("version" to minecraftVersion),
-    "bukkit" to mapOf("packets" to bukkitPackets),
-    "special" to mapOf("versions" to specialVersions),
-    "mypetVersion" to version,
-    "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
-)
+val versionSuffix = when (buildType) {
+    "release" -> ""
+    "snapshot", "dev" -> "-SNAPSHOT"
+    else -> "-SNAPSHOT-local"  // local builds
+}
+val fullVersion = "${project.version}$versionSuffix"
 
 sourceSets {
     main {
@@ -109,6 +104,22 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
     description = "Downloads MyPet translations into build/resources/main/locale"
     val targetDir = layout.buildDirectory.dir("resources/main/locale").get().asFile
     outputs.dir(targetDir)
+
+    // Skip download if translations are less than 12 hours old
+    val maxAgeMillis = 12 * 60 * 60 * 1000L // 12 hours in milliseconds
+    onlyIf {
+        if (!targetDir.exists()) {
+            true
+        } else {
+            val ageMillis = System.currentTimeMillis() - targetDir.lastModified()
+            val shouldDownload = ageMillis > maxAgeMillis
+            if (!shouldDownload) {
+                logger.lifecycle("Skipping translation download - last updated ${ageMillis / (60 * 60 * 1000)} hours ago (max: 12 hours)")
+            }
+            shouldDownload
+        }
+    }
+
     doFirst {
         if (targetDir.exists()) targetDir.deleteRecursively()
         targetDir.mkdirs()
@@ -117,19 +128,30 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
         "git", "clone", "--depth", "1", "--single-branch",
         "https://github.com/MyPetORG/MyPet-Translations.git", targetDir
     )
-    delete(fileTree("build/resources/main/locale") {
-        include(
-            "exclude",
-            ".git",
-            ".gitignore",
-            "README.md"
-        )
-    })
+    doLast {
+        // Clean up files we don't need in the final JAR
+        // Use direct File operations for configuration cache compatibility
+        File(targetDir, ".git").deleteRecursively()
+        File(targetDir, ".gitignore").delete()
+        File(targetDir, "README.md").delete()
+        File(targetDir, "exclude").deleteRecursively()
+    }
 }
 
-tasks.processResources {
+tasks.named<ProcessResources>("processResources") {
     dependsOn(downloadVersionmatcher, downloadTranslations)
     duplicatesStrategy = DuplicatesStrategy.WARN
+
+    // Define filtering properties inline for configuration cache compatibility
+    val filteringProps = mapOf(
+        "buildNumber" to (providers.gradleProperty("BUILD_NUMBER").orNull ?: ""),
+        "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
+        "minecraft" to mapOf("version" to minecraftVersion),
+        "bukkit" to mapOf("packets" to bukkitPackets),
+        "special" to mapOf("versions" to specialVersions),
+        "mypetVersion" to version,
+        "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
+    )
 
     filesMatching("plugin.yml") { expand(filteringProps) }
     filesMatching("*.yml") { if (name != "plugin.yml") expand(filteringProps) }
@@ -150,10 +172,10 @@ fun Manifest.attributesForMyPet() = attributes(
     )
 )
 
-tasks.jar {
+tasks.named<Jar>("jar") {
     archiveBaseName.set(archivesBaseName)
-    archiveFileName.set("${archivesBaseName}-${project.version}.jar")
-    archiveVersion.set(project.version.toString())
+    archiveFileName.set("${archivesBaseName}-${fullVersion}.jar")
+    archiveVersion.set(fullVersion)
     manifest { attributesForMyPet() }
 }
 
@@ -180,14 +202,15 @@ dependencies {
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.5")
     add("shade", "com.google.code.gson:gson:2.8.9")
-    add("shade", "io.sentry:sentry:1.7.30")
+    add("shade", "io.sentry:sentry:8.22.0")
+    add("shade", "io.sentry:sentry-logback:8.22.0")
     add("shade", "com.zaxxer:HikariCP:3.4.2")
 }
 
 // Build the shaded jar strictly from the 'shade' configuration
-tasks.shadowJar {
+val shadowJar = tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     archiveBaseName.set(archivesBaseName)
-    archiveVersion.set(project.version.toString())
+    archiveVersion.set(fullVersion)
     archiveClassifier.set("")
     exclude("META-INF/**")
     manifest { attributesForMyPet() }
@@ -199,15 +222,27 @@ tasks.shadowJar {
     relocate("at.blvckbytes.raw_message", "de.Keyle.MyPet.util.raw_message")
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
-    relocate("io.sentry", "de.Keyle.MyPet.util.sentry")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
     relocate("org.bson", "de.Keyle.MyPet.util.bson")
     relocate("com.google.gson", "de.Keyle.MyPet.util.gson")
     relocate("com.mongodb", "de.Keyle.MyPet.util.mongodb")
+    relocate("io.sentry", "de.Keyle.MyPet.util.sentry")
 }
 
-tasks.assemble { dependsOn(tasks.shadowJar) }
-tasks.build { dependsOn(tasks.shadowJar) }
+tasks.named("assemble") { dependsOn(shadowJar) }
+tasks.named("build") { dependsOn(shadowJar) }
+
+/* ---------- Sentry Configuration ---------- */
+
+sentry {
+    // Only bundle sources when auth token is available (snapshot/release builds)
+    // PR builds don't have the token and don't need source bundling
+    includeSourceContext = !System.getenv("SENTRY_AUTH_TOKEN").isNullOrEmpty()
+
+    org = "mypet"
+    projectName = "mypet"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
 
 /* ---------- Root compilation settings (Java 8 output) ---------- */
 
@@ -225,7 +260,7 @@ polymart {
     val polymartVersion = providers.gradleProperty("POLYMART_VERSION").orNull
         ?: project.version.toString()
     val polymartFile = providers.gradleProperty("POLYMART_FILE").orNull
-        ?: "build/libs/MyPet-${project.version}.jar"
+        ?: "build/libs/MyPet-${fullVersion}.jar"
     apiKey = providers.gradleProperty("POLYMART_TOKEN").orNull
         ?: System.getenv("POLYMART_TOKEN")
         ?: ""
@@ -244,7 +279,7 @@ hangarPublish {
         val hangarVersion = providers.gradleProperty("HANGAR_VERSION").orNull
             ?: project.version.toString()
         val hangarFile = providers.gradleProperty("HANGAR_FILE").orNull
-            ?: "build/libs/MyPet-${project.version}.jar"
+            ?: "build/libs/MyPet-${fullVersion}.jar"
         val hangarChangelog = providers.gradleProperty("HANGAR_CHANGELOG").orNull
             ?: "View the full changelog on Modrinth: https://modrinth.com/plugin/mypet/version/$hangarVersion"
 

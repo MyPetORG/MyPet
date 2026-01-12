@@ -126,7 +126,7 @@ public class EntityMyEnderman extends EntityMyPet {
 	public void updateVisuals() {
 		Optional<BlockState> block;
 		if (getMyPet().getBlock() != null) {
-			BlockState data = CraftMagicNumbers.getBlock(getMyPet().getBlock().getData());
+			BlockState data = CraftMagicNumbers.getBlock(getMyPet().getBlock().getType()).defaultBlockState();
 			block = Optional.ofNullable(data);
 		} else {
 			block = Optional.empty();

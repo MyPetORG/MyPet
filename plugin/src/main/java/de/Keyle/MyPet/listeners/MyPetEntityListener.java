@@ -31,7 +31,7 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
 import de.Keyle.MyPet.api.event.MyPetOnHitSkillEvent;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
-import de.Keyle.MyPet.api.player.DonateCheck;
+import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
@@ -65,9 +65,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 public class MyPetEntityListener implements Listener {
 
@@ -278,13 +275,13 @@ public class MyPetEntityListener implements Listener {
                         damager.sendMessage("   " + Translation.getString("Name.Exp", damager) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
                         infoShown = true;
                     }
-                    if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
+                    if (myPet.getOwner().getContributorRank() != ContributorCheck.ContributorRank.None) {
                         infoShown = true;
-                        String donationMessage = "" + ChatColor.GOLD;
-                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
-                        donationMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getDonationRank().name(), damager) + " ";
-                        donationMessage += myPet.getOwner().getDonationRank().getDefaultIcon();
-                        damager.sendMessage("   " + donationMessage);
+                        String contributionMessage = "" + ChatColor.GOLD;
+                        contributionMessage += myPet.getOwner().getContributorRank().getDefaultIcon();
+                        contributionMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getContributorRank().name(), damager) + " ";
+                        contributionMessage += myPet.getOwner().getContributorRank().getDefaultIcon();
+                        damager.sendMessage("   " + contributionMessage);
                     }
 
                     if (!infoShown) {
@@ -643,35 +640,7 @@ public class MyPetEntityListener implements Listener {
                 }
             }
 
-            String deathMessageKey = MyPetApi.getPlatformHelper().getLastDamageSource(event.getEntity());
-            if (deathMessageKey == null) {
-                myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.DeathMessage", myPet.getOwner()), myPet.getPetName(), killer));
-                return;
-            }
-
-            RawMessage message = new RawMessage();
-
-            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-                message.setTranslate(
-                  deathMessageKey,
-                  Arrays.asList(
-                    new RawMessage(myPet.getPetName())
-                      .setColor(MessageColor.AQUA),
-                    new RawMessage(killer)
-                      .clearImplicitStyling()
-                  )
-                );
-            } else {
-                message.setTranslate(
-                  deathMessageKey,
-                  Collections.singletonList(
-                    new RawMessage(myPet.getPetName())
-                      .setColor(MessageColor.AQUA)
-                  )
-                );
-            }
-
-            message.tellRawTo(myPet.getOwner().getPlayer());
+            myPet.getOwner().sendMessage(Util.formatText(Translation.getString("Message.DeathMessage", myPet.getOwner()), myPet.getPetName(), killer));
         }
     }
 }

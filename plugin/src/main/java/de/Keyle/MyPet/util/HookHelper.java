@@ -162,4 +162,69 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
         EconomyHook economyHook = getEconomy();
         return economyHook != null && economyHook.checkEconomy();
     }
+
+    // Beacon region checks
+
+    @Override
+    public boolean isBeaconAllowed(Location location) {
+        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        for (BeaconHook hook : beaconHooks) {
+            if (!hook.isBeaconAllowed(location)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isBeaconShareAllowed(Location location) {
+        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        for (BeaconHook hook : beaconHooks) {
+            if (!hook.isBeaconShareAllowed(location)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isBeaconSelfAllowed(Location location) {
+        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        for (BeaconHook hook : beaconHooks) {
+            if (!hook.isBeaconSelfAllowed(location)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public double getBeaconRangeMultiplier(Location location) {
+        double multiplier = 1.0;
+        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        for (BeaconHook hook : beaconHooks) {
+            multiplier *= hook.getBeaconRangeMultiplier(location);
+        }
+        return multiplier;
+    }
+
+    @Override
+    public double getBeaconDurationMultiplier(Location location) {
+        double multiplier = 1.0;
+        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        for (BeaconHook hook : beaconHooks) {
+            multiplier *= hook.getBeaconDurationMultiplier(location);
+        }
+        return multiplier;
+    }
+
+    @Override
+    public int getBeaconAmplifierModifier(Location location) {
+        int modifier = 0;
+        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        for (BeaconHook hook : beaconHooks) {
+            modifier += hook.getBeaconAmplifierModifier(location);
+        }
+        return modifier;
+    }
 }
