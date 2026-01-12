@@ -495,11 +495,25 @@ public class BeaconImpl implements Beacon {
         if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && !selectedBuffs.isEmpty() && --beaconTimer <= 0) {
             beaconTimer = 2;
 
+            // Safety check - pet could despawn between status check and location retrieval
+            if (!this.myPet.getLocation().isPresent()) {
+                return;
+            }
+            Location myPetLocation = this.myPet.getLocation().get();
+
+            // Check if beacon is allowed at pet's location
+            if (!MyPetApi.getHookHelper().isBeaconAllowed(myPetLocation)) {
+                return;
+            }
+
             double range = this.range.getValue().doubleValue();
 
             if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_BEACON_RANGE) {
                 range *= (Math.log10(myPet.getSaturation()) / 2);
             }
+
+            // Apply region range multiplier
+            range *= MyPetApi.getHookHelper().getBeaconRangeMultiplier(myPetLocation);
 
             if (range < 0.7) {
                 return;
@@ -514,22 +528,26 @@ public class BeaconImpl implements Beacon {
             }
 
             range = range * range;
-            myPet.getLocation().get().getWorld().spawnParticle(Particle.SPELL_WITCH, myPet.getLocation().get().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
+            myPetLocation.getWorld().spawnParticle(Particle.SPELL_WITCH, myPetLocation.clone().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
 
             List<Player> members = null;
             if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && receiver == BuffReceiver.Party) {
                 members = MyPetApi.getHookHelper().getPartyMembers(getMyPet().getOwner().getPlayer());
             }
-            int duration = this.duration.getValue() * 20;
+
+            // Apply region duration multiplier
+            int duration = (int) (this.duration.getValue() * 20 * MyPetApi.getHookHelper().getBeaconDurationMultiplier(myPetLocation));
+
+            // Get region amplifier modifier
+            int amplifierMod = MyPetApi.getHookHelper().getBeaconAmplifierModifier(myPetLocation);
 
             List<PotionEffect> potionEffects = new ArrayList<>();
             for (Buff buff : selectedBuffs) {
-                int amplification = getBuffLevel(buff) - 1;
+                int amplification = Math.max(0, getBuffLevel(buff) - 1 + amplifierMod);
                 PotionEffect effect = new PotionEffect(PotionEffectType.getById(buff.getId()), duration, amplification, true, true);
                 potionEffects.add(effect);
             }
 
-            Location myPetLocation = this.myPet.getLocation().get();
             targetLoop:
             for (Player player : myPetLocation.getWorld().getPlayers()) {
                 if (MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), myPetLocation) > range) {
@@ -538,6 +556,21 @@ public class BeaconImpl implements Beacon {
                     continue;
                 } else if (MyPetApi.getHookHelper().isVanished(player)) {
                     continue;
+                }
+
+                boolean isOwner = myPet.getOwner().getPlayer().equals(player);
+
+                // Check self-deny for owner
+                if (isOwner && !MyPetApi.getHookHelper().isBeaconSelfAllowed(player.getLocation())) {
+                    continue;
+                }
+
+                // Check share-deny for non-owners (both pet location and target location)
+                if (!isOwner) {
+                    if (!MyPetApi.getHookHelper().isBeaconShareAllowed(myPetLocation) ||
+                        !MyPetApi.getHookHelper().isBeaconShareAllowed(player.getLocation())) {
+                        continue;
+                    }
                 }
 
                 switch (receiver) {

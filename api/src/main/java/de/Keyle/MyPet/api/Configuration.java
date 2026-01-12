@@ -189,6 +189,7 @@ public class Configuration {
                 public static int HUNGER_DECREASE_TIME = 100;
                 public static boolean PARTY_SUPPORT = true;
                 public static boolean DISABLE_HEAD_TEXTURE = false;
+                public static boolean ZONE_MESSAGES = true;
             }
 
             public static class Backpack {
