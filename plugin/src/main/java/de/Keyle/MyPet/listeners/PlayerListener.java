@@ -591,46 +591,46 @@ public class PlayerListener implements Listener {
 
             if (!current.hasModifications() && previous.hasModifications()) {
                 // Left all modifications
-                player.sendMessage(Translation.getString("Message.Beacon.Zone.Leave", player));
+                player.sendMessage(Translation.getString("Message.Skill.Beacon.Zone.Leave", player));
             } else if (current.hasModifications()) {
                 // Entered or changed zone - build multi-line message
                 List<String> lines = new ArrayList<>();
-                lines.add(Translation.getString("Message.Beacon.Zone.Enter", player));
+                lines.add(Translation.getString("Message.Skill.Beacon.Zone.Enter", player));
 
                 if (current.deny) {
-                    lines.add(Translation.getString("Message.Beacon.Zone.Deny", player));
+                    lines.add(Translation.getString("Message.Skill.Beacon.Zone.Deny", player));
                 }
                 if (current.selfDeny) {
-                    lines.add(Translation.getString("Message.Beacon.Zone.SelfDeny", player));
+                    lines.add(Translation.getString("Message.Skill.Beacon.Zone.SelfDeny", player));
                 }
                 if (current.shareDeny) {
-                    lines.add(Translation.getString("Message.Beacon.Zone.ShareDeny", player));
+                    lines.add(Translation.getString("Message.Skill.Beacon.Zone.ShareDeny", player));
                 }
                 if (current.rangeMult < 1.0) {
                     lines.add(Util.formatText(
-                        Translation.getString("Message.Beacon.Zone.RangeReduced", player),
+                        Translation.getString("Message.Skill.Beacon.Zone.RangeReduced", player),
                         (int)(current.rangeMult * 100)));
                 } else if (current.rangeMult > 1.0) {
                     lines.add(Util.formatText(
-                        Translation.getString("Message.Beacon.Zone.RangeIncreased", player),
+                        Translation.getString("Message.Skill.Beacon.Zone.RangeIncreased", player),
                         (int)(current.rangeMult * 100)));
                 }
                 if (current.durationMult < 1.0) {
                     lines.add(Util.formatText(
-                        Translation.getString("Message.Beacon.Zone.DurationReduced", player),
+                        Translation.getString("Message.Skill.Beacon.Zone.DurationReduced", player),
                         (int)(current.durationMult * 100)));
                 } else if (current.durationMult > 1.0) {
                     lines.add(Util.formatText(
-                        Translation.getString("Message.Beacon.Zone.DurationIncreased", player),
+                        Translation.getString("Message.Skill.Beacon.Zone.DurationIncreased", player),
                         (int)(current.durationMult * 100)));
                 }
                 if (current.amplifierMod < 0) {
                     lines.add(Util.formatText(
-                        Translation.getString("Message.Beacon.Zone.AmplifierReduced", player),
+                        Translation.getString("Message.Skill.Beacon.Zone.AmplifierReduced", player),
                         Math.abs(current.amplifierMod)));
                 } else if (current.amplifierMod > 0) {
                     lines.add(Util.formatText(
-                        Translation.getString("Message.Beacon.Zone.AmplifierIncreased", player),
+                        Translation.getString("Message.Skill.Beacon.Zone.AmplifierIncreased", player),
                         current.amplifierMod));
                 }
 

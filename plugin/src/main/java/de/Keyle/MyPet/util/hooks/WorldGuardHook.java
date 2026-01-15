@@ -75,9 +75,9 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     public static final DoubleFlag EXP_MULT_FLAG = new DoubleFlag("mypet-exp-mult");
 
     // Beacon flags
-    public static final StateFlag BEACON_DENY_FLAG = new StateFlag("mypet-beacon-deny", false);
-    public static final StateFlag BEACON_SHARE_DENY_FLAG = new StateFlag("mypet-beacon-share-deny", false);
-    public static final StateFlag BEACON_SELF_DENY_FLAG = new StateFlag("mypet-beacon-self-deny", false);
+    public static final StateFlag BEACON_FLAG = new StateFlag("mypet-beacon", true);
+    public static final StateFlag BEACON_SHARE_FLAG = new StateFlag("mypet-beacon-share", true);
+    public static final StateFlag BEACON_SELF_FLAG = new StateFlag("mypet-beacon-self", true);
     public static final DoubleFlag BEACON_RANGE_MULT_FLAG = new DoubleFlag("mypet-beacon-range-mult");
     public static final DoubleFlag BEACON_DURATION_MULT_FLAG = new DoubleFlag("mypet-beacon-duration-mult");
     public static final IntegerFlag BEACON_AMPLIFIER_ADD_FLAG = new IntegerFlag("mypet-beacon-amplifier-add");
@@ -140,9 +140,9 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                         registerFlag(flagRegistry, EXP_MULT_FLAG);
 
                         // Register beacon flags
-                        registerFlag(flagRegistry, BEACON_DENY_FLAG);
-                        registerFlag(flagRegistry, BEACON_SHARE_DENY_FLAG);
-                        registerFlag(flagRegistry, BEACON_SELF_DENY_FLAG);
+                        registerFlag(flagRegistry, BEACON_FLAG);
+                        registerFlag(flagRegistry, BEACON_SHARE_FLAG);
+                        registerFlag(flagRegistry, BEACON_SELF_FLAG);
                         registerFlag(flagRegistry, BEACON_RANGE_MULT_FLAG);
                         registerFlag(flagRegistry, BEACON_DURATION_MULT_FLAG);
                         registerFlag(flagRegistry, BEACON_AMPLIFIER_ADD_FLAG);
@@ -304,7 +304,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     @Override
     public boolean isBeaconAllowed(Location location) {
         if (customFlags) {
-            StateFlag.State s = getState(location, null, BEACON_DENY_FLAG);
+            StateFlag.State s = getState(location, null, BEACON_FLAG);
             return s == null || s == StateFlag.State.ALLOW;
         }
         return true;
@@ -313,7 +313,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     @Override
     public boolean isBeaconShareAllowed(Location location) {
         if (customFlags) {
-            StateFlag.State s = getState(location, null, BEACON_SHARE_DENY_FLAG);
+            StateFlag.State s = getState(location, null, BEACON_SHARE_FLAG);
             return s == null || s == StateFlag.State.ALLOW;
         }
         return true;
@@ -322,7 +322,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     @Override
     public boolean isBeaconSelfAllowed(Location location) {
         if (customFlags) {
-            StateFlag.State s = getState(location, null, BEACON_SELF_DENY_FLAG);
+            StateFlag.State s = getState(location, null, BEACON_SELF_FLAG);
             return s == null || s == StateFlag.State.ALLOW;
         }
         return true;
