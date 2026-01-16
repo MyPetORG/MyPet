@@ -63,7 +63,7 @@ public interface MyPetMinecraftEntity {
 
     boolean hasTarget();
 
-    boolean hasRider();
+    boolean hasMyPetRider();
 
     void showPotionParticles(Color color);
 

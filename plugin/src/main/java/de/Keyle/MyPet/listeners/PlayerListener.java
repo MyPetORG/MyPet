@@ -140,7 +140,7 @@ public class PlayerListener implements Listener {
                         }
                     }
                     if (myPet.getSkills().isActive(Ride.class)) {
-                        if (myPet.getEntity().get().getHandle().hasRider()) {
+                        if (myPet.getEntity().get().getHandle().hasMyPetRider()) {
                             event.getPlayer().sendMessage(Util.formatTranslation("Message.Skill.Control.Ride", event.getPlayer(), myPet.getPetName()));
                             return;
                         }
