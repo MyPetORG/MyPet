@@ -194,7 +194,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 	}
 
 	@Override
-	public boolean hasRider() {
+	public boolean hasMyPetRider() {
 		return isVehicle();
 	}
 
@@ -1130,7 +1130,7 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 					interactCooldown--;
 				}
 
-				if (!hasRider()) {
+				if (!hasMyPetRider()) {
 					petTargetSelector.tick(); // target selector
 					petPathfinderSelector.tick(); // pathfinder selector
 					petNavigation.tick(); // navigation

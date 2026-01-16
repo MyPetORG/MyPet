@@ -425,7 +425,7 @@ public class MyPetEntityListener implements Listener {
             }
             
             if (event.getCause() == DamageCause.SUFFOCATION) {
-                if (bukkitEntity.getHandle().hasRider()) {
+                if (bukkitEntity.getHandle().hasMyPetRider()) {
                     event.setCancelled(true);
                     return;
                 }

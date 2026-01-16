@@ -230,7 +230,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	}
 
 	@Override
-	public boolean hasRider() {
+	public boolean hasMyPetRider() {
 		return isVehicle();
 	}
 
@@ -416,6 +416,15 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 						setTarget(null);
 					}
 					return false;
+				}
+			}
+			// Set kill credit to owner BEFORE damage so loot tables see it
+			if (Configuration.Misc.PET_KILLS_GIVE_PLAYER_REWARDS) {
+				if (entity instanceof LivingEntity && getOwner() != null) {
+					Player owner = getOwner().getPlayer();
+					if (owner != null && owner.isOnline()) {
+						((LivingEntity) entity).lastHurtByPlayer = ((CraftPlayer) owner).getHandle();
+					}
 				}
 			}
 			damageEntity = entity.hurt(this.damageSources().mobAttack(this), (float) damage);
@@ -1169,7 +1178,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 					interactCooldown--;
 				}
 
-				if (!hasRider()) {
+				if (!hasMyPetRider()) {
 					petTargetSelector.tick(); // target selector
 					petPathfinderSelector.tick(); // pathfinder selector
 					petNavigation.tick(); // navigation

@@ -165,13 +165,13 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     public float getHeadHeight() {
         float height = super.getHeadHeight();
-        if (hasRider()) {
+        if (hasMyPetRider()) {
             height += 1;
         }
         return height;
     }
 
-    public boolean hasRider() {
+    public boolean hasMyPetRider() {
         return isVehicle();
     }
 
@@ -1021,7 +1021,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     return;
                 }
 
-                if (!hasRider()) {
+                if (!hasMyPetRider()) {
                     petTargetSelector.tick(); // target selector
                     petPathfinderSelector.tick(); // pathfinder selector
                     petNavigation.tick(); // navigation

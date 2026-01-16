@@ -230,7 +230,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 	}
 
 	@Override
-	public boolean hasRider() {
+	public boolean hasMyPetRider() {
 		return isVehicle();
 	}
 
@@ -1169,7 +1169,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 					interactCooldown--;
 				}
 
-				if (!hasRider()) {
+				if (!hasMyPetRider()) {
 					petTargetSelector.tick(); // target selector
 					petPathfinderSelector.tick(); // pathfinder selector
 					petNavigation.tick(); // navigation
