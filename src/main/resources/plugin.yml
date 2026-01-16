@@ -5,14 +5,46 @@ api-version: '1.13'
 author: Keyle
 website: https://mypet.plugin.de/
 softdepend:
+  - Ancient
+  - BattleArena
+  - BossShopPro
+  - Citizens
+  - CombatLogX
+  - FabledSkyBlock
+  - Factions
+  - GangsPlus
   - GriefPrevention
   - GriefPreventionPlus
-  - Citizens
+  - Guilds
+  - Heroes
+  - Kingdoms
+  - Lands
+  - MagicSpells
+  - mcMMO
+  - Minigames
+  - MiniaturePets
+  - MobArena
+  - MobStacker
   - Multiverse-Core
   - My_Worlds
   - MythicMobs
+  - NoCheatPlus
   - PlaceholderAPI
+  - PlotSquared
+  - PreciousStones
+  - PremiumVanish
   - ProtocolLib
+  - pvparena
+  - PvPDiffTimer
+  - PvPManager
+  - RedProtect
+  - Residence
+  - SimpleClans
+  - SkillAPI
+  - StackMob
+  - SuperVanish
+  - SurvivalGames
+  - Towny
   - Vault
   - WGCustomFlags
   - WorldGuard
