@@ -404,25 +404,20 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             Entity ent = event.getEntity();
             if (ent instanceof MyPetBukkitEntity) {
                 Block block = event.getBlock();
-                switch (block.getType().name()) {
-                    case "WOOD_PLATE":
-                    case "STONE_PLATE":
-                    case "IRON_PLATE":
-                    case "GOLD_PLATE":
-                    case "ACACIA_PRESSURE_PLATE":
-                    case "STONE_PRESSURE_PLATE":
-                    case "BIRCH_PRESSURE_PLATE":
-                    case "DARK_OAK_PRESSURE_PLATE":
-                    case "HEAVY_WEIGHTED_PRESSURE_PLATE":
-                    case "JUNGLE_PRESSURE_PLATE":
-                    case "LIGHT_WEIGHTED_PRESSURE_PLATE":
-                    case "OAK_PRESSURE_PLATE":
-                    case "SPRUCE_PRESSURE_PLATE":
-                        Player p = ((MyPetBukkitEntity) ent).getOwner().getPlayer();
-                        StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
-                        if (s == null || s == StateFlag.State.DENY) {
-                            event.setCancelled(true);
-                        }
+                String blockTypeName = block.getType().name();
+
+                // Check all pressure plate variants (modern + legacy names)
+                if (blockTypeName.contains("PRESSURE_PLATE") ||
+                    blockTypeName.equals("WOOD_PLATE") ||
+                    blockTypeName.equals("STONE_PLATE") ||
+                    blockTypeName.equals("IRON_PLATE") ||
+                    blockTypeName.equals("GOLD_PLATE")) {
+
+                    Player p = ((MyPetBukkitEntity) ent).getOwner().getPlayer();
+                    StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
+                    if (s == null || s == StateFlag.State.DENY) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }
