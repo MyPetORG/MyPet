@@ -33,6 +33,7 @@ public class Configuration {
         public static boolean ALLOW_RANGED_LEASHING = true;
         public static boolean OWNER_CAN_ATTACK_PET = false;
         public static boolean DISABLE_PET_VS_PLAYER = false;
+        public static boolean PET_KILLS_GIVE_PLAYER_REWARDS = true;
         public static boolean RETAIN_EQUIPMENT_ON_TAME = true;
         public static boolean INVISIBLE_LIKE_OWNER = true;
         public static boolean THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = true;
