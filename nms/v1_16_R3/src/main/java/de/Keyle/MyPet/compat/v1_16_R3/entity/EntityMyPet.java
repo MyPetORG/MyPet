@@ -381,6 +381,15 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 					return false;
 				}
 			}
+			// Set kill credit to owner BEFORE damage so loot tables see it
+			if (Configuration.Misc.PET_KILLS_GIVE_PLAYER_REWARDS) {
+				if (entity instanceof EntityLiving && getOwner() != null) {
+					Player owner = getOwner().getPlayer();
+					if (owner != null && owner.isOnline()) {
+						((EntityLiving) entity).killer = ((CraftPlayer) owner).getHandle();
+					}
+				}
+			}
 			damageEntity = entity.damageEntity(DamageSource.mobAttack(this), (float) damage);
 		} catch (Exception e) {
 			e.printStackTrace();

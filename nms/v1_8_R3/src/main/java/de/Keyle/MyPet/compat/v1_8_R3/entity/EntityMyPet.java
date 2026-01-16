@@ -52,6 +52,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
@@ -155,13 +156,13 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
 
     public float getHeadHeight() {
         float height = super.getHeadHeight();
-        if (hasRider()) {
+        if (hasMyPetRider()) {
             height += 1;
         }
         return height;
     }
 
-    public boolean hasRider() {
+    public boolean hasMyPetRider() {
         return passenger != null && getOwner().equals(passenger);
     }
 
@@ -350,6 +351,15 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                         setGoalTarget(null);
                     }
                     return false;
+                }
+            }
+            // Set kill credit to owner BEFORE damage so loot tables see it
+            if (Configuration.Misc.PET_KILLS_GIVE_PLAYER_REWARDS) {
+                if (entity instanceof EntityLiving && getOwner() != null) {
+                    Player owner = getOwner().getPlayer();
+                    if (owner != null && owner.isOnline()) {
+                        ((EntityLiving) entity).killer = ((CraftPlayer) owner).getHandle();
+                    }
                 }
             }
             damageEntity = entity.damageEntity(DamageSource.mobAttack(this), (float) damage);
@@ -946,7 +956,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
                     return;
                 }
 
-                if (!hasRider()) {
+                if (!hasMyPetRider()) {
                     petTargetSelector.tick(); // target selector
                     petPathfinderSelector.tick(); // pathfinder selector
                     petNavigation.tick(); // navigation

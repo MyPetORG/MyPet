@@ -412,6 +412,15 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 					return false;
 				}
 			}
+			// Set kill credit to owner BEFORE damage so loot tables see it
+			if (Configuration.Misc.PET_KILLS_GIVE_PLAYER_REWARDS) {
+				if (entity instanceof LivingEntity && getOwner() != null) {
+					Player owner = getOwner().getPlayer();
+					if (owner != null && owner.isOnline()) {
+						((LivingEntity) entity).lastHurtByPlayer = ((CraftPlayer) owner).getHandle();
+					}
+				}
+			}
 			damageEntity = entity.hurt(DamageSource.mobAttack(this), (float) damage);
 		} catch (Exception e) {
 			e.printStackTrace();
