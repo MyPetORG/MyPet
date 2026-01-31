@@ -41,8 +41,12 @@ public class ExperienceCalculatorManager implements ServiceContainer {
 
     @Override
     public boolean onEnable() {
-        cache = MyPetApi.getServiceManager().getService(ExperienceCache.class).get();
-        return true;
+        return MyPetApi.getServiceManager().getService(ExperienceCache.class)
+                .map(experienceCache -> {
+                    cache = experienceCache;
+                    return true;
+                })
+                .orElse(false);
     }
 
     public void switchCalculator(@NonNull String calculator) {
