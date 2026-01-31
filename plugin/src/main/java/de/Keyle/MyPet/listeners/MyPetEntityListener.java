@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
@@ -302,7 +303,13 @@ public class MyPetEntityListener implements Listener {
                     if (myPet == projectile.getShooter().getMyPet()) {
                         event.setCancelled(true);
                     }
-                    if (!MyPetApi.getHookHelper().canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
+                    // Allow damage if both pets are dueling each other (bypasses PvP restrictions)
+                    // Must verify: shooter is in duel mode, target is in duel mode, AND shooter's target is the hit pet
+                    boolean inDuel = projectile.getShooter().getTargetPriority() == TargetPriority.Duel
+                            && myPet.getEntity().isPresent()
+                            && myPet.getEntity().get().getHandle().getTargetPriority() == TargetPriority.Duel
+                            && projectile.getShooter().getMyPetTarget() == craftMyPet;
+                    if (!inDuel && !MyPetApi.getHookHelper().canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
                         event.setCancelled(true);
                     }
                 }
