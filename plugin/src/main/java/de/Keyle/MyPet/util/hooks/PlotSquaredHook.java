@@ -30,42 +30,77 @@ import org.bukkit.entity.*;
 @PluginHookName("PlotSquared")
 public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, MountInsideHook {
 
-    protected boolean isV4 = false;
+    // Version constants: 0=none, 3=V3, 4=V4, 6=V6+
+    protected int version = 0;
 
     @Override
     public String getActivationMessage() {
-        return !isV4 ? " (Legacy)" : "";
+        switch (version) {
+            case 6:
+                return " (V6+)";
+            case 4:
+                return " (V4)";
+            case 3:
+                return " (V3 Legacy)";
+            default:
+                return "";
+        }
     }
 
     @Override
     public boolean onEnable() {
+        // Check V6+ first (v5 shares same API as v6)
+        try {
+            Class.forName("com.plotsquared.core.plot.Plot");
+            version = 6;
+            return true;
+        } catch (ClassNotFoundException ignored) {
+        }
+
+        // Check V4
         try {
             Class.forName("com.github.intellectualsites.plotsquared.plot.object.Plot");
-            isV4 = true;
-        } catch (ClassNotFoundException e) {
-            try {
-                Class.forName("com.intellectualcrafters.plot.flag.BooleanFlag");
-                isV4 = false;
-            } catch (ClassNotFoundException e2) {
-                return false;
-            }
+            version = 4;
+            return true;
+        } catch (ClassNotFoundException ignored) {
         }
-        return true;
+
+        // Check V3 (legacy)
+        try {
+            Class.forName("com.intellectualcrafters.plot.flag.BooleanFlag");
+            version = 3;
+            return true;
+        } catch (ClassNotFoundException ignored) {
+        }
+
+        return false;
     }
 
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
-        if (isV4) {
-            return V4.canHurt(attacker, defender);
-        } else {
-            return V3.canHurt(attacker, defender);
+        switch (version) {
+            case 6:
+                return V6.canHurt(attacker, defender);
+            case 4:
+                return V4.canHurt(attacker, defender);
+            case 3:
+                return V3.canHurt(attacker, defender);
+            default:
+                return true;
         }
     }
 
     @Override
     public boolean playerCanMount(MyPetPlayer player, Entity pet) {
-        //TODO implement
-        return true;
+        switch (version) {
+            case 6:
+                return V6.playerCanMount(player, pet);
+            case 4:
+            case 3:
+            default:
+                // V3 and V4 don't have this check implemented
+                return true;
+        }
     }
 
     private static class V3 {
@@ -294,6 +329,183 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
                     }
                     return com.github.intellectualsites.plotsquared.plot.util.Permissions.hasPermission(plotPlayer, "plots.admin.pve." + stub);
                 }
+            } catch (Throwable ignored) {
+            }
+            return true;
+        }
+    }
+
+    /**
+     * V6 implementation uses reflection to avoid compile-time conflicts with V3's BukkitUtil
+     * (both use com.plotsquared.bukkit.util.BukkitUtil but with different methods)
+     */
+    private static class V6 {
+
+        private static Class<?> bukkitUtilClass;
+        private static java.lang.reflect.Method adaptLocationMethod;
+        private static java.lang.reflect.Method adaptPlayerMethod;
+
+        static {
+            try {
+                bukkitUtilClass = Class.forName("com.plotsquared.bukkit.util.BukkitUtil");
+                adaptLocationMethod = bukkitUtilClass.getMethod("adapt", org.bukkit.Location.class);
+                adaptPlayerMethod = bukkitUtilClass.getMethod("adapt", org.bukkit.entity.Player.class);
+            } catch (Exception ignored) {
+            }
+        }
+
+        public static boolean canHurt(Player attacker, Entity defender) {
+            try {
+                // Use reflection to call BukkitUtil.adapt() to avoid V3/V6 class conflict
+                Object dloc = adaptLocationMethod.invoke(null, attacker.getLocation());
+                Object vloc = adaptLocationMethod.invoke(null, defender.getLocation());
+
+                // Get PlotArea from locations
+                java.lang.reflect.Method getPlotAreaMethod = dloc.getClass().getMethod("getPlotArea");
+                java.lang.reflect.Method getXMethod = dloc.getClass().getMethod("getX");
+                java.lang.reflect.Method getZMethod = dloc.getClass().getMethod("getZ");
+
+                Object dArea = getPlotAreaMethod.invoke(dloc);
+                Object vArea;
+                if (dArea != null) {
+                    java.lang.reflect.Method containsMethod = dArea.getClass().getMethod("contains", int.class, int.class);
+                    boolean contains = (Boolean) containsMethod.invoke(dArea, getXMethod.invoke(vloc), getZMethod.invoke(vloc));
+                    vArea = contains ? dArea : getPlotAreaMethod.invoke(vloc);
+                } else {
+                    vArea = getPlotAreaMethod.invoke(vloc);
+                }
+
+                if (dArea == null && vArea == null) {
+                    return true;
+                }
+
+                // Get plots
+                Object dplot = null;
+                Object vplot = null;
+                if (dArea != null) {
+                    java.lang.reflect.Method getPlotMethod = dArea.getClass().getMethod("getPlot", dloc.getClass());
+                    dplot = getPlotMethod.invoke(dArea, dloc);
+                }
+                if (vArea != null) {
+                    java.lang.reflect.Method getPlotMethod = vArea.getClass().getMethod("getPlot", vloc.getClass());
+                    vplot = getPlotMethod.invoke(vArea, vloc);
+                }
+
+                Object plot;
+                String stub;
+                if (dplot == null && vplot == null) {
+                    if (dArea == null) {
+                        return true;
+                    }
+                    plot = null;
+                    stub = "road";
+                } else {
+                    // Prioritize plots for close to seamless pvp zones
+                    if (defender.getTicksLived() > attacker.getTicksLived()) {
+                        if (dplot == null || !(defender instanceof Player)) {
+                            plot = vplot == null ? dplot : vplot;
+                        } else {
+                            plot = dplot;
+                        }
+                    } else if (dplot == null || !(defender instanceof Player)) {
+                        plot = vplot == null ? dplot : vplot;
+                    } else if (vplot == null) {
+                        plot = dplot;
+                    } else {
+                        plot = vplot;
+                    }
+                    java.lang.reflect.Method hasOwnerMethod = plot.getClass().getMethod("hasOwner");
+                    stub = (Boolean) hasOwnerMethod.invoke(plot) ? "other" : "unowned";
+                }
+
+                // Get plot player via reflection
+                Object plotPlayer = adaptPlayerMethod.invoke(null, attacker);
+                java.lang.reflect.Method hasPermissionMethod = plotPlayer.getClass().getMethod("hasPermission", String.class);
+                java.lang.reflect.Method getUUIDMethod = plotPlayer.getClass().getMethod("getUUID");
+                java.util.UUID playerUUID = (java.util.UUID) getUUIDMethod.invoke(plotPlayer);
+
+                // Check flags and permissions
+                if (defender instanceof Hanging) {
+                    if (plot != null && (checkBooleanFlag(plot, "HangingBreakFlag") || isAddedToPlot(plot, playerUUID))) {
+                        return true;
+                    }
+                    return (Boolean) hasPermissionMethod.invoke(plotPlayer, "plots.admin.destroy." + stub);
+                } else if (defender.getEntityId() == 30) {
+                    if (plot != null && (checkBooleanFlag(plot, "MiscBreakFlag") || isAddedToPlot(plot, playerUUID))) {
+                        return true;
+                    }
+                    return (Boolean) hasPermissionMethod.invoke(plotPlayer, "plots.admin.destroy." + stub);
+                } else if (defender instanceof Monster || defender instanceof EnderDragon) {
+                    if (plot != null && (checkBooleanFlag(plot, "HostileAttackFlag") || checkBooleanFlag(plot, "PveFlag") || isAddedToPlot(plot, playerUUID))) {
+                        return true;
+                    }
+                    return (Boolean) hasPermissionMethod.invoke(plotPlayer, "plots.admin.pve." + stub);
+                } else if (defender instanceof Tameable) {
+                    if (plot != null && (checkBooleanFlag(plot, "TamedAttackFlag") || checkBooleanFlag(plot, "PveFlag") || isAddedToPlot(plot, playerUUID))) {
+                        return true;
+                    }
+                    return (Boolean) hasPermissionMethod.invoke(plotPlayer, "plots.admin.pve." + stub);
+                } else if (defender instanceof Player) {
+                    if (plot != null) {
+                        return checkBooleanFlag(plot, "PvpFlag") || (Boolean) hasPermissionMethod.invoke(plotPlayer, "plots.admin.pvp." + stub);
+                    }
+                    return (Boolean) hasPermissionMethod.invoke(plotPlayer, "plots.admin.pvp." + stub);
+                } else if (defender instanceof Creature) {
+                    if (plot != null && (checkBooleanFlag(plot, "AnimalAttackFlag") || checkBooleanFlag(plot, "PveFlag") || isAddedToPlot(plot, playerUUID))) {
+                        return true;
+                    }
+                    return (Boolean) hasPermissionMethod.invoke(plotPlayer, "plots.admin.pve." + stub);
+                } else {
+                    if (plot != null && (checkBooleanFlag(plot, "PveFlag") || isAddedToPlot(plot, playerUUID))) {
+                        return true;
+                    }
+                    return (Boolean) hasPermissionMethod.invoke(plotPlayer, "plots.admin.pve." + stub);
+                }
+            } catch (Throwable ignored) {
+            }
+            return true;
+        }
+
+        private static boolean checkBooleanFlag(Object plot, String flagName) {
+            try {
+                Class<?> flagClass = Class.forName("com.plotsquared.core.plot.flag.implementations." + flagName);
+                java.lang.reflect.Method getFlagMethod = plot.getClass().getMethod("getFlag", Class.class);
+                Object result = getFlagMethod.invoke(plot, flagClass);
+                return result instanceof Boolean && (Boolean) result;
+            } catch (Throwable ignored) {
+            }
+            return false;
+        }
+
+        private static boolean isAddedToPlot(Object plot, java.util.UUID uuid) {
+            try {
+                java.lang.reflect.Method isAddedMethod = plot.getClass().getMethod("isAdded", java.util.UUID.class);
+                return (Boolean) isAddedMethod.invoke(plot, uuid);
+            } catch (Throwable ignored) {
+            }
+            return false;
+        }
+
+        public static boolean playerCanMount(MyPetPlayer player, Entity pet) {
+            try {
+                Object loc = adaptLocationMethod.invoke(null, pet.getLocation());
+                java.lang.reflect.Method getPlotAreaMethod = loc.getClass().getMethod("getPlotArea");
+                Object area = getPlotAreaMethod.invoke(loc);
+
+                if (area == null) {
+                    return true;
+                }
+
+                java.lang.reflect.Method getPlotMethod = area.getClass().getMethod("getPlot", loc.getClass());
+                Object plot = getPlotMethod.invoke(area, loc);
+
+                if (plot == null) {
+                    // On road, not in a plot - allow mounting
+                    return true;
+                }
+
+                // Check if player is added to the plot (owner, member, or trusted)
+                return isAddedToPlot(plot, player.getPlayerUUID());
             } catch (Throwable ignored) {
             }
             return true;

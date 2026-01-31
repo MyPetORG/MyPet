@@ -1,3 +1,5 @@
+import org.gradle.api.attributes.java.TargetJvmVersion
+
 plugins {
     id("io.freefair.lombok")
     `maven-publish`
@@ -6,6 +8,15 @@ plugins {
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(8)
     options.encoding = "UTF-8"
+}
+
+// Disable JVM version checking for compileClasspath to allow PlotSquared V6 (Java 17+) dependencies
+configurations.compileClasspath {
+    attributes {
+        // Request Java 17 runtime to match PlotSquared V6 requirements
+        // The actual compilation still targets Java 8 via options.release.set(8)
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
+    }
 }
 
 dependencies {
@@ -32,6 +43,15 @@ dependencies {
     compileOnly("com.github.intellectualsites:plotsquared:4.453") {
         exclude(group = "org.bstats", module = "bstats-bukkit")
         exclude(group = "com.destroystokyo.paper", module = "paper-api")
+    }
+
+    // PlotSquared V6+ (note: 6.11.2 has broken Maven deployment, use 6.11.1)
+    // These require Java 17+ but we only use them for compile-time type checking
+    compileOnly("com.plotsquared:PlotSquared-Core:6.11.1") {
+        isTransitive = false
+    }
+    compileOnly("com.plotsquared:PlotSquared-Bukkit:6.11.1") {
+        isTransitive = false
     }
 
     compileOnly("io.lumine.xikage:MythicMobs:4.9.1")

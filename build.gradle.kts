@@ -54,6 +54,7 @@ subprojects {
         maven("https://maven.enginehub.org/repo/")
         maven("https://repo.md-5.net/content/repositories/public")
         maven("https://jitpack.io")
+        maven("https://mvn.intellectualsites.com/content/repositories/releases/") // PlotSquared V6+
     }
 
     tasks.named("processResources") { enabled = false }
