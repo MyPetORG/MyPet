@@ -451,9 +451,9 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         Location l = entity.getLocation();
                         l.add(0, ((LivingEntity) entity).getEyeHeight(true) + 1, 0);
                         if (checkTamable((LivingEntity) entity, p)) {
-                            p.spawnParticle(Particle.ITEM_CRACK, l, 20, 0, 0, 0, 0.02f, new ItemStack(Material.LIME_DYE));
+                            p.spawnParticle(Particle.ITEM, l, 20, 0, 0, 0, 0.02f, new ItemStack(Material.LIME_DYE));
                         } else {
-                            p.spawnParticle(Particle.ITEM_CRACK, l, 20, 0, 0, 0, 0.02f, new ItemStack(Material.RED_DYE));
+                            p.spawnParticle(Particle.ITEM, l, 20, 0, 0, 0, 0.02f, new ItemStack(Material.RED_DYE));
                         }
                         if (count++ > 20) {
                             break;

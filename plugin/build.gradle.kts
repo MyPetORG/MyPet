@@ -4,7 +4,7 @@ plugins {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(17)
+    options.release.set(21)
     options.encoding = "UTF-8"
     // Enable parameter name preservation for Cloud annotations
     // This allows Cloud to infer parameter names from method signatures
@@ -17,7 +17,7 @@ dependencies {
 
     compileOnly("com.zaxxer:HikariCP:3.4.2")
     compileOnly("net.kyori:adventure-nbt:4.17.0")
-    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("org.mozilla:rhino:1.7.15")
     compileOnly("com.mojang:brigadier:1.0.18")
 
@@ -44,7 +44,9 @@ dependencies {
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
 
-    compileOnly("com.mewin:WGCustomFlags:1.9")
+    compileOnly("com.mewin:WGCustomFlags:1.9") {
+        exclude(group = "org.bukkit", module = "bukkit")
+    }
     compileOnly("com.ancientshores:ancient:1.1.0")
     compileOnly("com.massivecraft:Factions:2.14.0")
     compileOnly("com.massivecraft:MassiveCore:2.14.0")

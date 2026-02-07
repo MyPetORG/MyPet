@@ -65,7 +65,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -697,11 +696,4 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onMount(EntityMountEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-        }
-
-        //TODO Implement hooks
-    }
 }

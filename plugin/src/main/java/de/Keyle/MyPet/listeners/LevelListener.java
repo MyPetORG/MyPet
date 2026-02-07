@@ -117,7 +117,7 @@ public class LevelListener implements Listener {
                     new SpiralAnimation(1, entity.getEyeHeight() + 0.5, new EntityLocationHolder(entity)) {
                         @Override
                         protected void playParticleEffect(Location location) {
-                            location.getWorld().spawnParticle(Particle.CRIT_MAGIC, location, 1, 0, 0, 0, 0);
+                            location.getWorld().spawnParticle(Particle.ENCHANTED_HIT, location, 1, 0, 0, 0, 0);
                         }
                     }.loop(2);
 
@@ -165,7 +165,7 @@ public class LevelListener implements Listener {
                     new FixedCircleAnimation(1, entity.getEyeHeight() + 0.5, 10, new EntityLocationHolder(entity)) {
                         @Override
                         protected void playParticleEffect(Location location) {
-                            location.getWorld().spawnParticle(Particle.BLOCK_CRACK, location, 1, 0, 0, 0, 0, Material.REDSTONE_BLOCK.createBlockData());
+                            location.getWorld().spawnParticle(Particle.BLOCK, location, 1, 0, 0, 0, 0, Material.REDSTONE_BLOCK.createBlockData());
                         }
                     }.once();
 
