@@ -23,6 +23,6 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 
-@DefaultInfo(food = {"resin_clump"})
+@DefaultInfo(food = {"resin_clump"}, leashFlags = {"HeartLinked"})
 public interface MyCreaking extends MyPet {
 }

@@ -228,6 +228,11 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         getServer().getPluginManager().registerEvents(levelupListener, this);
         WorldListener worldListener = new WorldListener();
         getServer().getPluginManager().registerEvents(worldListener, this);
+        // Register CreakingHeartListener for 1.21.4+ (when Creaking Heart was added)
+        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4") >= 0) {
+            CreakingHeartListener creakingHeartListener = new CreakingHeartListener();
+            getServer().getPluginManager().registerEvents(creakingHeartListener, this);
+        }
 
         // register commands
         getCommand("petname").setExecutor(new CommandName());
@@ -551,6 +556,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager.registerService(SkillManager.class);
         serviceManager.registerService(SkilltreeManager.class);
         serviceManager.registerService(ShopManager.class);
+        serviceManager.registerService(de.Keyle.MyPet.services.DefaultCreakingService.class);
     }
 
     private void registerHooks() {
@@ -639,6 +645,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         MyPetApi.getLeashFlagManager().registerLeashFlag(new WildFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new WorldFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new PermissionFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new HeartLinkedFlag());
     }
 
     public static void registerSkilltreeRequirements() {
