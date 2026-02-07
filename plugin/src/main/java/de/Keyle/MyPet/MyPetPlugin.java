@@ -51,6 +51,7 @@ import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
+import de.Keyle.MyPet.services.DefaultCreakingService;
 import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skilltree.requirements.NoSkilltreeRequirement;
@@ -140,6 +141,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         MyPetApi.getLeashFlagManager().registerLeashFlag(new WildFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new WorldFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new PermissionFlag());
+        MyPetApi.getLeashFlagManager().registerLeashFlag(new HeartLinkedFlag());
     }
 
     public static void registerSkilltreeRequirements() {
@@ -284,6 +286,11 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         getServer().getPluginManager().registerEvents(worldListener, this);
         RideInteractListener rideInteractListener = new RideInteractListener();
         getServer().getPluginManager().registerEvents(rideInteractListener, this);
+        // Register CreakingHeartListener for 1.21.4+ (when Creaking Heart was added)
+        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4") >= 0) {
+            CreakingHeartListener creakingHeartListener = new CreakingHeartListener();
+            getServer().getPluginManager().registerEvents(creakingHeartListener, this);
+        }
 
         // Initialize Cloud Command Framework
         initializeCloudCommands();
@@ -597,6 +604,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager.registerService(SkillManager.class);
         serviceManager.registerService(SkilltreeManager.class);
         serviceManager.registerService(ShopManager.class);
+        serviceManager.registerService(DefaultCreakingService.class);
     }
 
     private void registerHooks() {

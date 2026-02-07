@@ -36,6 +36,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
+import de.Keyle.MyPet.api.util.service.types.CreakingService;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
@@ -436,6 +437,10 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             entityLoop:
             for (Entity entity : entities) {
                 if (entity instanceof LivingEntity && !(entity instanceof Player) && !(entity instanceof MyPetBukkitEntity)) {
+                    // Skip Creakings here - they're handled separately with particles on their heart block
+                    if ("CREAKING".equals(entity.getType().name())) {
+                        continue;
+                    }
                     if (MyPetApi.getMyPetInfo().isLeashableEntityType(entity.getType())) {
                         for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
                             if (!hook.canLeash(p, entity)) {
@@ -461,6 +466,65 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                     }
                 }
             }
+
+            // Show particles above Creaking Heart blocks for heart-linked Creakings
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4") >= 0) {
+                // Search in a wider radius since Creakings can wander far from their heart
+                List<Entity> nearbyEntities = p.getNearbyEntities(32, 32, 32);
+                Set<Location> shownHeartLocations = new HashSet<>();
+                for (Entity entity : nearbyEntities) {
+                    if (!"CREAKING".equals(entity.getType().name())) {
+                        continue;
+                    }
+                    if (!(entity instanceof LivingEntity)) {
+                        continue;
+                    }
+
+                    Location homePos = getCreakingHome(entity);
+                    if (homePos == null || homePos.getWorld() == null) {
+                        continue; // Not a heart-linked Creaking (transient) or invalid location
+                    }
+
+                    // Only show particles for hearts within 16 blocks of the player (same world)
+                    Location blockLoc = homePos.getBlock().getLocation();
+                    if (!blockLoc.getWorld().equals(p.getWorld())) {
+                        continue; // Different world
+                    }
+                    if (blockLoc.distanceSquared(p.getLocation()) > 256) { // 16^2 = 256
+                        continue;
+                    }
+
+                    // Avoid showing duplicate particles for the same heart block
+                    if (shownHeartLocations.contains(blockLoc)) {
+                        continue;
+                    }
+                    shownHeartLocations.add(blockLoc);
+
+                    // Check if player can leash Creaking
+                    if (!Permissions.has(this, "MyPet.leash.Creaking")) {
+                        continue;
+                    }
+
+                    boolean canLeash = true;
+                    for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
+                        if (!hook.canLeash(p, entity)) {
+                            canLeash = false;
+                            break;
+                        }
+                    }
+                    if (!canLeash) {
+                        continue;
+                    }
+
+                    // Show particles above the Creaking Heart block (centered, 1 block above)
+                    Location particleLoc = blockLoc.clone().add(0.5, 1.5, 0.5);
+                    if (checkTamable((LivingEntity) entity, p)) {
+                        p.spawnParticle(Particle.ITEM, particleLoc, 20, 0, 0, 0, 0.02f, new ItemStack(Material.LIME_DYE));
+                    } else {
+                        p.spawnParticle(Particle.ITEM, particleLoc, 20, 0, 0, 0, 0.02f, new ItemStack(Material.RED_DYE));
+                    }
+                }
+            }
         }
     }
 
@@ -473,6 +537,16 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             }
         }
         return true;
+    }
+
+    /**
+     * Gets the home location of a Creaking entity using the version-specific CreakingService.
+     */
+    private static Location getCreakingHome(Entity entity) {
+        return MyPetApi.getServiceManager()
+                .getService(CreakingService.class)
+                .map(service -> service.getCreakingHome(entity))
+                .orElse(null);
     }
 
     @Override

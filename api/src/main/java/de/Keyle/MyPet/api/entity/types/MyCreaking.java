@@ -25,6 +25,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 
 @ShopInfo
-@DefaultInfo(food = {"resin_clump"})
+@DefaultInfo(food = {"resin_clump"}, leashFlags = {"HeartLinked"})
 public interface MyCreaking extends MyPet {
 }
