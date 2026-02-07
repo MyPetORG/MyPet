@@ -69,6 +69,16 @@ import org.bukkit.projectiles.ProjectileSource;
 
 public class MyPetEntityListener implements Listener {
 
+    // JUMP was renamed to JUMP_BOOST in newer API versions
+    private static final PotionEffectType JUMP_EFFECT;
+    static {
+        PotionEffectType jump = PotionEffectType.getByName("JUMP_BOOST");
+        if (jump == null) {
+            jump = PotionEffectType.getByName("JUMP");
+        }
+        JUMP_EFFECT = jump;
+    }
+
     boolean isSkillActive = false;
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -426,7 +436,7 @@ public class MyPetEntityListener implements Listener {
 
             MyPetBukkitEntity bukkitEntity = (MyPetBukkitEntity) event.getEntity();
 
-            if(event.getCause() == DamageCause.FALL && bukkitEntity.hasPotionEffect(PotionEffectType.JUMP)) {
+            if(event.getCause() == DamageCause.FALL && JUMP_EFFECT != null && bukkitEntity.hasPotionEffect(JUMP_EFFECT)) {
                 event.setCancelled(true);
                 return;
             }
