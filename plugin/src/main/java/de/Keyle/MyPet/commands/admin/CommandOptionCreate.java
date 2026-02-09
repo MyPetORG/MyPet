@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionCreator;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -511,6 +512,26 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 break;
             }
         }
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petadmin create";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public String getHelpDescription() {
+        return "Creates a pet for a player";
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 20;
     }
 
     public static void createInfo(MyPetType petType, String[] args, TagCompound compound) {

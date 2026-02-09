@@ -18,11 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.commands.admin;
+package de.Keyle.MyPet.commands.mypet;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
@@ -37,6 +39,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 
 import java.io.File;
@@ -57,10 +60,35 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
     }
 
     @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Reload";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/mypet reload";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return Permissions.has(player, "MyPet.admin", false);
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 12;
+    }
+
+    @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin reload " + ChatColor.RED + "<what to reload?>");
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/mypet reload " + ChatColor.RED + "<all|config|shops|skilltrees>");
             return false;
         }
         switch (args[0].toLowerCase()) {
@@ -79,7 +107,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
                 reloadShops(sender);
                 break;
             default:
-                sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin reload " + ChatColor.RED + "<what to reload?>");
+                sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/mypet reload " + ChatColor.RED + "<all|config|shops|skilltrees>");
         }
         return true;
     }
@@ -162,10 +190,9 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        if (strings.length > 2) {
+        if (strings.length != 2) {
             return Collections.emptyList();
-        } else {
-            return filterTabCompletionResults(COMMAND_OPTIONS, strings[1]);
         }
+        return filterTabCompletionResults(COMMAND_OPTIONS, strings[1]);
     }
 }

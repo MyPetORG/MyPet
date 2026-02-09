@@ -68,4 +68,24 @@ public class CommandStop implements CommandTabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         return Collections.emptyList();
     }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Stop";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petstop";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player);
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 80;
+    }
 }

@@ -91,4 +91,24 @@ public class CommandCall implements CommandTabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         return Collections.emptyList();
     }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Call";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petcall";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player);
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 60;
+    }
 }

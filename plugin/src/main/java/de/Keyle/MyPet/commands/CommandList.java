@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -119,5 +120,30 @@ public class CommandList implements CommandTabCompleter {
             return null;
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.List";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petlist";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getPlayerManager().isMyPetPlayer(player);
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 125;
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.PET;
     }
 }

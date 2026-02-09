@@ -102,4 +102,24 @@ public class CommandSendAway implements CommandTabCompleter {
         }
         return Collections.emptyList();
     }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.SendAway";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petsendaway";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player);
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 70;
+    }
 }

@@ -203,4 +203,25 @@ public class CommandRelease implements CommandTabCompleter {
         }
         return Collections.emptyList();
     }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Release";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petrelease";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                && Permissions.has(player, "MyPet.command.release");
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 100;
+    }
 }

@@ -240,7 +240,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         getCommand("petsendaway").setExecutor(new CommandSendAway());
         getCommand("petstop").setExecutor(new CommandStop());
         getCommand("petrelease").setExecutor(new CommandRelease());
-        getCommand("mypet").setExecutor(new CommandHelp());
+        getCommand("mypet").setExecutor(new CommandMyPet());
         getCommand("petinventory").setExecutor(new CommandInventory());
         getCommand("petpickup").setExecutor(new CommandPickup());
         getCommand("petbehavior").setExecutor(new CommandBehavior());

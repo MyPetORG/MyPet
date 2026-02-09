@@ -325,4 +325,26 @@ public class CommandTrade implements CommandTabCompleter {
             return ownerName;
         }
     }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Trade";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/pettrade";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                && (Permissions.has(player, "MyPet.command.trade.offer")
+                || Permissions.has(player, "MyPet.command.trade.receive"));
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 140;
+    }
 }

@@ -124,4 +124,25 @@ public class CommandRespawn implements CommandTabCompleter {
         }
         return Collections.emptyList();
     }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Respawn";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petrespawn";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                && Permissions.has(player, "MyPet.command.respawn");
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 110;
+    }
 }

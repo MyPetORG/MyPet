@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
@@ -235,5 +236,30 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
             }
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.ChooseSkilltree";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petchooseskilltree";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player);
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 160;
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.SKILLS;
     }
 }

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
@@ -109,5 +110,25 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
         } else {
             return filterTabCompletionResults(COMMAND_OPTIONS, strings[1]);
         }
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petadmin info";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public String getHelpDescription() {
+        return "Shows detailed pet info";
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 40;
     }
 }

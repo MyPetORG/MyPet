@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -176,5 +177,25 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petadmin switch";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public String getHelpDescription() {
+        return "Switches a player's active pet";
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 36;
     }
 }

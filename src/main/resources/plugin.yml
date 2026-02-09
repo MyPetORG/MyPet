@@ -49,8 +49,8 @@ softdepend:
   - WGCustomFlags
   - WorldGuard
 commands:
-  myPet:
-    description: Help for all pet commands.
+  mypet:
+    description: MyPet plugin information and help.
   petname:
     description: Changes the name of your pet
     usage: '/<command> <pet name>'

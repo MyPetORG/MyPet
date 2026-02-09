@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
@@ -76,5 +77,31 @@ public class CommandBeacon implements CommandTabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Beacon";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petbeacon";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                && MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(BeaconImpl.class);
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 200;
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.SKILLS;
     }
 }

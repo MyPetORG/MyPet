@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration.LevelSystem.Experience.Modifier;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.ChatColor;
@@ -76,5 +77,25 @@ public class CommandOptionExpRate implements CommandOptionTabCompleter {
             return filterTabCompletionResults(addSetRemoveList, strings[1]);
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petadmin exp-rate";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public String getHelpDescription() {
+        return "Sets the global experience rate";
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 28;
     }
 }

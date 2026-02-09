@@ -126,4 +126,25 @@ public class CommandStore implements CommandTabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         return Collections.emptyList();
     }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Store";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petstore";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                && Permissions.has(player, "MyPet.command.switch");
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 130;
+    }
 }

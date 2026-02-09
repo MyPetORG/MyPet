@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
@@ -36,35 +36,29 @@ import java.util.*;
 
 public class CommandAdmin implements CommandTabCompleter {
 
-    private static List<String> optionsList = new ArrayList<>();
-    public static final Map<String, CommandOption> COMMAND_OPTIONS = new HashMap<>();
+    private List<String> optionsList = new ArrayList<>();
+    private final Map<String, CommandOption> commandOptions = new HashMap<>();
 
-    public CommandAdmin() {
-        COMMAND_OPTIONS.clear();
+    {
+        commandOptions.put("name", new CommandOptionName());
+        commandOptions.put("exp", new CommandOptionExp());
+        commandOptions.put("exp-rate", new CommandOptionExpRate());
+        commandOptions.put("respawn", new CommandOptionRespawn());
+        commandOptions.put("skilltree", new CommandOptionSkilltree());
+        commandOptions.put("create", new CommandOptionCreate());
+        commandOptions.put("clone", new CommandOptionClone());
+        commandOptions.put("remove", new CommandOptionRemove());
+        commandOptions.put("cleanup", new CommandOptionCleanup());
+        commandOptions.put("switch", new CommandOptionSwitch());
+        commandOptions.put("info", new CommandOptionInfo());
+    }
 
-        COMMAND_OPTIONS.put("name", new CommandOptionName());
-        COMMAND_OPTIONS.put("exp", new CommandOptionExp());
-        COMMAND_OPTIONS.put("exp-rate", new CommandOptionExpRate());
-        COMMAND_OPTIONS.put("respawn", new CommandOptionRespawn());
-        COMMAND_OPTIONS.put("reload", new CommandOptionReload());
-        COMMAND_OPTIONS.put("skilltree", new CommandOptionSkilltree());
-        COMMAND_OPTIONS.put("create", new CommandOptionCreate());
-        COMMAND_OPTIONS.put("clone", new CommandOptionClone());
-        COMMAND_OPTIONS.put("remove", new CommandOptionRemove());
-        COMMAND_OPTIONS.put("cleanup", new CommandOptionCleanup());
-        COMMAND_OPTIONS.put("ticket", new CommandOptionTicket());
-        COMMAND_OPTIONS.put("switch", new CommandOptionSwitch());
-        COMMAND_OPTIONS.put("update", new CommandOptionUpdate());
-        COMMAND_OPTIONS.put("info", new CommandOptionInfo());
+    public Map<String, CommandOption> getCommandOptions() {
+        return commandOptions;
+    }
 
-        if (MyPetVersion.getBuild().equals("9999")) {
-            COMMAND_OPTIONS.put("test", new CommandOptionTest());
-        }
-
-        COMMAND_OPTIONS.put("build", (sender, parameter) -> {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet-" + MyPetVersion.getVersion() + "-b#" + MyPetVersion.getBuild());
-            return true;
-        });
+    public void registerOption(String name, CommandOption option) {
+        commandOptions.put(name, option);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -77,12 +71,12 @@ public class CommandAdmin implements CommandTabCompleter {
 
         if (args.length < 1) {
             sender.sendMessage(Translation.getString("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + String.join(ChatColor.RESET + ", " + ChatColor.DARK_AQUA, COMMAND_OPTIONS.keySet()));
+            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + String.join(ChatColor.RESET + ", " + ChatColor.DARK_AQUA, commandOptions.keySet()));
             return false;
         }
 
         String[] parameter = Arrays.copyOfRange(args, 1, args.length);
-        CommandOption option = COMMAND_OPTIONS.get(args[0].toLowerCase());
+        CommandOption option = commandOptions.get(args[0].toLowerCase());
 
         if (option != null) {
             return option.onCommandOption(sender, parameter);
@@ -97,13 +91,13 @@ public class CommandAdmin implements CommandTabCompleter {
             return Collections.emptyList();
         }
         if (strings.length == 1) {
-            if (optionsList.size() != COMMAND_OPTIONS.keySet().size()) {
-                optionsList = new ArrayList<>(COMMAND_OPTIONS.keySet());
+            if (optionsList.size() != commandOptions.keySet().size()) {
+                optionsList = new ArrayList<>(commandOptions.keySet());
                 Collections.sort(optionsList);
             }
             return filterTabCompletionResults(optionsList, strings[0]);
         } else if (strings.length >= 1) {
-            CommandOption co = COMMAND_OPTIONS.get(strings[0]);
+            CommandOption co = commandOptions.get(strings[0]);
             if (co != null) {
                 if (co instanceof CommandOptionTabCompleter) {
                     return ((CommandOptionTabCompleter) co).onTabComplete(commandSender, strings);
@@ -111,5 +105,15 @@ public class CommandAdmin implements CommandTabCompleter {
             }
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return Permissions.has(player, "MyPet.admin", false);
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
     }
 }

@@ -214,4 +214,24 @@ public class CommandShop implements CommandTabCompleter {
         }
         return null;
     }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Shop";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petshop";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return true;
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 30;
+    }
 }

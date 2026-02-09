@@ -32,6 +32,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
@@ -173,5 +174,31 @@ public class CommandInventory implements CommandTabCompleter {
         }
 
         return inactivePetCount;
+    }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Inventory";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petinventory";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                && MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(BackpackImpl.class);
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 170;
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.SKILLS;
     }
 }

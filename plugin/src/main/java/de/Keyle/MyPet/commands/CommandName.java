@@ -106,4 +106,25 @@ public class CommandName implements CommandTabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         return Collections.emptyList();
     }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Name";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petname";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                && Permissions.has(player, "MyPet.command.name");
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 90;
+    }
 }

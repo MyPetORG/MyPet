@@ -35,17 +35,15 @@ import java.util.*;
 
 public class CommandSettings implements CommandTabCompleter {
 
-    private static List<String> optionsList = new ArrayList<>();
-    private static Map<String, CommandOption> commandOptions = new HashMap<>();
+    private final List<String> optionsList;
+    private final Map<String, CommandOption> commandOptions = new HashMap<>();
 
-    public CommandSettings() {
+    {
         commandOptions.put("healthbar", new CommandSettingHealthbar());
         commandOptions.put("idle-volume", new CommandSettingsPetLivingSound());
 
-        if (optionsList.size() != commandOptions.keySet().size()) {
-            optionsList = new ArrayList<>(commandOptions.keySet());
-            Collections.sort(optionsList);
-        }
+        optionsList = new ArrayList<>(commandOptions.keySet());
+        Collections.sort(optionsList);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -79,5 +77,25 @@ public class CommandSettings implements CommandTabCompleter {
             }
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Options";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petoptions";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return true;
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 40;
     }
 }

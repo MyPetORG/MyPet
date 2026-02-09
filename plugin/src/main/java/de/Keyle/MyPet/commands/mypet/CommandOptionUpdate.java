@@ -18,15 +18,44 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.commands.admin;
+package de.Keyle.MyPet.commands.mypet;
 
 import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.util.Updater;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class CommandOptionUpdate implements CommandOption {
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Update";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/mypet update";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return Permissions.has(player, "MyPet.admin", false);
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 14;
+    }
+
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (Updater.isUpdateAvailable()) {
