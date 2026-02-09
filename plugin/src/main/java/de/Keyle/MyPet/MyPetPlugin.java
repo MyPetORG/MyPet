@@ -129,6 +129,11 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         MyPetApi.setPlugin(this);
         getDataFolder().mkdirs();
 
+        getLogger().setFilter(record -> {
+            record.setMessage(Colorizer.toAnsi(record.getMessage()));
+            return true;
+        });
+
         // load version from manifest
         MyPetVersion.reset();
 
