@@ -397,7 +397,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         // init Metrics
         try {
             Metrics metrics = new Metrics(this, 778);
-            if (metrics.isEnabled()) {
+            if (metrics.isEnabled() && !MyPetVersion.isLocalBuild()) {
                 metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
                 metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
                 metrics.addCustomChart(new Metrics.SimplePie("update_mode", () -> {
