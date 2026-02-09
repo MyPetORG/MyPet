@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
@@ -98,5 +99,25 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
             }
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petadmin skilltree";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public String getHelpDescription() {
+        return "Changes a pet's skilltree";
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 32;
     }
 }

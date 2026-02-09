@@ -20,8 +20,18 @@
 
 package de.Keyle.MyPet.api.commands;
 
-import org.bukkit.command.CommandSender;
+public enum CommandCategory {
+    PET("Pet"),
+    SKILLS("Skills"),
+    ADMIN("Admin");
 
-public interface CommandOption extends HelpProvider {
-    boolean onCommandOption(CommandSender sender, String[] parameter);
+    private final String displayName;
+
+    CommandCategory(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

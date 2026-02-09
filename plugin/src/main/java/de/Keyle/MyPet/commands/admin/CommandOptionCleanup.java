@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import org.bukkit.ChatColor;
@@ -79,5 +80,25 @@ public class CommandOptionCleanup implements CommandOption {
             }
         });
         return true;
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petadmin cleanup";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public String getHelpDescription() {
+        return "Removes pets by criteria";
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 38;
     }
 }

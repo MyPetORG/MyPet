@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
@@ -71,5 +72,25 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
             return null;
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petadmin remove";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public String getHelpDescription() {
+        return "Removes a player's pet";
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 22;
     }
 }

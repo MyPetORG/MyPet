@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
@@ -90,5 +91,25 @@ public class CommandOptionRespawn implements CommandOptionTabCompleter {
             return filterTabCompletionResults(showList, strings[2]);
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petadmin respawn";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public String getHelpDescription() {
+        return "Sets pet respawn options";
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 30;
     }
 }

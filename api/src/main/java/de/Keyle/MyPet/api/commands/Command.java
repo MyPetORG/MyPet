@@ -22,6 +22,5 @@ package de.Keyle.MyPet.api.commands;
 
 import org.bukkit.command.CommandExecutor;
 
-public interface Command extends CommandExecutor {
-
+public interface Command extends CommandExecutor, HelpProvider {
 }

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -140,5 +141,25 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
             return filterTabCompletionResults(addSetRemoveList, strings[3]);
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petadmin exp";
+    }
+
+    @Override
+    public CommandCategory getHelpCategory() {
+        return CommandCategory.ADMIN;
+    }
+
+    @Override
+    public String getHelpDescription() {
+        return "Modifies pet experience";
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 26;
     }
 }

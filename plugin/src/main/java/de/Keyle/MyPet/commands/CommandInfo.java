@@ -228,4 +228,24 @@ public class CommandInfo implements CommandTabCompleter {
             this.adminOnly = adminOnly;
         }
     }
+
+    @Override
+    public String getHelpTranslationKey() {
+        return "Message.Command.Help.Info";
+    }
+
+    @Override
+    public String getHelpCommand() {
+        return "/petinfo";
+    }
+
+    @Override
+    public boolean isVisibleTo(Player player) {
+        return true;
+    }
+
+    @Override
+    public int getHelpOrder() {
+        return 20;
+    }
 }
