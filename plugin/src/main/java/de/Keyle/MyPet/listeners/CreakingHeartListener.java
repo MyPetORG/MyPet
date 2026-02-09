@@ -98,6 +98,12 @@ public class CreakingHeartListener implements Listener {
         }
 
         MyPetType petType = MyPetType.byEntityTypeName(linkedCreaking.getType().name());
+
+        // Only allow heart-based capture if HeartLinked is a configured leash requirement
+        if (!isHeartLinkedRequired(petType)) {
+            return;
+        }
+
         ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(petType);
 
         // Check permission
@@ -272,6 +278,11 @@ public class CreakingHeartListener implements Listener {
 
         MyPetType petType = MyPetType.Creaking;
 
+        // Only show heart-based capture info if HeartLinked is a configured leash requirement
+        if (!isHeartLinkedRequired(petType)) {
+            return;
+        }
+
         // Check permission
         if (!Permissions.has(player, "MyPet.leash." + petType.name())) {
             myPetPlayer.sendMessage(LeashFlag.getMessagePrefix(false) + Translation.getString("Message.No.Allowed", player), 2000);
@@ -314,6 +325,18 @@ public class CreakingHeartListener implements Listener {
         if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
             myPetPlayer.sendMessage(LeashFlag.getMessagePrefix(false) + Translation.getString("Message.Command.CaptureHelper.HasPet", player), 2000);
         }
+    }
+
+    /**
+     * Checks if the HeartLinked leash flag is configured as a requirement for the given pet type.
+     */
+    private boolean isHeartLinkedRequired(MyPetType petType) {
+        for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(petType)) {
+            if ("HeartLinked".equals(flagSettings.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
