@@ -259,6 +259,12 @@ public class SentryErrorReporter implements ErrorReporter {
                     "CJCommunicationsException".equals(className)) {
                 return true;
             }
+            if (current instanceof java.sql.SQLException) {
+                String message = current.getMessage();
+                if (message != null && message.contains("Access denied")) {
+                    return true;
+                }
+            }
             if (current instanceof java.net.ConnectException) {
                 // Only filter ConnectException if it's database-related
                 boolean isDatabaseRelated = Arrays.stream(current.getStackTrace())
