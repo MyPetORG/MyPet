@@ -83,12 +83,7 @@ public class CommandMyPet implements CommandTabCompleter {
     private void showSplash(CommandSender sender) {
         String line = dashes(SEPARATOR_WIDTH);
         sender.sendMessage(line);
-        String build = MyPetVersion.getBuild();
-        boolean numericBuild = build.chars().allMatch(Character::isDigit);
-        String version = MyPetVersion.isDevBuild()
-                ? "v" + MyPetVersion.getVersion() + "-SNAPSHOT-" + (numericBuild ? "b" : "") + build
-                : "v" + MyPetVersion.getVersion();
-        sender.sendMessage(ChatColor.GOLD + "MyPet" + ChatColor.RESET + " " + version);
+        sender.sendMessage(ChatColor.GOLD + "MyPet" + ChatColor.RESET + " " + MyPetVersion.getFormattedVersion());
         sender.sendMessage(ChatColor.GRAY + "https://github.com/MyPetORG/MyPet");
         sender.sendMessage("");
         sender.sendMessage("Use " + ChatColor.GOLD + "/mypet help" + ChatColor.RESET

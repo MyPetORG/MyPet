@@ -63,7 +63,7 @@ public class SentryErrorReporter implements ErrorReporter {
             options.setDebug(false);
 
             // Set release and environment
-            options.setRelease(MyPetVersion.getVersion());
+            options.setRelease(MyPetVersion.getFormattedVersion());
             options.setEnvironment(MyPetVersion.isDevBuild() ? "development" : "production");
 
             // Set server name (appears as server_name in Sentry)
