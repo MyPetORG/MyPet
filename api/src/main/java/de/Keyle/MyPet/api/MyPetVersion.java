@@ -37,7 +37,7 @@ public class MyPetVersion {
     private static boolean updated = false;
 
     private static String version = "0.0.0";
-    private static String build = "local";
+    private static String build = "";
     private static String buildType = "local";
     private static String minecraftVersion = "0.0.0";
     private static List<String> bukkitPackets = new ArrayList<>();
@@ -92,6 +92,14 @@ public class MyPetVersion {
 
     public static boolean isDevBuild() {
         return getVersion().contains("SNAPSHOT");
+    }
+
+    public static boolean isLocalBuild() {
+        if (!updated) {
+            loadData();
+            updated = true;
+        }
+        return "local".equalsIgnoreCase(buildType);
     }
 
     public static String getBuild() {

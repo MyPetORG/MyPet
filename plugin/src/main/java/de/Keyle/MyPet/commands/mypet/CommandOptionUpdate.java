@@ -60,7 +60,7 @@ public class CommandOptionUpdate implements CommandOption {
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (Updater.isUpdateAvailable()) {
             sender.sendMessage("A new version is available: " + ChatColor.GOLD + Updater.getLatest());
-        } else if ("local".equals(MyPetVersion.getBuild())) {
+        } else if (MyPetVersion.isLocalBuild()) {
             sender.sendMessage("You are running a " + ChatColor.YELLOW + "local build" + ChatColor.RESET + ". Update checks are skipped.");
         } else {
             sender.sendMessage("Your version of MyPet is up to date.");
