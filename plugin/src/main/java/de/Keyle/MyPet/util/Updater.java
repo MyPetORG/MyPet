@@ -80,7 +80,7 @@ public class Updater {
     public void update() {
         if (Configuration.Update.CHECK) {
             // Skip update check for local builds
-            if ("local".equals(MyPetVersion.getBuild())) {
+            if (MyPetVersion.isLocalBuild()) {
                 MyPetApi.getLogger().info("Skipping update check for local build.");
                 return;
             }
