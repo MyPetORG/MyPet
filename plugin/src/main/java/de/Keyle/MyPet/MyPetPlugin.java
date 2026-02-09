@@ -455,7 +455,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             e.printStackTrace();
         }
 
-        getLogger().info("Version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
+        getLogger().info("Version " + MyPetVersion.getFormattedVersion() + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
 
         ContributorCheck.startRefreshTask();

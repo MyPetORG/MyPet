@@ -105,6 +105,16 @@ public class MyPetVersion {
         return build;
     }
 
+    public static String getFormattedVersion() {
+        String result = getVersion();
+        String b = getBuild();
+        if (b != null && !b.isEmpty()) {
+            boolean numeric = b.chars().allMatch(Character::isDigit);
+            result += "-" + (numeric ? "b" : "") + b;
+        }
+        return result;
+    }
+
     public static String getMinecraftVersion() {
         if (!updated) {
             loadData();

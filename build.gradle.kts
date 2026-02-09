@@ -163,7 +163,7 @@ fun Manifest.attributesForMyPet() = attributes(
         "Class-Path" to "MyPet/rhino.jar MyPet/rhino-1.7.9.jar MyPet/rhino-1.7.10.jar MyPet/rhino-1.7.15.jar ../MyPet/rhino.jar ../MyPet/rhino-1.7.9.jar ../MyPet/rhino-1.7.10.jar ../MyPet/rhino-1.7.15.jar MyPet/mongo-java-driver.jar MyPet/mongo-java-driver-3.12.11.jar",
         "Main-Class" to "de.Keyle.MyPet.Main",
         "Project-Name" to project.name,
-        "Project-Version" to project.version.toString(),
+        "Project-Version" to fullVersion,
         "Project-Build" to (System.getenv("BUILD_NUMBER") ?: ""),
         "Project-Type" to buildType,
         "Project-Minecraft-Version" to minecraftVersion,
