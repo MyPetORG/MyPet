@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discord
+    url: https://discord.gg/GtcdWFw
+    about: Ask questions and get help from the community on Discord.
+  - name: Wiki
+    url: https://wiki.mypet-plugin.de/
+    about: Check the wiki for setup guides, configuration help, and FAQs.
+  - name: Modrinth
+    url: https://modrinth.com/plugin/mypet
+    about: Visit the Modrinth page for downloads and changelogs.
