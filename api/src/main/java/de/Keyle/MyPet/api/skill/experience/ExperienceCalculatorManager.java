@@ -70,7 +70,6 @@ public class ExperienceCalculatorManager implements ServiceContainer {
             } else {
                 this.calculator = defaultCalculator;
             }
-            MyPetApi.getLogger().info("Exp calculation mode: " + this.calculator.getIdentifier());
         }
 
         cache.checkVersion(this.calculator);

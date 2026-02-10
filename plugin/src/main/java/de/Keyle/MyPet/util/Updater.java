@@ -77,34 +77,34 @@ public class Updater {
         latest = null;
     }
 
-    public void update() {
-        if (Configuration.Update.CHECK) {
-            // Skip update check for local builds
-            if (MyPetVersion.isLocalBuild()) {
-                MyPetApi.getLogger().info("Skipping update check for local build.");
-                return;
-            }
-
-            Runnable updateRunner = () -> {
-                Optional<Update> update = check();
-                if (update.isPresent()) {
-                    latest = update.get();
-
-                    notifyVersion();
-
-                    if (Configuration.Update.DOWNLOAD) {
-                        download();
-                    }
-                } else {
-                    MyPetApi.getLogger().info("No update available.");
-                }
-            };
-            if (Configuration.Update.ASYNC) {
-                new Thread(updateRunner).start();
-            } else {
-                updateRunner.run();
-            }
+    /**
+     * Checks for updates and returns a status message for display in the splash screen.
+     * The check is always synchronous so the result can be shown at startup.
+     * Downloads, if enabled, are started asynchronously.
+     *
+     * @return a status message, or null if update checking is disabled
+     */
+    public String update() {
+        if (!Configuration.Update.CHECK) {
+            return null;
         }
+
+        if (MyPetVersion.isLocalBuild()) {
+            return "Skipping update check for local build.";
+        }
+
+        Optional<Update> update = check();
+        if (update.isPresent()) {
+            latest = update.get();
+
+            if (Configuration.Update.DOWNLOAD) {
+                download();
+            }
+
+            String msg = "A new " + (MyPetVersion.isDevBuild() ? "build" : "version") + " is available: " + latest;
+            return msg;
+        }
+        return "No update available.";
     }
 
     protected Optional<Update> check() {
@@ -190,25 +190,6 @@ public class Updater {
             e.printStackTrace();
         }
         return Optional.empty();
-    }
-
-    private void notifyVersion() {
-        String m = "#  A new ";
-        m += MyPetVersion.isDevBuild() ? "build" : "version";
-        m += " is available: " + latest + " #";
-
-        int len = m.length();
-
-        MyPetApi.getLogger().info(new String(new char[len]).replace('\0', '#'));
-
-        MyPetApi.getLogger().info(m);
-
-        String url = "#  https://modrinth.com/plugin/mypet/versions";
-        int pad = len - url.length();
-        String spaces = pad > 0 ? new String(new char[pad]).replace('\0', ' ') : "";
-
-        MyPetApi.getLogger().info(url + spaces + "#");
-        MyPetApi.getLogger().info(new String(new char[len]).replace('\0', '#'));
     }
 
     public void download() {
