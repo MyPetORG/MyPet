@@ -20,11 +20,9 @@
 
 package de.Keyle.MyPet.api;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -115,8 +113,6 @@ public class WorldGroup {
     }
 
     public static void loadGroups(File f) {
-        MyPetApi.getLogger().info("Loading WorldGroups...");
-
         ConfigurationYAML yamlConfiguration = new ConfigurationYAML(f);
         FileConfiguration config = yamlConfiguration.getConfig();
 
@@ -152,9 +148,7 @@ public class WorldGroup {
 
         for (String world : disabledWorlds) {
             if (Bukkit.getServer().getWorld(world) != null) {
-                if (WorldGroup.DISABLED_GROUP.addWorld(world)) {
-                    MyPetApi.getLogger().info("   disabled MyPet in '" + world + "'");
-                }
+                WorldGroup.DISABLED_GROUP.addWorld(world);
             }
         }
         groups = groups.stream().filter(s -> !s.equals("default")).collect(Collectors.toSet());
@@ -164,9 +158,7 @@ public class WorldGroup {
                 WorldGroup newGroup = new WorldGroup(node, false);
                 for (String world : worlds) {
                     if (Bukkit.getServer().getWorld(world) != null) {
-                        if (newGroup.addWorld(world)) {
-                            MyPetApi.getLogger().info("   added '" + ChatColor.GOLD + world + ChatColor.RESET + "' to '" + newGroup.getName() + "'");
-                        }
+                        newGroup.addWorld(world);
                     }
                 }
             }
@@ -179,7 +171,6 @@ public class WorldGroup {
             for (String world : worlds) {
                 if (Bukkit.getServer().getWorld(world) != null) {
                     if (DEFAULT_GROUP.addWorld(world)) {
-                        MyPetApi.getLogger().info("   added '" + ChatColor.GOLD + world + ChatColor.RESET + "' to '" + DEFAULT_GROUP.getName() + "'");
                         worldNames.add(world);
                     }
                 }
@@ -187,7 +178,6 @@ public class WorldGroup {
         }
         for (World world : Bukkit.getServer().getWorlds()) {
             if (WorldGroup.DEFAULT_GROUP.addWorld(world.getName())) {
-                MyPetApi.getLogger().info("   added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                 worldNames.add(world.getName());
                 newWorldFound = true;
             }

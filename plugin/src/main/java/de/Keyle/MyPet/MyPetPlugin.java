@@ -76,6 +76,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
+import java.time.Year;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -196,7 +197,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         this.errorReporter = new SentryErrorReporter();
         if (getConfig().getBoolean("MyPet.Log.Report-Errors", true)) {
             this.errorReporter.onEnable();
-            MyPetApi.getLogger().info("Error-Reporter ENABLED");
         }
 
         compatUtil = new CompatUtil();
@@ -235,7 +235,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         miniMessage = MiniMessage.miniMessage();
 
         Updater updater = new Updater("MyPet");
-        updater.update();
+        String updateStatus = updater.update();
+        printSplashScreen(updateStatus);
 
         if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
             getLogger().warning("This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + " on " + compatUtil.getMinecraftVersion() + "\". Is MyPet up to date?");
@@ -251,7 +252,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         DebugLogHandler.setup(getLogger());
 
         compatManager.enable();
-        getLogger().info("Compat mode for " + compatUtil.getInternalVersion() + " loaded.");
 
         ConfigurationLoader.loadCompatConfiguration();
 
@@ -400,7 +400,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                 repo = null;
             }
         } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
-            MyPetApi.getLogger().info("Connect to MySQL database...");
             repo = new MySqlRepository();
             try {
                 repo.init();
@@ -410,7 +409,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                 repo = null;
             }
         } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
-            MyPetApi.getLogger().info("Connect to MongoDB database...");
             repo = new MongoDbRepository();
             try {
                 repo.init();
@@ -422,7 +420,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         }
 
         if (repo == null) {
-            MyPetApi.getLogger().info("Connect to SQLite database...");
             repo = new SqLiteRepository();
             try {
                 repo.init();
@@ -512,7 +509,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             errorReporter.sendError(e, "Init Metrics failed");
         }
 
-        getLogger().info("Version " + MyPetVersion.getFormattedVersion() + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
 
         ContributorCheck.startRefreshTask();
@@ -728,6 +724,33 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     @Override
     public boolean isDisabling() {
         return isDisabling;
+    }
+
+    private void printSplashScreen(String updateStatus) {
+        String G = ChatColor.DARK_GREEN.toString();
+        String R = ChatColor.RESET.toString();
+        String version = MyPetVersion.getFormattedVersion();
+        String compatInfo = compatUtil.getInternalVersion() != null
+                ? G + "✔" + R + " Compatible with " + compatUtil.getMinecraftVersion() + " (" + compatUtil.getInternalVersion() + ")"
+                : null;
+
+        String dbType = Configuration.Repository.REPOSITORY_TYPE;
+
+        String splash = String.join("\n",
+                "",
+                G + "          ▄▄       ",
+                G + "    ▄██▄ ████      " + G + "  MyPet " + R + version,
+                G + "    ████ ▀██▀      " + G + "  Created by Keyle | Maintained by UserDerezzed",
+                G + "  ▄▄ ▀▀      ▄██▄  " + G + "  2011-" + Year.now(),
+                G + " ████  ▄███▄ ▀██▀  ",
+                G + "  ▀▀ ▄███████▄     " + (updateStatus != null ? R + "  " + updateStatus : ""),
+                G + "   ▄███████████▄   " + (compatInfo != null ? R + "  " + compatInfo : ""),
+                G + "   ▀███▀▀▀▀▀███▀   " + R + "  " + "Connecting to " + dbType + "...",
+                "",
+                G + "Please consider supporting active development: https://ko-fi.com/userderezzed"
+        );
+
+        getLogger().info(splash);
     }
 
     @Override
