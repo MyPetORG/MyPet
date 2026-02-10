@@ -1,0 +1,63 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for MyPet.
+type: Feature
+labels: ["Feature Request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to improve MyPet? We'd love to hear it!
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched [existing issues](https://github.com/MyPetORG/MyPet/issues) to make sure this hasn't already been requested.
+          required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: What part of MyPet does this relate to?
+      options:
+        - Plugin
+        - API
+        - Website / Wiki
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Motivation
+      description: Is this related to a problem? Describe the use case or pain point.
+      placeholder: "I'm always frustrated when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe what you'd like to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative approaches or workarounds?
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other information, mockups, or screenshots to support the request.
+    validations:
+      required: false

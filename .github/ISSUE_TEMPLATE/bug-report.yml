@@ -1,0 +1,110 @@
+name: Bug Report
+description: Report a bug with MyPet.
+type: Bug
+labels: ["Bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the form below as completely as possible.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched [existing issues](https://github.com/MyPetORG/MyPet/issues) to check this hasn't already been reported.
+          required: true
+        - label: I am using the latest version of MyPet.
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the bug.
+      placeholder: Describe what is going wrong...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this issue?
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened instead?
+    validations:
+      required: true
+
+  - type: input
+    id: server-software
+    attributes:
+      label: Server Software & Version
+      description: "The server software and full version string (e.g. Paper 1.21.4 build #150)."
+      placeholder: "Paper 1.21.4 #150"
+    validations:
+      required: true
+
+  - type: input
+    id: mypet-version
+    attributes:
+      label: MyPet Version
+      description: "The MyPet version"
+      placeholder: "3.14.1"
+    validations:
+      required: true
+
+  - type: input
+    id: java-version
+    attributes:
+      label: Java Version
+      description: "The Java version your server is running (e.g. Java 21.0.2)."
+      placeholder: "Java 21"
+    validations:
+      required: false
+
+  - type: textarea
+    id: error
+    attributes:
+      label: Error Log / Stack Trace
+      description: If there is an error in the console, paste it here.
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: ticket
+    attributes:
+      label: Ticket File
+      description: |
+        Run `/mypet ticket` (`/petadmin ticket` in older versions) in-game and attach the generated `ticket.zip` from the MyPet folder here.
+        You can drag and drop the file into this field.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other information, screenshots, or context that might help.
+    validations:
+      required: false
