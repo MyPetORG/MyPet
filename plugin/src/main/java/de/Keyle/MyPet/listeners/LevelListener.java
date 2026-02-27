@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.event.MyPetLevelEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
+import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.Colorizer;
@@ -38,9 +39,12 @@ import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.List;
@@ -184,6 +188,22 @@ public class LevelListener implements Listener {
         MyPet myPet = event.getPet();
         int lvl = event.getLevel();
 
+        // Snapshot backpack contents before the reset-reapply cycle. The reset
+        // phase temporarily shrinks the inventory to its minimum size, which
+        // would discard items beyond the first row. This must be handled here
+        // rather than in BackpackImpl because the UpgradeComputer callback fires
+        // incrementally during reapply and cannot determine the final row count.
+        Backpack backpack = myPet.getSkills().get(Backpack.class);
+        ItemStack[] savedBackpackContents = null;
+        if (backpack != null && backpack.getInventory().getBukkitInventory() != null) {
+            backpack.getInventory().close();
+            ItemStack[] contents = backpack.getInventory().getBukkitInventory().getContents();
+            savedBackpackContents = new ItemStack[contents.length];
+            for (int i = 0; i < contents.length; i++) {
+                savedBackpackContents[i] = contents[i] != null ? contents[i].clone() : null;
+            }
+        }
+
         myPet.getSkills().all().forEach(Skill::reset);
 
         Skilltree skilltree = myPet.getSkilltree();
@@ -199,6 +219,38 @@ public class LevelListener implements Listener {
                         Skill skill = myPet.getSkills().get(sn.value());
                         if (skill != null) {
                             upgrade.apply(skill);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Restore items that still fit and drop overflow as world items.
+        // The clear pass prevents duplication when the new skilltree has no
+        // backpack at all (inventory clamped to 9 slots still holds old items).
+        if (savedBackpackContents != null) {
+            Inventory inv = backpack.getInventory().getBukkitInventory();
+            if (inv != null) {
+                int newSize = backpack.isActive() ? inv.getSize() : 0;
+                for (int i = 0; i < newSize && i < savedBackpackContents.length; i++) {
+                    inv.setItem(i, savedBackpackContents[i]);
+                }
+                for (int i = newSize; i < inv.getSize(); i++) {
+                    inv.clear(i);
+                }
+                if (savedBackpackContents.length > newSize) {
+                    Location dropLoc = myPet.getLocation().orElse(null);
+                    if (dropLoc == null || dropLoc.getWorld() == null) {
+                        if (myPet.getOwner().getPlayer() != null) {
+                            dropLoc = myPet.getOwner().getPlayer().getLocation();
+                        }
+                    }
+                    if (dropLoc != null && dropLoc.getWorld() != null) {
+                        for (int i = newSize; i < savedBackpackContents.length; i++) {
+                            ItemStack item = savedBackpackContents[i];
+                            if (item != null && item.getType() != Material.AIR) {
+                                dropLoc.getWorld().dropItem(dropLoc, item);
+                            }
                         }
                     }
                 }
