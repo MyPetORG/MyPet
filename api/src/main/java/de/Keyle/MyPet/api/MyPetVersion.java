@@ -37,7 +37,8 @@ public class MyPetVersion {
     private static boolean updated = false;
 
     private static String version = "0.0.0";
-    private static String build = "0";
+    private static String build = "local";
+    private static String buildType = "local";
     private static String minecraftVersion = "0.0.0";
     private static List<String> bukkitPackets = new ArrayList<>();
 
@@ -50,8 +51,15 @@ public class MyPetVersion {
             String path = MyPetVersion.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
             Attributes attr = getManifestAttributes(path);
 
-            if (attr.getValue("Project-Build") != null) {
-                build = attr.getValue("Project-Build");
+            String val;
+            if ((val = attr.getValue("Project-Version")) != null && !val.isEmpty()) {
+                version = val;
+            }
+            if ((val = attr.getValue("Project-Build")) != null && !val.isEmpty()) {
+                build = val;
+            }
+            if ((val = attr.getValue("Project-Type")) != null && !val.isEmpty()) {
+                buildType = val;
             }
             if (attr.getValue("Project-Minecraft-Version") != null) {
                 minecraftVersion = attr.getValue("Project-Minecraft-Version");
