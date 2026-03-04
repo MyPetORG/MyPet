@@ -4,11 +4,11 @@ import java.time.format.DateTimeFormatter
 
 plugins {
     java
-    id("com.gradleup.shadow") version "9.2.2"
-    id("io.freefair.lombok") version "9.0.0"
-    id("io.typst.gradlesource.spigot") version "2.0.0" apply false
+    id("com.gradleup.shadow") version "9.3.1"
+    id("io.freefair.lombok") version "9.1.0"
     id("io.sentry.jvm.gradle") version "5.12.2"
-    id("io.papermc.hangar-publish-plugin") version "0.1.2"
+    id("com.cjcrafter.polymart-release") version "1.0.1"
+    id("io.papermc.hangar-publish-plugin") version "0.1.4"
     `maven-publish`
 }
 
@@ -66,6 +66,7 @@ subprojects {
         maven { url = uri("https://repo.md-5.net/content/repositories/public") }
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://repo.mypet-plugin.de/") }
+        maven { url = uri("https://mvn.intellectualsites.com/content/repositories/releases/") } // PlotSquared V6+
     }
 
     // Use lazy task configuration for better configuration performance
@@ -88,18 +89,6 @@ subprojects {
 
 val archivesBaseName = "MyPet"
 
-// Create filtering properties lazily to support configuration cache
-fun getFilteringProps() = mapOf(
-    "project" to project,
-    "buildNumber" to buildNumber,
-    "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
-    "minecraft" to mapOf("version" to minecraftVersion),
-    "bukkit" to mapOf("packets" to bukkitPackets),
-    "mypetVersion" to version,
-    "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
-)
-
-
 val downloadVersionmatcher by tasks.register("downloadVersionmatcher") {
     val dest = layout.projectDirectory.file("src/main/resources/versionmatcher.csv")
     outputs.file(dest)
@@ -115,45 +104,58 @@ val downloadVersionmatcher by tasks.register("downloadVersionmatcher") {
 val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
     group = "resources"
     description = "Downloads MyPet translations into build/resources/main/locale"
-    val targetDirProvider = layout.buildDirectory.dir("resources/main/locale")
-    outputs.dir(targetDirProvider)
-    outputs.cacheIf { true }
+    val targetDir = layout.buildDirectory.dir("resources/main/locale").get().asFile
+    outputs.dir(targetDir)
 
-    // Only run if directory doesn't exist or is older than 24 hours
+    // Skip download if translations are less than 12 hours old
+    val maxAgeMillis = 12 * 60 * 60 * 1000L // 12 hours in milliseconds
     onlyIf {
-        val dir = targetDirProvider.get().asFile
-        !dir.exists() ||
-                dir.listFiles()?.isEmpty() == true ||
-                (System.currentTimeMillis() - dir.lastModified()) > 86400000
+        if (!targetDir.exists()) {
+            true
+        } else {
+            val ageMillis = System.currentTimeMillis() - targetDir.lastModified()
+            val shouldDownload = ageMillis > maxAgeMillis
+            if (!shouldDownload) {
+                logger.lifecycle("Skipping translation download - last updated ${ageMillis / (60 * 60 * 1000)} hours ago (max: 12 hours)")
+            }
+            shouldDownload
+        }
     }
 
     doFirst {
-        val dir = targetDirProvider.get().asFile
-        if (dir.exists()) {
-            dir.deleteRecursively()
-        }
-        dir.mkdirs()
+        if (targetDir.exists()) targetDir.deleteRecursively()
+        targetDir.mkdirs()
     }
-
     commandLine(
         "git", "clone", "--depth", "1", "--single-branch",
-        "https://github.com/MyPetORG/MyPet-Translations.git",
-        targetDirProvider.get().asFile.absolutePath
+        "https://github.com/MyPetORG/MyPet-Translations.git", targetDir
     )
-
     doLast {
-        val dir = targetDirProvider.get().asFile
-        delete(fileTree(dir) {
-            include("exclude", ".git", ".gitignore", "README.md")
-        })
+        // Clean up files we don't need in the final JAR
+        // Use direct File operations for configuration cache compatibility
+        File(targetDir, ".git").deleteRecursively()
+        File(targetDir, ".gitignore").delete()
+        File(targetDir, "README.md").delete()
+        File(targetDir, "exclude").deleteRecursively()
     }
 }
 
 tasks.processResources {
-    dependsOn(downloadTranslations)
+    dependsOn(downloadVersionmatcher, downloadTranslations)
+    duplicatesStrategy = DuplicatesStrategy.WARN
 
-    filesMatching("plugin.yml") { expand(getFilteringProps()) }
-    filesMatching("*.yml") { if (name != "plugin.yml") expand(getFilteringProps()) }
+    // Define filtering properties inline for configuration cache compatibility
+    val filteringProps = mapOf(
+        "buildNumber" to buildNumber,
+        "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
+        "minecraft" to mapOf("version" to minecraftVersion),
+        "bukkit" to mapOf("packets" to bukkitPackets),
+        "mypetVersion" to version,
+        "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
+    )
+
+    filesMatching("plugin.yml") { expand(filteringProps) }
+    filesMatching("*.yml") { if (name != "plugin.yml") expand(filteringProps) }
 }
 
 fun Manifest.attributesForMyPet() = attributes(
@@ -232,7 +234,9 @@ tasks.assemble { dependsOn(tasks.shadowJar) }
 tasks.build { dependsOn(tasks.shadowJar) }
 
 sentry {
-    includeSourceContext = true
+    // Only bundle sources when auth token is available (snapshot/release builds)
+    // PR builds don't have the token and don't need source bundling
+    includeSourceContext = !System.getenv("SENTRY_AUTH_TOKEN").isNullOrEmpty()
 
     org = "mypet"
     projectName = "mypet"
@@ -249,19 +253,49 @@ tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
 }
 
-/* ---------- Hangar Publishing ---------- */
+/* ---------- Polymart Release ---------- */
+
+polymart {
+    val polymartVersion = providers.gradleProperty("POLYMART_VERSION").orNull
+        ?: project.version.toString()
+    val polymartFile = providers.gradleProperty("POLYMART_FILE").orNull
+        ?: "build/libs/MyPet-${project.version}.jar"
+    apiKey = providers.gradleProperty("POLYMART_TOKEN").orNull
+        ?: System.getenv("POLYMART_TOKEN")
+        ?: ""
+    resourceId = 8915
+    version = polymartVersion
+    title = "MyPet $polymartVersion"
+    message = "View the full changelog on Modrinth: https://modrinth.com/plugin/mypet/version/$polymartVersion"
+    file.set(file(polymartFile))
+    beta = buildType != "release"
+}
+
+/* ---------- Hangar Release ---------- */
 
 hangarPublish {
     publications.register("plugin") {
-        version.set(project.version as String)
+        val hangarVersion = providers.gradleProperty("HANGAR_VERSION").orNull
+            ?: project.version.toString()
+        val hangarFile = providers.gradleProperty("HANGAR_FILE").orNull
+            ?: "build/libs/MyPet-${project.version}.jar"
+        val hangarChangelog = providers.gradleProperty("HANGAR_CHANGELOG").orNull
+            ?: System.getenv("HANGAR_CHANGELOG")
+            ?: "View the full changelog on Modrinth: https://modrinth.com/plugin/mypet/version/$hangarVersion"
+
+        version.set(hangarVersion)
         id.set("MyPet")
-        channel.set(if (buildType == "dev") "Snapshot" else "Release")
-        changelog.set(project.findProperty("HANGAR_CHANGELOG")?.toString() ?: "Release ${project.version}")
-        apiKey.set(System.getenv("HANGAR_TOKEN") ?: "")
+        channel.set(if (buildType == "release") "Release" else "Snapshot")
+        changelog.set(hangarChangelog)
+        apiKey.set(
+            providers.gradleProperty("HANGAR_TOKEN").orNull
+                ?: System.getenv("HANGAR_TOKEN")
+                ?: ""
+        )
 
         platforms {
-            register(io.papermc.hangarpublishplugin.model.Platforms.PAPER) {
-                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
+            paper {
+                jar.set(file(hangarFile))
                 val gameVersions = System.getenv("GAME_VERSIONS")?.split("\n")?.filter { it.isNotBlank() } ?: listOf()
                 platformVersions.set(gameVersions)
             }

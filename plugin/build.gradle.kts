@@ -1,5 +1,5 @@
 plugins {
-    id("io.freefair.lombok") version "9.0.0"
+    id("io.freefair.lombok") version "9.1.0"
     `maven-publish`
 }
 
@@ -26,13 +26,19 @@ dependencies {
     compileOnly("org.incendo:cloud-annotations:2.0.0")
 
     compileOnly("net.citizensnpcs:citizensapi:2.0.24")
-    compileOnly("br.net.fabiozumbi12:PvPDiffTimer:1.4.4")
-    compileOnly("au.com.mineauz:Minigames:1.12.0")
     compileOnly("com.plotsquared.bukkit:PlotSquared:3.4.4")
 
     compileOnly("com.github.intellectualsites:plotsquared:4.453") {
         exclude(group = "org.bstats", module = "bstats-bukkit")
         exclude(group = "com.destroystokyo.paper", module = "paper-api")
+    }
+
+    // PlotSquared V6+ (note: 6.11.2 has broken Maven deployment, use 6.11.1)
+    compileOnly("com.plotsquared:PlotSquared-Core:6.11.1") {
+        isTransitive = false
+    }
+    compileOnly("com.plotsquared:PlotSquared-Bukkit:6.11.1") {
+        isTransitive = false
     }
 
     compileOnly("io.lumine.xikage:MythicMobs:4.9.1")
@@ -47,7 +53,6 @@ dependencies {
     compileOnly("com.mewin:WGCustomFlags:1.9") {
         exclude(group = "org.bukkit", module = "bukkit")
     }
-    compileOnly("com.ancientshores:ancient:1.1.0")
     compileOnly("com.massivecraft:Factions:2.14.0")
     compileOnly("com.massivecraft:MassiveCore:2.14.0")
     compileOnly("com.garbagemule:MobArena:0.103")
@@ -60,21 +65,15 @@ dependencies {
     compileOnly("net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.7.11")
     compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect:7.5.5")
     compileOnly("com.github.TechFortress:GriefPrevention:16.18")
-    compileOnly("net.kaikk.mc:GriefPreventionPlus:12.28")
     compileOnly("me.NoChance.PvPManager:PvPManager:3.4")
     compileOnly("org.kingdoms:kingdoms:13.3.40")
     compileOnly("com.herocraftonline.heroes:Heroes:1.5.5.7")
-    compileOnly("com.sucy.skill:SkillAPI:3.108")
-    compileOnly("com.nisovin.magicspells:MagicSpells:3.4.2")
     compileOnly("net.dmulloy2:ProtocolLib:5.3.0")
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("fr.neatmonster:nocheatplus:3.16.0")
     compileOnly("de.myzelyam:supervanish:6.1.0")
-    compileOnly("net.sacredlabyrinth.Phaed:PreciousStones:10.7.2")
     compileOnly("com.kirelcodes.miniaturepets:miniaturepets-api:1.5.4")
     compileOnly("com.SirBlobman.combatlogx:CombatLogX-Plugin:9.7.1.2")
-    compileOnly("me.jet315:MobStacker:1.7")
-    compileOnly("com.kiwifisher:mobstacker:2.0.0")
     compileOnly("uk.antiperson:StackMob:5.0.2")
     compileOnly("me.glaremasters:Guilds:3.3")
     compileOnly("com.github.Angeschossen:LandsAPI:4.5.2.0")
@@ -83,6 +82,8 @@ dependencies {
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")
+
+    compileOnly("io.sentry:sentry:8.22.0")
     compileOnly("ch.qos.logback:logback-classic:1.2.11")
     compileOnly("org.slf4j:slf4j-api:1.7.36")
     compileOnly("org.apache.logging.log4j:log4j-core:2.17.1")

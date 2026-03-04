@@ -1,8 +1,6 @@
 name: Build Release
 
 on:
-  push:
-    branches: [ master, v4 ]
   workflow_dispatch:
 
 permissions:
@@ -153,50 +151,42 @@ jobs:
 
       - name: Upload to Polymart
         continue-on-error: true
+        run: |
+          ./gradlew --no-daemon createPolymartRelease \
+            -PbuildType=release \
+            -PPOLYMART_TOKEN=${POLYMART_TOKEN} \
+            -PPOLYMART_VERSION=${PROJECT_VERSION} \
+            -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
+
+      - name: Send a Discord webhook notification
         shell: bash
         run: |
           set -euo pipefail
-          if [ -z "${{ env.POLYMART_TOKEN }}" ]; then
-            echo "POLYMART_TOKEN not set, skipping upload"
-            exit 0
-          fi
-          RESPONSE=$(curl -s -X POST "https://api.polymart.org/v1/postUpdate" \
-            -F "api_key=${{ env.POLYMART_TOKEN }}" \
-            -F "resource_id=8915" \
-            -F "version=${{ env.PROJECT_VERSION }}" \
-            -F "snapshot=0" \
-            -F "title=v${{ env.PROJECT_VERSION }}" \
-            -F "message=${{ env.CHANGELOG }}" \
-            -F "file=@${{ steps.findjar.outputs.jar }}")
-          echo "Polymart response: $RESPONSE"
-          if echo "$RESPONSE" | jq -e '.response.success' > /dev/null 2>&1; then
-            echo "Upload successful"
-          else
-            echo "Upload failed, check response above"
-            exit 1
-          fi
-
-      - name: Send a Discord webhook notification
-        run: |
-          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d '{
-          "username": "MyPet Release",
-          "content": "<@&1431929679626895450>",
-          "embeds": [
-            {
-              "type": "rich",
-              "title": "${{ env.PROJECT_VERSION }}",
-              "description": "New release published",
-              "color": 65280,
-              "thumbnail": {
-                "url": "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
-              },
-              "author": {
-                "name": "${{ github.actor }}",
-                "url": "https://github.com/${{ github.actor_id }}",
-                "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
-              },
-              "url": "https://hangar.papermc.io/MyPet/MyPet/versions/${{ env.PROJECT_VERSION }}"
-            }
-          ]
-          }' ${{ secrets.WEBHOOK_URL }})
+          PAYLOAD=$(jq -n \
+            --arg version "$PROJECT_VERSION" \
+            --arg changelog "$CHANGELOG" \
+            --arg actor "${{ github.actor }}" \
+            --arg actor_id "${{ github.actor_id }}" \
+            '{
+              username: "MyPet Release",
+              content: "<@&1431929679626895450>",
+              embeds: [
+                {
+                  type: "rich",
+                  title: $version,
+                  description: ("New release published\n\n" + $changelog),
+                  color: 65280,
+                  thumbnail: {
+                    url: "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
+                  },
+                  author: {
+                    name: $actor,
+                    url: ("https://github.com/" + $actor),
+                    icon_url: ("https://avatars.githubusercontent.com/u/" + $actor_id + "?v=4")
+                  },
+                  url: ("https://hangar.papermc.io/MyPet/MyPet/versions/" + $version)
+                }
+              ]
+            }')
+          RESPONSE=$(curl -s -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$WEBHOOK_URL")
           echo "Webhook server response: $RESPONSE"
