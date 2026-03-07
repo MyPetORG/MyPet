@@ -78,7 +78,7 @@ public class CommandList implements CommandTabCompleter {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(petOwner)) {
             owner = MyPetApi.getPlayerManager().getMyPetPlayer(petOwner);
         } else {
-            sender.sendMessage(Util.formatTranslation("Message.No.UserHavePet", lang, petOwner.getName()));
+            sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName()));
             return true;
         }
 
@@ -88,9 +88,9 @@ public class CommandList implements CommandTabCompleter {
                 @Override
                 public void callback(List<StoredMyPet> value) {
                     if (petOwner == sender) {
-                        sender.sendMessage(Util.formatTranslation("Message.Command.List.Yours", lang, owner.getName()));
+                        sender.sendMessage(Translation.getFormattedComponent("Message.Command.List.Yours", lang, owner.getName()));
                     } else {
-                        sender.sendMessage(Util.formatTranslation("Message.Command.List.Player", lang, owner.getName()));
+                        sender.sendMessage(Translation.getFormattedComponent("Message.Command.List.Player", lang, owner.getName()));
                     }
                     boolean doComma = false;
                     TextComponent.Builder messageBuilder = Component.text();
@@ -100,8 +100,7 @@ public class CommandList implements CommandTabCompleter {
                             messageBuilder.append(Component.text(", "));
                         }
                         messageBuilder.append(
-                                Component.text(mypet.getPetName())
-                                        .color(NamedTextColor.AQUA)
+                                mypet.getDisplayName()
                                         .hoverEvent(Util.myPetToItemHover(mypet, lang))
                         );
                         if (!doComma) {

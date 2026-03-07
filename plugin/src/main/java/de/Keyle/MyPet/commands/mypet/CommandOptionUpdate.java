@@ -25,7 +25,8 @@ import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.util.Updater;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -59,9 +60,9 @@ public class CommandOptionUpdate implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (Updater.isUpdateAvailable()) {
-            sender.sendMessage("A new version is available: " + ChatColor.GOLD + Updater.getLatest());
+            sender.sendMessage(Component.text("A new version is available: ").append(Component.text(Updater.getLatest().toString()).color(NamedTextColor.GOLD)));
         } else if (MyPetVersion.isLocalBuild()) {
-            sender.sendMessage("You are running a " + ChatColor.YELLOW + "local build" + ChatColor.RESET + ". Update checks are skipped.");
+            sender.sendMessage(Component.text("You are running a ").append(Component.text("local build").color(NamedTextColor.YELLOW)).append(Component.text(". Update checks are skipped.")));
         } else {
             sender.sendMessage("Your version of MyPet is up to date.");
         }

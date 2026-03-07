@@ -27,14 +27,14 @@ import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
-import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.shop.PetShop;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -42,8 +42,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
-
-import static org.bukkit.ChatColor.RESET;
 
 public class CommandShop implements CommandTabCompleter {
 
@@ -70,7 +68,7 @@ public class CommandShop implements CommandTabCompleter {
             if (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin")) {
                 player = Bukkit.getPlayer(args[1]);
                 if (player == null || !player.isOnline()) {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getComponent("Message.No.PlayerOnline", sender));
+                    sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", sender)));
                     return true;
                 }
             }
@@ -159,7 +157,7 @@ public class CommandShop implements CommandTabCompleter {
 
     private IconMenuItem makeShopIcon(PetShop s, ItemDatabase itemDatabase) {
         IconMenuItem icon = new IconMenuItem();
-        icon.setTitle(RESET + Colorizer.setColors(s.getDisplayName()));
+        icon.setTitle(Util.SANITIZED_MINIMESSAGE.deserialize(s.getDisplayName()));
 
         SkilltreeIcon si = s.getIcon();
         MaterialHolder material = itemDatabase.getByID(si.getMaterial());

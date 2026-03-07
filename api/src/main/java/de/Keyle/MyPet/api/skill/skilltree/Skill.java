@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
 
 public interface Skill {
 
@@ -58,7 +59,7 @@ public interface Skill {
 
     void reset();
 
-    String toPrettyString(String locale);
+    Component toPrettyComponent(String locale);
 
-    String[] getUpgradeMessage();
+    Component[] getUpgradeMessage();
 }

@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Shield;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -62,14 +62,14 @@ public class ShieldImpl implements Shield {
         redirectedDamage.removeAllUpgrades();
     }
 
-    public String toPrettyString(String locale) {
-        return Util.formatText(Translation.getString("Message.Skill.Shield.Format", locale), myPet.getPetName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
+    public Component toPrettyComponent(String locale) {
+        return Translation.getFormattedComponent("Message.Skill.Shield.Format", locale, myPet.getDisplayName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
     }
 
     @Override
-    public String[] getUpgradeMessage() {
-        return new String[]{
-                Util.formatText(Translation.getString("Message.Skill.Shield.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getChance().getValue(), getRedirectedDamage().getValue())
+    public Component[] getUpgradeMessage() {
+        return new Component[]{
+                Translation.getFormattedComponent("Message.Skill.Shield.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getRedirectedDamage().getValue())
         };
     }
 

@@ -23,7 +23,7 @@ package de.Keyle.MyPet.api.gui;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -127,15 +127,16 @@ public class IconMenu implements Listener {
         return ((maximumOptionPosition + 1) + (pageCapacity - 1)) / pageCapacity;
     }
 
-    private String substituteVariablesAndColors(String input) {
-        String colorizedInput = ChatColor.translateAlternateColorCodes('&', input);
+    private Component substituteVariablesAndColors(String input) {
+        String template = input;
 
-        if (pageSizeInSlots == null)
-            return colorizedInput;
+        if (pageSizeInSlots != null) {
+            template = template
+                    .replace("{currentPage}", String.valueOf(currentPageIndex + 1))
+                    .replace("{numberOfPages}", String.valueOf(getNumberOfPages()));
+        }
 
-        return colorizedInput
-                .replace("{currentPage}", String.valueOf(currentPageIndex + 1))
-                .replace("{numberOfPages}", String.valueOf(getNumberOfPages()));
+        return MiniMessage.miniMessage().deserialize(template);
     }
 
     private IconMenuItem makeConfigurableItem(String key) {
@@ -155,12 +156,8 @@ public class IconMenu implements Listener {
 
         try {
             List<String> loreLines = plugin.getConfig().getStringList(paginationBasePath + "." + key + ".Lore");
-            String[] loreContents = new String[loreLines.size()];
-
-            for (int i = 0; i < loreLines.size(); ++i)
-                loreContents[i] = substituteVariablesAndColors(loreLines.get(i));
-
-            result.setLore(loreContents);
+            for (String loreLine : loreLines)
+                result.addLoreLine(substituteVariablesAndColors(loreLine));
         } catch (Exception ignored) {
         }
 

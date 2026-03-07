@@ -41,7 +41,6 @@
 package de.Keyle.MyPet.util.hooks.citizens;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -59,6 +58,7 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -68,7 +68,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static de.Keyle.MyPet.api.Configuration.Misc;
-import static org.bukkit.ChatColor.*;
 
 public class StorageTrait extends Trait {
 
@@ -131,7 +130,7 @@ public class StorageTrait extends Trait {
                         if (inactivePetCount >= maxPetCount) {
                             String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
-                            final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Component.text(stats + " " + Translation.getString("Message.Npc.SwitchTitle", player)));
+                            final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Component.text(stats + " ").append(Translation.getComponent("Message.Npc.SwitchTitle", player)));
                             gui.open(pets, new RepositoryCallback<>() {
                                 @Override
                                 public void callback(StoredMyPet storedMyPet) {
@@ -139,29 +138,29 @@ public class StorageTrait extends Trait {
                                     Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
                                     if (activePet.isPresent() && myPetPlayer.isOnline()) {
                                         Player p = myPetPlayer.getPlayer();
-                                        myPetPlayer.sendMessage(Util.formatTranslation("Message.Npc.ChosenPet", player, activePet.get().getPetName()));
+                                        myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Npc.ChosenPet", player, activePet.get().getDisplayName()));
                                         WorldGroup wg = WorldGroup.getGroupByWorld(p.getWorld().getName());
                                         myPetPlayer.setMyPetForWorldGroup(wg, activePet.get().getUUID());
 
                                         switch (activePet.get().createEntity()) {
                                             case Canceled:
-                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.Spawn.Prevent", player, activePet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", player, activePet.get().getDisplayName()));
                                                 break;
                                             case NoSpace:
-                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", player, activePet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", player, activePet.get().getDisplayName()));
                                                 break;
                                             case NotAllowed:
-                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.No.AllowedHere", player, activePet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", player, activePet.get().getDisplayName()));
                                                 break;
                                             case Dead:
                                                 if (de.Keyle.MyPet.api.Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                    myPetPlayer.sendMessage(Util.formatTranslation("Message.Call.Dead", myPetPlayer, activePet.get().getPetName()));
+                                                    myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", myPetPlayer, activePet.get().getDisplayName()));
                                                 } else {
-                                                    myPetPlayer.sendMessage(Util.formatTranslation("Message.Call.Dead.Respawn", myPetPlayer, activePet.get().getPetName(), activePet.get().getRespawnTime()));
+                                                    myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead.Respawn", myPetPlayer, activePet.get().getDisplayName(), activePet.get().getRespawnTime()));
                                                 }
                                                 break;
                                             case Spectator:
-                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.Spawn.Spectator", myPetPlayer, activePet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Spectator", myPetPlayer, activePet.get().getDisplayName()));
                                                 break;
                                         }
                                     }
@@ -178,7 +177,7 @@ public class StorageTrait extends Trait {
                                     if (MyPetApi.getHookHelper().isEconomyEnabled() && costs > 0 && npc.hasTrait(WalletTrait.class)) {
                                         WalletTrait walletTrait = npc.getTrait(WalletTrait.class);
                                         if (!MyPetApi.getHookHelper().getEconomy().canPay(myPetPlayer, costs)) {
-                                            player.sendMessage(Util.formatTranslation("Message.No.Money", myPetPlayer, myPetPlayer.getMyPet().getPetName(), npcEvent.getNPC().getName()));
+                                            player.sendMessage(Translation.getFormattedComponent("Message.No.Money", myPetPlayer, myPetPlayer.getMyPet().getDisplayName(), npcEvent.getNPC().getName()));
                                             store = false;
                                         }
                                         if (MyPetApi.getHookHelper().getEconomy().pay(myPetPlayer, costs)) {
@@ -196,25 +195,37 @@ public class StorageTrait extends Trait {
                                             myPetPlayer.setMyPetForWorldGroup(wg1, null);
                                             MyPetApi.getRepository().updateMyPetPlayer(myPetPlayer, null);
 
-                                            player.sendMessage(Util.formatTranslation("Message.Npc.HandOver", myPetPlayer, storedMyPet.getPetName(), npcEvent.getNPC().getName()));
+                                            player.sendMessage(Translation.getFormattedComponent("Message.Npc.HandOver", myPetPlayer, storedMyPet.getDisplayName(), npcEvent.getNPC().getName()));
                                         }
                                     }
                                 }
                                 event.setWillClose(true);
                                 event.setWillDestroy(true);
                             }, MyPetApi.getPlugin());
-                            String[] lore;
                             double storageCosts = calculateStorageCosts(myPetPlayer.getMyPet());
+                            IconMenuItem yesIcon = new IconMenuItem()
+                                    .setMaterial(EnumSelector.find(Material.class, "WOOL", "GREEN_WOOL"))
+                                    .setData(5)
+                                    .setTitle(Translation.getComponent("Name.Yes", myPetPlayer).color(NamedTextColor.GREEN));
+                            yesIcon.addLoreLine(Translation.getFormattedComponent("Message.Npc.YesHandOver", myPetPlayer, myPetPlayer.getMyPet().getDisplayName()));
                             if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && npc.hasTrait(WalletTrait.class) && storageCosts > 0) {
-                                lore = new String[3];
-                                lore[1] = "";
-                                lore[2] = RESET + Translation.getString("Name.Costs", myPetPlayer) + ": " + (MyPetApi.getHookHelper().getEconomy().canPay(myPetPlayer, storageCosts) ? GREEN : RED) + storageCosts + DARK_GREEN + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular();
-                            } else {
-                                lore = new String[1];
+                                NamedTextColor canPay = MyPetApi.getHookHelper().getEconomy().canPay(myPetPlayer, storageCosts) ? NamedTextColor.GREEN : NamedTextColor.RED;
+                                yesIcon.addLoreLine(Component.empty());
+                                yesIcon.addLoreLine(Component.text()
+                                        .append(Translation.getComponent("Name.Costs", myPetPlayer))
+                                        .append(Component.text(": "))
+                                        .append(Component.text(storageCosts).color(canPay))
+                                        .append(Component.text(" ").color(NamedTextColor.DARK_GREEN))
+                                        .append(Component.text(MyPetApi.getHookHelper().getEconomy().currencyNameSingular()).color(NamedTextColor.DARK_GREEN))
+                                        .build());
                             }
-                            lore[0] = RESET + Util.formatText(Translation.getString("Message.Npc.YesHandOver", myPetPlayer), myPetPlayer.getMyPet().getPetName());
-                            menu.setOption(3, new IconMenuItem().setMaterial(EnumSelector.find(Material.class, "WOOL", "GREEN_WOOL")).setData(5).setTitle(GREEN + Translation.getString("Name.Yes", myPetPlayer)).setLore(lore));
-                            menu.setOption(5, new IconMenuItem().setMaterial(EnumSelector.find(Material.class, "WOOL", "RED_WOOL")).setData(14).setTitle(RED + Translation.getString("Name.No", myPetPlayer)).setLore(RESET + Util.formatText(Translation.getString("Message.Npc.NoHandOver", myPetPlayer), myPetPlayer.getMyPet().getPetName())));
+                            menu.setOption(3, yesIcon);
+                            IconMenuItem noIcon = new IconMenuItem()
+                                    .setMaterial(EnumSelector.find(Material.class, "WOOL", "RED_WOOL"))
+                                    .setData(14)
+                                    .setTitle(Translation.getComponent("Name.No", myPetPlayer).color(NamedTextColor.RED));
+                            noIcon.addLoreLine(Translation.getFormattedComponent("Message.Npc.NoHandOver", myPetPlayer, myPetPlayer.getMyPet().getDisplayName()));
+                            menu.setOption(5, noIcon);
                             menu.open(player);
                         }
                     }
@@ -236,33 +247,33 @@ public class StorageTrait extends Trait {
                                 maxPetCount = Misc.MAX_STORED_PET_COUNT;
                             }
                             String stats = "(" + pets.size() + "/" + maxPetCount + ")";
-                            MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Component.text(Translation.getString("Message.Npc.TakeTitle", myPetPlayer) + " " + stats));
+                            MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Translation.getComponent("Message.Npc.TakeTitle", myPetPlayer).append(Component.text(" " + stats)));
                             gui.open(pets, new RepositoryCallback<>() {
                                 @Override
                                 public void callback(StoredMyPet storedMyPet) {
                                     Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
                                     if (myPet.isPresent()) {
                                         Player player = myPetPlayer.getPlayer();
-                                        myPetPlayer.sendMessage(Util.formatTranslation("Message.Npc.ChosenPet", myPetPlayer, myPet.get().getPetName()));
+                                        myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Npc.ChosenPet", myPetPlayer, myPet.get().getDisplayName()));
                                         WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
                                         myPetPlayer.setMyPetForWorldGroup(wg, myPet.get().getUUID());
                                         MyPetApi.getRepository().updateMyPetPlayer(myPetPlayer, null);
 
                                         switch (myPet.get().createEntity()) {
                                             case Canceled:
-                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.Spawn.Prevent", myPetPlayer, myPet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", myPetPlayer, myPet.get().getDisplayName()));
                                                 break;
                                             case NoSpace:
-                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", myPetPlayer, myPet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", myPetPlayer, myPet.get().getDisplayName()));
                                                 break;
                                             case NotAllowed:
-                                                myPetPlayer.sendMessage(Util.formatTranslation("Message.No.AllowedHere", myPetPlayer, myPet.get().getPetName()));
+                                                myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPetPlayer, myPet.get().getDisplayName()));
                                                 break;
                                             case Dead:
                                                 if (de.Keyle.MyPet.api.Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                    myPetPlayer.sendMessage(Util.formatTranslation("Message.Call.Dead", myPetPlayer, myPet.get().getPetName()));
+                                                    myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", myPetPlayer, myPet.get().getDisplayName()));
                                                 } else {
-                                                    myPetPlayer.sendMessage(Util.formatTranslation("Message.Call.Dead.Respawn", myPetPlayer, myPet.get().getPetName(), myPet.get().getRespawnTime()));
+                                                    myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead.Respawn", myPetPlayer, myPet.get().getDisplayName(), myPet.get().getRespawnTime()));
                                                 }
                                                 break;
                                         }

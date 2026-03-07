@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -33,7 +32,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.PetInfoBuilder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -74,7 +73,7 @@ public class CommandInfo implements CommandTabCompleter {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(args[0])) {
                 petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(args[0]);
             } else {
-                sender.sendMessage(Util.formatTranslation("Message.No.UserHavePet", sender, args[0]));
+                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, args[0]));
                 return true;
             }
         } else {
@@ -184,11 +183,12 @@ public class CommandInfo implements CommandTabCompleter {
             }
             if (myPet.getOwner().getContributorRank() != ContributorCheck.ContributorRank.None) {
                 infoShown = true;
-                String contributionMessage = "" + ChatColor.GOLD;
-                contributionMessage += myPet.getOwner().getContributorRank().getDefaultIcon();
-                contributionMessage += " " + Translation.getString("Name.Title." + myPet.getOwner().getContributorRank().name(), sender) + " ";
-                contributionMessage += myPet.getOwner().getContributorRank().getDefaultIcon();
-                sender.sendMessage("   " + contributionMessage);
+                String icon = myPet.getOwner().getContributorRank().getDefaultIcon();
+                sender.sendMessage(Component.text()
+                        .append(Component.text("   " + icon + " ").color(NamedTextColor.GOLD))
+                        .append(Translation.getComponent("Name.Title." + myPet.getOwner().getContributorRank().name(), sender).color(NamedTextColor.GOLD))
+                        .append(Component.text(" " + icon).color(NamedTextColor.GOLD))
+                        .build());
             }
 
             if (!infoShown) {
@@ -197,7 +197,7 @@ public class CommandInfo implements CommandTabCompleter {
             return true;
         } else {
             if (args.length > 0) {
-                sender.sendMessage(Util.formatTranslation("Message.No.UserHavePet", sender, args[0]));
+                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, args[0]));
             } else {
                 sender.sendMessage(Translation.getComponent("Message.No.HasPet", sender));
             }

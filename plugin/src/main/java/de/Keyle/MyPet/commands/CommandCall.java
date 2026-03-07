@@ -22,7 +22,6 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -53,55 +52,55 @@ public class CommandCall implements CommandTabCompleter {
                 switch (myPet.createEntity()) {
                     case Success:
                         sender.sendMessage(MessageUtil.success(
-                                Util.formatTranslation(
+                                Translation.getFormattedComponent(
                                         "Message.Command.Call.Success",
                                         petOwner,
-                                        MessageUtil.petName(myPet.getPetName())
+                                        myPet.getDisplayName()
                                 ), false
                         ));
                         break;
                     case Canceled:
                         sender.sendMessage(MessageUtil.error(
-                                Util.formatTranslation(
+                                Translation.getFormattedComponent(
                                         "Message.Spawn.Prevent",
                                         petOwner,
-                                        MessageUtil.petName(myPet.getPetName())
+                                        myPet.getDisplayName()
                                 ), false
                         ));
                         break;
                     case NoSpace:
                         sender.sendMessage(MessageUtil.error(
-                                Util.formatTranslation(
+                                Translation.getFormattedComponent(
                                         "Message.Spawn.NoSpace",
                                         petOwner,
-                                        MessageUtil.petName(myPet.getPetName())
+                                        myPet.getDisplayName()
                                 ), false
                         ));
                         break;
                     case NotAllowed:
                         sender.sendMessage(MessageUtil.error(
-                                Util.formatTranslation(
+                                Translation.getFormattedComponent(
                                         "Message.No.AllowedHere",
                                         petOwner,
-                                        MessageUtil.petName(myPet.getPetName())
+                                        myPet.getDisplayName()
                                 ), false
                         ));
                         break;
                     case Dead:
                         if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
                             sender.sendMessage(MessageUtil.info(
-                                    Util.formatTranslation(
+                                    Translation.getFormattedComponent(
                                             "Message.Call.Dead",
                                             petOwner,
-                                            MessageUtil.petName(myPet.getPetName())
+                                            myPet.getDisplayName()
                                     ), false
                             ));
                         } else {
                             sender.sendMessage(MessageUtil.info(
-                                    Util.formatTranslation(
+                                    Translation.getFormattedComponent(
                                             "Message.Call.Dead.Respawn",
                                             petOwner,
-                                            MessageUtil.petName(myPet.getPetName()),
+                                            myPet.getDisplayName(),
                                             myPet.getRespawnTime()
                                     ), false
                             ));
@@ -109,19 +108,19 @@ public class CommandCall implements CommandTabCompleter {
                         break;
                     case Flying:
                         sender.sendMessage(MessageUtil.error(
-                                Util.formatTranslation(
+                                Translation.getFormattedComponent(
                                         "Message.Spawn.Flying",
                                         petOwner,
-                                        MessageUtil.petName(myPet.getPetName())
+                                        myPet.getDisplayName()
                                 ), false
                         ));
                         break;
                     case Spectator:
                         sender.sendMessage(MessageUtil.error(
-                                Util.formatTranslation(
+                                Translation.getFormattedComponent(
                                         "Message.Spawn.Spectator",
                                         petOwner,
-                                        MessageUtil.petName(myPet.getPetName())
+                                        myPet.getDisplayName()
                                 ), false
                         ));
                         break;

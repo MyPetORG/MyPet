@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
@@ -51,17 +50,17 @@ public class CommandBeacon implements CommandTabCompleter {
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatTranslation("Message.Call.First", player, myPet.getPetName()));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.Call.First", player, myPet.getDisplayName()));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatTranslation("Message.Action.Dead", player, myPet.getPetName()));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", player, myPet.getDisplayName()));
                     return true;
                 }
                 if (myPet.getSkills().isActive(BeaconImpl.class)) {
                     myPet.getSkills().get(BeaconImpl.class).activate();
                 } else {
-                    sender.sendMessage(Util.formatTranslation("Message.No.Skill", player, myPet.getPetName(), Translation.getComponent("Name.Skill.Beacon", player)));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.No.Skill", player, myPet.getDisplayName(), Translation.getComponent("Name.Skill.Beacon", player)));
                 }
                 return true;
             } else {

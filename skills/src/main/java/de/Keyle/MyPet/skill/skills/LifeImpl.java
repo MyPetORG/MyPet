@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Life;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class LifeImpl implements Life {
 
@@ -49,14 +49,17 @@ public class LifeImpl implements Life {
         life.removeAllUpgrades();
     }
 
-    public String toPrettyString(String locale) {
-        return "+" + ChatColor.GOLD + life.getValue().doubleValue();
+    public Component toPrettyComponent(String locale) {
+        return Component.text()
+                .append(Component.text("+"))
+                .append(Component.text(life.getValue().doubleValue()).color(NamedTextColor.GOLD))
+                .build();
     }
 
     @Override
-    public String[] getUpgradeMessage() {
-        return new String[]{
-                Util.formatText(Translation.getString("Message.Skill.Hp.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), myPet.getMaxHealth())
+    public Component[] getUpgradeMessage() {
+        return new Component[]{
+                Translation.getFormattedComponent("Message.Skill.Hp.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), myPet.getMaxHealth())
         };
     }
 

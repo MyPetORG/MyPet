@@ -3,10 +3,10 @@
   "Description": [
     "- <yellow><bold>Ride",
     "- <red><bold>Ranged Attacks",
-    "- Small <yellow><bold>Inventory <r>+ <yellow><bold>Pickup",
+    "- Small <yellow><bold>Inventory <reset>+ <yellow><bold>Pickup",
     "- <blue><bold>Sprint",
     "- <red><bold>Thorns",
-    "- <yellow><bold>Beacon<r> (Speed)"
+    "- <yellow><bold>Beacon<reset> (Speed)"
   ],
   "Skills": {
     "Ranged": {

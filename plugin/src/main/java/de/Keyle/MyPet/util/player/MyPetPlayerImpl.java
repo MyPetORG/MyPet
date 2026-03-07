@@ -24,7 +24,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
@@ -36,6 +35,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.CreakingService;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -384,10 +384,10 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                     myPet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
                     if (!MyPetApi.getCompatUtil().getMinecraftVersion().startsWith("1.8")) {
                         if (!p.isGliding()) {
-                            myPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Despawn", myPet.getOwner(), myPet.getPetName()));
+                            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Despawn", myPet.getOwner(), myPet.getDisplayName()));
                         }
                     } else {
-                        myPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Despawn", myPet.getOwner(), myPet.getPetName()));
+                        myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Despawn", myPet.getOwner(), myPet.getDisplayName()));
                     }
                 }
 
@@ -418,7 +418,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         }
 
                         if (spawn && myPet.createEntity() == MyPet.SpawnFlags.Success) {
-                            p.sendMessage(Util.formatTranslation("Message.Command.Call.Success", p, myPet.getPetName()));
+                            p.sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", p, myPet.getDisplayName()));
                         }
                     }
                 }

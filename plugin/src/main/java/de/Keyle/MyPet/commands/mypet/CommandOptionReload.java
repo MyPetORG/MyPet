@@ -33,9 +33,11 @@ import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.util.ConfigurationLoader;
+import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.shop.ShopManager;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -88,7 +90,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/mypet reload " + ChatColor.RED + "<all|config|shops|skilltrees>");
+            sender.sendMessage(Component.text(" -> ").append(Component.text("/mypet reload ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<all|config|shops|skilltrees>").color(NamedTextColor.RED)));
             return false;
         }
         switch (args[0].toLowerCase()) {
@@ -107,7 +109,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
                 reloadShops(sender);
                 break;
             default:
-                sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/mypet reload " + ChatColor.RED + "<all|config|shops|skilltrees>");
+                sender.sendMessage(Component.text(" -> ").append(Component.text("/mypet reload ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<all|config|shops|skilltrees>").color(NamedTextColor.RED)));
         }
         return true;
     }
@@ -149,7 +151,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
             }
         }
         if (!(sender instanceof ConsoleCommandSender)) {
-            sender.sendMessage("[" + ChatColor.DARK_GREEN + "MyPet" + ChatColor.RESET + "] config reloaded!");
+            sender.sendMessage(MessageUtil.prefixed(Component.text("config reloaded!")));
         }
         MyPetApi.getLogger().info("Config reloaded!");
     }
@@ -174,7 +176,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
             }
             myPet.setSkilltree(skilltree);
         }
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] skilltrees reloaded!");
+        sender.sendMessage(MessageUtil.prefixed(Component.text("skilltrees reloaded!")));
         MyPetApi.getLogger().info("Skilltrees reloaded!");
     }
 
@@ -184,7 +186,7 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
             MyPetApi.getServiceManager().getService(ShopManager.class).get().onEnable(); //TODO reload method?
         }
 
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] shops reloaded!");
+        sender.sendMessage(MessageUtil.prefixed(Component.text("shops reloaded!")));
         MyPetApi.getLogger().info("Shops reloaded!");
     }
 

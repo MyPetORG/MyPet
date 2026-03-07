@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Heal;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 
 public class HealImpl implements Heal {
@@ -55,16 +55,22 @@ public class HealImpl implements Heal {
         heal.removeAllUpgrades();
     }
 
-    public String toPrettyString(String locale) {
-        return "+" + ChatColor.GOLD + heal.getValue().doubleValue() + ChatColor.RESET
-                + Translation.getString("Name.HP", locale)
-                + " -> " + ChatColor.GOLD + timer.getValue() + ChatColor.RESET + " " + Translation.getString("Name.Seconds", locale);
+    public Component toPrettyComponent(String locale) {
+        return Component.text()
+                .append(Component.text("+"))
+                .append(Component.text(heal.getValue().doubleValue()).color(NamedTextColor.GOLD))
+                .append(Translation.getComponent("Name.HP", locale))
+                .append(Component.text(" -> "))
+                .append(Component.text(timer.getValue()).color(NamedTextColor.GOLD))
+                .append(Component.space())
+                .append(Translation.getComponent("Name.Seconds", locale))
+                .build();
     }
 
     @Override
-    public String[] getUpgradeMessage() {
-        return new String[]{
-                Util.formatText(Translation.getString("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getHeal().getValue().doubleValue(), getTimer().getValue())
+    public Component[] getUpgradeMessage() {
+        return new Component[]{
+                Translation.getFormattedComponent("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getHeal().getValue().doubleValue(), getTimer().getValue())
         };
     }
 

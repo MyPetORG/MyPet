@@ -28,10 +28,10 @@ import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -52,7 +52,7 @@ public class CommandSkill implements CommandTabCompleter {
                 sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", sender));
                 return true;
             } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-                sender.sendMessage(Util.formatTranslation("Message.No.UserHavePet", sender, petOwner.getName()));
+                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, petOwner.getName()));
                 return true;
             }
         } else {
@@ -71,11 +71,18 @@ public class CommandSkill implements CommandTabCompleter {
         if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
             myPet.autoAssignSkilltree();
-            sender.sendMessage(Util.formatTranslation("Message.Command.Skills.Show", sender, myPet.getPetName(), myPet.getSkilltree() == null ? "-" : Colorizer.setColors(myPet.getSkilltree().getDisplayName())));
+            String skilltreeDisplay = myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName();
+            sender.sendMessage(Translation.getFormattedComponent("Message.Command.Skills.Show", sender, myPet.getDisplayName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltreeDisplay)));
 
+            String locale = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
             for (Skill skill : myPet.getSkills().all()) {
                 if (skill.isActive()) {
-                    sender.sendMessage("  " + ChatColor.GREEN + skill.getName(MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender)) + ChatColor.RESET + " " + skill.toPrettyString(MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender)));
+                    sender.sendMessage(Component.text()
+                            .append(Component.text("  "))
+                            .append(Component.text(skill.getName(locale)).color(NamedTextColor.GREEN))
+                            .append(Component.space())
+                            .append(skill.toPrettyComponent(locale))
+                            .build());
                 }
             }
             return true;

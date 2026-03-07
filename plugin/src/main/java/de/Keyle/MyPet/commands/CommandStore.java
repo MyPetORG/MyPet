@@ -22,7 +22,6 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -74,12 +73,12 @@ public class CommandStore implements CommandTabCompleter {
 
                             int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
                             if (inactivePetCount >= maxPetCount) {
-                                sender.sendMessage(Util.formatTranslation("Message.Command.Switch.Limit", player, maxPetCount));
+                                sender.sendMessage(Translation.getFormattedComponent("Message.Command.Switch.Limit", player, maxPetCount));
                                 return;
                             }
                             if (MyPetApi.getMyPetManager().deactivateMyPet(owner, true)) {
                                 owner.setMyPetForWorldGroup(worldGroup, null);
-                                sender.sendMessage(Util.formatTranslation("Message.Command.Switch.Success", player, myPet.getPetName()));
+                                sender.sendMessage(Translation.getFormattedComponent("Message.Command.Switch.Success", player, myPet.getDisplayName()));
                             }
                         } else {
                             player.sendMessage(Translation.getComponent("Message.Command.Switch.NoPet", player));

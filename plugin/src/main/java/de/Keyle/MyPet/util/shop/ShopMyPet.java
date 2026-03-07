@@ -27,14 +27,14 @@ import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.NotImplemented;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
@@ -75,7 +75,7 @@ public class ShopMyPet implements StoredMyPet {
         IconMenuItem icon = this.icon.clone();
         Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
         egg.ifPresent(eggIconService -> eggIconService.updateIcon(petType, icon));
-        icon.setTitle(ChatColor.AQUA + Colorizer.setColors(getPetName()));
+        icon.setTitle(getDisplayName());
 
         return icon;
     }
@@ -135,16 +135,21 @@ public class ShopMyPet implements StoredMyPet {
 
     public String getPetName() {
         if (petName != null) {
-            return Colorizer.setColors(petName);
+            return petName;
         }
         if (petOwner != null) {
-            return Colorizer.setColors(Translation.getString("Name." + petType.name(), petOwner));
+            return Translation.getString("Name." + petType.name(), petOwner);
         }
         return "MyPet";
     }
 
     public void setPetName(String petName) {
         this.petName = petName;
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Util.SANITIZED_MINIMESSAGE.deserialize(getPetName());
     }
 
     public MyPetType getPetType() {
@@ -235,7 +240,7 @@ public class ShopMyPet implements StoredMyPet {
             this.skilltree = skilltree;
         }
         for (String line : config.getStringList("Description")) {
-            icon.addLoreLine(ChatColor.RESET + Colorizer.setColors(line));
+            icon.addLoreLine(Util.SANITIZED_MINIMESSAGE.deserialize(line));
         }
         List<String> options = config.getStringList("Options");
         if (options != null && !options.isEmpty()) {

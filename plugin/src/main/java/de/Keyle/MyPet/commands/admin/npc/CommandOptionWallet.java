@@ -23,11 +23,13 @@ package de.Keyle.MyPet.commands.admin.npc;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.util.WalletType;
+import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.hooks.citizens.WalletTrait;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -49,18 +51,18 @@ public class CommandOptionWallet implements CommandOptionTabCompleter {
         if (args.length >= 1) {
             NPC selectedNPC = CitizensAPI.getDefaultNPCSelector().getSelected(sender);
             if (selectedNPC == null) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] No NPC seleced!");
+                sender.sendMessage(MessageUtil.prefixed(Component.text("No NPC seleced!")));
                 return true;
             }
 
             if (!selectedNPC.hasTrait(WalletTrait.class)) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] This NPC doesn't has the " + ChatColor.GOLD + "mypet-wallet" + ChatColor.RESET + " trait!");
+                sender.sendMessage(MessageUtil.prefixed(Component.text().append(Component.text("This NPC doesn't has the ")).append(Component.text("mypet-wallet").color(NamedTextColor.GOLD)).append(Component.text(" trait!")).build()));
                 return true;
             }
 
             WalletType newWalletType = WalletType.getByName(args[0]);
             if (newWalletType == null) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Invalid wallet type!");
+                sender.sendMessage(MessageUtil.prefixed(Component.text("Invalid wallet type!")));
                 return true;
             }
 
@@ -68,12 +70,12 @@ public class CommandOptionWallet implements CommandOptionTabCompleter {
 
             if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
                 if (newWalletType == WalletType.Bank || newWalletType == WalletType.Player) {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You can not use the \"Player\" and \"Bank\" wallet types without an economy plugin installed!");
+                    sender.sendMessage(MessageUtil.prefixed(Component.text("You can not use the \"Player\" and \"Bank\" wallet types without an economy plugin installed!")));
                     return true;
                 }
             } else {
                 if (newWalletType == WalletType.Bank && !((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().hasBankSupport()) {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Your economy plugin doesn't has \"Banks\" support!");
+                    sender.sendMessage(MessageUtil.prefixed(Component.text("Your economy plugin doesn't has \"Banks\" support!")));
                     return true;
                 }
             }
@@ -84,7 +86,7 @@ public class CommandOptionWallet implements CommandOptionTabCompleter {
                 trait.setAccount(args[1]);
             }
 
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] wallet trait updated.");
+            sender.sendMessage(MessageUtil.prefixed(Component.text("wallet trait updated.")));
         }
         return false;
     }

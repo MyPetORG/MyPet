@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
@@ -58,11 +57,11 @@ public class CommandBehavior implements CommandTabCompleter {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
                 if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatTranslation("Message.Call.First", petOwner, myPet.getPetName()));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatTranslation("Message.No.CanUse", petOwner, myPet.getPetName()));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.No.CanUse", petOwner, myPet.getDisplayName()));
                     return true;
                 } else if (myPet.getSkills().has(BehaviorImpl.class)) {
                     BehaviorImpl behaviorSkill = myPet.getSkills().get(BehaviorImpl.class);
@@ -103,7 +102,7 @@ public class CommandBehavior implements CommandTabCompleter {
                             behaviorSkill.activate();
                             return false;
                         }
-                        myPet.getOwner().sendMessage(Util.formatTranslation("Message.Skill.Behavior.NewMode", myPet.getOwner(), myPet.getPetName(), Translation.getComponent("Name." + behaviorSkill.getBehavior().name(), myPet.getOwner().getPlayer())));
+                        myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Behavior.NewMode", myPet.getOwner(), myPet.getDisplayName(), Translation.getComponent("Name." + behaviorSkill.getBehavior().name(), myPet.getOwner().getPlayer())));
                     } else {
                         behaviorSkill.activate();
                     }

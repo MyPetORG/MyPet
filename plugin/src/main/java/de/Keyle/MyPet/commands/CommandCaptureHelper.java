@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -60,7 +59,7 @@ public class CommandCaptureHelper implements CommandTabCompleter {
 
                 myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
                 Component mode = myPetPlayer.isCaptureHelperActive() ? Translation.getComponent("Name.Enabled", player) : Translation.getComponent("Name.Disabled", player);
-                player.sendMessage(Util.formatTranslation("Message.Command.CaptureHelper.Mode", player, mode));
+                player.sendMessage(Translation.getFormattedComponent("Message.Command.CaptureHelper.Mode", player, mode));
                 return true;
             }
             player.sendMessage(Translation.getComponent("Message.No.Allowed", player));

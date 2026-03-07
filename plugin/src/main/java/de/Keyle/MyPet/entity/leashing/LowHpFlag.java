@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.entity.leashing;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -37,7 +37,7 @@ public class LowHpFlag implements LeashFlag {
     }
 
     @Override
-    public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
-        return Util.formatText(Translation.getString("Message.Command.CaptureHelper.Requirement.LowHP", player), String.format("%1.2f", entity.getMaxHealth() * 0.1));
+    public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+        return Translation.getFormattedComponent("Message.Command.CaptureHelper.Requirement.LowHP", player, String.format("%1.2f", entity.getMaxHealth() * 0.1));
     }
 }

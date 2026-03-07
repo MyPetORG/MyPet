@@ -68,7 +68,6 @@ import de.Keyle.MyPet.util.shop.ShopManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -555,26 +554,26 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                                                         MyPet runMyPet = myPetPlayer.getMyPet();
                                                         switch (runMyPet.createEntity()) {
                                                             case Canceled:
-                                                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Prevent", myPet.getOwner(), runMyPet.getPetName()));
+                                                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", myPet.getOwner(), runMyPet.getDisplayName()));
                                                                 break;
                                                             case NoSpace:
-                                                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", myPet.getOwner(), runMyPet.getPetName()));
+                                                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", myPet.getOwner(), runMyPet.getDisplayName()));
                                                                 break;
                                                             case NotAllowed:
-                                                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.No.AllowedHere", myPet.getOwner(), myPet.getPetName()));
+                                                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
                                                                 break;
                                                             case Dead:
                                                                 if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                                    runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Call.Dead", myPet.getOwner(), myPet.getPetName()));
+                                                                    runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Call.Dead", myPet.getOwner(), myPet.getDisplayName()));
                                                                 } else {
-                                                                    runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Respawn.In", myPet.getOwner(), myPet.getPetName(), myPet.getRespawnTime()));
+                                                                    runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Respawn.In", myPet.getOwner(), myPet.getDisplayName(), myPet.getRespawnTime()));
                                                                 }
                                                                 break;
                                                             case Flying:
-                                                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Spawn.Flying", myPet.getOwner(), myPet.getPetName()));
+                                                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", myPet.getOwner(), myPet.getDisplayName()));
                                                                 break;
                                                             case Success:
-                                                                runMyPet.getOwner().sendMessage(Util.formatTranslation("Message.Command.Call.Success", myPet.getOwner(), runMyPet.getPetName()));
+                                                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", myPet.getOwner(), runMyPet.getDisplayName()));
                                                                 break;
                                                         }
                                                     }
@@ -727,30 +726,27 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     }
 
     private void printSplashScreen(String updateStatus) {
-        String G = ChatColor.DARK_GREEN.toString();
-        String R = ChatColor.RESET.toString();
         String version = MyPetVersion.getFormattedVersion();
-        String compatInfo = compatUtil.getInternalVersion() != null
-                ? G + "✔" + R + " Compatible with " + compatUtil.getMinecraftVersion() + " (" + compatUtil.getInternalVersion() + ")"
-                : null;
-
+        String compatLine = compatUtil.getInternalVersion() != null
+                ? "<green>✔</green> Compatible with " + compatUtil.getMinecraftVersion() + " (" + compatUtil.getInternalVersion() + ")"
+                : "";
         String dbType = Configuration.Repository.REPOSITORY_TYPE;
 
         String splash = String.join("\n",
                 "",
-                G + "          ▄▄       ",
-                G + "    ▄██▄ ████      " + G + "  MyPet " + R + version,
-                G + "    ████ ▀██▀      " + G + "  Created by Keyle | Maintained by UserDerezzed",
-                G + "  ▄▄ ▀▀      ▄██▄  " + G + "  2011-" + Year.now(),
-                G + " ████  ▄███▄ ▀██▀  ",
-                G + "  ▀▀ ▄███████▄     " + (updateStatus != null ? R + "  " + updateStatus : ""),
-                G + "   ▄███████████▄   " + (compatInfo != null ? R + "  " + compatInfo : ""),
-                G + "   ▀███▀▀▀▀▀███▀   " + R + "  " + "Connecting to " + dbType + "...",
+                "<green>          ▄▄       </green>",
+                "<green>    ▄██▄ ████      </green><green>  MyPet </green>" + version,
+                "<green>    ████ ▀██▀      </green><green>  Created by Keyle | Maintained by UserDerezzed</green>",
+                "<green>  ▄▄ ▀▀      ▄██▄  </green><green>  2011-" + Year.now() + "</green>",
+                "<green> ████  ▄███▄ ▀██▀  </green>",
+                "<green>  ▀▀ ▄███████▄     </green>" + (updateStatus != null ? "  " + updateStatus : ""),
+                "<green>   ▄███████████▄   </green>" + (!compatLine.isEmpty() ? "  " + compatLine : ""),
+                "<green>   ▀███▀▀▀▀▀███▀   </green>  Connecting to " + dbType + "...",
                 "",
-                G + "Please consider supporting active development: https://ko-fi.com/userderezzed"
+                "<green>Please consider supporting active development: https://ko-fi.com/userderezzed</green>"
         );
 
-        getLogger().info(splash);
+        Bukkit.getConsoleSender().sendMessage(MiniMessage.miniMessage().deserialize(splash));
     }
 
     @Override

@@ -26,7 +26,8 @@ import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.settings.CommandSettingHealthbar;
 import de.Keyle.MyPet.commands.settings.CommandSettingsPetLivingSound;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -49,7 +50,16 @@ public class CommandSettings implements CommandTabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + String.join(ChatColor.RESET + ", " + ChatColor.DARK_AQUA, commandOptions.keySet()));
+            Component options = Component.text(" -> ");
+            boolean first = true;
+            for (String key : commandOptions.keySet()) {
+                if (!first) {
+                    options = options.append(Component.text(", "));
+                }
+                options = options.append(Component.text(key).color(NamedTextColor.DARK_AQUA));
+                first = false;
+            }
+            sender.sendMessage(options);
             return false;
         }
 

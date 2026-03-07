@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
@@ -31,8 +30,9 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.util.MessageUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -50,24 +50,24 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
         Player oldOwner = Bukkit.getPlayer(args[0]);
         if (oldOwner == null || !oldOwner.isOnline()) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
             return true;
         }
         final Player newOwner = Bukkit.getPlayer(args[1]);
         if (newOwner == null || !newOwner.isOnline()) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
             return true;
         }
 
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(oldOwner)) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), oldOwner.getName()));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, oldOwner.getName())));
             return true;
         }
 
         MyPetPlayer oldPetOwner = MyPetApi.getPlayerManager().getMyPetPlayer(oldOwner);
 
         if (!oldPetOwner.hasMyPet()) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), oldOwner.getName()));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, oldOwner.getName())));
             return true;
         }
 
@@ -79,7 +79,7 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         }
 
         if (newPetOwner.hasMyPet()) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + newOwner.getName() + " has already an active MyPet!");
+            sender.sendMessage(MessageUtil.prefixed(Component.text(newOwner.getName() + " has already an active MyPet!")));
             return true;
         }
 
@@ -109,7 +109,7 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
                     newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
                     MyPetApi.getRepository().updateMyPetPlayer(newPetOwner, null);
 
-                    newOwner.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet owned by " + newPetOwner.getName() + " successfully cloned!");
+                    newOwner.sendMessage(MessageUtil.prefixed(Component.text("MyPet owned by " + newPetOwner.getName() + " successfully cloned!")));
                 }
             }
         });

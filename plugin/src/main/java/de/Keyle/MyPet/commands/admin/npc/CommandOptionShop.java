@@ -23,10 +23,12 @@ package de.Keyle.MyPet.commands.admin.npc;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.util.service.types.ShopService;
+import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.hooks.citizens.ShopTrait;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -40,12 +42,12 @@ public class CommandOptionShop implements CommandOptionTabCompleter {
         if (args.length >= 1) {
             NPC selectedNPC = CitizensAPI.getDefaultNPCSelector().getSelected(sender);
             if (selectedNPC == null) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] No NPC seleced!");
+                sender.sendMessage(MessageUtil.prefixed(Component.text("No NPC seleced!")));
                 return true;
             }
 
             if (!selectedNPC.hasTrait(ShopTrait.class)) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] This NPC doesn't has the " + ChatColor.GOLD + "mypet-shop" + ChatColor.RESET + " trait!");
+                sender.sendMessage(MessageUtil.prefixed(Component.text().append(Component.text("This NPC doesn't has the ")).append(Component.text("mypet-shop").color(NamedTextColor.GOLD)).append(Component.text(" trait!")).build()));
                 return true;
             }
 
@@ -61,7 +63,7 @@ public class CommandOptionShop implements CommandOptionTabCompleter {
                     }
                 }
                 if (!shopFound) {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] No shop with this name found: " + shop);
+                    sender.sendMessage(MessageUtil.prefixed(Component.text("No shop with this name found: " + shop)));
                     return true;
                 }
             }
@@ -70,10 +72,10 @@ public class CommandOptionShop implements CommandOptionTabCompleter {
 
             trait.setShop(shop);
 
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Shop trait updated.");
+            sender.sendMessage(MessageUtil.prefixed(Component.text("Shop trait updated.")));
             return true;
         }
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Please enter a shopname!");
+        sender.sendMessage(MessageUtil.prefixed(Component.text("Please enter a shopname!")));
         return false;
     }
 

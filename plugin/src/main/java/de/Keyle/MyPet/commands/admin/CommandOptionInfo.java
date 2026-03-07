@@ -27,7 +27,8 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,7 +51,7 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin info " + ChatColor.RED + "<what info you want to see>");
+            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin info ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<what info you want to see>").color(NamedTextColor.RED)));
             return false;
         }
         switch (args[0].toLowerCase()) {
@@ -88,12 +89,12 @@ public class CommandOptionInfo implements CommandOptionTabCompleter {
                     }
                 } else {
                     sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-                    sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin info leashitem " + ChatColor.RED + "<pet type>");
+                    sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin info leashitem ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<pet type>").color(NamedTextColor.RED)));
                 }
                 break;
             }
             default:
-                sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin info " + ChatColor.RED + "<what info you want to see>");
+                sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin info ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<what info you want to see>").color(NamedTextColor.RED)));
         }
         return true;
     }

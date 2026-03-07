@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -30,8 +29,9 @@ import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
@@ -103,8 +103,12 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
      * @param locale the language/region code used for translations
      * @return a pretty, localized representation of the row count
      */
-    public String toPrettyString(String locale) {
-        return "" + ChatColor.GOLD + rows.getValue() + ChatColor.RESET + " " + Translation.getString("Name.Rows", locale);
+    public Component toPrettyComponent(String locale) {
+        return Component.text()
+                .append(Component.text(rows.getValue().toString()).color(NamedTextColor.GOLD))
+                .append(Component.space())
+                .append(Translation.getComponent("Name.Rows", locale))
+                .build();
     }
 
     /**
@@ -114,9 +118,9 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
      * @return an array of lines forming the upgrade message
      */
     @Override
-    public String[] getUpgradeMessage() {
-        return new String[]{
-                Util.formatText(Translation.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner()), myPet.getPetName(), getRows().getValue().intValue() * 9)
+    public Component[] getUpgradeMessage() {
+        return new Component[]{
+                Translation.getFormattedComponent("Message.Skill.Inventory.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getRows().getValue().intValue() * 9)
         };
     }
 
@@ -144,18 +148,18 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
             MyPetInventoryActionEvent event = new MyPetInventoryActionEvent(myPet, MyPetInventoryActionEvent.Action.Open);
             Bukkit.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
-                myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.No.AllowedHere", myPet.getOwner()), myPet.getPetName()));
+                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
                 return false;
             }
             if (myPet.getLocation().isPresent() && !myPet.getLocation().get().getBlock().isLiquid()) {
                 openInventory(myPet.getOwner().getPlayer());
                 return true;
             } else {
-                myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Skill.Inventory.Swimming", myPet.getOwner()), myPet.getPetName()));
+                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Inventory.Swimming", myPet.getOwner(), myPet.getDisplayName()));
                 return false;
             }
         } else {
-            myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Skill.Inventory.NotAvailable", myPet.getOwner()), myPet.getPetName()));
+            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Inventory.NotAvailable", myPet.getOwner(), myPet.getDisplayName()));
             return false;
         }
     }
@@ -167,7 +171,7 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
      * @param p the player for whom to open the inventory
      */
     public void openInventory(Player p) {
-        inventory.setName(myPet.getPetName());
+        inventory.setName(myPet.getDisplayName());
         inventory.open(p);
     }
 

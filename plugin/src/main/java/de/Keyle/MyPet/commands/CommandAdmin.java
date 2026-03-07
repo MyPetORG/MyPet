@@ -27,7 +27,10 @@ import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.admin.*;
-import org.bukkit.ChatColor;
+import de.Keyle.MyPet.util.MessageUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -71,7 +74,7 @@ public class CommandAdmin implements CommandTabCompleter {
 
         if (args.length < 1) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + String.join(ChatColor.RESET + ", " + ChatColor.DARK_AQUA, commandOptions.keySet()));
+            sender.sendMessage(Component.text(" -> ").append(Component.text(String.join(", ", commandOptions.keySet())).color(NamedTextColor.DARK_AQUA)));
             return false;
         }
 
@@ -81,7 +84,11 @@ public class CommandAdmin implements CommandTabCompleter {
         if (option != null) {
             return option.onCommandOption(sender, parameter);
         }
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] \"" + ChatColor.ITALIC + args[0].toLowerCase() + ChatColor.RESET + "\" is not a valid option!");
+        sender.sendMessage(MessageUtil.prefixed(Component.text()
+                .append(Component.text("\""))
+                .append(Component.text(args[0].toLowerCase()).decorate(TextDecoration.ITALIC))
+                .append(Component.text("\" is not a valid option!"))
+                .build()));
         return false;
     }
 

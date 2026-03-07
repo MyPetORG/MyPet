@@ -23,7 +23,6 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,9 +40,9 @@ public class WorldListener implements Listener {
                 FileConfiguration config = yamlConfiguration.getConfig();
                 config.set("Groups.default", WorldGroup.DEFAULT_GROUP.getWorlds());
                 yamlConfiguration.saveConfig();
-                MyPetApi.getLogger().info("added " + ChatColor.YELLOW + event.getWorld().getName() + ChatColor.RESET + " to '" + ChatColor.YELLOW + "default" + ChatColor.RESET + "' group.");
+                MyPetApi.getLogger().info("added '" + event.getWorld().getName() + "' to 'default' group.");
             } else {
-                MyPetApi.getLogger().warning("An error occured while adding " + ChatColor.YELLOW + event.getWorld().getName() + ChatColor.RESET + " to '" + ChatColor.YELLOW + "default" + ChatColor.RESET + "' group. Please restart the server.");
+                MyPetApi.getLogger().warning("An error occured while adding '" + event.getWorld().getName() + "' to 'default' group. Please restart the server.");
             }
         }
     }

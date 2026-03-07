@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.skill.skills;
 
 import com.google.common.collect.Iterables;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
@@ -29,7 +28,8 @@ import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
 
@@ -206,36 +206,29 @@ public class BehaviorImpl implements Behavior {
      * @param locale the locale key used for translations (must not be null)
      * @return a formatted String describing the active behavior modes
      */
-    public @NotNull String toPrettyString(@NotNull String locale) {
-        String activeModes = ChatColor.GOLD + Translation.getString("Name.Normal", locale) + ChatColor.RESET;
+    public @NotNull Component toPrettyComponent(@NotNull String locale) {
+        Component builder = Component.text()
+                .append(Translation.getComponent("Name.Modes", locale))
+                .append(Component.text(": "))
+                .append(Translation.getComponent("Name.Normal", locale).color(NamedTextColor.GOLD))
+                .build();
+
         if (activeBehaviors.contains(Friendly)) {
-            activeModes += ", " + ChatColor.GOLD + Translation.getString("Name.Friendly", locale) + ChatColor.RESET;
+            builder = builder.append(Component.text(", ")).append(Translation.getComponent("Name.Friendly", locale).color(NamedTextColor.GOLD));
         }
         if (activeBehaviors.contains(Aggressive)) {
-            if (!activeModes.equalsIgnoreCase("")) {
-                activeModes += ", ";
-            }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Aggressive", locale) + ChatColor.RESET;
+            builder = builder.append(Component.text(", ")).append(Translation.getComponent("Name.Aggressive", locale).color(NamedTextColor.GOLD));
         }
         if (activeBehaviors.contains(Farm)) {
-            if (!activeModes.equalsIgnoreCase("")) {
-                activeModes += ", ";
-            }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Farm", locale) + ChatColor.RESET;
+            builder = builder.append(Component.text(", ")).append(Translation.getComponent("Name.Farm", locale).color(NamedTextColor.GOLD));
         }
         if (activeBehaviors.contains(Raid)) {
-            if (!activeModes.equalsIgnoreCase("")) {
-                activeModes += ", ";
-            }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Raid", locale) + ChatColor.RESET;
+            builder = builder.append(Component.text(", ")).append(Translation.getComponent("Name.Raid", locale).color(NamedTextColor.GOLD));
         }
         if (activeBehaviors.contains(Duel)) {
-            if (!activeModes.equalsIgnoreCase("")) {
-                activeModes += ", ";
-            }
-            activeModes += ChatColor.GOLD + Translation.getString("Name.Duel", locale) + ChatColor.RESET;
+            builder = builder.append(Component.text(", ")).append(Translation.getComponent("Name.Duel", locale).color(NamedTextColor.GOLD));
         }
-        return Translation.getString("Name.Modes", locale) + ": " + activeModes;
+        return builder;
     }
 
     /**
@@ -245,10 +238,10 @@ public class BehaviorImpl implements Behavior {
      * @return a two-line, localized message array (never null)
      */
     @Override
-    public @NotNull String[] getUpgradeMessage() {
-        return new String[]{
-                Util.formatText(Translation.getString("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()),
-                "  " + toPrettyString(myPet.getOwner().getLanguage())
+    public @NotNull Component[] getUpgradeMessage() {
+        return new Component[]{
+                Translation.getFormattedComponent("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName()),
+                Component.text("  ").append(toPrettyComponent(myPet.getOwner().getLanguage()))
         };
     }
 
@@ -273,10 +266,10 @@ public class BehaviorImpl implements Behavior {
                     break;
                 }
             }
-            myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Skill.Behavior.NewMode", myPet.getOwner()), myPet.getPetName(), Translation.getString("Name." + selectedBehavior.name(), myPet.getOwner().getPlayer())));
+            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Behavior.NewMode", myPet.getOwner(), myPet.getDisplayName(), Translation.getComponent("Name." + selectedBehavior.name(), myPet.getOwner().getPlayer())));
             return true;
         } else {
-            myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.No.Skill", myPet.getOwner()), myPet.getPetName(), this.getName(myPet.getOwner().getLanguage())));
+            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.No.Skill", myPet.getOwner(), myPet.getDisplayName(), this.getName(myPet.getOwner().getLanguage())));
             return false;
         }
     }

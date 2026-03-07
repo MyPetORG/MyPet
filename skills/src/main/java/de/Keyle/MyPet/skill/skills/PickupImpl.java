@@ -22,7 +22,6 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
@@ -33,8 +32,9 @@ import de.Keyle.MyPet.api.skill.skills.Pickup;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -68,14 +68,20 @@ public class PickupImpl implements Pickup {
         expPickup.removeAllUpgrades();
     }
 
-    public String toPrettyString(String locale) {
-        return Translation.getString("Name.Range", locale) + ": " + ChatColor.GOLD + String.format("%1.2f", range.getValue().doubleValue()) + ChatColor.RESET + " " + Translation.getString("Name.Blocks", locale);
+    public Component toPrettyComponent(String locale) {
+        return Component.text()
+                .append(Translation.getComponent("Name.Range", locale))
+                .append(Component.text(": "))
+                .append(Component.text(String.format("%1.2f", range.getValue().doubleValue())).color(NamedTextColor.GOLD))
+                .append(Component.space())
+                .append(Translation.getComponent("Name.Blocks", locale))
+                .build();
     }
 
     @Override
-    public String[] getUpgradeMessage() {
-        return new String[]{
-                Util.formatText(Translation.getString("Message.Skill.Pickup.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", getRange().getValue().doubleValue()))
+    public Component[] getUpgradeMessage() {
+        return new Component[]{
+                Translation.getFormattedComponent("Message.Skill.Pickup.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), String.format("%1.2f", getRange().getValue().doubleValue()))
         };
     }
 
@@ -92,15 +98,15 @@ public class PickupImpl implements Pickup {
                     }
                 }
 
-                String mode = pickup ? Translation.getString("Name.Enabled", myPet.getOwner()) : Translation.getString("Name.Disabled", myPet.getOwner());
-                myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent(("Message.Skill.Pickup.StartStop"), myPet.getOwner()), myPet.getPetName(), mode));
+                Component mode = pickup ? Translation.getComponent("Name.Enabled", myPet.getOwner()) : Translation.getComponent("Name.Disabled", myPet.getOwner());
+                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Pickup.StartStop", myPet.getOwner(), myPet.getDisplayName(), mode));
                 return true;
             } else {
-                myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Skill.Pickup.NoInventory", myPet.getOwner()), myPet.getPetName()));
+                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Pickup.NoInventory", myPet.getOwner(), myPet.getDisplayName()));
                 return false;
             }
         } else {
-            myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.No.Skill", myPet.getOwner()), myPet.getPetName(), this.getName(myPet.getOwner().getLanguage())));
+            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.No.Skill", myPet.getOwner(), myPet.getDisplayName(), this.getName(myPet.getOwner().getLanguage())));
             return false;
         }
     }
@@ -110,7 +116,7 @@ public class PickupImpl implements Pickup {
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (pickup && (event.isCancelled() || !Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup"))) {
             pickup = false;
-            myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), Translation.getString("Name.Disabled", myPet.getOwner())));
+            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Pickup.StartStop", myPet.getOwner().getPlayer(), myPet.getDisplayName(), Translation.getComponent("Name.Disabled", myPet.getOwner())));
             return;
         }
         if (pickup && myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {

@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -39,7 +40,7 @@ public class UserCreatedFlag implements LeashFlag {
     }
 
     @Override
-    public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
-        return Translation.getString("Message.Command.CaptureHelper.UserCreated", player);
+    public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+        return Translation.getComponent("Message.Command.CaptureHelper.UserCreated", player);
     }
 }

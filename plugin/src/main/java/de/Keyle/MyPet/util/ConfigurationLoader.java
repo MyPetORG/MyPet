@@ -26,13 +26,11 @@ import de.Keyle.MyPet.api.Configuration.*;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
-import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -193,8 +191,8 @@ public class ConfigurationLoader {
                 ErrorUtil.reportError("ConfigurationLoader operation failed", e);
             }
         } else {
-            config.addDefault("Custom." + ChatColor.RED + "Big Boss.Max", 300.0);
-            config.addDefault("Custom." + ChatColor.RED + "Big Boss.Min", 150.0);
+            config.addDefault("Custom.<red>Big Boss.Max", 300.0);
+            config.addDefault("Custom.<red>Big Boss.Min", 150.0);
         }
 
         for (EntityType entityType : EntityType.values()) {
@@ -448,8 +446,8 @@ public class ConfigurationLoader {
         }
         Name.MAX_LENGTH = config.getInt("MyPet.Name.MaxLength", Name.MAX_LENGTH);
         Name.Tag.SHOW = config.getBoolean("MyPet.Name.Tag.Show", Name.Tag.SHOW);
-        Name.Tag.PREFIX = Colorizer.setColors(config.getString("MyPet.Name.Tag.Prefix", Name.Tag.PREFIX));
-        Name.Tag.SUFFIX = Colorizer.setColors(config.getString("MyPet.Name.Tag.Suffix", Name.Tag.SUFFIX));
+        Name.Tag.PREFIX = config.getString("MyPet.Name.Tag.Prefix", Name.Tag.PREFIX);
+        Name.Tag.SUFFIX = config.getString("MyPet.Name.Tag.Suffix", Name.Tag.SUFFIX);
 
         Repository.REPOSITORY_TYPE = config.getString("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
         Repository.CONVERT_FROM = config.getString("MyPet.Repository.ConvertFrom", Repository.CONVERT_FROM);

@@ -25,10 +25,11 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.MessageUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -42,12 +43,12 @@ public class CommandOptionName implements CommandOptionTabCompleter {
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin name " + ChatColor.RED + "<a player name>");
+            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin name ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<a player name>").color(NamedTextColor.RED)));
             return false;
         }
         if (args.length < 2) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin name " + args[0] + " " + ChatColor.RED + "<new name>");
+            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin name " + args[0] + " ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<new name>").color(NamedTextColor.RED)));
             return false;
         }
 
@@ -55,10 +56,10 @@ public class CommandOptionName implements CommandOptionTabCompleter {
         Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
         if (petOwner == null || !petOwner.isOnline()) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
             return true;
         } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), petOwner.getName()));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return true;
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
@@ -70,16 +71,14 @@ public class CommandOptionName implements CommandOptionTabCompleter {
             }
             name.append(args[i]);
         }
-        name = new StringBuilder(Colorizer.setColors(name.toString()));
-
-        Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
+        Pattern regex = Pattern.compile("<[a-zA-Z_]+>");
         Matcher regexMatcher = regex.matcher(name.toString());
         if (regexMatcher.find()) {
-            name.append(ChatColor.RESET);
+            name.append("<reset>");
         }
 
         myPet.setPetName(name.toString());
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
+        sender.sendMessage(MessageUtil.prefixed(Component.text("new name is now: ").append(Util.SANITIZED_MINIMESSAGE.deserialize(name.toString()))));
 
         return true;
     }

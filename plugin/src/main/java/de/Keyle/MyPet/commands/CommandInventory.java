@@ -22,7 +22,6 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
@@ -51,11 +50,11 @@ public class CommandInventory implements CommandTabCompleter {
                 if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                     MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
                     if (myPet.getStatus() == PetState.Despawned) {
-                        sender.sendMessage(Util.formatTranslation("Message.Call.First", player, myPet.getPetName()));
+                        sender.sendMessage(Translation.getFormattedComponent("Message.Call.First", player, myPet.getDisplayName()));
                         return true;
                     }
                     if (myPet.getStatus() == PetState.Dead) {
-                        sender.sendMessage(Util.formatTranslation("Message.Action.Dead", player, myPet.getPetName()));
+                        sender.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", player, myPet.getDisplayName()));
                         return true;
                     }
                     if (!Permissions.hasExtended(player, "MyPet.extended.inventory") && !Permissions.has(player, "MyPet.admin", false)) {
@@ -98,17 +97,14 @@ public class CommandInventory implements CommandTabCompleter {
                                 int inactivePetCount = getInactivePetCount(pets, worldGroup);
                                 int maxPetCount = getMaxPetCount(myPetOwner.getPlayer());
 
-                                String title;
                                 if (myPetOwner.hasMyPet()) {
                                     inactivePetCount--;
-                                    title = Translation.getString("Message.SelectMyPet", myPetOwner);
-                                } else {
-                                    title = Translation.getString("Message.SelectMyPet", myPetOwner);
                                 }
 
                                 String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
+                                Component title = Translation.getComponent("Message.SelectMyPet", myPetOwner).append(Component.text(" " + stats));
 
-                                final MyPetAdminSelectionGui gui = new MyPetAdminSelectionGui(myPetOwner,player, title + " " + stats);
+                                final MyPetAdminSelectionGui gui = new MyPetAdminSelectionGui(myPetOwner, player, title);
                                 gui.open(pets, new RepositoryCallback<StoredMyPet>() {
                                     @Override
                                     public void callback(StoredMyPet storedMyPet) {

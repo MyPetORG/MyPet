@@ -114,9 +114,8 @@ public abstract class PlatformHelper {
         } else if (health > maxHealth / 3) {
             healthColor = NamedTextColor.YELLOW;
         }
-        Component parsed = MyPetApi.getPlugin().miniMessage().deserialize(
-                "<petname><reset>: ",
-                Placeholder.unparsed("petname", myPet.getPetName()));
+        Component parsed = myPet.getDisplayName()
+                .append(MyPetApi.getPlugin().miniMessage().deserialize("<reset>: "));
         if (health > 0) {
             parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
                     "<healthcolor><health><white>/<maxhealth> ",

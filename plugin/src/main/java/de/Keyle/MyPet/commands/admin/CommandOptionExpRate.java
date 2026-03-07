@@ -26,7 +26,8 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -47,16 +48,16 @@ public class CommandOptionExpRate implements CommandOptionTabCompleter {
 
         if (args.length == 0 || !args[0].equalsIgnoreCase("global")) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", lang));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin exp-rate " + ChatColor.RED + "global");
+            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin exp-rate ").color(NamedTextColor.DARK_AQUA)).append(Component.text("global").color(NamedTextColor.RED)));
             return false;
         }
 
         if (args.length == 1) {
-            sender.sendMessage("Global Exp Rate: " + ChatColor.DARK_AQUA + Modifier.GLOBAL);
+            sender.sendMessage(Component.text("Global Exp Rate: ").append(Component.text(String.valueOf(Modifier.GLOBAL)).color(NamedTextColor.DARK_AQUA)));
         } else {
             if (!Util.isDouble(args[1])) {
                 sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", lang));
-                sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin exp-rate " + args[0].toLowerCase() + " " + ChatColor.RED + "<amount>");
+                sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin exp-rate " + args[0].toLowerCase() + " ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<amount>").color(NamedTextColor.RED)));
                 return false;
             }
 

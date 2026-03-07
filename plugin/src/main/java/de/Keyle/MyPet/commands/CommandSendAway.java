@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
@@ -61,7 +60,7 @@ public class CommandSendAway implements CommandTabCompleter {
             if (args.length == 0) {
                 sender.sendMessage(Translation.getComponent("Message.No.HasPet", (Player) sender));
             } else {
-                sender.sendMessage(Util.formatTranslation("Message.No.UserHavePet", lang, args[0]));
+                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, args[0]));
             }
             return true;
         }
@@ -78,27 +77,27 @@ public class CommandSendAway implements CommandTabCompleter {
                 if (!event.isCancelled()) {
                     myPet.removePet(false);
                     sender.sendMessage(MessageUtil.success(
-                            Util.formatTranslation(
+                            Translation.getFormattedComponent(
                                     "Message.Command.SendAway.Success",
                                     petOwner,
-                                    MessageUtil.petName(myPet.getPetName())
+                                    myPet.getDisplayName()
                             ), false
                     ));
                 }
             } else if (myPet.getStatus() == PetState.Despawned) {
                 sender.sendMessage(MessageUtil.info(
-                        Util.formatTranslation(
+                        Translation.getFormattedComponent(
                                 "Message.Command.SendAway.AlreadyAway",
                                 petOwner,
-                                MessageUtil.petName(myPet.getPetName())
+                                myPet.getDisplayName()
                         ), false
                 ));
             } else if (myPet.getStatus() == PetState.Dead) {
                 sender.sendMessage(MessageUtil.info(
-                        Util.formatTranslation(
+                        Translation.getFormattedComponent(
                                 "Message.Action.Dead",
                                 petOwner,
-                                MessageUtil.petName(myPet.getPetName())
+                                myPet.getDisplayName()
                         ), false
                 ));
             }
@@ -106,7 +105,7 @@ public class CommandSendAway implements CommandTabCompleter {
             if (args.length == 0) {
                 sender.sendMessage(Translation.getComponent("Message.No.HasPet", lang));
             } else {
-                sender.sendMessage(Util.formatTranslation("Message.No.UserHavePet", lang, args[0]));
+                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, args[0]));
             }
         }
         return true;

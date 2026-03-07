@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Control;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 
 public class ControlImpl implements Control {
@@ -54,12 +55,12 @@ public class ControlImpl implements Control {
         this.active.removeAllUpgrades();
     }
 
-    public String toPrettyString(String locale) {
-        return "";
+    public Component toPrettyComponent(String locale) {
+        return Component.empty();
     }
 
     @Override
-    public String[] getUpgradeMessage() {
+    public Component[] getUpgradeMessage() {
         return null;
     }
 

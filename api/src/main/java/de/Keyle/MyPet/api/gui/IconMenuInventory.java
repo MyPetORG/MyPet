@@ -133,6 +133,7 @@ public class IconMenuInventory {
 
     /**
      * Build a GUI-safe ItemStack from a menu item using only Bukkit APIs.
+     * Prefers Component-based title/lore when available (Paper API).
      */
     protected ItemStack createItemStack(IconMenuItem icon) {
         // Defensive defaults
@@ -142,13 +143,17 @@ public class IconMenuInventory {
         ItemMeta meta = is.getItemMeta();
         if (meta == null) return is;
 
-        // Title
-        if (icon.getTitle() != null && !icon.getTitle().isEmpty()) {
+        // Title — prefer Component over legacy String
+        if (icon.getComponentTitle() != null) {
+            meta.displayName(icon.getComponentTitle());
+        } else if (icon.getTitle() != null && !icon.getTitle().isEmpty()) {
             meta.setDisplayName(icon.getTitle());
         }
 
-        // Lore
-        if (!icon.getLore().isEmpty()) {
+        // Lore — prefer Component over legacy String
+        if (!icon.getComponentLore().isEmpty()) {
+            meta.lore(icon.getComponentLore());
+        } else if (!icon.getLore().isEmpty()) {
             List<String> lore = new ArrayList<>();
             for (String line : icon.getLore()) {
                 lore.add((line == null || line.isEmpty()) ? " " : line);

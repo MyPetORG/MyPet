@@ -28,8 +28,10 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.MessageUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -44,7 +46,7 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
         if (args.length >= 1) {
             Player player = Bukkit.getPlayer(args[0]);
             if (player == null || !player.isOnline()) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
+                sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
                 return true;
             }
             if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
@@ -59,7 +61,7 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
                     MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
                     MyPetApi.getRepository().removeMyPet(myPet.getUUID(), null);
 
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You removed the MyPet of: " + ChatColor.YELLOW + petOwner.getName());
+                    sender.sendMessage(MessageUtil.prefixed(Component.text("You removed the MyPet of: ").append(Component.text(petOwner.getName()).color(NamedTextColor.YELLOW))));
                 }
             }
         }

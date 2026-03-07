@@ -27,8 +27,10 @@ import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.MessageUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -50,12 +52,12 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin exp " + ChatColor.RED + "<a player name>");
+            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin exp ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<a player name>").color(NamedTextColor.RED)));
             return false;
         }
         if (args.length < 2) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin exp " + args[0] + " " + ChatColor.RED + "<amount>");
+            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin exp " + args[0] + " ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<amount>").color(NamedTextColor.RED)));
             return false;
         }
 
@@ -63,10 +65,10 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
         Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
         if (petOwner == null || !petOwner.isOnline()) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
             return true;
         } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), petOwner.getName()));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return true;
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
@@ -128,7 +130,7 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
         }
 
         myPet.getExperience().setExp(exp);
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".");
+        sender.sendMessage(MessageUtil.prefixed(Component.text("set exp to " + exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".")));
 
         return true;
     }

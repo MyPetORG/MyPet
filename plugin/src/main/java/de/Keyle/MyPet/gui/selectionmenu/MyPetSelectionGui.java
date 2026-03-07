@@ -28,16 +28,14 @@ import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.*;
-
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.RESET;
 
 public class MyPetSelectionGui {
 
@@ -93,35 +91,33 @@ public class MyPetSelectionGui {
             if (player.hasMyPet() && player.getMyPet().getUUID().equals(currentPet.getUUID()))
                 continue;
 
-            List<String> lore = new ArrayList<>();
+            IconMenuItem icon = new IconMenuItem();
 
             if (Configuration.HungerSystem.USE_HUNGER_SYSTEM)
-                lore.add(RESET + Translation.getString("Name.Hunger", player) + ": " + GOLD + Math.round(currentPet.getSaturation()));
+                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Hunger", player)).append(Component.text(": ")).append(Component.text(Math.round(currentPet.getSaturation())).color(NamedTextColor.GOLD)).build());
 
             if (currentPet.getRespawnTime() > 0) {
-                lore.add(RESET + Translation.getString("Name.Respawntime", player) + ": " + GOLD + currentPet.getRespawnTime() + "sec");
+                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Respawntime", player)).append(Component.text(": ")).append(Component.text(currentPet.getRespawnTime() + "sec").color(NamedTextColor.GOLD)).build());
             } else {
-                lore.add(RESET + Translation.getString("Name.HP", player) + ": " + GOLD + String.format("%1.2f", currentPet.getHealth()));
+                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.HP", player)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", currentPet.getHealth())).color(NamedTextColor.GOLD)).build());
             }
 
             boolean levelFound = false;
             if (currentPet.getInfo().keySet().contains("storage")) {
                 CompoundBinaryTag storage = currentPet.getInfo().getCompound("storage");
                 if (storage.keySet().contains("level")) {
-                    lore.add(RESET + Translation.getString("Name.Level", player) + ": " + GOLD + storage.getInt("level"));
+                    icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Level", player)).append(Component.text(": ")).append(Component.text(storage.getInt("level")).color(NamedTextColor.GOLD)).build());
                     levelFound = true;
                 }
             }
 
             if (!levelFound)
-                lore.add(RESET + Translation.getString("Name.Exp", player) + ": " + GOLD + String.format("%1.2f", currentPet.getExp()));
+                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Exp", player)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", currentPet.getExp())).color(NamedTextColor.GOLD)).build());
 
-            lore.add(RESET + Translation.getString("Name.Type", player) + ": " + GOLD + Translation.getString("Name." + currentPet.getPetType().name(), player));
-            lore.add(RESET + Translation.getString("Name.Skilltree", player) + ": " + GOLD + Colorizer.setColors(currentPet.getSkilltree() != null ? currentPet.getSkilltree().getDisplayName() : "-"));
+            icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Type", player)).append(Component.text(": ")).append(Translation.getComponent("Name." + currentPet.getPetType().name(), player).color(NamedTextColor.GOLD)).build());
+            icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Skilltree", player)).append(Component.text(": ")).append(Util.SANITIZED_MINIMESSAGE.deserialize(currentPet.getSkilltree() != null ? currentPet.getSkilltree().getDisplayName() : "-").color(NamedTextColor.GOLD)).build());
 
-            IconMenuItem icon = new IconMenuItem();
-            icon.setTitle(RESET + currentPet.getPetName());
-            icon.addLore(lore);
+            icon.setTitle(currentPet.getDisplayName());
             Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
             egg.ifPresent(service -> service.updateIcon(currentPet.getPetType(), icon));
 

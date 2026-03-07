@@ -22,6 +22,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
@@ -29,7 +30,6 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.animation.particle.FixedCircleAnimation;
 import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
 import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
@@ -57,9 +57,9 @@ public class LevelListener implements Listener {
         if (!event.isQuiet()) {
             int maxlevel = myPet.getSkilltree() != null ? myPet.getSkilltree().getMaxLevel() : 0;
             if (maxlevel != 0 && lvl >= maxlevel) {
-                myPet.getOwner().sendMessage(Util.formatTranslation("Message.LevelSystem.ReachedMaxLevel", event.getOwner(), myPet.getPetName(), maxlevel));
+                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.LevelSystem.ReachedMaxLevel", event.getOwner(), myPet.getDisplayName(), maxlevel));
             } else {
-                myPet.getOwner().sendMessage(Util.formatTranslation("Message.LevelSystem.LevelUp", event.getOwner(), myPet.getPetName(), event.getLevel()));
+                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.LevelSystem.LevelUp", event.getOwner(), myPet.getDisplayName(), event.getLevel()));
             }
         }
         Skilltree skilltree = myPet.getSkilltree();
@@ -72,10 +72,9 @@ public class LevelListener implements Listener {
                                 .replace("{{owner}}", myPet.getOwner().getName())
                                 .replace("{{level}}", "" + lvl)
                                 .replace("{{pet}}", myPet.getPetName());
-                        notification = Colorizer.setColors(notification);
                         String[] lines = notification.split("(<br>|\\\\n|\n|<br\\s?/>)");
                         for (String line : lines) {
-                            myPet.getOwner().sendMessage(Component.text(line));
+                            myPet.getOwner().sendMessage(Util.SANITIZED_MINIMESSAGE.deserialize(line));
                         }
                     }
                 }
@@ -96,10 +95,10 @@ public class LevelListener implements Listener {
                 }
                 if (!event.isQuiet()) {
                     for (Skill skill : affectedSkills) {
-                        String[] messages = skill.getUpgradeMessage();
+                        Component[] messages = skill.getUpgradeMessage();
                         if (messages != null) {
-                            for (String message : messages) {
-                                myPet.getOwner().sendMessage(Component.text("  " + message));
+                            for (Component message : messages) {
+                                myPet.getOwner().sendMessage(Component.text("  ").append(message));
                             }
                         }
                     }
@@ -134,7 +133,7 @@ public class LevelListener implements Listener {
         int fromLvl = event.fromLevel();
 
         if (!event.isQuiet()) {
-            myPet.getOwner().sendMessage(Util.formatTranslation("Message.LevelSystem.LevelDown", event.getOwner(), myPet.getPetName(), event.getLevel()));
+            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.LevelSystem.LevelDown", event.getOwner(), myPet.getDisplayName(), event.getLevel()));
         }
         Skilltree skilltree = myPet.getSkilltree();
         if (skilltree != null) {

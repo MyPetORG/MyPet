@@ -30,7 +30,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import org.bukkit.ChatColor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -214,7 +213,7 @@ public class Updater {
         String finalUrl = latest.getDownloadURL();
         String expectedHash = latest.getSha512Hash();
         Runnable downloadRunner = () -> {
-            MyPetApi.getLogger().info(ChatColor.RED + "Start update download: " + ChatColor.RESET + latest);
+            MyPetApi.getLogger().info("Start update download: " + latest);
 
             if (expectedHash == null) {
                 MyPetApi.getLogger().severe("Download aborted: Hash verification unavailable (API did not provide SHA512).");

@@ -30,7 +30,6 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -78,7 +77,7 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
                 try {
                     tag = TagParser.parseTag(nbtString);
                 } catch (Exception e) {
-                    MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.UNDERLINE + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
+                    MyPetApi.getLogger().warning("Error in config: " + e.getLocalizedMessage() + " caused by:");
                     MyPetApi.getLogger().warning(item.getDescriptionId() + " " + nbtString);
                 }
                 if (tag != null) {

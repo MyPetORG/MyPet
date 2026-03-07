@@ -39,9 +39,11 @@ import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.util.MessageUtil;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -646,7 +648,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
     public boolean onCommandOption(final CommandSender sender, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + ChatColor.RED + "<a player name>");
+            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin create ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<a player name>").color(NamedTextColor.RED)));
             return false;
         }
 
@@ -657,7 +659,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         if (args.length < 2 + forceOffset) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin create " + (forceOffset > 0 ? " -f " : "") + args[0] + " " + ChatColor.RED + "<a pet-type>");
+            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin create " + (forceOffset > 0 ? " -f " : "") + args[0] + " ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<a pet-type>").color(NamedTextColor.RED)));
             return false;
         }
 
@@ -668,12 +670,12 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
             if (myPetType.checkMinecraftVersion() && MyPetApi.getMyPetInfo().isLeashableEntityType(EntityType.valueOf(myPetType.getBukkitName()))) {
                 Player owner = Bukkit.getPlayer(args[forceOffset]);
                 if (owner == null || !owner.isOnline()) {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
+                    sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
                     return true;
                 }
 
                 if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
-                    sender.sendMessage("Pets are not allowed in " + ChatColor.GOLD + owner.getWorld().getName());
+                    sender.sendMessage(MessageUtil.prefixed(Component.text("Pets are not allowed in ").append(Component.text(owner.getWorld().getName()).color(NamedTextColor.GOLD))));
                     return true;
                 }
 
@@ -720,7 +722,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                                     myPet.get().createEntity();
                                     sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
                                 } else {
-                                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Can't create MyPet for " + newOwner.getName() + ". Is this player online?");
+                                    sender.sendMessage(MessageUtil.prefixed(Component.text("Can't create MyPet for " + newOwner.getName() + ". Is this player online?")));
                                 }
                             } else {
                                 sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));

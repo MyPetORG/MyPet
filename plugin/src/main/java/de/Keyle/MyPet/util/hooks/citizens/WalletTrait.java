@@ -27,7 +27,6 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.trait.Owner;
 import net.citizensnpcs.api.util.DataKey;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 import java.util.Objects;
 
@@ -87,14 +86,14 @@ public class WalletTrait extends Trait {
             }
             case Player -> {
                 if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-                    MyPetApi.getPlugin().getLogger().info(ChatColor.RED + "The MyPet-Wallet trait needs an economy plugin to use the \"Owner\" wallet type! (NPC: " + this.getNPC().getId() + ")");
+                    MyPetApi.getPlugin().getLogger().warning("The MyPet-Wallet trait needs an economy plugin to use the \"Owner\" wallet type! (NPC: " + this.getNPC().getId() + ")");
                     yield false;
                 }
                 yield ((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().depositPlayer(Bukkit.getOfflinePlayer(this.npc.getTrait(Owner.class).getOwnerId()), amount).transactionSuccess();
             }
             case Bank -> {
                 if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-                    MyPetApi.getPlugin().getLogger().info(ChatColor.RED + "The MyPet-Wallet trait needs an economy plugin to use the \"Bank\" wallet type! (NPC: " + this.getNPC().getId() + ")");
+                    MyPetApi.getPlugin().getLogger().warning("The MyPet-Wallet trait needs an economy plugin to use the \"Bank\" wallet type! (NPC: " + this.getNPC().getId() + ")");
                     yield false;
                 }
                 yield ((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().isBankOwner(account, Bukkit.getOfflinePlayer(this.npc.getTrait(Owner.class).getOwnerId())).transactionSuccess() && ((VaultHook) MyPetApi.getHookHelper().getEconomy()).getEconomy().bankDeposit(account, amount).transactionSuccess();

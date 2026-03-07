@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Thorns;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Creeper;
@@ -60,16 +60,20 @@ public class ThornsImpl implements Thorns {
         reflectedDamage.removeAllUpgrades();
     }
 
-    public String toPrettyString(String locale) {
-        return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET
-                + "% -> " + ChatColor.GOLD + reflectedDamage.getValue() + ChatColor.RESET
-                + "% " + Translation.getString("Name.Damage", locale);
+    public Component toPrettyComponent(String locale) {
+        return Component.text()
+                .append(Component.text(chance.getValue()).color(NamedTextColor.GOLD))
+                .append(Component.text("% -> "))
+                .append(Component.text(reflectedDamage.getValue()).color(NamedTextColor.GOLD))
+                .append(Component.text("% "))
+                .append(Translation.getComponent("Name.Damage", locale))
+                .build();
     }
 
     @Override
-    public String[] getUpgradeMessage() {
-        return new String[]{
-                Util.formatText(Translation.getString("Message.Skill.Thorns.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getChance().getValue(), getReflectedDamage().getValue())
+    public Component[] getUpgradeMessage() {
+        return new Component[]{
+                Translation.getFormattedComponent("Message.Skill.Thorns.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getReflectedDamage().getValue())
         };
     }
 

@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -57,7 +58,7 @@ public class BelowHpFlag implements LeashFlag {
     }
 
     @Override
-    public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+    public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
         double health = 0;
         for (Setting setting : settings.all()) {
             boolean isPercent = setting.getValue().endsWith("%");
@@ -80,6 +81,6 @@ public class BelowHpFlag implements LeashFlag {
             }
 
         }
-        return Util.formatText(Translation.getString("Message.Command.CaptureHelper.Requirement.BelowHP", player), String.format("%1.2f", health));
+        return Translation.getFormattedComponent("Message.Command.CaptureHelper.Requirement.BelowHP", player, String.format("%1.2f", health));
     }
 }

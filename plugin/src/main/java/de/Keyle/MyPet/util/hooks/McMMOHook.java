@@ -35,6 +35,7 @@ import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -134,7 +135,7 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
         }
 
         @Override
-        public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+        public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
             try {
                 List<String> skills = new ArrayList<>();
                 for (Object skillType : (Object[]) METHOD_SkillType_values.invoke(null)) {
@@ -147,7 +148,7 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
                         }
                     }
                 }
-                return "mcMMO: " + String.join(", ", skills);
+                return Component.text("mcMMO: " + String.join(", ", skills));
             } catch (IllegalAccessException | InvocationTargetException e) {
                 return null;
             }

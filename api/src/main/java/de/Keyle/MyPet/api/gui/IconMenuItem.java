@@ -21,8 +21,10 @@
 package de.Keyle.MyPet.api.gui;
 
 import de.Keyle.MyPet.api.util.inventory.meta.IconMeta;
+import lombok.Getter;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -39,6 +41,9 @@ public class IconMenuItem implements Cloneable {
     protected int amount = 1;
     protected String title = "";
     protected List<String> lore = new ArrayList<>();
+    @Getter
+    protected Component componentTitle = null;
+    protected List<Component> componentLore = new ArrayList<>();
     protected boolean glowing = false;
     protected ItemMeta bukkitMeta;
     protected IconMeta meta = null;
@@ -62,11 +67,13 @@ public class IconMenuItem implements Cloneable {
 
         if (useTitle && meta.hasDisplayName()) {
             this.title = meta.getDisplayName();
+            this.componentTitle = null;
             hasChanged = true;
         }
         if (useLore && meta.hasLore()) {
             this.lore.clear();
             this.lore.addAll(meta.getLore());
+            this.componentLore.clear();
             hasChanged = true;
         }
         if (this.bukkitMeta != meta) {
@@ -79,6 +86,7 @@ public class IconMenuItem implements Cloneable {
 
     public IconMenuItem addLoreLine(String line) {
         if (line != null) {
+            if (!this.componentLore.isEmpty()) this.componentLore.clear();
             if (line.contains("\n")) {
                 Collections.addAll(this.lore, line.split("\n"));
             } else {
@@ -172,6 +180,16 @@ public class IconMenuItem implements Cloneable {
     public IconMenuItem setTitle(String title) {
         if (title != null && !this.title.equals(title)) {
             this.title = title;
+            this.componentTitle = null;
+            hasChanged = true;
+        }
+        return this;
+    }
+
+    public IconMenuItem setTitle(Component title) {
+        if (title != null) {
+            this.componentTitle = title;
+            this.title = "";
             hasChanged = true;
         }
         return this;
@@ -179,6 +197,19 @@ public class IconMenuItem implements Cloneable {
 
     public List<String> getLore() {
         return Collections.unmodifiableList(lore);
+    }
+
+    public List<Component> getComponentLore() {
+        return Collections.unmodifiableList(componentLore);
+    }
+
+    public IconMenuItem addLoreLine(Component line) {
+        if (line != null) {
+            if (!this.lore.isEmpty()) this.lore.clear();
+            this.componentLore.add(line);
+            hasChanged = true;
+        }
+        return this;
     }
 
     public IconMenuItem setLore(String... lore) {
@@ -226,6 +257,8 @@ public class IconMenuItem implements Cloneable {
         newItem.amount = this.amount;
         newItem.title = this.title;
         newItem.lore.addAll(this.lore);
+        newItem.componentTitle = this.componentTitle;
+        newItem.componentLore.addAll(this.componentLore);
         newItem.glowing = this.glowing;
         if (this.bukkitMeta != null) {
             newItem.bukkitMeta = this.bukkitMeta.clone();

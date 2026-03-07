@@ -27,21 +27,18 @@ import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.util.Colorizer;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
-
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.RESET;
 
 public class MyPetAdminSelectionGui {
     MyPetPlayer petOwner;
@@ -79,11 +76,9 @@ public class MyPetAdminSelectionGui {
             Iterator<StoredMyPet> iterator = pets.iterator();
             while (iterator.hasNext()) {
                 StoredMyPet mypet = iterator.next();
-                if (mypet.getWorldGroup().isEmpty() || !mypet.getWorldGroup().equals(wg.getName())) {
-                    iterator.remove();
-                }
-
-                if (petOwner.hasMyPet() && petOwner.getMyPet().getUUID().equals(mypet.getUUID())) {
+                if (mypet.getWorldGroup().isEmpty()
+                        || !mypet.getWorldGroup().equals(wg.getName())
+                        || (petOwner.hasMyPet() && petOwner.getMyPet().getUUID().equals(mypet.getUUID()))) {
                     iterator.remove();
                 }
             }
@@ -120,33 +115,31 @@ public class MyPetAdminSelectionGui {
             }, MyPetApi.getPlugin());
 
             int pagePets = pets.size() - (page - 1) * 45;
-            for (int i = 0; i < pagePets && i <= 45; i++) {
+            for (int i = 0; i < pagePets && i < 45; i++) {
                 StoredMyPet mypet = pets.get(i + ((page - 1) * 45));
 
-                List<String> lore = new ArrayList<>();
-                lore.add(RESET + Translation.getString("Name.Hunger", admin) + ": " + GOLD + Math.round(mypet.getSaturation()));
+                IconMenuItem icon = new IconMenuItem();
+                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Hunger", admin)).append(Component.text(": ")).append(Component.text(Math.round(mypet.getSaturation())).color(NamedTextColor.GOLD)).build());
                 if (mypet.getRespawnTime() > 0) {
-                    lore.add(RESET + Translation.getString("Name.Respawntime", admin) + ": " + GOLD + mypet.getRespawnTime() + "sec");
+                    icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Respawntime", admin)).append(Component.text(": ")).append(Component.text(mypet.getRespawnTime() + "sec").color(NamedTextColor.GOLD)).build());
                 } else {
-                    lore.add(RESET + Translation.getString("Name.HP", admin) + ": " + GOLD + String.format("%1.2f", mypet.getHealth()));
+                    icon.addLoreLine(Component.text().append(Translation.getComponent("Name.HP", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", mypet.getHealth())).color(NamedTextColor.GOLD)).build());
                 }
                 boolean levelFound = false;
                 if (mypet.getInfo().keySet().contains("storage")) {
                     CompoundBinaryTag storage = mypet.getInfo().getCompound("storage");
                     if (storage.keySet().contains("level")) {
-                        lore.add(RESET + Translation.getString("Name.Level", admin) + ": " + GOLD + storage.getInt("level"));
+                        icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Level", admin)).append(Component.text(": ")).append(Component.text(storage.getInt("level")).color(NamedTextColor.GOLD)).build());
                         levelFound = true;
                     }
                 }
                 if (!levelFound) {
-                    lore.add(RESET + Translation.getString("Name.Exp", admin) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
+                    icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Exp", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", mypet.getExp())).color(NamedTextColor.GOLD)).build());
                 }
-                lore.add(RESET + Translation.getString("Name.Type", admin) + ": " + GOLD + Translation.getString("Name." + mypet.getPetType().name(), admin));
-                lore.add(RESET + Translation.getString("Name.Skilltree", admin) + ": " + GOLD + Colorizer.setColors(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
+                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Type", admin)).append(Component.text(": ")).append(Translation.getComponent("Name." + mypet.getPetType().name(), admin).color(NamedTextColor.GOLD)).build());
+                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Skilltree", admin)).append(Component.text(": ")).append(Util.SANITIZED_MINIMESSAGE.deserialize(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-").color(NamedTextColor.GOLD)).build());
 
-                IconMenuItem icon = new IconMenuItem();
-                icon.setTitle(RESET + mypet.getPetName());
-                icon.addLore(lore);
+                icon.setTitle(mypet.getDisplayName());
                 Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
                 egg.ifPresent(service -> service.updateIcon(mypet.getPetType(), icon));
 
@@ -157,14 +150,14 @@ public class MyPetAdminSelectionGui {
             if (previousPage != page) {
                 menu.setOption(45, new IconMenuItem()
                         .setMaterial(EnumSelector.find(Material.class, "SIGN", "OAK_SIGN"))
-                        .setTitle(previousPage + " ≪≪")
+                        .setTitle(Component.text(previousPage + " ≪≪"))
                 );
             }
 
             if (previousPage != page) {
                 menu.setOption(53, new IconMenuItem()
                         .setMaterial(EnumSelector.find(Material.class, "SIGN", "OAK_SIGN"))
-                        .setTitle(ChatColor.BOLD + "≫≫ " + ChatColor.RESET + nextPage)
+                        .setTitle(Component.text("≫≫ " + nextPage))
                 );
             }
 

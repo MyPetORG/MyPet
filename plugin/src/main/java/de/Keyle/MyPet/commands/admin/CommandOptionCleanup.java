@@ -25,7 +25,8 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import org.bukkit.ChatColor;
+import de.Keyle.MyPet.util.MessageUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 
 import java.util.Calendar;
@@ -34,12 +35,12 @@ import java.util.Date;
 public class CommandOptionCleanup implements CommandOption {
     @Override
     public boolean onCommandOption(final CommandSender sender, String[] args) {
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] cleaning up MyPet database...");
+        sender.sendMessage(MessageUtil.prefixed(Component.text("cleaning up MyPet database...")));
 
         long timestamp;
         if (args.length == 0) {
             timestamp = -1;
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] delete unused MyPets...");
+            sender.sendMessage(MessageUtil.prefixed(Component.text("delete unused MyPets...")));
         } else {
             Calendar cal = Calendar.getInstance();
 
@@ -70,13 +71,13 @@ public class CommandOptionCleanup implements CommandOption {
                 }
             }
             timestamp = cal.getTimeInMillis();
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] delete MyPets older than " + new Date(cal.getTimeInMillis()) + "...");
+            sender.sendMessage(MessageUtil.prefixed(Component.text("delete MyPets older than " + new Date(cal.getTimeInMillis()) + "...")));
         }
 
         MyPetApi.getRepository().cleanup(timestamp, new RepositoryCallback<>() {
             @Override
             public void callback(Integer value) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + value + " MyPets.");
+                sender.sendMessage(MessageUtil.prefixed(Component.text("removed " + value + " MyPets.")));
             }
         });
         return true;

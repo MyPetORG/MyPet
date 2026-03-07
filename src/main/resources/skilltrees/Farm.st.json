@@ -1,7 +1,7 @@
 {
   "Order": 4,
   "Description": [
-    "- <red><bold>Melee<r> + <red><bold>Ranged Attack",
+    "- <red><bold>Melee<reset> + <red><bold>Ranged Attack",
     "- <yellow><bold>Inventory",
     "- <red><bold>Thorns",
     "- <red><bold>Poison",

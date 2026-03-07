@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.ContributorCheck;
-import de.Keyle.MyPet.api.util.ComponentColorizer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -60,8 +59,7 @@ public class PetInfoBuilder {
      * @return Component with pet name header
      */
     public static Component petNameHeader(MyPet myPet) {
-        return Component.text(myPet.getPetName() + ":")
-                .color(NamedTextColor.AQUA);
+        return myPet.getDisplayName().append(Component.text(":"));
     }
 
     /**
@@ -314,7 +312,7 @@ public class PetInfoBuilder {
                 .append(Component.text(INDENT))
                 .append(Translation.getComponent("Name.Skilltree", sender))
                 .append(Component.text(": "))
-                .append(ComponentColorizer.parseToComponent(myPet.getSkilltree().getDisplayName()))
+                .append(Util.SANITIZED_MINIMESSAGE.deserialize(myPet.getSkilltree().getDisplayName()))
                 .build();
     }
 

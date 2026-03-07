@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -46,13 +45,13 @@ public class CommandStop implements CommandTabCompleter {
                 MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
                 if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatTranslation("Message.Call.First", petOwner, myPet.getPetName()));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
                     return true;
                 } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatTranslation("Message.Action.Dead", petOwner, myPet.getPetName()));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", petOwner, myPet.getDisplayName()));
                     return true;
                 }
-                sender.sendMessage(Util.formatTranslation("Message.Command.Stop.Attack", petOwner, myPet.getPetName()));
+                sender.sendMessage(Translation.getFormattedComponent("Message.Command.Stop.Attack", petOwner, myPet.getDisplayName()));
                 myPet.getEntity().ifPresent(MyPetBukkitEntity::forgetTarget);
             } else {
                 sender.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));

@@ -47,6 +47,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.*;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -468,11 +469,11 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
         }
 
         @Override
-        public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+        public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
             if (this.check(player, entity, damage, settings)) {
-                return Translation.getString("Message.Command.CaptureHelper.WorldGuard.Allowed", player);
+                return Translation.getComponent("Message.Command.CaptureHelper.WorldGuard.Allowed", player);
             } else {
-                return Translation.getString("Message.Command.CaptureHelper.WorldGuard.Denied", player);
+                return Translation.getComponent("Message.Command.CaptureHelper.WorldGuard.Denied", player);
             }
         }
     }

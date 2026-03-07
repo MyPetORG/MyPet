@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.*;
 
 @LeashFlagName("Wild")
@@ -41,7 +42,7 @@ public class WildFlag implements LeashFlag {
     }
 
     @Override
-    public String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
-        return Translation.getString("Message.Command.CaptureHelper.Wild", player);
+    public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+        return Translation.getComponent("Message.Command.CaptureHelper.Wild", player);
     }
 }

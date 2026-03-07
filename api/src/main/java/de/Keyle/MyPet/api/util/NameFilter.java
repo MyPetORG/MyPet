@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class NameFilter {
     public static List<String> NAME_FILTER = new ArrayList<>();
 
     public static boolean isClean(String text) {
-        text = Colorizer.stripColors(text);
+        text = Util.SANITIZED_MINIMESSAGE.stripTags(text);
         for (String pattern : NAME_FILTER) {
             try {
                 if (findRegEx(pattern, text)) {

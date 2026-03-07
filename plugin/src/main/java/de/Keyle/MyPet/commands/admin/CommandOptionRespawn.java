@@ -27,8 +27,10 @@ import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.MessageUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -48,7 +50,7 @@ public class CommandOptionRespawn implements CommandOptionTabCompleter {
     public boolean onCommandOption(CommandSender sender, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petadmin respawn " + ChatColor.RED + "<a player name>");
+            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin respawn ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<a player name>").color(NamedTextColor.RED)));
             return false;
         }
 
@@ -56,15 +58,15 @@ public class CommandOptionRespawn implements CommandOptionTabCompleter {
         Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
         if (petOwner == null || !petOwner.isOnline()) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
             return true;
         } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), petOwner.getName()));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return true;
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
         if (args.length >= 2 && args[1].equalsIgnoreCase("show")) {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.getRespawnTime() + "sec.");
+            sender.sendMessage(MessageUtil.prefixed(Component.text("respawn time: " + myPet.getRespawnTime() + "sec.")));
         } else if (myPet.getStatus() == PetState.Dead) {
             if (args.length >= 2 && Util.isInt(args[1])) {
                 int respawnTime = Integer.parseInt(args[1]);
@@ -74,9 +76,9 @@ public class CommandOptionRespawn implements CommandOptionTabCompleter {
             } else {
                 myPet.setRespawnTime(0);
             }
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.getRespawnTime() + "sec.");
+            sender.sendMessage(MessageUtil.prefixed(Component.text("set respawn time to: " + myPet.getRespawnTime() + "sec.")));
         } else {
-            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] pet is not dead!");
+            sender.sendMessage(MessageUtil.prefixed(Component.text("pet is not dead!")));
         }
 
         return true;

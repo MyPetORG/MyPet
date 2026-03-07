@@ -29,6 +29,8 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.NBTStorage;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -121,6 +123,11 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
 
     public void setPetName(String petName) {
         this.petName = petName;
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Util.SANITIZED_MINIMESSAGE.deserialize(getPetName());
     }
 
     public MyPetType getPetType() {

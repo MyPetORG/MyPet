@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Sprint;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.text.Component;
 
 public class SprintImpl implements Sprint {
 
@@ -56,15 +56,15 @@ public class SprintImpl implements Sprint {
         active.removeAllUpgrades();
     }
 
-    public String toPrettyString(String locale) {
-        return "";
+    public Component toPrettyComponent(String locale) {
+        return Component.empty();
     }
 
     @Override
-    public String[] getUpgradeMessage() {
+    public Component[] getUpgradeMessage() {
         if (getActive().getValue()) {
-            return new String[]{
-                    Util.formatText(Translation.getString("Message.Skill.Sprint.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName())
+            return new Component[]{
+                    Translation.getFormattedComponent("Message.Skill.Sprint.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName())
             };
         }
         return null;

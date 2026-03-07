@@ -21,23 +21,25 @@
 package de.Keyle.MyPet.api.entity.leashing;
 
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public interface LeashFlag {
 
-    static String getMessagePrefix(boolean right) {
+    static Component getComponentPrefix(boolean right) {
         if (right) {
-            return "" + ChatColor.GREEN + ChatColor.BOLD + "✔ " + ChatColor.RESET;
+            return Component.text("\u2714 ").color(NamedTextColor.GREEN).decoration(TextDecoration.BOLD, true);
         } else {
-            return "" + ChatColor.RED + ChatColor.BOLD + "✘ " + ChatColor.RESET;
+            return Component.text("\u2718 ").color(NamedTextColor.RED).decoration(TextDecoration.BOLD, true);
         }
     }
 
     boolean check(Player player, LivingEntity entity, double damage, Settings settings);
 
-    default String getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
+    default Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
         return null;
     }
 

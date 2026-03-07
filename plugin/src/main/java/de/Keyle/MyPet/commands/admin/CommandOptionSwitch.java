@@ -36,7 +36,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -66,14 +65,14 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         } else if (parameter.length == 1) {
             Player player = Bukkit.getPlayer(parameter[0]);
             if (player == null || !player.isOnline()) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", lang));
+                sender.sendMessage(de.Keyle.MyPet.util.MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
                 return true;
             }
             if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                 o = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             }
             if (o == null) {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Translation.getString("Message.No.UserHavePet", lang), player.getName()));
+                sender.sendMessage(de.Keyle.MyPet.util.MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
             }
         } else if (parameter.length == 2) {
             show = false;
@@ -101,8 +100,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                                 messageBuilder.append(Component.text(", "));
                             }
                             messageBuilder.append(
-                                    Component.text(mypet.getPetName())
-                                            .color(NamedTextColor.AQUA)
+                                    mypet.getDisplayName()
                                             .clickEvent(ClickEvent.runCommand("/petadmin switch " + owner.getUniqueId() + " " + mypet.getUUID()))
                                             .hoverEvent(Util.myPetToItemHover(mypet, lang))
                             );
@@ -115,7 +113,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                         }
                     } else {
                         for (StoredMyPet mypet : value) {
-                            sender.sendMessage(mypet.getPetName() + "(" + mypet.getPetType().name() + ") -> /petadmin switch " + owner.getUniqueId() + " " + mypet.getUUID());
+                            sender.sendMessage(Util.SANITIZED_MINIMESSAGE.stripTags(mypet.getPetName()) + "(" + mypet.getPetType().name() + ") -> /petadmin switch " + owner.getUniqueId() + " " + mypet.getUUID());
                         }
                     }
                 }
@@ -138,29 +136,29 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                             newPet.setWorldGroup(worldGroup.getName());
                             newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
 
-                            owner.sendMessage(Util.formatTranslation("Message.MultiWorld.NowActivePet", owner, myPet.get().getPetName()));
+                            owner.sendMessage(Translation.getFormattedComponent("Message.MultiWorld.NowActivePet", owner, myPet.get().getDisplayName()));
                             switch (myPet.get().createEntity()) {
                                 case Success:
-                                    sender.sendMessage(Util.formatTranslation("Message.Command.Call.Success", owner, myPet.get().getPetName()));
+                                    sender.sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", owner, myPet.get().getDisplayName()));
                                     break;
                                 case Canceled:
-                                    sender.sendMessage(Util.formatTranslation("Message.Spawn.Prevent", owner, myPet.get().getPetName()));
+                                    sender.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", owner, myPet.get().getDisplayName()));
                                     break;
                                 case NoSpace:
-                                    sender.sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", owner, myPet.get().getPetName()));
+                                    sender.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", owner, myPet.get().getDisplayName()));
                                     break;
                                 case NotAllowed:
-                                    sender.sendMessage(Util.formatTranslation("Message.No.AllowedHere", owner, myPet.get().getPetName()));
+                                    sender.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", owner, myPet.get().getDisplayName()));
                                     break;
                                 case Dead:
                                     if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                        sender.sendMessage(Util.formatTranslation("Message.Call.Dead", owner, myPet.get().getPetName()));
+                                        sender.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", owner, myPet.get().getDisplayName()));
                                     } else {
-                                        sender.sendMessage(Util.formatTranslation("Message.Call.Dead.Respawn", owner, myPet.get().getPetName(), myPet.get().getRespawnTime()));
+                                        sender.sendMessage(Translation.getFormattedComponent("Message.Call.Dead.Respawn", owner, myPet.get().getDisplayName(), myPet.get().getRespawnTime()));
                                     }
                                     break;
                                 case Flying:
-                                    sender.sendMessage(Util.formatTranslation("Message.Spawn.Flying", owner, myPet.get().getPetName()));
+                                    sender.sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", owner, myPet.get().getDisplayName()));
                                     break;
                             }
                         }

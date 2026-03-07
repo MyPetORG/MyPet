@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.api.util;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -53,7 +55,7 @@ public class LogFormat extends Formatter {
         }
 
         text = text.replaceAll("(\\u001b\\[\\d{1,3}(?:;\\d+)*m|(?:\\u001b\\[m)*)", "");
-        text = Colorizer.stripColors(text);
+        text = MiniMessage.miniMessage().stripTags(text);
 
         return text;
     }

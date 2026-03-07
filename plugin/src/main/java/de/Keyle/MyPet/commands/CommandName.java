@@ -27,10 +27,8 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -71,26 +69,23 @@ public class CommandName implements CommandTabCompleter {
                     return true;
                 }
 
-                name = new StringBuilder(Colorizer.setColors(name.toString()));
-
-                Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
+                Pattern regex = Pattern.compile("<[a-zA-Z_]+>");
                 Matcher regexMatcher = regex.matcher(name.toString());
                 if (regexMatcher.find()) {
-                    name.append(ChatColor.RESET);
+                    name.append("<reset>");
                 }
 
-                String nameWihtoutColors = Util.cutString(ChatColor.stripColor(name.toString()), 64);
-                name = new StringBuilder(Util.cutString(name.toString(), 64));
+                String nameWithoutColors = Util.SANITIZED_MINIMESSAGE.stripTags(name.toString());
 
-                if (nameWihtoutColors.length() <= Configuration.Name.MAX_LENGTH) {
+                if (nameWithoutColors.length() <= Configuration.Name.MAX_LENGTH) {
                     myPet.setPetName(name.toString());
                     if (Permissions.has(petOwner, "MyPet.command.name.color")) {
-                        sender.sendMessage(Util.formatTranslation("Message.Command.Name.New", petOwner, name.toString()));
+                        sender.sendMessage(Translation.getFormattedComponent("Message.Command.Name.New", petOwner, name.toString()));
                     } else {
-                        sender.sendMessage(Util.formatTranslation("Message.Command.Name.New", petOwner, nameWihtoutColors));
+                        sender.sendMessage(Translation.getFormattedComponent("Message.Command.Name.New", petOwner, nameWithoutColors));
                     }
                 } else {
-                    sender.sendMessage(Util.formatTranslation("Message.Command.Name.ToLong", petOwner, name.toString(), Configuration.Name.MAX_LENGTH));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.Command.Name.ToLong", petOwner, name.toString(), Configuration.Name.MAX_LENGTH));
                 }
             } else {
                 sender.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));

@@ -26,7 +26,8 @@ import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.player.Permissions;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -86,10 +87,10 @@ public class CommandOptionTicket implements CommandOption {
 
             out.close();
 
-            sender.sendMessage(ChatColor.RED + "------------------------------------------------");
+            sender.sendMessage(Component.text("------------------------------------------------").color(NamedTextColor.RED));
             sender.sendMessage("Ticket file created. Please upload this file somewhere and add the link to your ticket.");
             sender.sendMessage("  " + ticketFile.getAbsoluteFile());
-            sender.sendMessage(ChatColor.RED + "------------------------------------------------");
+            sender.sendMessage(Component.text("------------------------------------------------").color(NamedTextColor.RED));
         } catch (IOException e) {
             ErrorUtil.reportWarning("Failed to create debug ticket file", e);
         }

@@ -31,14 +31,14 @@ public class MessageUtil {
 
     /**
      * Standard MyPet plugin prefix: [MyPet]
-     * Format: [<AQUA>MyPet<RESET>]
+     * Format: [<GREEN>MyPet<RESET>]
      *
      * @return Component with plugin prefix
      */
     public static Component pluginPrefix() {
         return Component.text()
                 .append(Component.text("["))
-                .append(Component.text("MyPet").color(NamedTextColor.AQUA))
+                .append(Component.text("MyPet").color(NamedTextColor.GREEN))
                 .append(Component.text("]"))
                 .build();
     }
@@ -180,17 +180,6 @@ public class MessageUtil {
     }
 
     /**
-     * Creates a pet name component in AQUA color
-     * This is the standard color for pet names throughout MyPet
-     *
-     * @param name Pet name
-     * @return Component with pet name in AQUA
-     */
-    public static Component petName(String name) {
-        return Component.text(name).color(NamedTextColor.AQUA);
-    }
-
-    /**
      * Creates a value component in GOLD color
      * This is the standard color for values/numbers in MyPet displays
      *
@@ -240,6 +229,33 @@ public class MessageUtil {
                 .append(Component.text(label + ": "))
                 .append(Component.text(String.valueOf(value)).color(NamedTextColor.GOLD))
                 .build();
+    }
+
+    /**
+     * Creates a prefixed message that preserves the message's own colors.
+     * Format: [<AQUA>MyPet<RESET>] <message as-is>
+     * <p>
+     * Unlike {@link #info(Component, boolean)} which forces GRAY on the message,
+     * this method keeps whatever colors the message already has — useful for
+     * translation strings that contain their own color codes.
+     *
+     * @param message Message to prefix
+     * @return Component with plugin prefix followed by the original message
+     */
+    public static Component prefixed(Component message) {
+        return pluginPrefix()
+                .append(Component.space())
+                .append(message);
+    }
+
+    /**
+     * Creates a prefixed message from a plain string.
+     *
+     * @param message Message text to prefix
+     * @return Component with plugin prefix followed by the message
+     */
+    public static Component prefixed(String message) {
+        return prefixed(Component.text(message));
     }
 
     /**

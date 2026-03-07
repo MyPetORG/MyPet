@@ -22,7 +22,6 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -111,29 +110,29 @@ public class CommandSwitch implements CommandTabCompleter {
                                 Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
                                 if (activePet.isPresent() && owner.isOnline()) {
                                     Player player = owner.getPlayer();
-                                    activePet.get().getOwner().sendMessage(Util.formatTranslation("Message.Npc.ChosenPet", owner, activePet.get().getPetName()));
+                                    activePet.get().getOwner().sendMessage(Translation.getFormattedComponent("Message.Npc.ChosenPet", owner, activePet.get().getDisplayName()));
                                     WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
                                     owner.setMyPetForWorldGroup(wg, activePet.get().getUUID());
 
                                     switch (activePet.get().createEntity()) {
                                         case Canceled:
-                                            owner.sendMessage(Util.formatTranslation("Message.Spawn.Prevent", owner, activePet.get().getPetName()));
+                                            owner.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", owner, activePet.get().getDisplayName()));
                                             break;
                                         case NoSpace:
-                                            owner.sendMessage(Util.formatTranslation("Message.Spawn.NoSpace", owner, activePet.get().getPetName()));
+                                            owner.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", owner, activePet.get().getDisplayName()));
                                             break;
                                         case NotAllowed:
-                                            owner.sendMessage(Util.formatTranslation("Message.No.AllowedHere", owner, activePet.get().getPetName()));
+                                            owner.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", owner, activePet.get().getDisplayName()));
                                             break;
                                         case Dead:
                                             if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                owner.sendMessage(Util.formatTranslation("Message.Call.Dead", owner, activePet.get().getPetName()));
+                                                owner.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", owner, activePet.get().getDisplayName()));
                                             } else {
-                                                owner.sendMessage(Util.formatTranslation("Message.Spawn.Respawn.In", owner, activePet.get().getPetName(), activePet.get().getRespawnTime()));
+                                                owner.sendMessage(Translation.getFormattedComponent("Message.Spawn.Respawn.In", owner, activePet.get().getDisplayName(), activePet.get().getRespawnTime()));
                                             }
                                             break;
                                         case Spectator:
-                                            sender.sendMessage(Util.formatTranslation("Message.Spawn.Spectator", owner, activePet.get().getPetName()));
+                                            sender.sendMessage(Translation.getFormattedComponent("Message.Spawn.Spectator", owner, activePet.get().getDisplayName()));
                                             break;
                                     }
                                 }

@@ -23,7 +23,6 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
@@ -34,7 +33,8 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.mypet.CommandOptionReload;
 import de.Keyle.MyPet.commands.mypet.CommandOptionTicket;
 import de.Keyle.MyPet.commands.mypet.CommandOptionUpdate;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -70,7 +70,7 @@ public class CommandMyPet implements CommandTabCompleter {
             CommandOption option = subcommands.get(sub);
             if (option != null) {
                 if (sender instanceof Player && !option.isVisibleTo((Player) sender)) {
-                    sender.sendMessage(Translation.getString("Message.No.Allowed", sender));
+                    sender.sendMessage(Translation.getComponent("Message.No.Allowed", sender));
                     return true;
                 }
                 return option.onCommandOption(sender, Arrays.copyOfRange(args, 1, args.length));
@@ -83,11 +83,10 @@ public class CommandMyPet implements CommandTabCompleter {
     private void showSplash(CommandSender sender) {
         String line = dashes(SEPARATOR_WIDTH);
         sender.sendMessage(line);
-        sender.sendMessage(ChatColor.GOLD + "MyPet" + ChatColor.RESET + " " + MyPetVersion.getFormattedVersion());
-        sender.sendMessage(ChatColor.GRAY + "https://github.com/MyPetORG/MyPet");
+        sender.sendMessage(Component.text("MyPet").color(NamedTextColor.GOLD).append(Component.text(" " + MyPetVersion.getFormattedVersion()).color(NamedTextColor.WHITE)));
+        sender.sendMessage(Component.text("https://github.com/MyPetORG/MyPet").color(NamedTextColor.GRAY));
         sender.sendMessage("");
-        sender.sendMessage("Use " + ChatColor.GOLD + "/mypet help" + ChatColor.RESET
-                + " to see available commands.");
+        sender.sendMessage(Component.text("Use ").append(Component.text("/mypet help").color(NamedTextColor.GOLD)).append(Component.text(" to see available commands.")));
         sender.sendMessage(line);
     }
 
@@ -104,18 +103,17 @@ public class CommandMyPet implements CommandTabCompleter {
             if (match != null) {
                 showGroupedHelp(sender, player, isPlayer, match);
             } else {
-                sender.sendMessage(ChatColor.RED + "Unknown category: " + args[0]);
-                sender.sendMessage("Use " + ChatColor.GOLD + "/mypet help" + ChatColor.RESET
-                        + " to see available categories.");
+                sender.sendMessage(Component.text("Unknown category: " + args[0]).color(NamedTextColor.RED));
+                sender.sendMessage(Component.text("Use ").append(Component.text("/mypet help").color(NamedTextColor.GOLD)).append(Component.text(" to see available categories.")));
             }
         }
     }
 
     private void showCategoryListing(CommandSender sender, Player player, boolean isPlayer) {
-        String title = "MyPet - " + Translation.getString("Name.Help", sender);
-        sender.sendMessage(buildSeparator(title));
-        sender.sendMessage("Use " + ChatColor.GOLD + "/mypet help <category>" + ChatColor.RESET
-                + " to see commands.");
+        String helpText = Translation.getString("Name.Help", sender);
+        Component titleComponent = Component.text("MyPet - ").append(Translation.getComponent("Name.Help", sender));
+        sender.sendMessage(buildSeparator("MyPet - " + helpText, titleComponent));
+        sender.sendMessage(Component.text("Use ").append(Component.text("/mypet help <category>").color(NamedTextColor.GOLD)).append(Component.text(" to see commands.")));
         sender.sendMessage("");
 
         Map<CommandCategory, List<HelpProvider>> grouped = collectGroupedHelp();
@@ -129,14 +127,11 @@ public class CommandMyPet implements CommandTabCompleter {
                 continue;
             }
             String descKey = "Message.Command.Help.Category." + category.getDisplayName();
-            String description = Translation.getString(descKey, sender);
-            sender.sendMessage("  " + ChatColor.GOLD + category.getDisplayName().toLowerCase()
-                    + ChatColor.RESET + " - " + description);
+            sender.sendMessage(Component.text("  ").append(Component.text(category.getDisplayName().toLowerCase()).color(NamedTextColor.GOLD)).append(Component.text(" - ")).append(Translation.getComponent(descKey, sender)));
         }
 
         sender.sendMessage("");
-        sender.sendMessage("  " + ChatColor.GOLD + "all" + ChatColor.RESET + " - "
-                + Translation.getString("Message.Command.Help.Category.All", sender));
+        sender.sendMessage(Component.text("  ").append(Component.text("all").color(NamedTextColor.GOLD)).append(Component.text(" - ")).append(Translation.getComponent("Message.Command.Help.Category.All", sender)));
         sender.sendMessage(dashes(SEPARATOR_WIDTH));
     }
 
@@ -159,18 +154,20 @@ public class CommandMyPet implements CommandTabCompleter {
             if (!first) {
                 sender.sendMessage("");
             }
-            String title = "MyPet - " + Translation.getString("Name.Help", sender)
+            String plainTitle = "MyPet - " + Translation.getString("Name.Help", sender)
                     + " - " + category.getDisplayName();
-            sender.sendMessage(buildSeparator(title));
+            Component titleComp = Component.text("MyPet - ")
+                    .append(Translation.getComponent("Name.Help", sender))
+                    .append(Component.text(" - " + category.getDisplayName()));
+            sender.sendMessage(buildSeparator(plainTitle, titleComp));
             for (HelpProvider hp : providers) {
                 if (!isPlayer || hp.isVisibleTo(player)) {
                     if (hp.getHelpTranslationKey() != null) {
-                        sender.sendMessage("  " + Util.formatText(
-                                Translation.getString(hp.getHelpTranslationKey(), sender),
-                                hp.getHelpCommand()));
+                        sender.sendMessage(Component.text("  ").append(
+                                Translation.getFormattedComponent(hp.getHelpTranslationKey(), sender,
+                                hp.getHelpCommand())));
                     } else if (hp.getHelpDescription() != null) {
-                        sender.sendMessage("  " + ChatColor.GOLD + hp.getHelpCommand()
-                                + ChatColor.RESET + ": " + hp.getHelpDescription());
+                        sender.sendMessage(Component.text("  ").append(Component.text(hp.getHelpCommand()).color(NamedTextColor.GOLD)).append(Component.text(": " + hp.getHelpDescription())));
                     }
                 }
             }
@@ -178,8 +175,7 @@ public class CommandMyPet implements CommandTabCompleter {
         }
 
         sender.sendMessage("");
-        sender.sendMessage(Translation.getString("Message.Command.Help.MoreInfo", sender)
-                + ChatColor.GOLD + " " + Configuration.Misc.WIKI_URL);
+        sender.sendMessage(Translation.getComponent("Message.Command.Help.MoreInfo", sender).append(Component.text(" " + Configuration.Misc.WIKI_URL).color(NamedTextColor.GOLD)));
         sender.sendMessage(dashes(SEPARATOR_WIDTH));
     }
 
@@ -265,13 +261,14 @@ public class CommandMyPet implements CommandTabCompleter {
         return sb.toString();
     }
 
-    private static String buildSeparator(String title) {
-        int contentWidth = title.length() + 2;
+    private static Component buildSeparator(String plainTitle, Component titleComponent) {
+        int contentWidth = plainTitle.length() + 2;
         int remaining = SEPARATOR_WIDTH - contentWidth;
         int side = Math.max(0, remaining / 2);
 
-        return dashes(side) + " " + ChatColor.GOLD + title + ChatColor.RESET
-                + " " + dashes(remaining - side);
+        return Component.text(dashes(side) + " ")
+                .append(titleComponent.color(NamedTextColor.GOLD))
+                .append(Component.text(" " + dashes(remaining - side)));
     }
 
     @Override

@@ -22,12 +22,13 @@ package de.Keyle.MyPet.api.util.locale;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.Colorizer;
-import de.Keyle.MyPet.api.util.ComponentColorizer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.MiniMessageColorizer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.Style;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,10 +38,14 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Translation {
     private static Translation instance = null;
@@ -164,76 +169,127 @@ public class Translation {
         return instance.getComponentText(key, localeString);
     }
 
-    // ========== MiniMessage-Based Translation Methods (Advanced Formatting) ==========
+    // ========== Formatted Component Methods (Translation + Placeholder Substitution) ==========
 
     /**
-     * Gets translation as an Adventure Component with MiniMessage support for a Player.
-     * Respects player's client language setting.
+     * Gets a translated Component and replaces placeholders {0}, {1}, etc. with provided arguments.
+     * Arguments can be Components (inserted directly) or Objects (deserialized via SANITIZED_MINIMESSAGE).
      *
      * @param key    Translation key
-     * @param player The player whose language to use
-     * @return Translation as Component with MiniMessage formatting applied
+     * @param player Player for language detection
+     * @param values Arguments to replace placeholders
+     * @return Formatted Component
      */
-    public static Component getComponentMiniMessage(String key, Player player) {
-        if (player == null) {
-            return Component.text(key);
-        }
-
-        return getComponentMiniMessage(key, MyPetApi.getPlatformHelper().getPlayerLanguage(player));
+    public static Component getFormattedComponent(String key, Player player, Object... values) {
+        return formatComponent(getComponent(key, player), values);
     }
 
     /**
-     * Gets translation as an Adventure Component with MiniMessage support for a CommandSender.
-     * For Players, respects their language. For console, defaults to English.
-     *
-     * @param key    Translation key
-     * @param sender The command sender
-     * @return Translation as Component with MiniMessage formatting applied
+     * Gets a translated and formatted Component for a CommandSender.
      */
-    public static Component getComponentMiniMessage(String key, CommandSender sender) {
-        if (sender == null) {
-            return Component.text(key);
-        }
-        if (sender instanceof Player) {
-            return getComponentMiniMessage(key, (Player) sender);
-        }
-
-        return getComponentMiniMessage(key, "en");
+    public static Component getFormattedComponent(String key, CommandSender sender, Object... values) {
+        return formatComponent(getComponent(key, sender), values);
     }
 
     /**
-     * Gets translation as an Adventure Component with MiniMessage support for a MyPetPlayer.
-     * Uses the stored player language preference.
-     *
-     * @param key    Translation key
-     * @param player The MyPet player whose language to use
-     * @return Translation as Component with MiniMessage formatting applied
+     * Gets a translated and formatted Component for a MyPetPlayer.
      */
-    public static Component getComponentMiniMessage(String key, MyPetPlayer player) {
-        if (player == null) {
-            return Component.text(key);
-        }
-
-        return getComponentMiniMessage(key, player.getLanguage());
+    public static Component getFormattedComponent(String key, MyPetPlayer player, Object... values) {
+        return formatComponent(getComponent(key, player), values);
     }
 
     /**
-     * Gets translation as an Adventure Component with MiniMessage support for a specific locale.
-     * This is the base method that all other MiniMessage methods delegate to.
-     *
-     * @param key          Translation key
-     * @param localeString Locale string (e.g., "en", "de_DE", "fr")
-     * @return Translation as Component with MiniMessage formatting applied
+     * Gets a translated and formatted Component for a specific locale.
      */
-    public static Component getComponentMiniMessage(String key, String localeString) {
-        if (instance == null) {
-            return Component.text(key);
+    public static Component getFormattedComponent(String key, String localeString, Object... values) {
+        return formatComponent(getComponent(key, localeString), values);
+    }
+
+    // ========== Component Placeholder Substitution ==========
+
+    /**
+     * Formats a Component by replacing placeholders {0}, {1}, {2}... with provided arguments.
+     * Arguments can be Components (inserted with their styling) or Objects (converted via SANITIZED_MINIMESSAGE).
+     */
+    private static Component formatComponent(Component component, Object... values) {
+        if (component == null || values == null || values.length == 0) {
+            return component != null ? component : Component.empty();
         }
-        if (!Configuration.Misc.OVERWRITE_LANGUAGE.equalsIgnoreCase("")) {
-            localeString = Configuration.Misc.OVERWRITE_LANGUAGE;
+        return replaceInComponent(component, values);
+    }
+
+    /**
+     * Recursively processes a Component tree to replace placeholders.
+     */
+    private static Component replaceInComponent(Component component, Object[] values) {
+        if (component == null) {
+            return Component.empty();
         }
 
-        return instance.getComponentTextMiniMessage(key, localeString);
+        TextComponent.Builder builder = Component.text().style(component.style());
+
+        if (component instanceof TextComponent) {
+            TextComponent textComponent = (TextComponent) component;
+            String content = textComponent.content();
+            List<Component> replacedContent = replacePlaceholders(content, textComponent.style(), values);
+            for (Component part : replacedContent) {
+                builder.append(part);
+            }
+        } else {
+            builder.append(component);
+        }
+
+        for (Component child : component.children()) {
+            builder.append(replaceInComponent(child, values));
+        }
+
+        return builder.build();
+    }
+
+    /**
+     * Replaces placeholders in a text string and returns a list of Components.
+     */
+    private static List<Component> replacePlaceholders(String text, Style style, Object[] values) {
+        List<Component> result = new ArrayList<>();
+
+        if (text == null || text.isEmpty()) {
+            return result;
+        }
+
+        int lastIndex = 0;
+        Pattern pattern = Pattern.compile("\\{(\\d+)}");
+        Matcher matcher = pattern.matcher(text);
+
+        while (matcher.find()) {
+            if (matcher.start() > lastIndex) {
+                result.add(Component.text(text.substring(lastIndex, matcher.start())).style(style));
+            }
+
+            int index = Integer.parseInt(matcher.group(1));
+
+            if (index < values.length && values[index] != null) {
+                Object value = values[index];
+                if (value instanceof Component) {
+                    result.add((Component) value);
+                } else {
+                    result.add(Util.SANITIZED_MINIMESSAGE.deserialize(value.toString()));
+                }
+            } else {
+                result.add(Component.text(matcher.group()).style(style));
+            }
+
+            lastIndex = matcher.end();
+        }
+
+        if (lastIndex < text.length()) {
+            result.add(Component.text(text.substring(lastIndex)).style(style));
+        }
+
+        if (result.isEmpty() && !text.isEmpty()) {
+            result.add(Component.text(text).style(style));
+        }
+
+        return result;
     }
 
     // ========== Core translation + placeholder normalization ==========
@@ -261,9 +317,15 @@ public class Translation {
         // Example: "<gold>{0}<r>" → "<gold>{0}<reset>"
         fixed = fixed.replace("<r>", "<reset>");
 
-        // Additional normalization rules can be added here if needed:
-        // - Converting legacy color codes to MiniMessage tags
-        // - Fixing malformed tags, etc.
+        // Locale files use camelCase color names (e.g. <darkblue>) but MiniMessage
+        // requires underscore-separated names (e.g. <dark_blue>). Convert them.
+        fixed = fixed.replace("<darkblue>", "<dark_blue>");
+        fixed = fixed.replace("<darkgreen>", "<dark_green>");
+        fixed = fixed.replace("<darkaqua>", "<dark_aqua>");
+        fixed = fixed.replace("<darkred>", "<dark_red>");
+        fixed = fixed.replace("<darkpurple>", "<dark_purple>");
+        fixed = fixed.replace("<darkgray>", "<dark_gray>");
+        fixed = fixed.replace("<lightpurple>", "<light_purple>");
 
         return fixed;
     }
@@ -372,15 +434,15 @@ public class Translation {
     }
 
     /**
-     * Legacy method that retrieves translation with ChatColor formatting.
-     * Maintained for backward compatibility.
+     * Retrieves translation text with raw {@code <COLOR>} tags preserved.
+     * Callers that display to players should use {@link #getComponent} instead.
      *
      * @param key          Translation key
      * @param localeString Locale string (e.g., "en", "de_DE")
-     * @return Translation with ChatColor codes applied
+     * @return Translation text with {@code <COLOR>} tags
      */
     public String getText(String key, String localeString) {
-        return Colorizer.setColors(getRawText(key, localeString));
+        return getRawText(key, localeString);
     }
 
     // ========== Locale file loading ==========
@@ -394,18 +456,6 @@ public class Translation {
      * @return Translation as Adventure Component with colors applied
      */
     private Component getComponentText(String key, String localeString) {
-        return ComponentColorizer.parseToComponent(getRawText(key, localeString));
-    }
-
-    /**
-     * Advanced method that retrieves translation as an Adventure Component with MiniMessage support.
-     * Parses MiniMessage tags (gradients, hover, click, etc.) and falls back to legacy color codes.
-     *
-     * @param key          Translation key
-     * @param localeString Locale string (e.g., "en", "de_DE")
-     * @return Translation as Adventure Component with MiniMessage formatting applied
-     */
-    private Component getComponentTextMiniMessage(String key, String localeString) {
-        return MiniMessageColorizer.parseToComponent(getRawText(key, localeString));
+        return MiniMessage.miniMessage().deserialize(getRawText(key, localeString));
     }
 }

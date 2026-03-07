@@ -22,7 +22,6 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
@@ -290,18 +289,18 @@ public class EntityListener implements Listener {
                             willBeLeashed = false;
                             if (myPetPlayer != null) {
                                 if (myPetPlayer.isCaptureHelperActive()) {
-                                    String message = flag.getMissingMessage(player, leashTarget, event.getDamage(), flagSettings);
+                                    Component message = flag.getMissingMessage(player, leashTarget, event.getDamage(), flagSettings);
                                     if (message != null) {
-                                        myPetPlayer.sendMessage(Component.text(LeashFlag.getMessagePrefix(false) + message), 10000);
+                                        myPetPlayer.sendMessage(LeashFlag.getComponentPrefix(false).append(message), 10000);
                                     }
                                 }
                             }
                         } else {
                             if (myPetPlayer != null) {
                                 if (myPetPlayer.isCaptureHelperActive()) {
-                                    String message = flag.getMissingMessage(player, leashTarget, event.getDamage(), flagSettings);
+                                    Component message = flag.getMissingMessage(player, leashTarget, event.getDamage(), flagSettings);
                                     if (message != null) {
-                                        myPetPlayer.sendMessage(Component.text(LeashFlag.getMessagePrefix(true) + message), 10000);
+                                        myPetPlayer.sendMessage(LeashFlag.getComponentPrefix(true).append(message), 10000);
                                     }
                                 }
                             }
@@ -379,7 +378,7 @@ public class EntityListener implements Listener {
                                 myPet.ifPresent(pet -> pet.createEntity(capturedEntityLocation));
                                 if (owner.isCaptureHelperActive()) {
                                     owner.setCaptureHelperActive(false);
-                                    owner.sendMessage(Util.formatTranslation("Message.Command.CaptureHelper.Mode", owner, Translation.getString("Name.Disabled", owner)));
+                                    owner.sendMessage(Translation.getFormattedComponent("Message.Command.CaptureHelper.Mode", owner, Translation.getComponent("Name.Disabled", owner)));
                                 }
                                 justLeashed.remove(player.getUniqueId());
                             }

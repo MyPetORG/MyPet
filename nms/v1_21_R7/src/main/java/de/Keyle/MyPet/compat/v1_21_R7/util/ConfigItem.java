@@ -31,7 +31,6 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -65,7 +64,7 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
             this.item = CraftItemStack.asCraftMirror(stack);
 
         } catch (Exception e) {
-            MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.UNDERLINE + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
+            MyPetApi.getLogger().warning("Error in config: " + e.getLocalizedMessage() + " caused by:");
             MyPetApi.getLogger().warning(data);
         }
     }
@@ -96,7 +95,7 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
                     mergedString = mergedString.replace("count", "Count");
                     tag = TagParser.parseCompoundFully(mergedString);
                 } catch (Exception e) {
-                    MyPetApi.getLogger().warning("Error" + ChatColor.RESET + " in config: " + ChatColor.UNDERLINE + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
+                    MyPetApi.getLogger().warning("Error in config: " + e.getLocalizedMessage() + " caused by:");
                     MyPetApi.getLogger().warning(item.getDescriptionId() + " " + nbtString);
                 }
                 if (tag != null) {

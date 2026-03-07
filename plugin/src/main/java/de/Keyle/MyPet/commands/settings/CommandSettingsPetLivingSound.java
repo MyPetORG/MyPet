@@ -25,7 +25,8 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -50,7 +51,7 @@ public class CommandSettingsPetLivingSound implements CommandOptionTabCompleter 
         if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
             if (args.length < 1) {
                 sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-                sender.sendMessage(" -> " + ChatColor.DARK_AQUA + "/petsettings idle-volume " + ChatColor.RED + "<amount>");
+                sender.sendMessage(Component.text(" -> ").append(Component.text("/petsettings idle-volume ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<amount>").color(NamedTextColor.RED)));
                 return false;
             }
             if (Util.isInt(args[0])) {

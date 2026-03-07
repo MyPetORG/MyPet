@@ -319,30 +319,16 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 prefix = prefix.replace("<level>", "" + getMyPet().getExperience().getLevel());
                 suffix = suffix.replace("<owner>", getOwner().getName());
                 suffix = suffix.replace("<level>", "" + getMyPet().getExperience().getLevel());
-                this.setCustomNameVisible(isCustomNameVisible());
                 String name = myPet.getPetName();
                 if (!Permissions.has(getOwner(), "MyPet.command.name.color")) {
-                    name = ChatColor.stripColor(name);
+                    name = Util.SANITIZED_MINIMESSAGE.stripTags(name);
                 }
-                super.setCustomName(Component.literal(Util.cutString(prefix + name + suffix, 64)));
+                getBukkitEntity().customName(Util.SANITIZED_MINIMESSAGE.deserialize(prefix + name + suffix));
+                getBukkitEntity().setCustomNameVisible(Configuration.Name.Tag.SHOW);
             }
         } catch (Exception e) {
             ErrorUtil.report(e);
         }
-    }
-
-    @Override
-    public Component getCustomName() {
-        try {
-            return Component.literal(myPet.getPetName());
-        } catch (Exception e) {
-            return super.getCustomName();
-        }
-    }
-
-    @Override
-    public void setCustomName(Component ignored) {
-        updateNameTag();
     }
 
     @Override
@@ -481,9 +467,9 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         if (!sitEvent.isCancelled()) {
             this.sitPathfinder.toggleSitting();
             if (isSitting()) {
-                getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Sit.Stay", myPet.getOwner()), getMyPet().getPetName()));
+                getOwner().sendMessage(Translation.getFormattedComponent("Message.Sit.Stay", myPet.getOwner(), getMyPet().getDisplayName()));
             } else {
-                getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Sit.Follow", myPet.getOwner()), getMyPet().getPetName()));
+                getOwner().sendMessage(Translation.getFormattedComponent("Message.Sit.Follow", myPet.getOwner(), getMyPet().getDisplayName()));
             }
             sitCounter = 0;
         }
@@ -579,20 +565,13 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                     if (Permissions.has(getOwner(), "MyPet.command.name") && Permissions.hasExtended(getOwner(), "MyPet.extended.nametag")) {
                         final String name = itemStack.getHoverName().getString();
                         getMyPet().setPetName(name);
-                        getBukkitEntity().customName(net.kyori.adventure.text.Component.text("-"));
-                        myPet.getOwner().sendMessage(Util.formatComponent(Translation.getComponent("Message.Command.Name.New", myPet.getOwner()), name));
+                        myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Name.New", myPet.getOwner(), name));
                         if (((ServerPlayer) entityhuman).getBukkitEntity().getGameMode() != GameMode.CREATIVE) {
                             itemStack.shrink(1);
                         }
                         if (itemStack.getCount() <= 0) {
                             entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
                         }
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                updateNameTag();
-                            }
-                        }.runTaskLater(MyPetApi.getPlugin(), 1L);
                         return InteractionResult.CONSUME;
                     }
                 }
@@ -719,14 +698,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 org.bukkit.inventory.ItemStack otherBukkitItem = CraftItemStack.asCraftMirror(itemStack);
                 if (otherBukkitItem.getType() == Material.NAME_TAG) {
                     if (otherBukkitItem.hasItemMeta() && otherBukkitItem.getItemMeta().hasDisplayName()) {
-                        getBukkitEntity().customName(net.kyori.adventure.text.Component.text("-"));
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                updateNameTag();
-                            }
-                        }.runTaskLater(MyPetApi.getPlugin(), 1L);
-                        return InteractionResult.PASS;
+                        return InteractionResult.CONSUME;
                     }
                 }
             }

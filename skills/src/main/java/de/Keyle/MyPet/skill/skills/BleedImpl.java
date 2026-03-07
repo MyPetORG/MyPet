@@ -21,13 +21,13 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Bleed;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import lombok.Getter;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
@@ -79,21 +79,29 @@ public class BleedImpl implements Bleed {
     }
 
     @Override
-    public String toPrettyString(String locale) {
-        return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET + "% -> "
-                + ChatColor.GOLD + damage.getValue().doubleValue() + ChatColor.RESET + " "
-                + Translation.getString("Name.Damage", locale) + "/"
-                + ChatColor.GOLD + interval.getValue() + ChatColor.RESET + "s for "
-                + ChatColor.GOLD + duration.getValue() + ChatColor.RESET + " "
-                + Translation.getString("Name.Seconds", locale);
+    public Component toPrettyComponent(String locale) {
+        return Component.text()
+                .append(Component.text(chance.getValue()).color(NamedTextColor.GOLD))
+                .append(Component.text("% -> "))
+                .append(Component.text(damage.getValue().doubleValue()).color(NamedTextColor.GOLD))
+                .append(Component.space())
+                .append(Translation.getComponent("Name.Damage", locale))
+                .append(Component.text("/"))
+                .append(Component.text(interval.getValue()).color(NamedTextColor.GOLD))
+                .append(Component.text("s for "))
+                .append(Component.text(duration.getValue()).color(NamedTextColor.GOLD))
+                .append(Component.space())
+                .append(Translation.getComponent("Name.Seconds", locale))
+                .build();
     }
 
     @Override
-    public String[] getUpgradeMessage() {
-        return new String[]{
-                Util.formatText(
-                        Translation.getString("Message.Skill.Bleed.Upgrade", myPet.getOwner().getLanguage()),
-                        myPet.getPetName(),
+    public Component[] getUpgradeMessage() {
+        return new Component[]{
+                Translation.getFormattedComponent(
+                        "Message.Skill.Bleed.Upgrade",
+                        myPet.getOwner().getLanguage(),
+                        myPet.getDisplayName(),
                         getChance().getValue(),
                         getDamage().getValue().doubleValue(),
                         getInterval().getValue(),

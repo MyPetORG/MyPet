@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Knockback;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
@@ -55,14 +55,17 @@ public class KnockbackImpl implements Knockback {
         chance.removeAllUpgrades();
     }
 
-    public String toPrettyString(String locale) {
-        return "" + ChatColor.GOLD + chance.getValue() + ChatColor.RESET + "%";
+    public Component toPrettyComponent(String locale) {
+        return Component.text()
+                .append(Component.text(chance.getValue()).color(NamedTextColor.GOLD))
+                .append(Component.text("%"))
+                .build();
     }
 
     @Override
-    public String[] getUpgradeMessage() {
-        return new String[]{
-                Util.formatText(Translation.getString("Message.Skill.Knockback.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), getChance().getValue())
+    public Component[] getUpgradeMessage() {
+        return new Component[]{
+                Translation.getFormattedComponent("Message.Skill.Knockback.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue())
         };
     }
 

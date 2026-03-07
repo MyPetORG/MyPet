@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
@@ -51,10 +50,10 @@ public class CommandPickup implements CommandTabCompleter {
                     sender.sendMessage(Translation.getComponent("Message.No.Allowed", owner));
                     return true;
                 } else if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatTranslation("Message.Call.First", owner, myPet.getPetName()));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.Call.First", owner, myPet.getDisplayName()));
                     return true;
                 } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatTranslation("Message.Action.Dead", owner, myPet.getPetName()));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", owner, myPet.getDisplayName()));
                     return true;
                 }
                 if (myPet.getSkills().has(PickupImpl.class)) {
