@@ -42,7 +42,6 @@ import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
@@ -218,13 +217,14 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public void doPickupAnimation(Entity entity, Entity target) {
-        int count = 1;
-        if (target instanceof ItemEntity) {
-            count = ((ItemEntity) target).getItem().getCount();
-        }
-        for (Entity p : target.getNearbyEntities(10, 10, 10)) {
-            if (p instanceof Player) {
-                ((CraftPlayer) p).getHandle().connection.send(new ClientboundTakeItemEntityPacket(target.getEntityId(), entity.getEntityId(), count));
+        if (entity instanceof LivingEntity collector && target instanceof org.bukkit.entity.Item item) {
+            collector.playPickupItemAnimation(item, item.getItemStack().getAmount());
+        } else {
+            for (Entity p : target.getNearbyEntities(10, 10, 10)) {
+                if (p instanceof Player) {
+                    ((CraftPlayer) p).getHandle().connection.send(
+                            new ClientboundTakeItemEntityPacket(target.getEntityId(), entity.getEntityId(), 1));
+                }
             }
         }
     }
