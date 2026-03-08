@@ -61,7 +61,7 @@ dependencies {
     compileOnly("org.kingdoms:kingdoms:13.3.40")
     compileOnly("com.herocraftonline.heroes:Heroes:1.5.5.7")
     compileOnly("net.dmulloy2:ProtocolLib:5.3.0")
-    compileOnly("me.clip:placeholderapi:2.9.2")
+    compileOnly("me.clip:placeholderapi:2.12.2")
     compileOnly("fr.neatmonster:nocheatplus:3.16.0")
     compileOnly("de.myzelyam:supervanish:6.1.0")
     compileOnly("com.kirelcodes.miniaturepets:miniaturepets-api:1.5.4")

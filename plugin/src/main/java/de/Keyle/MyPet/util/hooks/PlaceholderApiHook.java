@@ -28,14 +28,10 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
-import me.clip.placeholderapi.events.PlaceholderHookUnloadEvent;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +40,7 @@ import java.util.stream.Collectors;
 @PluginHookName("PlaceholderAPI")
 public class PlaceholderApiHook implements PluginHook {
 
-    Map<String, PlaceHolder> placeHolders = new HashMap<>();
+    Map<String, PlaceHolder<?>> placeHolders = new HashMap<>();
     PlaceholderExpansion myPetExpansion;
 
     @Override
@@ -52,25 +48,13 @@ public class PlaceholderApiHook implements PluginHook {
         boolean loaded = registerParentPlaceHolder();
         if (loaded) {
             registerPlaceholder();
-            PlaceholderAPIPlugin plugin = MyPetApi.getPluginHookManager().getPluginInstance(PlaceholderAPIPlugin.class).get();
-            if (Util.versionCompare(plugin.getDescription().getVersion(), "2.8.5") < 0) {
-                Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
-            }
         }
         return loaded;
     }
 
     @Override
     public void onDisable() {
-        HandlerList.unregisterAll(this);
         myPetExpansion = null;
-    }
-
-    @EventHandler
-    public void on(PlaceholderHookUnloadEvent event) {
-        if (event.getHook() == myPetExpansion) {
-            Bukkit.getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> myPetExpansion.register(), 0);
-        }
     }
 
     public void registerPlaceholder() {
@@ -287,73 +271,66 @@ public class PlaceholderApiHook implements PluginHook {
     public boolean registerParentPlaceHolder() {
         myPetExpansion = new PlaceholderExpansion() {
             @Override
-            public boolean canRegister() {
-                return true;
-            }
-
             public boolean persist() {
                 return true;
             }
 
+            @SuppressWarnings("deprecation")
             @Override
-            public String getAuthor() {
+            public @NotNull String getAuthor() {
                 return MyPetApi.getPlugin().getDescription().getAuthors().toString();
             }
 
             @Override
-            public String getIdentifier() {
+            public @NotNull String getIdentifier() {
                 return "mypet";
             }
 
             @Override
-            public String getPlugin() {
+            public String getRequiredPlugin() {
                 return "MyPet";
             }
 
             @Override
-            public String getVersion() {
+            public @NotNull String getVersion() {
                 return "1.0.4";
             }
 
-            /**
-             * This is the method called when a placeholder with our identifier is found and needs a value
-             * We specify the value identifier in this method
-             */
             @Override
             @SuppressWarnings("unchecked")
-            public String onPlaceholderRequest(Player p, String identifier) {
+            public String onPlaceholderRequest(Player p, @NotNull String identifier) {
                 if (p == null) {
                     return null;
                 }
-                if (placeHolders.containsKey(identifier)) {
-                    PlaceHolder placeHolder = placeHolders.get(identifier);
-
-                    if (placeHolder.getHolderClass() == Player.class) {
-                        return placeHolder.getValue(p);
-                    }
-                    if (placeHolder.getHolderClass() == MyPetPlayer.class) {
-                        if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
-                            return placeHolder.getValue(MyPetApi.getPlayerManager().getMyPetPlayer(p));
-                        }
-                    }
-                    if (placeHolder.getHolderClass() == MyPet.class) {
-                        if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
-                            MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(p);
-                            if (petPlayer.hasMyPet()) {
-                                return placeHolder.getValue(petPlayer.getMyPet());
-                            }
-                        }
-                    }
-                    return "";
+                PlaceHolder<?> placeHolder = placeHolders.get(identifier);
+                if (placeHolder == null) {
+                    return null;
                 }
-                return null;
+
+                if (placeHolder.getHolderClass() == Player.class) {
+                    return ((PlaceHolder<Player>) placeHolder).getValue(p);
+                }
+                if (placeHolder.getHolderClass() == MyPetPlayer.class) {
+                    if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
+                        return ((PlaceHolder<MyPetPlayer>) placeHolder).getValue(MyPetApi.getPlayerManager().getMyPetPlayer(p));
+                    }
+                }
+                if (placeHolder.getHolderClass() == MyPet.class) {
+                    if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
+                        MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(p);
+                        if (petPlayer.hasMyPet()) {
+                            return ((PlaceHolder<MyPet>) placeHolder).getValue(petPlayer.getMyPet());
+                        }
+                    }
+                }
+                return "";
             }
         };
 
         return myPetExpansion.register();
     }
 
-    abstract class PlaceHolder<T> {
+    abstract static class PlaceHolder<T> {
 
         Class<T> clazz;
 
