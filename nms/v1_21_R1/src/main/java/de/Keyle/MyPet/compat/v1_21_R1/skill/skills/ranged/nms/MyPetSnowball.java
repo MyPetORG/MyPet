@@ -22,11 +22,8 @@ package de.Keyle.MyPet.compat.v1_21_R1.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R1.skill.skills.ranged.bukkit.CraftMyPetSnowball;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -37,7 +34,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
 
 @Compat("v1_21_R1")
 public class MyPetSnowball extends Snowball implements EntityMyPetProjectile {
@@ -84,13 +80,7 @@ public class MyPetSnowball extends Snowball implements EntityMyPetProjectile {
                 entity.hurt(this.damageSources().thrown(this, super.getOwner()), damage);
             }
         }
-        for (int i = 0; i < 8; i++) {
-            // ParticleTypes.ITEM_SNOWBALL
-            // This was actually Mapped correctly but for *whatever reason* it... didn't work?
-            Field snowballParticleField = ReflectionUtil.getField(ParticleTypes.class, "W");
-            ParticleOptions snowballParticle = (ParticleOptions) ReflectionUtil.getFieldValue(snowballParticleField, null);
-            this.level().addParticle(snowballParticle, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
-        }
+        getBukkitEntity().getWorld().spawnParticle(org.bukkit.Particle.ITEM_SNOWBALL, getX(), getY(), getZ(), 8);
         discard();
     }
 

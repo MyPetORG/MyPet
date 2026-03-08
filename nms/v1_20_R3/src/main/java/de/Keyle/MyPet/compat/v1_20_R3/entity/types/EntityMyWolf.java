@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyWolf;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyPet;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -194,7 +193,7 @@ public class EntityMyWolf extends EntityMyPet {
                     float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
                     float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.getBbWidth() * 0.5F;
 
-                    this.level().addParticle(ParticleTypes.SPLASH, this.getX() + offsetX, this.getY() + 0.8F, this.getZ() + offsetZ, this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z());
+                    getBukkitEntity().getWorld().spawnParticle(org.bukkit.Particle.WATER_SPLASH, this.getX() + offsetX, this.getY() + 0.8F, this.getZ() + offsetZ, 0, this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z(), 1.0);
                 }
             }
         }

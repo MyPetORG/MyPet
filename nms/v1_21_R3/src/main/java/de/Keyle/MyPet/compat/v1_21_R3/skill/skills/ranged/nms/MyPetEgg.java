@@ -24,8 +24,6 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R3.skill.skills.ranged.bukkit.CraftMyPetEgg;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -84,9 +82,7 @@ public class MyPetEgg extends ThrownEgg implements EntityMyPetProjectile {
                 entity.hurtServer(this.level().getMinecraftWorld(), this.damageSources().thrown(this, super.getOwner()), damage);
             }
         }
-        for (int i = 0; i < 8; ++i) {
-            this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.LEATHER_BOOTS)), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D);
-        }
+        getBukkitEntity().getWorld().spawnParticle(org.bukkit.Particle.ITEM, getX(), getY(), getZ(), 8, 0.0, 0.0, 0.0, 0.04, new org.bukkit.inventory.ItemStack(org.bukkit.Material.EGG));
         discard();
     }
 

@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_20_R1.skill.skills.ranged.bukkit.CraftMyPetEnderPearl;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -80,9 +79,7 @@ public class MyPetEnderPearl extends ThrownEnderpearl implements EntityMyPetProj
                 entity.hurt(this.damageSources().thrown(this, super.getOwner()), damage);
             }
         }
-        for (int i = 0; i < 32; ++i) {
-            this.level().addParticle(ParticleTypes.PORTAL, this.getX(), this.getY() + this.random.nextDouble() * 2.0D, this.getZ(), this.random.nextGaussian(), 0.0D, this.random.nextGaussian());
-        }
+        getBukkitEntity().getWorld().spawnParticle(org.bukkit.Particle.PORTAL, getX(), getY() + 1.0, getZ(), 32, 0.0, 1.0, 0.0);
         discard();
     }
 

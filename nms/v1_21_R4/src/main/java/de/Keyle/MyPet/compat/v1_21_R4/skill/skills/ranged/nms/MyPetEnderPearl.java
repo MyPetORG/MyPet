@@ -22,11 +22,8 @@ package de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.bukkit.CraftMyPetEnderPearl;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -39,7 +36,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
-import java.lang.reflect.Field;
 
 @Compat("v1_21_R4")
 public class MyPetEnderPearl extends ThrownEnderpearl implements EntityMyPetProjectile {
@@ -86,13 +82,7 @@ public class MyPetEnderPearl extends ThrownEnderpearl implements EntityMyPetProj
                 entity.hurtServer(this.level().getMinecraftWorld(), this.damageSources().thrown(this, super.getOwner()), damage);
             }
         }
-        for (int i = 0; i < 32; ++i) {
-            // ParticleTypes.PORTAL
-            // This was actually Mapped correctly but for *whatever reason* it... didn't work?
-            Field portalParticleField = ReflectionUtil.getField(ParticleTypes.class, "af");
-            ParticleOptions portalParticle = (ParticleOptions) ReflectionUtil.getFieldValue(portalParticleField, null);
-            this.level().addParticle(portalParticle, this.getX(), this.getY() + this.random.nextDouble() * 2.0D, this.getZ(), this.random.nextGaussian(), 0.0D, this.random.nextGaussian());
-        }
+        getBukkitEntity().getWorld().spawnParticle(org.bukkit.Particle.PORTAL, getX(), getY() + 1.0, getZ(), 32, 0.0, 1.0, 0.0);
         discard();
     }
 

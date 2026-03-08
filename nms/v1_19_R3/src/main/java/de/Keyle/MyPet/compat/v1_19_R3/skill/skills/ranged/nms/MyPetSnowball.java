@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_19_R3.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_19_R3.skill.skills.ranged.bukkit.CraftMyPetSnowball;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -80,9 +79,7 @@ public class MyPetSnowball extends Snowball implements EntityMyPetProjectile {
                 entity.hurt(this.damageSources().thrown(this, super.getOwner()), damage);
             }
         }
-        for (int i = 0; i < 8; i++) {
-            this.level.addParticle(ParticleTypes.ITEM_SNOWBALL, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
-        }
+        getBukkitEntity().getWorld().spawnParticle(org.bukkit.Particle.SNOWBALL, getX(), getY(), getZ(), 8);
         discard();
     }
 
