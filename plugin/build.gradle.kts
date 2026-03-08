@@ -41,7 +41,6 @@ dependencies {
         isTransitive = false
     }
 
-    compileOnly("io.lumine.xikage:MythicMobs:4.9.1")
     compileOnly("io.lumine:Mythic-Dist:5.0.1-SNAPSHOT")
 
     compileOnly("org.natrolite:vault-api:1.7")
