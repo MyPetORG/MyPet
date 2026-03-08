@@ -1062,10 +1062,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
             } else {
                 Preconditions.checkState(!entity.getPassengers().contains(this), "Circular entity riding! %s %s", this, entity);
-                boolean cancelled = false;
-                if (MyPetApi.getPlatformHelper().isSpigot()) {
-                    cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
-                }
+                boolean cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
                 if (cancelled) {
                     returnVal = false;
                 } else {
@@ -1082,10 +1079,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 throw new IllegalStateException("Use x.startRiding(y), not y.addPassenger(x)");
             } else {
                 Preconditions.checkState(!entity.getPassengers().contains(this), "Circular entity riding! %s %s", this, entity);
-                boolean cancelled = false;
-                if (MyPetApi.getPlatformHelper().isSpigot()) {
-                    cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
-                }
+                boolean cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
                 if (cancelled) {
                     returnVal = false;
                 } else {

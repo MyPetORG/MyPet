@@ -171,15 +171,6 @@ public abstract class PlatformHelper {
                 a.getBlockZ() == b.getBlockZ();
     }
 
-    public boolean isSpigot() {
-        try {
-            Class.forName("org.spigotmc.SpigotConfig");
-            return true;
-        } catch (Throwable throwable) {
-            return false;
-        }
-    }
-
     public Entity getEntityByUUID(UUID uuid) {
         return Bukkit.getEntity(uuid);
     }
