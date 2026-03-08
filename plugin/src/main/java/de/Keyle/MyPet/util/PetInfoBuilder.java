@@ -242,7 +242,7 @@ public class PetInfoBuilder {
                             .hoverEvent(Util.myPetToItemHover(myPet, player.getName()));
                 } else {
                     try {
-                        itemComponent = Component.translatable(MyPetApi.getPlatformHelper().getVanillaName(is))
+                        itemComponent = Component.translatable(is.translationKey())
                                 .color(NamedTextColor.GOLD)
                                 .hoverEvent(Util.myPetToItemHover(myPet, player.getName()));
                     } catch (Exception e) {

@@ -142,7 +142,6 @@ public abstract class PlatformHelper {
 
     public abstract boolean isEquipment(ItemStack itemStack);
 
-    public abstract String getVanillaName(ItemStack itemStack);
 
     public abstract void doPickupAnimation(Entity entity, Entity target);
 
