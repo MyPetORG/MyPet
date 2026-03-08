@@ -1143,15 +1143,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                     mountOwner(entity);
                 }
             }
-
-			/* this should not matter anymore but I'm leaving it in here in case it is relevant
-			if (this instanceof EntityMyAbstractHorse) {
-				double factor = 1;
-				if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_RIDE_SPEED) {
-					factor = Math.log10(myPet.getSaturation()) / 2;
-				}
-				getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((0.22222F * (1F + (rideSkill.getSpeedIncrease().getValue() / 100F))) * factor);
-			} */
         }
 
         if (rideSkill != null && entity instanceof EntityMySeat) {
