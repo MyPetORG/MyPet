@@ -26,13 +26,6 @@ dependencies {
     compileOnly("org.incendo:cloud-annotations:2.0.0")
 
     compileOnly("net.citizensnpcs:citizensapi:2.0.24")
-    compileOnly("com.plotsquared.bukkit:PlotSquared:3.4.4")
-
-    compileOnly("com.github.intellectualsites:plotsquared:4.453") {
-        exclude(group = "org.bstats", module = "bstats-bukkit")
-        exclude(group = "com.destroystokyo.paper", module = "paper-api")
-    }
-
     // PlotSquared V6+ (note: 6.11.2 has broken Maven deployment, use 6.11.1)
     compileOnly("com.plotsquared:PlotSquared-Core:6.11.1") {
         isTransitive = false
