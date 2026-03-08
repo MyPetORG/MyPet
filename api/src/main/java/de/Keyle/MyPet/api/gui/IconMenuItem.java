@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.api.gui;
 
-import de.Keyle.MyPet.api.util.inventory.meta.IconMeta;
 import lombok.Getter;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -46,7 +45,6 @@ public class IconMenuItem implements Cloneable {
     protected List<Component> componentLore = new ArrayList<>();
     protected boolean glowing = false;
     protected ItemMeta bukkitMeta;
-    protected IconMeta meta = null;
     protected CompoundBinaryTag tag;
 
     protected boolean hasChanged = true;
@@ -63,8 +61,6 @@ public class IconMenuItem implements Cloneable {
 
     @SuppressWarnings("unchecked")
     public IconMenuItem setMeta(ItemMeta meta, boolean useTitle, boolean useLore) {
-        this.meta = null;
-
         if (useTitle && meta.hasDisplayName()) {
             this.title = meta.getDisplayName();
             this.componentTitle = null;
@@ -144,20 +140,6 @@ public class IconMenuItem implements Cloneable {
             hasChanged = true;
         }
         return this;
-    }
-
-    public IconMeta getMeta() {
-        return meta;
-    }
-
-    public IconMenuItem setMeta(IconMeta meta) {
-        this.meta = meta;
-        this.bukkitMeta = null;
-        return this;
-    }
-
-    public boolean hasMeta() {
-        return meta != null;
     }
 
     public int getAmount() {
@@ -262,9 +244,6 @@ public class IconMenuItem implements Cloneable {
         newItem.glowing = this.glowing;
         if (this.bukkitMeta != null) {
             newItem.bukkitMeta = this.bukkitMeta.clone();
-        }
-        if (this.meta != null) {
-            newItem.meta = this.meta.clone();
         }
         // CompoundBinaryTag is immutable, so we can share the reference safely
         newItem.tag = this.tag;

@@ -29,12 +29,12 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Beacon;
 import de.Keyle.MyPet.api.util.EnumSelector;
-import de.Keyle.MyPet.api.util.inventory.meta.SkullMeta;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.IntArrayBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -44,6 +44,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
+
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 
 import static org.bukkit.Material.*;
 
@@ -59,9 +62,9 @@ public class BeaconImpl implements Beacon {
     protected BuffReceiver receiver = BuffReceiver.Owner;
     protected int beaconTimer = 0;
     protected Set<Buff> selectedBuffs = new HashSet<>();
-    SkullMeta disabledMeta = new SkullMeta();
-    SkullMeta partyMeta = new SkullMeta();
-    SkullMeta everyoneMeta = new SkullMeta();
+    org.bukkit.inventory.meta.SkullMeta disabledMeta;
+    org.bukkit.inventory.meta.SkullMeta partyMeta;
+    org.bukkit.inventory.meta.SkullMeta everyoneMeta;
     org.bukkit.inventory.meta.SkullMeta ownerMeta;
 
     public BeaconImpl(MyPet myPet) {
@@ -69,17 +72,18 @@ public class BeaconImpl implements Beacon {
         hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
 
         if (!Configuration.Skilltree.Skill.Beacon.DISABLE_HEAD_TEXTURE) {
+            Material headMaterial = EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD");
             // stone
-            disabledMeta.setOwner("NeverUsed0000001");
-            disabledMeta.setTexture("http://textures.minecraft.net/texture/de9b8aae7f9cc76d625ccb8abc686f30d38f9e6c42533098b9ad577f91c333c");
+            disabledMeta = createTexturedSkullMeta(headMaterial,
+                    "http://textures.minecraft.net/texture/de9b8aae7f9cc76d625ccb8abc686f30d38f9e6c42533098b9ad577f91c333c");
             // globe
-            everyoneMeta.setOwner("NeverUsed0000002");
-            everyoneMeta.setTexture("http://textures.minecraft.net/texture/b1dd4fe4a429abd665dfdb3e21321d6efa6a6b5e7b956db9c5d59c9efab25");
+            everyoneMeta = createTexturedSkullMeta(headMaterial,
+                    "http://textures.minecraft.net/texture/b1dd4fe4a429abd665dfdb3e21321d6efa6a6b5e7b956db9c5d59c9efab25");
             // beachball
-            partyMeta.setOwner("NeverUsed0000003");
-            partyMeta.setTexture("http://textures.minecraft.net/texture/5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd");
+            partyMeta = createTexturedSkullMeta(headMaterial,
+                    "http://textures.minecraft.net/texture/5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd");
             // owner skin
-            ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD")).getItemMeta();
+            ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(headMaterial).getItemMeta();
             ownerMeta.setOwner(myPet.getOwner().getName());
         }
 
@@ -199,29 +203,29 @@ public class BeaconImpl implements Beacon {
                         if (receiver != BuffReceiver.Owner) {
                             menu.getOption(21).setMeta(ownerMeta, false, false);
                             if (menu.getOption(22) != null) {
-                                menu.getOption(22).setMeta(partyMeta);
+                                menu.getOption(22).setMeta(partyMeta, false, false);
                             }
-                            menu.getOption(23).setMeta(disabledMeta);
+                            menu.getOption(23).setMeta(disabledMeta, false, false);
                             receiver = BuffReceiver.Owner;
                             menu.update();
                         }
                         break;
                     case 22:
                         if (receiver != BuffReceiver.Party) {
-                            menu.getOption(21).setMeta(disabledMeta);
-                            menu.getOption(22).setMeta(partyMeta);
-                            menu.getOption(23).setMeta(disabledMeta);
+                            menu.getOption(21).setMeta(disabledMeta, false, false);
+                            menu.getOption(22).setMeta(partyMeta, false, false);
+                            menu.getOption(23).setMeta(disabledMeta, false, false);
                             receiver = BuffReceiver.Party;
                             menu.update();
                         }
                         break;
                     case 23:
                         if (receiver != BuffReceiver.Everyone) {
-                            menu.getOption(21).setMeta(disabledMeta);
+                            menu.getOption(21).setMeta(disabledMeta, false, false);
                             if (menu.getOption(22) != null) {
-                                menu.getOption(22).setMeta(disabledMeta);
+                                menu.getOption(22).setMeta(disabledMeta, false, false);
                             }
-                            menu.getOption(23).setMeta(everyoneMeta);
+                            menu.getOption(23).setMeta(everyoneMeta, false, false);
                             receiver = BuffReceiver.Everyone;
                             menu.update();
                         }
@@ -325,7 +329,7 @@ public class BeaconImpl implements Beacon {
                     .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                     .setData(3)
                     .setTitle(Translation.getComponent("Name.Owner", myPet.getOwner()).color(NamedTextColor.GOLD))
-                    .setMeta(disabledMeta));
+                    .setMeta(disabledMeta, false, false));
         }
         if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && MyPetApi.getHookHelper().isInParty(getMyPet().getOwner().getPlayer())) {
             if (receiver != BuffReceiver.Party) {
@@ -333,13 +337,13 @@ public class BeaconImpl implements Beacon {
                         .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                         .setData(3)
                         .setTitle(Translation.getComponent("Name.Party", myPet.getOwner()).color(NamedTextColor.GOLD))
-                        .setMeta(partyMeta));
+                        .setMeta(partyMeta, false, false));
             } else {
                 menu.setOption(22, new IconMenuItem()
                         .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                         .setData(3)
                         .setTitle(Translation.getComponent("Name.Party", myPet.getOwner()).color(NamedTextColor.GOLD))
-                        .setMeta(disabledMeta));
+                        .setMeta(disabledMeta, false, false));
             }
         }
         if (receiver == BuffReceiver.Everyone) {
@@ -347,13 +351,13 @@ public class BeaconImpl implements Beacon {
                     .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                     .setData(3)
                     .setTitle(Translation.getComponent("Name.Everyone", myPet.getOwner()).color(NamedTextColor.GOLD))
-                    .setMeta(everyoneMeta));
+                    .setMeta(everyoneMeta, false, false));
         } else {
             menu.setOption(23, new IconMenuItem()
                     .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
                     .setData(3)
                     .setTitle(Translation.getComponent("Name.Everyone", myPet.getOwner()).color(NamedTextColor.GOLD))
-                    .setMeta(disabledMeta));
+                    .setMeta(disabledMeta, false, false));
         }
 
         if (getBuffLevel(Buff.Speed) > 0) {
@@ -686,5 +690,15 @@ public class BeaconImpl implements Beacon {
                 ", buffLevel=" + buffLevel +
                 ", selectedBuffs=" + selectedBuffs +
                 '}';
+    }
+
+    private static org.bukkit.inventory.meta.SkullMeta createTexturedSkullMeta(Material headMaterial, String textureUrl) {
+        org.bukkit.inventory.meta.SkullMeta meta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(headMaterial).getItemMeta();
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), null);
+        String textureJson = "{\"textures\":{\"SKIN\":{\"url\":\"" + textureUrl + "\"}}}";
+        String base64 = Base64.getEncoder().encodeToString(textureJson.getBytes());
+        profile.setProperty(new ProfileProperty("textures", base64));
+        meta.setPlayerProfile(profile);
+        return meta;
     }
 }
