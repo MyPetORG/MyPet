@@ -22,8 +22,6 @@ package de.Keyle.MyPet.compat.v1_20_R4.util.inventory;
 
 import com.mojang.serialization.Dynamic;
 import de.Keyle.MyPet.api.util.Compat;
-import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import net.kyori.adventure.nbt.*;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.RegistryAccess;
@@ -34,14 +32,12 @@ import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 @Compat("v1_20_R4")
 public class ItemStackNBTConverter {
 
-    private static final Field TAG_LIST_LIST = ReflectionUtil.getField(ListTag.class, "c"); //List-Field (or value)
     public static RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();
 
     public static CompoundBinaryTag itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
@@ -139,13 +135,8 @@ public class ItemStackNBTConverter {
             case 9 -> {
                 ListTag tagList = (ListTag) vanillaTag;
                 List<BinaryTag> elements = new ArrayList<>();
-                try {
-                    ArrayList<?> list = (ArrayList<?>) TAG_LIST_LIST.get(tagList);
-                    for (Object element : list) {
-                        elements.add(vanillaCompoundToCompound((Tag) element));
-                    }
-                } catch (IllegalAccessException e) {
-                    ErrorUtil.report(e);
+                for (Tag element : tagList) {
+                    elements.add(vanillaCompoundToCompound(element));
                 }
                 yield ListBinaryTag.from(elements);
             }
