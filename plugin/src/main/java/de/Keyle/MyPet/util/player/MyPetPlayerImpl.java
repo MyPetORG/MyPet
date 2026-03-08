@@ -405,7 +405,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
                         if (velocity) {
                             spawn = !p.isInsideVehicle();
-                            if (spawn && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
+                            if (spawn) {
                                 spawn = !p.isGliding();
                             }
                         }

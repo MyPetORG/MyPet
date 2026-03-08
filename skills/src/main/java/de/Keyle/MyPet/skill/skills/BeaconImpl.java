@@ -420,13 +420,11 @@ public class BeaconImpl implements Beacon {
                     .setAmount(getBuffLevel(Buff.NightVision))
                     .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.NightVision.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.NightVision))).color(NamedTextColor.GRAY)).build()));
         }
-        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-            if (getBuffLevel(Buff.Luck) > 0) {
-                menu.setOption(17, new IconMenuItem()
-                        .setMaterial(DIAMOND)
-                        .setAmount(getBuffLevel(Buff.Luck))
-                        .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Luck.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Luck))).color(NamedTextColor.GRAY)).build()));
-            }
+        if (getBuffLevel(Buff.Luck) > 0) {
+            menu.setOption(17, new IconMenuItem()
+                    .setMaterial(DIAMOND)
+                    .setAmount(getBuffLevel(Buff.Luck))
+                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Luck.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Luck))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.Absorption) > 0) {
             menu.setOption(26, new IconMenuItem()

@@ -55,22 +55,12 @@ public class ProtocolLibHook implements PluginHook {
     @Override
     public boolean onEnable() {
         try {
-            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) {
-                //This is async
-                registerEnderDragonInteractionFix();
-            } else {
-                //This is not - 1.17+ does NOT like async stuff
-                registerSyncEnderDragonInteractionFix();
-            }
+            registerSyncEnderDragonInteractionFix();
 
             checkTemporaryPlayers = ReflectionUtil.getMethod(PacketEvent.class, "isPlayerTemporary") != null;
 
             // reverse dragon facing direction
-            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                registerEnderDragonRotationFix19();
-            } else {
-                registerEnderDragonRotationFixLegacy();
-            }
+            registerEnderDragonRotationFix();
             return true;
         } catch (Throwable e) {
             return false;
@@ -85,36 +75,6 @@ public class ProtocolLibHook implements PluginHook {
             }
         } catch (Exception ignored) {
         }
-    }
-
-    private void registerEnderDragonInteractionFix() {
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(MyPetApi.getPlugin(), PacketType.Play.Client.USE_ENTITY) {
-            @Override
-            public void onPacketReceiving(PacketEvent event) {
-
-                if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
-                    return;
-                }
-                PacketContainer packet = event.getPacket();
-                if (packet.getType() == PacketType.Play.Client.USE_ENTITY) {
-
-                    int id = packet.getIntegers().read(0);
-
-                    Entity entity = null;
-                    try {
-                        entity = packet.getEntityModifier(event).readSafely(0);
-                    } catch (RuntimeException ignored) {
-                    }
-                    if (entity == null && event.getPlayer() != null) {
-                        entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
-                    }
-                    if (entity instanceof MyPetBukkitPart) {
-                        entity = ((MyPetBukkitPart) entity).getPetOwner();
-                        packet.getIntegers().write(0, entity.getEntityId());
-                    }
-                }
-            }
-        });
     }
 
     private void registerSyncEnderDragonInteractionFix() {
@@ -193,7 +153,7 @@ public class ProtocolLibHook implements PluginHook {
         return types;
     }
 
-    private void registerEnderDragonRotationFix19() {
+    private void registerEnderDragonRotationFix() {
         ProtocolLibrary.getProtocolManager().addPacketListener(
                 new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
                     @Override
@@ -206,68 +166,19 @@ public class ProtocolLibHook implements PluginHook {
                         int id = packet.getIntegers().read(0);
 
                         Entity entity = null;
-                        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) {
-                            try {
-                                entity = packet.getEntityModifier(event).readSafely(0);
-                            } catch (RuntimeException ignored) {
-                            }
-                        }
-                        if (entity == null) {
-                            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0) { //1.17+ does not like async
-                                try {
-                                    entity = ensureMainThread(() -> MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld()));
-                                } catch (TimeoutException e) {
-                                    // Assume the main thread is blocked and should free this netty thread.
-                                    return;
-                                } catch (Exception e) {
-                                    ErrorUtil.reportWarning("Third-party plugin integration failed", e);
-                                }
-                            } else {
-                                entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
-                            }
+                        try {
+                            entity = ensureMainThread(() -> MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld()));
+                        } catch (TimeoutException e) {
+                            // Assume the main thread is blocked and should free this netty thread.
+                            return;
+                        } catch (Exception e) {
+                            ErrorUtil.reportWarning("Third-party plugin integration failed", e);
                         }
 
                         if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
                             byte angle = packet.getBytes().read(0);
                             angle += Byte.MAX_VALUE;
                             packet.getBytes().write(0, angle);
-                        }
-                    }
-                });
-    }
-
-    private void registerEnderDragonRotationFixLegacy() {
-        ProtocolLibrary.getProtocolManager().addPacketListener(
-                new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
-                    @Override
-                    public void onPacketSending(PacketEvent event) {
-                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
-                            return;
-                        }
-
-                        PacketContainer packet = event.getPacket();
-
-                        final Entity entity = packet.getEntityModifier(event).readSafely(0);
-
-                        if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
-
-                            switch (packet.getType().name()) {
-                                case "ENTITY_TELEPORT":
-                                case "ENTITY_HEAD_ROTATION": {
-                                    byte angle = packet.getBytes().read(0);
-                                    angle += Byte.MAX_VALUE;
-                                    packet.getBytes().write(0, angle);
-                                    break;
-                                }
-                                case "ENTITY_LOOK":
-                                case "ENTITY_MOVE_LOOK":
-                                case "REL_ENTITY_MOVE_LOOK":
-                                case "VEHICLE_MOVE":
-                                    byte angle = packet.getBytes().read(3);
-                                    angle += Byte.MAX_VALUE;
-                                    packet.getBytes().write(3, angle);
-                                    break;
-                            }
                         }
                     }
                 });

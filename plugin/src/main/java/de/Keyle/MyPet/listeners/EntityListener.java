@@ -129,16 +129,14 @@ public class EntityListener implements Listener {
                     }
 
                     ItemStack arrow = null;
-                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                        arrow = switch (inventory.getItemInOffHand().getType()) {
-                            case ARROW, TIPPED_ARROW, SPECTRAL_ARROW -> inventory.getItemInOffHand();
-                            default -> arrow;
-                        };
-                        arrow = switch (inventory.getItemInMainHand().getType()) {
-                            case ARROW, TIPPED_ARROW, SPECTRAL_ARROW -> inventory.getItemInMainHand();
-                            default -> arrow;
-                        };
-                    }
+                    arrow = switch (inventory.getItemInOffHand().getType()) {
+                        case ARROW, TIPPED_ARROW, SPECTRAL_ARROW -> inventory.getItemInOffHand();
+                        default -> arrow;
+                    };
+                    arrow = switch (inventory.getItemInMainHand().getType()) {
+                        case ARROW, TIPPED_ARROW, SPECTRAL_ARROW -> inventory.getItemInMainHand();
+                        default -> arrow;
+                    };
                     if (arrow == null) {
                         int firstArrow = -1;
                         int normalArrow = inventory.first(Material.ARROW);
@@ -146,18 +144,14 @@ public class EntityListener implements Listener {
                             arrow = inventory.getItem(inventory.first(Material.ARROW));
                             firstArrow = normalArrow;
                         }
-                        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                            int tippedFirst = inventory.first(Material.TIPPED_ARROW);
-                            if (tippedFirst != -1 && firstArrow > tippedFirst) {
-                                arrow = inventory.getItem(inventory.first(Material.TIPPED_ARROW));
-                                firstArrow = tippedFirst;
-                            }
+                        int tippedFirst = inventory.first(Material.TIPPED_ARROW);
+                        if (tippedFirst != -1 && firstArrow > tippedFirst) {
+                            arrow = inventory.getItem(inventory.first(Material.TIPPED_ARROW));
+                            firstArrow = tippedFirst;
                         }
-                        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                            int spectralFirst = inventory.first(Material.SPECTRAL_ARROW);
-                            if (spectralFirst != -1 && firstArrow > spectralFirst) {
-                                arrow = inventory.getItem(inventory.first(Material.SPECTRAL_ARROW));
-                            }
+                        int spectralFirst = inventory.first(Material.SPECTRAL_ARROW);
+                        if (spectralFirst != -1 && firstArrow > spectralFirst) {
+                            arrow = inventory.getItem(inventory.first(Material.SPECTRAL_ARROW));
                         }
                     }
                     if (arrow != null) {
@@ -240,11 +234,7 @@ public class EntityListener implements Listener {
                     }
                 } else if (event.getDamager() instanceof Player) {
                     player = (Player) event.getDamager();
-                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                        leashItem = player.getEquipment().getItemInMainHand();
-                    } else {
-                        leashItem = player.getItemInHand();
-                    }
+                    leashItem = player.getEquipment().getItemInMainHand();
                 } else {
                     return;
                 }
@@ -353,11 +343,7 @@ public class EntityListener implements Listener {
                                 if (leashItem.getAmount() > 1) {
                                     leashItem.setAmount(leashItem.getAmount() - 1);
                                 } else {
-                                    if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                                        player.getEquipment().setItemInMainHand(null);
-                                    } else {
-                                        player.setItemInHand(null);
-                                    }
+                                    player.getEquipment().setItemInMainHand(null);
                                 }
                             }
                         }

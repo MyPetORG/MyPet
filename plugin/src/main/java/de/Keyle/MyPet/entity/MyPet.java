@@ -566,33 +566,31 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
                 bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), true));
 
-                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.10") >= 0) {
-                    Random r = new Random(petOwner.getUniqueId().toString().hashCode());
-                    final char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
-                    StringBuilder sb = new StringBuilder(10);
+                Random r = new Random(petOwner.getUniqueId().toString().hashCode());
+                final char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+                StringBuilder sb = new StringBuilder(10);
 
-                    for (int i = 0; i < 10; i++) {
-                        sb.append(chars[r.nextInt(chars.length)]);
-                    }
-
-                    String random = sb.toString();
-
-                    Team t;
-                    if (owner.getScoreboard().getTeam("MyPet-" + random) != null) {
-                        t = owner.getScoreboard().getTeam("MyPet-" + random);
-                    } else {
-                        t = owner.getScoreboard().registerNewTeam("MyPet-" + random);
-                        t.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
-                    }
-
-                    for (String entry : t.getEntries()) {
-                        try {
-                            t.removeEntry(entry);
-                        } catch (IllegalStateException ignored) {
-                        }
-                    }
-                    t.addEntry(minecraftEntity.getUniqueID().toString());
+                for (int i = 0; i < 10; i++) {
+                    sb.append(chars[r.nextInt(chars.length)]);
                 }
+
+                String random = sb.toString();
+
+                Team t;
+                if (owner.getScoreboard().getTeam("MyPet-" + random) != null) {
+                    t = owner.getScoreboard().getTeam("MyPet-" + random);
+                } else {
+                    t = owner.getScoreboard().registerNewTeam("MyPet-" + random);
+                    t.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+                }
+
+                for (String entry : t.getEntries()) {
+                    try {
+                        t.removeEntry(entry);
+                    } catch (IllegalStateException ignored) {
+                    }
+                }
+                t.addEntry(minecraftEntity.getUniqueID().toString());
 
                 if (getYSpawnOffset() > 0) {
                     loc = loc.add(0, getYSpawnOffset(), 0);

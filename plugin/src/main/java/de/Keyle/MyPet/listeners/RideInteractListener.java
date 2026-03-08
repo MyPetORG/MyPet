@@ -52,12 +52,8 @@ public class RideInteractListener implements Listener {
             return;
         }
         // Only consider main-hand interactions
-        try {
-            if (event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) {
-                return;
-            }
-        } catch (NoSuchMethodError ignored) {
-            // Fallback for versions without getHand() method (should not happen on 1.17+)
+        if (event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) {
+            return;
         }
 
         final Player player = event.getPlayer();
@@ -93,11 +89,8 @@ public class RideInteractListener implements Listener {
         if (!(event.getRightClicked() instanceof MyPetBukkitEntity petEntity)) {
             return;
         }
-        try {
-            if (event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) {
-                return;
-            }
-        } catch (NoSuchMethodError ignored) {
+        if (event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) {
+            return;
         }
         final Player player = event.getPlayer();
         if (!isOwner(player, petEntity)) {

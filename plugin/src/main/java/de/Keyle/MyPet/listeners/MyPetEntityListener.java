@@ -166,12 +166,7 @@ public class MyPetEntityListener implements Listener {
                 } else {
                     damager = (Player) event.getDamager();
                 }
-                ItemStack leashItem;
-                if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.9") >= 0) {
-                    leashItem = damager.getEquipment().getItemInMainHand();
-                } else {
-                    leashItem = damager.getItemInHand();
-                }
+                ItemStack leashItem = damager.getEquipment().getItemInMainHand();
                 if (MyPetApi.getMyPetInfo().getLeashItem(myPet.getPetType()).compare(leashItem)) {
                     boolean infoShown = false;
 
