@@ -45,8 +45,7 @@ dependencies {
     compileOnly("com.mewin:WGCustomFlags:1.9") {
         exclude(group = "org.bukkit", module = "bukkit")
     }
-    compileOnly("com.massivecraft:Factions:2.14.0")
-    compileOnly("com.massivecraft:MassiveCore:2.14.0")
+    compileOnly("dev.kitteh:factions:4.4.0")
     compileOnly("com.garbagemule:MobArena:0.103")
     compileOnly("mc.alk:BattleArena:3.9.9.10.5")
     compileOnly("net.slipcor:pvparena:1.3.4.298")
