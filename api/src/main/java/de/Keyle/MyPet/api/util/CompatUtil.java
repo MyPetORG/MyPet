@@ -20,16 +20,12 @@
 
 package de.Keyle.MyPet.api.util;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import org.bukkit.Bukkit;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -119,22 +115,7 @@ public class CompatUtil {
     }
 
     private String getBukkitVersionFromMinecraftVersion() {
-        HashMap<String, String> versionMap = new HashMap<>();
-        try {
-            InputStreamReader streamReader = new InputStreamReader(MyPetApi.getPlugin().getResource("versionmatcher.csv"), StandardCharsets.UTF_8);
-            BufferedReader reader = new BufferedReader(streamReader);
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                versionMap.put(parts[0], parts[1]);
-            }
-        } catch (Exception ignored) {
-        }
-
-        String bukkitVersion = null;
-        if (versionMap.containsKey(minecraftVersion))
-            bukkitVersion = versionMap.get(minecraftVersion);
-        return bukkitVersion;
+        return MinecraftVersion.getNmsVersion(minecraftVersion);
     }
 
     public boolean isCompatible(String version) {

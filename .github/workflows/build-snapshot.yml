@@ -65,14 +65,19 @@ jobs:
           BASE_PROJECT_VERSION=$(grep -Po 'baseVersion\s*=\s*"\K[^"]+' build.gradle.kts)
           echo "BASE_PROJECT_VERSION=$BASE_PROJECT_VERSION" >> "$GITHUB_ENV"
 
-          # Extract Minecraft versions from versionmatcher.csv (first column)
-          GAME_VERSIONS=$(cut -d',' -f1 src/main/resources/versionmatcher.csv | grep -v '^$' | paste -sd $'\n' -)
+          # Extract Minecraft versions from MinecraftVersion.java enum constants
+          MC_VERSION_FILE=api/src/main/java/de/Keyle/MyPet/api/util/MinecraftVersion.java
+          GAME_VERSIONS=$(grep -oP '"\K\d+\.\d+(?:\.\d+)?(?=")' "$MC_VERSION_FILE")
+          if [[ -z "$GAME_VERSIONS" ]]; then
+            echo "ERROR: No Minecraft versions extracted from $MC_VERSION_FILE" >&2
+            exit 1
+          fi
           echo "GAME_VERSIONS<<EOF" >> "$GITHUB_ENV"
           echo "$GAME_VERSIONS" >> "$GITHUB_ENV"
           echo "EOF" >> "$GITHUB_ENV"
 
           # Create JSON array for Hangar platform_dependencies (compact single-line format)
-          GAME_VERSIONS_JSON=$(cut -d',' -f1 src/main/resources/versionmatcher.csv | grep -v '^$' | jq -R . | jq -sc .)
+          GAME_VERSIONS_JSON=$(echo "$GAME_VERSIONS" | jq -R . | jq -sc .)
           echo "GAME_VERSIONS_JSON=$GAME_VERSIONS_JSON" >> "$GITHUB_ENV"
 
       - name: Ensure PR to master exists with release title

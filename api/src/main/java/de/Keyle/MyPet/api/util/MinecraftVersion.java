@@ -20,42 +20,59 @@
 
 package de.Keyle.MyPet.api.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Enum representing internal Minecraft NMS versions.
- * Used for tracking which version pet data was saved with.
+ * <p>
+ * Each constant maps one or more Minecraft versions to its NMS module name.
+ * Used as a fallback when the server class package name does not contain the
+ * NMS version (Paper 1.20.5+).
  */
 public enum MinecraftVersion {
-    UNKNOWN,
-    v1_7_R4,
-    v1_8_R1,
-    v1_8_R2,
-    v1_8_R3,
-    v1_9_R1,
-    v1_9_R2,
-    v1_10_R1,
-    v1_11_R1,
-    v1_12_R1,
-    v1_13_R1,
-    v1_13_R2,
-    v1_14_R1,
-    v1_15_R1,
-    v1_16_R1,
-    v1_16_R2,
-    v1_16_R3,
-    v1_17_R1,
-    v1_18_R1,
-    v1_18_R2,
-    v1_19_R1,
-    v1_19_R2,
-    v1_19_R3,
-    v1_20_R1,
-    v1_20_R2,
-    v1_20_R3,
-    v1_20_R4,
-    v1_21_R1,
-    v1_21_R2,
-    v1_21_R3,
-    v1_21_R4,
-    v1_21_R5,
-    v1_21_R6,
+    v1_18_R1("1.18", "1.18.1"),
+    v1_18_R2("1.18.2"),
+    v1_19_R1("1.19", "1.19.1"),
+    v1_19_R2("1.19.2"),
+    v1_19_R3("1.19.3", "1.19.4"),
+    v1_20_R1("1.20", "1.20.1"),
+    v1_20_R2("1.20.2"),
+    v1_20_R3("1.20.3", "1.20.4"),
+    v1_20_R4("1.20.5", "1.20.6"),
+    v1_21_R1("1.21", "1.21.1"),
+    v1_21_R2("1.21.2", "1.21.3"),
+    v1_21_R3("1.21.4"),
+    v1_21_R4("1.21.5"),
+    v1_21_R5("1.21.6", "1.21.7", "1.21.8"),
+    v1_21_R6("1.21.9", "1.21.10"),
+    v1_21_R7("1.21.11"),
+    ;
+
+    private static final Map<String, MinecraftVersion> MC_VERSION_LOOKUP = new HashMap<>();
+
+    static {
+        for (MinecraftVersion version : values()) {
+            for (String mcVersion : version.minecraftVersions) {
+                MC_VERSION_LOOKUP.put(mcVersion, version);
+            }
+        }
+    }
+
+    private final String[] minecraftVersions;
+
+    MinecraftVersion(String... minecraftVersions) {
+        this.minecraftVersions = minecraftVersions;
+    }
+
+    /**
+     * Returns the NMS module name for a given Minecraft version.
+     *
+     * @param minecraftVersion the Minecraft version (e.g. "1.21.11")
+     * @return the NMS module name (e.g. "v1_21_R7"), or null if not found
+     */
+    public static String getNmsVersion(String minecraftVersion) {
+        MinecraftVersion version = MC_VERSION_LOOKUP.get(minecraftVersion);
+        return version != null ? version.name() : null;
+    }
 }
