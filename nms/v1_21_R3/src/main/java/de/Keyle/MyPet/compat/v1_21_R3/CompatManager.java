@@ -21,13 +21,11 @@
 package de.Keyle.MyPet.compat.v1_21_R3;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.compat.v1_21_R3.services.EntityConverterService;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
-@Compat("v1_21_R3")
 public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager implements Listener {
 
     @Override

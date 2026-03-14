@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_19_R1.entity.EntityMyPet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -34,7 +33,6 @@ import org.bukkit.craftbukkit.v1_19_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 
-@Compat("v1_19_R1_2")
 public class MeleeAttack implements AIGoal {
 
     private final int ticksUntilNextHit;

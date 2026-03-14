@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_21_R5.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.compat.v1_21_R5.util.inventory.ItemStackComparator;
 import de.Keyle.MyPet.compat.v1_21_R5.util.inventory.ItemStackNBTConverter;
@@ -34,7 +33,6 @@ import net.minecraft.world.level.block.Block;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-@Compat("v1_21_R5")
 public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
     public ConfigItem(ItemStack item, DurabilityMode durabilityMode) {

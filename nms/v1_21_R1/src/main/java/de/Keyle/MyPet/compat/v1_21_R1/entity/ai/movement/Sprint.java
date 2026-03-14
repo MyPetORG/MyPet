@@ -24,14 +24,12 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.skill.skills.SprintImpl;
 import net.minecraft.world.entity.LivingEntity;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@Compat("v1_21_R1")
 public class Sprint implements AIGoal {
 
     private final MyPet myPet;

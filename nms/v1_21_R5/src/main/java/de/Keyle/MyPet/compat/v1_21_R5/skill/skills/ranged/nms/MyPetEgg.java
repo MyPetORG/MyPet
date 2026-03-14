@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_21_R5.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.skill.skills.ranged.bukkit.CraftMyPetEgg;
 import net.minecraft.server.level.ServerLevel;
@@ -36,7 +35,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-@Compat("v1_21_R5")
 public class MyPetEgg extends ThrownEgg implements EntityMyPetProjectile {
 
     protected float damage = 0;

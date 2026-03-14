@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_19_R3.util.iconmenu;
 
-import de.Keyle.MyPet.api.util.Compat;
-
 /**
  * Version-specific IconMenuInventory for Minecraft v1_19_R3.
  * <p>
@@ -33,7 +31,6 @@ import de.Keyle.MyPet.api.util.Compat;
  *   <li>Defer all functionality to the shared parent implementation</li>
  * </ul>
  */
-@Compat("v1_19_R3")
 public class IconMenuInventory extends de.Keyle.MyPet.api.gui.IconMenuInventory {
 
 }

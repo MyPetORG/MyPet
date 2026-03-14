@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_20_R1;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.compat.v1_20_R1.services.EntityConverterService;
@@ -32,7 +31,6 @@ import org.bukkit.event.Listener;
 
 import java.lang.reflect.Method;
 
-@Compat("v1_20_R1")
 public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager implements Listener {
 
     public static Method ENTITY_LIVING_broadcastItemBreak = ReflectionUtil.getMethod(LivingEntity.class, "d", InteractionHand.class);

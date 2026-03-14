@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_20_R3.entity.ai.movement;
 
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
@@ -49,7 +48,6 @@ import net.minecraft.world.phys.Vec3;
  * @see MyPetRandomStroll
  * @see MyPetRandomFly
  */
-@Compat("v1_20_R3")
 public class MyPetRandomSwim extends MyPetRandomStroll {
 
     // ==================== TUNABLE CONSTANTS ====================

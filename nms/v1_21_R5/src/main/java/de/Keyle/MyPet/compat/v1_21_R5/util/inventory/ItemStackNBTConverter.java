@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_21_R5.util.inventory;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.Compat;
 import net.kyori.adventure.nbt.*;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.RegistryAccess;
@@ -39,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Compat("v1_21_R5")
 public class ItemStackNBTConverter {
 
     private static final CompoundTag EMPTY_ITEM_COMPOUND;

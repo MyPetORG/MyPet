@@ -21,12 +21,10 @@
 package de.Keyle.MyPet.compat.v1_21_R5.entity.ai.movement;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.types.*;
 
-@Compat("v1_21_R5")
 public class Sit implements AIGoal {
 
     private final EntityMyPet entityMyPet;

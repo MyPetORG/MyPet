@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_18_R2.skill.skills.ranged.bukkit;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
-import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.world.entity.projectile.LlamaSpit;
 import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftLlamaSpit;
@@ -31,7 +30,6 @@ import org.bukkit.entity.SpawnCategory;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_18_R2")
 public class CraftMyPetLlamaSpit extends CraftLlamaSpit implements CraftMyPetProjectile {
 
     public CraftMyPetLlamaSpit(CraftServer server, LlamaSpit entity) {

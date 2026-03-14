@@ -25,9 +25,7 @@ import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.api.skill.skills.Ranged.Projectile;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R7.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_21_R7.skill.skills.ranged.nms.*;
 import de.Keyle.MyPet.compat.v1_21_R7.skill.skills.ranged.nms.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -39,7 +37,6 @@ import net.minecraft.world.level.Level;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 
-@Compat("v1_21_R7")
 public class RangedAttack implements AIGoal {
 
     private final MyPet myPet;

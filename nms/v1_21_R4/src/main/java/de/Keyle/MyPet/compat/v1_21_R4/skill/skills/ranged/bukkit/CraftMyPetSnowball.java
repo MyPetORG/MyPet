@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.bukkit;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
-import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.world.entity.projectile.Snowball;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.entity.CraftSnowball;
@@ -31,7 +30,6 @@ import org.bukkit.entity.SpawnCategory;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_21_R4")
 public class CraftMyPetSnowball extends CraftSnowball implements CraftMyPetProjectile {
 
     public CraftMyPetSnowball(CraftServer server, Snowball entity) {

@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import lombok.SneakyThrows;
@@ -50,7 +49,6 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-@Compat("v1_19_R1_2")
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();

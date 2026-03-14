@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_18_R2.entity.ai.movement;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_18_R2.entity.EntityMyPet;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +30,6 @@ import net.minecraft.world.phys.Vec3;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 
-@Compat("v1_18_R2")
 public class MyPetRandomStroll implements AIGoal, de.Keyle.MyPet.api.entity.ai.movement.MyPetRandomStroll {
     protected final int startDistance;
     protected final Player owner;

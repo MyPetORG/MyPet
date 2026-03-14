@@ -22,13 +22,11 @@ package de.Keyle.MyPet.compat.v1_21_R7.entity;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetBukkitPart;
-import de.Keyle.MyPet.api.util.Compat;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_21_R7")
 public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
 
     protected EntityMyPetPart petEntity;

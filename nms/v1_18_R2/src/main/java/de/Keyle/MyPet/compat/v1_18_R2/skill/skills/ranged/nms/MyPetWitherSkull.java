@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_18_R2.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_18_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_18_R2.skill.skills.ranged.bukkit.CraftMyPetWitherSkull;
@@ -36,7 +35,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-@Compat("v1_18_R2")
 public class MyPetWitherSkull extends WitherSkull implements EntityMyPetProjectile {
 
     protected float damage = 0;

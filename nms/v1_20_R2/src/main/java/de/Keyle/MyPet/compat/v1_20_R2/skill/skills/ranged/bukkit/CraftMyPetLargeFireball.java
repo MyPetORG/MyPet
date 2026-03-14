@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_20_R2.skill.skills.ranged.bukkit;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
-import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R2.entity.CraftLargeFireball;
@@ -31,7 +30,6 @@ import org.bukkit.entity.SpawnCategory;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-@Compat("v1_20_R2")
 public class CraftMyPetLargeFireball extends CraftLargeFireball implements CraftMyPetProjectile {
 
     public CraftMyPetLargeFireball(CraftServer server, LargeFireball entity) {

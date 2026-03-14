@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_18_R2;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
@@ -56,7 +55,6 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
-@Compat("v1_18_R2")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     private static final Method CHAT_MESSAGE_k = ReflectionUtil.getMethod(TranslatableComponent.class, "k");

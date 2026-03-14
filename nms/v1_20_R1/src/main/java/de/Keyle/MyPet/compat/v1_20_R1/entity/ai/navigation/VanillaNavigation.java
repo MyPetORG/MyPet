@@ -22,7 +22,6 @@ package de.Keyle.MyPet.compat.v1_20_R1.entity.ai.navigation;
 
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.navigation.NavigationParameters;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.ai.movement.MyPetAquaticMoveControl;
@@ -32,7 +31,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
-@Compat("v1_20_R1")
 public class VanillaNavigation extends AbstractNavigation {
 
     PathNavigation nav;

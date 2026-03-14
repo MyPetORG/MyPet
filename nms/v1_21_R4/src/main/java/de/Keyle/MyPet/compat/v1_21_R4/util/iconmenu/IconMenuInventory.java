@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_21_R4.util.iconmenu;
 
-import de.Keyle.MyPet.api.util.Compat;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
@@ -36,7 +35,6 @@ import org.bukkit.inventory.meta.ItemMeta;
  *   <li>Use modern glint override</li>
  * </ul>
  */
-@Compat("v1_21_R4")
 public class IconMenuInventory extends de.Keyle.MyPet.api.gui.IconMenuInventory {
     /**
      * Apply a glow effect using the modern server API when available on 1.20.4+,

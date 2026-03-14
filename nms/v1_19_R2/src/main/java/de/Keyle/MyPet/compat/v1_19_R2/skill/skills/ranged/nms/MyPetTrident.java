@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_19_R2.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_19_R2.skill.skills.ranged.bukkit.CraftMyPetTrident;
@@ -34,7 +33,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-@Compat("v1_19_R2")
 public class MyPetTrident extends ThrownTrident implements EntityMyPetProjectile {
 
     protected CraftMyPetTrident bukkitEntity = null;

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_19_R3.entity.ai.movement;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_19_R3.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -31,7 +30,6 @@ import net.minecraft.world.entity.ai.util.RandomPos;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 
-@Compat("v1_19_R3")
 public class MyPetRandomSwim extends MyPetRandomStroll {
 
     protected EntityMyPet petEntity;

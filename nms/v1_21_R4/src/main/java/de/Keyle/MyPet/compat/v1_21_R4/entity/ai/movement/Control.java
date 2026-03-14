@@ -25,13 +25,11 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import org.bukkit.Location;
 
-@Compat("v1_21_R4")
 public class Control implements AIGoal, Scheduler {
 
     private final MyPet myPet;

@@ -30,7 +30,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.types.*;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_21_R6.util.VariantConverter;
@@ -55,13 +54,11 @@ import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.entity.*;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
-@Compat("v1_21_R6")
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
 
     public static final Registry<VillagerType> VILLAGER_TYPE_REGISTRY = CraftRegistry.getMinecraftRegistry(Registries.VILLAGER_TYPE);

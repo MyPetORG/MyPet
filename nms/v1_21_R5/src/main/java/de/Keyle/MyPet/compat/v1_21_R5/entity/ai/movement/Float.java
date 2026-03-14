@@ -21,13 +21,11 @@
 package de.Keyle.MyPet.compat.v1_21_R5.entity.ai.movement;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.player.Player;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 
-@Compat("v1_21_R5")
 public class Float implements AIGoal {
 
     private final EntityMyPet entityMyPet;

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.types.EntityMyCat;
@@ -29,7 +28,6 @@ import de.Keyle.MyPet.compat.v1_19_R2.entity.types.EntityMyFox;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.types.EntityMyPanda;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.types.EntityMyWolf;
 
-@Compat("v1_19_R2")
 public class Sit implements AIGoal {
 
     private final EntityMyPet entityMyPet;

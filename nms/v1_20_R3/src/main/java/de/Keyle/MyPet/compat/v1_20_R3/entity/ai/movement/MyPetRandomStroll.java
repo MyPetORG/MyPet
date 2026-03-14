@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_20_R3.entity.ai.movement;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_20_R3.entity.EntityMyPet;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.player.Player;
@@ -53,7 +52,6 @@ import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
  * @see MyPetRandomSwim
  * @see FollowOwner
  */
-@Compat("v1_20_R3")
 public class MyPetRandomStroll implements AIGoal, de.Keyle.MyPet.api.entity.ai.movement.MyPetRandomStroll {
 
     // ==================== TUNABLE CONSTANTS ====================

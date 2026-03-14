@@ -29,7 +29,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.types.*;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_19_R2.util.inventory.ItemStackNBTConverter;
@@ -51,7 +50,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-@Compat("v1_19_R2")
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
 
     @Override

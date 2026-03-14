@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_20_R4.util.inventory;
 
 import com.mojang.serialization.Dynamic;
-import de.Keyle.MyPet.api.util.Compat;
 import net.kyori.adventure.nbt.*;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.RegistryAccess;
@@ -35,7 +34,6 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-@Compat("v1_20_R4")
 public class ItemStackNBTConverter {
 
     public static RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();

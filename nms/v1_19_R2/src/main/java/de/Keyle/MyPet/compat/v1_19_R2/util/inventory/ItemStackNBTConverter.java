@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.util.inventory;
 
-import de.Keyle.MyPet.api.util.Compat;
 import net.kyori.adventure.nbt.*;
 import net.minecraft.nbt.*;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +28,6 @@ import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-@Compat("v1_19_R2")
 public class ItemStackNBTConverter {
 
     public static CompoundBinaryTag itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {

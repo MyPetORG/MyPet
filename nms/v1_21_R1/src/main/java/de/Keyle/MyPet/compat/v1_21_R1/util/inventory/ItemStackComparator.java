@@ -20,12 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_21_R1.util.inventory;
 
-import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-@Compat("v1_21_R1")
 public class ItemStackComparator {
 
     public static boolean compareItem(ItemStack i1, ItemStack i2) {

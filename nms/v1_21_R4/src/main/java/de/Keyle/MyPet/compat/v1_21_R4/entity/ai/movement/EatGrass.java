@@ -22,7 +22,6 @@ package de.Keyle.MyPet.compat.v1_21_R4.entity.ai.movement;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.types.EntityMySheep;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -36,7 +35,6 @@ import org.bukkit.craftbukkit.event.CraftEventFactory;
 
 import java.util.function.Predicate;
 
-@Compat("v1_21_R4")
 public class EatGrass implements AIGoal {
 
     private static final Predicate<BlockState> GRASS = BlockStatePredicate.forBlock(Blocks.SHORT_GRASS);

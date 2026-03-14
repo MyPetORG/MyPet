@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.nms;
 
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R4.skill.skills.ranged.bukkit.CraftMyPetLargeFireball;
@@ -37,7 +36,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-@Compat("v1_21_R4")
 public class MyPetLargeFireball extends LargeFireball implements EntityMyPetProjectile {
 
     protected float damage = 0;

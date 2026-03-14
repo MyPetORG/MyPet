@@ -21,10 +21,8 @@
 package de.Keyle.MyPet.compat.v1_19_R2.entity.ai.movement;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 
-@Compat("v1_19_R2")
 public class RandomLookaround implements AIGoal {
 
     protected EntityMyPet petEntity;

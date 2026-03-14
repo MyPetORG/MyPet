@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_20_R4;
 import com.mojang.brigadier.StringReader;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyAquaticPet;
@@ -64,7 +63,6 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
-@Compat("v1_20_R4")
 public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     public static final Field dragonPartsField = ReflectionUtil.getField(ServerLevel.class, "ac"); //Mojang Field: dragonParts

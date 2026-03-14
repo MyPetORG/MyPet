@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_21_R2.entity.ai.movement;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_21_R2.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.compat.v1_21_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_21_R2.entity.ai.navigation.MyAquaticPetPathNavigation;
@@ -65,7 +64,6 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
  * @see MyPetRandomStroll
  * @see Control
  */
-@Compat("v1_21_R2")
 public class FollowOwner implements AIGoal {
 
     // ==================== TUNABLE CONSTANTS ====================

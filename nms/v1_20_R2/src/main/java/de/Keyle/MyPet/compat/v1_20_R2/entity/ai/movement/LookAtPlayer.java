@@ -21,11 +21,9 @@
 package de.Keyle.MyPet.compat.v1_20_R2.entity.ai.movement;
 
 import de.Keyle.MyPet.api.entity.ai.AIGoal;
-import de.Keyle.MyPet.api.util.Compat;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyPet;
 import net.minecraft.world.entity.Entity;
 
-@Compat("v1_20_R2")
 public class LookAtPlayer implements AIGoal {
 
     private final EntityMyPet petEntity;
