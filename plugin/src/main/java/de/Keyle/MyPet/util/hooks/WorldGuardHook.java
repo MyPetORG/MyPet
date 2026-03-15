@@ -25,13 +25,11 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.BukkitWorldConfiguration;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.config.ConfigurationManager;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DoubleFlag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.IntegerFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -60,9 +58,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityInteractEvent;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,13 +82,9 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     public static StateFlag PVP;
     public static StateFlag DAMAGE_ANIMALS;
-    protected static Method METHOD_getRegionManager = ReflectionUtil.getMethod(WorldGuardPlugin.class, "getRegionManager", World.class);
-    protected static Method METHOD_getFlagRegistry = ReflectionUtil.getMethod(WorldGuardPlugin.class, "getFlagRegistry");
-    protected static Method METHOD_getApplicableRegions = ReflectionUtil.getMethod(RegionManager.class, "getApplicableRegions", Location.class);
     protected WorldGuardPlugin wgp;
     protected boolean customFlags = false;
     protected Map<String, Boolean> missingEntityTypeFixValue = new HashMap<>();
-    protected boolean is7 = false;
 
     public WorldGuardHook() {
         if (MyPetApi.getPluginHookManager().getConfig().getConfig().getBoolean("WorldGuard.Enabled")) {
@@ -102,30 +94,10 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
             wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
 
-            if (wgp.getDescription().getVersion().startsWith("7.")) {
-                is7 = true;
-            }
-
             try {
-                FlagRegistry flagRegistry = null;
-                if (is7) {
-                    flagRegistry = WorldGuard.getInstance().getFlagRegistry();
-                    PVP = Flags.PVP;
-                    DAMAGE_ANIMALS = Flags.DAMAGE_ANIMALS;
-                } else {
-                    try {
-                        flagRegistry = (FlagRegistry) METHOD_getFlagRegistry.invoke(wgp);
-                    } catch (Throwable ignore) {
-                    }
-                    PVP = (StateFlag) ReflectionUtil
-                            .getClass("com.sk89q.worldguard.protection.flags.DefaultFlag")
-                            .getDeclaredField("PVP")
-                            .get(null);
-                    DAMAGE_ANIMALS = (StateFlag) ReflectionUtil
-                            .getClass("com.sk89q.worldguard.protection.flags.DefaultFlag")
-                            .getDeclaredField("DAMAGE_ANIMALS")
-                            .get(null);
-                }
+                FlagRegistry flagRegistry = WorldGuard.getInstance().getFlagRegistry();
+                PVP = Flags.PVP;
+                DAMAGE_ANIMALS = Flags.DAMAGE_ANIMALS;
 
                 if (flagRegistry != null) {
                     try {
@@ -153,7 +125,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                         MyPetApi.getLogger().warning("Could not register WorldGuard flags: " + e.getMessage());
                     }
                 }
-            } catch (NoSuchMethodError | IllegalAccessException | NoSuchFieldException e) {
+            } catch (NoSuchMethodError e) {
                 ErrorUtil.reportWarning("Third-party plugin integration failed", e);
             }
         }
@@ -187,63 +159,42 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     }
 
     public void fixMissingEntityType(World world, boolean apply) {
-        if (is7) {
-            try {
-                ConfigurationManager cfg = WorldGuard.getInstance().getPlatform().getGlobalStateManager();
-                com.sk89q.worldedit.world.World w = BukkitAdapter.adapt(world);
-                BukkitWorldConfiguration wcfg = (BukkitWorldConfiguration) cfg.get(w);
-                if (apply) {
-                    if (missingEntityTypeFixValue.containsKey(world.getName())) {
-                        fixMissingEntityType(world, false);
-                    }
-                    missingEntityTypeFixValue.put(world.getName(), wcfg.blockPluginSpawning);
-                    wcfg.blockPluginSpawning = false;
-                } else if (missingEntityTypeFixValue.containsKey(world.getName())) {
-                    wcfg.blockPluginSpawning = missingEntityTypeFixValue.get(world.getName());
-                    missingEntityTypeFixValue.remove(world.getName());
+        try {
+            ConfigurationManager cfg = WorldGuard.getInstance().getPlatform().getGlobalStateManager();
+            com.sk89q.worldedit.world.World w = BukkitAdapter.adapt(world);
+            BukkitWorldConfiguration wcfg = (BukkitWorldConfiguration) cfg.get(w);
+            if (apply) {
+                if (missingEntityTypeFixValue.containsKey(world.getName())) {
+                    fixMissingEntityType(world, false);
                 }
-            } catch (Exception e) {
-                ErrorUtil.reportWarning("Third-party plugin integration failed", e);
+                missingEntityTypeFixValue.put(world.getName(), wcfg.blockPluginSpawning);
+                wcfg.blockPluginSpawning = false;
+            } else if (missingEntityTypeFixValue.containsKey(world.getName())) {
+                wcfg.blockPluginSpawning = missingEntityTypeFixValue.get(world.getName());
+                missingEntityTypeFixValue.remove(world.getName());
             }
+        } catch (Exception e) {
+            ErrorUtil.reportWarning("Third-party plugin integration failed", e);
         }
     }
 
     public StateFlag.State getState(Location loc, Player player, StateFlag... flags) {
-        if (is7) {
-            RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
-            if (rc != null) {
-                return rc.createQuery().queryState(
-                        BukkitAdapter.adapt(loc),
-                        player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
-                        flags);
-            }
-        } else {
-            try {
-                RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
-                ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
-                return set.queryState(player != null ? wgp.wrapPlayer(player) : null, flags);
-            } catch (Exception ignored) {
-            }
+        RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        if (rc != null) {
+            return rc.createQuery().queryState(
+                    BukkitAdapter.adapt(loc),
+                    player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
+                    flags);
         }
         return StateFlag.State.ALLOW;
     }
 
     public Collection<Double> getDoubleValue(Location loc, Player player, DoubleFlag flag) {
-        if (is7) {
-            RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
-            return rc.createQuery().queryAllValues(
-                    BukkitAdapter.adapt(loc),
-                    player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
-                    flag);
-        } else {
-            try {
-                RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
-                ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
-                return set.queryAllValues(player != null ? wgp.wrapPlayer(player) : null, flag);
-            } catch (Exception ignored) {
-                return Collections.emptyList();
-            }
-        }
+        RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        return rc.createQuery().queryAllValues(
+                BukkitAdapter.adapt(loc),
+                player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
+                flag);
     }
 
     @Override
@@ -374,21 +325,11 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     }
 
     public Collection<Integer> getIntegerValue(Location loc, Player player, IntegerFlag flag) {
-        if (is7) {
-            RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
-            return rc.createQuery().queryAllValues(
-                    BukkitAdapter.adapt(loc),
-                    player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
-                    flag);
-        } else {
-            try {
-                RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
-                ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
-                return set.queryAllValues(player != null ? wgp.wrapPlayer(player) : null, flag);
-            } catch (Exception ignored) {
-                return Collections.emptyList();
-            }
-        }
+        RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        return rc.createQuery().queryAllValues(
+                BukkitAdapter.adapt(loc),
+                player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
+                flag);
     }
 
     @EventHandler
@@ -400,24 +341,16 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     @EventHandler
     public void on(EntityInteractEvent event) {
-        if (is7) {
-            Entity ent = event.getEntity();
-            if (ent instanceof MyPetBukkitEntity) {
-                Block block = event.getBlock();
-                String blockTypeName = block.getType().name();
+        Entity ent = event.getEntity();
+        if (ent instanceof MyPetBukkitEntity) {
+            Block block = event.getBlock();
+            String blockTypeName = block.getType().name();
 
-                // Check all pressure plate variants (modern + legacy names)
-                if (blockTypeName.contains("PRESSURE_PLATE") ||
-                    blockTypeName.equals("WOOD_PLATE") ||
-                    blockTypeName.equals("STONE_PLATE") ||
-                    blockTypeName.equals("IRON_PLATE") ||
-                    blockTypeName.equals("GOLD_PLATE")) {
-
-                    Player p = ((MyPetBukkitEntity) ent).getOwner().getPlayer();
-                    StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
-                    if (s == null || s == StateFlag.State.DENY) {
-                        event.setCancelled(true);
-                    }
+            if (blockTypeName.contains("PRESSURE_PLATE")) {
+                Player p = ((MyPetBukkitEntity) ent).getOwner().getPlayer();
+                StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
+                if (s == null || s == StateFlag.State.DENY) {
+                    event.setCancelled(true);
                 }
             }
         }
