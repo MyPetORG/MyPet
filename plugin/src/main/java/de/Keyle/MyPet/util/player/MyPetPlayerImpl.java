@@ -411,9 +411,8 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         }
                         if (spawn && fall) {
                             spawn = switch (p.getWorld().getBlockAt(p.getLocation().subtract(0, 0.5, 0)).getType().name()) {
-                                case "AIR", "CAVE_AIR", "VOID_AIR", "WATER", "STATIONARY_WATER", "LAVA",
-                                     "STATIONARY_LAVA" -> false;
-                                default -> spawn;
+                                case "AIR", "CAVE_AIR", "VOID_AIR", "WATER", "LAVA" -> false;
+                                default -> true;
                             };
                         }
 
