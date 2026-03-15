@@ -22,7 +22,6 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -68,7 +67,7 @@ public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
     }
 
     public void setFlower(ItemStack item) {
-        if (item != null && item.getType() != EnumSelector.find(Material.class, "RED_ROSE", "POPPY") && item.getData().getData() == 0) {
+        if (item != null && item.getType() != Material.POPPY) {
             return;
         }
         this.flower = item;
