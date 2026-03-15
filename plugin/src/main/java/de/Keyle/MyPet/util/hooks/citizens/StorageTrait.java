@@ -49,7 +49,6 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
-import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
 import de.Keyle.MyPet.util.hooks.CitizensHook;
@@ -204,7 +203,7 @@ public class StorageTrait extends Trait {
                             }, MyPetApi.getPlugin());
                             double storageCosts = calculateStorageCosts(myPetPlayer.getMyPet());
                             IconMenuItem yesIcon = new IconMenuItem()
-                                    .setMaterial(EnumSelector.find(Material.class, "WOOL", "GREEN_WOOL"))
+                                    .setMaterial(Material.GREEN_WOOL)
                                     .setData(5)
                                     .setTitle(Translation.getComponent("Name.Yes", myPetPlayer).color(NamedTextColor.GREEN));
                             yesIcon.addLoreLine(Translation.getFormattedComponent("Message.Npc.YesHandOver", myPetPlayer, myPetPlayer.getMyPet().getDisplayName()));
@@ -221,7 +220,7 @@ public class StorageTrait extends Trait {
                             }
                             menu.setOption(3, yesIcon);
                             IconMenuItem noIcon = new IconMenuItem()
-                                    .setMaterial(EnumSelector.find(Material.class, "WOOL", "RED_WOOL"))
+                                    .setMaterial(Material.RED_WOOL)
                                     .setData(14)
                                     .setTitle(Translation.getComponent("Name.No", myPetPlayer).color(NamedTextColor.RED));
                             noIcon.addLoreLine(Translation.getFormattedComponent("Message.Npc.NoHandOver", myPetPlayer, myPetPlayer.getMyPet().getDisplayName()));
