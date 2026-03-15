@@ -148,7 +148,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .get());
 
         petTypeOptionMap.put("guardian", new CommandOptionCreator()
-                .add("1.7.10", "1.11", "elder")
                 .get());
 
         petTypeOptionMap.put("hoglin", new CommandOptionCreator()
@@ -160,12 +159,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("baby")
                 .add("saddle")
                 .add("variant:")
-                .add("horse:")
-                .add("1.7.10", "1.11", "chest")
-                .add("1.7.10", "1.11", "donkey:")
-                .add("1.7.10", "1.11", "mule:")
-                .add("1.7.10", "1.11", "zombie:")
-                .add("1.7.10", "1.11", "skeleton:")
                 .get());
 
         petTypeOptionMap.put("husk", new CommandOptionCreator()
@@ -197,7 +190,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("ocelot", new CommandOptionCreator()
                 .add("baby")
-                .add("1.7.10", "1.14", "cat:")
                 .get());
 
         petTypeOptionMap.put("panda", new CommandOptionCreator()
@@ -268,8 +260,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .get());
 
         petTypeOptionMap.put("skeleton", new CommandOptionCreator()
-                .add("1.10", "1.11", "stray")
-                .add("1.7.10", "1.11", "wither")
                 .get());
 
         petTypeOptionMap.put("skeletonhorse", new CommandOptionCreator()
@@ -334,9 +324,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("zombie", new CommandOptionCreator()
                 .add("baby")
-                .add("1.10", "1.11", "husk")
-                .add("1.7.10", "1.11", "villager")
-                .add("1.7.10", "1.11", "profession:")
                 .get());
 
         petTypeOptionMap.put("zombiehorse", new CommandOptionCreator()
@@ -432,12 +419,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 builder.putBoolean("Saddle", true);
             } else if (arg.equalsIgnoreCase("sheared")) {
                 builder.putBoolean("Sheared", true);
-            } else if (arg.equalsIgnoreCase("wither")) {
-                builder.putInt("Type", 1);
-            } else if (arg.equalsIgnoreCase("stray")) {
-                builder.putInt("Type", 2);
-            } else if (arg.equalsIgnoreCase("husk")) {
-                builder.putInt("Type", 6);
             } else if (arg.equalsIgnoreCase("tamed")) {
                 builder.putBoolean("Tamed", true);
             } else if (arg.equalsIgnoreCase("angry")) {
@@ -446,16 +427,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 builder.putBoolean("Villager", true);
             } else if (arg.equalsIgnoreCase("chest")) {
                 builder.putBoolean("Chest", true);
-            } else if (arg.equalsIgnoreCase("elder")) {
-                builder.putBoolean("Elder", true);
-            } else if (arg.equalsIgnoreCase("donkey")) {
-                builder.putByte("Type", (byte) 1);
-            } else if (arg.equalsIgnoreCase("mule")) {
-                builder.putByte("Type", (byte) 2);
-            } else if (arg.equalsIgnoreCase("zombie")) {
-                builder.putByte("Type", (byte) 3);
-            } else if (arg.equalsIgnoreCase("skeleton")) {
-                builder.putByte("Type", (byte) 4);
             } else if (arg.equalsIgnoreCase("glowing")) {
                 builder.putBoolean("Glowing", true);
             } else if (arg.equalsIgnoreCase("rainbow")) {
@@ -468,13 +439,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 String size = arg.replace("size:", "");
                 if (Util.isInt(size)) {
                     builder.putInt("Size", Integer.parseInt(size));
-                }
-            } else if (arg.startsWith("horse:")) {
-                String horseTypeString = arg.replace("horse:", "");
-                if (Util.isByte(horseTypeString)) {
-                    int horseType = Integer.parseInt(horseTypeString);
-                    horseType = Math.min(Math.max(0, horseType), 4);
-                    builder.putByte("Type", (byte) horseType);
                 }
             } else if (arg.startsWith("variant:")) {
                 String variantString = arg.replace("variant:", "");
@@ -508,13 +472,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 } else if (petType == MyPetType.Cow || petType == MyPetType.Chicken || petType == MyPetType.Pig) {
                     // Cow/chicken/pig Variants are handled as (lowercase) Strings.
                     builder.putString("Variant", variantString.toLowerCase());
-                }
-            } else if (arg.startsWith("cat:")) {
-                String catTypeString = arg.replace("cat:", "");
-                if (Util.isInt(catTypeString)) {
-                    int catType = Integer.parseInt(catTypeString);
-                    catType = Math.min(Math.max(0, catType), 3);
-                    builder.putInt("CatType", catType);
                 }
             } else if (arg.startsWith("heartattack") && petType == MyPetType.Warden) {
                 builder.putBoolean("HeartAttack", true);
