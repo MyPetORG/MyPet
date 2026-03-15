@@ -26,7 +26,6 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 public class ReflectionUtil {
     private static MethodHandles.Lookup METHODHANDLE_LOOKUPER = MethodHandles.lookup();
@@ -174,34 +173,6 @@ public class ReflectionUtil {
             Field field = getField(target.getClass(), fieldName);
             if (field != null) {
                 field.setAccessible(true);
-                field.set(target, value);
-                return true;
-            }
-        } catch (Throwable ignored) {
-        }
-        return false;
-    }
-
-    /**
-     * Sets the value of a final field on a target object by field name.
-     * This method removes the final modifier before setting the value, allowing modification
-     * of fields declared as final. Use with caution as this breaks Java's immutability guarantees.
-     *
-     * @param fieldName the name of the final field to modify
-     * @param target    the object instance to set the field value on (null for static fields)
-     * @param value     the new value to assign to the field
-     * @return true if the field was successfully set, false if the field is not found or cannot be set
-     */
-    public static boolean setFinalFieldValue(String fieldName, Object target, Object value) {
-        try {
-            Field field = getField(target.getClass(), fieldName);
-            if (field != null) {
-                field.setAccessible(true);
-
-                Field modifiersField = Field.class.getDeclaredField("modifiers");
-                modifiersField.setAccessible(true);
-                modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
                 field.set(target, value);
                 return true;
             }
