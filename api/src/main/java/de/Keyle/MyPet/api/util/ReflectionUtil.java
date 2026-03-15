@@ -30,14 +30,9 @@ import java.lang.reflect.Modifier;
 
 public class ReflectionUtil {
     private static MethodHandles.Lookup METHODHANDLE_LOOKUPER = MethodHandles.lookup();
-    private static Field MODIFIERS_FIELD;
     private static Object THE_UNSAFE;
     private static MethodHandle PUT_OBJECT;
     private static MethodHandle STATIC_FIELD_OFFSET;
-
-    static {
-        MODIFIERS_FIELD = getField(Field.class, "modifiers");
-    }
 
     /**
      * Loads a class by its fully qualified name using Class.forName().
@@ -259,34 +254,24 @@ public class ReflectionUtil {
             return null;
         }
 
-        if (MODIFIERS_FIELD == null) {
-            if (THE_UNSAFE == null) {
-                try {
-                    THE_UNSAFE = getField(Class.forName("sun.misc.Unsafe"), "theUnsafe").get(null);
-                } catch (Exception e) {
-                    ErrorUtil.report(e);
-                    return null;
-                }
-                STATIC_FIELD_OFFSET = getMethodHandle(THE_UNSAFE.getClass(), "staticFieldOffset", Field.class).bindTo(THE_UNSAFE);
-                PUT_OBJECT = getMethodHandle(THE_UNSAFE.getClass(), "putObject", Object.class, long.class, Object.class).bindTo(THE_UNSAFE);
-            }
-
+        if (THE_UNSAFE == null) {
             try {
-                long offset = (long) STATIC_FIELD_OFFSET.invoke(field);
-
-                return MethodHandles.insertArguments(PUT_OBJECT, 0, className, offset);
-            } catch (Throwable t) {
-                t.printStackTrace();
+                THE_UNSAFE = getField(Class.forName("sun.misc.Unsafe"), "theUnsafe").get(null);
+            } catch (Exception e) {
+                ErrorUtil.report(e);
                 return null;
             }
+            STATIC_FIELD_OFFSET = getMethodHandle(THE_UNSAFE.getClass(), "staticFieldOffset", Field.class).bindTo(THE_UNSAFE);
+            PUT_OBJECT = getMethodHandle(THE_UNSAFE.getClass(), "putObject", Object.class, long.class, Object.class).bindTo(THE_UNSAFE);
         }
 
         try {
-            MODIFIERS_FIELD.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-            return METHODHANDLE_LOOKUPER.unreflectSetter(field);
-        } catch (Exception ignored) {
+            long offset = (long) STATIC_FIELD_OFFSET.invoke(field);
+            return MethodHandles.insertArguments(PUT_OBJECT, 0, className, offset);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     /**
