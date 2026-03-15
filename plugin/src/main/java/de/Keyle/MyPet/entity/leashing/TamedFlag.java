@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
@@ -34,9 +33,7 @@ import org.bukkit.entity.Tameable;
 public class TamedFlag implements LeashFlag {
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
-        if (entity instanceof Horse) {
-            return ((Horse) entity).isTamed() && ((Horse) entity).getOwner() == player;
-        } else if (entity instanceof Tameable) {
+        if (entity instanceof Tameable) {
             return ((Tameable) entity).isTamed() && ((Tameable) entity).getOwner() == player;
         }
         return true;
