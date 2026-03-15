@@ -34,7 +34,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
-import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.WalletType;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.hooks.VaultHook;
@@ -171,7 +170,7 @@ public class PetShop {
                                 event1.setWillDestroy(true);
                             }, MyPetApi.getPlugin());
                             IconMenuItem icon = new IconMenuItem()
-                                    .setMaterial(EnumSelector.find(Material.class, "WOOL", "LIME_WOOL"))
+                                    .setMaterial(Material.LIME_WOOL)
                                     .setData(5)
                                     .setTitle(Translation.getComponent("Name.Yes", player).color(NamedTextColor.GREEN));
                             icon.addLoreLine(Translation.getFormattedComponent("Message.Shop.Confirm.Yes", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
@@ -180,7 +179,7 @@ public class PetShop {
                             }
                             menu.setOption(3, icon);
                             menu.setOption(5, new IconMenuItem()
-                                    .setMaterial(EnumSelector.find(Material.class, "WOOL", "RED_WOOL"))
+                                    .setMaterial(Material.RED_WOOL)
                                     .setData(14)
                                     .setTitle(Translation.getComponent("Name.No", player).color(NamedTextColor.RED))
                                     .addLoreLine(Translation.getFormattedComponent("Message.Shop.Confirm.No", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice()))));
