@@ -212,9 +212,6 @@ public class ReflectionUtil {
 
     /**
      * Sets the value of a final field on a target object using a Field object.
-     * This method removes the final modifier before setting the value on Java versions before 12.
-     * On Java 12+, the modifiers field is not accessible, but final field modification still works
-     * through the Unsafe API internally.
      *
      * @param field  the Field object representing the final field to modify (must not be null)
      * @param target the object instance to set the field value on (null for static fields)
@@ -224,13 +221,6 @@ public class ReflectionUtil {
     public static boolean setFinalFieldValue(@NonNull Field field, Object target, Object value) {
         try {
             field.setAccessible(true);
-
-            if (Integer.parseInt(System.getProperty("java.version").split("\\.")[0]) < 12) { //Java-Version-Check
-                Field modifiersField = Field.class.getDeclaredField("modifiers");
-                modifiersField.setAccessible(true);
-                modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-            }
-
             field.set(target, value);
             return true;
         } catch (Throwable ignored) {
