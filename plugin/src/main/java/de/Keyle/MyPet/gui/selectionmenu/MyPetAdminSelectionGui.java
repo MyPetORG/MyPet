@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -149,14 +148,14 @@ public class MyPetAdminSelectionGui {
 
             if (previousPage != page) {
                 menu.setOption(45, new IconMenuItem()
-                        .setMaterial(EnumSelector.find(Material.class, "SIGN", "OAK_SIGN"))
+                        .setMaterial(Material.OAK_SIGN)
                         .setTitle(Component.text(previousPage + " ≪≪"))
                 );
             }
 
             if (previousPage != page) {
                 menu.setOption(53, new IconMenuItem()
-                        .setMaterial(EnumSelector.find(Material.class, "SIGN", "OAK_SIGN"))
+                        .setMaterial(Material.OAK_SIGN)
                         .setTitle(Component.text("≫≫ " + nextPage))
                 );
             }
