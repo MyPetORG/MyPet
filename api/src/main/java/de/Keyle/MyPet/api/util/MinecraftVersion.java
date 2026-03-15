@@ -31,7 +31,6 @@ import java.util.Map;
  * NMS version (Paper 1.20.5+).
  */
 public enum MinecraftVersion {
-    v1_18_R1("1.18", "1.18.1"),
     v1_18_R2("1.18.2"),
     v1_19_R1("1.19", "1.19.1"),
     v1_19_R2("1.19.2"),
