@@ -33,8 +33,6 @@ public class WildFlag implements LeashFlag {
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
         if (entity instanceof IronGolem) {
             return !((IronGolem) entity).isPlayerCreated();
-        } else if (entity instanceof Horse) {
-            return !((Horse) entity).isTamed();
         } else if (entity instanceof Tameable) {
             return !((Tameable) entity).isTamed();
         }
