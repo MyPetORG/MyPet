@@ -21,13 +21,11 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandTabCompleter;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
@@ -78,56 +76,7 @@ public class CommandInventory implements CommandTabCompleter {
                         myPet.getSkills().get(BackpackImpl.class).openInventory(player);
                     }
                 }
-            }/* else if (args.length == 2 && Permissions.has(player, "MyPet.admin", false) && args[1].equalsIgnoreCase("inactive")) {		//Inactive Pets
-                final Player petOwner = Bukkit.getServer().getOfflinePlayer(args[0]).getPlayer();
-                final MyPetPlayer myPetOwner = MyPetApi.getPlayerManager().getMyPetPlayer(petOwner);
-
-                if (petOwner == null) {
-                    sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", player));
-                } else {
-                	MyPetApi.getRepository().getMyPets(myPetOwner, new RepositoryCallback<List<StoredMyPet>>() {
-                        @Override
-                        public void callback(List<StoredMyPet> pets) {
-                            if (pets.size() - (myPetOwner.hasMyPet() ? 1 : 0) == 0) {
-                            	myPetOwner.sendMessage((Translation.getComponent("Message.Command.Switch.NoStoredPets", myPetOwner));
-                                return;
-                            }
-                            if (myPetOwner.isOnline()) {
-                                String worldGroup = WorldGroup.getGroupByWorld(myPetOwner.getPlayer().getWorld().getName()).getName();
-                                int inactivePetCount = getInactivePetCount(pets, worldGroup);
-                                int maxPetCount = getMaxPetCount(myPetOwner.getPlayer());
-
-                                if (myPetOwner.hasMyPet()) {
-                                    inactivePetCount--;
-                                }
-
-                                String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
-                                Component title = Translation.getComponent("Message.SelectMyPet", myPetOwner).append(Component.text(" " + stats));
-
-                                final MyPetAdminSelectionGui gui = new MyPetAdminSelectionGui(myPetOwner, player, title);
-                                gui.open(pets, new RepositoryCallback<StoredMyPet>() {
-                                    @Override
-                                    public void callback(StoredMyPet storedMyPet) {
-                                    	MyPet myPet = MyPetClass.getByMyPetType(storedMyPet.getPetType()).getNewMyPetInstance(storedMyPet.getOwner());
-                                    	Collection<Skill> skills = myPet.getSkills().all();
-                                        if (skills.size() > 0) {
-                                            for (Skill skill : skills) {
-                                                if (skill instanceof NBTStorage) {
-                                                    NBTStorage storageSkill = (NBTStorage) skill;
-                                                    if (storedMyPet.getSkillInfo().getCompoundData().containsKey(skill.getName())) {
-                                                        storageSkill.load(storedMyPet.getSkillInfo().getAs(skill.getName(), TagCompound.class));
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    	myPet.getSkills().get(BackpackImpl.class).openInventory(player);
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-            } */
+            }
             return true;
         }
         sender.sendMessage("You can't use this command from server console!");
@@ -140,34 +89,6 @@ public class CommandInventory implements CommandTabCompleter {
             return null;
         }
         return Collections.emptyList();
-    }
-
-    private int getMaxPetCount(Player p) {
-        int maxPetCount = 0;
-        if (Permissions.has(p, "MyPet.admin")) {
-            maxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
-        } else {
-            for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
-                if (Permissions.has(p, "MyPet.petstorage.limit." + i)) {
-                    maxPetCount = i;
-                    break;
-                }
-            }
-        }
-        return maxPetCount;
-    }
-
-    private int getInactivePetCount(List<StoredMyPet> pets, String worldGroup) {
-        int inactivePetCount = 0;
-
-        for (StoredMyPet pet : pets) {
-            if (!pet.getWorldGroup().equals(worldGroup)) {
-                continue;
-            }
-            inactivePetCount++;
-        }
-
-        return inactivePetCount;
     }
 
     @Override
