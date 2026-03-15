@@ -304,20 +304,7 @@ public class PluginHookManager {
      * @return instance of the plugin
      */
     public <T extends JavaPlugin> Optional<T> getPluginInstance(Class<T> clazz) {
-        try {
-            T plugin = JavaPlugin.getPlugin(clazz);
-            if (plugin != null) {
-                return Optional.of(plugin);
-            }
-        } catch (NoSuchMethodError e) {
-            for (Plugin p : Bukkit.getPluginManager().getPlugins()) {
-                if (clazz.isInstance(p)) {
-                    T plugin = clazz.cast(p);
-                    return Optional.of(plugin);
-                }
-            }
-        }
-        return Optional.empty();
+        return Optional.of(JavaPlugin.getPlugin(clazz));
     }
 
     /**
