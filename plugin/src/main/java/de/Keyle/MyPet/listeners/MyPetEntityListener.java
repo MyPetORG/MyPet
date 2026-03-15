@@ -109,7 +109,7 @@ public class MyPetEntityListener implements Listener {
             return;
         }
         if (event.getEntity() instanceof MyPetBukkitEntity) {
-            if (event.getBlock().getType() == EnumSelector.find(Material.class, "SOIL", "FARMLAND")) {
+            if (event.getBlock().getType() == Material.FARMLAND) {
                 event.setCancelled(true);
             } else if ("TURTLE_EGG".equals(event.getBlock().getType().name())) {
                 event.setCancelled(true);
