@@ -635,7 +635,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         pluginHookManager.registerHook(UltimateSurvivalGamesHook.class);
         pluginHookManager.registerHook(VaultHook.class);
         pluginHookManager.registerHook(WorldGuardHook.class);
-        pluginHookManager.registerHook(WorldGuardCustomFlagsHook.class);
     }
 
     @Override
