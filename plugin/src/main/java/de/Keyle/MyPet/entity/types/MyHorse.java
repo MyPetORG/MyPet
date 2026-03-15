@@ -22,7 +22,6 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
 import net.kyori.adventure.nbt.BinaryTag;
@@ -49,10 +48,10 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     public void setArmor(ItemStack item) {
         if (item != null &&
-                !item.getType().name().equals("LEATHER_HORSE_ARMOR") &&
-                item.getType() != EnumSelector.find(Material.class, "IRON_BARDING", "IRON_HORSE_ARMOR") &&
-                item.getType() != EnumSelector.find(Material.class, "GOLD_BARDING", "GOLDEN_HORSE_ARMOR") &&
-                item.getType() != EnumSelector.find(Material.class, "DIAMOND_BARDING", "DIAMOND_HORSE_ARMOR")) {
+                item.getType() != Material.LEATHER_HORSE_ARMOR &&
+                item.getType() != Material.IRON_HORSE_ARMOR &&
+                item.getType() != Material.GOLDEN_HORSE_ARMOR &&
+                item.getType() != Material.DIAMOND_HORSE_ARMOR) {
             return;
         }
 
