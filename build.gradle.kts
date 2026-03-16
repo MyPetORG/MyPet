@@ -91,8 +91,8 @@ val archivesBaseName = "MyPet"
 
 val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
     group = "resources"
-    description = "Downloads MyPet translations into build/resources/main/locale"
-    val targetDir = layout.buildDirectory.dir("resources/main/locale").get().asFile
+    description = "Downloads MyPet translations into plugin module resources"
+    val targetDir = project(":plugin").layout.buildDirectory.dir("resources/main/locale").get().asFile
     outputs.dir(targetDir)
 
     // Skip download if translations are less than 12 hours old
@@ -128,23 +128,8 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
     }
 }
 
-tasks.processResources {
-    dependsOn(downloadTranslations)
-    duplicatesStrategy = DuplicatesStrategy.WARN
-
-    // Define filtering properties inline for configuration cache compatibility
-    val filteringProps = mapOf(
-        "buildNumber" to buildNumber,
-        "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
-        "minecraft" to mapOf("version" to minecraftVersion),
-        "bukkit" to mapOf("packets" to bukkitPackets),
-        "mypetVersion" to version,
-        "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
-    )
-
-    filesMatching("plugin.yml") { expand(filteringProps) }
-    filesMatching("*.yml") { if (name != "plugin.yml") expand(filteringProps) }
-}
+// Root project no longer has src/main — resources are in :plugin module
+tasks.processResources { enabled = false }
 
 fun Manifest.attributesForMyPet() = attributes(
     mapOf(
@@ -231,15 +216,7 @@ sentry {
     authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
 
-/* ---------- Root compilation settings (Java 17 output) ---------- */
-
-java {
-    toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
-}
-tasks.withType<JavaCompile>().configureEach {
-    options.release.set(17)
-    options.encoding = "UTF-8"
-}
+/* ---------- Root project has no source files — compilation is in submodules ---------- */
 
 /* ---------- Polymart Release ---------- */
 

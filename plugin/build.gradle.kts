@@ -1,3 +1,6 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 plugins {
     id("io.freefair.lombok") version "9.1.0"
     `maven-publish`
@@ -9,6 +12,29 @@ tasks.withType<JavaCompile>().configureEach {
     // Enable parameter name preservation for Cloud annotations
     // This allows Cloud to infer parameter names from method signatures
     options.compilerArgs.add("-parameters")
+}
+
+// Re-enable processResources (disabled in root subprojects block)
+tasks.processResources {
+    enabled = true
+    duplicatesStrategy = DuplicatesStrategy.WARN
+    dependsOn(rootProject.tasks.named("downloadTranslations"))
+
+    val buildNumber = rootProject.findProperty("BUILD_NUMBER")?.toString() ?: "local"
+    val minecraftVersion: String by rootProject.extra
+    val bukkitPackets: String by rootProject.extra
+
+    val filteringProps = mapOf(
+        "buildNumber" to buildNumber,
+        "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
+        "minecraft" to mapOf("version" to minecraftVersion),
+        "bukkit" to mapOf("packets" to bukkitPackets),
+        "mypetVersion" to rootProject.version,
+        "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
+    )
+
+    filesMatching("plugin.yml") { expand(filteringProps) }
+    filesMatching("*.yml") { if (name != "plugin.yml") expand(filteringProps) }
 }
 
 dependencies {
