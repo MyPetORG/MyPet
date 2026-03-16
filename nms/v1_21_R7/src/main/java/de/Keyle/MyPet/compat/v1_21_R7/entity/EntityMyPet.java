@@ -108,7 +108,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
     protected static final EntityDataAccessor<Byte> POTION_PARTICLE_WATCHER = Mob.DATA_SHARED_FLAGS_ID;
     // Copied from prior version
-    protected final float rotA = (float) ((Math.random() + 1.0) * 0.009999999776482582);
     protected AIGoalSelector petPathfinderSelector, petTargetSelector;
     protected LivingEntity target = null;
     protected int interactCooldown = 0;
@@ -134,8 +133,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     protected boolean indirectRiding = false;
     // Needed for the MyPetFlyingMoveControl - Sometimes overwritten by specific pets
     protected float maxTurn = 20;
-    // FIXME: This field has been removed at the v1_21_R7 update - what was its purpose?
-    protected double lerpX;
 
     public EntityMyPet(Level world, MyPet myPet) {
         super(((EntityRegistry) MyPetApi.getEntityRegistry()).getEntityType(myPet.getPetType()), world);
@@ -1099,23 +1096,9 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         }
 
         if (this.isAlwaysTicking()) {
-            this.lerpX = 0;
             this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
         }
-        if (this.lerpX > 0) {
-            double newX = this.getX() + (this.useItemRemaining - this.getX()) / this.lerpX;
-            double newY = this.getY() + (this.fallFlyTicks - this.getY()) / this.lerpX;
-            double newZ = this.getZ() + (this.autoSpinAttackTicks - this.getZ()) / this.lerpX;
-            double rotDiff = this.rotA - (double) this.getYRot();
-            double d3 = rotDiff - Math.floor(rotDiff);
-            this.setYRot((float) ((double) this.getYRot() + d3 / this.lerpX));
-            this.setXRot((float) ((double) this.getXRot() + (this.walkAnimation.position() - (double) this.getXRot()) / this.lerpX));
-            --this.lerpX;
-            this.setPos(newX, newY, newZ);
-            this.setRot(this.getYRot(), this.getXRot());
-        } else {
-            this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
-        }
+        this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
 
         Vec3 vec3d = this.getDeltaMovement();
         double motX = vec3d.x();
