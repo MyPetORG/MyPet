@@ -138,11 +138,7 @@ public class EntityMyMule extends EntityMyPet {
                     getMyPet().setChest(null);
                     getMyPet().setSaddle(null);
                     if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                        try {
-                            itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-                        } catch (Error e) {
-                            // TODO REMOVE
-                        }
+                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
                     }
 
                     return InteractionResult.CONSUME;
