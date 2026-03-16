@@ -65,13 +65,6 @@ public class CraftMyPetPart extends CraftEntity implements MyPetBukkitPart {
     public void setPersistent(boolean b) {
     }
 
-    /* This doesn't work rn as getType was made final...
-    @NotNull
-    @Override
-    public EntityType getType() {
-        return EntityType.UNKNOWN;
-    }*/
-
     @NotNull
     @Override
     public SpawnCategory getSpawnCategory() {
