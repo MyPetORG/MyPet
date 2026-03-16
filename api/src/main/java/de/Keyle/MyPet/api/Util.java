@@ -36,9 +36,12 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.util.*;
 
 public class Util {
@@ -135,31 +138,23 @@ public class Util {
     }
 
     public static String readUrlContent(String address, int timeout) throws IOException {
-        StringBuilder contents = new StringBuilder(2048);
-        BufferedReader br = null;
-
         try {
-            URL url = new URL(address);
-            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-            huc.setConnectTimeout(timeout);
-            huc.setReadTimeout(timeout);
-            huc.setRequestMethod("GET");
-            huc.connect();
-            br = new BufferedReader(new InputStreamReader(huc.getInputStream()));
-            String line;
-            while ((line = br.readLine()) != null) {
-                contents.append(line);
+            HttpResponse<String> response;
+            try (HttpClient client = HttpClient.newBuilder()
+                    .connectTimeout(Duration.ofMillis(timeout))
+                    .build()) {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(address))
+                        .timeout(Duration.ofMillis(timeout))
+                        .GET()
+                        .build();
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
             }
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (Exception e) {
-                ErrorUtil.report(e);
-            }
+            return response.body();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("HTTP request interrupted", e);
         }
-        return contents.toString();
     }
 
     public static String decimal2roman(int src) {
