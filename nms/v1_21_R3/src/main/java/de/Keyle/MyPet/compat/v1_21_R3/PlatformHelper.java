@@ -60,7 +60,6 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -137,13 +136,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                     vanillaNBT = written;
                 }
             } else {
-                // Fallback: use entity's internal writer method (named "b" in obfuscated mappings)
-                Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
-                try {
-                    b.invoke(entity, vanillaNBT);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    ErrorUtil.report(e);
-                }
+                entity.saveWithoutId(vanillaNBT);
             }
         } catch (Exception e) {
             ErrorUtil.report(e);

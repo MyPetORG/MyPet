@@ -42,11 +42,13 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.bukkit.GameRule;
@@ -61,7 +63,6 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -139,13 +140,10 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                     vanillaNBT = written;
                 }
             } else {
-                // Fallback: use entity's internal writer method (named "b" in obfuscated mappings)
-                Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
-                try {
-                    b.invoke(entity, vanillaNBT);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    ErrorUtil.report(e);
-                }
+                HolderLookup.Provider lookup = ((CraftWorld) bukkitEntity.getWorld()).getHandle().registryAccess();
+                TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, lookup);
+                entity.saveWithoutId(output);
+                vanillaNBT = output.buildResult();
             }
         } catch (Exception e) {
             ErrorUtil.report(e);

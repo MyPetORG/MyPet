@@ -23,7 +23,6 @@ package de.Keyle.MyPet.compat.v1_20_R4;
 import com.mojang.brigadier.StringReader;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyAquaticPet;
 import de.Keyle.MyPet.compat.v1_20_R4.util.inventory.ItemStackNBTConverter;
@@ -57,7 +56,6 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -128,12 +126,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         if (entity instanceof net.minecraft.world.entity.LivingEntity) {
             ((net.minecraft.world.entity.LivingEntity) entity).addAdditionalSaveData(vanillaNBT);
         } else {
-            Method b = ReflectionUtil.getMethod(entity.getClass(), "b", CompoundTag.class);
-            try {
-                b.invoke(entity, vanillaNBT);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                ErrorUtil.report(e);
-            }
+            entity.saveWithoutId(vanillaNBT);
         }
 
         return (CompoundBinaryTag) ItemStackNBTConverter.vanillaCompoundToCompound(vanillaNBT);
