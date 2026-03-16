@@ -29,7 +29,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -71,14 +70,6 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
     public void load(MaterialHolder material, String data) {
         ResourceLocation key = ResourceLocation.tryParse(material.getId());
         Item item = BuiltInRegistries.ITEM.get(key);
-        //TODO AIR now?
-        if (item == null) {
-            Block block = BuiltInRegistries.BLOCK.get(key);
-            item = block.asItem();
-        }
-        if (item == null) {
-            return;
-        }
 
         net.minecraft.world.item.ItemStack is = new net.minecraft.world.item.ItemStack(item, 1);
         net.minecraft.world.item.ItemStack finishedItem = null;
