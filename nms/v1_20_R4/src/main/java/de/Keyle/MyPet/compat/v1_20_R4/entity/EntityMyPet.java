@@ -1039,9 +1039,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     }
 
     /**
-     * Returns the speed of played sounds
+     * Returns the pitch of played sounds
      */
-    protected float sp() {
+    @Override
+    public float getVoicePitch() {
         try {
             return getSoundSpeed();
         } catch (Exception e) {
