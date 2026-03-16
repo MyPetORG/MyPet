@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyIronGolem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.compat.v1_20_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -43,8 +42,6 @@ import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
-
-import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyIronGolem extends EntityMyPet {
@@ -132,18 +129,7 @@ public class EntityMyIronGolem extends EntityMyPet {
                 getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                 getMyPet().setFlower(null);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
-                            try {
-                                CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
-                            } catch (IllegalAccessException | InvocationTargetException ex) {
-                                ErrorUtil.report(ex);
-                            }
-                        });
-                    }
+                    itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
                 }
 
                 return InteractionResult.CONSUME;
