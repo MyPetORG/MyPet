@@ -130,19 +130,16 @@ public class Util {
     }
 
     public static String readUrlContent(String address, int timeout) throws IOException {
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(timeout))
+                .build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(address))
+                .timeout(Duration.ofMillis(timeout))
+                .GET()
+                .build();
         try {
-            HttpResponse<String> response;
-            try (HttpClient client = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofMillis(timeout))
-                    .build()) {
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(address))
-                        .timeout(Duration.ofMillis(timeout))
-                        .GET()
-                        .build();
-                response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            }
-            return response.body();
+            return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IOException("HTTP request interrupted", e);
