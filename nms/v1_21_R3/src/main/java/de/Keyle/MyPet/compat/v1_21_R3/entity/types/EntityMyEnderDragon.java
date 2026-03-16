@@ -40,10 +40,8 @@ import static de.Keyle.MyPet.compat.v1_21_R3.PlatformHelper.dragonPartsField;
 @EntitySize(width = 1.F, height = 1.F)
 public class EntityMyEnderDragon extends EntityMyFlyingPet {
 
-    public final double[][] c = new double[64][3];
     public EntityMyPetPart[] children;
     protected boolean registered = false;
-    protected int d = -1;
 
     public EntityMyEnderDragon(Level world, MyPet myPet) {
         super(world, myPet);
@@ -105,14 +103,6 @@ public class EntityMyEnderDragon extends EntityMyFlyingPet {
         }
     }
 
-	/* fmm...
-	@Override
-	public void discard() {
-		super.discard();
-		Arrays.stream(this.children).forEach((en) -> (en.getBukkitEntity().getHandle()).discard());
-	}
- 	*/
-
     @Override
     public void die(DamageSource damagesource) {
         super.die(damagesource);
@@ -122,30 +112,5 @@ public class EntityMyEnderDragon extends EntityMyFlyingPet {
     @Override
     public void aiStep() {
         super.aiStep();
-
-        //        if (++this.d == this.c.length) {
-        //            this.d = 0;
-        //        }
-        //
-        //        float f7 = (float) (this.a(5, 1.0F)[1] - this.a(10, 1.0F)[1]) * 10.0F * 0.017453292F;
-        //        float f8 = MathHelper.cos(f7);
-        //        float f9 = MathHelper.sin(f7);
-        //        float f10 = this.yaw * 0.017453292F;
-        //        float f11 = MathHelper.sin(f10);
-        //        float f12 = MathHelper.cos(f10);
-        //        this.children[2].tick();
-        //        this.children[2].setPositionRotation(this.getX() + (double) (f11 * 0.5F), this.getY(), this.getZ() - (double) (f12 * 0.5F), 0.0F, 0.0F);
-        //        this.children[6].tick();
-        //        this.children[6].setPositionRotation(this.getX() + (double) (f12 * 4.5F), this.getY() + 2.0D, this.getZ() + (double) (f11 * 4.5F), 0.0F, 0.0F);
-        //        this.children[7].tick();
-        //        this.children[7].setPositionRotation(this.getX() - (double) (f12 * 4.5F), this.getY() + 2.0D, this.getZ() - (double) (f11 * 4.5F), 0.0F, 0.0F);
-        //
-        //        float f13 = MathHelper.sin(this.yaw * 0.017453292F - this.be * 0.01F);
-        //        float f14 = MathHelper.cos(this.yaw * 0.017453292F - this.be * 0.01F);
-        //        this.children[0].tick();
-        //        this.children[1].tick();
-        //        double f3 = this.v(1.0F);
-        //        this.children[0].setPositionRotation(this.getX() + (double) (f13 * 6.5F * f8), this.getY() + (double) f3 + (double) (f9 * 6.5F), this.getZ() - (double) (f14 * 6.5F * f8), 0.0F, 0.0F);
-        //        this.children[1].setPositionRotation(this.getX() + (double) (f13 * 5.5F * f8), this.getY() + (double) f3 + (double) (f9 * 5.5F), this.getZ() - (double) (f14 * 5.5F * f8), 0.0F, 0.0F);
     }
 }
