@@ -247,25 +247,23 @@ public class EntityMyHorse extends EntityMyPet {
 
     @Override
     public void playStepSound(BlockPos blockposition, BlockState blockdata) {
-        if (!blockdata.getMaterial().isLiquid()) {
-            BlockState blockdataUp = this.level.getBlockState(blockposition.above());
-            SoundType soundeffecttype = blockdata.getSoundType();
-            if (blockdataUp.getBlock() == Blocks.SNOW) {
-                soundeffecttype = blockdata.getSoundType();
+        BlockState blockdataUp = this.level.getBlockState(blockposition.above());
+        SoundType soundeffecttype = blockdata.getSoundType();
+        if (blockdataUp.getBlock() == Blocks.SNOW) {
+            soundeffecttype = blockdata.getSoundType();
+        }
+        if (this.isVehicle()) {
+            ++this.soundCounter;
+            if (this.soundCounter > 5 && this.soundCounter % 3 == 0) {
+                this.playSound(SoundEvents.HORSE_GALLOP, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
+            } else if (this.soundCounter <= 5) {
+                this.playSound(SoundEvents.HORSE_STEP_WOOD, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
             }
-            if (this.isVehicle()) {
-                ++this.soundCounter;
-                if (this.soundCounter > 5 && this.soundCounter % 3 == 0) {
-                    this.playSound(SoundEvents.HORSE_GALLOP, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
-                } else if (this.soundCounter <= 5) {
-                    this.playSound(SoundEvents.HORSE_STEP_WOOD, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
-                }
-            } else if (!blockdata.getMaterial().isLiquid()) {
-                this.soundCounter += 1;
-                playSound(SoundEvents.HORSE_STEP_WOOD, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
-            } else {
-                playSound(SoundEvents.HORSE_STEP, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
-            }
+        } else if (!blockdata.getMaterial().isLiquid()) {
+            this.soundCounter += 1;
+            playSound(SoundEvents.HORSE_STEP_WOOD, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
+        } else {
+            playSound(SoundEvents.HORSE_STEP, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
         }
     }
 
