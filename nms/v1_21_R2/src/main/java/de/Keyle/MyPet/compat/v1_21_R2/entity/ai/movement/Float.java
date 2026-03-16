@@ -36,7 +36,6 @@ public class Float implements AIGoal {
 
     public Float(EntityMyPet entityMyPet) {
         this.entityMyPet = entityMyPet;
-        //entityMyPet.getNavigation().e(true);
         this.owner = ((CraftPlayer) entityMyPet.getOwner().getPlayer()).getHandle();
         entityMyPet.getNavigation().setCanFloat(true);
     }
