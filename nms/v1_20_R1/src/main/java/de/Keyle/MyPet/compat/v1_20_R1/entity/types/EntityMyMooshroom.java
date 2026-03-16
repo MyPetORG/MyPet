@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_20_R1.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -35,7 +34,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
 @EntitySize(width = 0.7F, height = 1.3F)
@@ -72,12 +70,7 @@ public class EntityMyMooshroom extends EntityMyPet {
         if (itemStack != null) {
             if (itemStack.getItem().equals(Items.BOWL)) {
                 if (!getOwner().equals(entityhuman) || !canUseItem() || !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP) {
-                    final int itemInHandIndex = entityhuman.getInventory().selected;
-                    ItemStack is = new ItemStack(Items.MUSHROOM_STEW);
-                    final ItemStack oldIs = entityhuman.getInventory().getItem(itemInHandIndex);
-                    entityhuman.getInventory().setItem(itemInHandIndex, is);
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetApi.getPlugin(), () -> entityhuman.getInventory().setItem(itemInHandIndex, oldIs), 2L);
-
+                    return InteractionResult.FAIL;
                 } else {
                     itemStack.shrink(1);
                     if (itemStack.getCount() <= 0) {
