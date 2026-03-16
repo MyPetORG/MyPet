@@ -482,7 +482,7 @@ public class Util {
         return null;
     }
 
-    public static String getClassName(Class clazz) {
+    public static String getClassName(Class<?> clazz) {
         if (clazz != null) {
             return clazz.getName();
         }
