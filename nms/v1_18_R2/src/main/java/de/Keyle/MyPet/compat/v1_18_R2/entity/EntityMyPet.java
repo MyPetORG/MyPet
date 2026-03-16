@@ -817,7 +817,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             minY = this.getBoundingBox().minY;
 
             float friction = 0.91F;
-            if (this.onGround) {
+            if (this.isOnGround()) {
                 friction = this.level.getBlockState(new BlockPos((int) Math.floor(this.getX()), (int) Math.floor(minY) - 1, (int) Math.floor(this.getZ()))).getBlock().getFriction() * 0.91F;
             }
 
@@ -1033,11 +1033,11 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
             boolean flag = this.isInWater() && d7 > 0.0D;
             double d8 = this.getFluidJumpThreshold();
-            if (flag && (!this.onGround || d7 > d8)) {
+            if (flag && (!this.isOnGround() || d7 > d8)) {
                 this.jumpInLiquid(FluidTags.WATER);
-            } else if (this.isInLava() && (!this.onGround || d7 > d8)) {
+            } else if (this.isInLava() && (!this.isOnGround() || d7 > d8)) {
                 this.jumpInLiquid(FluidTags.LAVA);
-            } else if ((this.onGround || flag && d7 <= d8) && this.jumpDelay == 0) {
+            } else if ((this.isOnGround() || flag && d7 <= d8) && this.jumpDelay == 0) {
                 this.jumpFromGround();
                 this.jumpDelay = 10;
             }
@@ -1149,7 +1149,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 }
 
                 Ride rideSkill = myPet.getSkills().get(RideImpl.class);
-                if (this.onGround && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
+                if (this.isOnGround() && rideSkill.getFlyLimit().getValue().doubleValue() > 0) {
                     limitCounter += rideSkill.getFlyRegenRate().getValue().doubleValue();
                     if (limitCounter > rideSkill.getFlyLimit().getValue().doubleValue()) {
                         limitCounter = rideSkill.getFlyLimit().getValue().floatValue();
@@ -1197,7 +1197,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             return;
         }
 
-        if (this.onGround && this.isFlying) {
+        if (this.isOnGround() && this.isFlying) {
             isFlying = false;
             this.flyDist = 0;
         }
