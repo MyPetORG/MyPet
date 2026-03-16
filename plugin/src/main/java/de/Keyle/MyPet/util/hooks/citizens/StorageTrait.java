@@ -112,7 +112,7 @@ public class StorageTrait extends Trait {
                         int maxPetCount = 0;
                         if (!Permissions.has(player, "MyPet.admin")) {
                             for (int i = Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
-                                if (Permissions.hasLegacy(player, "MyPet.petstorage.limit.", i)) {
+                                if (Permissions.has(player, "MyPet.petstorage.limit." + i)) {
                                     maxPetCount = i;
                                     break;
                                 }
@@ -237,7 +237,7 @@ public class StorageTrait extends Trait {
                             int maxPetCount = 0;
                             if (!Permissions.has(player, "MyPet.admin")) {
                                 for (int i = Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
-                                    if (Permissions.hasLegacy(player, "MyPet.petstorage.limit.", i)) {
+                                    if (Permissions.has(player, "MyPet.petstorage.limit." + i)) {
                                         maxPetCount = i;
                                         break;
                                     }

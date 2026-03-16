@@ -114,7 +114,6 @@ public class ConfigurationLoader {
 
         config.addDefault("MyPet.Permissions.Enabled", Permissions.ENABLED);
         config.addDefault("MyPet.Permissions.Extended", Permissions.EXTENDED);
-        config.addDefault("MyPet.Permissions.Legacy", Permissions.LEGACY);
 
         config.addDefault("MyPet.LevelSystem.CalculationMode", LevelSystem.CALCULATION_MODE);
 
@@ -473,7 +472,6 @@ public class ConfigurationLoader {
 
         Permissions.EXTENDED = config.getBoolean("MyPet.Permissions.Extended", false);
         Permissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
-        Permissions.LEGACY = config.getBoolean("MyPet.Permissions.Legacy", Permissions.LEGACY);
 
         LevelSystem.Experience.LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
         LevelSystem.Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
