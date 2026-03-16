@@ -94,40 +94,6 @@ public class Util {
         }
     }
 
-    public static boolean isLong(String number) {
-        try {
-            Long.parseLong(number);
-            return true;
-        } catch (NumberFormatException nFE) {
-            return false;
-        }
-    }
-
-    public static boolean isFloat(String number) {
-        try {
-            Float.parseFloat(number);
-            return true;
-        } catch (NumberFormatException nFE) {
-            return false;
-        }
-    }
-
-    public static boolean isShort(String number) {
-        try {
-            Short.parseShort(number);
-            return true;
-        } catch (NumberFormatException nFE) {
-            return false;
-        }
-    }
-
-    public static String cutString(String string, int length) {
-        if (string.length() > length) {
-            return string.substring(0, length - 1);
-        }
-        return string;
-    }
-
     public static String capitalizeName(String name) {
         if (name == null) {
             MyPetApi.getLogger().warning("Name is null");
@@ -165,11 +131,6 @@ public class Util {
         }
         reader.close();
         return fileData.toString();
-    }
-
-    public static String convertStreamToString(java.io.InputStream is) {
-        Scanner s = new Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
     }
 
     public static String readUrlContent(String address) throws IOException {
@@ -324,18 +285,6 @@ public class Util {
 
     public static int clamp(int val, int min, int max) {
         return Math.max(min, Math.min(max, val));
-    }
-
-    public static UUID getOfflinePlayerUUID(String name) {
-        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8));
-    }
-
-    public static boolean findClassInStackTrace(StackTraceElement[] stackTrace, String className) {
-        return findClassInStackTrace(stackTrace, className, 0, stackTrace.length - 1, false);
-    }
-
-    public static boolean findClassInStackTrace(StackTraceElement[] stackTrace, String className, int element) {
-        return findClassInStackTrace(stackTrace, className, element, element, false);
     }
 
     public static boolean findClassInStackTrace(StackTraceElement[] stackTrace, String className, int from, int to, boolean debug) {
@@ -533,66 +482,11 @@ public class Util {
         return null;
     }
 
-    public static String escapeJsonString(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); ++i) {
-            char ch = s.charAt(i);
-            switch (ch) {
-                case '\b':
-                    sb.append("\\b");
-                    continue;
-                case '\t':
-                    sb.append("\\t");
-                    continue;
-                case '\n':
-                    sb.append("\\n");
-                    continue;
-                case '\f':
-                    sb.append("\\f");
-                    continue;
-                case '\r':
-                    sb.append("\\r");
-                    continue;
-                case '"':
-                    sb.append("\\\"");
-                    continue;
-                case '/':
-                    sb.append("\\/");
-                    continue;
-                case '\\':
-                    sb.append("\\\\");
-                    continue;
-            }
-
-            if (ch <= 31 || ch >= 127 && ch <= 159 || ch >= 8192 && ch <= 8447) {
-                String ss = Integer.toHexString(ch);
-                sb.append("\\u");
-
-                sb.append("0".repeat(4 - ss.length()));
-
-                sb.append(ss.toUpperCase());
-            } else {
-                sb.append(ch);
-            }
-        }
-        return sb.toString();
-    }
-
     public static String getClassName(Class clazz) {
         if (clazz != null) {
             return clazz.getName();
         }
         return null;
-    }
-
-    public static boolean stringsEqual(String a, String b, boolean ignoreCase) {
-        if (a == null) {
-            return b == null;
-        }
-        if (b == null) {
-            return a == null;
-        }
-        return ignoreCase ? a.equalsIgnoreCase(b) : a.equals(b);
     }
 
     public static Set<Class<?>> getAllInterfaces(Class<?> type) {
