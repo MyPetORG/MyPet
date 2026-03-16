@@ -212,19 +212,11 @@ public class Util {
     }
 
     public static String toString(InputStream is, Charset charset) {
-        StringBuilder content = new StringBuilder();
-
         try {
-            InputStreamReader in = new InputStreamReader(is, charset);
-            int numBytes;
-            final char[] buf = new char[512];
-            while ((numBytes = in.read(buf)) != -1) {
-                content.append(String.copyValueOf(buf, 0, numBytes));
-            }
+            return new String(is.readAllBytes(), charset);
         } catch (Exception ignored) {
         }
-
-        return content.toString();
+        return "";
     }
 
     /**
