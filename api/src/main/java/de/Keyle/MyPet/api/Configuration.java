@@ -369,11 +369,6 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
-        public static class PigZombie {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
         public static class PolarBear {
 
             public static ConfigItem GROW_UP_ITEM;
@@ -401,7 +396,7 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
-        public static class Snowman {
+        public static class SnowGolem {
 
             public static boolean FIX_SNOW_TRACK = true;
         }

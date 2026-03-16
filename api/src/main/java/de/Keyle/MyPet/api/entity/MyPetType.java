@@ -20,285 +20,114 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.compat.Compat;
 import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
+import org.bukkit.entity.EntityType;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public enum MyPetType {
-    Axolotl("AXOLOTL", "1.17", MyAxolotl.class, new Compat<String>()
-            .v("1.17", "axolotl")
-            .search()),
-    Allay("ALLAY", "1.19", MyAllay.class, new Compat<String>()
-            .v("1.19", "allay")
-            .search()),
-    Armadillo("ARMADILLO", "1.20.5", MyArmadillo.class, new Compat<String>()
-            .v("1.20.5", "armadillo")
-            .search()),
-    Bat("BAT", "1.7.10", MyBat.class, new Compat<String>()
-            .v("1.13", "bat")
-            .search()),
-    Bee("BEE", "1.15", MyBee.class, new Compat<String>()
-            .v("1.13", "bee")
-            .search()),
-    Blaze("BLAZE", "1.7.10", MyBlaze.class, new Compat<String>()
-            .v("1.13", "blaze")
-            .search()),
-    Bogged("BOGGED", "1.21", MyBogged.class, new Compat<String>()
-            .v("1.21", "bogged")
-            .search()),
-    Breeze("BREEZE", "1.21", MyBreeze.class, new Compat<String>()
-            .v("1.21", "breeze")
-            .search()),
-    Camel("CAMEL", "1.20", MyCamel.class, new Compat<String>()
-            .v("1.20", "camel")
-            .search()),
-    Cat("CAT", "1.14", MyCat.class, new Compat<String>()
-            .v("1.14", "cat")
-            .search()),
-    CaveSpider("CAVE_SPIDER", "1.7.10", MyCaveSpider.class, new Compat<String>()
-            .v("1.13", "cave_spider")
-            .search()),
-    Chicken("CHICKEN", "1.7.10", MyChicken.class, new Compat<String>()
-            .v("1.13", "chicken")
-            .search()),
-    Cod("COD", "1.13", MyCod.class, new Compat<String>()
-            .v("1.13", "cod")
-            .search()),
-    CopperGolem("COPPER_GOLEM", "1.21.10", MyCopperGolem.class, new Compat<String>()
-            .v("1.21.10", "copper_golem")
-            .search()),
-    Cow("COW", "1.7.10", MyCow.class, new Compat<String>()
-            .v("1.13", "cow")
-            .search()),
-    Creeper("CREEPER", "1.7.10", MyCreeper.class, new Compat<String>()
-            .v("1.13", "creeper")
-            .search()),
-    Creaking("CREAKING", "1.21.4", MyCreaking.class, new Compat<String>()
-            .v("1.21.4", "creaking")
-            .search()),
-    Dolphin("DOLPHIN", "1.13", MyDolphin.class, new Compat<String>()
-            .v("1.13", "dolphin")
-            .search()),
-    Donkey("DONKEY", "1.11", MyDonkey.class, new Compat<String>()
-            .v("1.13", "donkey")
-            .search()),
-    Drowned("DROWNED", "1.13", MyDrowned.class, new Compat<String>()
-            .v("1.13", "drowned")
-            .search()),
-    ElderGuardian("ELDER_GUARDIAN", "1.11", MyElderGuardian.class, new Compat<String>()
-            .v("1.13", "elder_guardian")
-            .search()),
-    EnderDragon("ENDER_DRAGON", "1.7.10", MyEnderDragon.class, new Compat<String>()
-            .v("1.13", "ender_dragon")
-            .search()),
-    Enderman("ENDERMAN", "1.7.10", MyEnderman.class, new Compat<String>()
-            .v("1.13", "enderman")
-            .search()),
-    Endermite("ENDERMITE", "1.8", MyEndermite.class, new Compat<String>()
-            .v("1.13", "endermite")
-            .search()),
-    Evoker("EVOKER", "1.11", MyEvoker.class, new Compat<String>()
-            .v("1.13", "evoker")
-            .search()),
-    Fox("FOX", "1.14", MyFox.class, new Compat<String>()
-            .v("1.14", "fox")
-            .search()),
-    Frog("FROG", "1.19", MyFrog.class, new Compat<String>()
-            .v("1.19", "frog")
-            .search()),
-    Ghast("GHAST", "1.7.10", MyGhast.class, new Compat<String>()
-            .v("1.13", "ghast")
-            .search()),
-    Goat("GOAT", "1.17", MyGoat.class, new Compat<String>()
-            .v("1.17", "goat")
-            .search()),
-    Giant("GIANT", "1.7.10", MyGiant.class, new Compat<String>()
-            .v("1.13", "giant")
-            .search()),
-    GlowSquid("GLOW_SQUID", "1.17", MyGlowSquid.class, new Compat<String>()
-            .v("1.17", "glow_squid")
-            .search()),
-    Guardian("GUARDIAN", "1.8", MyGuardian.class, new Compat<String>()
-            .v("1.13", "guardian")
-            .search()),
-    Horse("HORSE", "1.7.10", MyHorse.class, new Compat<String>()
-            .v("1.13", "horse")
-            .search()),
-    Hoglin("HOGLIN", "1.16", MyHoglin.class, new Compat<String>()
-            .v("1.16", "hoglin")
-            .search()),
-    Husk("HUSK", "1.11", MyHusk.class, new Compat<String>()
-            .v("1.13", "husk")
-            .search()),
-    Illusioner("ILLUSIONER", "1.12", MyIllusioner.class, new Compat<String>()
-            .v("1.13", "illusioner")
-            .search()),
-    IronGolem("IRON_GOLEM", "1.7.10", MyIronGolem.class, new Compat<String>()
-            .v("1.13", "iron_golem")
-            .search()),
-    Llama("LLAMA", "1.11", MyLlama.class, new Compat<String>()
-            .v("1.13", "llama")
-            .search()),
-    MagmaCube("MAGMA_CUBE", "1.7.10", MyMagmaCube.class, new Compat<String>()
-            .v("1.13", "magma_cube")
-            .search()),
-    Mooshroom((String) new Compat<>().v("1.7.10", "MUSHROOM_COW")
-            .v("1.20.6", "MOOSHROOM").search().get(),
-            "1.7.10", MyMooshroom.class, new Compat<String>()
-            .v("1.13", "mooshroom")
-            .search()),
-    Mule("MULE", "1.11", MyMule.class, new Compat<String>()
-            .v("1.13", "mule")
-            .search()),
-    Ocelot("OCELOT", "1.7.10", MyOcelot.class, new Compat<String>()
-            .v("1.13", "ocelot")
-            .search()),
-    Panda("PANDA", "1.14", MyPanda.class, new Compat<String>()
-            .v("1.14", "panda")
-            .search()),
-    Parrot("PARROT", "1.12", MyParrot.class, new Compat<String>()
-            .v("1.13", "parrot")
-            .search()),
-    Phantom("PHANTOM", "1.13", MyPhantom.class, new Compat<String>()
-            .v("1.13", "phantom")
-            .search()),
-    Pig("PIG", "1.7.10", MyPig.class, new Compat<String>()
-            .v("1.13", "pig")
-            .search()),
-    Piglin("PIGLIN", "1.16", MyPiglin.class, new Compat<String>()
-            .v("1.16", "piglin")
-            .search()),
-    PiglinBrute("PIGLIN_BRUTE", "1.16.2", MyPiglin.class, new Compat<String>()
-            .v("1.16.2", "piglin_brute")
-            .search()),
-    PigZombie("PIG_ZOMBIE", "1.7.10", MyPigZombie.class, new Compat<String>()
-            .v("1.13", "zombie_pigman")
-            .removedAt("1.16")
-            .search()),
-    Pillager("PILLAGER", "1.14", MyPillager.class, new Compat<String>()
-            .v("1.14", "pillager")
-            .search()),
-    PolarBear("POLAR_BEAR", "1.10", MyPolarBear.class, new Compat<String>()
-            .v("1.13", "polar_bear")
-            .search()),
-    Pufferfish("PUFFERFISH", "1.13", MyPufferfish.class, new Compat<String>()
-            .v("1.13", "pufferfish")
-            .search()),
-    Rabbit("RABBIT", "1.8", MyRabbit.class, new Compat<String>()
-            .v("1.13", "rabbit")
-            .search()),
-    Ravager("RAVAGER", "1.14", MyRavager.class, new Compat<String>()
-            .v("1.14", "ravager")
-            .search()),
-    Salmon("SALMON", "1.13", MySalmon.class, new Compat<String>()
-            .v("1.13", "salmon")
-            .search()),
-    Sheep("SHEEP", "1.7.10", MySheep.class, new Compat<String>()
-            .v("1.13", "sheep")
-            .search()),
-    Silverfish("SILVERFISH", "1.7.10", MySilverfish.class, new Compat<String>()
-            .v("1.13", "silverfish")
-            .search()),
-    Skeleton("SKELETON", "1.7.10", MySkeleton.class, new Compat<String>()
-            .v("1.13", "skeleton")
-            .search()),
-    SkeletonHorse("SKELETON_HORSE", "1.11", MySkeletonHorse.class, new Compat<String>()
-            .v("1.13", "skeleton_horse")
-            .search()),
-    Slime("SLIME", "1.7.10", MySlime.class, new Compat<String>()
-            .v("1.13", "slime")
-            .search()),
-    Sniffer("SNIFFER", "1.20", MySniffer.class, new Compat<String>()
-            .v("1.20", "sniffer")
-            .search()),
-    Snowman((String) new Compat<>().v("1.7.10", "SNOWMAN")
-            .v("1.20.6", "SNOW_GOLEM").search().get(),
-            "1.7.10", MySnowman.class, new Compat<String>()
-            .v("1.13", "snow_golem")
-            .search()),
-    Spider("SPIDER", "1.7.10", MySpider.class, new Compat<String>()
-            .v("1.13", "spider")
-            .search()),
-    Squid("SQUID", "1.7.10", MySquid.class, new Compat<String>()
-            .v("1.13", "squid")
-            .search()),
-    Stray("STRAY", "1.11", MyStray.class, new Compat<String>()
-            .v("1.13", "stray")
-            .search()),
-    Strider("STRIDER", "1.16", MyStray.class, new Compat<String>()
-            .v("1.16", "strider")
-            .search()),
-    Tadpole("TADPOLE", "1.19", MyTadpole.class, new Compat<String>()
-            .v("1.19", "tadpole")
-            .search()),
-    TraderLlama("TRADER_LLAMA", "1.14", MyTraderLlama.class, new Compat<String>()
-            .v("1.14", "trader_llama")
-            .search()),
-    TropicalFish("TROPICAL_FISH", "1.13", MyTropicalFish.class, new Compat<String>()
-            .v("1.13", "tropical_fish")
-            .search()),
-    Turtle("TURTLE", "1.13", MyTurtle.class, new Compat<String>()
-            .v("1.13", "turtle")
-            .search()),
-    Vex("VEX", "1.11", MyVex.class, new Compat<String>()
-            .v("1.13", "vex")
-            .search()),
-    Villager("VILLAGER", "1.7.10", MyVillager.class, new Compat<String>()
-            .v("1.13", "villager")
-            .search()),
-    Vindicator("VINDICATOR", "1.11", MyVindicator.class, new Compat<String>()
-            .v("1.13", "vindicator")
-            .search()),
-    Warden("WARDEN", "1.19", MyWarden.class, new Compat<String>()
-            .v("1.19", "warden")
-            .search()),
-    WanderingTrader("WANDERING_TRADER", "1.14", MyWanderingTrader.class, new Compat<String>()
-            .v("1.14", "wandering_trader")
-            .search()),
-    Witch("WITCH", "1.7.10", MyWitch.class, new Compat<String>()
-            .v("1.13", "witch")
-            .search()),
-    Wither("WITHER", "1.7.10", MyWither.class, new Compat<String>()
-            .v("1.13", "wither")
-            .search()),
-    WitherSkeleton("WITHER_SKELETON", "1.11", MyWitherSkeleton.class, new Compat<String>()
-            .v("1.13", "wither_skeleton")
-            .search()),
-    Wolf("WOLF", "1.7.10", MyWolf.class, new Compat<String>()
-            .v("1.13", "wolf")
-            .search()),
-    Zoglin("ZOGLIN", "1.16", MyZoglin.class, new Compat<String>()
-            .v("1.16", "zoglin")
-            .search()),
-    Zombie("ZOMBIE", "1.7.10", MyZombie.class, new Compat<String>()
-            .v("1.13", "zombie")
-            .search()),
-    ZombieHorse("ZOMBIE_HORSE", "1.11", MyZombieHorse.class, new Compat<String>()
-            .v("1.13", "zombie_horse")
-            .search()),
-    ZombifiedPiglin("ZOMBIFIED_PIGLIN", "1.16", MyZombifiedPiglin.class, new Compat<String>()
-            .v("1.16", "zombified_piglin")
-            .search()),
-    ZombieVillager("ZOMBIE_VILLAGER", "1.11", MyZombieVillager.class, new Compat<String>()
-            .v("1.13", "zombie_villager")
-            .search());
+    Axolotl(MyAxolotl.class),
+    Allay(MyAllay.class),
+    Armadillo(MyArmadillo.class),
+    Bat(MyBat.class),
+    Bee(MyBee.class),
+    Blaze(MyBlaze.class),
+    Bogged(MyBogged.class),
+    Breeze(MyBreeze.class),
+    Camel(MyCamel.class),
+    Cat(MyCat.class),
+    CaveSpider(MyCaveSpider.class),
+    Chicken(MyChicken.class),
+    Cod(MyCod.class),
+    CopperGolem(MyCopperGolem.class),
+    Cow(MyCow.class),
+    Creeper(MyCreeper.class),
+    Creaking(MyCreaking.class),
+    Dolphin(MyDolphin.class),
+    Donkey(MyDonkey.class),
+    Drowned(MyDrowned.class),
+    ElderGuardian(MyElderGuardian.class),
+    EnderDragon(MyEnderDragon.class),
+    Enderman(MyEnderman.class),
+    Endermite(MyEndermite.class),
+    Evoker(MyEvoker.class),
+    Fox(MyFox.class),
+    Frog(MyFrog.class),
+    Ghast(MyGhast.class),
+    Goat(MyGoat.class),
+    Giant(MyGiant.class),
+    GlowSquid(MyGlowSquid.class),
+    Guardian(MyGuardian.class),
+    Horse(MyHorse.class),
+    Hoglin(MyHoglin.class),
+    Husk(MyHusk.class),
+    Illusioner(MyIllusioner.class),
+    IronGolem(MyIronGolem.class),
+    Llama(MyLlama.class),
+    MagmaCube(MyMagmaCube.class),
+    Mooshroom(MyMooshroom.class),
+    Mule(MyMule.class),
+    Ocelot(MyOcelot.class),
+    Panda(MyPanda.class),
+    Parrot(MyParrot.class),
+    Phantom(MyPhantom.class),
+    Pig(MyPig.class),
+    Piglin(MyPiglin.class),
+    PiglinBrute(MyPiglin.class),
+    Pillager(MyPillager.class),
+    PolarBear(MyPolarBear.class),
+    Pufferfish(MyPufferfish.class),
+    Rabbit(MyRabbit.class),
+    Ravager(MyRavager.class),
+    Salmon(MySalmon.class),
+    Sheep(MySheep.class),
+    Silverfish(MySilverfish.class),
+    Skeleton(MySkeleton.class),
+    SkeletonHorse(MySkeletonHorse.class),
+    Slime(MySlime.class),
+    Sniffer(MySniffer.class),
+    SnowGolem(MySnowGolem.class),
+    Spider(MySpider.class),
+    Squid(MySquid.class),
+    Stray(MyStray.class),
+    Strider(MyStray.class),
+    Tadpole(MyTadpole.class),
+    TraderLlama(MyTraderLlama.class),
+    TropicalFish(MyTropicalFish.class),
+    Turtle(MyTurtle.class),
+    Vex(MyVex.class),
+    Villager(MyVillager.class),
+    Vindicator(MyVindicator.class),
+    Warden(MyWarden.class),
+    WanderingTrader(MyWanderingTrader.class),
+    Witch(MyWitch.class),
+    Wither(MyWither.class),
+    WitherSkeleton(MyWitherSkeleton.class),
+    Wolf(MyWolf.class),
+    Zoglin(MyZoglin.class),
+    Zombie(MyZombie.class),
+    ZombieHorse(MyZombieHorse.class),
+    ZombifiedPiglin(MyZombifiedPiglin.class),
+    ZombieVillager(MyZombieVillager.class);
 
-    private final String bukkitName;
-    private final String minVersion;
-    private final boolean removed;
-    private final String typeID;
     private final Class<? extends MyPet> mypetClass;
 
-    MyPetType(String bukkitName, String minecraftVersion, Class<? extends MyPet> mypetClass, Compat<String> id) {
-        this.bukkitName = bukkitName;
-        this.typeID = id.get();
+    MyPetType(Class<? extends MyPet> mypetClass) {
         this.mypetClass = mypetClass;
-        this.minVersion = minecraftVersion;
-        this.removed = id.isRemoved();
+    }
+
+    private static String camelToSnake(String name) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            if (Character.isUpperCase(c) && i > 0) {
+                sb.append('_');
+            }
+            sb.append(Character.toLowerCase(c));
+        }
+        return sb.toString();
     }
 
     public static List<MyPetType> all() {
@@ -344,11 +173,11 @@ public enum MyPetType {
     }
 
     public String getBukkitName() {
-        return bukkitName;
+        return camelToSnake(name()).toUpperCase();
     }
 
     public String getTypeID() {
-        return typeID;
+        return camelToSnake(name());
     }
 
     public Class<? extends MyPet> getMyPetClass() {
@@ -356,7 +185,12 @@ public enum MyPetType {
     }
 
     public boolean checkMinecraftVersion() {
-        return !removed && MyPetApi.getCompatUtil().compareWithMinecraftVersion(this.minVersion) >= 0;
+        try {
+            EntityType.valueOf(getBukkitName());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
     /**

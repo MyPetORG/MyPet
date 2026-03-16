@@ -20,9 +20,14 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
-import de.Keyle.MyPet.api.entity.*;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 
-@ShopInfo(displayName = "Pig Zombie")
-@DefaultInfo(food = {"rotten_flesh"})
-public interface MyPigZombie extends MyPet, MyPetEquipment, MyPetBaby, MyPetLavaEntity {
+@ShopInfo
+@DefaultInfo(food = {"carrot", "snowball"})
+public interface MySnowGolem extends MyPet {
+    boolean isSheared();
+
+    void setSheared(boolean flag);
 }

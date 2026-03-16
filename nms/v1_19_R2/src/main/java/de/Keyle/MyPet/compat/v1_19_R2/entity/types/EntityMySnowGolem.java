@@ -18,12 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_18_R2.entity.types;
+package de.Keyle.MyPet.compat.v1_19_R2.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.types.MySnowman;
-import de.Keyle.MyPet.compat.v1_18_R2.entity.EntityMyPet;
+import de.Keyle.MyPet.api.entity.types.MySnowGolem;
+import de.Keyle.MyPet.compat.v1_19_R2.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -37,11 +37,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
 @EntitySize(width = 0.7F, height = 1.7F)
-public class EntityMySnowman extends EntityMyPet {
+public class EntityMySnowGolem extends EntityMyPet {
 
-    private static final EntityDataAccessor<Byte> SHEARED_WATCHER = SynchedEntityData.defineId(EntityMySnowman.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> SHEARED_WATCHER = SynchedEntityData.defineId(EntityMySnowGolem.class, EntityDataSerializers.BYTE);
 
-    public EntityMySnowman(Level world, MyPet myPet) {
+    public EntityMySnowGolem(Level world, MyPet myPet) {
         super(world, myPet);
     }
 
@@ -106,7 +106,7 @@ public class EntityMySnowman extends EntityMyPet {
     }
 
     @Override
-    public MySnowman getMyPet() {
-        return (MySnowman) myPet;
+    public MySnowGolem getMyPet() {
+        return (MySnowGolem) myPet;
     }
 }

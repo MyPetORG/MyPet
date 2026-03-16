@@ -285,7 +285,7 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle");
         }
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
-        config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", MyPet.Snowman.FIX_SNOW_TRACK);
+        config.addDefault("MyPet.Pets.SnowGolem.FixSnowTrack", MyPet.SnowGolem.FIX_SNOW_TRACK);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Horse.GrowUpItem", "bread");
@@ -328,7 +328,6 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets.PiglinBrute.WillShake", MyPet.PiglinBrute.WILL_SHAKE);
             config.addDefault("MyPet.Pets.PiglinBrute.GrowUpItem", "experience_bottle");
         }
-        config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle");
         if (MyPetType.PolarBear.checkMinecraftVersion()) {
             config.addDefault("MyPet.Pets.PolarBear.GrowUpItem", "experience_bottle");
         }
@@ -557,7 +556,7 @@ public class ConfigurationLoader {
         MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
         MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
         MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanTossUp", true);
-        MyPet.Snowman.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.Snowman.FixSnowTrack", true);
+        MyPet.SnowGolem.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.SnowGolem.FixSnowTrack", true);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
         MyPet.Allay.CAN_GLIDE = config.getBoolean("MyPet.Pets.Allay.CanGlide", true);
         MyPet.Bee.CAN_GLIDE = config.getBoolean("MyPet.Pets.Bee.CanGlide", true);
@@ -611,7 +610,6 @@ public class ConfigurationLoader {
         MyPet.Pig.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "experience_bottle"));
         MyPet.Piglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Piglin.GrowUpItem", "experience_bottle"));
         MyPet.PiglinBrute.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PiglinBrute.GrowUpItem", "experience_bottle"));
-        MyPet.PigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "experience_bottle"));
         MyPet.PolarBear.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PolarBear.GrowUpItem", "experience_bottle"));
         MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle"));
         MyPet.Sniffer.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sniffer.GrowUpItem", "experience_bottle"));

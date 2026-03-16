@@ -18,12 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.compat.v1_20_R2.entity.types;
+package de.Keyle.MyPet.compat.v1_21_R4.entity.types;
 
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.types.MySnowman;
-import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyPet;
+import de.Keyle.MyPet.api.entity.types.MySnowGolem;
+import de.Keyle.MyPet.compat.v1_21_R4.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -37,11 +37,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
 @EntitySize(width = 0.7F, height = 1.7F)
-public class EntityMySnowman extends EntityMyPet {
+public class EntityMySnowGolem extends EntityMyPet {
 
-    private static final EntityDataAccessor<Byte> SHEARED_WATCHER = SynchedEntityData.defineId(EntityMySnowman.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> SHEARED_WATCHER = SynchedEntityData.defineId(EntityMySnowGolem.class, EntityDataSerializers.BYTE);
 
-    public EntityMySnowman(Level world, MyPet myPet) {
+    public EntityMySnowGolem(Level world, MyPet myPet) {
         super(world, myPet);
     }
 
@@ -57,7 +57,7 @@ public class EntityMySnowman extends EntityMyPet {
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                     itemStack.shrink(1);
                     if (itemStack.getCount() <= 0) {
-                        entityhuman.getInventory().setItem(entityhuman.getInventory().selected, ItemStack.EMPTY);
+                        entityhuman.getInventory().setItem(entityhuman.getInventory().getSelectedSlot(), ItemStack.EMPTY);
                     }
                 }
                 return InteractionResult.CONSUME;
@@ -65,7 +65,7 @@ public class EntityMySnowman extends EntityMyPet {
                 getMyPet().setSheared(true);
                 getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
+                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
                 }
                 return InteractionResult.CONSUME;
             }
@@ -79,10 +79,10 @@ public class EntityMySnowman extends EntityMyPet {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
 
-        getEntityData().define(SHEARED_WATCHER, (byte) 16);
+        builder.define(SHEARED_WATCHER, (byte) 16);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class EntityMySnowman extends EntityMyPet {
     }
 
     @Override
-    public MySnowman getMyPet() {
-        return (MySnowman) myPet;
+    public MySnowGolem getMyPet() {
+        return (MySnowGolem) myPet;
     }
 }

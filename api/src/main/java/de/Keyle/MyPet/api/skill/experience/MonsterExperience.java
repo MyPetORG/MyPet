@@ -44,7 +44,6 @@ public class MonsterExperience {
         mobExp.put("WOLF", new MonsterExperience(1., 3., "WOLF"));
         mobExp.put("CREEPER", new MonsterExperience(5., "CREEPER"));
         mobExp.put("GHAST", new MonsterExperience(5., "GHAST"));
-        mobExp.put("PIG_ZOMBIE", new MonsterExperience(5., "PIG_ZOMBIE"));
         mobExp.put("ENDERMAN", new MonsterExperience(5., "ENDERMAN"));
         mobExp.put("ENDERMITE", new MonsterExperience(3., "ENDERMITE"));
         mobExp.put("CAVE_SPIDER", new MonsterExperience(5., "CAVE_SPIDER"));
@@ -66,10 +65,10 @@ public class MonsterExperience {
         mobExp.put("SHEEP", new MonsterExperience(1., 3., "SHEEP"));
         mobExp.put("GOAT", new MonsterExperience(1., 3., "GOAT"));
         mobExp.put("OCELOT", new MonsterExperience(1., 3., "OCELOT"));
-        mobExp.put("MUSHROOM_COW", new MonsterExperience(1., 3., "MUSHROOM_COW"));
+        mobExp.put("MOOSHROOM", new MonsterExperience(1., 3., "MOOSHROOM"));
         mobExp.put("VILLAGER", new MonsterExperience(0., "VILLAGER"));
         mobExp.put("SHULKER", new MonsterExperience(5., "SHULKER"));
-        mobExp.put("SNOWMAN", new MonsterExperience(0., "SNOWMAN"));
+        mobExp.put("SNOW_GOLEM", new MonsterExperience(0., "SNOW_GOLEM"));
         mobExp.put("IRON_GOLEM", new MonsterExperience(0., "IRON_GOLEM"));
         mobExp.put("ENDER_DRAGON", new MonsterExperience(20000., "ENDER_DRAGON"));
         mobExp.put("WITCH", new MonsterExperience(10., "WITCH"));

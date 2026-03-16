@@ -56,7 +56,7 @@ public class EggIconService implements ServiceContainer {
                 case EnderDragon:
                     material = Material.DRAGON_EGG; // block egg
                     break;
-                case Snowman:
+                case SnowGolem:
                     material = Material.PUMPKIN; // snow golem has no egg
                     break;
                 case Giant:

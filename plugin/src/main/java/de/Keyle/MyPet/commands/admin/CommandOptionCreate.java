@@ -232,10 +232,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("noshake")
                 .get());
 
-        petTypeOptionMap.put("pigzombie", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
         petTypeOptionMap.put("polarbear", new CommandOptionCreator()
                 .add("baby")
                 .get());
@@ -274,7 +270,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 .add("baby")
                 .get());
 
-        petTypeOptionMap.put("snowman", new CommandOptionCreator()
+        petTypeOptionMap.put("snowgolem", new CommandOptionCreator()
                 .add("sheared")
                 .get());
 

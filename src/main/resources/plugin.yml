@@ -172,7 +172,6 @@ permissions:
       MyPet.leash.Phantom: true
       MyPet.leash.Pig: true
       MyPet.leash.Piglin: true
-      MyPet.leash.PigZombie: true
       MyPet.leash.Pillager: true
       MyPet.leash.PolarBear: true
       MyPet.leash.Pufferfish: true
@@ -185,7 +184,7 @@ permissions:
       MyPet.leash.SkeletonHorse: true
       MyPet.leash.Slime: true
       MyPet.leash.Sniffer: true
-      MyPet.leash.Snowman: true
+      MyPet.leash.SnowGolem: true
       MyPet.leash.Spider: true
       MyPet.leash.Squid: true
       MyPet.leash.GlowSquid: true
@@ -254,7 +253,6 @@ permissions:
       MyPet.command.trade.offer.Phantom: true
       MyPet.command.trade.offer.Pig: true
       MyPet.command.trade.offer.Piglin: true
-      MyPet.command.trade.offer.PigZombie: true
       MyPet.command.trade.offer.Pillager: true
       MyPet.command.trade.offer.PolarBear: true
       MyPet.command.trade.offer.Pufferfish: true
@@ -266,7 +264,7 @@ permissions:
       MyPet.command.trade.offer.Skeleton: true
       MyPet.command.trade.offer.SkeletonHorse: true
       MyPet.command.trade.offer.Slime: true
-      MyPet.command.trade.offer.Snowman: true
+      MyPet.command.trade.offer.SnowGolem: true
       MyPet.command.trade.offer.Spider: true
       MyPet.command.trade.offer.Squid: true
       MyPet.command.trade.offer.GlowSquid: true
@@ -335,7 +333,6 @@ permissions:
       MyPet.command.trade.receive.Phantom: true
       MyPet.command.trade.receive.Pig: true
       MyPet.command.trade.receive.Piglin: true
-      MyPet.command.trade.receive.PigZombie: true
       MyPet.command.trade.receive.Pillager: true
       MyPet.command.trade.receive.PolarBear: true
       MyPet.command.trade.receive.Pufferfish: true
@@ -347,7 +344,7 @@ permissions:
       MyPet.command.trade.receive.Skeleton: true
       MyPet.command.trade.receive.SkeletonHorse: true
       MyPet.command.trade.receive.Slime: true
-      MyPet.command.trade.receive.Snowman: true
+      MyPet.command.trade.receive.SnowGolem: true
       MyPet.command.trade.receive.Spider: true
       MyPet.command.trade.receive.Squid: true
       MyPet.command.trade.receive.GlowSquid: true
