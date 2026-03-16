@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Beacon;
-import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.IntArrayBinaryTag;
@@ -72,7 +71,7 @@ public class BeaconImpl implements Beacon {
         hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
 
         if (!Configuration.Skilltree.Skill.Beacon.DISABLE_HEAD_TEXTURE) {
-            Material headMaterial = EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD");
+        Material headMaterial = PLAYER_HEAD;
             // stone
             disabledMeta = createTexturedSkullMeta(headMaterial,
                     "http://textures.minecraft.net/texture/de9b8aae7f9cc76d625ccb8abc686f30d38f9e6c42533098b9ad577f91c333c");
@@ -310,52 +309,44 @@ public class BeaconImpl implements Beacon {
         }
 
         menu.setOption(3, new IconMenuItem()
-                .setMaterial(EnumSelector.find(Material.class, "STAINED_GLASS_PANE", "GREEN_STAINED_GLASS"))
-                .setData(5)
+                .setMaterial(GREEN_STAINED_GLASS_PANE)
                 .setTitle(Translation.getComponent("Name.Done", myPet.getOwner()).color(NamedTextColor.GREEN)));
         menu.setOption(5, new IconMenuItem()
-                .setMaterial(EnumSelector.find(Material.class, "STAINED_GLASS_PANE", "RED_STAINED_GLASS"))
-                .setData(14)
+                .setMaterial(RED_STAINED_GLASS_PANE)
                 .setTitle(Translation.getComponent("Name.Cancel", myPet.getOwner()).color(NamedTextColor.RED)));
 
         if (receiver == BuffReceiver.Owner) {
             menu.setOption(21, new IconMenuItem()
-                    .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
-                    .setData(3)
+                    .setMaterial(PLAYER_HEAD)
                     .setTitle(Translation.getComponent("Name.Owner", myPet.getOwner()).color(NamedTextColor.GOLD))
                     .setMeta(ownerMeta, false, false));
         } else {
             menu.setOption(21, new IconMenuItem()
-                    .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
-                    .setData(3)
+                    .setMaterial(PLAYER_HEAD)
                     .setTitle(Translation.getComponent("Name.Owner", myPet.getOwner()).color(NamedTextColor.GOLD))
                     .setMeta(disabledMeta, false, false));
         }
         if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && MyPetApi.getHookHelper().isInParty(getMyPet().getOwner().getPlayer())) {
             if (receiver != BuffReceiver.Party) {
                 menu.setOption(22, new IconMenuItem()
-                        .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
-                        .setData(3)
+                        .setMaterial(PLAYER_HEAD)
                         .setTitle(Translation.getComponent("Name.Party", myPet.getOwner()).color(NamedTextColor.GOLD))
                         .setMeta(partyMeta, false, false));
             } else {
                 menu.setOption(22, new IconMenuItem()
-                        .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
-                        .setData(3)
+                        .setMaterial(PLAYER_HEAD)
                         .setTitle(Translation.getComponent("Name.Party", myPet.getOwner()).color(NamedTextColor.GOLD))
                         .setMeta(disabledMeta, false, false));
             }
         }
         if (receiver == BuffReceiver.Everyone) {
             menu.setOption(23, new IconMenuItem()
-                    .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
-                    .setData(3)
+                    .setMaterial(PLAYER_HEAD)
                     .setTitle(Translation.getComponent("Name.Everyone", myPet.getOwner()).color(NamedTextColor.GOLD))
                     .setMeta(everyoneMeta, false, false));
         } else {
             menu.setOption(23, new IconMenuItem()
-                    .setMaterial(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD"))
-                    .setData(3)
+                    .setMaterial(PLAYER_HEAD)
                     .setTitle(Translation.getComponent("Name.Everyone", myPet.getOwner()).color(NamedTextColor.GOLD))
                     .setMeta(disabledMeta, false, false));
         }
@@ -368,7 +359,7 @@ public class BeaconImpl implements Beacon {
         }
         if (getBuffLevel(Buff.Haste) > 0) {
             menu.setOption(9, new IconMenuItem()
-                    .setMaterial(EnumSelector.find(Material.class, "GOLD_PICKAXE", "GOLDEN_PICKAXE"))
+                    .setMaterial(GOLDEN_PICKAXE)
                     .setAmount(getBuffLevel(Buff.Haste))
                     .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Haste.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Haste))).color(NamedTextColor.GRAY)).build()));
         }
@@ -380,7 +371,7 @@ public class BeaconImpl implements Beacon {
         }
         if (getBuffLevel(Buff.JumpBoost) > 0) {
             menu.setOption(1, new IconMenuItem()
-                    .setMaterial(EnumSelector.find(Material.class, "FIREWORK", "FIREWORK_ROCKET"))
+                    .setMaterial(FIREWORK_ROCKET)
                     .setAmount(getBuffLevel(Buff.JumpBoost))
                     .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.JumpBoost.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.JumpBoost))).color(NamedTextColor.GRAY)).build()));
         }
@@ -404,13 +395,13 @@ public class BeaconImpl implements Beacon {
         }
         if (getBuffLevel(Buff.WaterBreathing) > 0) {
             menu.setOption(16, new IconMenuItem()
-                    .setMaterial(EnumSelector.find(Material.class, "RAW_FISH", "PUFFERFISH"))
+                    .setMaterial(PUFFERFISH)
                     .setAmount(getBuffLevel(Buff.WaterBreathing))
                     .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.WaterBreathing.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.WaterBreathing))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.Invisibility) > 0) {
             menu.setOption(25, new IconMenuItem()
-                    .setMaterial(EnumSelector.find(Material.class, "EYE_OF_ENDER", "ENDER_EYE"))
+                    .setMaterial(ENDER_EYE)
                     .setAmount(getBuffLevel(Buff.Invisibility))
                     .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Invisibility.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Invisibility))).color(NamedTextColor.GRAY)).build()));
         }
