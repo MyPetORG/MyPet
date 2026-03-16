@@ -181,10 +181,6 @@ public class FollowOwner implements AIGoal {
 				walkSpeed += 0.08f;
 			}
 		}
-		// Flying seemingly too
-		/*if(this.petEntity.getNavigation() instanceof MyFlyingPetPathNavigation) {
-			walkSpeed += 0.6f;
-		}*/
 
 		// make the pet a little bit faster than the player so it can catch up
 		walkSpeed += 0.07f;
