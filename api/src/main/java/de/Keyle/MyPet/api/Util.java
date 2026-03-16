@@ -441,17 +441,17 @@ public class Util {
         return 0;
     }
 
-    public static <T> void getClassParents(Class clazz, Class<T> type, Set<Class<? extends T>> result) {
+    @SuppressWarnings("unchecked")
+    public static <T> void getClassParents(Class<?> clazz, Class<T> type, Set<Class<? extends T>> result) {
         if (type != null && clazz != null && result != null && clazz != type) {
             if (clazz == Object.class) {
                 return;
             }
             if (type.isAssignableFrom(clazz)) {
-                //noinspection unchecked
-                result.add(clazz);
+                result.add((Class<? extends T>) clazz);
             }
             getClassParents(clazz.getSuperclass(), type, result);
-            for (Class c : clazz.getInterfaces()) {
+            for (Class<?> c : clazz.getInterfaces()) {
                 getClassParents(c, type, result);
             }
         }
