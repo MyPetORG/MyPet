@@ -42,7 +42,6 @@ import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandInfo;
