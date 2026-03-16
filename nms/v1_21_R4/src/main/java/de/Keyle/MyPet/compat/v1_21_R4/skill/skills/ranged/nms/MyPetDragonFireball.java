@@ -55,16 +55,6 @@ public class MyPetDragonFireball extends DragonFireball implements EntityMyPetPr
         this.damage = damage;
     }
 
-    /*@Override
-    public void assignDirectionalMovement(Vec3 vec3d, double d0) {
-        double d1 = vec3d.x + this.random.nextGaussian() * 0.2D;
-        double d2 = vec3d.y + this.random.nextGaussian() * 0.2D;
-        double d3 = vec3d.z + this.random.nextGaussian() * 0.2D;
-
-        this.setDeltaMovement(vec3d.normalize().scale(d0));
-        this.hasImpulse = true;
-    }*/
-
     @Override
     public CraftMyPetDragonFireball getBukkitEntity() {
         if (this.bukkitEntity == null) {
