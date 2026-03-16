@@ -58,12 +58,12 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.util.UnsafeList;
 import org.bukkit.entity.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -88,8 +88,8 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
         return getBlockBBsInBB(mcWorld, bb).isEmpty() && !mcWorld.containsAnyLiquid(bb);
     }
 
-    public List getBlockBBsInBB(net.minecraft.world.level.Level world, AABB axisalignedbb) {
-        UnsafeList unsafeList = new UnsafeList();
+    public List<AABB> getBlockBBsInBB(net.minecraft.world.level.Level world, AABB axisalignedbb) {
+        List<AABB> list = new ArrayList<>();
 
         int minX = Mth.floor(axisalignedbb.minX);
         int maxX = (int) Math.ceil(axisalignedbb.maxX);
@@ -113,7 +113,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                             if (!isEmpty) {
                                 for (AABB bb : vec3d.toAabbs()) {
                                     if (bb.move(bp).intersects(axisalignedbb)) {
-                                        unsafeList.add(bb);
+                                        list.add(bb);
                                     }
                                 }
                             }
@@ -122,7 +122,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
                 }
             }
         }
-        return unsafeList;
+        return list;
     }
 
     @Override
