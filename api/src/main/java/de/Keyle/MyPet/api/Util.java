@@ -65,10 +65,21 @@ public class Util {
 
     static Random rng = new Random();
 
+    /**
+     * Returns the shared {@link Random} instance used throughout the plugin.
+     *
+     * @return the shared random number generator
+     */
     public static Random getRandom() {
         return rng;
     }
 
+    /**
+     * Checks whether the given string can be parsed as an {@code int}.
+     *
+     * @param number the string to test
+     * @return {@code true} if the string is a valid integer, {@code false} otherwise
+     */
     public static boolean isInt(String number) {
         try {
             Integer.parseInt(number);
@@ -78,6 +89,12 @@ public class Util {
         }
     }
 
+    /**
+     * Checks whether the given string can be parsed as a {@code byte}.
+     *
+     * @param number the string to test
+     * @return {@code true} if the string is a valid byte ({@code -128} to {@code 127}), {@code false} otherwise
+     */
     public static boolean isByte(String number) {
         try {
             Byte.parseByte(number);
@@ -87,6 +104,12 @@ public class Util {
         }
     }
 
+    /**
+     * Checks whether the given string can be parsed as a {@code double}.
+     *
+     * @param number the string to test
+     * @return {@code true} if the string is a valid double, {@code false} otherwise
+     */
     public static boolean isDouble(String number) {
         try {
             Double.parseDouble(number);
@@ -96,6 +119,14 @@ public class Util {
         }
     }
 
+    /**
+     * Converts an underscore-separated name into PascalCase.
+     * Underscores are treated as word separators and removed, and the first letter of each
+     * word is title-cased. For example, {@code "zombie_horse"} becomes {@code "ZombieHorse"}.
+     *
+     * @param name the underscore-separated name to capitalize, or {@code null}
+     * @return the PascalCase name, or {@code null} if the input was {@code null}
+     */
     public static String capitalizeName(String name) {
         if (name == null) {
             MyPetApi.getLogger().warning("Name is null");
@@ -121,14 +152,38 @@ public class Util {
         return name;
     }
 
+    /**
+     * Reads the entire contents of a file into a string using UTF-8 encoding.
+     *
+     * @param filePath the absolute or relative path to the file
+     * @return the file contents as a string
+     * @throws IOException if the file cannot be read
+     */
     public static String readFileAsString(String filePath) throws IOException {
         return Files.readString(Path.of(filePath));
     }
 
+    /**
+     * Fetches the content of a URL as a string using a default timeout of 2000ms.
+     *
+     * @param address the URL to fetch
+     * @return the response body as a string
+     * @throws IOException if the request fails or is interrupted
+     * @see #readUrlContent(String, int)
+     */
     public static String readUrlContent(String address) throws IOException {
         return readUrlContent(address, 2000);
     }
 
+    /**
+     * Fetches the content of a URL as a string with a configurable timeout.
+     * The timeout applies to both the connection and the request as a whole.
+     *
+     * @param address the URL to fetch
+     * @param timeout the timeout in milliseconds for both connect and read
+     * @return the response body as a string
+     * @throws IOException if the request fails or is interrupted
+     */
     public static String readUrlContent(String address, int timeout) throws IOException {
         HttpClient client = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofMillis(timeout))
@@ -146,6 +201,13 @@ public class Util {
         }
     }
 
+    /**
+     * Converts a positive integer to its Roman numeral representation.
+     * Used for displaying skill levels (e.g. level 4 as "IV").
+     *
+     * @param src the positive integer to convert
+     * @return the Roman numeral string, or an empty string if {@code src} is 0
+     */
     public static String decimal2roman(int src) {
         char[] digits = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
         StringBuilder thousands = new StringBuilder();
@@ -195,6 +257,14 @@ public class Util {
         return thousands.toString() + result;
     }
 
+    /**
+     * Reads all bytes from an {@link InputStream} and decodes them into a string.
+     * Any exception during reading is silently ignored, returning an empty string.
+     *
+     * @param is      the input stream to read
+     * @param charset the charset to use for decoding
+     * @return the decoded string, or an empty string if an error occurs
+     */
     public static String toString(InputStream is, Charset charset) {
         try {
             return new String(is.readAllBytes(), charset);
@@ -244,22 +314,62 @@ public class Util {
         return 0;
     }
 
+    /**
+     * Checks whether a value falls within an inclusive range.
+     *
+     * @param intMin   the minimum bound (inclusive)
+     * @param intMax   the maximum bound (inclusive)
+     * @param intValue the value to test
+     * @return {@code true} if {@code intMin <= intValue <= intMax}
+     */
     public static boolean isBetween(int intMin, int intMax, int intValue) {
         return intValue >= intMin && intValue <= intMax;
     }
 
+    /**
+     * Clamps a {@code double} value to the specified range.
+     *
+     * @param val the value to clamp
+     * @param min the minimum allowed value
+     * @param max the maximum allowed value
+     * @return {@code min} if {@code val < min}, {@code max} if {@code val > max}, otherwise {@code val}
+     */
     public static double clamp(double val, double min, double max) {
         return Math.max(min, Math.min(max, val));
     }
 
+    /**
+     * Clamps a {@code float} value to the specified range.
+     *
+     * @param val the value to clamp
+     * @param min the minimum allowed value
+     * @param max the maximum allowed value
+     * @return {@code min} if {@code val < min}, {@code max} if {@code val > max}, otherwise {@code val}
+     */
     public static float clamp(float val, float min, float max) {
         return Math.max(min, Math.min(max, val));
     }
 
+    /**
+     * Clamps an {@code int} value to the specified range.
+     *
+     * @param val the value to clamp
+     * @param min the minimum allowed value
+     * @param max the maximum allowed value
+     * @return {@code min} if {@code val < min}, {@code max} if {@code val > max}, otherwise {@code val}
+     */
     public static int clamp(int val, int min, int max) {
         return Math.max(min, Math.min(max, val));
     }
 
+    /**
+     * Recursively searches a throwable's stack trace (including causes) for a class name
+     * containing the given substring.
+     *
+     * @param throwable the throwable to search
+     * @param string    the substring to match against class names in the stack trace
+     * @return {@code true} if any stack frame's class name contains the string
+     */
     public static boolean findStringInThrowable(Throwable throwable, String string) {
         for (StackTraceElement el : throwable.getStackTrace()) {
             if (el.getClassName().contains(string)) {
@@ -270,9 +380,13 @@ public class Util {
     }
 
     /**
-     * Converts a StoredMyPet to a Kyori Adventure HoverEvent for displaying pet tooltips
-     * Replacement for the old myPetToItemAction using RawMessage
-     * Returns a hover event showing formatted pet statistics with colored values
+     * Builds a Kyori Adventure {@link HoverEvent} displaying a pet's statistics as a tooltip.
+     * The tooltip includes hunger, HP/respawn time, experience, level, pet type, skill tree,
+     * and dead status (if applicable). Values are highlighted in {@link NamedTextColor#GOLD}.
+     *
+     * @param mypet the stored pet whose stats to display
+     * @param lang  the locale key for translating stat labels
+     * @return a hover event that shows the formatted pet tooltip
      */
     public static HoverEvent<Component> myPetToItemHover(StoredMyPet mypet, String lang) {
         // Build component with proper colors matching the old RawMessage style
@@ -343,6 +457,12 @@ public class Util {
         return HoverEvent.showText(builder.build());
     }
 
+    /**
+     * Captures the current thread's stack trace and formats it as a string.
+     * Each frame is tab-indented and newline-separated.
+     *
+     * @return the formatted stack trace of the calling thread
+     */
     public static String stackTraceToString() {
         StringBuilder trace = new StringBuilder();
         for (StackTraceElement e1 : Thread.currentThread().getStackTrace()) {
@@ -351,6 +471,13 @@ public class Util {
         return trace.toString();
     }
 
+    /**
+     * Computes the SHA-256 hash of a file and returns the first 8 bytes as a {@code long}.
+     * Used as a change-detection token for file versioning (e.g. experience calculator scripts).
+     *
+     * @param file the file to hash
+     * @return the truncated SHA-256 hash as a {@code long}, or {@code 0} if the file cannot be read
+     */
     public static long getSha256FromFile(File file) {
         try {
             return com.google.common.io.Files.asByteSource(file).hash(Hashing.sha256()).asLong();
@@ -360,6 +487,15 @@ public class Util {
         return 0;
     }
 
+    /**
+     * Recursively collects all superclasses and interfaces of {@code clazz} that are
+     * assignable to {@code type}, excluding {@code type} itself and {@link Object}.
+     *
+     * @param <T>    the base type to filter against
+     * @param clazz  the class whose hierarchy to walk
+     * @param type   the target type — only classes assignable to this are collected
+     * @param result the set to populate with matching parent classes
+     */
     @SuppressWarnings("unchecked")
     public static <T> void getClassParents(Class<?> clazz, Class<T> type, Set<Class<? extends T>> result) {
         if (type != null && clazz != null && result != null && clazz != type) {
@@ -376,6 +512,15 @@ public class Util {
         }
     }
 
+    /**
+     * Searches for an annotation on the given class, walking up the superclass chain and
+     * all implemented interfaces recursively. Returns the first match found, or {@code null}.
+     *
+     * @param <T>        the annotation type
+     * @param clazz      the class to start searching from
+     * @param annotation the annotation class to look for
+     * @return the annotation instance if found, or {@code null}
+     */
     public static <T extends Annotation> T getClassAnnotation(Class<?> clazz, Class<T> annotation) {
         if (annotation != null && clazz != null) {
             if (clazz == Object.class) {
@@ -400,6 +545,12 @@ public class Util {
         return null;
     }
 
+    /**
+     * Returns the fully-qualified name of a class, or {@code null} if the class is {@code null}.
+     *
+     * @param clazz the class, or {@code null}
+     * @return the class name, or {@code null}
+     */
     public static String getClassName(Class<?> clazz) {
         if (clazz != null) {
             return clazz.getName();
@@ -407,6 +558,13 @@ public class Util {
         return null;
     }
 
+    /**
+     * Collects all interfaces implemented by the given class and its entire superclass chain,
+     * including transitively inherited interfaces. The result preserves insertion order.
+     *
+     * @param type the class to inspect
+     * @return a set of all interfaces in the class hierarchy, in discovery order
+     */
     public static Set<Class<?>> getAllInterfaces(Class<?> type) {
         Set<Class<?>> interfaces = new LinkedHashSet<>();
 
@@ -428,6 +586,13 @@ public class Util {
         }
     }
 
+    /**
+     * Returns all superclasses of the given class, from the immediate parent up to
+     * (and including) {@link Object}. Does not include the class itself.
+     *
+     * @param cls the class whose superclass chain to collect
+     * @return a list of superclasses ordered from most specific to most general
+     */
     public static List<Class<?>> getAllSuperclasses(Class<?> cls) {
         List<Class<?>> list = new ArrayList<>();
 
