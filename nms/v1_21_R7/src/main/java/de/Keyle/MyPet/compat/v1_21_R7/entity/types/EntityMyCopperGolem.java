@@ -148,11 +148,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
                 getMyPet().setWaxed(false);
                 getMyPet().setOxidationTickCounter(0);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-                    } catch (Error e) {
-                        // ignore
-                    }
+                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
                 }
                 makeSound("item.axe.wax_off", 1.0F, 1.0F);
                 spawnParticlesAroundEntity(Particle.WAX_OFF);
@@ -172,11 +168,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
                     getMyPet().setOxidationState(newState);
                     getMyPet().setOxidationTickCounter(0);
                     if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                        try {
-                            itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-                        } catch (Error e) {
-                            // ignore
-                        }
+                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
                     }
                     makeSound("item.axe.scrape", 1.0F, 1.0F);
                     spawnParticlesAroundEntity(Particle.SCRAPE);
@@ -205,11 +197,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setPoppy(null);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-                    } catch (Error e) {
-                        // ignore
-                    }
+                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
                 }
                 return InteractionResult.CONSUME;
             }
