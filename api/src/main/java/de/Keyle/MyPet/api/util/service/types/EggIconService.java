@@ -52,25 +52,25 @@ public class EggIconService implements ServiceContainer {
 
         // Known exceptions or entities without official spawn eggs
         if (material == null) {
-            switch (type) {
-                case EnderDragon:
+            switch (type.name()) {
+                case "EnderDragon":
                     material = Material.DRAGON_EGG; // block egg
                     break;
-                case SnowGolem:
+                case "SnowGolem":
                     material = Material.PUMPKIN; // snow golem has no egg
                     break;
-                case Giant:
+                case "Giant":
                     material = Material.ZOMBIE_SPAWN_EGG; // no official egg
                     break;
-                case Illusioner:
+                case "Illusioner":
                     material = Material.SQUID_SPAWN_EGG; // No official egg
                     icon.setGlowing(true);
                     break;
-                case IronGolem:
+                case "IronGolem":
                     material = Material.SKELETON_SPAWN_EGG; // Required for 1.19.2 and below
                     icon.setGlowing(true);
                     break;
-                case Wither:
+                case "Wither":
                     material = Material.ENDERMITE_SPAWN_EGG; // Required for 1.19.2 and below
                     icon.setGlowing(true);
                     break;

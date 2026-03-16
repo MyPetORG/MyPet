@@ -276,7 +276,7 @@ public class CreakingHeartListener implements Listener {
             return;
         }
 
-        MyPetType petType = MyPetType.Creaking;
+        MyPetType petType = MyPetType.byName("Creaking");
 
         // Only show heart-based capture info if HeartLinked is a configured leash requirement
         if (!isHeartLinkedRequired(petType)) {

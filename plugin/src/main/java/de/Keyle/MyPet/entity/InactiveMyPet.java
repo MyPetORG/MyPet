@@ -52,7 +52,7 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
     private double saturation = 100;
     private int respawnTime = 0;
     private double exp = 0;
-    private MyPetType petType = MyPetType.Wolf;
+    private MyPetType petType = MyPetType.byName("Wolf");
     private Skilltree skilltree = null;
     private CompoundBinaryTag NBTSkills;
     private CompoundBinaryTag NBTextendetInfo;
@@ -239,7 +239,10 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
         petName = myPetNBT.getString("Name");
 
         if (myPetNBT.keySet().contains("Type")) {
-            petType = MyPetType.valueOf(myPetNBT.getString("Type"));
+            MyPetType type = MyPetType.byNameOrNull(myPetNBT.getString("Type"));
+            if (type != null) {
+                petType = type;
+            }
         }
 
         if (myPetNBT.keySet().contains("LastUsed")) {

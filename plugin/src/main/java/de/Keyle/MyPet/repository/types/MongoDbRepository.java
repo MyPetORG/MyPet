@@ -287,7 +287,9 @@ public class MongoDbRepository implements Repository {
             pet.setHealth(document.getDouble("health"));
             pet.setRespawnTime(document.getInteger("respawn_time"));
             pet.setPetName(document.getString("name"));
-            pet.setPetType(MyPetType.valueOf(document.getString("type")));
+            MyPetType type = MyPetType.byNameOrNull(document.getString("type"));
+            if (type == null) return null;
+            pet.setPetType(type);
             pet.setLastUsed(document.getLong("last_used"));
             pet.setSaturation(((Number) document.get("hunger")).doubleValue());
             pet.wantsToRespawn = document.getBoolean("wants_to_spawn");

@@ -439,46 +439,46 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 String variantString = arg.replace("variant:", "");
                 if (Util.isInt(variantString)) {
                     int variant = Integer.parseInt(variantString);
-                    if (petType == MyPetType.Horse) {
+                    if (petType.equals(MyPetType.byName("Horse"))) {
                         variant = Math.min(Math.max(0, variant), 1030);
                         builder.putInt("Variant", variant);
-                    } else if (petType == MyPetType.Rabbit) {
+                    } else if (petType.equals(MyPetType.byName("Rabbit"))) {
                         if (variant != 99 && (variant > 5 || variant < 0)) {
                             variant = 0;
                         }
                         builder.putByte("Variant", (byte) variant);
-                    } else if (petType == MyPetType.Llama || petType == MyPetType.TraderLlama) {
+                    } else if (petType.equals(MyPetType.byName("Llama")) || petType.equals(MyPetType.byName("TraderLlama"))) {
                         if (variant > 3 || variant < 0) {
                             variant = 0;
                         }
                         builder.putInt("Variant", variant);
-                    } else if (petType == MyPetType.Parrot) {
+                    } else if (petType.equals(MyPetType.byName("Parrot"))) {
                         builder.putInt("Variant", variant);
-                    } else if (petType == MyPetType.Axolotl) {
+                    } else if (petType.equals(MyPetType.byName("Axolotl"))) {
                         builder.putInt("Variant", variant);
-                    } else if (petType == MyPetType.Frog) {
+                    } else if (petType.equals(MyPetType.byName("Frog"))) {
                         builder.putInt("FrogType", variant);
-                    } else if (petType == MyPetType.TropicalFish) {
+                    } else if (petType.equals(MyPetType.byName("TropicalFish"))) {
                         builder.putInt("Variant", variant);
                     }
-                } else if (petType == MyPetType.Wolf) {
+                } else if (petType.equals(MyPetType.byName("Wolf"))) {
                     // Wolf Variants are handled as (lowercase) Strings.
                     builder.putString("Variant", variantString.toLowerCase());
-                } else if (petType == MyPetType.Cow || petType == MyPetType.Chicken || petType == MyPetType.Pig) {
+                } else if (petType.equals(MyPetType.byName("Cow")) || petType.equals(MyPetType.byName("Chicken")) || petType.equals(MyPetType.byName("Pig"))) {
                     // Cow/chicken/pig Variants are handled as (lowercase) Strings.
                     builder.putString("Variant", variantString.toLowerCase());
                 }
-            } else if (arg.startsWith("heartattack") && petType == MyPetType.Warden) {
+            } else if (arg.startsWith("heartattack") && petType.equals(MyPetType.byName("Warden"))) {
                 builder.putBoolean("HeartAttack", true);
             } else if (arg.startsWith("profession:")) {
                 String professionString = arg.replace("profession:", "");
                 if (Util.isInt(professionString)) {
                     int profession = Integer.parseInt(professionString);
                     profession = Math.min(Math.max(0, profession), 14);
-                    if (petType == MyPetType.Villager) {
+                    if (petType.equals(MyPetType.byName("Villager"))) {
                         builder.putInt("Profession", profession);
                         builder.putInt("VillagerLevel", 1);
-                    } else if (petType == MyPetType.Zombie || petType == MyPetType.ZombieVillager) {
+                    } else if (petType.equals(MyPetType.byName("Zombie")) || petType.equals(MyPetType.byName("ZombieVillager"))) {
                         builder.putBoolean("Villager", true);
                         builder.putInt("Profession", profession);
                         builder.putInt("TradingLevel", 1);
@@ -549,8 +549,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                         break;
                 }
             } else if (arg.startsWith("type:")) {
-                switch (petType) {
-                    case Fox:
+                switch (petType.name()) {
+                    case "Fox":
                         switch (arg) {
                             case "type:white":
                                 builder.putInt("FoxType", 1);
@@ -561,7 +561,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                                 break;
                         }
                         break;
-                    case Mooshroom:
+                    case "Mooshroom":
                         switch (arg) {
                             case "type:brown":
                                 builder.putInt("CowType", 1);
@@ -572,7 +572,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                                 break;
                         }
                         break;
-                    case Cat:
+                    case "Cat":
                         String catTypeString = arg.replace("type:", "");
                         if (Util.isInt(catTypeString)) {
                             int catType = Integer.parseInt(catTypeString);
@@ -580,8 +580,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                             builder.putInt("CatType", catType);
                         }
                         break;
-                    case Villager:
-                    case ZombieVillager:
+                    case "Villager":
+                    case "ZombieVillager":
                         String villagerTypeString = arg.replace("type:", "");
                         if (Util.isInt(villagerTypeString)) {
                             int villagerType = Integer.parseInt(villagerTypeString);

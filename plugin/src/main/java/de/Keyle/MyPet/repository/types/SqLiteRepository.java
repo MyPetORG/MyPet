@@ -396,7 +396,9 @@ public class SqLiteRepository implements Repository {
                 pet.setHealth(resultSet.getDouble("health"));
                 pet.setRespawnTime(resultSet.getInt("respawn_time"));
                 pet.setPetName(new String(resultSet.getBytes("name"), StandardCharsets.UTF_8));
-                pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
+                MyPetType type = MyPetType.byNameOrNull(resultSet.getString("type"));
+                if (type == null) continue;
+                pet.setPetType(type);
                 pet.setLastUsed(resultSet.getLong("last_used"));
                 pet.setSaturation(resultSet.getDouble("hunger"));
                 pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");

@@ -29,7 +29,8 @@ import de.Keyle.MyPet.api.event.MyPetLoadEvent;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.entity.InactiveMyPet;
-import de.Keyle.MyPet.entity.MyPetClass;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -68,7 +69,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
             return Optional.empty();
         }
 
-        if (storedMyPet.getPetType() == MyPetType.EnderDragon && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4") >= 0)
+        if (storedMyPet.getPetType().equals(MyPetType.byName("EnderDragon")) && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4") >= 0)
             return Optional.empty();
 
         if (!storedMyPet.getOwner().isOnline()) {
@@ -84,7 +85,10 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         Event event = new MyPetLoadEvent(storedMyPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        MyPet myPet = MyPetClass.getByMyPetType(storedMyPet.getPetType()).getNewMyPetInstance(storedMyPet.getOwner());
+        MyPet myPet = createMyPetInstance(storedMyPet.getPetType(), storedMyPet.getOwner());
+        if (myPet == null) {
+            return Optional.empty();
+        }
         myPet.setUUID(storedMyPet.getUUID());
         myPet.setPetName(storedMyPet.getPetName());
         myPet.setRespawnTime(storedMyPet.getRespawnTime());
@@ -115,5 +119,16 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         return Optional.of(myPet);
+    }
+
+    private static MyPet createMyPetInstance(MyPetType type, MyPetPlayer owner) {
+        String className = "de.Keyle.MyPet.entity.types.My" + type.name();
+        try {
+            Class<?> clazz = Class.forName(className);
+            return (MyPet) clazz.getConstructor(MyPetPlayer.class).newInstance(owner);
+        } catch (Exception e) {
+            ErrorUtil.reportError("Failed to create MyPet instance for " + type.name(), e);
+            return null;
+        }
     }
 }

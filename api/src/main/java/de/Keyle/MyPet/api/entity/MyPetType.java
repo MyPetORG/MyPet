@@ -20,102 +20,80 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.entity.types.*;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import org.bukkit.entity.EntityType;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-public enum MyPetType {
-    Axolotl(MyAxolotl.class),
-    Allay(MyAllay.class),
-    Armadillo(MyArmadillo.class),
-    Bat(MyBat.class),
-    Bee(MyBee.class),
-    Blaze(MyBlaze.class),
-    Bogged(MyBogged.class),
-    Breeze(MyBreeze.class),
-    Camel(MyCamel.class),
-    Cat(MyCat.class),
-    CaveSpider(MyCaveSpider.class),
-    Chicken(MyChicken.class),
-    Cod(MyCod.class),
-    CopperGolem(MyCopperGolem.class),
-    Cow(MyCow.class),
-    Creeper(MyCreeper.class),
-    Creaking(MyCreaking.class),
-    Dolphin(MyDolphin.class),
-    Donkey(MyDonkey.class),
-    Drowned(MyDrowned.class),
-    ElderGuardian(MyElderGuardian.class),
-    EnderDragon(MyEnderDragon.class),
-    Enderman(MyEnderman.class),
-    Endermite(MyEndermite.class),
-    Evoker(MyEvoker.class),
-    Fox(MyFox.class),
-    Frog(MyFrog.class),
-    Ghast(MyGhast.class),
-    Goat(MyGoat.class),
-    Giant(MyGiant.class),
-    GlowSquid(MyGlowSquid.class),
-    Guardian(MyGuardian.class),
-    Horse(MyHorse.class),
-    Hoglin(MyHoglin.class),
-    Husk(MyHusk.class),
-    Illusioner(MyIllusioner.class),
-    IronGolem(MyIronGolem.class),
-    Llama(MyLlama.class),
-    MagmaCube(MyMagmaCube.class),
-    Mooshroom(MyMooshroom.class),
-    Mule(MyMule.class),
-    Ocelot(MyOcelot.class),
-    Panda(MyPanda.class),
-    Parrot(MyParrot.class),
-    Phantom(MyPhantom.class),
-    Pig(MyPig.class),
-    Piglin(MyPiglin.class),
-    PiglinBrute(MyPiglin.class),
-    Pillager(MyPillager.class),
-    PolarBear(MyPolarBear.class),
-    Pufferfish(MyPufferfish.class),
-    Rabbit(MyRabbit.class),
-    Ravager(MyRavager.class),
-    Salmon(MySalmon.class),
-    Sheep(MySheep.class),
-    Silverfish(MySilverfish.class),
-    Skeleton(MySkeleton.class),
-    SkeletonHorse(MySkeletonHorse.class),
-    Slime(MySlime.class),
-    Sniffer(MySniffer.class),
-    SnowGolem(MySnowGolem.class),
-    Spider(MySpider.class),
-    Squid(MySquid.class),
-    Stray(MyStray.class),
-    Strider(MyStray.class),
-    Tadpole(MyTadpole.class),
-    TraderLlama(MyTraderLlama.class),
-    TropicalFish(MyTropicalFish.class),
-    Turtle(MyTurtle.class),
-    Vex(MyVex.class),
-    Villager(MyVillager.class),
-    Vindicator(MyVindicator.class),
-    Warden(MyWarden.class),
-    WanderingTrader(MyWanderingTrader.class),
-    Witch(MyWitch.class),
-    Wither(MyWither.class),
-    WitherSkeleton(MyWitherSkeleton.class),
-    Wolf(MyWolf.class),
-    Zoglin(MyZoglin.class),
-    Zombie(MyZombie.class),
-    ZombieHorse(MyZombieHorse.class),
-    ZombifiedPiglin(MyZombifiedPiglin.class),
-    ZombieVillager(MyZombieVillager.class);
+/**
+ * Registry of all available pet types. Types are auto-discovered at startup
+ * by scanning Bukkit's EntityType enum for matching My* interface classes in
+ * {@code de.Keyle.MyPet.api.entity.types}.
+ * <p>
+ * Third-party plugins can register custom pet types via {@link #register(String, Class)}.
+ */
+public final class MyPetType {
 
+    private static final String API_TYPES_PACKAGE = "de.Keyle.MyPet.api.entity.types.My";
+    private static final Map<String, MyPetType> BY_NAME = new LinkedHashMap<>();
+    private static final Map<String, MyPetType> BY_BUKKIT_NAME = new LinkedHashMap<>();
+
+    static {
+        for (EntityType entityType : EntityType.values()) {
+            String camelName = snakeToCamel(entityType.name());
+            String className = API_TYPES_PACKAGE + camelName;
+            try {
+                Class<?> clazz = Class.forName(className);
+                if (MyPet.class.isAssignableFrom(clazz)) {
+                    @SuppressWarnings("unchecked")
+                    Class<? extends MyPet> petClass = (Class<? extends MyPet>) clazz;
+                    MyPetType type = new MyPetType(camelName, entityType.name(), petClass);
+                    BY_NAME.put(camelName.toUpperCase(), type);
+                    BY_BUKKIT_NAME.put(entityType.name(), type);
+                }
+            } catch (ClassNotFoundException ignored) {
+            }
+        }
+    }
+
+    private final String name;
+    private final String bukkitName;
     private final Class<? extends MyPet> mypetClass;
 
-    MyPetType(Class<? extends MyPet> mypetClass) {
+    private MyPetType(String name, String bukkitName, Class<? extends MyPet> mypetClass) {
+        this.name = name;
+        this.bukkitName = bukkitName;
         this.mypetClass = mypetClass;
+    }
+
+    /**
+     * Registers a custom pet type. Use this for third-party or ModelEngine-backed entities.
+     *
+     * @param name     CamelCase name (e.g. "MyCustomMob")
+     * @param petClass interface extending MyPet
+     * @return the registered MyPetType
+     */
+    public static MyPetType register(String name, Class<? extends MyPet> petClass) {
+        String bukkitName = camelToSnake(name).toUpperCase();
+        MyPetType type = new MyPetType(name, bukkitName, petClass);
+        BY_NAME.put(name.toUpperCase(), type);
+        BY_BUKKIT_NAME.put(bukkitName, type);
+        return type;
+    }
+
+    private static String snakeToCamel(String snake) {
+        StringBuilder sb = new StringBuilder();
+        boolean capitalize = true;
+        for (int i = 0; i < snake.length(); i++) {
+            char c = snake.charAt(i);
+            if (c == '_') {
+                capitalize = true;
+            } else {
+                sb.append(capitalize ? Character.toUpperCase(c) : Character.toLowerCase(c));
+                capitalize = false;
+            }
+        }
+        return sb.toString();
     }
 
     private static String camelToSnake(String name) {
@@ -131,13 +109,15 @@ public enum MyPetType {
     }
 
     public static List<MyPetType> all() {
-        List<MyPetType> all = new LinkedList<>();
-        for (MyPetType t : values()) {
-            if (t.checkMinecraftVersion()) {
-                all.add(t);
-            }
-        }
-        return all;
+        return new ArrayList<>(BY_NAME.values());
+    }
+
+    public static Collection<MyPetType> values() {
+        return Collections.unmodifiableCollection(BY_NAME.values());
+    }
+
+    public static MyPetType valueOf(String name) {
+        return byName(name);
     }
 
     public static MyPetType byEntityTypeName(String name) {
@@ -145,13 +125,9 @@ public enum MyPetType {
     }
 
     public static MyPetType byEntityTypeName(String name, boolean versionCheck) {
-        for (MyPetType t : values()) {
-            if (t.getBukkitName().equalsIgnoreCase(name)) {
-                if (!versionCheck || t.checkMinecraftVersion()) {
-                    return t;
-                }
-                break;
-            }
+        MyPetType type = BY_BUKKIT_NAME.get(name.toUpperCase());
+        if (type != null) {
+            return type;
         }
         throw new MyPetTypeNotFoundException(name);
     }
@@ -161,23 +137,27 @@ public enum MyPetType {
     }
 
     public static MyPetType byName(String name, boolean versionCheck) {
-        for (MyPetType t : values()) {
-            if (t.name().equalsIgnoreCase(name)) {
-                if (!versionCheck || t.checkMinecraftVersion()) {
-                    return t;
-                }
-                break;
-            }
+        MyPetType type = BY_NAME.get(name.toUpperCase());
+        if (type != null) {
+            return type;
         }
         throw new MyPetTypeNotFoundException(name);
     }
 
+    public static MyPetType byNameOrNull(String name) {
+        return BY_NAME.get(name.toUpperCase());
+    }
+
+    public String name() {
+        return name;
+    }
+
     public String getBukkitName() {
-        return camelToSnake(name()).toUpperCase();
+        return bukkitName;
     }
 
     public String getTypeID() {
-        return camelToSnake(name());
+        return bukkitName.toLowerCase();
     }
 
     public Class<? extends MyPet> getMyPetClass() {
@@ -185,28 +165,23 @@ public enum MyPetType {
     }
 
     public boolean checkMinecraftVersion() {
-        try {
-            EntityType.valueOf(getBukkitName());
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        return true;
     }
 
-    /**
-     * Returns a MyPetType by name, or null if not found.
-     * This method does NOT check Minecraft version compatibility.
-     * Use this when you want to gracefully handle invalid/unknown pet types.
-     *
-     * @param name the name to look up (case-insensitive)
-     * @return the MyPetType, or null if not found
-     */
-    public static MyPetType byNameOrNull(String name) {
-        for (MyPetType t : values()) {
-            if (t.name().equalsIgnoreCase(name)) {
-                return t;
-            }
-        }
-        return null;
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MyPetType other)) return false;
+        return name.equals(other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

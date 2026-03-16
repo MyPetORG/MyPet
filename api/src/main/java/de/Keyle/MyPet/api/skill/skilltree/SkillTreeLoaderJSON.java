@@ -131,9 +131,7 @@ public class SkillTreeLoaderJSON {
 
         tryToLoad("MobTypes", () -> {
             if (containsKey(skilltreeObject, "MobTypes")) {
-                List<MyPetType> availableTypes = Arrays.stream(MyPetType.values())
-                        .filter(MyPetType::checkMinecraftVersion)
-                        .toList();
+                List<MyPetType> availableTypes = MyPetType.all();
                 JsonArray mobTypeArray = get(skilltreeObject, "MobTypes").getAsJsonArray();
                 Set<MyPetType> mobTypes = new HashSet<>();
                 if (mobTypeArray.isEmpty()) {

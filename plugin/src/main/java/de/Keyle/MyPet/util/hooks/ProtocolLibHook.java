@@ -175,7 +175,7 @@ public class ProtocolLibHook implements PluginHook {
                             ErrorUtil.reportWarning("Third-party plugin integration failed", e);
                         }
 
-                        if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
+                        if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType().equals(MyPetType.byName("EnderDragon"))) {
                             byte angle = packet.getBytes().read(0);
                             angle += Byte.MAX_VALUE;
                             packet.getBytes().write(0, angle);

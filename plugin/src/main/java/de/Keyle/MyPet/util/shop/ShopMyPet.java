@@ -53,7 +53,7 @@ public class ShopMyPet implements StoredMyPet {
     protected String petName = "";
     protected String worldGroup = "";
     protected double exp = 0;
-    protected MyPetType petType = MyPetType.Wolf;
+    protected MyPetType petType = MyPetType.byName("Wolf");
     protected Skilltree skilltree = null;
     protected CompoundBinaryTag NBTSkills = CompoundBinaryTag.empty();
     protected CompoundBinaryTag NBTextendetInfo = CompoundBinaryTag.empty();
@@ -232,7 +232,9 @@ public class ShopMyPet implements StoredMyPet {
         }
         price = config.getDouble("Price", 0);
         position = config.getInt("Position", -1);
-        petType = MyPetType.byName(config.getString("PetType", "Pig"));
+        MyPetType type = MyPetType.byNameOrNull(config.getString("PetType", "Pig"));
+        if (type == null) return;
+        petType = type;
         exp = config.getDouble("EXP");
         petName = config.getString("Name", null);
         Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(config.getString("Skilltree", null));

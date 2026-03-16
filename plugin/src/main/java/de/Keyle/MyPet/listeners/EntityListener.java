@@ -448,7 +448,7 @@ public class EntityListener implements Listener {
         }
         Entity damagedEntity = event.getEntity();
         // --  fix unwanted screaming of Endermen --
-        if (damagedEntity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) damagedEntity).getPetType() == MyPetType.Enderman) {
+        if (damagedEntity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) damagedEntity).getPetType().equals(MyPetType.byName("Enderman"))) {
             ((MyEnderman) ((MyPetBukkitEntity) damagedEntity).getMyPet()).setScreaming(true);
             ((MyEnderman) ((MyPetBukkitEntity) damagedEntity).getMyPet()).setScreaming(false);
         }

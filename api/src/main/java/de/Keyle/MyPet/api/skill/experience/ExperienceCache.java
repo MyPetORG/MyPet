@@ -185,10 +185,11 @@ public class ExperienceCache implements ServiceContainer {
             intervalMap.put(worldGroup, typeIntervalMap);
             JsonObject typeMap = this.expMap.getAsJsonObject(worldGroup);
             for (String typeObject : typeMap.keySet()) {
-                MyPetType type = MyPetType.byName(typeObject);
+                MyPetType type = MyPetType.byNameOrNull(typeObject);
+                if (type == null) continue;
                 IntervalTree<Double, Integer> tree = new IntervalTree<>();
                 typeIntervalMap.put(type, tree);
-                JsonObject expMap = typeMap.get(type.name()).getAsJsonObject();
+                JsonObject expMap = typeMap.get(typeObject).getAsJsonObject();
                 for (String levelObject : expMap.keySet()) {
                     int level = Integer.parseInt(levelObject);
                     double exp = expMap.get("" + level).getAsDouble();
