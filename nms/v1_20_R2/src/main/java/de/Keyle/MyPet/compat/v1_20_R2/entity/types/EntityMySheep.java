@@ -24,8 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySheep;
-import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.compat.v1_20_R2.CompatManager;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.EntityMyPet;
 import de.Keyle.MyPet.compat.v1_20_R2.entity.ai.movement.EatGrass;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -44,7 +42,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Sound;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -122,18 +119,7 @@ public class EntityMySheep extends EntityMyPet {
                 }
                 getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
-                            try {
-                                CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
-                            } catch (IllegalAccessException | InvocationTargetException ex) {
-                                ErrorUtil.report(ex);
-                            }
-                        });
-                    }
+                    itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
                 }
                 return InteractionResult.CONSUME;
             } else if (Configuration.MyPet.Sheep.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {

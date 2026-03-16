@@ -98,6 +98,7 @@ public class EntityMySheep extends EntityMyPet {
         }
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            // TODO [modernize] instanceof without pattern matching — use `instanceof DyeItem dyeItem` to eliminate casts
             if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).getDyeColor().ordinal() != getMyPet().getColor().ordinal() && !getMyPet().isSheared()) {
                 getMyPet().setColor(org.bukkit.DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().ordinal()]);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
@@ -119,11 +120,7 @@ public class EntityMySheep extends EntityMyPet {
                 }
                 getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
-                    }
+                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
                 }
                 return InteractionResult.CONSUME;
             } else if (Configuration.MyPet.Sheep.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
