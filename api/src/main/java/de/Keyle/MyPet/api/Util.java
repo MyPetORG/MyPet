@@ -260,31 +260,6 @@ public class Util {
         return Math.max(min, Math.min(max, val));
     }
 
-    public static boolean findClassInStackTrace(StackTraceElement[] stackTrace, String className, int from, int to, boolean debug) {
-        if (to < from) {
-            MyPetApi.getLogger().warning("\"to\" must be >= \"from\" (from=" + from + ", to=" + to + ")");
-        }
-        if (from < 0) {
-            MyPetApi.getLogger().warning("\"from\" must be >= 0 (from=" + from + ")");
-        }
-        to = Math.min(stackTrace.length - 1, to);
-        if (debug) {
-            MyPetApi.getLogger().info("=====================================================================================================================================");
-        }
-        for (int i = from; i <= to; i++) {
-            if (stackTrace[i].getClassName().equals(className)) {
-                if (debug) {
-                    MyPetApi.getLogger().info("=====================================================================================================================================");
-                }
-                return true;
-            }
-        }
-        if (debug) {
-            MyPetApi.getLogger().info("=====================================================================================================================================");
-        }
-        return false;
-    }
-
     public static boolean findStringInThrowable(Throwable throwable, String string) {
         for (StackTraceElement el : throwable.getStackTrace()) {
             if (el.getClassName().contains(string)) {
