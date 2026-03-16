@@ -400,27 +400,6 @@ public class Util {
         return trace.toString();
     }
 
-    public static int getJavaUpdate() {
-        try {
-            String[] javaVersionElements = System.getProperty("java.runtime.version").split("\\.|_|-b");
-            return Integer.parseInt(javaVersionElements[3]);
-        } catch (Exception e) {
-            return -1;
-        }
-    }
-
-    public static String getFileExtension(String fileName) {
-
-        String extension = "";
-
-        int i = fileName.lastIndexOf('.');
-        if (i > 0) {
-            extension = fileName.substring(i + 1);
-        }
-
-        return extension;
-    }
-
     public static long getSha256FromFile(File file) {
         try {
             return com.google.common.io.Files.asByteSource(file).hash(Hashing.sha256()).asLong();
