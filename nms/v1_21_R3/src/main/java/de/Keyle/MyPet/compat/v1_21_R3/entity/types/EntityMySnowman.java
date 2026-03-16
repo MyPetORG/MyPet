@@ -65,11 +65,7 @@ public class EntityMySnowman extends EntityMyPet {
                 getMyPet().setSheared(true);
                 getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
-                    }
+                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
                 }
                 return InteractionResult.CONSUME;
             }
