@@ -92,7 +92,7 @@ public class EntityMySlime extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (this.onGround && jumpDelay-- <= 0) {
+        if (this.onGround() && jumpDelay-- <= 0) {
             getJumpControl().jump();
             jumpDelay = (this.random.nextInt(20) + 50);
             makeSound("entity.slime.jump", 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);

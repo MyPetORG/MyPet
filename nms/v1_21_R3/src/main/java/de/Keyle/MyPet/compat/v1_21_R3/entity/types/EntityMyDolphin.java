@@ -79,7 +79,7 @@ public class EntityMyDolphin extends EntityMyAquaticPet {
             this.canDolphinjump = true;
         }
         if (this.canDolphinjump &&
-                this.onGround && !this.isInWaterOrBubble()) {
+                this.onGround() && !this.isInWaterOrBubble()) {
             this.canDolphinjump = false;
         }
     }

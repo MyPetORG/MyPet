@@ -77,7 +77,7 @@ public abstract class EntityMyAquaticPet extends EntityMyPet {
             minY = this.getBoundingBox().minY;
 
             float friction = 0.91F;
-            if (this.onGround) {
+            if (this.onGround()) {
                 friction = this.level().getBlockState(new BlockPos(Mth.floor(this.getX()), Mth.floor(minY) - 1, Mth.floor(this.getZ()))).getBlock().getFriction() * 0.91F;
             }
 

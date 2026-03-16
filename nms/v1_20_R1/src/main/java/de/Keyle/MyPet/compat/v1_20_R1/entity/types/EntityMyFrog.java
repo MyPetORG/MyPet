@@ -108,7 +108,7 @@ public class EntityMyFrog extends EntityMyAquaticPet {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (this.onGround && jumpDelay-- <= 0) {
+        if (this.onGround() && jumpDelay-- <= 0) {
             getJumpControl().jump();
             jumpDelay = (this.random.nextInt(20, 500));
             if (getTarget() != null) {

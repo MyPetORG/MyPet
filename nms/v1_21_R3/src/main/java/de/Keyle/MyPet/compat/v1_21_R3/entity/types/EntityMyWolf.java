@@ -183,7 +183,7 @@ public class EntityMyWolf extends EntityMyPet {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (this.isWet && !this.shaking && this.onGround) {
+        if (this.isWet && !this.shaking && this.onGround()) {
             this.shaking = true;
             this.shakeCounter = 0.0F;
             this.level().broadcastEntityEvent(this, (byte) 8);

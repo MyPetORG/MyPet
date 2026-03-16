@@ -70,7 +70,7 @@ public class EntityMyWither extends EntityMyFlyingPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (Configuration.MyPet.Wither.CAN_GLIDE) {
-            if (!this.onGround && this.getDeltaMovement().y() < 0.0D) {
+            if (!this.onGround() && this.getDeltaMovement().y() < 0.0D) {
                 this.setDeltaMovement(getDeltaMovement().multiply(1, 0.6D, 1));
             }
         }

@@ -163,7 +163,7 @@ public class EntityMyStrider extends EntityMyPet {
             minY = this.getBoundingBox().minY;
 
             float friction = 0.91F;
-            if (this.onGround) {
+            if (this.onGround()) {
                 friction = this.level().getBlockState(new BlockPos(Mth.floor(this.getX()), Mth.floor(minY) - 1, Mth.floor(this.getZ()))).getBlock().getFriction() * 0.91F;
             }
 
@@ -200,7 +200,7 @@ public class EntityMyStrider extends EntityMyPet {
             CollisionContext collisioncontext = CollisionContext.of(this);
 
             if (collisioncontext.isAbove(LiquidBlock.STABLE_SHAPE, this.blockPosition(), true) && !this.level().getFluidState(this.blockPosition().above()).is(FluidTags.LAVA)) {
-                this.onGround = true;
+                this.setOnGround(true);
             } else {
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.5D).add(0.0D, 0.05D, 0.0D));
             }

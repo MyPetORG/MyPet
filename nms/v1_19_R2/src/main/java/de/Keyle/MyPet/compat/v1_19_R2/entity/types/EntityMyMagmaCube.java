@@ -68,7 +68,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (this.onGround && jumpDelay-- <= 0) {
+        if (this.isOnGround() && jumpDelay-- <= 0) {
             getJumpControl().jump();
             jumpDelay = (this.random.nextInt(20) + 50);
             this.getBukkitEntity().getWorld().playSound(this.getBukkitEntity().getLocation(), Sound.ENTITY_MAGMA_CUBE_JUMP, 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
