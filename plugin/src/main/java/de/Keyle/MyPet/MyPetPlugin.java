@@ -388,17 +388,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         }
 
         // init repository
-        if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("NBT")) {
-            Configuration.Repository.REPOSITORY_TYPE = "SQLite";
-            Configuration.Repository.CONVERT_FROM = "NBT";
-            repo = new SqLiteRepository();
-            try {
-                repo.init();
-            } catch (RepositoryInitException e) {
-                ErrorUtil.reportSevere("Failed to initialize NBT repository", e);
-                repo = null;
-            }
-        } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
+        if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
             repo = new MySqlRepository();
             try {
                 repo.init();
