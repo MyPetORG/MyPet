@@ -457,14 +457,13 @@ public class Util {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends Annotation> T getClassAnnotation(Class clazz, Class<T> annotation) {
+    public static <T extends Annotation> T getClassAnnotation(Class<?> clazz, Class<T> annotation) {
         if (annotation != null && clazz != null) {
             if (clazz == Object.class) {
                 return null;
             }
 
-            T a = (T) clazz.getAnnotation(annotation);
+            T a = clazz.getAnnotation(annotation);
             if (a != null) {
                 return a;
             }
@@ -472,7 +471,7 @@ public class Util {
             if (a != null) {
                 return a;
             }
-            for (Class c : clazz.getInterfaces()) {
+            for (Class<?> c : clazz.getInterfaces()) {
                 a = getClassAnnotation(c, annotation);
                 if (a != null) {
                     return a;
