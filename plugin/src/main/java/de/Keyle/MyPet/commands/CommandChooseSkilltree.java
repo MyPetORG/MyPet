@@ -34,8 +34,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
-import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
-
 import de.Keyle.MyPet.api.util.locale.Translation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -167,14 +165,13 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                         event.setWillDestroy(true);
                     }, MyPetApi.getPlugin()).setPaginationIdentifier("ChooseSkilltree");
 
-                    ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
                     for (int i = 0; i < availableSkilltrees.size(); i++) {
                         Skilltree addedSkilltree = availableSkilltrees.get(i);
 
                         SkilltreeIcon icon = addedSkilltree.getIcon();
-                        Material material = itemDatabase.getByID(icon.getMaterial());
+                        Material material = Material.matchMaterial(icon.getMaterial());
                         if (material == null) {
-                            material = itemDatabase.getByID("oak_sapling");
+                            material = Material.OAK_SAPLING;
                         }
                         IconMenuItem option = new IconMenuItem()
                                 .setMaterial(material)

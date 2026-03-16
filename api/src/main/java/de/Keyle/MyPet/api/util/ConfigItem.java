@@ -22,7 +22,6 @@ package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -53,10 +52,9 @@ public abstract class ConfigItem {
             return;
         }
 
-        ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-        Material material = itemDatabase.getByID(splitData[0]);
+        Material material = Material.matchMaterial(splitData[0]);
         if (material == null) {
-            MyPetApi.getLogger().warning(splitData[0] + " is not a valid 1.13 item ID! Please check your configs.");
+            MyPetApi.getLogger().warning(splitData[0] + " is not a valid item ID! Please check your configs.");
             return;
         }
 

@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.shop.PetShop;
@@ -119,8 +118,6 @@ public class CommandShop implements CommandTabCompleter {
                             }
                         }, MyPetApi.getPlugin()).setPaginationIdentifier("AvailableShops");
 
-                        ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-
                         Queue<PetShop> filler = new ArrayDeque<>();
 
                         for (String shopname : availableShops) {
@@ -133,14 +130,14 @@ public class CommandShop implements CommandTabCompleter {
                                 continue;
                             }
 
-                            menu.setOption(position, makeShopIcon(s, itemDatabase));
+                            menu.setOption(position, makeShopIcon(s));
                             shops.put(position, s.getName());
                         }
 
                         while (!filler.isEmpty()) {
                             PetShop s = filler.poll();
 
-                            int position = menu.addOption(makeShopIcon(s, itemDatabase));
+                            int position = menu.addOption(makeShopIcon(s));
                             shops.put(position, s.getName());
                         }
 
@@ -155,14 +152,14 @@ public class CommandShop implements CommandTabCompleter {
         return true;
     }
 
-    private IconMenuItem makeShopIcon(PetShop s, ItemDatabase itemDatabase) {
+    private IconMenuItem makeShopIcon(PetShop s) {
         IconMenuItem icon = new IconMenuItem();
         icon.setTitle(Util.SANITIZED_MINIMESSAGE.deserialize(s.getDisplayName()));
 
         SkilltreeIcon si = s.getIcon();
-        Material material = itemDatabase.getByID(si.getMaterial());
+        Material material = Material.matchMaterial(si.getMaterial());
         if (material == null) {
-            material = itemDatabase.getByID("chest");
+            material = Material.CHEST;
         }
         icon.setMaterial(material).setGlowing(si.isGlowing());
 

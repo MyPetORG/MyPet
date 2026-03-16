@@ -22,7 +22,6 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -71,9 +70,8 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
     public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
         if (info.keySet().contains("BlockName")) {
-            ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
             String id = info.getString("BlockName");
-            Material material = itemDatabase.getByID(id);
+            Material material = Material.matchMaterial(id);
             if (material != null) {
                 setBlock(new ItemStack(material, 1));
             }

@@ -35,7 +35,6 @@ import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -43,6 +42,7 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -504,8 +504,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 }
             } else if (arg.startsWith("block:")) {
                 String block = arg.replace("block:", "");
-                ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-                if (itemDatabase.getByID(block.toLowerCase()) != null) {
+                if (Material.matchMaterial(block) != null) {
                     builder.putString("BlockName", block.toLowerCase());
                 }
             } else if (arg.startsWith("puff:")) {

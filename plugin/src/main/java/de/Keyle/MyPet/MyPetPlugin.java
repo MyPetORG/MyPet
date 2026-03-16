@@ -39,7 +39,6 @@ import de.Keyle.MyPet.api.util.*;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
-import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.api.util.service.Load;
@@ -572,7 +571,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     }
 
     private void registerServices() {
-        serviceManager.registerService(ItemDatabase.class);
         serviceManager.registerService(LeashFlagManager.class);
         serviceManager.registerService(ExperienceCache.class);
         serviceManager.registerService(ExperienceCalculatorManager.class);
