@@ -261,7 +261,7 @@ public class Util {
         }
         if (i < vals1.length) {
             try {
-                return Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(vals2[i]));
+                return Integer.compare(Integer.parseInt(vals1[i]), Integer.parseInt(vals2[i]));
             } catch (NumberFormatException ignored) {
             }
         }
