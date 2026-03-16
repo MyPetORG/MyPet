@@ -331,16 +331,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         boolean createLocaleReadme = new File(getDataFolder(), "locale").mkdirs();
         new File(getDataFolder(), "logs").mkdirs();
 
-        if (!createDefaultSkilltree) {
-            File legacyDefaultSkilltree = new File(skilltreeFolder, "default.st");
-            if (legacyDefaultSkilltree.exists()) {
-                if (Util.getSha256FromFile(legacyDefaultSkilltree) == -4323392001800132707L) {
-                    createDefaultSkilltree = true;
-                    legacyDefaultSkilltree.delete();
-                }
-            }
-        }
-
         if (createDefaultSkilltree) {
             File skilltreeFile = new File(skilltreeFolder, "Combat.st.json");
             if (!skilltreeFile.exists()) {
