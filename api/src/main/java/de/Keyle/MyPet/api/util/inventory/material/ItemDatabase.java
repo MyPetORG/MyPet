@@ -38,9 +38,7 @@ import java.util.Map;
 @ServiceName("ItemDatabase")
 public class ItemDatabase implements ServiceContainer {
 
-    Map<String, MaterialHolder> byID = new HashMap<>();
-    Map<LegacyIdData, MaterialHolder> byLegacyId = new HashMap<>();
-    Map<LegacyNamedData, MaterialHolder> byLegacyName = new HashMap<>();
+    Map<String, Material> byID = new HashMap<>();
 
     @Override
     public boolean onEnable() {
@@ -55,8 +53,6 @@ public class ItemDatabase implements ServiceContainer {
     @Override
     public void onDisable() {
         byID.clear();
-        byLegacyId.clear();
-        byLegacyName.clear();
     }
 
     protected void loadFile() {
@@ -80,78 +76,18 @@ public class ItemDatabase implements ServiceContainer {
                 }
             }
             String id = entryObject.get("id").getAsString();
-
-            MaterialHolder materialHolder;
-
-            short legacyData = 0;
-            String legacyName = null;
-            int legacyId = -1;
-            if (entryObject.has("legacy-data")) {
-                legacyData = Short.parseShort(entryObject.get("legacy-data").getAsString());
+            Material material = Material.matchMaterial(id.toUpperCase());
+            if (material != null) {
+                byID.put(id, material);
             }
-            if (entryObject.has("legacy-name")) {
-                legacyName = entryObject.get("legacy-name").getAsString();
-            }
-            if (entryObject.has("legacy-id")) {
-                legacyId = Integer.parseInt(entryObject.get("legacy-id").getAsString());
-            }
-            if (legacyId >= 0) {
-                if (legacyName != null) {
-                    materialHolder = new MaterialHolder(introduced, id, legacyName, legacyId, legacyData);
-                    byLegacyName.put(materialHolder.getLegacyName(), materialHolder);
-                } else {
-                    materialHolder = new MaterialHolder(introduced, id, legacyId, legacyData);
-                }
-                byLegacyId.put(materialHolder.getLegacyId(), materialHolder);
-            } else {
-                materialHolder = new MaterialHolder(introduced, id);
-            }
-
-            byID.put(id, materialHolder);
         }
     }
 
-    public MaterialHolder getByID(String id) {
+    public Material getByID(String id) {
         id = id.toLowerCase();
         if (id.startsWith("minecraft:")) {
             id = id.substring(10);
         }
         return byID.get(id);
-    }
-
-    public MaterialHolder getByLegacyId(LegacyIdData legacyIdData) {
-        return byLegacyId.get(legacyIdData);
-    }
-
-    public MaterialHolder getByLegacyId(int id, short data) {
-        return getByLegacyId(new LegacyIdData(id, data));
-    }
-
-    public MaterialHolder getByLegacyId(int id) {
-        return getByLegacyId(id, (short) 0);
-    }
-
-    public MaterialHolder getByLegacyName(LegacyNamedData legacyNamedData) {
-        return byLegacyName.get(legacyNamedData);
-    }
-
-    public MaterialHolder getByLegacyName(String name, short data) {
-        name = name.toLowerCase();
-        if (name.startsWith("minecraft:")) {
-            name = name.substring(10);
-        }
-        return getByLegacyName(new LegacyNamedData(name, data));
-    }
-
-    public MaterialHolder getByLegacyName(String name) {
-        return getByLegacyName(name, (short) 0);
-    }
-
-    public Material getMaterialById(String id) {
-        MaterialHolder materialHolder = getByID(id);
-        if (materialHolder != null) {
-            return MyPetApi.getPlatformHelper().getMaterial(materialHolder);
-        }
-        return null;
     }
 }

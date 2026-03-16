@@ -23,7 +23,6 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
-import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -74,24 +73,8 @@ public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types
         if (info.keySet().contains("BlockName")) {
             ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
             String id = info.getString("BlockName");
-            MaterialHolder materialHolder = itemDatabase.getByID(id);
-            if (materialHolder != null) {
-                Material material = materialHolder.getMaterial();
-                if (material != null) {
-                    setBlock(new ItemStack(material, 1));
-                }
-            }
-        } else if (info.keySet().contains("BlockID")) {
-            int id = info.getInt("BlockID");
-            byte data = 0;
-            if (info.keySet().contains("BlockData")) {
-                data = (byte) info.getInt("BlockData");
-            }
-
-            ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-            MaterialHolder materialHolder = itemDatabase.getByLegacyId(id, data);
-            if (materialHolder != null) {
-                Material material = materialHolder.getMaterial();
+            Material material = itemDatabase.getByID(id);
+            if (material != null) {
                 setBlock(new ItemStack(material, 1));
             }
         } else if (info.keySet().contains("Block")) {

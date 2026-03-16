@@ -23,7 +23,6 @@ package de.Keyle.MyPet.api.util;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
-import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -55,13 +54,13 @@ public abstract class ConfigItem {
         }
 
         ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-        MaterialHolder material = itemDatabase.getByID(splitData[0]);
+        Material material = itemDatabase.getByID(splitData[0]);
         if (material == null) {
             MyPetApi.getLogger().warning(splitData[0] + " is not a valid 1.13 item ID! Please check your configs.");
             return;
         }
 
-        load(material, splitData.length == 2 ? splitData[1] : null);
+        load(splitData[0], splitData.length == 2 ? splitData[1] : null);
     }
 
     public static ConfigItem createConfigItem(String data) {
@@ -123,7 +122,7 @@ public abstract class ConfigItem {
         MyPetApi.getLogger().warning("You are trying to use 1.20.5+ item-NBT! You need to use 1.13 item IDs and NBT for this version.");
     }
 
-    public abstract void load(MaterialHolder material, String data);
+    public abstract void load(String materialId, String data);
 
     public enum DurabilityMode {
         Smaller, Bigger, NotUsed, Equal

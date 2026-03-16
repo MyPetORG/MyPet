@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
@@ -159,10 +158,6 @@ public abstract class PlatformHelper {
             return Double.MAX_VALUE;
         }
         return Math.sqrt(distanceSquared(a, b));
-    }
-
-    public Material getMaterial(MaterialHolder materialHolder) {
-        return Material.matchMaterial(materialHolder.getId().toUpperCase());
     }
 
     public boolean compareBlockPositions(Location a, Location b) {

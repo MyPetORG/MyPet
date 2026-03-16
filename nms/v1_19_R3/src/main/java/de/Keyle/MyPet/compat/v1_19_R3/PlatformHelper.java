@@ -20,12 +20,10 @@
 
 package de.Keyle.MyPet.compat.v1_19_R3;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
-import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
 import de.Keyle.MyPet.compat.v1_19_R3.util.inventory.ItemStackNBTConverter;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -252,8 +250,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public String itemstackToString(org.bukkit.inventory.ItemStack itemStack) {
-        ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-        String itemstack = itemDatabase.getByID(itemStack.getType().getKey().getKey()).getId();
+        String itemstack = itemStack.getType().getKey().getKey();
         if (itemStack.hasItemMeta()) {
             itemstack += " " + CraftItemStack.asNMSCopy(itemStack).getTag().toString();
         }

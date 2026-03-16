@@ -35,10 +35,11 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
-import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
+
 import de.Keyle.MyPet.api.util.locale.Translation;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -171,21 +172,18 @@ public class CommandChooseSkilltree implements CommandTabCompleter {
                         Skilltree addedSkilltree = availableSkilltrees.get(i);
 
                         SkilltreeIcon icon = addedSkilltree.getIcon();
-                        MaterialHolder material = itemDatabase.getByID(icon.getMaterial());
+                        Material material = itemDatabase.getByID(icon.getMaterial());
                         if (material == null) {
                             material = itemDatabase.getByID("oak_sapling");
                         }
                         IconMenuItem option = new IconMenuItem()
-                                .setMaterial(material.getMaterial())
+                                .setMaterial(material)
                                 .setGlowing(icon.isGlowing())
                                 .setTitle(Component.text()
                                         .append(Component.text("❱❱❱  "))
                                         .append(Util.SANITIZED_MINIMESSAGE.deserialize(addedSkilltree.getDisplayName()).color(NamedTextColor.DARK_GREEN))
                                         .append(Component.text("  ❰❰❰"))
                                         .build());
-                        if (material.isLegacy()) {
-                            option.setData(material.getLegacyId().getData());
-                        }
 
                         boolean selectable = false;
                         int requiredLevel = addedSkilltree.getRequiredLevel();

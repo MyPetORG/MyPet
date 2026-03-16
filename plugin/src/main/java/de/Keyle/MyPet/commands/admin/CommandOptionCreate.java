@@ -36,7 +36,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
-import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -506,9 +505,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
             } else if (arg.startsWith("block:")) {
                 String block = arg.replace("block:", "");
                 ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-                MaterialHolder materialHolder = itemDatabase.getByID(block.toLowerCase());
-                if (materialHolder != null) {
-                    builder.putString("BlockName", materialHolder.getId());
+                if (itemDatabase.getByID(block.toLowerCase()) != null) {
+                    builder.putString("BlockName", block.toLowerCase());
                 }
             } else if (arg.startsWith("puff:")) {
                 switch (arg) {

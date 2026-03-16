@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.compat.v1_21_R7.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
+
 import de.Keyle.MyPet.compat.v1_21_R7.util.inventory.ItemStackComparator;
 import de.Keyle.MyPet.compat.v1_21_R7.util.inventory.ItemStackNBTConverter;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -67,8 +67,8 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
     }
 
     @Override
-    public void load(MaterialHolder material, String data) {
-        Identifier key = Identifier.tryParse(material.getId());
+    public void load(String materialId, String data) {
+        Identifier key = Identifier.tryParse(materialId);
         Item item = BuiltInRegistries.ITEM.get(key).get().value();
 
         net.minecraft.world.item.ItemStack is = new net.minecraft.world.item.ItemStack(item, 1);

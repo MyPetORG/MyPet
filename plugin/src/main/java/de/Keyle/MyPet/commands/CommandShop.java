@@ -29,12 +29,12 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.inventory.material.ItemDatabase;
-import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.shop.PetShop;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -160,14 +160,11 @@ public class CommandShop implements CommandTabCompleter {
         icon.setTitle(Util.SANITIZED_MINIMESSAGE.deserialize(s.getDisplayName()));
 
         SkilltreeIcon si = s.getIcon();
-        MaterialHolder material = itemDatabase.getByID(si.getMaterial());
+        Material material = itemDatabase.getByID(si.getMaterial());
         if (material == null) {
             material = itemDatabase.getByID("chest");
         }
-        icon.setMaterial(material.getMaterial()).setGlowing(si.isGlowing());
-        if (material.isLegacy()) {
-            icon.setData(material.getLegacyId().getData());
-        }
+        icon.setMaterial(material).setGlowing(si.isGlowing());
 
         return icon;
     }
