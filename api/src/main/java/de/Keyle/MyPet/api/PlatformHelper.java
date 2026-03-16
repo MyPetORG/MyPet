@@ -176,7 +176,7 @@ public abstract class PlatformHelper {
 
     public abstract boolean gameruleDoDeathMessages(LivingEntity e);
 
-    public boolean doStackWalking(Class leClass, int oldDepth) {
+    public boolean doStackWalking(Class<?> leClass, int oldDepth) {
         return false;
     }
 }

@@ -264,7 +264,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     @Override
-    public boolean doStackWalking(Class leClass, int oldDepth) {
+    public boolean doStackWalking(Class<?> leClass, int oldDepth) {
         return leWalker.walk(s -> s.limit(oldDepth + 1).map(StackWalker.StackFrame::getDeclaringClass).anyMatch(leClass::equals));
     }
 }
