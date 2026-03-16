@@ -84,11 +84,7 @@ public class EntityMyBlaze extends EntityMyPet {
                 getMyPet().setOnFire(true);
                 makeSound("item.flintandsteel.use", 1.0F, 1.0F);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
-                    }
+                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
                 }
                 return InteractionResult.CONSUME;
             }

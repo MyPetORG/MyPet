@@ -24,8 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyBlaze;
-import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.compat.v1_20_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_20_R1.entity.EntityMyPet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -37,7 +35,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-import java.lang.reflect.InvocationTargetException;
 
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
@@ -88,18 +85,7 @@ public class EntityMyBlaze extends EntityMyPet {
                 getMyPet().setOnFire(true);
                 makeSound("item.flintandsteel.use", 1.0F, 1.0F);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
-                            try {
-                                CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
-                            } catch (IllegalAccessException | InvocationTargetException ex) {
-                                ErrorUtil.report(ex);
-                            }
-                        });
-                    }
+                    itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
                 }
                 return InteractionResult.CONSUME;
             }
