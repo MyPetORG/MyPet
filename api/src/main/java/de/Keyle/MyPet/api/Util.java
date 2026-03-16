@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.api;
 
-import com.google.common.base.Charsets;
-import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -41,7 +39,6 @@ import java.lang.annotation.Annotation;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.*;
 
 public class Util {
@@ -426,15 +423,7 @@ public class Util {
 
     public static long getSha256FromFile(File file) {
         try {
-            Hasher hasher = Hashing.sha256().newHasher();
-            BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(file.toPath()));
-            byte[] buf = new byte[1024];
-            int numRead;
-            while ((numRead = bis.read(buf)) != -1) {
-                hasher.putBytes(buf, 0, numRead);
-            }
-            bis.close();
-            return hasher.hash().asLong();
+            return com.google.common.io.Files.asByteSource(file).hash(Hashing.sha256()).asLong();
         } catch (IOException e) {
             ErrorUtil.report(e);
         }
