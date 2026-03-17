@@ -29,8 +29,10 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Beacon;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.kyori.adventure.nbt.IntArrayBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
+import net.kyori.adventure.nbt.StringBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -525,7 +527,7 @@ public class BeaconImpl implements Beacon {
             List<PotionEffect> potionEffects = new ArrayList<>();
             for (Buff buff : selectedBuffs) {
                 int amplification = Math.max(0, getBuffLevel(buff) - 1 + amplifierMod);
-                PotionEffect effect = new PotionEffect(PotionEffectType.getById(buff.getId()), duration, amplification, true, true);
+                PotionEffect effect = new PotionEffect(buff.getPotionEffectType(), duration, amplification, true, true);
                 potionEffects.add(effect);
             }
 
@@ -631,8 +633,12 @@ public class BeaconImpl implements Beacon {
 
     @Override
     public CompoundBinaryTag save() {
+        ListBinaryTag.Builder<StringBinaryTag> buffsBuilder = ListBinaryTag.builder(BinaryTagTypes.STRING);
+        for (Buff buff : selectedBuffs) {
+            buffsBuilder.add(StringBinaryTag.stringBinaryTag(buff.getName()));
+        }
         return CompoundBinaryTag.builder()
-                .put("Buffs", IntArrayBinaryTag.intArrayBinaryTag(selectedBuffs.stream().mapToInt(Buff::getId).toArray()))
+                .put("Buffs", buffsBuilder.build())
                 .putBoolean("Active", this.active)
                 .putString("Receiver", this.receiver.name())
                 .build();
@@ -640,16 +646,11 @@ public class BeaconImpl implements Beacon {
 
     @Override
     public void load(CompoundBinaryTag compound) {
-        if (compound.keySet().contains("Buff")) {
-            Buff selectedBuff = Buff.getBuffByID(compound.getInt("Buff"));
-            if (selectedBuff != null) {
-                this.selectedBuffs.add(selectedBuff);
-            }
-        }
         if (compound.keySet().contains("Buffs")) {
-            int[] selectedBuffs = compound.getIntArray("Buffs");
-            for (int selectedBuffId : selectedBuffs) {
-                Buff selectedBuff = Buff.getBuffByID(selectedBuffId);
+            ListBinaryTag buffsList = compound.getList("Buffs");
+            for (int i = 0; i < buffsList.size(); i++) {
+                String buffName = buffsList.getString(i);
+                Buff selectedBuff = Buff.getByName(buffName);
                 if (selectedBuff != null) {
                     this.selectedBuffs.add(selectedBuff);
                 }

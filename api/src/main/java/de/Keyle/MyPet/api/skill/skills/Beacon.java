@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,38 +43,37 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
     <T> UpgradeComputer<T> getBuff(Buff buff);
 
     enum Buff {
-        Speed("Speed", 1, 0),
-        Haste("Haste", 3, 9),
-        Strength("Strength", 5, 18),
-        JumpBoost("JumpBoost", 8, 1),
-        Regeneration("Regeneration", 10, 10),
-        Resistance("Resistance", 11, 19),
-        FireResistance("FireResistance", 12, 7, false),
-        WaterBreathing("WaterBreathing", 13, 16, false),
-        Invisibility("Invisibility", 14, 25, false),
-        NightVision("NightVision", 16, 8, false),
-        Absorption("Absorption", 22, 26),
-        Luck("Luck", 26, 17, false),
-        HealthBoost("HealthBoost", -1, -1);
+        Speed("Speed", 0, PotionEffectType.SPEED),
+        Haste("Haste", 9, PotionEffectType.FAST_DIGGING),
+        Strength("Strength", 18, PotionEffectType.INCREASE_DAMAGE),
+        JumpBoost("JumpBoost", 1, PotionEffectType.JUMP),
+        Regeneration("Regeneration", 10, PotionEffectType.REGENERATION),
+        Resistance("Resistance", 19, PotionEffectType.DAMAGE_RESISTANCE),
+        FireResistance("FireResistance", 7, PotionEffectType.FIRE_RESISTANCE, false),
+        WaterBreathing("WaterBreathing", 16, PotionEffectType.WATER_BREATHING, false),
+        Invisibility("Invisibility", 25, PotionEffectType.INVISIBILITY, false),
+        NightVision("NightVision", 8, PotionEffectType.NIGHT_VISION, false),
+        Absorption("Absorption", 26, PotionEffectType.ABSORPTION),
+        Luck("Luck", 17, PotionEffectType.LUCK, false),
+        HealthBoost("HealthBoost", -1, PotionEffectType.HEALTH_BOOST);
 
-        private static Map<Integer, Buff> buffPositions = new HashMap<>();
-        private static Map<Integer, Buff> buffIds = new HashMap<>();
+        private static final Map<Integer, Buff> buffPositions = new HashMap<>();
         private final String name;
-        private final int id;
         private final int position;
+        private final PotionEffectType potionEffectType;
         private final boolean moreThanOneLevel;
 
-        Buff(String name, int id, int position) {
+        Buff(String name, int position, PotionEffectType potionEffectType) {
             this.name = name;
-            this.id = id;
             this.position = position;
+            this.potionEffectType = potionEffectType;
             this.moreThanOneLevel = true;
         }
 
-        Buff(String name, int id, int position, boolean moreThanOneLevel) {
+        Buff(String name, int position, PotionEffectType potionEffectType, boolean moreThanOneLevel) {
             this.name = name;
-            this.id = id;
             this.position = position;
+            this.potionEffectType = potionEffectType;
             this.moreThanOneLevel = moreThanOneLevel;
         }
 
@@ -86,25 +86,25 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
             return buffPositions.get(positiion);
         }
 
-        public static Buff getBuffByID(int id) {
-            if (buffIds.isEmpty()) {
-                for (Buff buff : values()) {
-                    buffIds.put(buff.id, buff);
+        public static Buff getByName(String name) {
+            for (Buff buff : values()) {
+                if (buff.name.equals(name)) {
+                    return buff;
                 }
             }
-            return buffIds.get(id);
+            return null;
         }
 
         public String getName() {
             return name;
         }
 
-        public int getId() {
-            return id;
-        }
-
         public int getPosition() {
             return position;
+        }
+
+        public PotionEffectType getPotionEffectType() {
+            return potionEffectType;
         }
 
         public boolean hasMoreThanOneLevel() {
