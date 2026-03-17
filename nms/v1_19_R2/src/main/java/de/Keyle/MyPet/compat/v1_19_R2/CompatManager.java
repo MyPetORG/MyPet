@@ -21,19 +21,12 @@
 package de.Keyle.MyPet.compat.v1_19_R2;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.compat.v1_19_R2.services.EntityConverterService;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.LivingEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
-import java.lang.reflect.Method;
-
 public class CompatManager extends de.Keyle.MyPet.api.util.CompatManager implements Listener {
-
-    public static Method ENTITY_LIVING_broadcastItemBreak = ReflectionUtil.getMethod(LivingEntity.class, "d", InteractionHand.class);
 
     @Override
     public void init() {
