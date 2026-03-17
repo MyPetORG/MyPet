@@ -68,16 +68,16 @@ public class BehaviorAggressiveTarget implements AIGoal {
 
         for (net.minecraft.world.entity.LivingEntity entityLiving : this.petEntity.level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class, this.petOwnerEntity.getBoundingBox().inflate(range, range, range))) {
             if (entityLiving != petEntity && !(entityLiving instanceof ArmorStand) && entityLiving.isAlive() && petEntity.distanceToSqr(entityLiving) <= 91) {
-                if (entityLiving instanceof ServerPlayer) {
-                    Player targetPlayer = (Player) entityLiving.getBukkitEntity();
+                if (entityLiving instanceof ServerPlayer serverPlayer) {
+                    Player targetPlayer = (Player) serverPlayer.getBukkitEntity();
                     if (myPet.getOwner().equals(targetPlayer)) {
                         continue;
                     }
                     if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                         continue;
                     }
-                } else if (entityLiving instanceof EntityMyPet) {
-                    MyPet targetMyPet = ((EntityMyPet) entityLiving).getMyPet();
+                } else if (entityLiving instanceof EntityMyPet entityMyPet) {
+                    MyPet targetMyPet = entityMyPet.getMyPet();
                     if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                         continue;
                     }
