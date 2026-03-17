@@ -205,12 +205,12 @@ public class ReflectionUtil {
      * normal reflection on newer Java versions. The method uses Unsafe API when the modifiers
      * field is not accessible (Java 12+).
      *
-     * @param className the class containing the static final field
-     * @param fieldName the name of the static final field
+     * @param className  the class containing the static final field
+     * @param fieldNames one or more possible names of the static final field (e.g., Mojang name first, then obfuscated)
      * @return a MethodHandle for setting the field, or null if the field is not found or cannot be accessed
      */
-    public static MethodHandle createStaticFinalSetter(Class<?> className, String fieldName) {
-        Field field = getField(className, fieldName);
+    public static MethodHandle createStaticFinalSetter(Class<?> className, String... fieldNames) {
+        Field field = getField(className, fieldNames);
         if (field == null) {
             return null;
         }

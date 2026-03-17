@@ -119,9 +119,9 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @Override
     public void registerEntityTypes() {
         DefaultedRegistry<EntityType<?>> entityRegistry = getRegistry(Registry.ENTITY_TYPE);
-        Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class, "bL"); //frozen
-        Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class, "bN"); //intrusiveHolderCache
-        MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(Registry.class, "W"); //ENTITY_TYPE
+        Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class, "frozen", "bL");
+        Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class, "intrusiveHolderCache", "bN");
+        MethodHandle ENTITY_REGISTRY_SETTER = ReflectionUtil.createStaticFinalSetter(Registry.class, "ENTITY_TYPE", "W");
 
         if (custReg != null) {
             //Gotta put the original Registry in. Just for a moment
@@ -188,8 +188,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     protected void overwriteEntityID(EntityType<?> types, int id, DefaultedRegistry<EntityType<?>> entityRegistry) {
         try {
-            Field bgF = MappedRegistry.class.getDeclaredField("bE"); //This is toId
-            bgF.setAccessible(true);
+            Field bgF = ReflectionUtil.getField(MappedRegistry.class, "toId", "bE");
             Object map = bgF.get(entityRegistry);
             Class<?> clazz = map.getClass();
             Method mapPut = clazz.getDeclaredMethod("put", Object.class, int.class);

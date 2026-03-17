@@ -118,8 +118,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     @Override
     public void registerEntityTypes() {
         DefaultedRegistry<EntityType<?>> entityRegistry = getRegistry(Registry.ENTITY_TYPE);
-        Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class, "ca"); //frozen
-        Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class, "cc"); //intrusiveHolderCache
+        Field frozenDoBe = ReflectionUtil.getField(MappedRegistry.class, "frozen", "ca");
+        Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class, "intrusiveHolderCache", "cc");
 
         ReflectionUtil.setFinalFieldValue(frozenDoBe, entityRegistry, false);
         ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
@@ -165,8 +165,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     protected void overwriteEntityID(EntityType<?> types, int id, DefaultedRegistry<EntityType<?>> entityRegistry) {
         try {
-            Field bgF = MappedRegistry.class.getDeclaredField("bT"); //This is toId
-            bgF.setAccessible(true);
+            Field bgF = ReflectionUtil.getField(MappedRegistry.class, "toId", "bT");
             Object map = bgF.get(entityRegistry);
             Class<?> clazz = map.getClass();
             Method mapPut = clazz.getDeclaredMethod("put", Object.class, int.class);
