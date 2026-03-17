@@ -67,16 +67,14 @@ public class Sit implements AIGoal {
 
     @Override
     public void finish() {
-        if (this.entityMyPet instanceof EntityMyWolf) {
-            ((EntityMyWolf) this.entityMyPet).applySitting(false);
-        } else if (this.entityMyPet instanceof EntityMyCat) {
-            ((EntityMyCat) this.entityMyPet).applySitting(false);
-        } else if (this.entityMyPet instanceof EntityMyCamel) {
-            ((EntityMyCamel) this.entityMyPet).applySitting(false);
-        } else if (this.entityMyPet instanceof EntityMyFox) {
-            ((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, false);
-        } else if (this.entityMyPet instanceof EntityMyPanda) {
-            ((EntityMyPanda) this.entityMyPet).updateActionsWatcher(8, false);
+        switch (this.entityMyPet) {
+            case EntityMyWolf entityMyWolf -> entityMyWolf.applySitting(false);
+            case EntityMyCat entityMyCat -> entityMyCat.applySitting(false);
+            case EntityMyCamel entityMyCamel -> entityMyCamel.applySitting(false);
+            case EntityMyFox entityMyFox -> entityMyFox.updateActionsWatcher(1, false);
+            case EntityMyPanda entityMyPanda -> entityMyPanda.updateActionsWatcher(8, false);
+            default -> {
+            }
         }
     }
 

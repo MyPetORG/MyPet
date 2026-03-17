@@ -55,28 +55,28 @@ public class Sit implements AIGoal {
     @Override
     public void start() {
         this.entityMyPet.getPetNavigation().stop();
-        if (this.entityMyPet instanceof EntityMyWolf) {
-            ((EntityMyWolf) this.entityMyPet).applySitting(true);
-        } else if (this.entityMyPet instanceof EntityMyCat) {
-            ((EntityMyCat) this.entityMyPet).applySitting(true);
-        } else if (this.entityMyPet instanceof EntityMyFox) {
-            ((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, true);
-        } else if (this.entityMyPet instanceof EntityMyPanda) {
-            ((EntityMyPanda) this.entityMyPet).updateActionsWatcher(8, true);
+        if (this.entityMyPet instanceof EntityMyWolf wolf) {
+            wolf.applySitting(true);
+        } else if (this.entityMyPet instanceof EntityMyCat cat) {
+            cat.applySitting(true);
+        } else if (this.entityMyPet instanceof EntityMyFox fox) {
+            fox.updateActionsWatcher(1, true);
+        } else if (this.entityMyPet instanceof EntityMyPanda panda) {
+            panda.updateActionsWatcher(8, true);
         }
         entityMyPet.setTarget(null);
     }
 
     @Override
     public void finish() {
-        if (this.entityMyPet instanceof EntityMyWolf) {
-            ((EntityMyWolf) this.entityMyPet).applySitting(false);
-        } else if (this.entityMyPet instanceof EntityMyCat) {
-            ((EntityMyCat) this.entityMyPet).applySitting(false);
-        } else if (this.entityMyPet instanceof EntityMyFox) {
-            ((EntityMyFox) this.entityMyPet).updateActionsWatcher(1, false);
-        } else if (this.entityMyPet instanceof EntityMyPanda) {
-            ((EntityMyPanda) this.entityMyPet).updateActionsWatcher(8, false);
+        if (this.entityMyPet instanceof EntityMyWolf wolf) {
+            wolf.applySitting(false);
+        } else if (this.entityMyPet instanceof EntityMyCat cat) {
+            cat.applySitting(false);
+        } else if (this.entityMyPet instanceof EntityMyFox fox) {
+            fox.updateActionsWatcher(1, false);
+        } else if (this.entityMyPet instanceof EntityMyPanda panda) {
+            panda.updateActionsWatcher(8, false);
         }
     }
 
