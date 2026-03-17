@@ -52,16 +52,17 @@ import java.util.Map;
 public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 
     BiMap<MyPetType, Class<? extends EntityMyPet>> entityClasses = HashBiMap.create();
-    Map<MyPetType, EntityType> entityTypes = new HashMap<>();
+    Map<MyPetType, EntityType<?>> entityTypes = new HashMap<>();
 
     @SneakyThrows
     public static void registerDefaultAttributes(EntityType<? extends LivingEntity> customType, EntityType<? extends LivingEntity> rootType) {
         MyAttributeDefaults.registerCustomEntityType(customType, rootType);
     }
 
+    @SuppressWarnings("unchecked")
     protected void registerEntityType(MyPetType petType, String key, DefaultedRegistry<EntityType<?>> entityRegistry) {
         EntityDimensions size = entityRegistry.get(new ResourceLocation(key.toLowerCase())).getDimensions();
-        EntityType leType;
+        EntityType<?> leType;
         if (!entityRegistry.containsKey(ResourceLocation.tryParse("mypet_" + key.toLowerCase()))) {
             leType = Registry.register(entityRegistry, "mypet_" + key.toLowerCase(), EntityType.Builder.createNothing(MobCategory.CREATURE).noSave().noSummon().sized(size.width, size.height).build(key));
         } else {
@@ -69,7 +70,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         }
         entityTypes.put(petType, leType);
         EntityType<? extends LivingEntity> types = (EntityType<? extends LivingEntity>) entityRegistry.get(new ResourceLocation(key));
-        registerDefaultAttributes(entityTypes.get(petType), types);
+        registerDefaultAttributes((EntityType<? extends LivingEntity>) entityTypes.get(petType), types);
         overwriteEntityID(entityTypes.get(petType), getEntityTypeId(petType, entityRegistry), entityRegistry);
     }
 
@@ -129,6 +130,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         entityRegistry.freeze();
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getEntityType(MyPetType petType) {
         return (T) this.entityTypes.get(petType);
     }
@@ -161,7 +163,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         return registryMaterials;
     }
 
-    protected void overwriteEntityID(EntityType types, int id, DefaultedRegistry<EntityType<?>> entityRegistry) {
+    protected void overwriteEntityID(EntityType<?> types, int id, DefaultedRegistry<EntityType<?>> entityRegistry) {
         try {
             Field bgF = MappedRegistry.class.getDeclaredField("bT"); //This is toId
             bgF.setAccessible(true);
