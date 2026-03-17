@@ -54,7 +54,7 @@ public class BeaconImpl implements Beacon {
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
     protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> selectableBuffs = new UpgradeComputer<>(0);
-    protected Map<Buff, UpgradeComputer> buffLevel = new HashMap<>();
+    protected Map<Buff, UpgradeComputer<?>> buffLevel = new HashMap<>();
     protected MyPet myPet;
     protected boolean active = false;
     protected int hungerDecreaseTimer;
@@ -87,28 +87,23 @@ public class BeaconImpl implements Beacon {
         }
 
         for (Buff buff : Buff.values()) {
-            UpgradeComputer upgradeComputer;
             if (buff.hasMoreThanOneLevel()) {
-                upgradeComputer = new UpgradeComputer<>(0);
-            } else {
-                upgradeComputer = new UpgradeComputer<>(false);
-            }
-            buffLevel.put(buff, upgradeComputer);
-            UpgradeComputer.UpgradeCallback callback = (newValue, reason) -> {
-                if (reason == UpgradeComputer.CallbackReason.Remove) {
-                    if (upgradeComputer.getValue() instanceof Boolean) {
-                        if (!((Boolean) newValue)) {
-                            selectedBuffs.remove(buff);
-                        }
-                    } else if (upgradeComputer.getValue() instanceof Integer) {
-                        if ((Integer) newValue == 0) {
-                            selectedBuffs.remove(buff);
-                        }
+                UpgradeComputer<Integer> intComputer = new UpgradeComputer<>(0);
+                intComputer.addCallback((newValue, reason) -> {
+                    if (reason == UpgradeComputer.CallbackReason.Remove && newValue == 0) {
+                        selectedBuffs.remove(buff);
                     }
-                }
-            };
-            //noinspection unchecked
-            upgradeComputer.addCallback(callback);
+                });
+                buffLevel.put(buff, intComputer);
+            } else {
+                UpgradeComputer<Boolean> boolComputer = new UpgradeComputer<>(false);
+                boolComputer.addCallback((newValue, reason) -> {
+                    if (reason == UpgradeComputer.CallbackReason.Remove && !newValue) {
+                        selectedBuffs.remove(buff);
+                    }
+                });
+                buffLevel.put(buff, boolComputer);
+            }
         }
     }
 
@@ -120,7 +115,7 @@ public class BeaconImpl implements Beacon {
         if (selectableBuffs.getValue() == 0 || range.getValue().doubleValue() == 0) {
             return false;
         }
-        for (UpgradeComputer amp : buffLevel.values()) {
+        for (UpgradeComputer<?> amp : buffLevel.values()) {
             if (amp.getValue() instanceof Boolean) {
                 if ((Boolean) amp.getValue()) {
                     return duration.getValue() > 0;
@@ -620,12 +615,12 @@ public class BeaconImpl implements Beacon {
     }
 
     @Override
-    public UpgradeComputer getBuff(Buff buff) {
-        return this.buffLevel.get(buff);
+    public <T> UpgradeComputer<T> getBuff(Buff buff) {
+        return (UpgradeComputer<T>) this.buffLevel.get(buff);
     }
 
     public int getBuffLevel(Buff buff) {
-        UpgradeComputer buffLevel = this.buffLevel.get(buff);
+        UpgradeComputer<?> buffLevel = this.buffLevel.get(buff);
         if (buffLevel.getValue() instanceof Boolean) {
             return (Boolean) buffLevel.getValue() ? 1 : 0;
         } else if (buffLevel.getValue() instanceof Integer) {

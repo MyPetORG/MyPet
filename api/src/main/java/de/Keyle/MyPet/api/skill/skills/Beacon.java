@@ -39,7 +39,7 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
 
     UpgradeComputer<Number> getRange();
 
-    UpgradeComputer getBuff(Buff buff);
+    <T> UpgradeComputer<T> getBuff(Buff buff);
 
     enum Buff {
         Speed("Speed", 1, 0),

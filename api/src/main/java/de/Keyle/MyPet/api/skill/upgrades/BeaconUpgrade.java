@@ -107,19 +107,19 @@ public class BeaconUpgrade implements Upgrade<Beacon> {
         skill.getDuration().addUpgrade(durationModifier);
         skill.getNumberOfBuffs().addUpgrade(numberOfBuffsModifier);
 
-        skill.getBuff(Beacon.Buff.Absorption).addUpgrade(absorptionModifier);
-        skill.getBuff(Beacon.Buff.FireResistance).addUpgrade(fireResistanceModifier);
-        skill.getBuff(Beacon.Buff.Haste).addUpgrade(hasteModifier);
-        skill.getBuff(Beacon.Buff.HealthBoost).addUpgrade(healthBoostModifier);
-        skill.getBuff(Beacon.Buff.JumpBoost).addUpgrade(jumpBoostModifier);
-        skill.getBuff(Beacon.Buff.Resistance).addUpgrade(resistanceModifier);
-        skill.getBuff(Beacon.Buff.Speed).addUpgrade(speedModifier);
-        skill.getBuff(Beacon.Buff.Strength).addUpgrade(strengthModifier);
-        skill.getBuff(Beacon.Buff.Regeneration).addUpgrade(regenerationModifier);
-        skill.getBuff(Beacon.Buff.Luck).addUpgrade(luckModifier);
-        skill.getBuff(Beacon.Buff.NightVision).addUpgrade(nightVisionModifier);
-        skill.getBuff(Beacon.Buff.WaterBreathing).addUpgrade(waterBreathingModifier);
-        skill.getBuff(Beacon.Buff.Invisibility).addUpgrade(invisibilityModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Absorption).addUpgrade(absorptionModifier);
+        skill.<Boolean>getBuff(Beacon.Buff.FireResistance).addUpgrade(fireResistanceModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Haste).addUpgrade(hasteModifier);
+        skill.<Integer>getBuff(Beacon.Buff.HealthBoost).addUpgrade(healthBoostModifier);
+        skill.<Integer>getBuff(Beacon.Buff.JumpBoost).addUpgrade(jumpBoostModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Resistance).addUpgrade(resistanceModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Speed).addUpgrade(speedModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Strength).addUpgrade(strengthModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Regeneration).addUpgrade(regenerationModifier);
+        skill.<Boolean>getBuff(Beacon.Buff.Luck).addUpgrade(luckModifier);
+        skill.<Boolean>getBuff(Beacon.Buff.NightVision).addUpgrade(nightVisionModifier);
+        skill.<Boolean>getBuff(Beacon.Buff.WaterBreathing).addUpgrade(waterBreathingModifier);
+        skill.<Boolean>getBuff(Beacon.Buff.Invisibility).addUpgrade(invisibilityModifier);
     }
 
     @Override
@@ -128,18 +128,18 @@ public class BeaconUpgrade implements Upgrade<Beacon> {
         skill.getDuration().removeUpgrade(durationModifier);
         skill.getNumberOfBuffs().removeUpgrade(numberOfBuffsModifier);
 
-        skill.getBuff(Beacon.Buff.Absorption).removeUpgrade(absorptionModifier);
-        skill.getBuff(Beacon.Buff.FireResistance).removeUpgrade(fireResistanceModifier);
-        skill.getBuff(Beacon.Buff.Haste).removeUpgrade(hasteModifier);
-        skill.getBuff(Beacon.Buff.HealthBoost).removeUpgrade(healthBoostModifier);
-        skill.getBuff(Beacon.Buff.JumpBoost).removeUpgrade(jumpBoostModifier);
-        skill.getBuff(Beacon.Buff.Resistance).removeUpgrade(resistanceModifier);
-        skill.getBuff(Beacon.Buff.Speed).removeUpgrade(speedModifier);
-        skill.getBuff(Beacon.Buff.Strength).removeUpgrade(strengthModifier);
-        skill.getBuff(Beacon.Buff.Regeneration).removeUpgrade(regenerationModifier);
-        skill.getBuff(Beacon.Buff.Luck).removeUpgrade(luckModifier);
-        skill.getBuff(Beacon.Buff.NightVision).removeUpgrade(nightVisionModifier);
-        skill.getBuff(Beacon.Buff.WaterBreathing).removeUpgrade(waterBreathingModifier);
-        skill.getBuff(Beacon.Buff.Invisibility).removeUpgrade(invisibilityModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Absorption).removeUpgrade(absorptionModifier);
+        skill.<Boolean>getBuff(Beacon.Buff.FireResistance).removeUpgrade(fireResistanceModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Haste).removeUpgrade(hasteModifier);
+        skill.<Integer>getBuff(Beacon.Buff.HealthBoost).removeUpgrade(healthBoostModifier);
+        skill.<Integer>getBuff(Beacon.Buff.JumpBoost).removeUpgrade(jumpBoostModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Resistance).removeUpgrade(resistanceModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Speed).removeUpgrade(speedModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Strength).removeUpgrade(strengthModifier);
+        skill.<Integer>getBuff(Beacon.Buff.Regeneration).removeUpgrade(regenerationModifier);
+        skill.<Boolean>getBuff(Beacon.Buff.Luck).removeUpgrade(luckModifier);
+        skill.<Boolean>getBuff(Beacon.Buff.NightVision).removeUpgrade(nightVisionModifier);
+        skill.<Boolean>getBuff(Beacon.Buff.WaterBreathing).removeUpgrade(waterBreathingModifier);
+        skill.<Boolean>getBuff(Beacon.Buff.Invisibility).removeUpgrade(invisibilityModifier);
     }
 }
