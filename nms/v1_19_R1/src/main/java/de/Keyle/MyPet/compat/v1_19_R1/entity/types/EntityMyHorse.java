@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyHorse;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.compat.v1_19_R1.CompatManager;
 import de.Keyle.MyPet.compat.v1_19_R1.entity.EntityMyPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
@@ -51,7 +50,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -163,18 +161,7 @@ public class EntityMyHorse extends EntityMyPet {
                 getMyPet().setSaddle(null);
                 getMyPet().setArmor(null);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    try {
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
-                    } catch (Error e) {
-                        // TODO REMOVE
-                        itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> {
-                            try {
-                                CompatManager.ENTITY_LIVING_broadcastItemBreak.invoke(entityhuman1, enumhand);
-                            } catch (IllegalAccessException | InvocationTargetException ex) {
-                                ErrorUtil.report(ex);
-                            }
-                        });
-                    }
+                    itemStack.hurtAndBreak(1, entityhuman, (entityhuman1) -> entityhuman1.broadcastBreakEvent(enumhand));
                 }
 
                 return InteractionResult.CONSUME;
