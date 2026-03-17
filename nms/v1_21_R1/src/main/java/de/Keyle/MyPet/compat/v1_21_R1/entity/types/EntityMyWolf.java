@@ -99,9 +99,9 @@ public class EntityMyWolf extends EntityMyPet {
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && itemStack.getItem() != Items.AIR) {
                 if (canUseItem()) {
-                    if (itemStack.getItem() instanceof DyeItem && ((DyeItem) itemStack.getItem()).getDyeColor().ordinal() != getMyPet().getCollarColor().ordinal()) {
+                    if (itemStack.getItem() instanceof DyeItem dyeItem && dyeItem.getDyeColor().ordinal() != getMyPet().getCollarColor().ordinal()) {
                         if (getOwner().getPlayer().isSneaking()) {
-                            getMyPet().setCollarColor(DyeColor.values()[((DyeItem) itemStack.getItem()).getDyeColor().ordinal()]);
+                            getMyPet().setCollarColor(DyeColor.values()[dyeItem.getDyeColor().ordinal()]);
                             if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                                 itemStack.shrink(1);
                                 if (itemStack.getCount() <= 0) {
