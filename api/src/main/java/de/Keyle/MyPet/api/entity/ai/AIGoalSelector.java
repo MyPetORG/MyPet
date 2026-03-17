@@ -112,9 +112,7 @@ public class AIGoalSelector {
         }
 
         // add goals
-        ListIterator iterator = AIGoalList.listIterator();
-        while (iterator.hasNext()) {
-            AIGoal goal = (AIGoal) iterator.next();
+        for (AIGoal goal : AIGoalList) {
             if (!activeAIGoalList.contains(goal)) {
                 if (goal.shouldStart()) {
                     goal.start();
@@ -124,9 +122,9 @@ public class AIGoalSelector {
         }
 
         // remove goals
-        iterator = activeAIGoalList.listIterator();
+        ListIterator<AIGoal> iterator = activeAIGoalList.listIterator();
         while (iterator.hasNext()) {
-            AIGoal goal = (AIGoal) iterator.next();
+            AIGoal goal = iterator.next();
             if (goal.shouldFinish()) {
                 goal.finish();
                 iterator.remove();
@@ -134,9 +132,7 @@ public class AIGoalSelector {
         }
 
         // tick goals
-        iterator = activeAIGoalList.listIterator();
-        while (iterator.hasNext()) {
-            AIGoal goal = (AIGoal) iterator.next();
+        for (AIGoal goal : activeAIGoalList) {
             goal.tick();
         }
     }
