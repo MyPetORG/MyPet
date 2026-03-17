@@ -86,7 +86,7 @@ public class MyPetRandomSwim extends MyPetRandomStroll {
 
         for (int k = 0;
              vec3d != null && !mobby.level.getBlockState(new BlockPos(vec3d)).isPathfindable(mobby.level, new BlockPos(vec3d), PathComputationType.WATER)
-                     && !mobby.level.getBlockState(new BlockPos(vec4d)).getMaterial().isLiquid()
+                     && mobby.level.getFluidState(new BlockPos(vec4d)).isEmpty()
                      && k++ < 10; vec3d = leGen(mobby, i, j)) {
         }
 
