@@ -118,12 +118,12 @@ public class BeaconImpl implements Beacon {
             return false;
         }
         for (UpgradeComputer<?> amp : buffLevel.values()) {
-            if (amp.getValue() instanceof Boolean) {
-                if ((Boolean) amp.getValue()) {
+            if (amp.getValue() instanceof Boolean b) {
+                if (b) {
                     return duration.getValue() > 0;
                 }
-            } else if (amp.getValue() instanceof Integer) {
-                if ((Integer) amp.getValue() > 0) {
+            } else if (amp.getValue() instanceof Integer i) {
+                if (i > 0) {
                     return duration.getValue() > 0;
                 }
             }
@@ -616,6 +616,7 @@ public class BeaconImpl implements Beacon {
         return range;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> UpgradeComputer<T> getBuff(Buff buff) {
         return (UpgradeComputer<T>) this.buffLevel.get(buff);
@@ -623,10 +624,10 @@ public class BeaconImpl implements Beacon {
 
     public int getBuffLevel(Buff buff) {
         UpgradeComputer<?> buffLevel = this.buffLevel.get(buff);
-        if (buffLevel.getValue() instanceof Boolean) {
-            return (Boolean) buffLevel.getValue() ? 1 : 0;
-        } else if (buffLevel.getValue() instanceof Integer) {
-            return (Integer) buffLevel.getValue();
+        if (buffLevel.getValue() instanceof Boolean b) {
+            return b ? 1 : 0;
+        } else if (buffLevel.getValue() instanceof Integer i) {
+            return i;
         }
         return 0;
     }
