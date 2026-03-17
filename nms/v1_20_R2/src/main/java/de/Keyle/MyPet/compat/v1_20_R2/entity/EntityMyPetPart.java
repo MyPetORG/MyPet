@@ -22,7 +22,6 @@ package de.Keyle.MyPet.compat.v1_20_R2.entity;
 
 import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.entity.MyPetMinecraftPart;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -39,7 +38,7 @@ public class EntityMyPetPart extends Entity implements MyPetMinecraftPart {
 
     public EntityMyPetPart(EntityMyPet owner, String part, float width, float height) {
         super(EntityType.ENDER_DRAGON, owner.level());
-        ReflectionUtil.setFieldValue("bukkitEntity", this, new CraftMyPetPart(this.level().getCraftServer(), this));
+        this.bukkitEntity = new CraftMyPetPart(this.level().getCraftServer(), this);
         this.owner = owner;
         this.part = part;
         this.size = EntityDimensions.scalable(width, height);
