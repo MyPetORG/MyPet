@@ -85,7 +85,7 @@ public class BeaconImpl implements Beacon {
                     "http://textures.minecraft.net/texture/5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd");
             // owner skin
             ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(headMaterial).getItemMeta();
-            ownerMeta.setOwner(myPet.getOwner().getName());
+            ownerMeta.setOwningPlayer(myPet.getOwner().getPlayer());
         }
 
         for (Buff buff : Buff.values()) {
