@@ -67,23 +67,23 @@ public class CommandTrade implements CommandTabCompleter {
             if (args[0].equalsIgnoreCase("accept")) {
                 if (offers.containsKey(player.getUniqueId())) {
                     Offer offer = offers.get(player.getUniqueId());
-                    Player owner = Bukkit.getServer().getPlayer(offer.getOwner());
+                    Player owner = Bukkit.getServer().getPlayer(offer.owner());
                     if (owner == null || !owner.isOnline()) {
                         sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                         offers.remove(player.getUniqueId());
                         return true;
                     }
 
-                    if (!Permissions.has(player, "MyPet.command.trade.receive." + offer.getPet().getPetType().name())) {
+                    if (!Permissions.has(player, "MyPet.command.trade.receive." + offer.pet().getPetType().name())) {
                         sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.NoPermission", player));
-                        owner.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.getPet().getDisplayName()));
+                        owner.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.pet().getDisplayName()));
                         offers.remove(player.getUniqueId());
                         return true;
                     }
 
                     if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
                         final MyPetPlayer oldOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
-                        if (!oldOwner.hasMyPet() || oldOwner.getMyPet() != offer.getPet()) {
+                        if (!oldOwner.hasMyPet() || oldOwner.getMyPet() != offer.pet()) {
                             sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                             offers.remove(player.getUniqueId());
                             return true;
@@ -98,13 +98,13 @@ public class CommandTrade implements CommandTabCompleter {
                             return true;
                         }
 
-                        if (offer.getPrice() > 0) {
+                        if (offer.price() > 0) {
                             if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
                                 player.sendMessage(Translation.getComponent("Message.No.Economy", player));
                                 return true;
                             }
-                            if (!MyPetApi.getHookHelper().getEconomy().transfer(player, owner, offer.getPrice())) {
-                                sender.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Receiver.NotEnoughMoney", player, MyPetApi.getHookHelper().getEconomy().format(offer.getPrice())));
+                            if (!MyPetApi.getHookHelper().getEconomy().transfer(player, owner, offer.price())) {
+                                sender.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Receiver.NotEnoughMoney", player, MyPetApi.getHookHelper().getEconomy().format(offer.price())));
                                 return true;
                             }
                         }
@@ -112,10 +112,10 @@ public class CommandTrade implements CommandTabCompleter {
                         offers.remove(player.getUniqueId());
 
                         final MyPetPlayer newOwner = MyPetApi.getPlayerManager().isMyPetPlayer(player) ? MyPetApi.getPlayerManager().getMyPetPlayer(player) : MyPetApi.getPlayerManager().registerMyPetPlayer(player);
-                        final String worldGroup = offer.getPet().getWorldGroup();
+                        final String worldGroup = offer.pet().getWorldGroup();
 
                         MyPetApi.getMyPetManager().deactivateMyPet(oldOwner, false);
-                        final StoredMyPet pet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.getPet());
+                        final StoredMyPet pet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.pet());
 
                         final Repository repo = MyPetApi.getRepository();
                         repo.removeMyPet(pet, new RepositoryCallback<>() {
@@ -174,11 +174,11 @@ public class CommandTrade implements CommandTabCompleter {
             } else if (args[0].equalsIgnoreCase("reject")) {
                 if (offers.containsKey(player.getUniqueId())) {
                     Offer offer = offers.get(player.getUniqueId());
-                    Player owner = Bukkit.getServer().getPlayer(offer.getOwner());
+                    Player owner = Bukkit.getServer().getPlayer(offer.owner());
                     if (owner != null && owner.isOnline()) {
-                        owner.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.getPet().getDisplayName()));
+                        owner.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.pet().getDisplayName()));
                     }
-                    sender.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Receiver.Reject", player, offer.getOwnerName()));
+                    sender.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Receiver.Reject", player, offer.ownerName()));
                     offers.remove(player.getUniqueId());
                 } else {
                     sender.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.NoOffer", player));
@@ -187,10 +187,10 @@ public class CommandTrade implements CommandTabCompleter {
             } else if (args[0].equalsIgnoreCase("cancel")) {
                 UUID ownerUUID = player.getUniqueId();
                 for (Offer offer : offers.values()) {
-                    if (offer.getOwner().equals(ownerUUID)) {
-                        offers.remove(offer.getReceiver());
-                        sender.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Cancel", player, offer.getReceiverName()));
-                        Player receiver = Bukkit.getPlayer(offer.getReceiver());
+                    if (offer.owner().equals(ownerUUID)) {
+                        offers.remove(offer.receiver());
+                        sender.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Cancel", player, offer.receiverName()));
+                        Player receiver = Bukkit.getPlayer(offer.receiver());
                         if (receiver != null && receiver.isOnline()) {
                             receiver.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                         }
@@ -283,47 +283,7 @@ public class CommandTrade implements CommandTabCompleter {
         return Collections.emptyList();
     }
 
-    private class Offer {
-
-        double price;
-        MyPet pet;
-        UUID owner;
-        UUID receiver;
-        String receiverName;
-        String ownerName;
-
-        public Offer(double price, MyPet pet, UUID owner, UUID receiver, String receiverName, String ownerName) {
-            this.price = price;
-            this.pet = pet;
-            this.owner = owner;
-            this.receiver = receiver;
-            this.receiverName = receiverName;
-            this.ownerName = ownerName;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public MyPet getPet() {
-            return pet;
-        }
-
-        public UUID getOwner() {
-            return owner;
-        }
-
-        public UUID getReceiver() {
-            return receiver;
-        }
-
-        public String getReceiverName() {
-            return receiverName;
-        }
-
-        public String getOwnerName() {
-            return ownerName;
-        }
+    private record Offer(double price, MyPet pet, UUID owner, UUID receiver, String receiverName, String ownerName) {
     }
 
     @Override
