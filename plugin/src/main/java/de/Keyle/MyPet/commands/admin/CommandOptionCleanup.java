@@ -29,8 +29,8 @@ import de.Keyle.MyPet.util.MessageUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CommandOptionCleanup implements CommandOption {
     @Override
@@ -42,36 +42,36 @@ public class CommandOptionCleanup implements CommandOption {
             timestamp = -1;
             sender.sendMessage(MessageUtil.prefixed(Component.text("delete unused MyPets...")));
         } else {
-            Calendar cal = Calendar.getInstance();
+            ZonedDateTime cutoff = ZonedDateTime.now();
 
             for (String arg : args) {
                 if (arg.endsWith("y") || arg.endsWith("Y")) {
                     if (Util.isInt(arg.replaceAll("[yY]", ""))) {
                         int years = Integer.parseInt(arg.replaceAll("[yY]", ""));
-                        cal.add(Calendar.YEAR, -years);
+                        cutoff = cutoff.minusYears(years);
                     }
                 }
                 if (arg.endsWith("d") || arg.endsWith("D")) {
                     if (Util.isInt(arg.replaceAll("[dD]", ""))) {
                         int days = Integer.parseInt(arg.replaceAll("[dD]", ""));
-                        cal.add(Calendar.DAY_OF_YEAR, -days);
+                        cutoff = cutoff.minusDays(days);
                     }
                 }
                 if (arg.endsWith("h") || arg.endsWith("H")) {
                     if (Util.isInt(arg.replaceAll("[hH]", ""))) {
                         int hours = Integer.parseInt(arg.replaceAll("[hH]", ""));
-                        cal.add(Calendar.HOUR, -hours);
+                        cutoff = cutoff.minusHours(hours);
                     }
                 }
                 if (arg.endsWith("m") || arg.endsWith("M")) {
                     if (Util.isInt(arg.replaceAll("[mM]", ""))) {
                         int minutes = Integer.parseInt(arg.replaceAll("[mM]", ""));
-                        cal.add(Calendar.MINUTE, -minutes);
+                        cutoff = cutoff.minusMinutes(minutes);
                     }
                 }
             }
-            timestamp = cal.getTimeInMillis();
-            sender.sendMessage(MessageUtil.prefixed(Component.text("delete MyPets older than " + new Date(cal.getTimeInMillis()) + "...")));
+            timestamp = cutoff.toInstant().toEpochMilli();
+            sender.sendMessage(MessageUtil.prefixed(Component.text("delete MyPets older than " + cutoff.format(DateTimeFormatter.RFC_1123_DATE_TIME) + "...")));
         }
 
         MyPetApi.getRepository().cleanup(timestamp, new RepositoryCallback<>() {
