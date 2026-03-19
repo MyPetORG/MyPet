@@ -110,22 +110,15 @@ public class ContributorCheck {
             if (contributorMap.containsKey(check)) {
                 contributorType = contributorMap.get(check);
             }
-            switch (contributorType) {
-                case '1':
-                    return ContributorRank.Donator;
-                case '2':
-                    return ContributorRank.Developer;
-                case '3':
-                    return ContributorRank.Translator;
-                case '4':
-                    return ContributorRank.Helper;
-                case '5':
-                    return ContributorRank.Creator;
-                case '6':
-                    return ContributorRank.Premium;
-                default:
-                    return ContributorRank.None;
-            }
+            return switch (contributorType) {
+                case '1' -> ContributorRank.Donator;
+                case '2' -> ContributorRank.Developer;
+                case '3' -> ContributorRank.Translator;
+                case '4' -> ContributorRank.Helper;
+                case '5' -> ContributorRank.Creator;
+                case '6' -> ContributorRank.Premium;
+                default -> ContributorRank.None;
+            };
         } catch (Exception ignored) {
             return ContributorRank.None;
         }
