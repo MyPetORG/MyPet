@@ -29,7 +29,6 @@ import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftMob;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.SpawnCategory;
 import org.jetbrains.annotations.NotNull;
@@ -94,25 +93,6 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
     @Override
     public MyPetType getPetType() {
         return getMyPet().getPetType();
-    }
-
-    //I saw other plugins do it this way - it should be fine and solve problems with p2 and wg
-    //Update - It wasn't! - GriefPrevention didn't like the previous solution!
-    //So now this ugly bs will solve it. Hopefully
-    @Override
-    public EntityType getType() {
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        String class1 = stackTraceElements[2].getClassName();
-        String class2 = stackTraceElements[3].getClassName();
-        //all special cases here
-        if (class1.contains("worldedit") || class2.contains("worldedit") ||
-                class1.contains("plotsquared") || class2.contains("plotsquared") ||
-                class1.contains("worldguard") || class2.contains("worldguard") ||
-                class1.contains("towny") || class2.contains("towny")) {
-            return EntityType.valueOf(this.getPetType().getBukkitName());
-        }
-
-        return EntityType.UNKNOWN;
     }
 
     @NotNull
