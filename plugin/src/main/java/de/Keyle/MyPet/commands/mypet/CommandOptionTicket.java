@@ -69,10 +69,8 @@ public class CommandOptionTicket implements CommandOption {
 
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
-        try {
-            File ticketFile = new File(MyPetApi.getPlugin().getDataFolder(), "ticket.zip");
-            ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(ticketFile.toPath()));
-
+        File ticketFile = new File(MyPetApi.getPlugin().getDataFolder(), "ticket.zip");
+        try (ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(ticketFile.toPath()))) {
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "config.yml"), out, "");
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pet-config.yml"), out, "");
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "hooks-config.yml"), out, "");
@@ -84,8 +82,6 @@ public class CommandOptionTicket implements CommandOption {
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "logs" + File.separator + "MyPet.log"), out, "");
             addFileToZip(new File(MyPetApi.getPlugin().getDataFolder().getParentFile().getParentFile(), "logs" + File.separator + "latest.log"), out, "");
             writeStreamToZip(new ByteArrayInputStream(accumulatePermissions().getBytes()), "permissions.txt", out);
-
-            out.close();
 
             sender.sendMessage(Component.text("------------------------------------------------").color(NamedTextColor.RED));
             sender.sendMessage("Ticket file created. Please upload this file somewhere and add the link to your ticket.");
@@ -118,8 +114,9 @@ public class CommandOptionTicket implements CommandOption {
 
     private void addFileToZip(File file, ZipOutputStream zip, String folder) throws IOException {
         if (file.isFile()) {
-            FileInputStream in = new FileInputStream(file);
-            this.writeStreamToZip(in, folder + file.getName(), zip);
+            try (InputStream in = Files.newInputStream(file.toPath())) {
+                this.writeStreamToZip(in, folder + file.getName(), zip);
+            }
         } else if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
@@ -132,13 +129,6 @@ public class CommandOptionTicket implements CommandOption {
 
     private void writeStreamToZip(InputStream in, String file, ZipOutputStream zip) throws IOException {
         zip.putNextEntry(new ZipEntry(file));
-
-        byte[] b = new byte[1024];
-        int count;
-
-        while ((count = in.read(b)) > 0) {
-            zip.write(b, 0, count);
-        }
-        in.close();
+        in.transferTo(zip);
     }
 }
