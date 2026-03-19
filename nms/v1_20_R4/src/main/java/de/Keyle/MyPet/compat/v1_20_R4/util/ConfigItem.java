@@ -75,22 +75,19 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
         net.minecraft.world.item.ItemStack is = new net.minecraft.world.item.ItemStack(item, 1);
         net.minecraft.world.item.ItemStack finishedItem = null;
 
-        String isTagString = ItemStackNBTConverter.itemStackToVanillaCompound(is).toString();
         if (data != null) {
-            CompoundTag tag = null;
             String nbtString = data.trim();
             if (nbtString.startsWith("{") && nbtString.endsWith("}")) {
                 try {
-                    String mergedString = isTagString.substring(0, isTagString.length() - 1) + ",tag:" + nbtString + "}";
-                    mergedString = mergedString.replace("count", "Count");
-                    tag = TagParser.parseTag(mergedString);
+                    CompoundTag nbtData = TagParser.parseTag(nbtString);
+                    CompoundTag legacyCompound = new CompoundTag();
+                    legacyCompound.putString("id", materialId);
+                    legacyCompound.putByte("Count", (byte) 1);
+                    legacyCompound.put("tag", nbtData);
+                    finishedItem = ItemStackNBTConverter.vanillaCompoundToItemStack(legacyCompound);
                 } catch (Exception e) {
                     MyPetApi.getLogger().warning("Error in config: " + e.getLocalizedMessage() + " caused by:");
                     MyPetApi.getLogger().warning(item.getDescriptionId() + " " + nbtString);
-                }
-                if (tag != null) {
-                    CompoundTag convertedTag = ItemStackNBTConverter.convertOldVanillaCompound(tag);
-                    finishedItem = ItemStackNBTConverter.vanillaCompoundToItemStack(convertedTag);
                 }
             }
         }
