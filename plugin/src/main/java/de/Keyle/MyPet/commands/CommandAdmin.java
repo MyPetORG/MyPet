@@ -65,8 +65,8 @@ public class CommandAdmin implements CommandTabCompleter {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            if (!Permissions.has((Player) sender, "MyPet.admin", false)) {
+        if (sender instanceof Player player) {
+            if (!Permissions.has(player, "MyPet.admin", false)) {
                 sender.sendMessage(Translation.getComponent("Message.No.Allowed", sender));
                 return true;
             }
@@ -94,7 +94,7 @@ public class CommandAdmin implements CommandTabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (commandSender instanceof Player && !Permissions.has((Player) commandSender, "MyPet.admin", false)) {
+        if (commandSender instanceof Player player && !Permissions.has(player, "MyPet.admin", false)) {
             return Collections.emptyList();
         }
         if (strings.length == 1) {
@@ -105,10 +105,8 @@ public class CommandAdmin implements CommandTabCompleter {
             return filterTabCompletionResults(optionsList, strings[0]);
         } else if (strings.length >= 1) {
             CommandOption co = commandOptions.get(strings[0]);
-            if (co != null) {
-                if (co instanceof CommandOptionTabCompleter) {
-                    return ((CommandOptionTabCompleter) co).onTabComplete(commandSender, strings);
-                }
+            if (co instanceof CommandOptionTabCompleter tabCompleter) {
+                return tabCompleter.onTabComplete(commandSender, strings);
             }
         }
         return Collections.emptyList();
