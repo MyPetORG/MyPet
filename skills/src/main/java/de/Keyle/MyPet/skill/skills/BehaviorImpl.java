@@ -322,27 +322,13 @@ public class BehaviorImpl implements Behavior {
     @Override
     public void load(@NotNull CompoundBinaryTag compound) {
         if (compound.keySet().contains("selectedBehavior")) {
-            String behaviorString = compound.getString("selectedBehavior");
-            switch (behaviorString) {
-                case "Friendly":
-                    setBehavior(Friendly);
-                    break;
-                case "Aggressive":
-                    setBehavior(Aggressive);
-                    break;
-                case "Raid":
-                    setBehavior(Raid);
-                    break;
-                case "Farm":
-                    setBehavior(Farm);
-                    break;
-                case "Duel":
-                    setBehavior(Duel);
-                    break;
-                default:
-                    setBehavior(Normal);
-                    break;
+            BehaviorMode mode;
+            try {
+                mode = BehaviorMode.valueOf(compound.getString("selectedBehavior"));
+            } catch (IllegalArgumentException e) {
+                mode = Normal;
             }
+            setBehavior(mode);
         }
     }
 }
