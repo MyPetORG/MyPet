@@ -37,17 +37,17 @@ public class EntityMyBreeze extends EntityMyPet {
 
     @Override
     protected String getMyPetDeathSound() {
-        return "entity.blaze.death";
+        return "entity.breeze.death";
     }
 
     @Override
     protected String getHurtSound() {
-        return "entity.blaze.hurt";
+        return "entity.breeze.hurt";
     }
 
     @Override
     protected String getLivingSound() {
-        return "entity.blaze.ambient";
+        return "entity.breeze.idle_ground";
     }
 
     @Override
@@ -70,7 +70,7 @@ public class EntityMyBreeze extends EntityMyPet {
      */
     @Override
     public int calculateFallDamage(double f, float f1) {
-        if (!Configuration.MyPet.Blaze.CAN_GLIDE) {
+        if (!Configuration.MyPet.Breeze.CAN_GLIDE) {
             super.calculateFallDamage(f, f1);
         }
         return 0;
