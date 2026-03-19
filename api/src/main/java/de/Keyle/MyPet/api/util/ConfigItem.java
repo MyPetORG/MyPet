@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -45,10 +44,6 @@ public abstract class ConfigItem {
         String[] splitData = data.split("\\s+", 2);
 
         if (splitData.length == 0) {
-            return;
-        }
-        if (Util.isInt(splitData[0])) {
-            MyPetApi.getLogger().warning("Number IDs are not supported anymore! You need to use 1.13 item IDs from now on. Please check your configs.");
             return;
         }
 
