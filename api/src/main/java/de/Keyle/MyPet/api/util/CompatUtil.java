@@ -56,7 +56,6 @@ public class CompatUtil {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T getCompatInstance(Class<? extends T> clazz, String path, String className, Object... parameters) {
         if (internalVersion == null || minecraftVersion == null) {
             return null;
@@ -68,6 +67,7 @@ public class CompatUtil {
         }
 
         try {
+            @SuppressWarnings("unchecked")
             Class<? extends T> compatClass = (Class<? extends T>) Class.forName(classPath);
 
             if (Modifier.isAbstract(compatClass.getModifiers())) {
@@ -77,13 +77,12 @@ public class CompatUtil {
                 return null;
             }
 
-            Class[] paramterClasses = new Class[parameters.length];
+            Class<?>[] parameterClasses = new Class<?>[parameters.length];
             for (int i = 0; i < parameters.length; i++) {
-                Object parameter = parameters[i];
-                paramterClasses[i] = parameter.getClass();
+                parameterClasses[i] = parameters[i].getClass();
             }
 
-            Constructor<T> constructor = (Constructor<T>) compatClass.getConstructor(paramterClasses);
+            Constructor<? extends T> constructor = compatClass.getConstructor(parameterClasses);
             return constructor.newInstance(parameters);
 
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException |
