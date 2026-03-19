@@ -34,18 +34,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class CommandBehavior implements CommandTabCompleter {
-    private static List<String> behaviorList = new ArrayList<>();
-
-    static {
-        for (BehaviorMode mode : BehaviorMode.values()) {
-            behaviorList.add(mode.name());
-        }
-    }
+    private static final List<String> behaviorList = Arrays.stream(BehaviorMode.values()).map(Enum::name).toList();
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player petOwner) {
