@@ -153,27 +153,27 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
     @Override
     public void convertEntity(MyPet myPet, LivingEntity normalEntity) {
-        if (myPet instanceof MyCreeper) {
-            if (((MyCreeper) myPet).isPowered()) {
+        if (myPet instanceof MyCreeper creeper) {
+            if (creeper.isPowered()) {
                 ((Creeper) normalEntity).setPowered(true);
             }
-        } else if (myPet instanceof MyGoat) {
-            if (((MyGoat) myPet).isScreaming()) {
+        } else if (myPet instanceof MyGoat goat) {
+            if (goat.isScreaming()) {
                 ((Goat) normalEntity).setScreaming(true);
             }
-        } else if (myPet instanceof MyEnderman) {
-            if (((MyEnderman) myPet).hasBlock()) {
-                ((Enderman) normalEntity).setCarriedBlock(((MyEnderman) myPet).getBlock().getType().createBlockData());
+        } else if (myPet instanceof MyEnderman enderman) {
+            if (enderman.hasBlock()) {
+                ((Enderman) normalEntity).setCarriedBlock(enderman.getBlock().getType().createBlockData());
             }
         } else if (myPet instanceof MyIronGolem) {
             ((IronGolem) normalEntity).setPlayerCreated(true);
-        } else if (myPet instanceof MyMagmaCube) {
-            ((MagmaCube) normalEntity).setSize(((MyMagmaCube) myPet).getSize());
-        } else if (myPet instanceof MyPig) {
-            ((Pig) normalEntity).setSaddle(((MyPig) myPet).hasSaddle());
-        } else if (myPet instanceof MySheep) {
-            ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
-            ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
+        } else if (myPet instanceof MyMagmaCube magmaCube) {
+            ((MagmaCube) normalEntity).setSize(magmaCube.getSize());
+        } else if (myPet instanceof MyPig pig) {
+            ((Pig) normalEntity).setSaddle(pig.hasSaddle());
+        } else if (myPet instanceof MySheep sheep) {
+            ((Sheep) normalEntity).setSheared(sheep.isSheared());
+            ((Sheep) normalEntity).setColor(sheep.getColor());
         } else if (myPet instanceof MyVillager villagerPet) {
             Villager villagerEntity = ((Villager) normalEntity);
 
@@ -238,88 +238,87 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                     entityVillager.setVillagerXp(xp);
                 }
             }
-        } else if (myPet instanceof MySlime) {
-            ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
-        } else if (myPet instanceof MyZombieVillager) {
-            Villager.Profession profession = Villager.Profession.values()[((MyZombieVillager) myPet).getProfession()];
+        } else if (myPet instanceof MySlime slime) {
+            ((Slime) normalEntity).setSize(slime.getSize());
+        } else if (myPet instanceof MyZombieVillager zombieVillager) {
+            Villager.Profession profession = Villager.Profession.values()[zombieVillager.getProfession()];
             net.minecraft.world.entity.monster.ZombieVillager nmsEntity = ((CraftVillagerZombie) normalEntity).getHandle();
             nmsEntity.setVillagerData(nmsEntity.getVillagerData()
-                    .setType(Registry.VILLAGER_TYPE.get(new ResourceLocation(((MyZombieVillager) myPet).getType().name().toLowerCase(Locale.ROOT))))
-                    .setLevel(((MyZombieVillager) myPet).getTradingLevel())
+                    .setType(Registry.VILLAGER_TYPE.get(new ResourceLocation(zombieVillager.getType().name().toLowerCase(Locale.ROOT))))
+                    .setLevel(zombieVillager.getTradingLevel())
                     .setProfession(Registry.VILLAGER_PROFESSION.get(new ResourceLocation(profession.name().toLowerCase(Locale.ROOT)))));
         } else if (myPet instanceof MyWitherSkeleton) {
             normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.STONE_SWORD));
         } else if (myPet instanceof MySkeleton) {
             normalEntity.getEquipment().setItemInMainHand(new ItemStack(Material.BOW));
-        } else if (myPet instanceof MyHorse) {
-            Horse.Style style = Horse.Style.values()[(((MyHorse) myPet).getVariant() >>> 8)];
-            Horse.Color color = Horse.Color.values()[(((MyHorse) myPet).getVariant() & 0xFF)];
+        } else if (myPet instanceof MyHorse horse) {
+            Horse.Style style = Horse.Style.values()[(horse.getVariant() >>> 8)];
+            Horse.Color color = Horse.Color.values()[(horse.getVariant() & 0xFF)];
 
             ((Horse) normalEntity).setColor(color);
             ((Horse) normalEntity).setStyle(style);
 
-            if (((MyHorse) myPet).hasSaddle()) {
-                ((Horse) normalEntity).getInventory().setSaddle(((MyHorse) myPet).getSaddle().clone());
+            if (horse.hasSaddle()) {
+                ((Horse) normalEntity).getInventory().setSaddle(horse.getSaddle().clone());
             }
-            if (((MyHorse) myPet).hasArmor()) {
-                ((Horse) normalEntity).getInventory().setArmor(((MyHorse) myPet).getArmor().clone());
+            if (horse.hasArmor()) {
+                ((Horse) normalEntity).getInventory().setArmor(horse.getArmor().clone());
             }
             ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
-        } else if (myPet instanceof MySkeletonHorse) {
+        } else if (myPet instanceof MySkeletonHorse skeletonHorse) {
             ((SkeletonHorse) normalEntity).setOwner(myPet.getOwner().getPlayer());
-            if (((MySkeletonHorse) myPet).hasSaddle()) {
-                ((SkeletonHorse) normalEntity).getInventory().setSaddle(((MySkeletonHorse) myPet).getSaddle().clone());
+            if (skeletonHorse.hasSaddle()) {
+                ((SkeletonHorse) normalEntity).getInventory().setSaddle(skeletonHorse.getSaddle().clone());
             }
-        } else if (myPet instanceof MyZombieHorse) {
+        } else if (myPet instanceof MyZombieHorse zombieHorse) {
             ((ZombieHorse) normalEntity).setOwner(myPet.getOwner().getPlayer());
-            if (((MyZombieHorse) myPet).hasSaddle()) {
-                ((ZombieHorse) normalEntity).getInventory().setSaddle(((MyZombieHorse) myPet).getSaddle().clone());
+            if (zombieHorse.hasSaddle()) {
+                ((ZombieHorse) normalEntity).getInventory().setSaddle(zombieHorse.getSaddle().clone());
             }
-        } else if (myPet instanceof MyDonkey) {
+        } else if (myPet instanceof MyDonkey donkey) {
             ((Donkey) normalEntity).setOwner(myPet.getOwner().getPlayer());
-            ((Donkey) normalEntity).setCarryingChest(((MyDonkey) myPet).hasChest());
-            if (((MyDonkey) myPet).hasSaddle()) {
-                ((Donkey) normalEntity).getInventory().setSaddle(((MyDonkey) myPet).getSaddle().clone());
+            ((Donkey) normalEntity).setCarryingChest(donkey.hasChest());
+            if (donkey.hasSaddle()) {
+                ((Donkey) normalEntity).getInventory().setSaddle(donkey.getSaddle().clone());
             }
-        } else if (myPet instanceof MyMule) {
+        } else if (myPet instanceof MyMule mule) {
             ((Mule) normalEntity).setOwner(myPet.getOwner().getPlayer());
-            ((Mule) normalEntity).setCarryingChest(((MyMule) myPet).hasChest());
-            if (((MyMule) myPet).hasSaddle()) {
-                ((Mule) normalEntity).getInventory().setSaddle(((MyMule) myPet).getSaddle().clone());
+            ((Mule) normalEntity).setCarryingChest(mule.hasChest());
+            if (mule.hasSaddle()) {
+                ((Mule) normalEntity).getInventory().setSaddle(mule.getSaddle().clone());
             }
-        } else if (myPet instanceof MyLlama) {
-            ((Llama) normalEntity).setColor(Llama.Color.values()[Math.max(0, Math.min(3, ((MyLlama) myPet).getVariant()))]);
-            ((Llama) normalEntity).setCarryingChest(((MyLlama) myPet).hasChest());
+        } else if (myPet instanceof MyLlama llama) {
+            ((Llama) normalEntity).setColor(Llama.Color.values()[Math.max(0, Math.min(3, llama.getVariant()))]);
+            ((Llama) normalEntity).setCarryingChest(llama.hasChest());
 
-            if (((MyLlama) myPet).hasDecor()) {
-                ((Llama) normalEntity).getInventory().setDecor(((MyLlama) myPet).getDecor());
+            if (llama.hasDecor()) {
+                ((Llama) normalEntity).getInventory().setDecor(llama.getDecor());
             }
             ((Llama) normalEntity).setOwner(myPet.getOwner().getPlayer());
-        } else if (myPet instanceof MyTraderLlama) {
-            ((TraderLlama) normalEntity).setColor(TraderLlama.Color.values()[Math.max(0, Math.min(3, ((MyTraderLlama) myPet).getVariant()))]);
+        } else if (myPet instanceof MyTraderLlama traderLlama) {
+            ((TraderLlama) normalEntity).setColor(TraderLlama.Color.values()[Math.max(0, Math.min(3, traderLlama.getVariant()))]);
             ((TraderLlama) normalEntity).setOwner(myPet.getOwner().getPlayer());
-        } else if (myPet instanceof MyRabbit) {
-            ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
-        } else if (myPet instanceof MyParrot) {
-            ((Parrot) normalEntity).setVariant(Parrot.Variant.values()[((MyParrot) myPet).getVariant()]);
-        } else if (myPet instanceof MyAxolotl) {
-            ((Axolotl) normalEntity).setVariant(Axolotl.Variant.values()[((MyAxolotl) myPet).getVariant()]);
-        } else if (myPet instanceof MyTropicalFish) {
-            ((CraftTropicalFish) normalEntity).getHandle().setVariant(((MyTropicalFish) myPet).getVariant());
-        } else if (myPet instanceof MyPufferfish) {
-            ((PufferFish) normalEntity).setPuffState(((MyPufferfish) myPet).getPuffState().ordinal());
-        } else if (myPet instanceof MyPhantom) {
-            ((Phantom) normalEntity).setSize(((MyPhantom) myPet).getSize());
-        } else if (myPet instanceof MyCat) {
-            ((Cat) normalEntity).setCatType(((MyCat) myPet).getCatType());
-            ((Cat) normalEntity).setCollarColor(((MyCat) myPet).getCollarColor());
-        } else if (myPet instanceof MyMooshroom) {
-            ((MushroomCow) normalEntity).setVariant(MushroomCow.Variant.values()[((MyMooshroom) myPet).getType().ordinal()]);
-        } else if (myPet instanceof MyPanda) {
-            ((Panda) normalEntity).setMainGene(((MyPanda) myPet).getMainGene());
-            ((Panda) normalEntity).setHiddenGene(((MyPanda) myPet).getHiddenGene());
-        } else if (myPet instanceof WanderingTrader) {
-            MyWanderingTrader traderPet = (MyWanderingTrader) myPet;
+        } else if (myPet instanceof MyRabbit rabbit) {
+            ((Rabbit) normalEntity).setRabbitType(rabbit.getVariant().getBukkitType());
+        } else if (myPet instanceof MyParrot parrot) {
+            ((Parrot) normalEntity).setVariant(Parrot.Variant.values()[parrot.getVariant()]);
+        } else if (myPet instanceof MyAxolotl axolotl) {
+            ((Axolotl) normalEntity).setVariant(Axolotl.Variant.values()[axolotl.getVariant()]);
+        } else if (myPet instanceof MyTropicalFish tropicalFish) {
+            ((CraftTropicalFish) normalEntity).getHandle().setVariant(tropicalFish.getVariant());
+        } else if (myPet instanceof MyPufferfish pufferfish) {
+            ((PufferFish) normalEntity).setPuffState(pufferfish.getPuffState().ordinal());
+        } else if (myPet instanceof MyPhantom phantom) {
+            ((Phantom) normalEntity).setSize(phantom.getSize());
+        } else if (myPet instanceof MyCat cat) {
+            ((Cat) normalEntity).setCatType(cat.getCatType());
+            ((Cat) normalEntity).setCollarColor(cat.getCollarColor());
+        } else if (myPet instanceof MyMooshroom mooshroom) {
+            ((MushroomCow) normalEntity).setVariant(MushroomCow.Variant.values()[mooshroom.getType().ordinal()]);
+        } else if (myPet instanceof MyPanda panda) {
+            ((Panda) normalEntity).setMainGene(panda.getMainGene());
+            ((Panda) normalEntity).setHiddenGene(panda.getHiddenGene());
+        } else if (myPet instanceof MyWanderingTrader traderPet) {
             if (traderPet.hasOriginalData()) {
                 CompoundBinaryTag.Builder mergedBuilder = CompoundBinaryTag.builder();
                 CompoundBinaryTag villagerTag = MyPetApi.getPlatformHelper().entityToTag(normalEntity);
@@ -336,18 +335,18 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
 
                 MyPetApi.getPlatformHelper().applyTagToEntity(mergedBuilder.build(), normalEntity);
             }
-        } else if (myPet instanceof MyBee) {
-            ((Bee) normalEntity).setHasNectar(((MyBee) myPet).hasNectar());
-            ((Bee) normalEntity).setHasStung(((MyBee) myPet).hasStung());
-        } else if (myPet instanceof MyFox) {
-            ((Fox) normalEntity).setFoxType(((MyFox) myPet).getFoxType());
+        } else if (myPet instanceof MyBee bee) {
+            ((Bee) normalEntity).setHasNectar(bee.hasNectar());
+            ((Bee) normalEntity).setHasStung(bee.hasStung());
+        } else if (myPet instanceof MyFox fox) {
+            ((Fox) normalEntity).setFoxType(fox.getFoxType());
         }
 
-        if (myPet instanceof MyPetBaby && normalEntity instanceof Ageable) {
-            if (((MyPetBaby) myPet).isBaby()) {
-                ((Ageable) normalEntity).setBaby();
+        if (myPet instanceof MyPetBaby baby && normalEntity instanceof Ageable ageable) {
+            if (baby.isBaby()) {
+                ageable.setBaby();
             } else {
-                ((Ageable) normalEntity).setAdult();
+                ageable.setAdult();
             }
         }
     }
