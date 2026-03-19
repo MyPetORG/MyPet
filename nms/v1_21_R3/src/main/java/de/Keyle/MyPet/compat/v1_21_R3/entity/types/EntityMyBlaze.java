@@ -69,7 +69,7 @@ public class EntityMyBlaze extends EntityMyPet {
             if (getMyPet().isOnFire() && itemStack.getItem() == Items.WATER_BUCKET && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setOnFire(false);
                 makeSound("block.fire.extinguish", 1.0F, 1.0F);
-                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().flying) {
+                if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                     itemStack.shrink(1);
                     if (itemStack.getCount() <= 0) {
                         entityhuman.getInventory().setItem(entityhuman.getInventory().selected, new ItemStack(Items.BUCKET));
