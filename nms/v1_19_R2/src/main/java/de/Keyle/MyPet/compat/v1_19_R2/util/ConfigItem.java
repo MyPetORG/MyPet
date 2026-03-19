@@ -47,7 +47,9 @@ public class ConfigItem extends de.Keyle.MyPet.api.util.ConfigItem {
 
     @Override
     public boolean compare(Object o) {
-        net.minecraft.world.item.ItemStack compareItem = (net.minecraft.world.item.ItemStack) o;
+        if (!(o instanceof net.minecraft.world.item.ItemStack compareItem)) {
+            return false;
+        }
         return this.compare(CraftItemStack.asCraftMirror(compareItem));
     }
 
