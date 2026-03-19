@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.util;
 import de.Keyle.MyPet.MyPetApi;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 public abstract class ConfigItem {
 
@@ -77,22 +78,26 @@ public abstract class ConfigItem {
         if (item.getType() != compareItem.getType()) {
             return false;
         }
-        switch (durabilityMode) {
-            case Bigger:
-                if (compareItem.getDurability() <= item.getDurability()) {
-                    return false;
-                }
-                break;
-            case Smaller:
-                if (compareItem.getDurability() >= item.getDurability()) {
-                    return false;
-                }
-                break;
-            case Equal:
-                if (compareItem.getDurability() != item.getDurability()) {
-                    return false;
-                }
-                break;
+        if (durabilityMode != DurabilityMode.NotUsed) {
+            int compareDamage = compareItem.getItemMeta() instanceof Damageable d ? d.getDamage() : 0;
+            int itemDamage = item.getItemMeta() instanceof Damageable d2 ? d2.getDamage() : 0;
+            switch (durabilityMode) {
+                case Bigger:
+                    if (compareDamage <= itemDamage) {
+                        return false;
+                    }
+                    break;
+                case Smaller:
+                    if (compareDamage >= itemDamage) {
+                        return false;
+                    }
+                    break;
+                case Equal:
+                    if (compareDamage != itemDamage) {
+                        return false;
+                    }
+                    break;
+            }
         }
         return true;
     }
