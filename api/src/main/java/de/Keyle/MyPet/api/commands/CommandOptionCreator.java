@@ -44,13 +44,6 @@ public class CommandOptionCreator {
         return this;
     }
 
-    public CommandOptionCreator add(String from, String toExcluding, String option) {
-        if (MyPetApi.getCompatUtil().isCompatible(from) && !MyPetApi.getCompatUtil().isCompatible(toExcluding)) {
-            options.add(option);
-        }
-        return this;
-    }
-
     public List<String> get() {
         return options;
     }

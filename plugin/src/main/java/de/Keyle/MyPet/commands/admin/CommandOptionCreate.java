@@ -177,8 +177,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
         petTypeOptionMap.put("mooshroom", new CommandOptionCreator()
                 .add("baby")
-                .add("1.14", "type:brown")
-                .add("1.14", "type:red")
+                .add("type:brown")
+                .add("type:red")
                 .get());
 
         petTypeOptionMap.put("mule", new CommandOptionCreator()
@@ -301,8 +301,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionMap.put("villager", new CommandOptionCreator()
                 .add("baby")
                 .add("profession:")
-                //                .add("1.14", "level:")
-                .add("1.14", "type:")
+                .add("type:")
                 .get());
 
         petTypeOptionMap.put("wither", new CommandOptionCreator()
@@ -329,8 +328,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionMap.put("zombievillager", new CommandOptionCreator()
                 .add("baby")
                 .add("profession:")
-                //.add("1.14", "level:")
-                .add("1.14", "type:")
+                .add("type:")
                 .get());
 
         petTypeOptionMap.put("zombifiedpiglin", new CommandOptionCreator()
