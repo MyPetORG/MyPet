@@ -43,26 +43,26 @@ import java.util.List;
 public class CommandList implements CommandTabCompleter {
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         final String lang;
-        if (sender instanceof Player) {
-            lang = MyPetApi.getPlatformHelper().getPlayerLanguage((Player) sender);
+        if (sender instanceof Player player) {
+            lang = MyPetApi.getPlatformHelper().getPlayerLanguage(player);
         } else {
             lang = "en";
         }
 
         final Player petOwner;
         if (args.length == 0) {
-            if (sender instanceof Player) {
-                petOwner = (Player) sender;
+            if (sender instanceof Player player) {
+                petOwner = player;
             } else {
                 sender.sendMessage("You can't use this command from server console!");
                 return true;
             }
         } else {
-            if (sender instanceof Player) {
-                if (Permissions.has((Player) sender, "MyPet.admin", false)) {
+            if (sender instanceof Player player) {
+                if (Permissions.has(player, "MyPet.admin", false)) {
                     petOwner = Bukkit.getPlayer(args[0]);
                 } else {
-                    petOwner = (Player) sender;
+                    petOwner = player;
                 }
             } else {
                 sender.sendMessage("You can't use this command from server console!");
@@ -82,7 +82,6 @@ public class CommandList implements CommandTabCompleter {
             return true;
         }
 
-
         if (owner != null) {
             MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
                 @Override
@@ -95,7 +94,6 @@ public class CommandList implements CommandTabCompleter {
                     boolean doComma = false;
                     TextComponent.Builder messageBuilder = Component.text();
                     for (StoredMyPet mypet : value) {
-
                         if (doComma) {
                             messageBuilder.append(Component.text(", "));
                         }
@@ -118,7 +116,7 @@ public class CommandList implements CommandTabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (sender instanceof Player && strings.length == 1 && Permissions.has((Player) sender, "MyPet.admin", false)) {
+        if (sender instanceof Player player && strings.length == 1 && Permissions.has(player, "MyPet.admin", false)) {
             return null;
         }
         return Collections.emptyList();
