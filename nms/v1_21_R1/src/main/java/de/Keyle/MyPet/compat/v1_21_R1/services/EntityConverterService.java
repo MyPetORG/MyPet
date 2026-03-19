@@ -56,7 +56,6 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class EntityConverterService extends de.Keyle.MyPet.api.util.service.types.EntityConverterService {
@@ -375,12 +374,9 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
         } else if (myPet instanceof MyFrog frog) {
             ((Frog) normalEntity).setVariant(VariantConverter.getBukkitFrogVariant(frog.getFrogVariant()));
         } else if (myPet instanceof MyWolf wolf) {
-            Method getVariant = ReflectionUtil.getMethod(Wolf.Variant.class, "getVariant", String.class);
-            try {
-                Wolf.Variant leVariant = (Wolf.Variant) getVariant.invoke(null, wolf.getVariant());
-                ((Wolf) normalEntity).setVariant(leVariant);
-            } catch (Exception e) {
-                ErrorUtil.report(e);
+            Wolf.Variant wolfVariant = org.bukkit.Registry.WOLF_VARIANT.get(org.bukkit.NamespacedKey.minecraft(wolf.getVariant()));
+            if (wolfVariant != null) {
+                ((Wolf) normalEntity).setVariant(wolfVariant);
             }
         }
 
