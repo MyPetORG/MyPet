@@ -28,6 +28,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class ConfigurationJSON {
     public File jsonFile;
@@ -50,7 +51,7 @@ public class ConfigurationJSON {
 
     public boolean load() {
         config = new JsonObject();
-        try (BufferedReader reader = new BufferedReader(new FileReader(jsonFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(jsonFile, StandardCharsets.UTF_8))) {
             Gson gson = new Gson();
             config = gson.fromJson(reader, JsonObject.class);
         } catch (JsonParseException e) {
@@ -66,10 +67,8 @@ public class ConfigurationJSON {
     public boolean save() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String prettyJsonString = gson.toJson(config);
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile, StandardCharsets.UTF_8))) {
             writer.write(prettyJsonString);
-            writer.close();
             return true;
         } catch (IOException e) {
             ErrorUtil.report(e);
