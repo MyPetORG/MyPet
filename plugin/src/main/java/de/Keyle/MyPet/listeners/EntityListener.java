@@ -414,7 +414,7 @@ public class EntityListener implements Listener {
                 if (event.getDamage() == 0) {
                     return;
                 } else if (target instanceof MyPetBukkitEntity) {
-                    if (MyPetApi.getMyPetInfo().getLeashItem(((MyPetBukkitEntity) target).getPetType()).compare(player.getItemInHand())) {
+                    if (MyPetApi.getMyPetInfo().getLeashItem(((MyPetBukkitEntity) target).getPetType()).compare(player.getInventory().getItemInMainHand())) {
                         return;
                     }
                 }
