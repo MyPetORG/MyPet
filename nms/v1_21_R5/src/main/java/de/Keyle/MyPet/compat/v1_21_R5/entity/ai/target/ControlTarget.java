@@ -88,8 +88,8 @@ public class ControlTarget implements AIGoal {
                                 continue;
                             }
                         }
-                    } else if (entityLiving instanceof EntityMyPet) {
-                        MyPet targetMyPet = ((EntityMyPet) entityLiving).getMyPet();
+                    } else if (entityLiving instanceof EntityMyPet emp) {
+                        MyPet targetMyPet = emp.getMyPet();
                         if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                             continue;
                         }
