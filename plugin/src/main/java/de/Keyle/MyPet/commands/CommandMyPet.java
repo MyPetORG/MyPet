@@ -254,11 +254,7 @@ public class CommandMyPet implements CommandTabCompleter {
     private static final int SEPARATOR_WIDTH = 52;
 
     private static String dashes(int count) {
-        StringBuilder sb = new StringBuilder(count);
-        for (int i = 0; i < count; i++) {
-            sb.append('-');
-        }
-        return sb.toString();
+        return "-".repeat(count);
     }
 
     private static Component buildSeparator(String plainTitle, Component titleComponent) {
