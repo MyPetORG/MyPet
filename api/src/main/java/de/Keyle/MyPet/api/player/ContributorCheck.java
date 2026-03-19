@@ -21,11 +21,8 @@
 package de.Keyle.MyPet.api.player;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -72,31 +69,17 @@ public class ContributorCheck {
         if (contributorMapLoaded) {
             return;
         }
-        int timeout = 2000;
-        HttpURLConnection connection = null;
         try {
-            URL url = new URL("https://raw.githubusercontent.com/MyPetORG/MyPet/particles/particles.csv");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(timeout);
-            connection.setReadTimeout(timeout);
-            connection.setRequestMethod("GET");
-            connection.connect();
-
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                contributorMap.clear();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.length() >= 2) {
-                        contributorMap.put(line.substring(0, line.length() - 1), line.charAt(line.length() - 1));
-                    }
+            String content = Util.readUrlContent("https://raw.githubusercontent.com/MyPetORG/MyPet/particles/particles.csv");
+            contributorMap.clear();
+            for (String line : content.split("\n")) {
+                if (line.length() >= 2) {
+                    contributorMap.put(line.substring(0, line.length() - 1), line.charAt(line.length() - 1));
                 }
             }
             contributorMapLoaded = true;
-        } catch (Exception ignored) {
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
+        } catch (Exception e) {
+            MyPetApi.getLogger().warning("Failed to load contributor list: " + e.getMessage());
         }
     }
 
