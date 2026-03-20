@@ -147,7 +147,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         Class TagSetClass = MappedRegistry.class.getDeclaredClasses()[0];
         Method unboundMethod = ReflectionUtil.getMethod(TagSetClass, "a"); //unbound
         ReflectionUtil.setFinalFieldValue(frozenDoBe, entityRegistry, false);
-        ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
+        ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap<>());
         try {
             ReflectionUtil.setFinalFieldValue(allTagsField, entityRegistry, unboundMethod.invoke(entityRegistry));
         } catch (Exception e) {

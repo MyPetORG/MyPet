@@ -122,7 +122,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         Field intrusiveHolderCacheField = ReflectionUtil.getField(MappedRegistry.class, "intrusiveHolderCache", "cc");
 
         ReflectionUtil.setFinalFieldValue(frozenDoBe, entityRegistry, false);
-        ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap());
+        ReflectionUtil.setFinalFieldValue(intrusiveHolderCacheField, entityRegistry, new IdentityHashMap<>());
 
         for (MyPetType type : MyPetType.all()) {
             registerEntity(type, entityRegistry);
