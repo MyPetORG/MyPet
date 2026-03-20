@@ -67,18 +67,18 @@ public class OwnerHurtByTarget implements AIGoal {
         if (lastDamager == petEntity) {
             return false;
         }
-        if (lastDamager instanceof ServerPlayer) {
-            if (owner == lastDamager) {
+        if (lastDamager instanceof ServerPlayer serverPlayer) {
+            if (owner == serverPlayer) {
                 return false;
             }
 
-            Player targetPlayer = (Player) lastDamager.getBukkitEntity();
+            Player targetPlayer = serverPlayer.getBukkitEntity();
 
             if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                 return false;
             }
-        } else if (lastDamager instanceof EntityMyPet) {
-            MyPet targetMyPet = ((EntityMyPet) lastDamager).getMyPet();
+        } else if (lastDamager instanceof EntityMyPet targetPetEntity) {
+            MyPet targetMyPet = targetPetEntity.getMyPet();
             if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                 return false;
             }
@@ -99,7 +99,7 @@ public class OwnerHurtByTarget implements AIGoal {
                 return false;
             }
             if (behaviorSkill.getBehavior() == BehaviorMode.Raid) {
-                if (lastDamager instanceof TamableAnimal && ((TamableAnimal) lastDamager).isTame()) {
+                if (lastDamager instanceof TamableAnimal tameable && tameable.isTame()) {
                     return false;
                 }
                 if (lastDamager instanceof EntityMyPet) {

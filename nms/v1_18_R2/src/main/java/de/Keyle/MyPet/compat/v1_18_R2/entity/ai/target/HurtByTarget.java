@@ -62,16 +62,16 @@ public class HurtByTarget implements AIGoal {
         if (target instanceof ArmorStand) {
             return false;
         }
-        if (target instanceof ServerPlayer) {
-            Player targetPlayer = (Player) target.getBukkitEntity();
+        if (target instanceof ServerPlayer serverPlayer) {
+            Player targetPlayer = serverPlayer.getBukkitEntity();
 
             if (targetPlayer == myPet.getOwner().getPlayer()) {
                 return false;
             } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                 return false;
             }
-        } else if (target instanceof EntityMyPet) {
-            MyPet targetMyPet = ((EntityMyPet) target).getMyPet();
+        } else if (target instanceof EntityMyPet targetPetEntity) {
+            MyPet targetMyPet = targetPetEntity.getMyPet();
             if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                 return false;
             }
