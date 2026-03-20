@@ -155,8 +155,8 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
                 break;
         }
 
-        if (entity instanceof Ageable) {
-            convertAgable((Ageable) entity, builder);
+        if (entity instanceof Ageable ageable) {
+            convertAgable(ageable, builder);
         }
 
         return builder.build();
