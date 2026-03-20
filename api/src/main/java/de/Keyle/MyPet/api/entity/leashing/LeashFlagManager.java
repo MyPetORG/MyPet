@@ -46,12 +46,12 @@ public class LeashFlagManager implements ServiceContainer {
         return leashFlags.get(flagName.toLowerCase());
     }
 
-    public String getLeashFlagName(Class clazz) {
+    public String getLeashFlagName(Class<?> clazz) {
         if (clazz == Object.class) {
             return null;
         }
         if (LeashFlag.class.isAssignableFrom(clazz)) {
-            LeashFlagName flagName = (LeashFlagName) clazz.getAnnotation(LeashFlagName.class);
+            LeashFlagName flagName = clazz.getAnnotation(LeashFlagName.class);
             if (flagName != null) {
                 return flagName.value();
             }
@@ -60,7 +60,7 @@ public class LeashFlagManager implements ServiceContainer {
         if (flagName != null) {
             return flagName;
         }
-        for (Class c : clazz.getInterfaces()) {
+        for (Class<?> c : clazz.getInterfaces()) {
             flagName = getLeashFlagName(c);
             if (flagName != null) {
                 return flagName;
