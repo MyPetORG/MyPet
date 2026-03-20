@@ -75,11 +75,9 @@ public class MyPetVersion {
     }
 
     private static Attributes getManifestAttributes(String filepath) throws IOException {
-        File jar = new File(filepath);
-        JarFile jf = new JarFile(jar);
-        Manifest mf = jf.getManifest();
-        jf.close();
-        return mf.getMainAttributes();
+        try (JarFile jf = new JarFile(new File(filepath))) {
+            return jf.getManifest().getMainAttributes();
+        }
     }
 
     public static String getVersion() {
