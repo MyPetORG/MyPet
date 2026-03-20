@@ -759,8 +759,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             }
             if (status == PetState.Here) {
                 for (Skill skill : skills.all()) {
-                    if (skill instanceof Scheduler) {
-                        ((Scheduler) skill).schedule();
+                    if (skill instanceof Scheduler scheduler) {
+                        scheduler.schedule();
                     }
                 }
 
