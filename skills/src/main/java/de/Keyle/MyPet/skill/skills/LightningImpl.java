@@ -90,8 +90,8 @@ public class LightningImpl implements Lightning {
             }
             target.damage(damage.getValue().doubleValue(), petEntity);
             for (Entity entity : target.getNearbyEntities(1.5, 1.5, 1.5)) {
-                if (entity instanceof LivingEntity && entity != owner && entity != petEntity) {
-                    ((LivingEntity) entity).damage(damage.getValue().doubleValue(), petEntity);
+                if (entity instanceof LivingEntity living && living != owner && living != petEntity) {
+                    living.damage(damage.getValue().doubleValue(), petEntity);
                 }
             }
         });
