@@ -67,6 +67,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         MyAttributeDefaults.registerCustomEntityType(customType, rootType);
     }
 
+    @SuppressWarnings("unchecked")
     protected void registerEntityType(MyPetType petType, String key, DefaultedRegistry<EntityType<?>> entityRegistry) {
         EntityDimensions size = entityRegistry.get(Identifier.tryParse(key.toLowerCase())).get().value().getDimensions();
         EntityType<?> leType;
@@ -103,8 +104,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         try {
             Constructor<?> ctor = entityClass.getConstructor(Level.class, MyPet.class);
             Object obj = ctor.newInstance(world, pet);
-            if (obj instanceof EntityMyPet) {
-                petEntity = (EntityMyPet) obj;
+            if (obj instanceof EntityMyPet entity) {
+                petEntity = entity;
             }
         } catch (Exception e) {
             MyPetApi.getLogger().severe(Util.getClassName(entityClass) + "(" + pet.getPetType() + ") is no valid MyPet(Entity)!");
