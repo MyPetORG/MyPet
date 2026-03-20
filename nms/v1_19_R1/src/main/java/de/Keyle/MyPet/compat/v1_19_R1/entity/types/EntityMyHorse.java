@@ -246,7 +246,7 @@ public class EntityMyHorse extends EntityMyPet {
             } else if (this.soundCounter <= 5) {
                 this.playSound(SoundEvents.HORSE_STEP_WOOD, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
             }
-        } else if (!blockdata.getMaterial().isLiquid()) {
+        } else if (blockdata.getFluidState().isEmpty()) {
             this.soundCounter += 1;
             playSound(SoundEvents.HORSE_STEP_WOOD, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
         } else {

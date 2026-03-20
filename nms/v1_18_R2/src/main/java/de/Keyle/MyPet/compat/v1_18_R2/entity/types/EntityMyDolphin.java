@@ -63,7 +63,7 @@ public class EntityMyDolphin extends EntityMyAquaticPet {
             myPet.getLocation().get().getWorld().spawnParticle(Particle.WATER_SPLASH, myPet.getLocation().get().add(0, 0.7, 0), 10, 0.2F, 0.2F, 0.2F, 0.5F);
         }
         if (!this.canDolphinjump &&
-                (this.level.getBlockState(new BlockPos(this.getBlockX(), this.getBlockY() + 3, this.getBlockZ())).getMaterial().isLiquid())) {
+                (!this.level.getFluidState(new BlockPos(this.getBlockX(), this.getBlockY() + 3, this.getBlockZ())).isEmpty())) {
             this.canDolphinjump = true;
         }
         if (this.canDolphinjump &&

@@ -190,7 +190,7 @@ public class EntityMySkeletonHorse extends EntityMyPet {
 
     @Override
     public void playStepSound(BlockPos blockposition, BlockState blockdata) {
-        if (!blockdata.getMaterial().isLiquid()) {
+        if (blockdata.getFluidState().isEmpty()) {
             BlockState blockdataUp = this.level.getBlockState(blockposition.above());
             SoundType soundeffecttype = blockdata.getSoundType();
             if (blockdataUp.getBlock() == Blocks.SNOW) {
@@ -203,7 +203,7 @@ public class EntityMySkeletonHorse extends EntityMyPet {
                 } else if (this.soundCounter <= 5) {
                     this.playSound(SoundEvents.HORSE_STEP_WOOD, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
                 }
-            } else if (!blockdata.getMaterial().isLiquid()) {
+            } else if (blockdata.getFluidState().isEmpty()) {
                 this.soundCounter += 1;
                 playSound(SoundEvents.HORSE_STEP_WOOD, soundeffecttype.getVolume() * 0.15F, soundeffecttype.getPitch());
             } else {
