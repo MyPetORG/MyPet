@@ -82,7 +82,6 @@ public class ExperienceCache implements ServiceContainer {
         return 0;
     }
 
-    @SuppressWarnings("unchecked")
     public void insertExp(String worldGroup, MyPetType type, int level, double exp) {
         if (level < 1) {
             return;
@@ -105,13 +104,13 @@ public class ExperienceCache implements ServiceContainer {
 
         expMap.addProperty("" + level, exp);
         if (expMap.has("" + (level - 1))) {
-            DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval(level - 1).builder()
+            DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval<>(level - 1).builder()
                     .greaterEqual(expMap.get("" + (level - 1)).getAsDouble())
                     .less(exp).build();
             tree.add(interval);
         }
         if (expMap.has("" + (level + 1))) {
-            DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval(level).builder()
+            DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval<>(level).builder()
                     .greaterEqual(exp)
                     .less(expMap.get("" + (level + 1)).getAsDouble()).build();
             tree.add(interval);
@@ -147,7 +146,6 @@ public class ExperienceCache implements ServiceContainer {
         }
     }
 
-    @SuppressWarnings("unchecked")
     protected void save() {
         try (OutputStreamWriter oos = new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(cacheFile.toPath())))) {
             JsonObject cacheObject = new JsonObject();
@@ -178,7 +176,6 @@ public class ExperienceCache implements ServiceContainer {
         }
     }
 
-    @SuppressWarnings("unchecked")
     protected void loadIntervals() {
         for (String worldGroup : this.expMap.keySet()) {
             Map<MyPetType, IntervalTree<Double, Integer>> typeIntervalMap = new HashMap<>();
@@ -194,7 +191,7 @@ public class ExperienceCache implements ServiceContainer {
                     int level = Integer.parseInt(levelObject);
                     double exp = expMap.get("" + level).getAsDouble();
                     if (expMap.has("" + (level - 1))) {
-                        DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval(level - 1)
+                        DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval<>(level - 1)
                                 .builder()
                                 .greaterEqual(expMap.get("" + (level - 1)).getAsDouble())
                                 .less(exp)
@@ -204,7 +201,7 @@ public class ExperienceCache implements ServiceContainer {
                         }
                     }
                     if (expMap.has("" + (level + 1))) {
-                        DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval(level)
+                        DoubleInterval<Integer> interval = (DoubleInterval<Integer>) new DoubleInterval<>(level)
                                 .builder()
                                 .greaterEqual(exp)
                                 .less(expMap.get("" + (level + 1)).getAsDouble())
