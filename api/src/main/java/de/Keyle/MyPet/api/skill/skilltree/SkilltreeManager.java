@@ -87,12 +87,11 @@ public class SkilltreeManager implements ServiceContainer {
         }
 
         double num = (1 - Util.getRandom().nextDouble()) * totalWeight;
-        try {
-            num = skilltreeMap.floorKey(num);
-            return skilltreeMap.get(num);
-        } catch (NullPointerException e) {
+        Double key = skilltreeMap.floorKey(num);
+        if (key == null) {
             return null;
         }
+        return skilltreeMap.get(key);
     }
 
     public boolean hasSkilltree(String name) {
