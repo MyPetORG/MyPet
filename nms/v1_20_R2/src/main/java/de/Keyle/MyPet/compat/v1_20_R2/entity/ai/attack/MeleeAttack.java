@@ -75,7 +75,7 @@ public class MeleeAttack implements AIGoal {
                 return false;
             }
             if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
-                if (targetEntity instanceof TamableAnimal && ((TamableAnimal) targetEntity).isTame()) {
+                if (targetEntity instanceof TamableAnimal tamable && tamable.isTame()) {
                     return false;
                 }
                 if (targetEntity instanceof EntityMyPet) {
@@ -107,7 +107,7 @@ public class MeleeAttack implements AIGoal {
                 return true;
             }
             if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
-                if (this.targetEntity instanceof TamableAnimal && ((TamableAnimal) this.targetEntity).isTame()) {
+                if (this.targetEntity instanceof TamableAnimal tamable && tamable.isTame()) {
                     return true;
                 }
                 if (this.targetEntity instanceof EntityMyPet) {
@@ -143,8 +143,8 @@ public class MeleeAttack implements AIGoal {
         if (this.petEntity.distanceToSqr(targetEntity.getX(), targetEntity.getBoundingBox().minY, targetEntity.getZ()) - (targetEntity.getBbHeight() * (2. / 3.)) <= this.range && this.ticksUntilNextHitLeft-- <= 0) {
             if (this.petEntity.getSensing().hasLineOfSight(targetEntity)) {
                 this.ticksUntilNextHitLeft = ticksUntilNextHit;
-                if (this.petEntity instanceof MyPetEquipment) {
-                    if (((MyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.HAND) != null) {
+                if (this.petEntity instanceof MyPetEquipment equip) {
+                    if (equip.getEquipment(EquipmentSlot.HAND) != null) {
                         this.petEntity.swing(InteractionHand.MAIN_HAND); // -> swingItem()
                     }
                 }
