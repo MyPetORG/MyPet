@@ -73,18 +73,12 @@ public abstract class PlatformHelper {
     }
 
     public boolean copyResource(Plugin plugin, String ressource, File destination) {
-        try {
-            InputStream template = plugin.getResource(ressource);
-            OutputStream out = Files.newOutputStream(destination.toPath());
-
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = template.read(buf)) > 0) {
-                out.write(buf, 0, len);
+        try (InputStream template = plugin.getResource(ressource);
+             OutputStream out = Files.newOutputStream(destination.toPath())) {
+            if (template == null) {
+                return false;
             }
-            template.close();
-            out.close();
-
+            template.transferTo(out);
             return true;
         } catch (IOException e) {
             ErrorUtil.report(e);
