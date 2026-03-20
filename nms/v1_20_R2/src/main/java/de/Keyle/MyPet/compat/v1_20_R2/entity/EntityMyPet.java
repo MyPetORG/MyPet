@@ -104,7 +104,7 @@ import static org.bukkit.attribute.Attribute.GENERIC_MOVEMENT_SPEED;
 public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraftEntity {
 
     protected static final EntityDataAccessor<Byte> POTION_PARTICLE_WATCHER = Mob.DATA_SHARED_FLAGS_ID;
-    private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "bj");    //Jumping-Field
+    private static final Field jump = ReflectionUtil.getField(LivingEntity.class, "jumping", "bj");
     protected AIGoalSelector petPathfinderSelector, petTargetSelector;
     protected LivingEntity target = null;
     protected int interactCooldown = 0;
