@@ -71,8 +71,8 @@ public class Translation {
         if (sender == null) {
             return key;
         }
-        if (sender instanceof Player) {
-            return getString(key, (Player) sender);
+        if (sender instanceof Player p) {
+            return getString(key, p);
         }
 
         return getString(key, "en");
@@ -127,8 +127,8 @@ public class Translation {
         if (sender == null) {
             return Component.text(key);
         }
-        if (sender instanceof Player) {
-            return getComponent(key, (Player) sender);
+        if (sender instanceof Player p) {
+            return getComponent(key, p);
         }
 
         return getComponent(key, "en");
@@ -228,8 +228,7 @@ public class Translation {
 
         TextComponent.Builder builder = Component.text().style(component.style());
 
-        if (component instanceof TextComponent) {
-            TextComponent textComponent = (TextComponent) component;
+        if (component instanceof TextComponent textComponent) {
             String content = textComponent.content();
             List<Component> replacedContent = replacePlaceholders(content, textComponent.style(), values);
             for (Component part : replacedContent) {
