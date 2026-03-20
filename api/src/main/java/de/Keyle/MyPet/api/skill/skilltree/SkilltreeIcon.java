@@ -24,13 +24,14 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.bukkit.Material;
 
 public class SkilltreeIcon {
     @Getter
     @Setter
     @Accessors(chain = true)
     @NonNull
-    protected String material = "Sapling";
+    protected String material = Material.OAK_SAPLING.name();
     @Getter
     @Setter
     @Accessors(chain = true)
