@@ -134,11 +134,8 @@ public class WorldGroup {
 
         Set<String> groups;
         Set<String> disabledWorlds = new HashSet<>();
-        try {
-            groups = config.getConfigurationSection("Groups").getKeys(false);
-        } catch (NullPointerException e) {
-            groups = new HashSet<>();
-        }
+        var section = config.getConfigurationSection("Groups");
+        groups = section != null ? section.getKeys(false) : new HashSet<>();
         if (config.contains("Disabled")) {
             disabledWorlds.addAll(config.getStringList("Disabled"));
         } else {
