@@ -263,11 +263,11 @@ public class IntervalTree<T extends Comparable<? super T>, S> extends AbstractSe
         if (root == null || o == null) {
             return false;
         }
-        if (!(o instanceof Interval)) {
+        if (!(o instanceof Interval<?, ?>)) {
             return false;
         }
-        Interval<T, S> query;
-        query = (Interval<T, S>) o;
+        @SuppressWarnings("unchecked")
+        Interval<T, S> query = (Interval<T, S>) o;
         TreeNode<T, S> node = root;
         while (node != null) {
             if (query.contains(node.midpoint)) {

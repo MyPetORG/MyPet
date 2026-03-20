@@ -45,7 +45,6 @@ import java.util.Comparator;
  * @param <T> The type that represents a single point from the domain of definition of the
  *            interval.
  */
-@SuppressWarnings("ALL")
 public abstract class Interval<T extends Comparable<? super T>, S> {
 
     /**
@@ -641,9 +640,10 @@ public abstract class Interval<T extends Comparable<? super T>, S> {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Interval)) {
+        if (!(obj instanceof Interval<?, ?>)) {
             return false;
         }
+        @SuppressWarnings("unchecked")
         Interval<T, S> other = (Interval<T, S>) obj;
         if (start == null ^ other.start == null) {
             return false;

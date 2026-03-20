@@ -186,7 +186,7 @@ public class TreeNode<T extends Comparable<? super T>, S> implements Iterable<In
      * @return The height of the subtree rooted at {@code node}. Returns 0, if {@code node}
      * is {@code null}.
      */
-    private static int height(TreeNode node) {
+    private static int height(TreeNode<?, ?> node) {
         return node == null ? 0 : node.height();
     }
 
