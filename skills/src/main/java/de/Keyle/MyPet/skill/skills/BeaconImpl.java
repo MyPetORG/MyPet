@@ -511,7 +511,7 @@ public class BeaconImpl implements Beacon {
             }
 
             range = range * range;
-            myPetLocation.getWorld().spawnParticle(Particle.SPELL_WITCH, myPetLocation.clone().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
+            myPetLocation.getWorld().spawnParticle(Particle.WITCH, myPetLocation.clone().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
 
             List<Player> members = null;
             if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && receiver == BuffReceiver.Party) {
@@ -565,7 +565,7 @@ public class BeaconImpl implements Beacon {
                                 player.addPotionEffect(effect, true);
                             }
                             if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                                player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
+                                player.getWorld().spawnParticle(Particle.INSTANT_EFFECT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
                             }
                             break targetLoop;
                         }
@@ -574,7 +574,7 @@ public class BeaconImpl implements Beacon {
                             player.addPotionEffect(effect, true);
                         }
                         if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                            player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
+                            player.getWorld().spawnParticle(Particle.INSTANT_EFFECT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
                         }
                         break;
                     case Party:
@@ -584,7 +584,7 @@ public class BeaconImpl implements Beacon {
                                     player.addPotionEffect(effect, true);
                                 }
                                 if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                                    player.getWorld().spawnParticle(Particle.SPELL_INSTANT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
+                                    player.getWorld().spawnParticle(Particle.INSTANT_EFFECT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
                                 }
                             }
                             break;

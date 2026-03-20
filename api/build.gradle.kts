@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
 
     compileOnly("net.kyori:adventure-nbt:4.17.0")
     compileOnly("org.jetbrains:annotations:16.0.2")
@@ -21,6 +21,6 @@ dependencies {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(17)
+    options.release.set(21)
     options.encoding = "UTF-8"
 }

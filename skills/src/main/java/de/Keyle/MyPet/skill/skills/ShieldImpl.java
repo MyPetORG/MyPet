@@ -88,7 +88,7 @@ public class ShieldImpl implements Shield {
                 myPetBukkitEntity.damage(redirectedDamage);
                 event.setDamage(event.getDamage() - redirectedDamage);
                 myPetBukkitEntity.getWorld().playSound(myPetBukkitEntity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.2F, 1.0F);
-                myPet.getOwner().getPlayer().getWorld().spawnParticle(Particle.CRIT_MAGIC, myPet.getOwner().getPlayer().getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
+                myPet.getOwner().getPlayer().getWorld().spawnParticle(Particle.ENCHANTED_HIT, myPet.getOwner().getPlayer().getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
                 myPet.getLocation().get().getWorld().spawnParticle(Particle.CRIT, myPet.getLocation().get().add(0, 1, 0), 10, 0.5F, 0.5F, 0.5F, 0.1F);
             });
         }

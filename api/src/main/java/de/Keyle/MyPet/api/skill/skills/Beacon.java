@@ -44,11 +44,11 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
 
     enum Buff {
         Speed("Speed", 0, PotionEffectType.SPEED),
-        Haste("Haste", 9, PotionEffectType.FAST_DIGGING),
-        Strength("Strength", 18, PotionEffectType.INCREASE_DAMAGE),
-        JumpBoost("JumpBoost", 1, PotionEffectType.JUMP),
+        Haste("Haste", 9, PotionEffectType.HASTE),
+        Strength("Strength", 18, PotionEffectType.STRENGTH),
+        JumpBoost("JumpBoost", 1, PotionEffectType.JUMP_BOOST),
         Regeneration("Regeneration", 10, PotionEffectType.REGENERATION),
-        Resistance("Resistance", 19, PotionEffectType.DAMAGE_RESISTANCE),
+        Resistance("Resistance", 19, PotionEffectType.RESISTANCE),
         FireResistance("FireResistance", 7, PotionEffectType.FIRE_RESISTANCE, false),
         WaterBreathing("WaterBreathing", 16, PotionEffectType.WATER_BREATHING, false),
         Invisibility("Invisibility", 25, PotionEffectType.INVISIBILITY, false),

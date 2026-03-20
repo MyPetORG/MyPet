@@ -261,7 +261,7 @@ public class BleedImpl implements Bleed {
 
             // Play red block particles for blood effect
             target.getWorld().spawnParticle(
-                    Particle.BLOCK_CRACK,
+                    Particle.BLOCK,
                     target.getLocation().add(0, 1, 0),
                     10,
                     0.3, 0.5, 0.3,

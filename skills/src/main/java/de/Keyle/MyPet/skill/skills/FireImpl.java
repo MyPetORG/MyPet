@@ -88,7 +88,7 @@ public class FireImpl implements Fire {
 
     public void apply(LivingEntity target) {
         target.setFireTicks(getDuration().getValue() * 20);
-        target.getWorld().spawnParticle(Particle.SMOKE_LARGE, target.getLocation(), 20, .5f, .5f, .5f, 0.02f);
+        target.getWorld().spawnParticle(Particle.LARGE_SMOKE, target.getLocation(), 20, .5f, .5f, .5f, 0.02f);
     }
 
     @Override

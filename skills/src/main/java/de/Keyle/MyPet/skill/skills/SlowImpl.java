@@ -88,7 +88,7 @@ public class SlowImpl implements Slow {
     }
 
     public void apply(LivingEntity target) {
-        PotionEffect effect = new PotionEffect(PotionEffectType.SLOW, duration.getValue() * 20, 1, false);
+        PotionEffect effect = new PotionEffect(PotionEffectType.SLOWNESS, duration.getValue() * 20, 1, false);
         target.addPotionEffect(effect);
     }
 

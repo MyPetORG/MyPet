@@ -23,7 +23,6 @@ package de.Keyle.MyPet.api.gui;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -125,9 +124,7 @@ public class IconMenuInventory {
      * @return modified {@link ItemMeta} with glow applied
      */
     protected ItemMeta addGlint(ItemMeta meta) {
-        // Legacy-safe glow technique: add dummy enchant and hide it from view
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addEnchant(Enchantment.LUCK, 1, true);
+        meta.setEnchantmentGlintOverride(true);
         return meta;
     }
 

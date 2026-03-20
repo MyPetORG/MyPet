@@ -1,9 +1,6 @@
 // Ensure configurations like compileOnly exist
 apply(plugin = "java-library")
 
-// Per-module switch; override in gradle.properties if needed
-extra["needsReobf"] = true
-
 dependencies {
     add("compileOnly", project(":api"))
     add("compileOnly", project(":skills"))
@@ -20,21 +17,8 @@ dependencies {
 }
 
 afterEvaluate {
-    val reobf: Boolean =
-        (findProperty("needsReobf")?.toString()?.toBoolean())
-            ?: (extra["needsReobf"] as? Boolean ?: true)
-
-    if (reobf) {
-        // 1.17–1.20.4: publish reobfuscated JAR produced by paperweight
-        configurations.named("runtimeElements").configure {
-            outgoing.artifacts.clear()
-            outgoing.artifact(tasks.named("reobfJar"))
-        }
-    } else {
-        // 1.20.5+: publish Mojang-mapped JAR
-        configurations.named("runtimeElements").configure {
-            outgoing.artifacts.clear()
-            outgoing.artifact(tasks.named("jar"))
-        }
+    configurations.named("runtimeElements").configure {
+        outgoing.artifacts.clear()
+        outgoing.artifact(tasks.named("jar"))
     }
 }

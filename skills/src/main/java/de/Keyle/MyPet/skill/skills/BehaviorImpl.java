@@ -283,7 +283,7 @@ public class BehaviorImpl implements Behavior {
     @Override
     public void schedule() {
         if (selectedBehavior == Aggressive && random.nextBoolean() && myPet.getStatus() == MyPet.PetState.Here) {
-            myPet.getEntity().ifPresent(entity -> entity.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, entity.getLocation().add(0, entity.getEyeHeight(), 0), 1, 0.2F, 0.2F, 0.2F, 0.5F));
+            myPet.getEntity().ifPresent(entity -> entity.getWorld().spawnParticle(Particle.ANGRY_VILLAGER, entity.getLocation().add(0, entity.getEyeHeight(), 0), 1, 0.2F, 0.2F, 0.2F, 0.5F));
         }
     }
 

@@ -102,7 +102,7 @@ public class ThornsImpl implements Thorns {
         myPet.getEntity().ifPresent(entity -> {
             damager.damage(calculateReflectedDamage(event.getDamage()), entity);
             entity.getWorld().playSound(entity.getLocation(), Sound.ENCHANT_THORNS_HIT, 0.2F, 1.0F);
-            entity.getWorld().spawnParticle(Particle.CRIT_MAGIC, entity.getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
+            entity.getWorld().spawnParticle(Particle.ENCHANTED_HIT, entity.getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
             entity.getWorld().spawnParticle(Particle.CRIT, entity.getLocation().add(0, 1, 0), 10, 0.5F, 0.5F, 0.5F, 0.1F);
         });
     }
