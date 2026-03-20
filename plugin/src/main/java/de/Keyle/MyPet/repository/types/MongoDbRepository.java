@@ -50,7 +50,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-
 public class MongoDbRepository implements Repository {
 
     private MongoClient mongo;
@@ -92,7 +91,6 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void init() throws RepositoryInitException {
         connect();
 
@@ -100,8 +98,8 @@ public class MongoDbRepository implements Repository {
             initStructure();
         } else {
 
-            MongoCollection infoCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "info");
-            Document info = (Document) infoCollection.find().first();
+            MongoCollection<Document> infoCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "info");
+            Document info = infoCollection.find().first();
 
             updateStructure(info.getInteger("version"));
         }
@@ -109,23 +107,22 @@ public class MongoDbRepository implements Repository {
         updateInfo();
     }
 
-    @SuppressWarnings("unchecked")
     private void initStructure() {
         db.createCollection(Configuration.Repository.MongoDB.PREFIX + "info");
         db.createCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
         db.createCollection(Configuration.Repository.MongoDB.PREFIX + "players");
 
-        MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+        MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
         petCollection.createIndex(new BasicDBObject("uuid", 1));
         petCollection.createIndex(new BasicDBObject("owner_uuid", 1));
-        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
         playerCollection.createIndex(new BasicDBObject("uuid", 1));
 
         Document info = new Document();
 
         updateInfoDocument(info);
 
-        MongoCollection infoCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "info");
+        MongoCollection<Document> infoCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "info");
         infoCollection.insertOne(info);
     }
 
@@ -145,21 +142,21 @@ public class MongoDbRepository implements Repository {
     }
 
     private void updateToV2() {
-        MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+        MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
         petCollection.createIndex(new BasicDBObject("uuid", 1));
         petCollection.createIndex(new BasicDBObject("owner_uuid", 1));
-        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
         playerCollection.createIndex(new BasicDBObject("uuid", 1));
     }
 
     private void updateToV3() {
-        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
         playerCollection.dropIndex(new BasicDBObject("offline_uuid", 1));
         playerCollection.createIndex(new BasicDBObject("name", 1));
     }
 
     private void updateToV4() {
-        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
         Document filter = new Document();
         Document data = new Document("$set", new Document("last_update", System.currentTimeMillis()));
 
@@ -198,7 +195,7 @@ public class MongoDbRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+                MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                 long result = petCollection.deleteMany(new Document("last_used", new Document("$lt", timestamp))).getDeletedCount();
                 if (callback != null) {
                     callback.runTask((int) result);
@@ -213,7 +210,7 @@ public class MongoDbRepository implements Repository {
             @Override
             public void run() {
                 if (callback != null) {
-                    MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+                    MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                     long result = petCollection.count();
                     callback.runTask((int) result);
                 }
@@ -227,7 +224,7 @@ public class MongoDbRepository implements Repository {
             @Override
             public void run() {
                 if (callback != null) {
-                    MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+                    MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                     long result = petCollection.count(new Document("type", type.name()));
                     callback.runTask((int) result);
                 }
@@ -241,10 +238,9 @@ public class MongoDbRepository implements Repository {
         savePlayers();
     }
 
-    @SuppressWarnings("unchecked")
     private void updateInfo() {
-        MongoCollection infoCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "info");
-        Document info = (Document) infoCollection.find().first();
+        MongoCollection<Document> infoCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "info");
+        Document info = infoCollection.find().first();
         updateInfoDocument(info);
         updateInfoDocument(info);
         infoCollection.replaceOne(new Document("_id", info.getObjectId("_id")), info);
@@ -266,7 +262,6 @@ public class MongoDbRepository implements Repository {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void savePlayers() {
         for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
             updatePlayer(player);
@@ -329,7 +324,6 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<StoredMyPet> getAllMyPets() {
 
         List<MyPetPlayer> playerList = getAllMyPetPlayers();
@@ -339,7 +333,7 @@ public class MongoDbRepository implements Repository {
             owners.put(player.getUniqueId(), player);
         }
 
-        MongoCollection petCollection = this.db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+        MongoCollection<Document> petCollection = this.db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
 
         final List<StoredMyPet> myPetList = new ArrayList<>();
 
@@ -363,7 +357,7 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+                    MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                     long result = petCollection.count(new Document("owner_uuid", myPetPlayer.getUniqueId().toString()));
                     callback.runTask(result > 0);
                 }
@@ -372,15 +366,14 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback) {
         if (callback != null && owner != null) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     final List<StoredMyPet> pets = new ArrayList<>();
-                    MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                    FindIterable petDocuments = petCollection.find(new Document("owner_uuid", owner.getUniqueId().toString()));
+                    MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+                    FindIterable<Document> petDocuments = petCollection.find(new Document("owner_uuid", owner.getUniqueId().toString()));
                     petDocuments.forEach((Block<Document>) document -> {
                         StoredMyPet storedMyPet = documentToMyPet(owner, document);
                         if (storedMyPet != null) {
@@ -394,7 +387,6 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
         if (callback != null) {
             Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
@@ -417,8 +409,8 @@ public class MongoDbRepository implements Repository {
                     }
 
                     StoredMyPet result = null;
-                    MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                    Document petDocument = (Document) petCollection.find(new Document("uuid", uuid.toString())).first();
+                    MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+                    Document petDocument = petCollection.find(new Document("uuid", uuid.toString())).first();
                     if (petDocument != null) {
                         MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(petDocument.getString("owner_uuid")));
                         result = documentToMyPet(owner, petDocument);
@@ -434,7 +426,7 @@ public class MongoDbRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+                MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
                 boolean result = petCollection.deleteOne(new Document("uuid", uuid.toString())).getDeletedCount() > 0;
                 if (callback != null) {
                     callback.runTask(result);
@@ -462,9 +454,8 @@ public class MongoDbRepository implements Repository {
         }.runTaskAsynchronously(MyPetApi.getPlugin());
     }
 
-    @SuppressWarnings("unchecked")
     public void addMyPet(StoredMyPet storedMyPet) {
-        MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+        MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
 
         Document petDocument = new Document();
         petDocument.append("uuid", storedMyPet.getUUID().toString());
@@ -509,11 +500,10 @@ public class MongoDbRepository implements Repository {
         }.runTaskAsynchronously(MyPetApi.getPlugin());
     }
 
-    @SuppressWarnings("unchecked")
     public boolean savePet(StoredMyPet storedMyPet) {
-        MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+        MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
         Document filter = new Document("uuid", storedMyPet.getUUID().toString());
-        Document petDocument = (Document) petCollection.find(filter).first();
+        Document petDocument = petCollection.find(filter).first();
 
         if (petDocument == null) {
             return false;
@@ -588,9 +578,8 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<MyPetPlayer> getAllMyPetPlayers() {
-        MongoCollection playerCollection = this.db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        MongoCollection<Document> playerCollection = this.db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
 
         final List<MyPetPlayer> playerList = new ArrayList<>();
         playerCollection.find().forEach((Block<Document>) document -> {
@@ -608,7 +597,7 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+                    MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
                     long result = playerCollection.count(new BasicDBObject("uuid", player.getUniqueId().toString()));
                     callback.runTask(result > 0);
                 }
@@ -621,8 +610,8 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-                    Document playerDocument = (Document) playerCollection.find(new Document("uuid", uuid.toString())).first();
+                    MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+                    Document playerDocument = playerCollection.find(new Document("uuid", uuid.toString())).first();
                     if (playerDocument != null) {
                         MyPetPlayer player = documentToPlayer(playerDocument);
                         if (player != null) {
@@ -640,8 +629,8 @@ public class MongoDbRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-                    Document playerDocument = (Document) playerCollection.find(new BasicDBObject("uuid", player.getUniqueId().toString())).first();
+                    MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+                    Document playerDocument = playerCollection.find(new BasicDBObject("uuid", player.getUniqueId().toString())).first();
                     if (playerDocument != null) {
                         MyPetPlayer myPetPlayer = documentToPlayer(playerDocument);
                         if (myPetPlayer != null) {
@@ -672,11 +661,10 @@ public class MongoDbRepository implements Repository {
         }.runTaskAsynchronously(MyPetApi.getPlugin());
     }
 
-    @SuppressWarnings("unchecked")
     public boolean updatePlayer(final MyPetPlayer player) {
-        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
         Document filter = new Document("uuid", player.getUniqueId().toString());
-        Document playerDocument = (Document) playerCollection.find(filter).first();
+        Document playerDocument = playerCollection.find(filter).first();
         if (playerDocument != null) {
             setPlayerData(player, playerDocument);
             return playerCollection.replaceOne(filter, playerDocument).getModifiedCount() > 0;
@@ -684,7 +672,6 @@ public class MongoDbRepository implements Repository {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
     private void setPlayerData(MyPetPlayer player, Document playerDocument) {
         playerDocument.append("uuid", player.getUniqueId().toString());
         playerDocument.append("last_update", System.currentTimeMillis());
@@ -714,7 +701,6 @@ public class MongoDbRepository implements Repository {
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
         new BukkitRunnable() {
             @Override
@@ -728,12 +714,11 @@ public class MongoDbRepository implements Repository {
         }.runTaskAsynchronously(MyPetApi.getPlugin());
     }
 
-    @SuppressWarnings("unchecked")
     public boolean addMyPetPlayer(MyPetPlayer player) {
         Document playerDocument = new Document();
         setPlayerData(player, playerDocument);
 
-        MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+        MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
         playerCollection.insertOne(playerDocument);
         return true;
     }
@@ -743,7 +728,7 @@ public class MongoDbRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                MongoCollection playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+                MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
                 boolean result = playerCollection.deleteOne(new Document("uuid", player.getUniqueId().toString())).getDeletedCount() > 0;
                 if (callback != null) {
                     callback.runTask(result);
