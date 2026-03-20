@@ -415,8 +415,8 @@ public class SkillTreeLoaderJSON {
     }
 
     private static UpgradeNumberModifier parseNumberModifier(JsonElement modifierObject) {
-        if (modifierObject instanceof JsonPrimitive && ((JsonPrimitive) modifierObject).isString()) {
-            String modifierString = modifierObject.getAsString();
+        if (modifierObject instanceof JsonPrimitive p && p.isString()) {
+            String modifierString = p.getAsString();
             UpgradeNumberModifier.Type type;
             if (modifierString.startsWith("+")) {
                 type = UpgradeNumberModifier.Type.Add;
@@ -432,8 +432,8 @@ public class SkillTreeLoaderJSON {
     }
 
     private static UpgradeIntegerModifier parseIntegerModifier(JsonElement modifierObject) {
-        if (modifierObject instanceof JsonPrimitive && ((JsonPrimitive) modifierObject).isString()) {
-            String modifierString = modifierObject.getAsString();
+        if (modifierObject instanceof JsonPrimitive p && p.isString()) {
+            String modifierString = p.getAsString();
             UpgradeNumberModifier.Type type;
             if (modifierString.startsWith("+")) {
                 type = UpgradeNumberModifier.Type.Add;
@@ -449,8 +449,8 @@ public class SkillTreeLoaderJSON {
     }
 
     private static UpgradeBooleanModifier parseBooleanModifier(JsonElement modifierObject) {
-        if (modifierObject instanceof JsonPrimitive && ((JsonPrimitive) modifierObject).isBoolean()) {
-            if (modifierObject.getAsBoolean()) {
+        if (modifierObject instanceof JsonPrimitive p && p.isBoolean()) {
+            if (p.getAsBoolean()) {
                 return UpgradeBooleanModifier.True;
             } else {
                 return UpgradeBooleanModifier.False;
@@ -460,8 +460,8 @@ public class SkillTreeLoaderJSON {
     }
 
     private static <T extends Enum<T>> UpgradeEnumModifier<T> parseEnumModifier(JsonElement modifierObject, Class<T> e) {
-        if (modifierObject instanceof JsonPrimitive && ((JsonPrimitive) modifierObject).isString()) {
-            String modifierString = modifierObject.getAsString();
+        if (modifierObject instanceof JsonPrimitive p && p.isString()) {
+            String modifierString = p.getAsString();
             for (T c : e.getEnumConstants()) {
                 if (c.name().equalsIgnoreCase(modifierString)) {
                     return new UpgradeEnumModifier<>(c);
