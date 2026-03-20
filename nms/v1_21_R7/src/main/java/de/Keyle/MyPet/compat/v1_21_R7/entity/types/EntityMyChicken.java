@@ -144,7 +144,7 @@ public class EntityMyChicken extends EntityMyPet {
     @Override
     public int calculateFallDamage(double f, float f1) {
         if (!Configuration.MyPet.Chicken.CAN_GLIDE) {
-            super.calculateFallDamage(f, f1);
+            return super.calculateFallDamage(f, f1);
         }
         return 0;
     }
