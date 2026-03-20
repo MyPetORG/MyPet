@@ -22,36 +22,10 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 
-@Getter
 public class MyGuardian extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGuardian {
-
-    protected boolean elder = false;
 
     public MyGuardian(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putBoolean("Elder", elder);
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Elder")) {
-            setElder(info.getBoolean("Elder"));
-        }
-    }
-
-    public void setElder(boolean flag) {
-        this.elder = flag;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
     }
 }

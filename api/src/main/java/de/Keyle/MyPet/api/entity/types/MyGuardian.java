@@ -27,7 +27,4 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 @ShopInfo
 @DefaultInfo(food = {"sugar"})
 public interface MyGuardian extends MyPet {
-    boolean isElder();
-
-    void setElder(boolean flag);
 }
