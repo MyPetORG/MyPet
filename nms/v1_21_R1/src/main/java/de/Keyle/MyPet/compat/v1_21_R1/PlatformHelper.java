@@ -171,30 +171,29 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public boolean isEquipment(org.bukkit.inventory.ItemStack itemStack) {
-        {
-            ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
-            Equipable equipable = Equipable.get(itemstack);
-            EquipmentSlot slotRaw = equipable != null ? equipable.getEquipmentSlot() : EquipmentSlot.MAINHAND;
-            int slot = slotRaw.getFilterFlag();
-            if (slot == 0) {
-                return switch (itemstack.getItem()) {
-                    case SwordItem swordItem -> true;
-                    case AxeItem axeItem -> true;
-                    case ShovelItem shovelItem -> true;
-                    case HoeItem hoeItem -> true;
-                    case PickaxeItem pickaxeItem -> true;
-                    case BowItem bowItem -> true;
-                    case ShieldItem shieldItem -> true;
-                    case TridentItem tridentItem -> true;
-                    case FishingRodItem fishingRodItem -> true;
-                    case CompassItem compassItem -> true;
-                    case FoodOnAStickItem foodOnAStickItem -> true;
-                    case SignItem signItem -> true;
-                    default -> itemstack.getItem() instanceof CrossbowItem;
-                };
-            }
-            return true;
+        ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
+        Equipable equipable = Equipable.get(itemstack);
+        EquipmentSlot slotRaw = equipable != null ? equipable.getEquipmentSlot() : EquipmentSlot.MAINHAND;
+        int slot = slotRaw.getFilterFlag();
+        if (slot == 0) {
+            return switch (itemstack.getItem()) {
+                case SwordItem swordItem -> true;
+                case AxeItem axeItem -> true;
+                case ShovelItem shovelItem -> true;
+                case HoeItem hoeItem -> true;
+                case PickaxeItem pickaxeItem -> true;
+                case BowItem bowItem -> true;
+                case ShieldItem shieldItem -> true;
+                case TridentItem tridentItem -> true;
+                case FishingRodItem fishingRodItem -> true;
+                case CompassItem compassItem -> true;
+                case FoodOnAStickItem foodOnAStickItem -> true;
+                case SignItem signItem -> true;
+                case CrossbowItem crossbowItem -> true;
+                default -> false;
+            };
         }
+        return true;
     }
 
     @Override

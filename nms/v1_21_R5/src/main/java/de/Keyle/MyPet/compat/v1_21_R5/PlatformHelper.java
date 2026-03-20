@@ -190,36 +190,35 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public boolean isEquipment(org.bukkit.inventory.ItemStack itemStack) {
-        {
-            ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
-            Equippable equipable = itemstack.get(DataComponents.EQUIPPABLE);
-            EquipmentSlot slotRaw = equipable != null ? equipable.slot() : EquipmentSlot.MAINHAND;
-            int slot = slotRaw.getId();
-            if (slot == 0) {
-                if (itemstack.getItem().components().has(DataComponents.WEAPON)) {
-                    return true;
-                }
-
-                if (itemstack.getItem().components().has(DataComponents.TOOL)) {
-                    return true;
-                }
-
-                return switch (itemstack.getItem()) {
-                    case AxeItem axeItem -> true;
-                    case ShovelItem shovelItem -> true;
-                    case HoeItem hoeItem -> true;
-                    case BowItem bowItem -> true;
-                    case ShieldItem shieldItem -> true;
-                    case TridentItem tridentItem -> true;
-                    case FishingRodItem fishingRodItem -> true;
-                    case CompassItem compassItem -> true;
-                    case FoodOnAStickItem foodOnAStickItem -> true;
-                    case SignItem signItem -> true;
-                    default -> itemstack.getItem() instanceof CrossbowItem;
-                };
+        ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
+        Equippable equipable = itemstack.get(DataComponents.EQUIPPABLE);
+        EquipmentSlot slotRaw = equipable != null ? equipable.slot() : EquipmentSlot.MAINHAND;
+        int slot = slotRaw.getId();
+        if (slot == 0) {
+            if (itemstack.getItem().components().has(DataComponents.WEAPON)) {
+                return true;
             }
-            return true;
+
+            if (itemstack.getItem().components().has(DataComponents.TOOL)) {
+                return true;
+            }
+
+            return switch (itemstack.getItem()) {
+                case AxeItem axeItem -> true;
+                case ShovelItem shovelItem -> true;
+                case HoeItem hoeItem -> true;
+                case BowItem bowItem -> true;
+                case ShieldItem shieldItem -> true;
+                case TridentItem tridentItem -> true;
+                case FishingRodItem fishingRodItem -> true;
+                case CompassItem compassItem -> true;
+                case FoodOnAStickItem foodOnAStickItem -> true;
+                case SignItem signItem -> true;
+                case CrossbowItem crossbowItem -> true;
+                default -> false;
+            };
         }
+        return true;
     }
 
     @Override

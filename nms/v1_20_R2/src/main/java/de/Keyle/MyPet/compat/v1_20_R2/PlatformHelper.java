@@ -161,38 +161,25 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public boolean isEquipment(org.bukkit.inventory.ItemStack itemStack) {
-        {
-            ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
-            int slot = Mob.getEquipmentSlotForItem(itemstack).getFilterFlag();
-            if (slot == 0) {
-                if (itemstack.getItem() instanceof SwordItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof AxeItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof ShovelItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof HoeItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof PickaxeItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof BowItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof ShieldItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof TridentItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof FishingRodItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof CompassItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof FoodOnAStickItem) {
-                    return true;
-                } else if (itemstack.getItem() instanceof SignItem) {
-                    return true;
-                } else return itemstack.getItem() instanceof CrossbowItem;
-            }
-            return true;
+        ItemStack itemstack = CraftItemStack.asNMSCopy(itemStack);
+        int slot = Mob.getEquipmentSlotForItem(itemstack).getFilterFlag();
+        if (slot == 0) {
+            net.minecraft.world.item.Item item = itemstack.getItem();
+            return item instanceof SwordItem
+                    || item instanceof AxeItem
+                    || item instanceof ShovelItem
+                    || item instanceof HoeItem
+                    || item instanceof PickaxeItem
+                    || item instanceof BowItem
+                    || item instanceof ShieldItem
+                    || item instanceof TridentItem
+                    || item instanceof FishingRodItem
+                    || item instanceof CompassItem
+                    || item instanceof FoodOnAStickItem
+                    || item instanceof SignItem
+                    || item instanceof CrossbowItem;
         }
+        return true;
     }
 
     @Override
