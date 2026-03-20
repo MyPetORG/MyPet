@@ -42,14 +42,14 @@ package de.Keyle.MyPet.api.util.location;
 
 import org.bukkit.Location;
 
-public class OffsetLocationHolder extends LocationHolder<LocationHolder> {
+public class OffsetLocationHolder extends LocationHolder<LocationHolder<?>> {
 
     protected double x;
     protected double y;
     protected double z;
-    private LocationHolder location;
+    private LocationHolder<?> location;
 
-    public OffsetLocationHolder(LocationHolder location, double x, double y, double z) {
+    public OffsetLocationHolder(LocationHolder<?> location, double x, double y, double z) {
         this.location = location;
         this.x = x;
         this.y = y;
@@ -64,7 +64,7 @@ public class OffsetLocationHolder extends LocationHolder<LocationHolder> {
     }
 
     @Override
-    public LocationHolder getHolder() {
+    public LocationHolder<?> getHolder() {
         return location;
     }
 
