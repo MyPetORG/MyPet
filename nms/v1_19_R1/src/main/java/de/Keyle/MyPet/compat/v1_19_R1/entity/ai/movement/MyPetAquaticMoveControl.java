@@ -36,11 +36,11 @@ public class MyPetAquaticMoveControl extends MoveControl {
     @Override
     public void tick() {
         if (this.operation == MoveControl.Operation.MOVE_TO && !this.fish.getNavigation().isDone()) {
-            float f = (float) (this.speedModifier * this.fish.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).getValue());
+            float f = (float) (this.getSpeedModifier() * this.fish.getAttributes().getInstance(Attributes.MOVEMENT_SPEED).getValue());
 
-            double d0 = this.wantedX - this.fish.getX();
-            double d1 = this.wantedY - this.fish.getY();
-            double d2 = this.wantedZ - this.fish.getZ();
+            double d0 = this.getWantedX() - this.fish.getX();
+            double d1 = this.getWantedY() - this.fish.getY();
+            double d2 = this.getWantedZ() - this.fish.getZ();
 
             this.fish.setSpeed(Mth.lerp(0.125F, this.fish.getSpeed(), f));
 
