@@ -42,10 +42,7 @@ public abstract class MyPetInfo {
     private Map<MyPetType, ConfigItem> leashItem = new HashMap<>();
 
     public int getCustomRespawnTimeFactor(MyPetType type) {
-        if (customRespawnTimeFactor.containsKey(type)) {
-            return customRespawnTimeFactor.get(type);
-        }
-        return 0;
+        return customRespawnTimeFactor.getOrDefault(type, 0);
     }
 
     public void setCustomRespawnTimeFactor(MyPetType type, int factor) {
@@ -53,10 +50,7 @@ public abstract class MyPetInfo {
     }
 
     public int getCustomRespawnTimeFixed(MyPetType type) {
-        if (customRespawnTimeFixed.containsKey(type)) {
-            return customRespawnTimeFixed.get(type);
-        }
-        return 0;
+        return customRespawnTimeFixed.getOrDefault(type, 0);
     }
 
     public void setCustomRespawnTimeFixed(MyPetType type, int factor) {
@@ -97,10 +91,7 @@ public abstract class MyPetInfo {
     }
 
     public double getStartHP(MyPetType type) {
-        if (startHP.containsKey(type)) {
-            return startHP.get(type);
-        }
-        return 20;
+        return startHP.getOrDefault(type, 20.0);
     }
 
     public void setStartHP(MyPetType type, double hp) {
@@ -116,10 +107,10 @@ public abstract class MyPetInfo {
     }
 
     public double getSpeed(MyPetType myPetType) {
-        if (myPetType != null) {
-            return startSpeed.get(myPetType);
+        if (myPetType == null) {
+            return 0.3;
         }
-        return 0.3F;
+        return startSpeed.getOrDefault(myPetType, 0.3);
     }
 
     public void setSpeed(MyPetType type, double speed) {
@@ -137,16 +128,16 @@ public abstract class MyPetInfo {
     }
 
     public boolean getReleaseOnDeath(MyPetType myPetType) {
-        if (myPetType != null && releaseOnDeath.containsKey(myPetType)) {
-            return releaseOnDeath.get(myPetType);
+        if (myPetType == null) {
+            return false;
         }
-        return false;
+        return releaseOnDeath.getOrDefault(myPetType, false);
     }
 
     public boolean getRemoveAfterRelease(MyPetType myPetType) {
-        if (myPetType != null && removeAfterRelease.containsKey(myPetType)) {
-            return removeAfterRelease.get(myPetType);
+        if (myPetType == null) {
+            return false;
         }
-        return false;
+        return removeAfterRelease.getOrDefault(myPetType, false);
     }
 }
