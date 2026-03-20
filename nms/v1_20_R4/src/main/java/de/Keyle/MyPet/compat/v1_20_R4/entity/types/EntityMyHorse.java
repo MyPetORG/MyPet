@@ -46,6 +46,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 import java.util.List;
@@ -195,33 +196,7 @@ public class EntityMyHorse extends EntityMyPet {
     }
 
     public void setPetEquipment(org.bukkit.inventory.EquipmentSlot slot, ItemStack itemStack) {
-        net.minecraft.world.entity.EquipmentSlot nmsSlot;
-        switch (slot) {
-            case HAND:
-                nmsSlot = net.minecraft.world.entity.EquipmentSlot.MAINHAND;
-                break;
-            case OFF_HAND:
-                nmsSlot = net.minecraft.world.entity.EquipmentSlot.OFFHAND;
-                break;
-            case FEET:
-                nmsSlot = net.minecraft.world.entity.EquipmentSlot.FEET;
-                break;
-            case LEGS:
-                nmsSlot = net.minecraft.world.entity.EquipmentSlot.LEGS;
-                break;
-            case CHEST:
-                nmsSlot = net.minecraft.world.entity.EquipmentSlot.CHEST;
-                break;
-            case HEAD:
-                nmsSlot = net.minecraft.world.entity.EquipmentSlot.HEAD;
-                break;
-            case BODY:
-                nmsSlot = net.minecraft.world.entity.EquipmentSlot.BODY;
-                break;
-            default:
-                return;
-        }
-        ((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(nmsSlot, itemStack))));
+        ((ServerLevel) this.level()).getChunkSource().broadcastAndSend(this, new ClientboundSetEquipmentPacket(getId(), List.of(new Pair<>(CraftEquipmentSlot.getNMS(slot), itemStack))));
     }
 
     @Override

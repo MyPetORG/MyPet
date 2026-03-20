@@ -66,6 +66,7 @@ public abstract class Interval<T extends Comparable<? super T>, S> {
      * ths user to ensure that she compares intervals from the same class, otherwise an exception might be thrown.
      * </p>
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static Comparator<Interval> sweepLeftToRight = (a, b) -> {
         int compare = a.compareStarts(b);
         if (compare != 0) {
@@ -96,6 +97,7 @@ public abstract class Interval<T extends Comparable<? super T>, S> {
      * ths user to ensure that she compares intervals from the same class, otherwise an exception might be thrown.
      * </p>
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static Comparator<Interval> sweepRightToLeft = (a, b) -> {
         int compare = b.compareEnds(a);
         if (compare != 0) {

@@ -49,7 +49,7 @@ public class Skilltree {
     @Setter
     protected double weight = 1;
     protected Set<MyPetType> mobTypes = new HashSet<>();
-    protected Map<LevelRule, Upgrade> upgrades = new HashMap<>();
+    protected Map<LevelRule, Upgrade<?>> upgrades = new HashMap<>();
     protected Map<LevelRule, String> notifications = new HashMap<>();
     protected @Getter List<Settings> requirementSettings = new ArrayList<>();
 
