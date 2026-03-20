@@ -70,7 +70,7 @@ public class SkillManager implements ServiceContainer {
         return registeredSkillsNames.keySet();
     }
 
-    public boolean isValidSkill(Class clazz) {
+    public boolean isValidSkill(Class<?> clazz) {
         if (clazz == Object.class) {
             return false;
         }
@@ -80,7 +80,7 @@ public class SkillManager implements ServiceContainer {
         if (isValidSkill(clazz.getSuperclass())) {
             return true;
         }
-        for (Class c : clazz.getInterfaces()) {
+        for (Class<?> c : clazz.getInterfaces()) {
             if (isValidSkill(c)) {
                 return true;
             }
@@ -88,12 +88,12 @@ public class SkillManager implements ServiceContainer {
         return false;
     }
 
-    public String getSkillName(Class clazz) {
+    public String getSkillName(Class<?> clazz) {
         if (clazz == Object.class) {
             return null;
         }
         if (Skill.class.isAssignableFrom(clazz)) {
-            SkillName sn = (SkillName) clazz.getAnnotation(SkillName.class);
+            SkillName sn = clazz.getAnnotation(SkillName.class);
             if (sn != null) {
                 return sn.value();
             }
@@ -102,7 +102,7 @@ public class SkillManager implements ServiceContainer {
         if (skillName != null) {
             return skillName;
         }
-        for (Class c : clazz.getInterfaces()) {
+        for (Class<?> c : clazz.getInterfaces()) {
             skillName = getSkillName(c);
             if (skillName != null) {
                 return skillName;
