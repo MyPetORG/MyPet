@@ -141,7 +141,8 @@ fun Manifest.attributesForMyPet() = attributes(
         "Project-Type" to buildType,
         "Project-Minecraft-Version" to minecraftVersion,
         "Project-Bukkit-Packets" to bukkitPackets,
-        "Git-Commit" to (System.getenv("GIT_COMMIT") ?: "")
+        "Git-Commit" to (System.getenv("GIT_COMMIT") ?: ""),
+        "paperweight-mappings-namespace" to "mojang+yarn"
     )
 )
 
