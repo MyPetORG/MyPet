@@ -23,36 +23,11 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
-import org.bukkit.entity.Ocelot.Type;
 
 @Getter
 public class MyOcelot extends MyPet implements de.Keyle.MyPet.api.entity.types.MyOcelot {
 
-    protected Type catType = Type.WILD_OCELOT;
-
     public MyOcelot(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    public void setCatType(Type value) {
-        this.catType = value;
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putInt("CatType", getCatType().getId());
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("CatType")) {
-            setCatType(Type.getType(info.getInt("CatType")));
-        }
     }
 }
