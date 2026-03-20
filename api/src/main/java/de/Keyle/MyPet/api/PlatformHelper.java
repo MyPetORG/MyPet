@@ -32,7 +32,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -107,21 +106,21 @@ public abstract class PlatformHelper {
             healthColor = NamedTextColor.YELLOW;
         }
         Component parsed = myPet.getDisplayName()
-                .append(MyPetApi.getPlugin().miniMessage().deserialize("<reset>: "));
+                .append(MyPetApi.getPlugin().getMiniMessage().deserialize("<reset>: "));
         if (health > 0) {
-            parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
+            parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
                     "<healthcolor><health><white>/<maxhealth> ",
                     Placeholder.styling("healthcolor", healthColor),
                     Placeholder.unparsed("health", String.format("%1.2f", health)),
                     Placeholder.unparsed("maxhealth", String.format("%1.2f", maxHealth))));
             if (!myPet.getOwner().isHealthBarActive()) {
-                parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
+                parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
                         "(<deltahealthcolor><deltahealth><reset>)",
                         Placeholder.parsed("deltahealthcolor", deltaHealth < 0 ? "<green>+" : "<red>-"),
                         Placeholder.unparsed("deltahealth", String.format("%1.2f", deltaHealth))));
             }
         } else {
-            parsed = parsed.append(MyPetApi.getPlugin().miniMessage().deserialize(
+            parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
                     "<dead>",
                     Placeholder.unparsed("dead", Translation.getString("Name.Dead", myPet.getOwner()))));
         }

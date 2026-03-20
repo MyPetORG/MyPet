@@ -20,24 +20,44 @@
 
 package de.Keyle.MyPet;
 
-import java.awt.*;
+import org.jetbrains.annotations.NotNull;
+
+import java.awt.Desktop;
 import java.net.URI;
 
+/**
+ * Executable entry point for the MyPet JAR when run outside of a Minecraft server.
+ *
+ * <p>Since MyPet is a Bukkit/Paper plugin, it is not intended to be run as a standalone
+ * application. When a user double-clicks or executes the JAR directly, this class
+ * redirects them to the MyPet Skilltree Editor website instead of failing silently.</p>
+ */
 public class Main {
-    static String url = "https://skilltree.mypet-plugin.de";
 
-    public static void main(String[] args) {
+    /** URL of the MyPet Skilltree Editor web application. */
+    @NotNull
+    private static final String SKILLTREE_EDITOR_URL = "https://skilltree.mypet-plugin.de";
+
+    /**
+     * Opens the MyPet Skilltree Editor in the user's default browser.
+     *
+     * <p>If the desktop environment supports browsing, the URL is opened automatically.
+     * Otherwise, the URL is printed to the console for manual navigation.</p>
+     *
+     * @param args command-line arguments (unused)
+     */
+    public static void main(@NotNull String[] args) {
         try {
             if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                Desktop.getDesktop().browse(new URI(url));
+                Desktop.getDesktop().browse(new URI(SKILLTREE_EDITOR_URL));
                 System.out.println("Opening MyPet Skilltree Editor in your default browser...");
             } else {
                 System.err.println("Failed to open Skilltree Editor.");
-                System.out.println("Please visit: " + url);
+                System.out.println("Please visit: " + SKILLTREE_EDITOR_URL);
             }
         } catch (Exception e) {
             System.err.println("Failed to open Skilltree Editor: " + e.getMessage());
-            System.out.println("Please visit: " + url);
+            System.out.println("Please visit: " + SKILLTREE_EDITOR_URL);
         }
     }
 }

@@ -63,5 +63,5 @@ public interface MyPetPlugin extends Plugin {
 
     boolean isDisabling();
 
-    MiniMessage miniMessage();
+    MiniMessage getMiniMessage();
 }

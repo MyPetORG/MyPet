@@ -72,6 +72,9 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.time.Year;
@@ -80,26 +83,105 @@ import java.util.Map;
 import java.util.UUID;
 
 
+/**
+ * Main Bukkit plugin class for MyPet.
+ *
+ * <p>This is the entry point that Bukkit/Paper loads. It orchestrates the full plugin lifecycle
+ * through {@link #onLoad()}, {@link #onEnable()}, and {@link #onDisable()}, coordinating
+ * version-specific NMS compatibility, repository initialization, service activation, and
+ * third-party plugin hook registration.</p>
+ *
+ * <h3>Lifecycle overview</h3>
+ * <ol>
+ *   <li>{@code onLoad} — configuration, version detection, NMS compat manager init, service
+ *       registration, hook registration, {@link Load.State#OnLoad} services activated</li>
+ *   <li>{@code onEnable} — entity registration, event listeners, commands, skilltrees,
+ *       repository init, metrics, {@link Load.State#OnEnable}/{@link Load.State#AfterHooks}/
+ *       {@link Load.State#OnReady} services activated, online player pet loading</li>
+ *   <li>{@code onDisable} — active pets removed, repository closed, tasks cancelled,
+ *       hooks and services disabled, error reporter shut down</li>
+ * </ol>
+ *
+ * @see de.Keyle.MyPet.api.plugin.MyPetPlugin
+ * @see MyPetApi
+ */
 @SuppressWarnings("unused")
 public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin.MyPetPlugin {
 
+    /** Whether the plugin has completed full initialization and is ready to serve. */
     private boolean isReady = false;
+
+    /** Set to {@code true} at the start of {@link #onDisable()} to signal shutdown. */
+    @Getter
     private boolean isDisabling = false;
-    private Repository repo;
-    private MyPetInfo petInfo;
+
+    // Note: The following fields are initialized during onLoad()/onEnable() and are
+    // guaranteed non-null once the plugin is fully active. They lack initializers because
+    // they depend on runtime version detection, configuration, and NMS reflection.
+
+    /** The active persistence backend (SQLite, MySQL, or MongoDB). Initialized in {@link #onEnable()}. */
+    @Getter
+    private Repository repository;
+
+    /** Version-specific pet metadata provider, loaded via NMS reflection in {@link #onLoad()}. */
+    @Getter
+    private MyPetInfo myPetInfo;
+
+    /** Version-specific platform utilities, loaded via NMS reflection in {@link #onLoad()}. */
+    @Getter
     private PlatformHelper platformHelper;
+
+    /** Version-specific entity type registry, loaded via NMS reflection in {@link #onLoad()}. */
+    @Getter
     private EntityRegistry entityRegistry;
+
+    /** Minecraft version detection and NMS class loading utility. Initialized in {@link #onLoad()}. */
+    @Getter
     private CompatUtil compatUtil;
+
+    /** Version-specific compatibility manager that registers NMS services and listeners. Initialized in {@link #onLoad()}. */
     private CompatManager compatManager;
+
+    /** Manages online {@link MyPetPlayer} instances. Initialized in {@link #onLoad()}. */
+    @Getter
     private PlayerManager playerManager;
+
+    /** Manages active and stored pet instances. Initialized in {@link #onLoad()}. */
+    @Getter
     private MyPetManager myPetManager;
+
+    /** Provides helper methods for third-party plugin integrations. Initialized in {@link #onLoad()}. */
+    @Getter
     private HookHelper hookHelper;
+
+    /** Registry and lifecycle manager for third-party plugin hooks. Initialized in {@link #onLoad()}. */
+    @Getter
     private PluginHookManager pluginHookManager;
+
+    /** Central registry for plugin services, activated at different lifecycle states. Initialized in {@link #onLoad()}. */
+    @Getter
     private ServiceManager serviceManager;
+
+    /** Shared MiniMessage instance for Adventure text deserialization. Initialized in {@link #onEnable()}. */
+    @Getter
     private MiniMessage miniMessage;
+
+    /** Cloud v2 command framework manager for annotation-based commands. Initialized in {@link #onEnable()}. */
     private CloudCommandManager cloudCommandManager;
+
+    /** Sentry error reporter for remote error tracking in non-local builds. */
+    @Getter
     private SentryErrorReporter errorReporter = null;
 
+    /**
+     * Registers all 21 built-in pet skill implementations with the {@link SkillManager}.
+     *
+     * <p>Skills define pet abilities such as dealing damage, healing the owner, carrying items,
+     * and more. Each skill is registered by its implementation class and later bound to pets
+     * via skilltrees.</p>
+     *
+     * @see SkillManager#registerSkill(Class)
+     */
     public static void registerSkills() {
         MyPetApi.getSkillManager().registerSkill(BackpackImpl.class);
         MyPetApi.getSkillManager().registerSkill(HealImpl.class);
@@ -124,6 +206,14 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         MyPetApi.getSkillManager().registerSkill(BleedImpl.class);
     }
 
+    /**
+     * Registers all built-in leash flag implementations with the {@link LeashFlagManager}.
+     *
+     * <p>Leash flags define conditions that must be met before a mob can be leashed as a pet
+     * (e.g., the mob must be a baby, tamed, below a certain HP threshold, etc.).</p>
+     *
+     * @see LeashFlagManager#registerLeashFlag(de.Keyle.MyPet.api.entity.leashing.LeashFlag)
+     */
     public static void registerLeashFlags() {
         MyPetApi.getLeashFlagManager().registerLeashFlag(new AdultFlag());
         MyPetApi.getLeashFlagManager().registerLeashFlag(new AngryFlag());
@@ -143,6 +233,13 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         MyPetApi.getLeashFlagManager().registerLeashFlag(new HeartLinkedFlag());
     }
 
+    /**
+     * Registers all built-in skilltree requirement types with the {@link SkilltreeManager}.
+     *
+     * <p>Requirements define conditions that control which skilltrees a pet can use
+     * (e.g., having a specific permission, reaching a certain level, or already having
+     * a particular skilltree).</p>
+     */
     public static void registerSkilltreeRequirements() {
         MyPetApi.getSkilltreeManager().registerRequirement(new NoSkilltreeRequirement());
         MyPetApi.getSkilltreeManager().registerRequirement(new PermissionRequirement());
@@ -150,6 +247,18 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         MyPetApi.getSkilltreeManager().registerRequirement(new SkilltreeRequirement());
     }
 
+    /**
+     * Handles plugin shutdown.
+     *
+     * <p>Performs the following cleanup in order:</p>
+     * <ol>
+     *   <li>Removes all active pet entities from the world</li>
+     *   <li>Closes the persistence repository</li>
+     *   <li>Unregisters custom entity types</li>
+     *   <li>Cancels all scheduled Bukkit tasks</li>
+     *   <li>Disables debug logging, plugin hooks, services, and the error reporter</li>
+     * </ol>
+     */
     public void onDisable() {
         isDisabling = true;
 
@@ -159,7 +268,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     myPet.removePet(true);
                 }
             }
-            repo.disable();
+            repository.disable();
             entityRegistry.unregisterEntityTypes();
             Timer.reset();
         }
@@ -178,6 +287,25 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         }
     }
 
+    /**
+     * Handles the early plugin load phase (before any plugins are enabled).
+     *
+     * <p>Initializes foundational systems in order:</p>
+     * <ol>
+     *   <li>Sets this plugin as the active instance via {@link MyPetApi#setPlugin(de.Keyle.MyPet.api.plugin.MyPetPlugin)}</li>
+     *   <li>Reads version info from the JAR manifest</li>
+     *   <li>Initializes Sentry error reporting (if enabled in config)</li>
+     *   <li>Detects Minecraft version via {@link CompatUtil}</li>
+     *   <li>Loads, upgrades, and applies configuration</li>
+     *   <li>Creates the {@link ServiceManager} and {@link PluginHookManager}</li>
+     *   <li>Loads version-specific NMS instances (pet info, platform helper, entity registry)</li>
+     *   <li>Initializes the {@link CompatManager} and activates {@link Load.State#OnLoad} services</li>
+     *   <li>Registers third-party plugin hooks</li>
+     * </ol>
+     *
+     * <p>If the detected Minecraft version is unsupported, initialization stops early and
+     * the plugin will be disabled in {@link #onEnable()}.</p>
+     */
     public void onLoad() {
         MyPetApi.setPlugin(this);
         getDataFolder().mkdirs();
@@ -210,7 +338,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             return;
         }
 
-        petInfo = compatUtil.getCompatInstance(MyPetInfo.class, "entity", "MyPetInfo");
+        myPetInfo = compatUtil.getCompatInstance(MyPetInfo.class, "entity", "MyPetInfo");
         platformHelper = compatUtil.getCompatInstance(PlatformHelper.class, "", "PlatformHelper");
         entityRegistry = compatUtil.getCompatInstance(EntityRegistry.class, "entity", "EntityRegistry");
         myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
@@ -227,6 +355,24 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         registerHooks();
     }
 
+    /**
+     * Handles the main plugin enable phase.
+     *
+     * <p>This is the heaviest lifecycle method, performing all remaining initialization:</p>
+     * <ul>
+     *   <li>Version compatibility check (disables plugin if incompatible)</li>
+     *   <li>Entity type registration with the server</li>
+     *   <li>Event listener registration (player, entity, vehicle, world, level, ride, creaking)</li>
+     *   <li>Command registration (Cloud framework + legacy Bukkit commands)</li>
+     *   <li>Leash flag, skilltree requirement, and experience calculator registration</li>
+     *   <li>World group loading and default skilltree extraction</li>
+     *   <li>Repository initialization with fallback chain: MySQL/MongoDB → SQLite</li>
+     *   <li>Pet shop configuration and bStats metrics setup</li>
+     *   <li>Service activation through {@link Load.State#OnEnable}, {@link Load.State#AfterHooks},
+     *       and {@link Load.State#OnReady}</li>
+     *   <li>Loading pets for already-online players (handles server reloads)</li>
+     * </ul>
+     */
     public void onEnable() {
         this.isReady = false;
 
@@ -378,29 +524,29 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         // init repository
         if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
-            repo = new MySqlRepository();
+            repository = new MySqlRepository();
             try {
-                repo.init();
+                repository.init();
                 MyPetApi.getLogger().info("MySQL connection successful.");
             } catch (RepositoryInitException e) {
                 ErrorUtil.reportSevere("MySQL database connection failed during initialization", e);
-                repo = null;
+                repository = null;
             }
         } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
-            repo = new MongoDbRepository();
+            repository = new MongoDbRepository();
             try {
-                repo.init();
+                repository.init();
                 MyPetApi.getLogger().info("MongoDB connection successful.");
             } catch (RepositoryInitException e) {
                 ErrorUtil.reportSevere("MongoDB database connection failed during initialization", e);
-                repo = null;
+                repository = null;
             }
         }
 
-        if (repo == null) {
-            repo = new SqLiteRepository();
+        if (repository == null) {
+            repository = new SqLiteRepository();
             try {
-                repo.init();
+                repository.init();
                 MyPetApi.getLogger().info("SQLite connection successful.");
             } catch (RepositoryInitException ignored) {
                 MyPetApi.getLogger().warning("SQLite connection failed!");
@@ -411,8 +557,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         Converter.convert();
 
-        if (repo instanceof Scheduler) {
-            Timer.addTask((Scheduler) repo);
+        if (repository instanceof Scheduler) {
+            Timer.addTask((Scheduler) repository);
         }
 
         File shopConfig = new File(getDataFolder(), "pet-shops.yml");
@@ -498,7 +644,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             @Override
             public void run() {
                 for (final Player player : getServer().getOnlinePlayers()) {
-                    repo.getMyPetPlayer(player, new RepositoryCallback<>() {
+                    repository.getMyPetPlayer(player, new RepositoryCallback<>() {
                         @Override
                         public void callback(final MyPetPlayer p) {
                             if (p != null) {
@@ -570,6 +716,14 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         }.runTaskLater(this, 0);
     }
 
+    /**
+     * Registers core plugin services with the {@link ServiceManager}.
+     *
+     * <p>Services registered here are activated later during specific lifecycle states.
+     * This includes leash flag management, experience caching and calculation, skill and
+     * skilltree management, shop management, and version-specific services like the
+     * Creaking entity service.</p>
+     */
     private void registerServices() {
         serviceManager.registerService(LeashFlagManager.class);
         serviceManager.registerService(ExperienceCache.class);
@@ -580,6 +734,13 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager.registerService(DefaultCreakingService.class);
     }
 
+    /**
+     * Registers all third-party plugin hook classes with the {@link PluginHookManager}.
+     *
+     * <p>Hooks are registered here during {@link #onLoad()} but not enabled until
+     * {@link #onEnable()} calls {@link PluginHookManager#enableHooks()}. Each hook
+     * checks at enable-time whether its target plugin is present and loaded.</p>
+     */
     private void registerHooks() {
         pluginHookManager.registerHook(BattleArenaHook.class);
         pluginHookManager.registerHook(CitizensHook.class);
@@ -615,58 +776,18 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         pluginHookManager.registerHook(WorldGuardHook.class);
     }
 
+    /**
+     * Returns the plugin's JAR file.
+     *
+     * <p>Exposes the protected {@link JavaPlugin#getFile()} for use by the update system
+     * and resource loading.</p>
+     *
+     * @return the plugin JAR {@link File}
+     */
     @Override
-    public PluginHookManager getPluginHookManager() {
-        return pluginHookManager;
-    }
-
-    @Override
-    public ServiceManager getServiceManager() {
-        return serviceManager;
-    }
-
+    @NotNull
     public File getFile() {
         return super.getFile();
-    }
-
-    @Override
-    public MyPetInfo getMyPetInfo() {
-        return petInfo;
-    }
-
-    @Override
-    public EntityRegistry getEntityRegistry() {
-        return entityRegistry;
-    }
-
-    @Override
-    public CompatUtil getCompatUtil() {
-        return compatUtil;
-    }
-
-    @Override
-    public PlayerManager getPlayerManager() {
-        return playerManager;
-    }
-
-    public MyPetManager getMyPetManager() {
-        return myPetManager;
-    }
-
-    public HookHelper getHookHelper() {
-        return hookHelper;
-    }
-
-    public Repository getRepository() {
-        return repo;
-    }
-
-    public PlatformHelper getPlatformHelper() {
-        return platformHelper;
-    }
-
-    public SentryErrorReporter getErrorReporter() {
-        return errorReporter;
     }
 
     /**
@@ -697,12 +818,15 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         }
     }
 
-    @Override
-    public boolean isDisabling() {
-        return isDisabling;
-    }
-
-    private void printSplashScreen(String updateStatus) {
+    /**
+     * Prints the MyPet ASCII art splash screen to the server console using MiniMessage formatting.
+     *
+     * <p>Displays the plugin version, year range, compatibility status, database type,
+     * and an optional update status message.</p>
+     *
+     * @param updateStatus the update check result message, or {@code null} if no update info is available
+     */
+    private void printSplashScreen(@Nullable String updateStatus) {
         String version = MyPetVersion.getFormattedVersion();
         String compatLine = compatUtil.getInternalVersion() != null
                 ? "<green>✔</green> Compatible with " + compatUtil.getMinecraftVersion() + " (" + compatUtil.getInternalVersion() + ")"
@@ -724,10 +848,5 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         );
 
         Bukkit.getConsoleSender().sendMessage(MiniMessage.miniMessage().deserialize(splash));
-    }
-
-    @Override
-    public MiniMessage miniMessage() {
-        return miniMessage;
     }
 }
