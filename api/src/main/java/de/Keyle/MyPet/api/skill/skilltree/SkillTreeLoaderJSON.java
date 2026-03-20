@@ -522,7 +522,7 @@ public class SkillTreeLoaderJSON {
         return null;
     }
 
-    private static <T extends Enum> UpgradeEnumModifier<T> parseEnumModifier(JsonElement modifierObject, Class<T> e) {
+    private static <T extends Enum<T>> UpgradeEnumModifier<T> parseEnumModifier(JsonElement modifierObject, Class<T> e) {
         if (modifierObject instanceof JsonPrimitive && ((JsonPrimitive) modifierObject).isString()) {
             String modifierString = modifierObject.getAsString();
             for (T c : e.getEnumConstants()) {
