@@ -57,10 +57,6 @@ public class NavigationParameters {
     }
 
     public double speedModifier() {
-        double speedModifier = 0D;
-        for (Double sm : this.speedModifier.values()) {
-            speedModifier += sm;
-        }
-        return speedModifier;
+        return this.speedModifier.values().stream().mapToDouble(Double::doubleValue).sum();
     }
 }
