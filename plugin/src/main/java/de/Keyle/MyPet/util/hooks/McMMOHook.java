@@ -60,7 +60,7 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
         } catch (ClassNotFoundException e) {
             isV2 = false;
         }
-        Class skillTypeClass;
+        Class<?> skillTypeClass;
         if (isV2) {
             skillTypeClass = ReflectionUtil.getClass("com.gmail.nossr50.datatypes.skills.PrimarySkillType");
         } else {

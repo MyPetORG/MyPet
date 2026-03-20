@@ -40,8 +40,7 @@ public class ReflectionUtil {
      * @return the Class object representing the loaded class
      * @throws RuntimeException if the class cannot be found or loaded
      */
-    @SuppressWarnings("rawtypes")
-    public static Class getClass(String name) {
+    public static Class<?> getClass(String name) {
         try {
             return Class.forName(name);
         } catch (Throwable e) {

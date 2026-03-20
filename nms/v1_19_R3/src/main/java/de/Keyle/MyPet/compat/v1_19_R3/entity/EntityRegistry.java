@@ -79,7 +79,7 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
     }
 
     protected void registerEntity(MyPetType type, DefaultedRegistry<EntityType<?>> entityRegistry) {
-        Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_19_R3.entity.types.EntityMy" + type.name());
+        Class<? extends EntityMyPet> entityClass = ReflectionUtil.getClass("de.Keyle.MyPet.compat.v1_19_R3.entity.types.EntityMy" + type.name()).asSubclass(EntityMyPet.class);
         entityClasses.forcePut(type, entityClass);
 
         String key = type.getTypeID().toString();
