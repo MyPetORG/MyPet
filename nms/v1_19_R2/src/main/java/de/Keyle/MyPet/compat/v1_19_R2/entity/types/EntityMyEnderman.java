@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.compat.v1_19_R2.entity.types;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyEnderman;
@@ -34,7 +33,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -88,7 +87,7 @@ public class EntityMyEnderman extends EntityMyPet {
                 }
 
                 return InteractionResult.CONSUME;
-            } else if (getMyPet().getBlock() == null && Util.isBetween(1, 255, Item.getId(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
+            } else if (getMyPet().getBlock() == null && itemStack.getItem() instanceof BlockItem && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setBlock(CraftItemStack.asBukkitCopy(itemStack));
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
                     itemStack.shrink(1);
