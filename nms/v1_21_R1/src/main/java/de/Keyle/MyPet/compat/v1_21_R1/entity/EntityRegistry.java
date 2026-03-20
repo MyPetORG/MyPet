@@ -144,7 +144,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         //First copy the old registrie's map into a new one:
         org.bukkit.Registry<org.bukkit.entity.EntityType> bukkitRegistry = org.bukkit.Registry.ENTITY_TYPE;
         Field mapField = ReflectionUtil.getField(bukkitRegistry.getClass(), "map");
-        Map<NamespacedKey, org.bukkit.entity.EntityType> bukkitMap = (Map) ReflectionUtil.getFieldValue(mapField, bukkitRegistry);
+        @SuppressWarnings("unchecked")
+        Map<NamespacedKey, org.bukkit.entity.EntityType> bukkitMap = (Map<NamespacedKey, org.bukkit.entity.EntityType>) ReflectionUtil.getFieldValue(mapField, bukkitRegistry);
         ImmutableMap.Builder<NamespacedKey, org.bukkit.entity.EntityType> ownMap = ImmutableMap.builder();
         ownMap.putAll(bukkitMap);
 

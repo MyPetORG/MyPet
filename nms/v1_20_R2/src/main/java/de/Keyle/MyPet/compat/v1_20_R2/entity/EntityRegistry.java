@@ -146,7 +146,8 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
         org.bukkit.Registry<org.bukkit.entity.EntityType> bukkitRegistry = org.bukkit.Registry.ENTITY_TYPE;
         Bukkit.getConsoleSender().sendMessage(bukkitRegistry.getClass() + "");
         Field mapField = ReflectionUtil.getField(bukkitRegistry.getClass(), "map");
-        ImmutableMap<NamespacedKey, org.bukkit.entity.EntityType> bukkitMap = (ImmutableMap) ReflectionUtil.getFieldValue(mapField, bukkitRegistry);
+        @SuppressWarnings("unchecked")
+        ImmutableMap<NamespacedKey, org.bukkit.entity.EntityType> bukkitMap = (ImmutableMap<NamespacedKey, org.bukkit.entity.EntityType>) ReflectionUtil.getFieldValue(mapField, bukkitRegistry);
         ImmutableMap.Builder<NamespacedKey, org.bukkit.entity.EntityType> ownMap = ImmutableMap.builder();
         ownMap.putAll(bukkitMap);
 
