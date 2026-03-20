@@ -109,7 +109,7 @@ public class PluginHookManager {
                 }
             }
             try {
-                PluginHook hook = hookClass.newInstance();
+            PluginHook hook = hookClass.getDeclaredConstructor().newInstance();
                 registeredHooks.add(hook);
             } catch (Throwable e) {
                 ErrorUtil.report("Error occured while enabling " + pluginName + " (" + Bukkit.getPluginManager().getPlugin(pluginName).getDescription().getVersion() + ") hook.", e);

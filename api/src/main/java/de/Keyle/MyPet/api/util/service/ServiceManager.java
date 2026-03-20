@@ -53,7 +53,7 @@ public class ServiceManager {
             loadingState = serviceClass.getAnnotation(Load.class).value();
         }
         try {
-            ServiceContainer service = serviceClass.newInstance();
+            ServiceContainer service = serviceClass.getDeclaredConstructor().newInstance();
             registeredServices.put(loadingState, service);
         } catch (Throwable e) {
             ErrorUtil.report("Error occured while creating the " + serviceClass.getName() + " service.", e);

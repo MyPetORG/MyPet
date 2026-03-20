@@ -60,7 +60,7 @@ public class ExperienceCalculatorManager implements ServiceContainer {
             if (calculators.containsKey(calculator)) {
                 Class<? extends ExperienceCalculator> calculatorClass = calculators.get(calculator);
                 try {
-                    ExperienceCalculator newCalculator = calculatorClass.newInstance();
+                    ExperienceCalculator newCalculator = calculatorClass.getDeclaredConstructor().newInstance();
                     if (newCalculator.isUsable()) {
                         this.calculator = newCalculator;
                     }
