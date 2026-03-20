@@ -21,16 +21,8 @@
 package de.Keyle.MyPet.api.repository;
 
 public class RepositoryInitException extends Exception {
-    final public Exception exception;
 
-    public RepositoryInitException(Exception e) {
-        exception = e;
-    }
-
-    @Override
-    public String toString() {
-        return "RepositoryInitException{" +
-                "exception=" + exception +
-                '}';
+    public RepositoryInitException(Exception cause) {
+        super(cause);
     }
 }
