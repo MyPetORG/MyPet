@@ -166,9 +166,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     @Getter
     private MiniMessage miniMessage;
 
-    /** Cloud v2 command framework manager for annotation-based commands. Initialized in {@link #onEnable()}. */
-    private CloudCommandManager cloudCommandManager;
-
     /** Sentry error reporter for remote error tracking in non-local builds. */
     @Getter
     private SentryErrorReporter errorReporter = null;
@@ -363,7 +360,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
      *   <li>Version compatibility check (disables plugin if incompatible)</li>
      *   <li>Entity type registration with the server</li>
      *   <li>Event listener registration (player, entity, vehicle, world, level, ride, creaking)</li>
-     *   <li>Command registration (Cloud framework + legacy Bukkit commands)</li>
+     *   <li>Command registration</li>
      *   <li>Leash flag, skilltree requirement, and experience calculator registration</li>
      *   <li>World group loading and default skilltree extraction</li>
      *   <li>Repository initialization with fallback chain: MySQL/MongoDB → SQLite</li>
@@ -436,10 +433,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             getServer().getPluginManager().registerEvents(creakingHeartListener, this);
         }
 
-        // Initialize Cloud Command Framework
-        initializeCloudCommands();
-
-        // register legacy commands (to be migrated)
+        // register commands
         getCommand("petname").setExecutor(new CommandName());
         getCommand("petcall").setExecutor(new CommandCall());
         getCommand("petsendaway").setExecutor(new CommandSendAway());
@@ -788,34 +782,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     @NotNull
     public File getFile() {
         return super.getFile();
-    }
-
-    /**
-     * Initializes the Cloud Command Framework and registers all commands.
-     * <p>
-     * Cloud v2 provides:
-     * - Type-safe command definitions with annotations
-     * - Automatic tab completion and suggestions
-     * - Flexible permission handling
-     * - Exception handling
-     * - Brigadier integration for native Minecraft support
-     */
-    private void initializeCloudCommands() {
-        try {
-            // Initialize the Cloud command manager
-            cloudCommandManager = new CloudCommandManager(this);
-            cloudCommandManager.initialize();
-
-            // Register annotation-based commands
-            // This is the preferred method - cleaner and more concise than builder API
-            // cloudCommandManager.registerAnnotationCommands(new CommandPetCall());
-            // TODO: Register remaining commands as they are migrated
-
-            getLogger().info("Cloud Command Framework enabled");
-
-        } catch (Exception e) {
-            ErrorUtil.reportWarning("Failed to initialize Cloud Command Framework - falling back to legacy Bukkit command system", e);
-        }
     }
 
     /**

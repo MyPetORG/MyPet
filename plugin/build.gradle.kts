@@ -9,9 +9,6 @@ plugins {
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(21)
     options.encoding = "UTF-8"
-    // Enable parameter name preservation for Cloud annotations
-    // This allows Cloud to infer parameter names from method signatures
-    options.compilerArgs.add("-parameters")
 }
 
 // Re-enable processResources (disabled in root subprojects block)
@@ -46,10 +43,6 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("org.mozilla:rhino:1.7.15")
     compileOnly("com.mojang:brigadier:1.0.18")
-
-    // Cloud Command Framework v2
-    compileOnly("org.incendo:cloud-paper:2.0.0-beta.13")
-    compileOnly("org.incendo:cloud-annotations:2.0.0")
 
     compileOnly("net.citizensnpcs:citizensapi:2.0.24")
     // PlotSquared V6+ (note: 6.11.2 has broken Maven deployment, use 6.11.1)

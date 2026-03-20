@@ -6,8 +6,6 @@ author: Keyle
 libraries:
   - org.mongodb:mongodb-driver-sync:5.5.0
   - com.zaxxer:HikariCP:6.3.0
-  - org.incendo:cloud-paper:2.0.0-beta.13
-  - org.incendo:cloud-annotations:2.0.0
   - net.kyori:adventure-text-minimessage:4.17.0
   - net.kyori:adventure-text-serializer-ansi:4.17.0
   - net.kyori:adventure-text-serializer-legacy:4.17.0
