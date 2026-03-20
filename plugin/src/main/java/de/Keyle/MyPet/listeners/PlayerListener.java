@@ -125,7 +125,7 @@ public class PlayerListener implements Listener {
         if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
             return;
         }
-        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getInventory().getItemInMainHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(event.getPlayer());
             if (myPet.getStatus() == MyPet.PetState.Here && myPet.getEntity().isPresent() && myPet.getEntity().get().canMove()) {
                 if (myPet.getSkills().isActive(ControlImpl.class)) {
