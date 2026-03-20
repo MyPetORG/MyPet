@@ -139,12 +139,12 @@ public class Skilltree {
         this.order = order;
     }
 
-    public List<Upgrade> getUpgrades(int level) {
+    public List<Upgrade<?>> getUpgrades(int level) {
         return getUpgrades(level, new HashSet<>());
     }
 
-    protected List<Upgrade> getUpgrades(int level, Set<String> computedSkilltrees) {
-        List<Upgrade> upgrades = new ArrayList<>();
+    protected List<Upgrade<?>> getUpgrades(int level, Set<String> computedSkilltrees) {
+        List<Upgrade<?>> upgrades = new ArrayList<>();
         computedSkilltrees.add(this.skilltreeName);
         if (inheritedSkilltreeName != null && !inheritedSkilltreeName.isEmpty() && !computedSkilltrees.contains(inheritedSkilltreeName)) {
             if (MyPetApi.getSkilltreeManager().hasSkilltree(inheritedSkilltreeName)) {
@@ -165,7 +165,7 @@ public class Skilltree {
         return upgrades;
     }
 
-    public void addUpgrade(LevelRule levelRule, Upgrade upgrade) {
+    public void addUpgrade(LevelRule levelRule, Upgrade<?> upgrade) {
         this.upgrades.put(levelRule, upgrade);
     }
 

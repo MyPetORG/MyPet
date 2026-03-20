@@ -79,8 +79,8 @@ public class LevelListener implements Listener {
                     }
                 }
                 Set<Skill> affectedSkills = new HashSet<>();
-                List<Upgrade> upgrades = skilltree.getUpgrades(i);
-                for (Upgrade upgrade : upgrades) {
+                List<Upgrade<?>> upgrades = skilltree.getUpgrades(i);
+                for (Upgrade<?> upgrade : upgrades) {
                     if (upgrade == null) {
                         continue;
                     }
@@ -88,7 +88,7 @@ public class LevelListener implements Listener {
                     if (sn != null) {
                         Skill skill = myPet.getSkills().get(sn.value());
                         if (skill != null) {
-                            upgrade.apply(skill);
+                            applyUpgrade(upgrade, skill);
                             affectedSkills.add(skill);
                         }
                     }
@@ -138,8 +138,8 @@ public class LevelListener implements Listener {
         Skilltree skilltree = myPet.getSkilltree();
         if (skilltree != null) {
             for (int i = fromLvl; i > lvl; i--) {
-                List<Upgrade> upgrades = skilltree.getUpgrades(i);
-                for (Upgrade upgrade : upgrades) {
+                List<Upgrade<?>> upgrades = skilltree.getUpgrades(i);
+                for (Upgrade<?> upgrade : upgrades) {
                     if (upgrade == null) {
                         continue;
                     }
@@ -147,7 +147,7 @@ public class LevelListener implements Listener {
                     if (sn != null) {
                         Skill skill = myPet.getSkills().get(sn.value());
                         if (skill != null) {
-                            upgrade.invert(skill);
+                            invertUpgrade(upgrade, skill);
                         }
                     }
                 }
@@ -187,8 +187,8 @@ public class LevelListener implements Listener {
         Skilltree skilltree = myPet.getSkilltree();
         if (skilltree != null) {
             for (int i = 1; i <= lvl; i++) {
-                List<Upgrade> upgrades = skilltree.getUpgrades(i);
-                for (Upgrade upgrade : upgrades) {
+                List<Upgrade<?>> upgrades = skilltree.getUpgrades(i);
+                for (Upgrade<?> upgrade : upgrades) {
                     if (upgrade == null) {
                         continue;
                     }
@@ -196,11 +196,21 @@ public class LevelListener implements Listener {
                     if (sn != null) {
                         Skill skill = myPet.getSkills().get(sn.value());
                         if (skill != null) {
-                            upgrade.apply(skill);
+                            applyUpgrade(upgrade, skill);
                         }
                     }
                 }
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Skill> void applyUpgrade(Upgrade<T> upgrade, Skill skill) {
+        upgrade.apply((T) skill);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Skill> void invertUpgrade(Upgrade<T> upgrade, Skill skill) {
+        upgrade.invert((T) skill);
     }
 }

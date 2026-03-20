@@ -247,7 +247,7 @@ public class SkillTreeLoaderJSON {
 
                                     JsonObject upgradeObject = upgradesObject.getAsJsonObject(levelRuleString);
                                     tryToLoad("Skills." + skillName + ".Upgrades." + levelRuleString + ".Upgrade", () -> {
-                                        Upgrade upgrade = loadUpgrade(skillName, upgradeObject);
+                                        Upgrade<?> upgrade = loadUpgrade(skillName, upgradeObject);
                                         if (upgrade != null) {
                                             skilltree.addUpgrade(levelRule, upgrade);
                                         } else {
@@ -295,8 +295,8 @@ public class SkillTreeLoaderJSON {
         return levelRule;
     }
 
-    private static Upgrade loadUpgrade(String skillName, JsonObject upgradeObject) {
-        Upgrade upgrade = null;
+    private static Upgrade<?> loadUpgrade(String skillName, JsonObject upgradeObject) {
+        Upgrade<?> upgrade = null;
         switch (skillName.toLowerCase()) {
             case "backpack": {
 
