@@ -66,11 +66,10 @@ public abstract class PlatformHelper {
     public abstract void applyTagToEntity(CompoundBinaryTag tag, Entity entity);
 
     public String getCommandSenderLanguage(CommandSender sender) {
-        String lang = "en";
-        if (sender instanceof Player) {
-            lang = getPlayerLanguage((Player) sender);
+        if (sender instanceof Player player) {
+            return getPlayerLanguage(player);
         }
-        return lang;
+        return "en";
     }
 
     public boolean copyResource(Plugin plugin, String ressource, File destination) {
