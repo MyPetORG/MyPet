@@ -111,12 +111,12 @@ public class SkilltreeManager implements ServiceContainer {
         return requirements.get(requirementName.toLowerCase());
     }
 
-    public String getRequirementName(Class clazz) {
+    public String getRequirementName(Class<?> clazz) {
         if (clazz == Object.class) {
             return null;
         }
         if (Requirement.class.isAssignableFrom(clazz)) {
-            RequirementName requirementName = (RequirementName) clazz.getAnnotation(RequirementName.class);
+            RequirementName requirementName = clazz.getAnnotation(RequirementName.class);
             if (requirementName != null) {
                 return requirementName.value();
             }
@@ -125,7 +125,7 @@ public class SkilltreeManager implements ServiceContainer {
         if (requirementName != null) {
             return requirementName;
         }
-        for (Class c : clazz.getInterfaces()) {
+        for (Class<?> c : clazz.getInterfaces()) {
             requirementName = getRequirementName(c);
             if (requirementName != null) {
                 return requirementName;
