@@ -722,10 +722,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
      */
     public float getSoundSpeed() {
         float pitchAddition = 0;
-        if (getMyPet() instanceof MyPetBaby) {
-            if (((MyPetBaby) getMyPet()).isBaby()) {
-                pitchAddition += 0.5F;
-            }
+        if (getMyPet() instanceof MyPetBaby baby && baby.isBaby()) {
+            pitchAddition += 0.5F;
         }
         return (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1 + pitchAddition;
     }
@@ -1322,7 +1320,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                         this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed, this.getDeltaMovement().z());
                     }
                 } else if (this instanceof EntityMyDolphin
-                        && this.level.getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getMaterial().isLiquid()
+                        && !this.level.getFluidState(this.getBlockPosBelowThatAffectsMyMovement()).isEmpty()
                         && ((EntityMyDolphin) this).canDolphinjump) {
                     this.setDeltaMovement(this.getDeltaMovement().x(), ascendSpeed * 4, this.getDeltaMovement().z());
                     ((EntityMyDolphin) this).canDolphinjump = false;

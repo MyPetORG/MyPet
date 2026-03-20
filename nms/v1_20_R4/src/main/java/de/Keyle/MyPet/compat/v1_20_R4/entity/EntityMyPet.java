@@ -796,10 +796,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
      */
     public float getSoundSpeed() {
         float pitchAddition = 0;
-        if (getMyPet() instanceof MyPetBaby) {
-            if (((MyPetBaby) getMyPet()).isBaby()) {
-                pitchAddition += 0.5F;
-            }
+        if (getMyPet() instanceof MyPetBaby baby && baby.isBaby()) {
+            pitchAddition += 0.5F;
         }
         return (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1 + pitchAddition;
     }
