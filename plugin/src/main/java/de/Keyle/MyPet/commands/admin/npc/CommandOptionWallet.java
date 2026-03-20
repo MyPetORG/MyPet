@@ -35,6 +35,7 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class CommandOptionWallet implements CommandOptionTabCompleter {
 
@@ -60,11 +61,12 @@ public class CommandOptionWallet implements CommandOptionTabCompleter {
                 return true;
             }
 
-            WalletType newWalletType = WalletType.getByName(args[0]);
-            if (newWalletType == null) {
+            Optional<WalletType> optWalletType = WalletType.getByName(args[0]);
+            if (optWalletType.isEmpty()) {
                 sender.sendMessage(MessageUtil.prefixed(Component.text("Invalid wallet type!")));
                 return true;
             }
+            WalletType newWalletType = optWalletType.get();
 
             WalletTrait trait = selectedNPC.getTrait(WalletTrait.class);
 

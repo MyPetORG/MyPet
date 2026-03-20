@@ -284,10 +284,7 @@ public class PetShop {
 
 
         tryToLoad("Balance.Type", () -> {
-            wallet = WalletType.getByName(section.getString("Balance.Type", ""));
-            if (wallet == null) {
-                wallet = WalletType.None;
-            }
+            wallet = WalletType.getByName(section.getString("Balance.Type", "")).orElse(WalletType.None);
             switch (wallet) {
                 case Bank:
                 case Player:

@@ -28,7 +28,6 @@ import net.citizensnpcs.api.trait.trait.Owner;
 import net.citizensnpcs.api.util.DataKey;
 import org.bukkit.Bukkit;
 
-import java.util.Objects;
 
 public class WalletTrait extends Trait {
 
@@ -45,8 +44,7 @@ public class WalletTrait extends Trait {
         if (type.equalsIgnoreCase("Owner")) {
             type = "Player";
         }
-        WalletType wt = WalletType.getByName(type);
-        this.type = Objects.requireNonNullElse(wt, WalletType.Private);
+        this.type = WalletType.getByName(type).orElse(WalletType.Private);
         account = key.getString("accountName", key.getString("account", ""));
         credit = key.getDouble("privateWallet", key.getDouble("credit", 0D));
     }
