@@ -20,82 +20,100 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.PickupImpl;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
-public class CommandPickup implements CommandTabCompleter {
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player owner) {
-            if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
-                owner.sendMessage(Translation.getComponent("Message.No.AllowedHere", owner));
-                return true;
-            }
-            if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
-                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
+/**
+ * Handles the {@code /petpickup} command, which toggles the Pickup skill on the player's
+ * active pet. When enabled, the pet automatically collects nearby dropped items for its owner.
+ *
+ * <p><b>Usage:</b> {@code /petpickup}</p>
+ * <p><b>Aliases:</b> {@code /petp}, {@code /pp}</p>
+ * <p><b>Permissions:</b> {@code MyPet.extended.pickup} — required to use the pickup toggle</p>
+ * <p><b>Help category:</b> {@link CommandCategory#SKILLS SKILLS} (priority 150)</p>
+ *
+ * @see PickupImpl
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandPickup {
 
-                if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup")) {
-                    sender.sendMessage(Translation.getComponent("Message.No.Allowed", owner));
-                    return true;
-                } else if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Translation.getFormattedComponent("Message.Call.First", owner, myPet.getDisplayName()));
-                    return true;
-                } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", owner, myPet.getDisplayName()));
-                    return true;
-                }
-                if (myPet.getSkills().has(PickupImpl.class)) {
-                    myPet.getSkills().get(PickupImpl.class).activate();
-                }
-            } else {
-                sender.sendMessage(Translation.getComponent("Message.No.HasPet", owner));
-            }
-            return true;
+    /**
+     * Registers the {@code /petpickup} Brigadier command and its help entry.
+     *
+     * <p>The command is a player-only literal with no arguments. The help entry is only
+     * shown when the player has an active pet with the Pickup skill active.</p>
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petpickup")
+                        .requires(ctx -> ctx.getSender() instanceof Player)
+                        .executes(ctx -> {
+                            execute((Player) ctx.getSource().getSender());
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .build(),
+                "Toggles pet pickup",
+                List.of("petp", "pp")
+        );
+
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Pickup",
+                "/petpickup",
+                CommandCategory.SKILLS,
+                150,
+                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                        && MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(PickupImpl.class)
+        ));
+    }
+
+    /**
+     * Executes the pickup toggle for the given player's pet.
+     *
+     * <p>Validates that the world group is enabled, the player has an active and spawned pet,
+     * and that the player holds the {@code MyPet.extended.pickup} permission. If all checks
+     * pass, activates (toggles) the Pickup skill on the pet.</p>
+     *
+     * @param owner the player whose pet's Pickup skill should be toggled
+     */
+    private void execute(Player owner) {
+        if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
+            owner.sendMessage(Translation.getComponent("Message.No.AllowedHere", owner));
+            return;
         }
-        sender.sendMessage("You can't use this command from server console!");
-        return true;
-    }
+        if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
+            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Pickup";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petpickup";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
-                && MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(PickupImpl.class);
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 180;
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.SKILLS;
+            if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup")) {
+                owner.sendMessage(Translation.getComponent("Message.No.Allowed", owner));
+                return;
+            } else if (myPet.getStatus() == PetState.Despawned) {
+                owner.sendMessage(Translation.getFormattedComponent("Message.Call.First", owner, myPet.getDisplayName()));
+                return;
+            } else if (myPet.getStatus() == PetState.Dead) {
+                owner.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", owner, myPet.getDisplayName()));
+                return;
+            }
+            if (myPet.getSkills().has(PickupImpl.class)) {
+                myPet.getSkills().get(PickupImpl.class).activate();
+            }
+        } else {
+            owner.sendMessage(Translation.getComponent("Message.No.HasPet", owner));
+        }
     }
 }

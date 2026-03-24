@@ -20,92 +20,61 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.api.commands.CommandOption;
-import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.commands.CommandCategory;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.commands.settings.CommandSettingHealthbar;
 import de.Keyle.MyPet.commands.settings.CommandSettingsPetLivingSound;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import io.papermc.paper.command.brigadier.Commands;
 
-import java.util.*;
+import java.util.List;
 
-public class CommandSettings implements CommandTabCompleter {
+/**
+ * Handles the {@code /petsettings} command, which provides player-configurable pet options.
+ * This is a parent command that delegates to subcommands:
+ *
+ * <ul>
+ *   <li>{@code /petsettings healthbar} — toggles the pet health bar display
+ *       (see {@link CommandSettingHealthbar})</li>
+ *   <li>{@code /petsettings idle-volume <amount>} — sets the pet's idle/living sound volume
+ *       (0-100, see {@link CommandSettingsPetLivingSound})</li>
+ * </ul>
+ *
+ * <p><b>Usage:</b> {@code /petsettings <healthbar|idle-volume>}</p>
+ * <p><b>Aliases:</b> {@code /po}, {@code /peto}, {@code /petoption}, {@code /petoptions},
+ * {@code /psettings}</p>
+ * <p><b>Help category:</b> {@link CommandCategory#PET PET} (priority 40)</p>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandSettings {
 
-    private final List<String> optionsList;
-    private final Map<String, CommandOption> commandOptions = new HashMap<>();
+    /**
+     * Registers the {@code /petsettings} Brigadier command and its help entry.
+     *
+     * <p>The command tree is composed of subcommand nodes built by
+     * {@link CommandSettingHealthbar#buildNode()} and
+     * {@link CommandSettingsPetLivingSound#buildNode()}. No root-level executor is defined;
+     * one of the subcommands must be specified.</p>
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petsettings")
+                        .then(new CommandSettingHealthbar().buildNode())
+                        .then(new CommandSettingsPetLivingSound().buildNode())
+                        .build(),
+                "Pet settings",
+                List.of("po", "peto", "petoption", "petoptions", "psettings")
+        );
 
-    {
-        commandOptions.put("healthbar", new CommandSettingHealthbar());
-        commandOptions.put("idle-volume", new CommandSettingsPetLivingSound());
-
-        optionsList = new ArrayList<>(commandOptions.keySet());
-        Collections.sort(optionsList);
-    }
-
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 1) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            Component options = Component.text(" -> ");
-            boolean first = true;
-            for (String key : commandOptions.keySet()) {
-                if (!first) {
-                    options = options.append(Component.text(", "));
-                }
-                options = options.append(Component.text(key).color(NamedTextColor.DARK_AQUA));
-                first = false;
-            }
-            sender.sendMessage(options);
-            return false;
-        }
-
-        String[] parameter = Arrays.copyOfRange(args, 1, args.length);
-        CommandOption option = commandOptions.get(args[0].toLowerCase());
-
-        if (option != null) {
-            return option.onCommandOption(sender, parameter);
-        }
-        return false;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (sender instanceof Player) {
-            if (strings.length == 1) {
-                return filterTabCompletionResults(optionsList, strings[0]);
-            } else if (strings.length >= 1) {
-                CommandOption co = commandOptions.get(strings[0]);
-                if (co != null) {
-                    if (co instanceof CommandOptionTabCompleter) {
-                        return ((CommandOptionTabCompleter) co).onTabComplete(sender, strings);
-                    }
-                }
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Options";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petoptions";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return true;
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 40;
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Options",
+                "/petoptions",
+                CommandCategory.PET,
+                40,
+                null
+        ));
     }
 }

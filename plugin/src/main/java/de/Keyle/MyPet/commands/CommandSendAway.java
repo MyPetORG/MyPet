@@ -20,8 +20,12 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.CommandCategory;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.event.MyPetSendAwayEvent;
@@ -29,45 +33,103 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.MessageUtil;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
-public class CommandSendAway implements CommandTabCompleter {
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0 && !(sender instanceof Player)) {
-            sender.sendMessage("You can't use this command from server console!");
-            return true;
-        }
+/**
+ * Handles the {@code /petsendaway} command, which despawns (sends away) a player's active pet
+ * without removing ownership. The pet can later be called back with {@code /petcall}.
+ *
+ * <p>When executed without arguments, sends away the executing player's own pet.
+ * When an optional player name argument is provided (admin only), sends away the
+ * specified player's pet.</p>
+ *
+ * <p><b>Usage:</b> {@code /petsendaway [player]}</p>
+ * <p><b>Aliases:</b> {@code /petsa}, {@code /psa}</p>
+ * <p><b>Permissions:</b> {@code MyPet.admin} — required to send away another player's pet</p>
+ * <p><b>Help category:</b> {@link CommandCategory#PET PET} (priority 80)</p>
+ *
+ * @see MyPetSendAwayEvent
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandSendAway {
 
-        String playerName = sender.getName();
-        String lang = "en_en";
-        if (args.length > 0) {
-            if (sender instanceof Player) {
-                if (Permissions.has((Player) sender, "MyPet.admin", false)) {
-                    playerName = args[0];
-                    lang = MyPetApi.getPlatformHelper().getPlayerLanguage((Player) sender);
-                }
-            } else {
-                playerName = args[0];
-            }
-        }
+    /**
+     * Registers the {@code /petsendaway} Brigadier command and its help entry.
+     *
+     * <p>The command tree consists of a base literal node (player-only) that sends away
+     * the sender's own pet, plus an optional {@code player} argument restricted to admins
+     * with tab-completion of online player names.</p>
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petsendaway")
+                        .requires(ctx -> ctx.getSender() instanceof Player)
+                        .executes(ctx -> {
+                            Player player = (Player) ctx.getSource().getSender();
+                            execute(player, player.getName(),
+                                    MyPetApi.getPlatformHelper().getPlayerLanguage(player));
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .then(Commands.argument("player", StringArgumentType.word())
+                                .requires(ctx -> {
+                                    var sender = ctx.getSender();
+                                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin", false);
+                                })
+                                .suggests((ctx, builder) -> {
+                                    Bukkit.getOnlinePlayers().forEach(p -> builder.suggest(p.getName()));
+                                    return builder.buildFuture();
+                                })
+                                .executes(ctx -> {
+                                    CommandSender sender = ctx.getSource().getSender();
+                                    String targetName = StringArgumentType.getString(ctx, "player");
+                                    String lang = sender instanceof Player p
+                                            ? MyPetApi.getPlatformHelper().getPlayerLanguage(p)
+                                            : "en_en";
+                                    execute(sender, targetName, lang);
+                                    return Command.SINGLE_SUCCESS;
+                                }))
+                        .build(),
+                "Sends your pet away",
+                List.of("petsa", "psa")
+        );
+
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.SendAway",
+                "/petsendaway",
+                CommandCategory.PET,
+                80,
+                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+        ));
+    }
+
+    /**
+     * Executes the send-away logic for the specified player's pet.
+     *
+     * <p>Validates that the target player is a registered MyPet player, is online, and
+     * has an active pet. Fires a {@link MyPetSendAwayEvent} which may be cancelled by
+     * other plugins. Provides feedback for all states: success, already away, or dead.</p>
+     *
+     * @param sender     the command sender (player or console) to receive feedback messages
+     * @param playerName the name of the player whose pet should be sent away
+     * @param lang       the locale code for translating feedback messages
+     */
+    private void execute(CommandSender sender, String playerName, String lang) {
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(playerName)) {
-            if (args.length == 0) {
-                sender.sendMessage(Translation.getComponent("Message.No.HasPet", (Player) sender));
-            } else {
-                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, args[0]));
-            }
-            return true;
+            sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, playerName));
+            return;
         }
         MyPetPlayer petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(playerName);
         if (petOwner != null && !petOwner.isOnline()) {
             sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", lang));
-            return true;
+            return;
         }
         if (petOwner != null && petOwner.hasMyPet()) {
             MyPet myPet = petOwner.getMyPet();
@@ -102,42 +164,7 @@ public class CommandSendAway implements CommandTabCompleter {
                 ));
             }
         } else {
-            if (args.length == 0) {
-                sender.sendMessage(Translation.getComponent("Message.No.HasPet", lang));
-            } else {
-                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, args[0]));
-            }
+            sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, playerName));
         }
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (sender instanceof Player) {
-            if (strings.length == 1 && Permissions.has((Player) sender, "MyPet.admin", false)) {
-                return null;
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.SendAway";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petsendaway";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return MyPetApi.getMyPetManager().hasActiveMyPet(player);
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 70;
     }
 }

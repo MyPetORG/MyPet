@@ -20,23 +20,58 @@
 
 package de.Keyle.MyPet.commands.settings;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 
-public class CommandSettingHealthbar implements CommandOption {
-    @Override
-    public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (sender instanceof Player && MyPetApi.getPlayerManager().isMyPetPlayer((Player) sender)) {
-            MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender);
+/**
+ * Provides the {@code /petsettings healthbar} subcommand, which toggles the visibility
+ * of the pet's health bar for the executing player.
+ *
+ * <h3>Usage</h3>
+ * <p>{@code /petsettings healthbar}</p>
+ *
+ * <p>This is a player-only command with no additional permission requirement beyond
+ * being a registered MyPet player. Each invocation flips the health bar display
+ * state between enabled and disabled.</p>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandSettingHealthbar {
+
+    /**
+     * Builds and returns the Brigadier {@code "healthbar"} literal command node.
+     * This node is intended to be attached as a child of the {@code /petsettings} command tree.
+     *
+     * @return the built {@link LiteralCommandNode} for the healthbar subcommand
+     */
+    public LiteralCommandNode<CommandSourceStack> buildNode() {
+        return Commands.literal("healthbar")
+                .requires(ctx -> ctx.getSender() instanceof Player)
+                .executes(ctx -> {
+                    execute((Player) ctx.getSource().getSender());
+                    return Command.SINGLE_SUCCESS;
+                })
+                .build();
+    }
+
+    /**
+     * Toggles the health bar display setting for the given player. If the player is a
+     * registered MyPet player, their health bar active state is flipped.
+     *
+     * @param player the player toggling the setting
+     */
+    private void execute(Player player) {
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+            MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             myPetPlayer.setHealthBarActive(!myPetPlayer.isHealthBarActive());
-            sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
-            return true;
+            player.sendMessage(Translation.getComponent("Message.Command.Success", player));
+        } else {
+            player.sendMessage(Translation.getComponent("Message.Command.Fail", player));
         }
-        sender.sendMessage(Translation.getComponent("Message.Command.Fail", sender));
-        return true;
     }
 }

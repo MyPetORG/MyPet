@@ -20,66 +20,127 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.MyPetApi;
+import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandOption;
-import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
-import de.Keyle.MyPet.commands.CommandAdmin;
-import de.Keyle.MyPet.api.commands.HelpProvider;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.mypet.CommandOptionReload;
 import de.Keyle.MyPet.commands.mypet.CommandOptionTicket;
 import de.Keyle.MyPet.commands.mypet.CommandOptionUpdate;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-public class CommandMyPet implements CommandTabCompleter {
+/**
+ * Handles the {@code /mypet} base command using Paper's Brigadier API.
+ *
+ * <p>This is the plugin's primary top-level command. When invoked without arguments it
+ * displays a splash banner with plugin version and a link to the project. Sub-literals
+ * are mounted for the {@code help}, {@code reload}, {@code ticket}, and {@code update}
+ * subcommands.</p>
+ *
+ * <h3>Command tree</h3>
+ * <pre>
+ *   /mypet              - show splash banner
+ *   /mypet help         - list available help categories
+ *   /mypet help all     - show all commands across every category
+ *   /mypet help pet     - show commands in the "Pet" category
+ *   /mypet help skills  - show commands in the "Skills" category
+ *   /mypet help admin   - show commands in the "Admin" category
+ *   /mypet reload ...   - reload plugin resources (see {@link CommandOptionReload})
+ *   /mypet ticket       - open a support ticket link
+ *   /mypet update       - check for plugin updates
+ * </pre>
+ *
+ * <p>The help system groups entries from the {@link HelpRegistry} by
+ * {@link CommandCategory} and filters visibility based on the player's permissions.</p>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandMyPet {
 
-    private final Map<String, CommandOption> subcommands = new LinkedHashMap<>();
+    /** Character width of the dash separators used in help output. */
+    private static final int SEPARATOR_WIDTH = 52;
 
-    {
-        subcommands.put("reload", new CommandOptionReload());
-        subcommands.put("ticket", new CommandOptionTicket());
-        subcommands.put("update", new CommandOptionUpdate());
+    /** Registry used to look up help entries by category and visibility. */
+    private HelpRegistry helpRegistry;
+
+    /**
+     * Registers the {@code /mypet} Brigadier command and its help entry.
+     *
+     * <p>The tree consists of a root literal {@code mypet} whose default execution shows
+     * the splash banner, a {@code help} literal with sub-literals for each category (plus
+     * {@code all}), and delegated subtrees for {@code reload}, {@code ticket}, and
+     * {@code update}.</p>
+     *
+     * <p>A {@link HelpEntry} for the base command itself is also registered under the
+     * {@link CommandCategory#PET} category.</p>
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        this.helpRegistry = helpRegistry;
+
+        commands.register(
+                Commands.literal("mypet")
+                        .executes(ctx -> {
+                            showSplash(ctx.getSource().getSender());
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .then(Commands.literal("help")
+                                .executes(ctx -> {
+                                    showHelp(ctx.getSource().getSender(), null);
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                                        .then(Commands.literal("all")
+                                        .executes(ctx -> {
+                                            showHelp(ctx.getSource().getSender(), "all");
+                                            return Command.SINGLE_SUCCESS;
+                                        }))
+                                .then(Commands.literal("pet")
+                                        .executes(ctx -> {
+                                            showHelp(ctx.getSource().getSender(), "pet");
+                                            return Command.SINGLE_SUCCESS;
+                                        }))
+                                .then(Commands.literal("skills")
+                                        .executes(ctx -> {
+                                            showHelp(ctx.getSource().getSender(), "skills");
+                                            return Command.SINGLE_SUCCESS;
+                                        }))
+                                .then(Commands.literal("admin")
+                                        .executes(ctx -> {
+                                            showHelp(ctx.getSource().getSender(), "admin");
+                                            return Command.SINGLE_SUCCESS;
+                                        })))
+                        .then(new CommandOptionReload().buildNode())
+                        .then(new CommandOptionTicket().buildNode())
+                        .then(new CommandOptionUpdate().buildNode())
+                        .build(),
+                "MyPet plugin commands",
+                List.of()
+        );
+
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.MyPet",
+                "/mypet",
+                CommandCategory.PET,
+                5,
+                null
+        ));
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        if (args.length > 0) {
-            String sub = args[0].toLowerCase();
-            if (sub.equals("help")) {
-                showHelp(sender, Arrays.copyOfRange(args, 1, args.length));
-                return true;
-            }
-            CommandOption option = subcommands.get(sub);
-            if (option != null) {
-                if (sender instanceof Player && !option.isVisibleTo((Player) sender)) {
-                    sender.sendMessage(Translation.getComponent("Message.No.Allowed", sender));
-                    return true;
-                }
-                return option.onCommandOption(sender, Arrays.copyOfRange(args, 1, args.length));
-            }
-        }
-        showSplash(sender);
-        return true;
-    }
-
+    /**
+     * Displays the plugin splash banner showing the name, version, and project URL.
+     *
+     * @param sender the command sender to receive the splash output
+     */
     private void showSplash(CommandSender sender) {
         String line = dashes(SEPARATOR_WIDTH);
         sender.sendMessage(line);
@@ -90,25 +151,48 @@ public class CommandMyPet implements CommandTabCompleter {
         sender.sendMessage(line);
     }
 
-    private void showHelp(CommandSender sender, String[] args) {
+    /**
+     * Routes the {@code /mypet help} command to the appropriate handler.
+     *
+     * <ul>
+     *   <li>{@code null} category -- shows the category listing overview</li>
+     *   <li>{@code "all"} -- shows all commands grouped by every category</li>
+     *   <li>A valid category name -- shows commands for that single category</li>
+     *   <li>An unrecognized name -- sends an error message</li>
+     * </ul>
+     *
+     * @param sender      the command sender requesting help
+     * @param categoryArg the category argument, or {@code null} if none was provided
+     */
+    private void showHelp(CommandSender sender, String categoryArg) {
         boolean isPlayer = sender instanceof Player;
         Player player = isPlayer ? (Player) sender : null;
 
-        if (args.length == 0) {
+        if (categoryArg == null) {
             showCategoryListing(sender, player, isPlayer);
-        } else if (args[0].equalsIgnoreCase("all")) {
+        } else if (categoryArg.equalsIgnoreCase("all")) {
             showGroupedHelp(sender, player, isPlayer, null);
         } else {
-            CommandCategory match = matchCategory(args[0]);
+            CommandCategory match = matchCategory(categoryArg);
             if (match != null) {
                 showGroupedHelp(sender, player, isPlayer, match);
             } else {
-                sender.sendMessage(Component.text("Unknown category: " + args[0]).color(NamedTextColor.RED));
+                sender.sendMessage(Component.text("Unknown category: " + categoryArg).color(NamedTextColor.RED));
                 sender.sendMessage(Component.text("Use ").append(Component.text("/mypet help").color(NamedTextColor.GOLD)).append(Component.text(" to see available categories.")));
             }
         }
     }
 
+    /**
+     * Displays the help category overview, listing each {@link CommandCategory} that has
+     * at least one visible entry for the sender, along with its localized description.
+     *
+     * <p>An additional {@code "all"} pseudo-category is always appended at the bottom.</p>
+     *
+     * @param sender   the command sender to receive the category listing
+     * @param player   the {@link Player} instance if the sender is a player, otherwise {@code null}
+     * @param isPlayer {@code true} if the sender is a player (used for permission filtering)
+     */
     private void showCategoryListing(CommandSender sender, Player player, boolean isPlayer) {
         String helpText = Translation.getString("Name.Help", sender);
         Component titleComponent = Component.text("MyPet - ").append(Translation.getComponent("Name.Help", sender));
@@ -116,38 +200,51 @@ public class CommandMyPet implements CommandTabCompleter {
         sender.sendMessage(Component.text("Use ").append(Component.text("/mypet help <category>").color(NamedTextColor.GOLD)).append(Component.text(" to see commands.")));
         sender.sendMessage("");
 
-        Map<CommandCategory, List<HelpProvider>> grouped = collectGroupedHelp();
-
         for (CommandCategory category : CommandCategory.values()) {
-            List<HelpProvider> providers = grouped.get(category);
-            if (providers == null) {
-                continue;
-            }
-            if (!hasVisibleCommands(providers, player, isPlayer)) {
+            List<HelpEntry> entries = isPlayer
+                    ? helpRegistry.getEntriesByCategoryVisibleTo(category, player)
+                    : helpRegistry.getEntriesByCategory(category);
+            if (entries.isEmpty()) {
                 continue;
             }
             String descKey = "Message.Command.Help.Category." + category.getDisplayName();
-            sender.sendMessage(Component.text("  ").append(Component.text(category.getDisplayName().toLowerCase()).color(NamedTextColor.GOLD)).append(Component.text(" - ")).append(Translation.getComponent(descKey, sender)));
+            sender.sendMessage(Component.text("  ")
+                    .append(Component.text(category.getDisplayName().toLowerCase()).color(NamedTextColor.GOLD))
+                    .append(Component.text(" - "))
+                    .append(Translation.getComponent(descKey, sender)));
         }
 
         sender.sendMessage("");
-        sender.sendMessage(Component.text("  ").append(Component.text("all").color(NamedTextColor.GOLD)).append(Component.text(" - ")).append(Translation.getComponent("Message.Command.Help.Category.All", sender)));
+        sender.sendMessage(Component.text("  ")
+                .append(Component.text("all").color(NamedTextColor.GOLD))
+                .append(Component.text(" - "))
+                .append(Translation.getComponent("Message.Command.Help.Category.All", sender)));
         sender.sendMessage(dashes(SEPARATOR_WIDTH));
     }
 
+    /**
+     * Renders help entries grouped under their {@link CommandCategory} headings.
+     *
+     * <p>When {@code filter} is {@code null}, all categories are shown (the "all" view).
+     * When a specific category is given, only entries belonging to that category are
+     * displayed. Each group is preceded by a titled separator line, and a wiki URL is
+     * appended at the end.</p>
+     *
+     * @param sender   the command sender to receive the help output
+     * @param player   the {@link Player} instance if the sender is a player, otherwise {@code null}
+     * @param isPlayer {@code true} if the sender is a player (used for permission filtering)
+     * @param filter   the category to restrict output to, or {@code null} to show all categories
+     */
     private void showGroupedHelp(CommandSender sender, Player player, boolean isPlayer, CommandCategory filter) {
-        Map<CommandCategory, List<HelpProvider>> grouped = collectGroupedHelp();
-
         boolean first = true;
         for (CommandCategory category : CommandCategory.values()) {
             if (filter != null && category != filter) {
                 continue;
             }
-            List<HelpProvider> providers = grouped.get(category);
-            if (providers == null) {
-                continue;
-            }
-            if (!hasVisibleCommands(providers, player, isPlayer)) {
+            List<HelpEntry> entries = isPlayer
+                    ? helpRegistry.getEntriesByCategoryVisibleTo(category, player)
+                    : helpRegistry.getEntriesByCategory(category);
+            if (entries.isEmpty()) {
                 continue;
             }
 
@@ -160,87 +257,26 @@ public class CommandMyPet implements CommandTabCompleter {
                     .append(Translation.getComponent("Name.Help", sender))
                     .append(Component.text(" - " + category.getDisplayName()));
             sender.sendMessage(buildSeparator(plainTitle, titleComp));
-            for (HelpProvider hp : providers) {
-                if (!isPlayer || hp.isVisibleTo(player)) {
-                    if (hp.getHelpTranslationKey() != null) {
-                        sender.sendMessage(Component.text("  ").append(
-                                Translation.getFormattedComponent(hp.getHelpTranslationKey(), sender,
-                                hp.getHelpCommand())));
-                    } else if (hp.getHelpDescription() != null) {
-                        sender.sendMessage(Component.text("  ").append(Component.text(hp.getHelpCommand()).color(NamedTextColor.GOLD)).append(Component.text(": " + hp.getHelpDescription())));
-                    }
-                }
+            for (HelpEntry entry : entries) {
+                sender.sendMessage(Component.text("  ").append(
+                        Translation.getFormattedComponent(entry.translationKey(), sender,
+                                entry.command())));
             }
             first = false;
         }
 
         sender.sendMessage("");
-        sender.sendMessage(Translation.getComponent("Message.Command.Help.MoreInfo", sender).append(Component.text(" " + Configuration.Misc.WIKI_URL).color(NamedTextColor.GOLD)));
+        sender.sendMessage(Translation.getComponent("Message.Command.Help.MoreInfo", sender)
+                .append(Component.text(" " + Configuration.Misc.WIKI_URL).color(NamedTextColor.GOLD)));
         sender.sendMessage(dashes(SEPARATOR_WIDTH));
     }
 
-    private Map<CommandCategory, List<HelpProvider>> collectGroupedHelp() {
-        List<HelpProvider> all = collectHelpProviders();
-        Map<CommandCategory, List<HelpProvider>> grouped = new LinkedHashMap<>();
-        for (HelpProvider hp : all) {
-            grouped.computeIfAbsent(hp.getHelpCategory(), k -> new ArrayList<>()).add(hp);
-        }
-        return grouped;
-    }
-
-    private List<HelpProvider> collectHelpProviders() {
-        JavaPlugin plugin = (JavaPlugin) MyPetApi.getPlugin();
-        List<HelpProvider> result = new ArrayList<>();
-
-        for (String name : plugin.getDescription().getCommands().keySet()) {
-            PluginCommand pluginCmd = plugin.getCommand(name);
-            if (pluginCmd == null) {
-                continue;
-            }
-            CommandExecutor executor = pluginCmd.getExecutor();
-            if (executor instanceof HelpProvider) {
-                HelpProvider hp = (HelpProvider) executor;
-                if (hp.getHelpTranslationKey() != null && hp.getHelpCommand() != null) {
-                    result.add(hp);
-                }
-            }
-        }
-
-        for (CommandOption option : subcommands.values()) {
-            if (option.getHelpTranslationKey() != null && option.getHelpCommand() != null) {
-                result.add(option);
-            }
-        }
-
-        PluginCommand adminCmd = plugin.getCommand("mypetadmin");
-        if (adminCmd != null) {
-            CommandExecutor adminExecutor = adminCmd.getExecutor();
-            if (adminExecutor instanceof CommandAdmin) {
-                for (CommandOption option : ((CommandAdmin) adminExecutor).getCommandOptions().values()) {
-                    if (option.getHelpCommand() != null
-                            && (option.getHelpTranslationKey() != null || option.getHelpDescription() != null)) {
-                        result.add(option);
-                    }
-                }
-            }
-        }
-
-        result.sort(Comparator.comparingInt(HelpProvider::getHelpOrder));
-        return result;
-    }
-
-    private boolean hasVisibleCommands(List<HelpProvider> providers, Player player, boolean isPlayer) {
-        if (!isPlayer) {
-            return true;
-        }
-        for (HelpProvider hp : providers) {
-            if (hp.isVisibleTo(player)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Performs a case-insensitive lookup of a {@link CommandCategory} by its display name.
+     *
+     * @param input the category name typed by the user
+     * @return the matching {@link CommandCategory}, or {@code null} if no match was found
+     */
     private CommandCategory matchCategory(String input) {
         String lower = input.toLowerCase();
         for (CommandCategory category : CommandCategory.values()) {
@@ -251,12 +287,26 @@ public class CommandMyPet implements CommandTabCompleter {
         return null;
     }
 
-    private static final int SEPARATOR_WIDTH = 52;
-
+    /**
+     * Creates a string of dash ({@code -}) characters of the specified length.
+     *
+     * @param count the number of dashes to produce
+     * @return a string containing exactly {@code count} dash characters
+     */
     private static String dashes(int count) {
         return "-".repeat(count);
     }
 
+    /**
+     * Builds a centered separator line with a gold-coloured title flanked by dashes.
+     *
+     * <p>The plain-text title is used to calculate the character width so that the
+     * dashes on each side are evenly distributed within {@link #SEPARATOR_WIDTH}.</p>
+     *
+     * @param plainTitle     the unformatted title string (used for width measurement)
+     * @param titleComponent the styled Adventure {@link Component} to render as the title
+     * @return a {@link Component} of the form {@code "--- Title ---"}
+     */
     private static Component buildSeparator(String plainTitle, Component titleComponent) {
         int contentWidth = plainTitle.length() + 2;
         int remaining = SEPARATOR_WIDTH - contentWidth;
@@ -265,86 +315,5 @@ public class CommandMyPet implements CommandTabCompleter {
         return Component.text(dashes(side) + " ")
                 .append(titleComponent.color(NamedTextColor.GOLD))
                 .append(Component.text(" " + dashes(remaining - side)));
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.MyPet";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/mypet";
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 5;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String s, String[] args) {
-        if (args.length == 1) {
-            List<String> options = new ArrayList<>();
-            String prefix = args[0].toLowerCase();
-            if ("help".startsWith(prefix)) {
-                options.add("help");
-            }
-            for (Map.Entry<String, CommandOption> entry : subcommands.entrySet()) {
-                if (entry.getKey().startsWith(prefix)) {
-                    boolean allowed = !(sender instanceof Player)
-                            || entry.getValue().isVisibleTo((Player) sender);
-                    if (allowed) {
-                        options.add(entry.getKey());
-                    }
-                }
-            }
-            return options;
-        }
-        if (args.length >= 2) {
-            String sub = args[0].toLowerCase();
-            if (sub.equals("help")) {
-                return completeHelpCategories(sender, args[1]);
-            }
-            CommandOption option = subcommands.get(sub);
-            if (option instanceof CommandOptionTabCompleter) {
-                boolean allowed = !(sender instanceof Player)
-                        || option.isVisibleTo((Player) sender);
-                if (allowed) {
-                    return ((CommandOptionTabCompleter) option).onTabComplete(sender, args);
-                }
-            }
-            return Collections.emptyList();
-        }
-        return Collections.emptyList();
-    }
-
-    private List<String> completeHelpCategories(CommandSender sender, String prefix) {
-        boolean isPlayer = sender instanceof Player;
-        Player player = isPlayer ? (Player) sender : null;
-        String lower = prefix.toLowerCase();
-
-        Map<CommandCategory, List<HelpProvider>> grouped = collectGroupedHelp();
-        List<String> results = new ArrayList<>();
-
-        for (CommandCategory category : CommandCategory.values()) {
-            List<HelpProvider> providers = grouped.get(category);
-            if (providers == null) {
-                continue;
-            }
-            if (!hasVisibleCommands(providers, player, isPlayer)) {
-                continue;
-            }
-            String name = category.getDisplayName().toLowerCase();
-            if (name.startsWith(lower)) {
-                results.add(name);
-            }
-        }
-
-        if ("all".startsWith(lower)) {
-            results.add("all");
-        }
-
-        return results;
     }
 }

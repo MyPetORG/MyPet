@@ -20,17 +20,47 @@
 
 package de.Keyle.MyPet.api.commands;
 
+/**
+ * Categories used to group commands in the {@code /mypet help} output.
+ * Each command's {@link HelpEntry} is assigned a category so that related commands
+ * are displayed together in the help listing.
+ */
 public enum CommandCategory {
+    /**
+     * Commands related to pet management, such as naming, releasing,
+     * switching pets, and viewing pet info.
+     */
     PET("Pet"),
+
+    /**
+     * Commands related to pet skills, such as viewing the skill tree
+     * or managing individual skill behaviors.
+     */
     SKILLS("Skills"),
+
+    /**
+     * Administrative commands for server operators, such as reloading
+     * configuration, managing other players' pets, or debugging.
+     */
     ADMIN("Admin");
 
     private final String displayName;
 
+    /**
+     * Creates a new command category with the given human-readable display name.
+     *
+     * @param displayName the display name shown in help output
+     */
     CommandCategory(String displayName) {
         this.displayName = displayName;
     }
 
+    /**
+     * Returns the human-readable display name for this category,
+     * suitable for use in help output sent to players.
+     *
+     * @return the display name
+     */
     public String getDisplayName() {
         return displayName;
     }

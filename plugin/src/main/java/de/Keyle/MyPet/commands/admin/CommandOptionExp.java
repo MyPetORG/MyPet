@@ -20,148 +20,201 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.MessageUtil;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+/**
+ * Admin subcommand that modifies the experience or level of a player's active pet.
+ *
+ * <p>Usage:</p>
+ * <ul>
+ *   <li>{@code /petadmin exp <player> <amount> [add|set|remove]} -- manipulates raw experience points</li>
+ *   <li>{@code /petadmin exp <player> <levels> levels [add|set|remove]} -- manipulates levels (converted to exp)</li>
+ * </ul>
+ *
+ * <p>When no operator is specified, {@code set} is used by default. Experience is clamped
+ * to the range {@code [0, maxExp]} and levels are clamped to {@code [1, LEVEL_CAP]}.</p>
+ *
+ * <p>Requires the {@code MyPet.admin} permission.</p>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandOptionExp {
 
-public class CommandOptionExp implements CommandOptionTabCompleter {
+    /**
+     * Arithmetic operators for experience/level modification.
+     */
+    private enum Operator { ADD, SET, REMOVE }
 
-    private static List<String> addSetRemoveList = new ArrayList<>();
+    /**
+     * Builds the Brigadier command tree for the {@code exp} subcommand.
+     *
+     * <p>The tree has two branches under the {@code <player>} argument:</p>
+     * <ol>
+     *   <li>Raw exp branch: {@code <amount>} (double) followed by optional {@code add|set|remove} literals.</li>
+     *   <li>Level branch: {@code <levels>} (integer) followed by the {@code levels} literal keyword and
+     *       optional {@code add|set|remove} literals.</li>
+     * </ol>
+     *
+     * @param helpRegistry the help registry to register the command's help entry with
+     * @return the built {@link LiteralCommandNode} representing the {@code exp} subcommand
+     */
+    public LiteralCommandNode<CommandSourceStack> buildNode(HelpRegistry helpRegistry) {
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Admin.Exp",
+                "/petadmin exp",
+                CommandCategory.ADMIN,
+                26,
+                player -> Permissions.has(player, "MyPet.admin", false)
+        ));
 
-    static {
-        addSetRemoveList.add("add");
-        addSetRemoveList.add("set");
-        addSetRemoveList.add("remove");
+        // /petadmin exp <player> <amount> [add|set|remove]
+        // /petadmin exp <player> <levels> levels [add|set|remove]
+        LiteralArgumentBuilder<CommandSourceStack> expNode = Commands.literal("exp")
+                .then(Commands.argument("player", ArgumentTypes.player())
+                        // Raw exp branch: /petadmin exp <player> <amount> [operator]
+                        .then(Commands.argument("amount", DoubleArgumentType.doubleArg(0))
+                                .executes(ctx -> {
+                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                            .resolve(ctx.getSource()).getFirst();
+                                    double amount = DoubleArgumentType.getDouble(ctx, "amount");
+                                    executeExp(ctx.getSource().getSender(), player, amount, Operator.SET);
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                                .then(Commands.literal("add").executes(ctx -> {
+                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                            .resolve(ctx.getSource()).getFirst();
+                                    executeExp(ctx.getSource().getSender(), player,
+                                            DoubleArgumentType.getDouble(ctx, "amount"), Operator.ADD);
+                                    return Command.SINGLE_SUCCESS;
+                                }))
+                                .then(Commands.literal("set").executes(ctx -> {
+                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                            .resolve(ctx.getSource()).getFirst();
+                                    executeExp(ctx.getSource().getSender(), player,
+                                            DoubleArgumentType.getDouble(ctx, "amount"), Operator.SET);
+                                    return Command.SINGLE_SUCCESS;
+                                }))
+                                .then(Commands.literal("remove").executes(ctx -> {
+                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                            .resolve(ctx.getSource()).getFirst();
+                                    executeExp(ctx.getSource().getSender(), player,
+                                            DoubleArgumentType.getDouble(ctx, "amount"), Operator.REMOVE);
+                                    return Command.SINGLE_SUCCESS;
+                                })))
+                        // Level branch: /petadmin exp <player> <levels> levels [operator]
+                        .then(Commands.argument("levels", IntegerArgumentType.integer(0))
+                                .then(Commands.literal("levels")
+                                        .executes(ctx -> {
+                                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                                    .resolve(ctx.getSource()).getFirst();
+                                            int levels = IntegerArgumentType.getInteger(ctx, "levels");
+                                            executeLevels(ctx.getSource().getSender(), player, levels, Operator.SET);
+                                            return Command.SINGLE_SUCCESS;
+                                        })
+                                        .then(Commands.literal("add").executes(ctx -> {
+                                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                                    .resolve(ctx.getSource()).getFirst();
+                                            executeLevels(ctx.getSource().getSender(), player,
+                                                    IntegerArgumentType.getInteger(ctx, "levels"), Operator.ADD);
+                                            return Command.SINGLE_SUCCESS;
+                                        }))
+                                        .then(Commands.literal("set").executes(ctx -> {
+                                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                                    .resolve(ctx.getSource()).getFirst();
+                                            executeLevels(ctx.getSource().getSender(), player,
+                                                    IntegerArgumentType.getInteger(ctx, "levels"), Operator.SET);
+                                            return Command.SINGLE_SUCCESS;
+                                        }))
+                                        .then(Commands.literal("remove").executes(ctx -> {
+                                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                                    .resolve(ctx.getSource()).getFirst();
+                                            executeLevels(ctx.getSource().getSender(), player,
+                                                    IntegerArgumentType.getInteger(ctx, "levels"), Operator.REMOVE);
+                                            return Command.SINGLE_SUCCESS;
+                                        })))));
+
+        return expNode.build();
     }
 
-    @Override
-    public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin exp ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<a player name>").color(NamedTextColor.RED)));
-            return false;
-        }
-        if (args.length < 2) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin exp " + args[0] + " ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<amount>").color(NamedTextColor.RED)));
-            return false;
-        }
-
+    /**
+     * Applies an experience modification to the target player's active pet.
+     *
+     * <p>The final experience value is computed based on the operator: {@code SET} replaces
+     * the current exp (clamped to max), {@code ADD} adds to current exp (clamped to max),
+     * and {@code REMOVE} subtracts from current exp (floored at 0).</p>
+     *
+     * @param sender   the command sender (for feedback messages)
+     * @param petOwner the player whose pet's experience will be modified
+     * @param amount   the raw experience amount to apply
+     * @param operator the arithmetic operation to perform
+     */
+    private void executeExp(CommandSender sender, Player petOwner, double amount, Operator operator) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
-        Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
-        if (petOwner == null || !petOwner.isOnline()) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
-            return true;
-        } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
-            return true;
+            return;
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
-
-        int valueInd = 1;
-        int operatorInd = 2;
-
-        if (args.length > 2 && Util.isDouble(args[2])) {
-            valueInd = 2;
-            operatorInd = 1;
-        }
-
-        String value = args[valueInd];
-        boolean level = false;
-        double exp = myPet.getExp();
-
-        if (value.endsWith("l") || value.endsWith("L")) {
-            level = true;
-            value = value.substring(0, value.length() - 1);
-        }
-
-        if (args.length == 2 || args[operatorInd].equalsIgnoreCase("set")) {
-            if (level) {
-                if (Util.isInt(value)) {
-                    exp = myPet.getExperience().getExpByLevel(Math.min(Integer.parseInt(value), Configuration.LevelSystem.Experience.LEVEL_CAP));
-                }
-            } else {
-                if (Util.isDouble(value)) {
-                    exp = Math.min(Double.parseDouble(value), myPet.getExperience().getMaxExp());
-                }
-            }
-        } else if (args[operatorInd].equalsIgnoreCase("add")) {
-            if (level) {
-                if (Util.isInt(value)) {
-                    int newLevel = Math.min(myPet.getExperience().getLevel() + Integer.parseInt(value), Configuration.LevelSystem.Experience.LEVEL_CAP);
-
-                    exp = myPet.getExperience().getExpByLevel(newLevel);
-                }
-            } else {
-                if (Util.isDouble(value)) {
-                    exp = Math.min(Double.parseDouble(value) + exp, myPet.getExperience().getMaxExp());
-                }
-            }
-        } else if (args[operatorInd].equalsIgnoreCase("remove")) {
-            if (level) {
-                if (Util.isInt(value)) {
-                    int oldLevel = myPet.getExperience().getLevel();
-                    if (oldLevel - Integer.parseInt(value) <= 1) {
-                        exp = 0;
-                    } else {
-                        exp = myPet.getExperience().getExpByLevel(oldLevel - Integer.parseInt(value));
-                    }
-                }
-            } else {
-                if (Util.isDouble(value)) {
-                    exp -= Double.parseDouble(value);
-                }
-            }
-        }
+        double exp = switch (operator) {
+            case SET -> Math.min(amount, myPet.getExperience().getMaxExp());
+            case ADD -> Math.min(myPet.getExp() + amount, myPet.getExperience().getMaxExp());
+            case REMOVE -> Math.max(0, myPet.getExp() - amount);
+        };
 
         myPet.getExperience().setExp(exp);
-        sender.sendMessage(MessageUtil.prefixed(Component.text("set exp to " + exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".")));
-
-        return true;
+        sender.sendMessage(MessageUtil.prefixed(Component.text(
+                "set exp to " + exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".")));
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        if (strings.length == 2) {
-            return null;
-        } else if (strings.length == 4) {
-            return filterTabCompletionResults(addSetRemoveList, strings[3]);
+    /**
+     * Applies a level-based experience modification to the target player's active pet.
+     *
+     * <p>Computes the target level based on the operator ({@code SET}, {@code ADD}, or {@code REMOVE}),
+     * clamps it to {@code [1, LEVEL_CAP]}, converts the target level to the equivalent experience
+     * value, and sets it on the pet.</p>
+     *
+     * @param sender   the command sender (for feedback messages)
+     * @param petOwner the player whose pet's level will be modified
+     * @param levels   the number of levels to apply
+     * @param operator the arithmetic operation to perform
+     */
+    private void executeLevels(CommandSender sender, Player petOwner, int levels, Operator operator) {
+        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+
+        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
+            return;
         }
-        return Collections.emptyList();
-    }
+        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        int targetLevel = switch (operator) {
+            case SET -> Math.min(levels, Configuration.LevelSystem.Experience.LEVEL_CAP);
+            case ADD -> Math.min(myPet.getExperience().getLevel() + levels, Configuration.LevelSystem.Experience.LEVEL_CAP);
+            case REMOVE -> Math.max(1, myPet.getExperience().getLevel() - levels);
+        };
 
-    @Override
-    public String getHelpCommand() {
-        return "/petadmin exp";
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.ADMIN;
-    }
-
-    @Override
-    public String getHelpDescription() {
-        return "Modifies pet experience";
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 26;
+        double exp = targetLevel <= 1 ? 0 : myPet.getExperience().getExpByLevel(targetLevel);
+        myPet.getExperience().setExp(exp);
+        sender.sendMessage(MessageUtil.prefixed(Component.text(
+                "set exp to " + exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".")));
     }
 }

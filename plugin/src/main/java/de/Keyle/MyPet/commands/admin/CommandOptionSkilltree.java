@@ -20,105 +20,137 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.MessageUtil;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class CommandOptionSkilltree implements CommandOptionTabCompleter {
-    @Override
-    public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin skilltree ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<a player name> <new skilltree>").color(NamedTextColor.RED)));
-            return false;
-        }
-        if (args.length == 1) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin skilltree " + args[0] + " ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<new skilltree>").color(NamedTextColor.RED)));
-            return false;
-        }
+/**
+ * Admin subcommand for forcibly changing the skilltree of another player's active pet.
+ *
+ * <p>Usage: {@code /petadmin skilltree <player> <skilltree>}
+ *
+ * <p>The skilltree argument provides tab completion that filters available skilltrees
+ * based on compatibility with the target player's active pet type. Only skilltrees
+ * whose {@link Skilltree#getMobTypes()} includes the pet's type are suggested and accepted.
+ *
+ * <p>Fires a {@link MyPetSelectSkilltreeEvent} with source
+ * {@link MyPetSelectSkilltreeEvent.Source#AdminCommand} when the skilltree is changed.
+ *
+ * <p>Requires the {@code MyPet.admin} permission.
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandOptionSkilltree {
 
+    /**
+     * Builds the Brigadier command node for the {@code skilltree} admin subcommand.
+     *
+     * <p>The resulting command tree structure is:
+     * <pre>
+     *   skilltree
+     *     &lt;player: player_selector&gt;
+     *       &lt;skilltree: word&gt;
+     *         (executes) -- assign the named skilltree to the player's pet
+     * </pre>
+     *
+     * <p>The {@code skilltree} argument's suggestion provider resolves the player selector,
+     * looks up their active pet, and suggests only skilltrees compatible with that pet type.
+     * If the player selector fails during suggestion (e.g., player not yet typed), the
+     * exception is silently caught and no suggestions are provided.
+     *
+     * @param helpRegistry the help registry to register the command's help entry with
+     * @return the built {@link LiteralCommandNode} representing the {@code skilltree} subcommand
+     */
+    public LiteralCommandNode<CommandSourceStack> buildNode(HelpRegistry helpRegistry) {
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Admin.Skilltree",
+                "/petadmin skilltree",
+                CommandCategory.ADMIN,
+                32,
+                player -> Permissions.has(player, "MyPet.admin", false)
+        ));
+
+        return Commands.literal("skilltree")
+                .then(Commands.argument("player", ArgumentTypes.player())
+                        .then(Commands.argument("skilltree", StringArgumentType.word())
+                                .suggests((ctx, builder) -> {
+                                    try {
+                                        List<Player> resolved = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                                .resolve(ctx.getSource());
+                                        if (!resolved.isEmpty()) {
+                                            Player player = resolved.getFirst();
+                                            if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                                                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
+                                                for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
+                                                    if (skilltree.getMobTypes().contains(myPet.getPetType())) {
+                                                        builder.suggest(skilltree.getName());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } catch (Exception ignored) {
+                                        // Player selector may fail during suggestion - silently skip
+                                    }
+                                    return builder.buildFuture();
+                                })
+                                .executes(ctx -> {
+                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                            .resolve(ctx.getSource()).getFirst();
+                                    execute(ctx.getSource().getSender(), player,
+                                            StringArgumentType.getString(ctx, "skilltree"));
+                                    return Command.SINGLE_SUCCESS;
+                                })))
+                .build();
+    }
+
+    /**
+     * Assigns a skilltree to the specified player's active pet.
+     *
+     * <p>Validates that the player has an active pet, that the named skilltree exists,
+     * and that it is compatible with the pet's type. If all checks pass, the skilltree
+     * is set on the pet and a localized success message is sent. Otherwise, an appropriate
+     * error message is sent.
+     *
+     * @param sender        the command sender (admin) to receive feedback messages
+     * @param petOwner      the player whose active pet's skilltree will be changed
+     * @param skilltreeName the name of the skilltree to assign
+     */
+    private void execute(CommandSender sender, Player petOwner, String skilltreeName) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
-        Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
-        if (petOwner == null || !petOwner.isOnline()) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
-            return true;
-        } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
-            return true;
+            return;
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
-        if (MyPetApi.getSkilltreeManager().hasSkilltree(args[1])) {
-            Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(args[1]);
+        if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
+            Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
             if (skilltree.getMobTypes().contains(myPet.getPetType()) && myPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.AdminCommand)) {
                 sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.Skilltree.SwitchedToFor", lang, petOwner.getName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName()))));
             } else {
                 sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.Skilltree.NotSwitched", lang)));
             }
         } else {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.Command.Skilltree.CantFindSkilltree", lang, args[1])));
+            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.Command.Skilltree.CantFindSkilltree", lang, skilltreeName)));
         }
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        if (strings.length == 2) {
-            return null;
-        }
-        if (strings.length == 3) {
-            Player player = Bukkit.getServer().getPlayer(strings[1]);
-            if (player == null || !player.isOnline()) {
-                return Collections.emptyList();
-            }
-            if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
-                List<String> skilltreeList = new ArrayList<>();
-                for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
-                    if (skilltree.getMobTypes().contains(myPet.getPetType())) {
-                        skilltreeList.add(skilltree.getName());
-                    }
-                }
-                return filterTabCompletionResults(skilltreeList, strings[2]);
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petadmin skilltree";
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.ADMIN;
-    }
-
-    @Override
-    public String getHelpDescription() {
-        return "Changes a pet's skilltree";
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 32;
     }
 }

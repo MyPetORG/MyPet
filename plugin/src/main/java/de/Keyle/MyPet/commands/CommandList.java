@@ -20,66 +20,116 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
-public class CommandList implements CommandTabCompleter {
-    public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
-        final String lang;
-        if (sender instanceof Player player) {
-            lang = MyPetApi.getPlatformHelper().getPlayerLanguage(player);
-        } else {
-            lang = "en";
-        }
+/**
+ * Handles the {@code /petlist} command (alias: {@code /plist}).
+ *
+ * <p>Lists all stored pets belonging to the sender, or to another player when an admin
+ * provides a target name. Each pet's display name is shown as a comma-separated list
+ * with hover tooltips containing pet details (via {@link de.Keyle.MyPet.api.Util#myPetToItemHover}).</p>
+ *
+ * <p>This command is restricted to in-game players only (no console support).</p>
+ *
+ * <p><b>Usage:</b> {@code /petlist [player]}</p>
+ *
+ * <p><b>Permissions:</b></p>
+ * <ul>
+ *   <li>{@code MyPet.admin} -- required to view another player's pet list</li>
+ * </ul>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandList {
+
+    /**
+     * Registers the {@code /petlist} Brigadier command and its help entry.
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petlist")
+                        .requires(ctx -> ctx.getSender() instanceof Player)
+                        .executes(ctx -> {
+                            execute((Player) ctx.getSource().getSender(), null);
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .then(Commands.argument("player", StringArgumentType.word())
+                                .suggests((ctx, builder) -> {
+                                    Bukkit.getOnlinePlayers().forEach(p -> builder.suggest(p.getName()));
+                                    return builder.buildFuture();
+                                })
+                                .executes(ctx -> {
+                                    execute((Player) ctx.getSource().getSender(), StringArgumentType.getString(ctx, "player"));
+                                    return Command.SINGLE_SUCCESS;
+                                }))
+                        .build(),
+                "Lists your pets",
+                List.of("plist")
+        );
+
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.List",
+                "/petlist",
+                CommandCategory.PET,
+                125,
+                player -> MyPetApi.getPlayerManager().isMyPetPlayer(player)
+        ));
+    }
+
+    /**
+     * Executes the petlist command logic. Resolves the target pet owner, fetches all
+     * their stored pets from the repository asynchronously, and sends a formatted
+     * comma-separated list with hover events to the sender.
+     *
+     * @param sender     the player who executed the command
+     * @param targetName the name of the target player whose pets to list,
+     *                   or {@code null} to list the sender's own pets
+     */
+    private void execute(Player sender, String targetName) {
+        final String lang = MyPetApi.getPlatformHelper().getPlayerLanguage(sender);
 
         final Player petOwner;
-        if (args.length == 0) {
-            if (sender instanceof Player player) {
-                petOwner = player;
-            } else {
-                sender.sendMessage("You can't use this command from server console!");
-                return true;
-            }
+        if (targetName == null) {
+            petOwner = sender;
         } else {
-            if (sender instanceof Player player) {
-                if (Permissions.has(player, "MyPet.admin", false)) {
-                    petOwner = Bukkit.getPlayer(args[0]);
-                } else {
-                    petOwner = player;
-                }
+            if (Permissions.has(sender, "MyPet.admin", false)) {
+                petOwner = Bukkit.getPlayer(targetName);
             } else {
-                sender.sendMessage("You can't use this command from server console!");
-                return true;
+                petOwner = sender;
             }
         }
 
         if (petOwner == null || !petOwner.isOnline()) {
             sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", lang));
-            return true;
+            return;
         }
         final MyPetPlayer owner;
         if (MyPetApi.getPlayerManager().isMyPetPlayer(petOwner)) {
             owner = MyPetApi.getPlayerManager().getMyPetPlayer(petOwner);
         } else {
             sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName()));
-            return true;
+            return;
         }
 
         if (owner != null) {
@@ -105,45 +155,9 @@ public class CommandList implements CommandTabCompleter {
                             doComma = true;
                         }
                     }
-                    if (sender instanceof Player player) {
-                        player.sendMessage(messageBuilder.build());
-                    }
+                    sender.sendMessage(messageBuilder.build());
                 }
             });
         }
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (sender instanceof Player player && strings.length == 1 && Permissions.has(player, "MyPet.admin", false)) {
-            return null;
-        }
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.List";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petlist";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return MyPetApi.getPlayerManager().isMyPetPlayer(player);
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 125;
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.PET;
     }
 }

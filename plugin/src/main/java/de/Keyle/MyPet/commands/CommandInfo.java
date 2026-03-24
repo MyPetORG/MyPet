@@ -20,9 +20,12 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.ContributorCheck;
@@ -30,18 +33,47 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.PetInfoBuilder;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.command.Command;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
-public class CommandInfo implements CommandTabCompleter {
+/**
+ * Handles the {@code /petinfo} command (alias: {@code /pinfo}).
+ *
+ * <p>Displays detailed information about the sender's active pet, or another player's pet
+ * when a target player name is provided. The information shown includes pet name, HP,
+ * damage, ranged damage, hunger, food, behavior, skilltree, level, experience, and
+ * respawn time (if dead). Each info line has configurable visibility controlled by
+ * {@link PetInfoDisplay} which determines whether a field is admin-only.</p>
+ *
+ * <p><b>Usage:</b> {@code /petinfo [player]}</p>
+ *
+ * <p><b>Permissions:</b></p>
+ * <ul>
+ *   <li>{@code MyPet.command.info.other} -- required to view another player's pet info</li>
+ *   <li>{@code MyPet.admin} -- bypasses admin-only display restrictions</li>
+ * </ul>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandInfo {
 
+    /**
+     * Determines whether the given sender is allowed to see a particular info field.
+     *
+     * <p>If {@code adminOnly} is {@code true}, the field is only visible to the pet owner
+     * themselves or to players with the {@code MyPet.admin} permission. Console senders
+     * can always see all fields.</p>
+     *
+     * @param adminOnly   whether the field requires admin or owner status to view
+     * @param sender      the command sender requesting the information
+     * @param storedMyPet the pet whose info is being displayed
+     * @return {@code true} if the sender is allowed to see the field
+     */
     public static boolean canSee(boolean adminOnly, CommandSender sender, StoredMyPet storedMyPet) {
         if (sender instanceof Player player) {
             return !adminOnly || storedMyPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin", false);
@@ -50,31 +82,75 @@ public class CommandInfo implements CommandTabCompleter {
         }
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    /**
+     * Registers the {@code /petinfo} Brigadier command and its help entry.
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petinfo")
+                        .executes(ctx -> {
+                            execute(ctx.getSource().getSender(), null);
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .then(Commands.argument("player", StringArgumentType.word())
+                                .suggests((ctx, builder) -> {
+                                    Bukkit.getOnlinePlayers().forEach(p -> builder.suggest(p.getName()));
+                                    return builder.buildFuture();
+                                })
+                                .executes(ctx -> {
+                                    execute(ctx.getSource().getSender(), StringArgumentType.getString(ctx, "player"));
+                                    return Command.SINGLE_SUCCESS;
+                                }))
+                        .build(),
+                "Shows info about your or another player's pet",
+                List.of("pinfo")
+        );
+
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Info",
+                "/petinfo",
+                null,
+                20,
+                null
+        ));
+    }
+
+    /**
+     * Executes the petinfo command logic, resolving the pet owner and displaying
+     * all applicable info lines for their active pet.
+     *
+     * @param sender     the command sender (player or console)
+     * @param targetName the name of the target player whose pet info to view,
+     *                   or {@code null} to view the sender's own pet
+     */
+    private void execute(CommandSender sender, String targetName) {
         MyPetPlayer petOwner;
 
-        if (args.length == 0 && sender instanceof Player player) {
+        if (targetName == null && sender instanceof Player player) {
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
                 player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
-                return true;
+                return;
             }
             if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                 petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             } else {
                 sender.sendMessage(Translation.getComponent("Message.No.HasPet", player));
-                return true;
+                return;
             }
-        } else if (args.length > 0 && (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.command.info.other"))) {
-            Player p = Bukkit.getServer().getPlayer(args[0]);
+        } else if (targetName != null && (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.command.info.other"))) {
+            Player p = Bukkit.getServer().getPlayer(targetName);
             if (p == null || !p.isOnline()) {
                 sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", sender));
-                return true;
+                return;
             }
-            if (MyPetApi.getPlayerManager().isMyPetPlayer(args[0])) {
-                petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(args[0]);
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(targetName)) {
+                petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(targetName);
             } else {
-                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, args[0]));
-                return true;
+                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, targetName));
+                return;
             }
         } else {
             if (sender instanceof Player) {
@@ -82,7 +158,7 @@ public class CommandInfo implements CommandTabCompleter {
             } else {
                 sender.sendMessage("You can't use this command from server console!");
             }
-            return true;
+            return;
         }
 
         if (petOwner.hasMyPet()) {
@@ -194,31 +270,20 @@ public class CommandInfo implements CommandTabCompleter {
             if (!infoShown) {
                 sender.sendMessage(Translation.getComponent("Message.CantViewPetInfo", sender));
             }
-            return true;
         } else {
-            if (args.length > 0) {
-                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, args[0]));
+            if (targetName != null) {
+                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, targetName));
             } else {
                 sender.sendMessage(Translation.getComponent("Message.No.HasPet", sender));
             }
         }
-        return true;
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (strings.length == 1) {
-            if (sender instanceof Player) {
-                if (Permissions.has((Player) sender, "MyPet.command.info.other")) {
-                    return null;
-                }
-            } else {
-                return null;
-            }
-        }
-        return Collections.emptyList();
-    }
-
+    /**
+     * Enum controlling the visibility of each pet info field.
+     * When {@code adminOnly} is {@code true}, the field is only visible to the pet owner
+     * or players with {@code MyPet.admin} permission.
+     */
     public enum PetInfoDisplay {
         Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false), RespawnTime(true), Behavior(true);
 
@@ -227,25 +292,5 @@ public class CommandInfo implements CommandTabCompleter {
         PetInfoDisplay(boolean adminOnly) {
             this.adminOnly = adminOnly;
         }
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Info";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petinfo";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return true;
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 20;
     }
 }

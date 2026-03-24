@@ -20,14 +20,16 @@
 
 package de.Keyle.MyPet.commands.mypet;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandOption;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.player.Permissions;
-import org.bukkit.Bukkit;
+import de.Keyle.MyPet.api.util.ErrorUtil;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -40,59 +42,73 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class CommandOptionTicket implements CommandOption {
+/**
+ * Provides the {@code /mypet ticket} subcommand, which generates a diagnostic ZIP archive
+ * ({@code ticket.zip}) in the MyPet data folder for use when submitting support tickets.
+ *
+ * <h3>Usage</h3>
+ * <p>{@code /mypet ticket}</p>
+ *
+ * <h3>Permissions</h3>
+ * <ul>
+ *   <li>{@code MyPet.admin} -- required for players; console can always execute</li>
+ * </ul>
+ *
+ * <p>The generated ZIP includes configuration files ({@code config.yml}, {@code pet-config.yml},
+ * {@code hooks-config.yml}, {@code pet-shops.yml}, {@code worldgroups.yml}), the skilltrees
+ * directory, the MyPet log, the server's latest log, the SQLite database ({@code pets.db}),
+ * legacy data ({@code My.Pets.old}), and a snapshot of all online players' effective
+ * permissions.</p>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandOptionTicket {
 
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Ticket";
+    /**
+     * Builds and returns the Brigadier {@code "ticket"} literal command node.
+     * This node is intended to be attached as a child of the {@code /mypet} command tree.
+     *
+     * @return the built {@link LiteralCommandNode} for the ticket subcommand
+     */
+    public LiteralCommandNode<CommandSourceStack> buildNode() {
+        return Commands.literal("ticket")
+                .requires(ctx -> {
+                    var sender = ctx.getSender();
+                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin", false);
+                })
+                .executes(ctx -> {
+                    CommandSender sender = ctx.getSource().getSender();
+                    File ticketFile = new File(MyPetApi.getPlugin().getDataFolder(), "ticket.zip");
+                    try (ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(ticketFile.toPath()))) {
+                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "config.yml"), out, "");
+                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pet-config.yml"), out, "");
+                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "hooks-config.yml"), out, "");
+                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pet-shops.yml"), out, "");
+                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "My.Pets.old"), out, "");
+                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pets.db"), out, "");
+                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "worldgroups.yml"), out, "");
+                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "skilltrees"), out, "");
+                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "logs" + File.separator + "MyPet.log"), out, "");
+                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder().getParentFile().getParentFile(), "logs" + File.separator + "latest.log"), out, "");
+                        writeStreamToZip(new ByteArrayInputStream(accumulatePermissions().getBytes()), "permissions.txt", out);
+
+                        sender.sendMessage(Component.text("------------------------------------------------").color(NamedTextColor.RED));
+                        sender.sendMessage("Ticket file created. Please upload this file somewhere and add the link to your ticket.");
+                        sender.sendMessage("  " + ticketFile.getAbsoluteFile());
+                        sender.sendMessage(Component.text("------------------------------------------------").color(NamedTextColor.RED));
+                    } catch (IOException e) {
+                        ErrorUtil.reportWarning("Failed to create debug ticket file", e);
+                    }
+                    return Command.SINGLE_SUCCESS;
+                })
+                .build();
     }
 
-    @Override
-    public String getHelpCommand() {
-        return "/mypet ticket";
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.ADMIN;
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return Permissions.has(player, "MyPet.admin", false);
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 16;
-    }
-
-    @Override
-    public boolean onCommandOption(CommandSender sender, String[] args) {
-        File ticketFile = new File(MyPetApi.getPlugin().getDataFolder(), "ticket.zip");
-        try (ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(ticketFile.toPath()))) {
-            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "config.yml"), out, "");
-            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pet-config.yml"), out, "");
-            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "hooks-config.yml"), out, "");
-            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pet-shops.yml"), out, "");
-            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "My.Pets.old"), out, "");
-            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pets.db"), out, "");
-            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "worldgroups.yml"), out, "");
-            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "skilltrees"), out, "");
-            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "logs" + File.separator + "MyPet.log"), out, "");
-            addFileToZip(new File(MyPetApi.getPlugin().getDataFolder().getParentFile().getParentFile(), "logs" + File.separator + "latest.log"), out, "");
-            writeStreamToZip(new ByteArrayInputStream(accumulatePermissions().getBytes()), "permissions.txt", out);
-
-            sender.sendMessage(Component.text("------------------------------------------------").color(NamedTextColor.RED));
-            sender.sendMessage("Ticket file created. Please upload this file somewhere and add the link to your ticket.");
-            sender.sendMessage("  " + ticketFile.getAbsoluteFile());
-            sender.sendMessage(Component.text("------------------------------------------------").color(NamedTextColor.RED));
-        } catch (IOException e) {
-            ErrorUtil.reportWarning("Failed to create debug ticket file", e);
-        }
-        return true;
-    }
-
+    /**
+     * Collects the effective (granted) permissions for every online player into a
+     * human-readable string, sorted alphabetically per player.
+     *
+     * @return a formatted string listing each online player's UUID and their granted permissions
+     */
     private String accumulatePermissions() {
         StringBuilder retValue = new StringBuilder();
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -112,6 +128,14 @@ public class CommandOptionTicket implements CommandOption {
         return retValue.toString();
     }
 
+    /**
+     * Recursively adds a file or directory to the ZIP output stream.
+     *
+     * @param file   the file or directory to add
+     * @param zip    the ZIP output stream to write to
+     * @param folder the path prefix within the ZIP archive
+     * @throws IOException if an I/O error occurs during writing
+     */
     private void addFileToZip(File file, ZipOutputStream zip, String folder) throws IOException {
         if (file.isFile()) {
             try (InputStream in = Files.newInputStream(file.toPath())) {
@@ -127,6 +151,14 @@ public class CommandOptionTicket implements CommandOption {
         }
     }
 
+    /**
+     * Writes the contents of an input stream as a new entry in the ZIP output stream.
+     *
+     * @param in   the input stream to read from
+     * @param file the entry name (path) within the ZIP archive
+     * @param zip  the ZIP output stream to write to
+     * @throws IOException if an I/O error occurs during writing
+     */
     private void writeStreamToZip(InputStream in, String file, ZipOutputStream zip) throws IOException {
         zip.putNextEntry(new ZipEntry(file));
         in.transferTo(zip);

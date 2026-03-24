@@ -36,6 +36,7 @@ import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
 import de.Keyle.MyPet.api.util.*;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
@@ -165,6 +166,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     /** Shared MiniMessage instance for Adventure text deserialization. Initialized in {@link #onEnable()}. */
     @Getter
     private MiniMessage miniMessage;
+
+    /** Registry of help entries for the /mypet help command. Initialized in {@link #onEnable()}. */
+    @Getter
+    private HelpRegistry helpRegistry;
 
     /** Sentry error reporter for remote error tracking in non-local builds. */
     @Getter
@@ -433,29 +438,12 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             getServer().getPluginManager().registerEvents(creakingHeartListener, this);
         }
 
-        // register commands
-        getCommand("petname").setExecutor(new CommandName());
-        getCommand("petcall").setExecutor(new CommandCall());
-        getCommand("petsendaway").setExecutor(new CommandSendAway());
-        getCommand("petstop").setExecutor(new CommandStop());
-        getCommand("petrelease").setExecutor(new CommandRelease());
-        getCommand("mypet").setExecutor(new CommandMyPet());
-        getCommand("petinventory").setExecutor(new CommandInventory());
-        getCommand("petpickup").setExecutor(new CommandPickup());
-        getCommand("petbehavior").setExecutor(new CommandBehavior());
-        getCommand("petinfo").setExecutor(new CommandInfo());
-        getCommand("mypetadmin").setExecutor(new CommandAdmin());
-        getCommand("petskill").setExecutor(new CommandSkill());
-        getCommand("petchooseskilltree").setExecutor(new CommandChooseSkilltree());
-        getCommand("petbeacon").setExecutor(new CommandBeacon());
-        getCommand("petrespawn").setExecutor(new CommandRespawn());
-        getCommand("petsettings").setExecutor(new CommandSettings());
-        getCommand("petswitch").setExecutor(new CommandSwitch());
-        getCommand("petstore").setExecutor(new CommandStore());
-        getCommand("petlist").setExecutor(new CommandList());
-        getCommand("petcapturehelper").setExecutor(new CommandCaptureHelper());
-        getCommand("pettrade").setExecutor(new CommandTrade());
-        getCommand("petshop").setExecutor(new CommandShop());
+        // Register commands via Paper's Brigadier Lifecycle API
+        this.helpRegistry = new HelpRegistry();
+        this.getLifecycleManager().registerEventHandler(io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents.COMMANDS, event -> {
+            final io.papermc.paper.command.brigadier.Commands commands = event.registrar();
+            registerBrigadierCommands(commands, helpRegistry);
+        });
 
         // load worldgroups
         WorldGroup.loadGroups(new File(getDataFolder().getPath(), "worldgroups.yml"));
@@ -782,6 +770,34 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     @NotNull
     public File getFile() {
         return super.getFile();
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    private void registerBrigadierCommands(io.papermc.paper.command.brigadier.Commands commands, HelpRegistry helpRegistry) {
+        new CommandAdmin().register(commands, helpRegistry);
+        new CommandCall().register(commands, helpRegistry);
+        new CommandStop().register(commands, helpRegistry);
+        new CommandSendAway().register(commands, helpRegistry);
+        new CommandPickup().register(commands, helpRegistry);
+        new CommandCaptureHelper().register(commands, helpRegistry);
+        new CommandName().register(commands, helpRegistry);
+        new CommandRelease().register(commands, helpRegistry);
+        new CommandRespawn().register(commands, helpRegistry);
+        new CommandBehavior().register(commands, helpRegistry);
+        new CommandSettings().register(commands, helpRegistry);
+        new CommandInfo().register(commands, helpRegistry);
+        new CommandSkill().register(commands, helpRegistry);
+        new CommandList().register(commands, helpRegistry);
+        new CommandTrade().register(commands, helpRegistry);
+        new CommandBeacon().register(commands, helpRegistry);
+        new CommandChooseSkilltree().register(commands, helpRegistry);
+        new CommandSwitch().register(commands, helpRegistry);
+        new CommandStore().register(commands, helpRegistry);
+        new CommandInventory().register(commands, helpRegistry);
+        new CommandShop().register(commands, helpRegistry);
+        new CommandMyPet().register(commands, helpRegistry);
+
+        getLogger().info("Brigadier commands registered");
     }
 
     /**

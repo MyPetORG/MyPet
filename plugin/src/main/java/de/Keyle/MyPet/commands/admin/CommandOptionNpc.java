@@ -18,87 +18,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * This file is part of MyPet-NPC
- *
- * Copyright (C) 2011-2013 Keyle
- * MyPet-NPC is licensed under the GNU Lesser General Public License.
- *
- * MyPet-NPC is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * MyPet-NPC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 package de.Keyle.MyPet.commands.admin;
 
-import de.Keyle.MyPet.api.commands.CommandOption;
-import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.api.player.Permissions;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.commands.admin.npc.CommandOptionShop;
 import de.Keyle.MyPet.commands.admin.npc.CommandOptionWallet;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 
-import java.util.*;
+/**
+ * Provides the {@code /petadmin npc} subcommand group, which contains admin commands
+ * for managing Citizens NPC traits related to MyPet.
+ *
+ * <h3>Usage</h3>
+ * <ul>
+ *   <li>{@code /petadmin npc shop <shopname>} -- assign a pet shop to the selected NPC</li>
+ *   <li>{@code /petadmin npc wallet <type> [account]} -- configure the wallet trait on the selected NPC</li>
+ * </ul>
+ *
+ * <p>This subcommand group is only available when the Citizens plugin hook is active.
+ * Individual subcommands are delegated to {@link CommandOptionShop} and {@link CommandOptionWallet}.</p>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandOptionNpc {
 
-public class CommandOptionNpc implements CommandOptionTabCompleter {
-
-    public static final Map<String, CommandOption> COMMAND_OPTIONS = new HashMap<>();
-    private static List<String> optionsList = new ArrayList<>();
-
-    public CommandOptionNpc() {
-        COMMAND_OPTIONS.put("wallet", new CommandOptionWallet());
-        COMMAND_OPTIONS.put("shop", new CommandOptionShop());
-    }
-
-    @Override
-    public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            if (!Permissions.has((Player) sender, "MyPet.admin", false)) {
-                return true;
-            }
-        }
-
-        if (args.length < 1) {
-            return false;
-        }
-
-        String[] parameter = Arrays.copyOfRange(args, 1, args.length);
-        CommandOption option = COMMAND_OPTIONS.get(args[0].toLowerCase());
-
-        return option != null && option.onCommandOption(sender, parameter);
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        if (commandSender instanceof Player) {
-            if (!Permissions.has((Player) commandSender, "MyPet.admin", false)) {
-                return Collections.emptyList();
-            }
-        }
-        if (strings.length == 2) {
-            if (optionsList.size() != COMMAND_OPTIONS.size()) {
-                optionsList = new ArrayList<>(COMMAND_OPTIONS.keySet());
-                Collections.sort(optionsList);
-            }
-            return optionsList;
-        } else if (strings.length >= 2) {
-            CommandOption co = COMMAND_OPTIONS.get(strings[1].toLowerCase());
-            if (co != null) {
-                if (co instanceof CommandOptionTabCompleter) {
-                    return ((CommandOptionTabCompleter) co).onTabComplete(commandSender, strings);
-                }
-            }
-        }
-        return Collections.emptyList();
+    /**
+     * Builds and returns the Brigadier {@code "npc"} literal command node, which serves
+     * as a parent for the {@code shop} and {@code wallet} subcommands. The node requires
+     * the Citizens plugin hook to be active.
+     *
+     * @param helpRegistry the help registry to register the command's help entry with
+     * @return the built {@link LiteralCommandNode} representing the {@code npc} subcommand
+     */
+    public LiteralCommandNode<CommandSourceStack> buildNode(HelpRegistry helpRegistry) {
+        return Commands.literal("npc")
+                .requires(ctx -> MyPetApi.getPluginHookManager().isHookActive("Citizens"))
+                .then(new CommandOptionShop().buildNode(helpRegistry))
+                .then(new CommandOptionWallet().buildNode(helpRegistry))
+                .build();
     }
 }

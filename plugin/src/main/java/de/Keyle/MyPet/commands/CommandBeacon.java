@@ -20,86 +20,104 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BeaconImpl;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
-public class CommandBeacon implements CommandTabCompleter {
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player player) {
-            if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
-                return true;
-            }
-            if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
-                if (!Permissions.hasExtended(player, "MyPet.extended.beacon")) {
-                    myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", player));
-                    return true;
-                }
-                if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Translation.getFormattedComponent("Message.Call.First", player, myPet.getDisplayName()));
-                    return true;
-                }
-                if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", player, myPet.getDisplayName()));
-                    return true;
-                }
-                if (myPet.getSkills().isActive(BeaconImpl.class)) {
-                    myPet.getSkills().get(BeaconImpl.class).activate();
-                } else {
-                    sender.sendMessage(Translation.getFormattedComponent("Message.No.Skill", player, myPet.getDisplayName(), Translation.getComponent("Name.Skill.Beacon", player)));
-                }
-                return true;
-            } else {
-                sender.sendMessage(Translation.getComponent("Message.No.HasPet", player));
-            }
-            return true;
+/**
+ * Handles the {@code /petbeacon} command, which opens the Beacon skill's GUI for the
+ * player's active pet. The Beacon skill provides area-of-effect buff selection (similar
+ * to vanilla beacon effects) that the pet applies to nearby players.
+ *
+ * <p><b>Usage:</b> {@code /petbeacon}</p>
+ * <p><b>Aliases:</b> {@code /pbeacon}</p>
+ * <p><b>Permissions:</b> {@code MyPet.extended.beacon} — required to open the beacon GUI</p>
+ * <p><b>Help category:</b> {@link CommandCategory#SKILLS SKILLS} (priority 200)</p>
+ *
+ * @see BeaconImpl
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandBeacon {
+
+    /**
+     * Registers the {@code /petbeacon} Brigadier command and its help entry.
+     *
+     * <p>The command is a player-only literal with no arguments. The help entry is only
+     * shown when the player has an active pet with the Beacon skill active.</p>
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petbeacon")
+                        .requires(ctx -> ctx.getSender() instanceof Player)
+                        .executes(ctx -> {
+                            execute((Player) ctx.getSource().getSender());
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .build(),
+                "Opens the beacon skill GUI",
+                List.of("pbeacon")
+        );
+
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Beacon",
+                "/petbeacon",
+                CommandCategory.SKILLS,
+                200,
+                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                        && MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(BeaconImpl.class)
+        ));
+    }
+
+    /**
+     * Opens the Beacon skill GUI for the given player's pet.
+     *
+     * <p>Validates that the world group is enabled, the player has an active and spawned pet,
+     * the player holds the {@code MyPet.extended.beacon} permission, and that the pet's Beacon
+     * skill is active. If all checks pass, activates the Beacon skill which opens its GUI.</p>
+     *
+     * @param player the player whose pet's Beacon GUI should be opened
+     */
+    private void execute(Player player) {
+        if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
+            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            return;
         }
-        sender.sendMessage("You can't use this command from server console!");
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Beacon";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petbeacon";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
-                && MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(BeaconImpl.class);
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 200;
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.SKILLS;
+        if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
+            if (!Permissions.hasExtended(player, "MyPet.extended.beacon")) {
+                myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", player));
+                return;
+            }
+            if (myPet.getStatus() == PetState.Despawned) {
+                player.sendMessage(Translation.getFormattedComponent("Message.Call.First", player, myPet.getDisplayName()));
+                return;
+            }
+            if (myPet.getStatus() == PetState.Dead) {
+                player.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", player, myPet.getDisplayName()));
+                return;
+            }
+            if (myPet.getSkills().isActive(BeaconImpl.class)) {
+                myPet.getSkills().get(BeaconImpl.class).activate();
+            } else {
+                player.sendMessage(Translation.getFormattedComponent("Message.No.Skill", player, myPet.getDisplayName(), Translation.getComponent("Name.Skill.Beacon", player)));
+            }
+        } else {
+            player.sendMessage(Translation.getComponent("Message.No.HasPet", player));
+        }
     }
 }

@@ -20,12 +20,16 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOptionCreator;
-import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.event.MyPetCreateEvent;
@@ -33,11 +37,18 @@ import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.MessageUtil;
+import de.Keyle.MyPet.commands.arguments.RegistryArgumentType;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
+import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -49,12 +60,55 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class CommandOptionCreate implements CommandOptionTabCompleter {
+/**
+ * Admin subcommand that creates a new pet for a target player.
+ *
+ * <p>Usage:</p>
+ * <ul>
+ *   <li>{@code /petadmin create <player> <type> [options...]} -- creates a pet if the player has no active pet</li>
+ *   <li>{@code /petadmin create -f <player> <type> [options...]} -- force-creates a pet, deactivating any existing one</li>
+ * </ul>
+ *
+ * <p>The {@code type} argument accepts any Minecraft entity type that maps to a valid {@link MyPetType}.
+ * Optional trailing arguments control the pet's appearance and metadata (e.g. {@code baby}, {@code saddle},
+ * {@code variant:3}, {@code skilltree:Combat}, {@code name:Fluffy}).</p>
+ *
+ * <p>Requires the {@code MyPet.admin} permission.</p>
+ *
+ * @see CommandOptionCreator helper used to build per-type option lists
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandOptionCreate {
 
-    private static List<String> petTypeList = new ArrayList<>();
-    private static Map<String, List<String>> petTypeOptionMap = new HashMap<>();
-    private static List<String> commonTypeOptionList = new ArrayList<>();
+    /**
+     * Custom {@link RegistryArgumentType} that filters the Paper entity-type registry to only include
+     * entity types that have a corresponding {@link MyPetType} entry. This ensures tab-completion
+     * only suggests valid pet types.
+     */
+    static final RegistryArgumentType<EntityType> PET_ENTITY_TYPE =
+            RegistryArgumentType.of(RegistryKey.ENTITY_TYPE, entityType -> {
+                try {
+                    MyPetType.byEntityTypeName(entityType.name());
+                    return true;
+                } catch (MyPetTypeNotFoundException e) {
+                    return false;
+                }
+            });
 
+    /**
+     * Maps lowercase pet type names (with underscores removed, e.g. {@code "zombievillager"}) to
+     * the list of type-specific option strings available for that pet. Used by {@link #suggestOptions}
+     * to provide context-aware tab-completion. Populated in the static initializer block below.
+     */
+    private static final Map<String, List<String>> petTypeOptionMap = new HashMap<>();
+
+    /**
+     * Options common to all pet types, appended to every suggestion list. Currently includes
+     * {@code skilltree:} and {@code name:}.
+     */
+    private static final List<String> commonTypeOptionList = new ArrayList<>();
+
+    /* Populates petTypeOptionMap and commonTypeOptionList with all known pet types and their options. */
     static {
         commonTypeOptionList.add("skilltree:");
         commonTypeOptionList.add("name:");
@@ -338,14 +392,257 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionMap.put("zoglin", new CommandOptionCreator()
                 .add("baby")
                 .get());
+    }
 
-        for (MyPetType petType : MyPetType.values()) {
-            if (petType.checkMinecraftVersion()) {
-                petTypeList.add(petType.name());
+    /**
+     * Builds the Brigadier command tree for the {@code create} subcommand.
+     *
+     * <p>The tree has two branches:</p>
+     * <ol>
+     *   <li>{@code create -f <player> <type> [options...]} -- force variant that deactivates the player's
+     *       current pet before creating a new one.</li>
+     *   <li>{@code create <player> <type> [options...]} -- standard variant that fails if the player already
+     *       has an active pet.</li>
+     * </ol>
+     *
+     * <p>Both branches accept an optional greedy-string {@code options} argument with
+     * type-aware tab-completion provided by {@link #suggestOptions}.</p>
+     *
+     * @param helpRegistry the help registry to register the command's help entry with
+     * @return the built {@link LiteralCommandNode} representing the {@code create} subcommand
+     */
+    public LiteralCommandNode<CommandSourceStack> buildNode(HelpRegistry helpRegistry) {
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Admin.Create",
+                "/petadmin create",
+                CommandCategory.ADMIN,
+                20,
+                player -> Permissions.has(player, "MyPet.admin", false)
+        ));
+
+        return Commands.literal("create")
+                // /petadmin create -f <player> <type> [options...]
+                .then(Commands.literal("-f")
+                        .then(Commands.argument("player", ArgumentTypes.player())
+                                .then(Commands.argument("type", PET_ENTITY_TYPE)
+                                        .executes(ctx -> {
+                                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                                    .resolve(ctx.getSource()).getFirst();
+                                            executeCreate(ctx.getSource().getSender(),
+                                                    true, player,
+                                                    ctx.getArgument("type", EntityType.class),
+                                                    new String[0]);
+                                            return Command.SINGLE_SUCCESS;
+                                        })
+                                        .then(Commands.argument("options", StringArgumentType.greedyString())
+                                                .suggests((ctx, builder) -> {
+                                                    suggestOptions(ctx.getInput(), builder);
+                                                    return builder.buildFuture();
+                                                })
+                                                .executes(ctx -> {
+                                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                                            .resolve(ctx.getSource()).getFirst();
+                                                    executeCreate(ctx.getSource().getSender(),
+                                                            true, player,
+                                                            ctx.getArgument("type", EntityType.class),
+                                                            StringArgumentType.getString(ctx, "options").split(" "));
+                                                    return Command.SINGLE_SUCCESS;
+                                                })))))
+                // /petadmin create <player> <type> [options...]
+                .then(Commands.argument("player", ArgumentTypes.player())
+                        .then(Commands.argument("type", PET_ENTITY_TYPE)
+                                .executes(ctx -> {
+                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                            .resolve(ctx.getSource()).getFirst();
+                                    executeCreate(ctx.getSource().getSender(),
+                                            false, player,
+                                            ctx.getArgument("type", EntityType.class),
+                                            new String[0]);
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                                .then(Commands.argument("options", StringArgumentType.greedyString())
+                                        .suggests((ctx, builder) -> {
+                                            suggestOptions(ctx.getInput(), builder);
+                                            return builder.buildFuture();
+                                        })
+                                        .executes(ctx -> {
+                                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                                    .resolve(ctx.getSource()).getFirst();
+                                            executeCreate(ctx.getSource().getSender(),
+                                                    false, player,
+                                                    ctx.getArgument("type", EntityType.class),
+                                                    StringArgumentType.getString(ctx, "options").split(" "));
+                                            return Command.SINGLE_SUCCESS;
+                                        }))))
+                .build();
+    }
+
+    /**
+     * Populates Brigadier tab-completion suggestions for the trailing {@code options} argument.
+     *
+     * <p>The method inspects the full command input to determine the pet type being created, then
+     * combines the common options ({@code skilltree:}, {@code name:}) with the type-specific options
+     * from {@link #petTypeOptionMap}. Options already present in the input are excluded from suggestions.
+     * Only the last whitespace-delimited word is used for prefix matching.</p>
+     *
+     * @param input   the full raw command input string from the Brigadier context
+     * @param builder the suggestions builder to populate with matching completions
+     */
+    private void suggestOptions(String input, com.mojang.brigadier.suggestion.SuggestionsBuilder builder) {
+        // Extract the pet type from the full command input to provide type-specific suggestions
+        String[] parts = input.split(" ");
+
+        // Find pet type in the command parts — match minecraft:zombie or zombie format
+        String petTypeLower = null;
+        for (String part : parts) {
+            String stripped = part.startsWith("minecraft:") ? part.substring("minecraft:".length()) : part;
+            String key = stripped.toLowerCase().replace("_", "");
+            if (petTypeOptionMap.containsKey(key)) {
+                petTypeLower = key;
+                break;
             }
+        }
+
+        List<String> options = new ArrayList<>(commonTypeOptionList);
+        if (petTypeLower != null && petTypeOptionMap.containsKey(petTypeLower)) {
+            options.addAll(petTypeOptionMap.get(petTypeLower));
+        }
+
+        // Collect already-entered options so we don't suggest them again
+        String remaining = builder.getRemaining();
+        String[] enteredWords = remaining.split(" ");
+        Set<String> alreadyUsed = new HashSet<>();
+        for (String word : enteredWords) {
+            String lower = word.toLowerCase();
+            // For key:value options (e.g. "variant:red"), track the key prefix
+            int colon = lower.indexOf(':');
+            if (colon >= 0) {
+                alreadyUsed.add(lower.substring(0, colon + 1));
+            } else {
+                alreadyUsed.add(lower);
+            }
+        }
+
+        // Rebuild the builder offset to only complete the last word,
+        // not replace the entire greedy string
+        int lastSpace = remaining.lastIndexOf(' ');
+        com.mojang.brigadier.suggestion.SuggestionsBuilder lastWordBuilder =
+                builder.createOffset(builder.getStart() + lastSpace + 1);
+        String partial = lastWordBuilder.getRemaining().toLowerCase();
+
+        for (String option : options) {
+            String optionLower = option.toLowerCase();
+            // Check if this option (or its key prefix) was already used
+            int colon = optionLower.indexOf(':');
+            String key = colon >= 0 ? optionLower.substring(0, colon + 1) : optionLower;
+            if (alreadyUsed.contains(key)) {
+                continue;
+            }
+            if (optionLower.startsWith(partial)) {
+                lastWordBuilder.suggest(option);
+            }
+        }
+
+        builder.add(lastWordBuilder);
+    }
+
+    /**
+     * Executes the pet creation logic.
+     *
+     * <p>Validates the pet type, checks world-group restrictions, resolves or registers the
+     * {@link MyPetPlayer}, builds an {@link InactiveMyPet} with the parsed options, fires
+     * {@link MyPetCreateEvent} and {@link MyPetSaveEvent}, persists the pet to the repository,
+     * and activates it if the owner has no current pet.</p>
+     *
+     * @param sender     the command sender (for feedback messages)
+     * @param force      if {@code true}, deactivates the player's current pet before creation
+     * @param owner      the target player who will own the new pet
+     * @param entityType the Bukkit entity type to create as a pet
+     * @param options    additional creation options (e.g. {@code "baby"}, {@code "variant:3"}, {@code "skilltree:Combat"})
+     */
+    private void executeCreate(CommandSender sender, boolean force, Player owner, EntityType entityType, String[] options) {
+        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+
+        try {
+            MyPetType myPetType = MyPetType.byEntityTypeName(entityType.name());
+            if (myPetType.checkMinecraftVersion() && MyPetApi.getMyPetInfo().isLeashableEntityType(entityType)) {
+                if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
+                    sender.sendMessage(MessageUtil.prefixed(Component.text("Pets are not allowed in ").append(Component.text(owner.getWorld().getName()).color(NamedTextColor.GOLD))));
+                    return;
+                }
+
+                final MyPetPlayer newOwner;
+                if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
+                    newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
+
+                    if (newOwner.hasMyPet() && force) {
+                        MyPetApi.getMyPetManager().deactivateMyPet(newOwner, true);
+                    }
+                } else {
+                    newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
+                }
+
+                final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
+                inactiveMyPet.setPetType(myPetType);
+                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner()));
+
+                CompoundBinaryTag.Builder infoBuilder = CompoundBinaryTag.builder();
+                createInfo(myPetType, options, infoBuilder);
+                inactiveMyPet.setInfo(infoBuilder.build());
+                updateData(inactiveMyPet, options);
+
+                final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
+
+                inactiveMyPet.setWorldGroup(wg.getName());
+
+                MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
+                Bukkit.getServer().getPluginManager().callEvent(createEvent);
+
+                MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
+                Bukkit.getServer().getPluginManager().callEvent(saveEvent);
+
+                MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<>() {
+                    @Override
+                    public void callback(Boolean added) {
+                        if (added) {
+                            if (!newOwner.hasMyPet()) {
+                                inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
+                                MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
+
+                                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
+                                if (myPet.isPresent()) {
+                                    myPet.get().createEntity();
+                                    sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
+                                } else {
+                                    sender.sendMessage(MessageUtil.prefixed(Component.text("Can't create MyPet for " + newOwner.getName() + ". Is this player online?")));
+                                }
+                            } else {
+                                sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (MyPetTypeNotFoundException e) {
+            sender.sendMessage(Translation.getComponent("Message.Command.PetType.Unknown", lang));
         }
     }
 
+    /**
+     * Applies non-NBT metadata from the options array to an {@link InactiveMyPet}.
+     *
+     * <p>Currently handles:</p>
+     * <ul>
+     *   <li>{@code skilltree:<name>} -- assigns the named skilltree to the pet</li>
+     *   <li>{@code name:<petName>} -- sets the pet's display name</li>
+     * </ul>
+     *
+     * <p>This is separated from {@link #createInfo} because these properties live on the
+     * {@link InactiveMyPet} object rather than in the NBT info compound.</p>
+     *
+     * @param inactiveMyPet the pet instance to update
+     * @param args          the option strings to parse
+     */
     public static void updateData(InactiveMyPet inactiveMyPet, String[] args) {
         for (String arg : args) {
             if (arg.startsWith("skilltree:")) {
@@ -355,43 +652,26 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                     inactiveMyPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.AdminCreation);
                 }
             } else if (arg.startsWith("name:")) {
-                String name = arg.replace("name:", "");
-                int index = -1;
-                for (int i = 0; i < args.length; i++) {
-                    if (Objects.equals(args[i], arg)) {
-                        index = i;
-                        break;
-                    }
-                }
-                if (args.length > index + 1) {
-                    name += " " + String.join(" ", Arrays.copyOfRange(args, index + 1, args.length));
-                }
-                inactiveMyPet.setPetName(name);
-                break;
+                inactiveMyPet.setPetName(arg.substring("name:".length()));
             }
         }
     }
 
-    @Override
-    public String getHelpCommand() {
-        return "/petadmin create";
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.ADMIN;
-    }
-
-    @Override
-    public String getHelpDescription() {
-        return "Creates a pet for a player";
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 20;
-    }
-
+    /**
+     * Parses the option strings and writes type-specific NBT data into the provided builder.
+     *
+     * <p>Handles boolean flags (e.g. {@code baby}, {@code saddle}, {@code powered}), numeric
+     * values (e.g. {@code size:}, {@code variant:}, {@code color:}), string identifiers
+     * (e.g. {@code block:}, wolf/cow/chicken/pig string variants), and composite keys
+     * (e.g. {@code puff:semi}, {@code main-gene:lazy}, {@code type:red}).</p>
+     *
+     * <p>Pet-type-specific validation is applied where appropriate (e.g. clamping horse variant
+     * to 0-1030, rabbit variant to 0-5 or 99, llama variant to 0-3).</p>
+     *
+     * @param petType the {@link MyPetType} being created, used for type-specific variant handling
+     * @param args    the option strings to parse
+     * @param builder the NBT compound builder to populate with parsed data
+     */
     public static void createInfo(MyPetType petType, String[] args, CompoundBinaryTag.Builder builder) {
         for (String arg : args) {
             if (arg.equalsIgnoreCase("baby")) {
@@ -590,124 +870,5 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean onCommandOption(final CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin create ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<a player name>").color(NamedTextColor.RED)));
-            return false;
-        }
-
-        int forceOffset = 0;
-        if (args[0].equalsIgnoreCase("-f")) {
-            forceOffset = 1;
-        }
-
-        if (args.length < 2 + forceOffset) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin create " + (forceOffset > 0 ? " -f " : "") + args[0] + " ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<a pet-type>").color(NamedTextColor.RED)));
-            return false;
-        }
-
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
-
-        try {
-            MyPetType myPetType = MyPetType.byName(args[1 + forceOffset]);
-            if (myPetType.checkMinecraftVersion() && MyPetApi.getMyPetInfo().isLeashableEntityType(EntityType.valueOf(myPetType.getBukkitName()))) {
-                Player owner = Bukkit.getPlayer(args[forceOffset]);
-                if (owner == null || !owner.isOnline()) {
-                    sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
-                    return true;
-                }
-
-                if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
-                    sender.sendMessage(MessageUtil.prefixed(Component.text("Pets are not allowed in ").append(Component.text(owner.getWorld().getName()).color(NamedTextColor.GOLD))));
-                    return true;
-                }
-
-                final MyPetPlayer newOwner;
-                if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
-                    newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
-
-                    if (newOwner.hasMyPet() && forceOffset == 1) {
-                        MyPetApi.getMyPetManager().deactivateMyPet(newOwner, true);
-                    }
-                } else {
-                    newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
-                }
-
-                final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
-                inactiveMyPet.setPetType(myPetType);
-                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner()));
-
-                CompoundBinaryTag.Builder infoBuilder = CompoundBinaryTag.builder();
-                createInfo(myPetType, Arrays.copyOfRange(args, 2 + forceOffset, args.length), infoBuilder);
-                inactiveMyPet.setInfo(infoBuilder.build());
-                updateData(inactiveMyPet, Arrays.copyOfRange(args, 2 + forceOffset, args.length));
-
-                final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
-
-                inactiveMyPet.setWorldGroup(wg.getName());
-
-                MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
-                Bukkit.getServer().getPluginManager().callEvent(createEvent);
-
-                MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
-                Bukkit.getServer().getPluginManager().callEvent(saveEvent);
-
-                MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<>() {
-                    @Override
-                    public void callback(Boolean added) {
-                        if (added) {
-                            if (!newOwner.hasMyPet()) {
-                                inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
-                                MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
-
-                                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
-                                if (myPet.isPresent()) {
-                                    myPet.get().createEntity();
-                                    sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
-                                } else {
-                                    sender.sendMessage(MessageUtil.prefixed(Component.text("Can't create MyPet for " + newOwner.getName() + ". Is this player online?")));
-                                }
-                            } else {
-                                sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
-                            }
-                        }
-                    }
-                });
-            }
-        } catch (MyPetTypeNotFoundException e) {
-            sender.sendMessage(Translation.getComponent("Message.Command.PetType.Unknown", lang));
-        }
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        int forceOffset = 0;
-        if (strings.length >= 2 && strings[1].equalsIgnoreCase("-f")) {
-            forceOffset = 1;
-        }
-        if (strings.length == 2 + forceOffset) {
-            return null;
-        }
-        if (strings.length == 3 + forceOffset) {
-            return filterTabCompletionResults(petTypeList, strings[2 + forceOffset]);
-        }
-        if (strings.length >= 4 + forceOffset) {
-            if (petTypeOptionMap.containsKey(strings[2 + forceOffset].toLowerCase())) {
-                List<String> options = petTypeOptionMap.get(strings[2 + forceOffset].toLowerCase());
-                if (!options.contains(commonTypeOptionList.get(0))) {
-                    options.addAll(commonTypeOptionList);
-                }
-                return filterTabCompletionResults(options, strings[strings.length - 1]);
-            } else {
-                return filterTabCompletionResults(commonTypeOptionList, strings[3 + forceOffset]);
-            }
-        }
-        return Collections.emptyList();
     }
 }

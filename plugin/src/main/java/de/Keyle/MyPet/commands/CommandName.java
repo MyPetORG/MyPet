@@ -20,105 +20,146 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.CommandCategory;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import de.Keyle.MyPet.commands.arguments.MiniMessageSuggestions;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommandName implements CommandTabCompleter {
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player petOwner) {
-            if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
-                return true;
-            }
-            if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-                if (args.length < 1) {
-                    return false;
-                }
+/**
+ * Handles the {@code /petname <name>} command using Paper's Brigadier API.
+ *
+ * <p>This command allows a player to rename their active pet. The name argument accepts
+ * MiniMessage formatting tags (e.g. {@code <gold>}, {@code <bold>}) when the player holds
+ * the appropriate permissions. Tag suggestions are provided via
+ * {@link MiniMessageSuggestions} while the player types.</p>
+ *
+ * <h3>Command tree</h3>
+ * <pre>
+ *   /petname &lt;name&gt;  - set the pet's display name
+ * </pre>
+ *
+ * <h3>Validation</h3>
+ * <ul>
+ *   <li>Requires an active pet and {@code MyPet.command.name} permission</li>
+ *   <li>The name is checked against {@link NameFilter} for forbidden words</li>
+ *   <li>Colour/format tags are stripped unless the player has
+ *       {@code MyPet.command.name.color}</li>
+ *   <li>A {@code <reset>} tag is auto-appended if the name contains any MiniMessage tags,
+ *       preventing formatting from leaking into subsequent chat text</li>
+ *   <li>The name (after stripping tags) must not exceed
+ *       {@link Configuration.Name#MAX_LENGTH}</li>
+ * </ul>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandName {
 
-                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
-                if (!Permissions.has(petOwner, "MyPet.command.name")) {
-                    myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", petOwner));
-                    return true;
-                }
+    /**
+     * Registers the {@code /petname} Brigadier command and its help entry.
+     *
+     * <p>The tree consists of a single root literal {@code petname} restricted to players,
+     * with a greedy-string argument {@code name} that provides MiniMessage tag suggestions
+     * via {@link MiniMessageSuggestions#suggest}. A {@link HelpEntry} is registered under
+     * the {@link CommandCategory#PET} category, visible only to players who have an active
+     * pet and the {@code MyPet.command.name} permission.</p>
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petname")
+                        .requires(ctx -> ctx.getSender() instanceof Player)
+                        .then(Commands.argument("name", StringArgumentType.greedyString())
+                                .suggests((ctx, builder) -> {
+                                    MiniMessageSuggestions.suggest(builder, ctx.getSource().getSender());
+                                    return builder.buildFuture();
+                                })
+                                .executes(ctx -> {
+                                    Player player = (Player) ctx.getSource().getSender();
+                                    String name = StringArgumentType.getString(ctx, "name");
+                                    execute(player, name);
+                                    return Command.SINGLE_SUCCESS;
+                                }))
+                        .build(),
+                "Sets the name of your pet",
+                List.of()
+        );
 
-                StringBuilder name = new StringBuilder();
-                for (String arg : args) {
-                    if (!name.isEmpty()) {
-                        name.append(" ");
-                    }
-                    name.append(arg);
-                }
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Name",
+                "/petname",
+                CommandCategory.PET,
+                90,
+                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                        && Permissions.has(player, "MyPet.command.name")
+        ));
+    }
 
-                if (!NameFilter.isClean(name.toString())) {
-                    sender.sendMessage(Translation.getComponent("Message.Command.Name.Filter", petOwner));
-                    return true;
-                }
-
-                Pattern regex = Pattern.compile("<[a-zA-Z_]+>");
-                Matcher regexMatcher = regex.matcher(name.toString());
-                if (regexMatcher.find()) {
-                    name.append("<reset>");
-                }
-
-                String nameWithoutColors = Util.SANITIZED_MINIMESSAGE.stripTags(name.toString());
-
-                if (nameWithoutColors.length() <= Configuration.Name.MAX_LENGTH) {
-                    myPet.setPetName(name.toString());
-                    if (Permissions.has(petOwner, "MyPet.command.name.color")) {
-                        sender.sendMessage(Translation.getFormattedComponent("Message.Command.Name.New", petOwner, name.toString()));
-                    } else {
-                        sender.sendMessage(Translation.getFormattedComponent("Message.Command.Name.New", petOwner, nameWithoutColors));
-                    }
-                } else {
-                    sender.sendMessage(Translation.getFormattedComponent("Message.Command.Name.ToLong", petOwner, name.toString(), Configuration.Name.MAX_LENGTH));
-                }
-            } else {
-                sender.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
-            }
-            return true;
+    /**
+     * Executes the pet-rename logic for the given player.
+     *
+     * <p>Validates world group, active pet ownership, permission, and name filter rules
+     * before applying the new name. If MiniMessage tags are detected in the name, a
+     * {@code <reset>} tag is appended to prevent formatting bleed. The display name
+     * shown in the confirmation message respects the player's colour permission.</p>
+     *
+     * @param petOwner the player who issued the command
+     * @param name     the raw name string (may contain MiniMessage tags)
+     */
+    private void execute(Player petOwner, String name) {
+        if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
+            petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
+            return;
         }
-        sender.sendMessage("You can't use this command from server console!");
-        return true;
-    }
+        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+            petOwner.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
+            return;
+        }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        return Collections.emptyList();
-    }
+        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        if (!Permissions.has(petOwner, "MyPet.command.name")) {
+            myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", petOwner));
+            return;
+        }
 
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Name";
-    }
+        if (!NameFilter.isClean(name)) {
+            petOwner.sendMessage(Translation.getComponent("Message.Command.Name.Filter", petOwner));
+            return;
+        }
 
-    @Override
-    public String getHelpCommand() {
-        return "/petname";
-    }
+        Pattern regex = Pattern.compile("<[a-zA-Z_]+>");
+        Matcher regexMatcher = regex.matcher(name);
+        if (regexMatcher.find()) {
+            name = name + "<reset>";
+        }
 
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
-                && Permissions.has(player, "MyPet.command.name");
-    }
+        String nameWithoutColors = Util.SANITIZED_MINIMESSAGE.stripTags(name);
 
-    @Override
-    public int getHelpOrder() {
-        return 90;
+        if (nameWithoutColors.length() <= Configuration.Name.MAX_LENGTH) {
+            myPet.setPetName(name);
+            if (Permissions.has(petOwner, "MyPet.command.name.color")) {
+                petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Name.New", petOwner, name));
+            } else {
+                petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Name.New", petOwner, nameWithoutColors));
+            }
+        } else {
+            petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Name.ToLong", petOwner, name, Configuration.Name.MAX_LENGTH));
+        }
     }
 }

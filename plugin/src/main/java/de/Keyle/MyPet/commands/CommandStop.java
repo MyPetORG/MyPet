@@ -20,70 +20,91 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.CommandCategory;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
-public class CommandStop implements CommandTabCompleter {
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player petOwner) {
-            if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-                petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
-                return true;
-            }
-            if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+/**
+ * Handles the {@code /petstop} command, which forces the player's active pet to stop
+ * attacking its current target. The pet forgets its target and returns to an idle state.
+ *
+ * <p><b>Usage:</b> {@code /petstop}</p>
+ * <p><b>Aliases:</b> {@code /pets}, {@code /ps}</p>
+ * <p><b>Help category:</b> {@link CommandCategory#PET PET} (priority 70)</p>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandStop {
 
-                if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Translation.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
-                    return true;
-                } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", petOwner, myPet.getDisplayName()));
-                    return true;
-                }
-                sender.sendMessage(Translation.getFormattedComponent("Message.Command.Stop.Attack", petOwner, myPet.getDisplayName()));
-                myPet.getEntity().ifPresent(MyPetBukkitEntity::forgetTarget);
-            } else {
-                sender.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
-            }
-            return true;
+    /**
+     * Registers the {@code /petstop} Brigadier command and its help entry.
+     *
+     * <p>The command is a simple player-only literal with no arguments. The help entry
+     * is only shown when the player has an active pet.</p>
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petstop")
+                        .requires(ctx -> ctx.getSender() instanceof Player)
+                        .executes(ctx -> {
+                            execute((Player) ctx.getSource().getSender());
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .build(),
+                "Stops your pet from attacking",
+                List.of("pets", "ps")
+        );
+
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Stop",
+                "/petstop",
+                CommandCategory.PET,
+                70,
+                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+        ));
+    }
+
+    /**
+     * Executes the stop-attack logic for the given player's pet.
+     *
+     * <p>Checks that the player's world group is not disabled, that the player has
+     * an active pet, and that the pet is currently spawned (not despawned or dead).
+     * If valid, tells the pet entity to forget its current attack target.</p>
+     *
+     * @param petOwner the player whose pet should stop attacking
+     */
+    private void execute(Player petOwner) {
+        if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
+            petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
+            return;
         }
-        sender.sendMessage("You can't use this command from server console!");
-        return true;
-    }
+        if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Stop";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petstop";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return MyPetApi.getMyPetManager().hasActiveMyPet(player);
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 80;
+            if (myPet.getStatus() == PetState.Despawned) {
+                petOwner.sendMessage(Translation.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
+                return;
+            } else if (myPet.getStatus() == PetState.Dead) {
+                petOwner.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", petOwner, myPet.getDisplayName()));
+                return;
+            }
+            petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Stop.Attack", petOwner, myPet.getDisplayName()));
+            myPet.getEntity().ifPresent(MyPetBukkitEntity::forgetTarget);
+        } else {
+            petOwner.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
+        }
     }
 }

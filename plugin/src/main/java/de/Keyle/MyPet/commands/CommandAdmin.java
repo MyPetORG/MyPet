@@ -20,105 +20,77 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandOption;
-import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.admin.*;
-import de.Keyle.MyPet.util.MessageUtil;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.List;
 
-public class CommandAdmin implements CommandTabCompleter {
+/**
+ * Handles the {@code /mypetadmin} command (alias {@code /petadmin}) using Paper's
+ * Brigadier API.
+ *
+ * <p>This is the administrative top-level command. It requires the {@code MyPet.admin}
+ * permission (or console access) and delegates to a set of admin subcommand nodes, each
+ * provided by a dedicated class in the {@code de.Keyle.MyPet.commands.admin} package.</p>
+ *
+ * <h3>Command tree</h3>
+ * <pre>
+ *   /mypetadmin name        - rename another player's pet
+ *   /mypetadmin exp         - modify a pet's experience points
+ *   /mypetadmin exprate     - view or change the global XP rate multiplier
+ *   /mypetadmin respawn     - force-respawn a pet or adjust its respawn timer
+ *   /mypetadmin skilltree   - assign a skilltree to a pet
+ *   /mypetadmin create      - create a new pet for a player
+ *   /mypetadmin clone       - clone a pet from one player to another
+ *   /mypetadmin remove      - permanently remove a player's pet
+ *   /mypetadmin purge       - purge inactive pet data
+ *   /mypetadmin switch      - switch a player's active pet
+ *   /mypetadmin info        - display detailed info about a player's pet
+ *   /mypetadmin npc         - manage NPC-related pet features
+ * </pre>
+ *
+ * <h3>Aliases</h3>
+ * <ul>
+ *   <li>{@code /petadmin}</li>
+ * </ul>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandAdmin {
 
-    private final Map<String, CommandOption> commandOptions = new HashMap<>();
-    private List<String> optionsList = new ArrayList<>();
-
-    {
-        commandOptions.put("name", new CommandOptionName());
-        commandOptions.put("exp", new CommandOptionExp());
-        commandOptions.put("exp-rate", new CommandOptionExpRate());
-        commandOptions.put("respawn", new CommandOptionRespawn());
-        commandOptions.put("skilltree", new CommandOptionSkilltree());
-        commandOptions.put("create", new CommandOptionCreate());
-        commandOptions.put("clone", new CommandOptionClone());
-        commandOptions.put("remove", new CommandOptionRemove());
-        commandOptions.put("cleanup", new CommandOptionCleanup());
-        commandOptions.put("switch", new CommandOptionSwitch());
-        commandOptions.put("info", new CommandOptionInfo());
-    }
-
-    public Map<String, CommandOption> getCommandOptions() {
-        return commandOptions;
-    }
-
-    public void registerOption(String name, CommandOption option) {
-        commandOptions.put(name, option);
-    }
-
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player player) {
-            if (!Permissions.has(player, "MyPet.admin", false)) {
-                sender.sendMessage(Translation.getComponent("Message.No.Allowed", sender));
-                return true;
-            }
-        }
-
-        if (args.length < 1) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(Component.text(" -> ").append(Component.text(String.join(", ", commandOptions.keySet())).color(NamedTextColor.DARK_AQUA)));
-            return false;
-        }
-
-        String[] parameter = Arrays.copyOfRange(args, 1, args.length);
-        CommandOption option = commandOptions.get(args[0].toLowerCase());
-
-        if (option != null) {
-            return option.onCommandOption(sender, parameter);
-        }
-        sender.sendMessage(MessageUtil.prefixed(Component.text()
-                .append(Component.text("\""))
-                .append(Component.text(args[0].toLowerCase()).decorate(TextDecoration.ITALIC))
-                .append(Component.text("\" is not a valid option!"))
-                .build()));
-        return false;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (commandSender instanceof Player player && !Permissions.has(player, "MyPet.admin", false)) {
-            return Collections.emptyList();
-        }
-        if (strings.length == 1) {
-            if (optionsList.size() != commandOptions.size()) {
-                optionsList = new ArrayList<>(commandOptions.keySet());
-                Collections.sort(optionsList);
-            }
-            return filterTabCompletionResults(optionsList, strings[0]);
-        } else if (strings.length >= 1) {
-            CommandOption co = commandOptions.get(strings[0]);
-            if (co instanceof CommandOptionTabCompleter tabCompleter) {
-                return tabCompleter.onTabComplete(commandSender, strings);
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return Permissions.has(player, "MyPet.admin", false);
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.ADMIN;
+    /**
+     * Registers the {@code /mypetadmin} Brigadier command and its help entry.
+     *
+     * <p>The root literal {@code mypetadmin} requires the sender to either be the console
+     * or a player with the {@code MyPet.admin} permission. Each admin subcommand is
+     * mounted as a child literal node built by its respective command option class, which
+     * also registers its own {@link HelpEntry} in the shared {@link HelpRegistry}.</p>
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("mypetadmin")
+                        .requires(ctx -> !(ctx.getSender() instanceof Player player)
+                                || Permissions.has(player, "MyPet.admin", false))
+                        .then(new CommandOptionName().buildNode(helpRegistry))
+                        .then(new CommandOptionExp().buildNode(helpRegistry))
+                        .then(new CommandOptionExpRate().buildNode(helpRegistry))
+                        .then(new CommandOptionRespawn().buildNode(helpRegistry))
+                        .then(new CommandOptionSkilltree().buildNode(helpRegistry))
+                        .then(new CommandOptionCreate().buildNode(helpRegistry))
+                        .then(new CommandOptionClone().buildNode(helpRegistry))
+                        .then(new CommandOptionRemove().buildNode(helpRegistry))
+                        .then(new CommandOptionPurge().buildNode(helpRegistry))
+                        .then(new CommandOptionSwitch().buildNode(helpRegistry))
+                        .then(new CommandOptionInfo().buildNode(helpRegistry))
+                        .then(new CommandOptionNpc().buildNode(helpRegistry))
+                        .build(),
+                "MyPet admin commands",
+                List.of("petadmin")
+        );
     }
 }

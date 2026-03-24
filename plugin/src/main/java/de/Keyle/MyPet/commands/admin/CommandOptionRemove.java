@@ -20,79 +20,113 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.MessageUtil;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.List;
+/**
+ * Admin subcommand for permanently removing a player's active pet.
+ *
+ * <p>Usage: {@code /petadmin remove <player>}
+ *
+ * <p>This command performs the following steps:
+ * <ol>
+ *   <li>Fires a {@link MyPetRemoveEvent} with source {@link MyPetRemoveEvent.Source#AdminCommand}</li>
+ *   <li>Clears the pet association for the player's current world group</li>
+ *   <li>Deactivates the pet entity in the world</li>
+ *   <li>Deletes the pet data from the repository (database)</li>
+ * </ol>
+ *
+ * <p>This operation is irreversible -- the pet and all its data (level, skills, etc.)
+ * are permanently deleted.
+ *
+ * <p>Requires the {@code MyPet.admin} permission.
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandOptionRemove {
 
-public class CommandOptionRemove implements CommandOptionTabCompleter {
-    @Override
-    public boolean onCommandOption(CommandSender sender, String[] args) {
+    /**
+     * Builds the Brigadier command node for the {@code remove} admin subcommand.
+     *
+     * <p>The resulting command tree structure is:
+     * <pre>
+     *   remove
+     *     &lt;player: player_selector&gt;
+     *       (executes) -- remove the player's active pet permanently
+     * </pre>
+     *
+     * @param helpRegistry the help registry to register the command's help entry with
+     * @return the built {@link LiteralCommandNode} representing the {@code remove} subcommand
+     */
+    public LiteralCommandNode<CommandSourceStack> buildNode(HelpRegistry helpRegistry) {
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Admin.Remove",
+                "/petadmin remove",
+                CommandCategory.ADMIN,
+                22,
+                player -> Permissions.has(player, "MyPet.admin", false)
+        ));
+
+        return Commands.literal("remove")
+                .then(Commands.argument("player", ArgumentTypes.player())
+                        .executes(ctx -> {
+                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                                    .resolve(ctx.getSource()).getFirst();
+                            execute(ctx.getSource().getSender(), player);
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .build();
+    }
+
+    /**
+     * Removes the specified player's active pet permanently.
+     *
+     * <p>Validates that the player is a registered MyPet player with an active pet,
+     * then fires a removal event, clears the world group association, deactivates
+     * the pet entity, and deletes the pet from the persistence repository.
+     *
+     * @param sender the command sender (admin) who issued the removal
+     * @param player the target player whose active pet will be removed
+     */
+    private void execute(CommandSender sender, Player player) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
-
-        if (args.length >= 1) {
-            Player player = Bukkit.getPlayer(args[0]);
-            if (player == null || !player.isOnline()) {
-                sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.No.PlayerOnline", lang)));
-                return true;
-            }
-            if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
-                MyPetPlayer petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
-                if (petOwner.hasMyPet()) {
-                    MyPet myPet = petOwner.getMyPet();
-
-                    MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.AdminCommand);
-                    Bukkit.getServer().getPluginManager().callEvent(removeEvent);
-
-                    myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), null);
-                    MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
-                    MyPetApi.getRepository().removeMyPet(myPet.getUUID(), null);
-
-                    sender.sendMessage(MessageUtil.prefixed(Component.text("You removed the MyPet of: ").append(Component.text(petOwner.getName()).color(NamedTextColor.YELLOW))));
-                }
-            }
+        if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
+            return;
         }
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        if (strings.length == 2) {
-            return null;
+        MyPetPlayer petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
+        if (!petOwner.hasMyPet()) {
+            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
+            return;
         }
-        return Collections.emptyList();
-    }
+        MyPet myPet = petOwner.getMyPet();
 
-    @Override
-    public String getHelpCommand() {
-        return "/petadmin remove";
-    }
+        MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.AdminCommand);
+        Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.ADMIN;
-    }
+        myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), null);
+        MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
+        MyPetApi.getRepository().removeMyPet(myPet.getUUID(), null);
 
-    @Override
-    public String getHelpDescription() {
-        return "Removes a player's pet";
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 22;
+        sender.sendMessage(MessageUtil.prefixed(Component.text("You removed the MyPet of: ").append(Component.text(petOwner.getName()).color(NamedTextColor.YELLOW))));
     }
 }

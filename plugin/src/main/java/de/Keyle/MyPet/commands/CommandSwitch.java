@@ -20,10 +20,12 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -31,56 +33,84 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class CommandSwitch implements CommandTabCompleter {
+/**
+ * Handles the {@code /petswitch} command (aliases: {@code /pswitch}, {@code /psw}).
+ *
+ * <p>Opens a GUI that allows the player to switch between their stored pets. The GUI
+ * displays all pets in the current world group with a title showing the current
+ * storage usage ({@code inactive/max}). Upon selecting a pet, the currently active pet
+ * (if any) is deactivated and the selected pet is activated and spawned.</p>
+ *
+ * <p>This command is restricted to in-game players only (no console support).</p>
+ *
+ * <p><b>Usage:</b> {@code /petswitch}</p>
+ *
+ * <p><b>Permissions:</b></p>
+ * <ul>
+ *   <li>{@code MyPet.command.switch} -- required to use the switch command</li>
+ *   <li>{@code MyPet.petstorage.limit.<n>} -- determines the maximum number of stored pets</li>
+ *   <li>{@code MyPet.admin} -- grants the maximum configured storage limit</li>
+ * </ul>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandSwitch {
 
-    private List<String> storeList = new ArrayList<>();
+    /**
+     * Registers the {@code /petswitch} Brigadier command and its help entry.
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petswitch")
+                        .requires(ctx -> ctx.getSender() instanceof Player)
+                        .executes(ctx -> {
+                            execute((Player) ctx.getSource().getSender());
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .build(),
+                "Opens the pet switch GUI",
+                List.of("pswitch", "psw")
+        );
 
-    public CommandSwitch() {
-        storeList.add("store");
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Switch",
+                "/petswitch",
+                null,
+                120,
+                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                        && Permissions.has(player, "MyPet.command.switch")
+        ));
     }
 
-    public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
-
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage("You can't use this command from server console!");
-            return true;
-        }
+    /**
+     * Executes the petswitch command logic. Fetches all stored pets from the repository,
+     * opens the {@link MyPetSelectionGui}, and handles the pet activation callback
+     * including spawning the selected pet and reporting any spawn failures.
+     *
+     * @param player the player executing the command
+     */
+    private void execute(Player player) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
             player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
-            return true;
+            return;
         }
         if (!Permissions.has(player, "MyPet.command.switch")) {
             player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
-            return true;
+            return;
         }
 
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             final MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-            int page = 1;
-
-            if (args.length > 0) {
-                try {
-                    page = Integer.parseInt(args[0]);
-                } catch (NumberFormatException e) {
-                    Bukkit.getConsoleSender().sendMessage("MyPet: Invalid page number format in /petswitch command by player " + player.getName() + ". Using page 1.");
-                }
-                if (page < 1) {
-                    return true;
-                }
-            }
-            final int finalPage = page;
             MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
                 @Override
                 public void callback(List<StoredMyPet> pets) {
@@ -103,7 +133,7 @@ public class CommandSwitch implements CommandTabCompleter {
 
                         Component stats = Component.text(" (" + inactivePetCount + "/" + maxPetCount + ")");
 
-                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title.append(stats), finalPage);
+                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title.append(stats), 1);
                         gui.open(pets, new RepositoryCallback<>() {
                             @Override
                             public void callback(StoredMyPet storedMyPet) {
@@ -132,7 +162,7 @@ public class CommandSwitch implements CommandTabCompleter {
                                             }
                                             break;
                                         case Spectator:
-                                            sender.sendMessage(Translation.getFormattedComponent("Message.Spawn.Spectator", owner, activePet.get().getDisplayName()));
+                                            player.sendMessage(Translation.getFormattedComponent("Message.Spawn.Spectator", owner, activePet.get().getDisplayName()));
                                             break;
                                     }
                                 }
@@ -142,11 +172,18 @@ public class CommandSwitch implements CommandTabCompleter {
                 }
             });
         } else {
-            sender.sendMessage(Translation.getComponent("Message.No.HasPet", player));
+            player.sendMessage(Translation.getComponent("Message.No.HasPet", player));
         }
-        return true;
     }
 
+    /**
+     * Calculates the maximum number of pets the player is allowed to store.
+     * Admins receive {@link Configuration.Misc#MAX_STORED_PET_COUNT}. Other players
+     * are checked for {@code MyPet.petstorage.limit.<n>} permissions from highest to lowest.
+     *
+     * @param p the player to check
+     * @return the maximum number of stored pets allowed, or 0 if none
+     */
     private int getMaxPetCount(Player p) {
         int maxPetCount = 0;
         if (Permissions.has(p, "MyPet.admin")) {
@@ -162,6 +199,13 @@ public class CommandSwitch implements CommandTabCompleter {
         return maxPetCount;
     }
 
+    /**
+     * Counts the number of pets belonging to the given world group.
+     *
+     * @param pets       the list of all stored pets for the player
+     * @param worldGroup the world group name to filter by
+     * @return the number of pets in the specified world group
+     */
     private int getInactivePetCount(List<StoredMyPet> pets, String worldGroup) {
         int inactivePetCount = 0;
 
@@ -173,50 +217,5 @@ public class CommandSwitch implements CommandTabCompleter {
         }
 
         return inactivePetCount;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (sender instanceof Player && strings.length == 1) {
-            final int[] petCount = {0};
-            MyPetApi.getRepository().getMyPets(MyPetApi.getPlayerManager().getMyPetPlayer((Player) sender), new RepositoryCallback<>() {
-                @Override
-                public void callback(List<StoredMyPet> value) {
-                    petCount[0]++;
-                }
-            });
-            // Tab as many pages as 54 slots might fit
-            int maxPages = (int) Math.ceil((double) petCount[0] / 54);
-            for (int i = 1; i <= maxPages; i++) {
-                if (!storeList.contains(String.valueOf(i))) {
-                    storeList.add(String.valueOf(i));
-                }
-                if (MyPetApi.getMyPetManager().hasActiveMyPet((Player) sender)) {
-                    return filterTabCompletionResults(storeList, strings[0]);
-                }
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Switch";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petswitch";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
-                && Permissions.has(player, "MyPet.command.switch");
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 120;
     }
 }

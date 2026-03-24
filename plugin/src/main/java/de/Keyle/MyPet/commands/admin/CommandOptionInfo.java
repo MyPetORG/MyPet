@@ -20,112 +20,152 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.MessageUtil;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+/**
+ * Admin subcommand for inspecting item information relevant to MyPet configuration.
+ *
+ * <p>This command provides two sub-paths:
+ * <ul>
+ *   <li>{@code /petadmin info item} -- displays the serialized string representation of the
+ *       item currently held in the executing player's main hand, with a clickable [Copy] button</li>
+ *   <li>{@code /petadmin info leashitem <pettype>} -- displays the configured leash item for the
+ *       specified pet type, with a clickable [Copy] button</li>
+ * </ul>
+ *
+ * <p>The {@code item} subcommand can only be executed by a player (not from console).
+ * The serialized item strings use the platform helper's {@code itemstackToString} format,
+ * which can be pasted directly into MyPet configuration files.
+ *
+ * <p>Requires the {@code MyPet.admin} permission.
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandOptionInfo {
 
-public class CommandOptionInfo implements CommandOptionTabCompleter {
+    /**
+     * Builds the Brigadier command node for the {@code info} admin subcommand.
+     *
+     * <p>The resulting command tree structure is:
+     * <pre>
+     *   info
+     *     item
+     *       (executes) -- show held item's serialized string
+     *     leashitem
+     *       &lt;pettype: entity_type&gt;
+     *         (executes) -- show leash item for the given pet type
+     * </pre>
+     *
+     * <p>The {@code pettype} argument reuses the custom argument type from
+     * {@link CommandOptionCreate#PET_ENTITY_TYPE}.
+     *
+     * @param helpRegistry the help registry to register the command's help entry with
+     * @return the built {@link LiteralCommandNode} representing the {@code info} subcommand
+     */
+    public LiteralCommandNode<CommandSourceStack> buildNode(HelpRegistry helpRegistry) {
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Admin.Info",
+                "/petadmin info",
+                CommandCategory.ADMIN,
+                40,
+                player -> Permissions.has(player, "MyPet.admin", false)
+        ));
 
-    public static final List<String> COMMAND_OPTIONS = new ArrayList<>();
-
-    static {
-        COMMAND_OPTIONS.add("item");
-        COMMAND_OPTIONS.add("leashitem");
+        return Commands.literal("info")
+                .then(Commands.literal("item")
+                        .executes(ctx -> {
+                            executeItem(ctx.getSource().getSender());
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .then(Commands.literal("leashitem")
+                        .then(Commands.argument("pettype", CommandOptionCreate.PET_ENTITY_TYPE)
+                                .executes(ctx -> {
+                                    EntityType entityType = ctx.getArgument("pettype", EntityType.class);
+                                    MyPetType type = MyPetType.byEntityTypeName(entityType.name());
+                                    executeLeashItem(ctx.getSource().getSender(), type);
+                                    return Command.SINGLE_SUCCESS;
+                                })))
+                .build();
     }
 
-    @Override
-    public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin info ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<what info you want to see>").color(NamedTextColor.RED)));
-            return false;
-        }
-        switch (args[0].toLowerCase()) {
-            case "item":
-                if (sender instanceof Player) {
-                    ItemStack itemStack = ((Player) sender).getInventory().getItemInMainHand();
+    /**
+     * Displays the serialized string representation of the item held in the player's main hand.
+     *
+     * <p>If the held item is air (empty hand), the string {@code "air"} is displayed.
+     * The output includes a clickable [Copy] button that copies the item string to the
+     * player's clipboard. This command cannot be run from the server console.
+     *
+     * @param sender the command sender; must be a {@link Player} instance
+     */
+    private void executeItem(CommandSender sender) {
+        if (sender instanceof Player player) {
+            ItemStack itemStack = player.getInventory().getItemInMainHand();
+            String itemString = itemStack.getType() != Material.AIR
+                    ? MyPetApi.getPlatformHelper().itemstackToString(itemStack)
+                    : "air";
 
-                    sender.sendMessage("See server logs for the result.");
-                    if (itemStack != null && itemStack.getType() != Material.AIR) {
-                        String itemString = MyPetApi.getPlatformHelper().itemstackToString(itemStack);
-                        MyPetApi.getLogger().info("MyPet Info Item: " + itemString);
-                    } else {
-                        MyPetApi.getLogger().info("MyPet Info Item: air");
-                    }
-                } else {
-                    sender.sendMessage("You can't use this command from server console!");
-                }
-                break;
-            case "leashitem": {
-                if (args.length >= 2) {
-                    try {
-                        MyPetType type = MyPetType.byName(args[1], true);
-                        ConfigItem configItem = MyPetApi.getMyPetInfo().getLeashItem(type);
-                        ItemStack configItemStack = configItem.getItem();
-                        String itemString = "air";
-                        if (configItemStack != null) {
-                            itemString = MyPetApi.getPlatformHelper().itemstackToString(configItemStack);
-                        }
-                        MyPetApi.getLogger().info("MyPet Leash Item (" + type + "): " + itemString);
-                        if (sender instanceof Player) {
-                            ((Player) sender).getInventory().addItem(configItemStack);
-                        }
-                    } catch (MyPetTypeNotFoundException e) {
-                        sender.sendMessage(Translation.getComponent("Message.Command.PetType.Unknown", sender));
-                    }
-                } else {
-                    sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-                    sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin info leashitem ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<pet type>").color(NamedTextColor.RED)));
-                }
-                break;
-            }
-            default:
-                sender.sendMessage(Component.text(" -> ").append(Component.text("/petadmin info ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<what info you want to see>").color(NamedTextColor.RED)));
-        }
-        return true;
-    }
+            Component copyButton = Component.text(" [Copy]").color(NamedTextColor.AQUA)
+                    .clickEvent(ClickEvent.copyToClipboard(itemString))
+                    .hoverEvent(HoverEvent.showText(
+                            Component.text("Click to copy to clipboard").color(NamedTextColor.YELLOW)));
 
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        if (strings.length > 2) {
-            return Collections.emptyList();
+            sender.sendMessage(MessageUtil.prefixed(
+                    Component.text("Item: ").color(NamedTextColor.GRAY)
+                            .append(Component.text(itemString).color(NamedTextColor.WHITE))
+                            .append(copyButton)));
         } else {
-            return filterTabCompletionResults(COMMAND_OPTIONS, strings[1]);
+            sender.sendMessage("You can't use this command from server console!");
         }
     }
 
-    @Override
-    public String getHelpCommand() {
-        return "/petadmin info";
-    }
+    /**
+     * Displays the configured leash item for a specific pet type.
+     *
+     * <p>Retrieves the leash item from the pet type's configuration via
+     * {@link MyPetApi#getMyPetInfo()} and displays its serialized string representation.
+     * If no leash item is configured (null item stack), {@code "air"} is shown.
+     * The output includes a clickable [Copy] button for clipboard copying.
+     *
+     * @param sender the command sender to receive the output message
+     * @param type   the pet type whose leash item should be displayed
+     */
+    private void executeLeashItem(CommandSender sender, MyPetType type) {
+        ConfigItem configItem = MyPetApi.getMyPetInfo().getLeashItem(type);
+        ItemStack configItemStack = configItem.getItem();
+        String itemString = "air";
+        if (configItemStack != null) {
+            itemString = MyPetApi.getPlatformHelper().itemstackToString(configItemStack);
+        }
 
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.ADMIN;
-    }
+        Component copyButton = Component.text(" [Copy]").color(NamedTextColor.AQUA)
+                .clickEvent(ClickEvent.copyToClipboard(itemString))
+                .hoverEvent(HoverEvent.showText(
+                        Component.text("Click to copy to clipboard").color(NamedTextColor.YELLOW)));
 
-    @Override
-    public String getHelpDescription() {
-        return "Shows detailed pet info";
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 40;
+        sender.sendMessage(MessageUtil.prefixed(
+                Component.text("Leash Item (").color(NamedTextColor.GRAY)
+                        .append(Component.text(type.name()).color(NamedTextColor.GOLD))
+                        .append(Component.text("): ").color(NamedTextColor.GRAY))
+                        .append(Component.text(itemString).color(NamedTextColor.WHITE))
+                        .append(copyButton)));
     }
 }

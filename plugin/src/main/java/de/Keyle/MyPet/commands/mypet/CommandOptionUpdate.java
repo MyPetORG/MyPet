@@ -20,52 +20,61 @@
 
 package de.Keyle.MyPet.commands.mypet;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.api.MyPetVersion;
-import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.util.Updater;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandOptionUpdate implements CommandOption {
+/**
+ * Provides the {@code /mypet update} subcommand, which checks whether a newer version
+ * of the MyPet plugin is available.
+ *
+ * <h3>Usage</h3>
+ * <p>{@code /mypet update}</p>
+ *
+ * <h3>Permissions</h3>
+ * <ul>
+ *   <li>{@code MyPet.admin} -- required for players; console can always execute</li>
+ * </ul>
+ *
+ * <p>Reports the latest available version if an update exists, or confirms the
+ * installation is up to date. For local (development) builds, update checks are skipped.</p>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandOptionUpdate {
 
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Update";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/mypet update";
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.ADMIN;
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return Permissions.has(player, "MyPet.admin", false);
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 14;
-    }
-
-    @Override
-    public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (Updater.isUpdateAvailable()) {
-            sender.sendMessage(Component.text("A new version is available: ").append(Component.text(Updater.getLatest().toString()).color(NamedTextColor.GOLD)));
-        } else if (MyPetVersion.isLocalBuild()) {
-            sender.sendMessage(Component.text("You are running a ").append(Component.text("local build").color(NamedTextColor.YELLOW)).append(Component.text(". Update checks are skipped.")));
-        } else {
-            sender.sendMessage("Your version of MyPet is up to date.");
-        }
-        return true;
+    /**
+     * Builds and returns the Brigadier {@code "update"} literal command node.
+     * This node is intended to be attached as a child of the {@code /mypet} command tree.
+     *
+     * @return the built {@link LiteralCommandNode} for the update subcommand
+     */
+    public LiteralCommandNode<CommandSourceStack> buildNode() {
+        return Commands.literal("update")
+                .requires(ctx -> {
+                    var sender = ctx.getSender();
+                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin", false);
+                })
+                .executes(ctx -> {
+                    var sender = ctx.getSource().getSender();
+                    if (Updater.isUpdateAvailable()) {
+                        sender.sendMessage(Component.text("A new version is available: ")
+                                .append(Component.text(Updater.getLatest().toString()).color(NamedTextColor.GOLD)));
+                    } else if (MyPetVersion.isLocalBuild()) {
+                        sender.sendMessage(Component.text("You are running a ")
+                                .append(Component.text("local build").color(NamedTextColor.YELLOW))
+                                .append(Component.text(". Update checks are skipped.")));
+                    } else {
+                        sender.sendMessage("Your version of MyPet is up to date.");
+                    }
+                    return Command.SINGLE_SUCCESS;
+                })
+                .build();
     }
 }

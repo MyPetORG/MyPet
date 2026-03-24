@@ -20,38 +20,90 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
-public class CommandStore implements CommandTabCompleter {
+/**
+ * Handles the {@code /petstore} command (aliases: {@code /pstore}, {@code /pst}).
+ *
+ * <p>Stores (deactivates) the player's currently active pet, making it available for
+ * later retrieval via {@code /petswitch}. The pet is unlinked from the current world
+ * group so another pet can be activated. Storage is subject to a per-player limit
+ * controlled by {@code MyPet.petstorage.limit.<n>} permissions or admin status.</p>
+ *
+ * <p>This command is restricted to in-game players only (no console support).</p>
+ *
+ * <p><b>Usage:</b> {@code /petstore}</p>
+ *
+ * <p><b>Permissions:</b></p>
+ * <ul>
+ *   <li>{@code MyPet.command.store} -- required to store a pet</li>
+ *   <li>{@code MyPet.petstorage.limit.<n>} -- determines the maximum number of stored pets</li>
+ *   <li>{@code MyPet.admin} -- grants the maximum configured storage limit</li>
+ * </ul>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandStore {
 
-    public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage("You can't use this command from server console!");
-            return true;
-        }
+    /**
+     * Registers the {@code /petstore} Brigadier command and its help entry.
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petstore")
+                        .requires(ctx -> ctx.getSender() instanceof Player)
+                        .executes(ctx -> {
+                            execute((Player) ctx.getSource().getSender());
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .build(),
+                "Stores your active pet",
+                List.of("pstore", "pst")
+        );
+
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Store",
+                "/petstore",
+                null,
+                130,
+                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                        && Permissions.has(player, "MyPet.command.switch")
+        ));
+    }
+
+    /**
+     * Executes the petstore command logic. Validates permissions and storage limits,
+     * then deactivates the player's active pet and clears the world group assignment
+     * so the slot is freed for another pet.
+     *
+     * @param player the player executing the command
+     */
+    private void execute(Player player) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
             player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
-            return true;
+            return;
         }
 
         if (!Permissions.has(player, "MyPet.command.store")) {
             player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
-            return true;
+            return;
         }
 
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
@@ -60,7 +112,7 @@ public class CommandStore implements CommandTabCompleter {
 
             if (maxPetCount == 0) {
                 player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
-                return true;
+                return;
             }
 
             if (owner.hasMyPet()) {
@@ -73,25 +125,32 @@ public class CommandStore implements CommandTabCompleter {
 
                             int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
                             if (inactivePetCount >= maxPetCount) {
-                                sender.sendMessage(Translation.getFormattedComponent("Message.Command.Switch.Limit", player, maxPetCount));
+                                player.sendMessage(Translation.getFormattedComponent("Message.Command.Switch.Limit", player, maxPetCount));
                                 return;
                             }
                             if (MyPetApi.getMyPetManager().deactivateMyPet(owner, true)) {
                                 owner.setMyPetForWorldGroup(worldGroup, null);
-                                sender.sendMessage(Translation.getFormattedComponent("Message.Command.Switch.Success", player, myPet.getDisplayName()));
+                                player.sendMessage(Translation.getFormattedComponent("Message.Command.Switch.Success", player, myPet.getDisplayName()));
                             }
                         } else {
                             player.sendMessage(Translation.getComponent("Message.Command.Switch.NoPet", player));
                         }
                     }
                 });
-                return true;
+                return;
             }
         }
         player.sendMessage(Translation.getComponent("Message.Command.Switch.NoPet", player));
-        return true;
     }
 
+    /**
+     * Calculates the maximum number of pets the player is allowed to store.
+     * Admins receive {@link Configuration.Misc#MAX_STORED_PET_COUNT}. Other players
+     * are checked for {@code MyPet.petstorage.limit.<n>} permissions from highest to lowest.
+     *
+     * @param p the player to check
+     * @return the maximum number of stored pets allowed, or 0 if none
+     */
     private int getMaxPetCount(Player p) {
         int maxPetCount = 0;
         if (Permissions.has(p, "MyPet.admin")) {
@@ -107,6 +166,13 @@ public class CommandStore implements CommandTabCompleter {
         return maxPetCount;
     }
 
+    /**
+     * Counts the number of pets belonging to the given world group.
+     *
+     * @param pets       the list of all stored pets for the player
+     * @param worldGroup the world group name to filter by
+     * @return the number of pets in the specified world group
+     */
     private int getInactivePetCount(List<StoredMyPet> pets, String worldGroup) {
         int inactivePetCount = 0;
 
@@ -118,31 +184,5 @@ public class CommandStore implements CommandTabCompleter {
         }
 
         return inactivePetCount;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Store";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petstore";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return MyPetApi.getMyPetManager().hasActiveMyPet(player)
-                && Permissions.has(player, "MyPet.command.switch");
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 130;
     }
 }

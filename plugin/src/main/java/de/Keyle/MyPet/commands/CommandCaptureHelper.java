@@ -20,75 +20,102 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.CommandCategory;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
-public class CommandCaptureHelper implements CommandTabCompleter {
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (commandSender instanceof Player player) {
+/**
+ * Handles the {@code /petcapturehelper} command, which toggles the capture helper overlay
+ * for a player. The capture helper displays visual cues (e.g., health bar indicators) on
+ * mobs that are eligible to be captured as pets, helping players know when a mob is low
+ * enough to leash.
+ *
+ * <p>The capture helper cannot be enabled while the player already has an active pet.</p>
+ *
+ * <p><b>Usage:</b> {@code /petcapturehelper}</p>
+ * <p><b>Aliases:</b> {@code /pch}</p>
+ * <p><b>Permissions:</b> {@code MyPet.command.capturehelper} — required to toggle the helper</p>
+ * <p><b>Help category:</b> {@link CommandCategory#PET PET} (priority 180)</p>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandCaptureHelper {
 
-            if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
-                return true;
-            }
+    /**
+     * Registers the {@code /petcapturehelper} Brigadier command and its help entry.
+     *
+     * <p>The command is a player-only literal with no arguments. The help entry is
+     * always visible (no conditional predicate).</p>
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petcapturehelper")
+                        .requires(ctx -> ctx.getSender() instanceof Player)
+                        .executes(ctx -> {
+                            execute((Player) ctx.getSource().getSender());
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .build(),
+                "Toggles the capture helper",
+                List.of("pch")
+        );
 
-            if (Permissions.has(player, "MyPet.command.capturehelper")) {
-                MyPetPlayer myPetPlayer;
-                if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
-                    myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.CaptureHelper",
+                "/petcapturehelper",
+                CommandCategory.PET,
+                180,
+                null
+        ));
+    }
 
-                    if (myPetPlayer.hasMyPet()) {
-                        player.sendMessage(Translation.getComponent("Message.Command.CaptureHelper.HasPet", player));
-                        return true;
-                    }
-                } else {
-                    myPetPlayer = MyPetApi.getPlayerManager().registerMyPetPlayer(player);
-                }
-
-                myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
-                Component mode = myPetPlayer.isCaptureHelperActive() ? Translation.getComponent("Name.Enabled", player) : Translation.getComponent("Name.Disabled", player);
-                player.sendMessage(Translation.getFormattedComponent("Message.Command.CaptureHelper.Mode", player, mode));
-                return true;
-            }
-            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
+    /**
+     * Toggles the capture helper for the given player.
+     *
+     * <p>Checks that the world group is enabled, the player has the required permission,
+     * and that the player does not currently have an active pet. If the player is not yet
+     * registered as a MyPet player, they are registered automatically. Sends a confirmation
+     * message indicating whether the capture helper was enabled or disabled.</p>
+     *
+     * @param player the player whose capture helper state should be toggled
+     */
+    private void execute(Player player) {
+        if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
+            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            return;
         }
-        return true;
-    }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        return Collections.emptyList();
-    }
+        if (Permissions.has(player, "MyPet.command.capturehelper")) {
+            MyPetPlayer myPetPlayer;
+            if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+                myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.CaptureHelper";
-    }
+                if (myPetPlayer.hasMyPet()) {
+                    player.sendMessage(Translation.getComponent("Message.Command.CaptureHelper.HasPet", player));
+                    return;
+                }
+            } else {
+                myPetPlayer = MyPetApi.getPlayerManager().registerMyPetPlayer(player);
+            }
 
-    @Override
-    public String getHelpCommand() {
-        return "/petcapturehelper";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return Permissions.has(player, "MyPet.command.capturehelper");
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 50;
+            myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
+            Component mode = myPetPlayer.isCaptureHelperActive() ? Translation.getComponent("Name.Enabled", player) : Translation.getComponent("Name.Disabled", player);
+            player.sendMessage(Translation.getFormattedComponent("Message.Command.CaptureHelper.Mode", player, mode));
+            return;
+        }
+        player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
     }
 }

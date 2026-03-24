@@ -20,40 +20,102 @@
 
 package de.Keyle.MyPet.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandTabCompleter;
+import de.Keyle.MyPet.api.commands.HelpEntry;
+import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
-public class CommandSkill implements CommandTabCompleter {
+/**
+ * Handles the {@code /petskill} command (alias: {@code /pskill}).
+ *
+ * <p>Displays all active skills for the sender's pet, or another player's pet when a
+ * target name is provided by an admin. Each skill is listed with its localized name
+ * and a formatted description of its current level/properties.</p>
+ *
+ * <p><b>Usage:</b> {@code /petskill [player]}</p>
+ *
+ * <p><b>Permissions:</b></p>
+ * <ul>
+ *   <li>{@code MyPet.admin} -- required to view another player's pet skills</li>
+ * </ul>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandSkill {
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    /**
+     * Registers the {@code /petskill} Brigadier command and its help entry.
+     *
+     * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
+     * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
+     */
+    public void register(Commands commands, HelpRegistry helpRegistry) {
+        commands.register(
+                Commands.literal("petskill")
+                        .executes(ctx -> {
+                            execute(ctx.getSource().getSender(), null);
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .then(Commands.argument("player", StringArgumentType.word())
+                                .suggests((ctx, builder) -> {
+                                    Bukkit.getOnlinePlayers().forEach(p -> builder.suggest(p.getName()));
+                                    return builder.buildFuture();
+                                })
+                                .executes(ctx -> {
+                                    execute(ctx.getSource().getSender(), StringArgumentType.getString(ctx, "player"));
+                                    return Command.SINGLE_SUCCESS;
+                                }))
+                        .build(),
+                "Shows your pet's skills",
+                List.of("pskill")
+        );
+
+        helpRegistry.register(new HelpEntry(
+                "Message.Command.Help.Skill",
+                "/petskill",
+                CommandCategory.SKILLS,
+                150,
+                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+        ));
+    }
+
+    /**
+     * Executes the petskill command logic. Resolves the pet owner, auto-assigns the
+     * skilltree if needed, then iterates over all active skills and sends their
+     * localized descriptions to the sender.
+     *
+     * @param sender     the command sender (player or console)
+     * @param targetName the name of the target player whose pet skills to view,
+     *                   or {@code null} to view the sender's own pet skills
+     */
+    private void execute(CommandSender sender, String targetName) {
         Player petOwner;
-        if (args.length == 0 && sender instanceof Player) {
+        if (targetName == null && sender instanceof Player) {
             petOwner = (Player) sender;
-        } else if (args.length > 0 && (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin"))) {
-            petOwner = Bukkit.getServer().getPlayer(args[0]);
+        } else if (targetName != null && (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin"))) {
+            petOwner = Bukkit.getServer().getPlayer(targetName);
 
             if (petOwner == null || !petOwner.isOnline()) {
                 sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", sender));
-                return true;
+                return;
             } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
                 sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, petOwner.getName()));
-                return true;
+                return;
             }
         } else {
             if (sender instanceof Player) {
@@ -61,7 +123,7 @@ public class CommandSkill implements CommandTabCompleter {
             } else {
                 sender.sendMessage("You can't use this command from server console!");
             }
-            return true;
+            return;
         }
 
         if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
@@ -85,49 +147,8 @@ public class CommandSkill implements CommandTabCompleter {
                             .build());
                 }
             }
-            return true;
         } else {
             sender.sendMessage(Translation.getComponent("Message.No.HasPet", sender));
         }
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
-        if (strings.length == 1) {
-            if (sender instanceof Player) {
-                if (Permissions.has((Player) sender, "MyPet.admin")) {
-                    return null;
-                }
-            } else {
-                return null;
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Skill";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/petskill";
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return MyPetApi.getMyPetManager().hasActiveMyPet(player);
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 150;
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.SKILLS;
     }
 }

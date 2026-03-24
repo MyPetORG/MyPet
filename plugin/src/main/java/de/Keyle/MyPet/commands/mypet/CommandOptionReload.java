@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.commands.mypet;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
-import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -35,9 +35,11 @@ import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.shop.ShopManager;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -45,75 +47,99 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
-public class CommandOptionReload implements CommandOptionTabCompleter {
+/**
+ * Provides the {@code /mypet reload} subcommand, enabling hot-reload of plugin resources.
+ *
+ * <p>This command is restricted to the console and players with the {@code MyPet.admin}
+ * permission. It supports four reload targets:</p>
+ *
+ * <h3>Command tree</h3>
+ * <pre>
+ *   /mypet reload             - shows usage hint (missing parameter)
+ *   /mypet reload all         - reloads config, skilltrees, and shops
+ *   /mypet reload config      - reloads config.yml, translations, hook configs, and
+ *                                recalculates pet-storage permissions and XP calculator
+ *   /mypet reload skilltrees  - reloads skilltree JSON files from the skilltrees/
+ *                                directory and reassigns trees to all active pets
+ *   /mypet reload shops       - reloads shop definitions via the {@link ShopManager}
+ * </pre>
+ */
+@SuppressWarnings("UnstableApiUsage")
+public class CommandOptionReload {
 
-    public static final List<String> COMMAND_OPTIONS = new ArrayList<>();
-
-    static {
-        COMMAND_OPTIONS.add("all");
-        COMMAND_OPTIONS.add("config");
-        COMMAND_OPTIONS.add("skilltrees");
-        COMMAND_OPTIONS.add("shops");
+    /**
+     * Builds the {@code reload} literal command node to be mounted under {@code /mypet}.
+     *
+     * <p>The node requires {@code MyPet.admin} permission (or console) and defines four
+     * sub-literals ({@code all}, {@code config}, {@code skilltrees}, {@code shops}). The
+     * bare {@code /mypet reload} execution (without a target) sends a usage hint listing
+     * the available targets.</p>
+     *
+     * @return the built {@link LiteralCommandNode} for the {@code reload} subtree
+     */
+    public LiteralCommandNode<CommandSourceStack> buildNode() {
+        return Commands.literal("reload")
+                .requires(ctx -> {
+                    var sender = ctx.getSender();
+                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin", false);
+                })
+                .then(Commands.literal("all")
+                        .executes(ctx -> {
+                            CommandSender sender = ctx.getSource().getSender();
+                            reloadConfig(sender);
+                            reloadSkilltrees(sender);
+                            reloadShops(sender);
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .then(Commands.literal("config")
+                        .executes(ctx -> {
+                            CommandSender sender = ctx.getSource().getSender();
+                            reloadConfig(sender);
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .then(Commands.literal("skilltrees")
+                        .executes(ctx -> {
+                            CommandSender sender = ctx.getSource().getSender();
+                            reloadSkilltrees(sender);
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .then(Commands.literal("shops")
+                        .executes(ctx -> {
+                            CommandSender sender = ctx.getSource().getSender();
+                            reloadShops(sender);
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .executes(ctx -> {
+                    CommandSender sender = ctx.getSource().getSender();
+                    sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
+                    sender.sendMessage(Component.text(" -> ")
+                            .append(Component.text("/mypet reload ").color(NamedTextColor.DARK_AQUA))
+                            .append(Component.text("<all|config|shops|skilltrees>").color(NamedTextColor.RED)));
+                    return Command.SINGLE_SUCCESS;
+                })
+                .build();
     }
 
-    @Override
-    public String getHelpTranslationKey() {
-        return "Message.Command.Help.Reload";
-    }
-
-    @Override
-    public String getHelpCommand() {
-        return "/mypet reload";
-    }
-
-    @Override
-    public CommandCategory getHelpCategory() {
-        return CommandCategory.ADMIN;
-    }
-
-    @Override
-    public boolean isVisibleTo(Player player) {
-        return Permissions.has(player, "MyPet.admin", false);
-    }
-
-    @Override
-    public int getHelpOrder() {
-        return 12;
-    }
-
-    @Override
-    public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
-            sender.sendMessage(Component.text(" -> ").append(Component.text("/mypet reload ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<all|config|shops|skilltrees>").color(NamedTextColor.RED)));
-            return false;
-        }
-        switch (args[0].toLowerCase()) {
-            case "all":
-                reloadConfig(sender);
-                reloadSkilltrees(sender);
-                reloadShops(sender);
-                break;
-            case "config":
-                reloadConfig(sender);
-                break;
-            case "skilltrees":
-                reloadSkilltrees(sender);
-                break;
-            case "shops":
-                reloadShops(sender);
-                break;
-            default:
-                sender.sendMessage(Component.text(" -> ").append(Component.text("/mypet reload ").color(NamedTextColor.DARK_AQUA)).append(Component.text("<all|config|shops|skilltrees>").color(NamedTextColor.RED)));
-        }
-        return true;
-    }
-
+    /**
+     * Reloads the plugin configuration from {@code config.yml} and applies side effects.
+     *
+     * <p>This method performs the following steps in order:</p>
+     * <ol>
+     *   <li>Reloads the main configuration and version-specific compatibility config via
+     *       {@link ConfigurationLoader}</li>
+     *   <li>Updates the debug log level</li>
+     *   <li>Re-initialises the translation/locale system</li>
+     *   <li>Adjusts {@code MyPet.petstorage.limit.*} permissions if the maximum stored
+     *       pet count changed (registers new permissions or removes excess ones)</li>
+     *   <li>Switches the experience calculator to match the configured calculation mode</li>
+     *   <li>Reloads configuration for all registered {@link PluginHook} integrations</li>
+     * </ol>
+     *
+     * @param sender the command sender to receive a confirmation message (console senders
+     *               receive only a log entry, not a chat message)
+     */
     protected void reloadConfig(CommandSender sender) {
         int oldMaxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
         ConfigurationLoader.loadConfiguration();
@@ -156,6 +182,16 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
         MyPetApi.getLogger().info("Config reloaded!");
     }
 
+    /**
+     * Reloads all skilltree definitions from the {@code skilltrees/} data folder.
+     *
+     * <p>After clearing and re-loading the skilltree JSON files, every currently active
+     * pet is checked: if its previously assigned skilltree still exists and is compatible
+     * with the pet's mob type, the reference is updated to the newly loaded instance;
+     * otherwise the pet's skilltree is set to {@code null}.</p>
+     *
+     * @param sender the command sender to receive a confirmation message
+     */
     protected void reloadSkilltrees(CommandSender sender) {
         MyPetApi.getSkilltreeManager().clearSkilltrees();
 
@@ -180,6 +216,15 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
         MyPetApi.getLogger().info("Skilltrees reloaded!");
     }
 
+    /**
+     * Reloads shop definitions by re-running the {@link ShopManager#onEnable()} lifecycle
+     * method, which re-reads shop configuration files.
+     *
+     * <p>If no {@link ShopManager} service is registered (e.g. shops are disabled), the
+     * reload is silently skipped but the confirmation message is still sent.</p>
+     *
+     * @param sender the command sender to receive a confirmation message
+     */
     protected void reloadShops(CommandSender sender) {
         Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
         if (shopManager.isPresent()) {
@@ -188,13 +233,5 @@ public class CommandOptionReload implements CommandOptionTabCompleter {
 
         sender.sendMessage(MessageUtil.prefixed(Component.text("shops reloaded!")));
         MyPetApi.getLogger().info("Shops reloaded!");
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        if (strings.length != 2) {
-            return Collections.emptyList();
-        }
-        return filterTabCompletionResults(COMMAND_OPTIONS, strings[1]);
     }
 }
