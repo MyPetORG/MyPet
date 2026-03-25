@@ -50,9 +50,9 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandInfo;
 import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
-import at.blvckbytes.raw_message.MessageColor;
-import at.blvckbytes.raw_message.RawMessage;
-import at.blvckbytes.raw_message.hover.ShowItemAction;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -217,7 +217,7 @@ public class MyPetEntityListener implements Listener {
                     if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
                         damager.sendMessage("   " + Translation.getString("Name.Hunger", damager) + ": " + Math.round(myPet.getSaturation()));
 
-                        RawMessage message = new RawMessage("   " + Translation.getString("Name.Food", damager) + ": ");
+                        TextComponent message = new TextComponent("   " + Translation.getString("Name.Food", damager) + ": ");
 
                         boolean comma = false;
                         for (ConfigItem material : MyPetApi.getMyPetInfo().getFood(myPet.getPetType())) {
@@ -229,29 +229,15 @@ public class MyPetEntityListener implements Listener {
                                 message.addExtra(", ");
                             }
 
-                            RawMessage itemPart = new RawMessage();
-                            ShowItemAction itemAction = new ShowItemAction(is.getType());
-
-                            itemPart.setHoverAction(itemAction);
-                            message.addExtra(itemPart);
-
                             ItemMeta meta = is.getItemMeta();
 
-                            if (meta != null) {
-                                if (meta.hasDisplayName())
-                                    itemAction.setName(meta.getDisplayName());
-
-                                if (meta.hasLore())
-                                    itemAction.setLoreStrings(meta.getLore());
-                            }
-
+                            BaseComponent itemPart;
                             if (meta != null && meta.hasDisplayName()) {
-                                itemPart.setText(meta.getDisplayName());
+                                itemPart = new TextComponent(meta.getDisplayName());
                             } else {
                                 try {
-                                    itemPart
-                                      .setTranslate(MyPetApi.getPlatformHelper().getVanillaName(is))
-                                      .setColor(MessageColor.GOLD);
+                                    itemPart = new TranslatableComponent(MyPetApi.getPlatformHelper().getVanillaName(is));
+                                    itemPart.setColor(net.md_5.bungee.api.ChatColor.GOLD);
                                 } catch (Exception e) {
                                     MyPetApi.getLogger().warning("A food item caused an error. If you think this is a bug please report it to the MyPet developer.");
                                     MyPetApi.getLogger().warning("" + is);
@@ -259,9 +245,10 @@ public class MyPetEntityListener implements Listener {
                                     continue;
                                 }
                             }
+                            message.addExtra(itemPart);
                             comma = true;
                         }
-                        message.tellRawTo(damager);
+                        damager.spigot().sendMessage(message);
 
                         infoShown = true;
                     }

@@ -29,8 +29,8 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import at.blvckbytes.raw_message.MessageColor;
-import at.blvckbytes.raw_message.RawMessage;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -92,22 +92,20 @@ public class CommandList implements CommandTabCompleter {
                         sender.sendMessage(Util.formatText(Translation.getString("Message.Command.List.Player", lang), owner.getName()));
                     }
                     boolean doComma = false;
-                    RawMessage message = new RawMessage();
+                    TextComponent message = new TextComponent("");
                     for (StoredMyPet mypet : value) {
-
                         if (doComma) {
                             message.addExtra(", ");
                         }
-                        message.addExtra(
-                          new RawMessage(mypet.getPetName())
-                            .setColor(MessageColor.AQUA)
-                            .setHoverAction(Util.myPetToItemAction(mypet, lang))
-                        );
+                        TextComponent petName = new TextComponent(mypet.getPetName());
+                        petName.setColor(ChatColor.AQUA);
+                        petName.setHoverEvent(Util.myPetToHoverEvent(mypet, lang));
+                        message.addExtra(petName);
                         if (!doComma) {
                             doComma = true;
                         }
                     }
-                    message.tellRawTo((Player) sender);
+                    ((Player) sender).spigot().sendMessage(message);
                 }
             });
         }

@@ -16,11 +16,11 @@ plugins {
 group = "de.keyle"
 
 val buildType = project.findProperty("buildType")?.toString() ?: "local"
-val minecraftVersion by extra("1.21.11")
-val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6;v1_21_R7")
+val minecraftVersion by extra("26.1")
+val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6;v1_21_R7;v26_1_R1")
 val specialVersions by extra("")
 
-version = "3.14.1"
+version = "3.14.2"
 
 val nmsModules: List<String> = File(rootDir, "nms")
     .listFiles()
@@ -32,7 +32,6 @@ val nmsModules: List<String> = File(rootDir, "nms")
 allprojects {
     repositories {
         mavenCentral()
-        mavenLocal()
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
         maven("https://repo.mypet-plugin.de/")
     }
@@ -69,7 +68,7 @@ subprojects {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(21))
+            languageVersion.set(JavaLanguageVersion.of(25))
         }
     }
 }
@@ -198,7 +197,7 @@ dependencies {
     nmsModules.forEach { add("shade", project(path = it, configuration = "runtimeElements")) }
 
     // External libs to be shaded
-    add("shade", "at.blvckbytes:RawMessage:0.2")
+
     add("shade", "org.bstats:bstats-bukkit:1.7")
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.5")
@@ -220,7 +219,7 @@ val shadowJar = tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.Sha
 
     configurations = listOf(shade)
 
-    relocate("at.blvckbytes.raw_message", "de.Keyle.MyPet.util.raw_message")
+
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
@@ -248,7 +247,7 @@ sentry {
 /* ---------- Root compilation settings (Java 8 output) ---------- */
 
 java {
-    toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
+    toolchain { languageVersion.set(JavaLanguageVersion.of(25)) }
 }
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(8)
@@ -299,7 +298,7 @@ hangarPublish {
                 jar.set(file(hangarFile))
                 platformVersions.set(listOf(
                     "1.8.8", "1.12.2", "1.16.5", "1.17.1", "1.18.2",
-                    "1.19.x", "1.20.x", "1.21.x"
+                    "1.19.x", "1.20.x", "1.21.x", "26.1"
                 ))
             }
         }

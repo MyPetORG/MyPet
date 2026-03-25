@@ -33,8 +33,6 @@ dependencies {
 
     compileOnly("org.apache.logging.log4j:log4j-core:2.17.1")
 
-    compileOnly("at.blvckbytes:RawMessage:0.2")
-
     compileOnly("net.citizensnpcs:citizensapi:2.0.24")
     compileOnly("br.net.fabiozumbi12:PvPDiffTimer:1.4.4")
     compileOnly("au.com.mineauz:Minigames:1.12.0")
@@ -96,7 +94,6 @@ dependencies {
     compileOnly("uk.antiperson:StackMob:5.0.2")
     compileOnly("me.glaremasters:Guilds:3.3")
     compileOnly("com.github.Angeschossen:LandsAPI:4.5.2.0")
-    compileOnly("de.keyle:mypet-premium-apis:1.0-SNAPSHOT")
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")
