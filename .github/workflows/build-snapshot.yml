@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 30
 
     env:
-      JAVA_VERSION: '21'
+      JAVA_VERSION: '25'
       PROJECT_VERSION: ""
       BUILD_NUMBER: 0
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
@@ -227,6 +227,7 @@ jobs:
             1.19.x
             1.20.x
             1.21.x
+            26.1
           files: ${{ steps.findjar.outputs.jar }}
 
 #      - name: Publish to Hangar
