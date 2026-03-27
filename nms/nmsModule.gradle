@@ -1,5 +1,16 @@
 apply from: rootProject.file('nms/specialSource.gradle')
 
+repositories {
+    maven {
+        url = uri("https://repo.userderezzed.dev/spigot")
+        credentials {
+            username = "MyPetORG"
+            password = providers.gradleProperty("reposiliteToken").orNull
+                ?: System.getenv("REPOSILITE_TOKEN")
+        }
+    }
+}
+
 ext {
     // This needs to be defined by projects that apply this script.
     craftbukkitVersion = 'UNSPECIFIED'

@@ -94,14 +94,11 @@ dependencies {
     compileOnly("uk.antiperson:StackMob:5.0.2")
     compileOnly("me.glaremasters:Guilds:3.3")
     compileOnly("com.github.Angeschossen:LandsAPI:4.5.2.0")
+    compileOnly("de.keyle:mypet-premium-apis:1.0-SNAPSHOT")
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")
     compileOnly("de.keyle:knbt:0.0.5")
-
-    // Prefer Lombok as compileOnly + annotationProcessor in Gradle:
-    compileOnly("org.projectlombok:lombok:1.18.42")
-    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
     compileOnly("io.sentry:sentry:8.22.0")
 
@@ -110,31 +107,4 @@ dependencies {
 fun getVersionFromName(filename: String): String {
     return """\d+(\.\d+)+(-SNAPSHOT)?""".toRegex().find(filename)?.value
         ?: throw GradleException("Failed to get PE version from: '$filename'")
-}
-
-publishing {
-    repositories {
-        if (System.getenv("MVN_USER") != null) {
-            maven {
-                val repoType = if (project.version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
-                // Eg: https://mvn.lib.co.nz/repositories/maven-%branch%/
-                url = uri(System.getenv("MVN_PATH").replace("%branch%", repoType))
-
-                credentials {
-                    username = System.getenv("MVN_USER")
-                    password = System.getenv("MVN_PASS")
-                }
-            }
-        } else {
-            mavenLocal()
-        }
-    }
-
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-
-            artifactId = "mypet"
-        }
-    }
 }

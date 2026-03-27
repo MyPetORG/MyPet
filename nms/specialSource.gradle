@@ -6,11 +6,6 @@ configurations {
     }
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
 dependencies {
     specialSourceTool 'net.md-5:SpecialSource:1.11.6:shaded'
 }

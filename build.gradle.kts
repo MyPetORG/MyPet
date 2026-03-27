@@ -22,11 +22,8 @@ val specialVersions by extra("")
 
 version = "3.14.2"
 
-val nmsModules: List<String> = File(rootDir, "nms")
-    .listFiles()
-    ?.filter { it.isDirectory && it.name.matches(Regex("v[\\d_]+R\\d+")) }
-    ?.map { ":nms:${it.name}" }
-    ?: emptyList()
+@Suppress("UNCHECKED_CAST")
+val nmsModules: List<String> = gradle.extra["nmsModules"] as List<String>
 
 // Shared repositories for all projects (root + subprojects)
 allprojects {
@@ -46,14 +43,11 @@ subprojects {
         maven("https://mvn.lib.co.nz/spigot/")
         maven("https://repo.md-5.net/content/groups/public/")
         maven("https://repo.papermc.io/repository/maven-public/")
-        maven("https://repo.codemc.io/repository/maven-releases/")
-        maven("https://repo.codemc.io/repository/maven-snapshots/")
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
         maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://maven.enginehub.org/repo/")
         maven("https://repo.md-5.net/content/repositories/public")
         maven("https://jitpack.io")
-        maven("https://mvn.intellectualsites.com/content/repositories/releases/") // PlotSquared V6+
     }
 
     tasks.named("processResources") { enabled = false }
@@ -61,9 +55,11 @@ subprojects {
     tasks.named("compileTestJava") { enabled = false }
     tasks.named("processTestResources") { enabled = false }
 
-    plugins.withId("maven-publish") {
-        tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
-        tasks.withType<PublishToMavenLocal>().configureEach { enabled = false }
+    if (project.name != "api") {
+        plugins.withId("maven-publish") {
+            tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
+            tasks.withType<PublishToMavenLocal>().configureEach { enabled = false }
+        }
     }
 
     java {
@@ -153,8 +149,7 @@ tasks.named<ProcessResources>("processResources") {
         "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
     )
 
-    filesMatching("plugin.yml") { expand(filteringProps) }
-    filesMatching("*.yml") { if (name != "plugin.yml") expand(filteringProps) }
+    filesMatching("*.yml") { expand(filteringProps) }
 }
 
 fun Manifest.attributesForMyPet() = attributes(

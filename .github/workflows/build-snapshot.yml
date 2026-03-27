@@ -126,6 +126,13 @@ jobs:
       - name: Build MyPet
         run: |
           ./gradlew --no-daemon build -PbuildType=dev -PBUILD_NUMBER=${BUILD_NUMBER} -PSENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+        env:
+          REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}
+
+      - name: Publish API snapshot to Reposilite
+        run: ./gradlew --no-daemon :api:publish -PbuildType=dev
+        env:
+          REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}
 
       - name: Find and rename shaded JAR with build number
         id: findjar
