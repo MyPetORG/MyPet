@@ -1,13 +1,7 @@
 plugins {
     `java-library`
     id("io.freefair.lombok") version "9.1.0"
-}
-
-repositories {
-    mavenCentral()
-
-    maven("https://hub.spigotmc.org/nexus/content/groups/public/")
-    maven("https://repo.md-5.net/content/repositories/public/")
+    `maven-publish`
 }
 
 dependencies {
@@ -23,4 +17,37 @@ dependencies {
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(21)
     options.encoding = "UTF-8"
+}
+
+val buildType = rootProject.findProperty("buildType")?.toString() ?: "local"
+val versionSuffix = when (buildType) {
+    "release" -> ""
+    "snapshot", "dev" -> "-SNAPSHOT"
+    else -> "-SNAPSHOT-local"
+}
+val apiVersion = "${rootProject.version}$versionSuffix"
+
+publishing {
+    repositories {
+        maven {
+            name = "UserDerezzed"
+            val repoPath = if (apiVersion.endsWith("-SNAPSHOT") || apiVersion.endsWith("-SNAPSHOT-local")) "snapshots" else "releases"
+            url = uri("https://repo.userderezzed.dev/$repoPath")
+            credentials {
+                username = "MyPetORG"
+                password = providers.gradleProperty("reposiliteToken").orNull
+                    ?: System.getenv("REPOSILITE_TOKEN")
+            }
+        }
+    }
+
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+
+            groupId = "de.keyle"
+            artifactId = "mypet-api"
+            version = apiVersion
+        }
+    }
 }

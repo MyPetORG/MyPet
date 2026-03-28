@@ -22,11 +22,8 @@ val versionSuffix = if (buildType == "dev") {
 version = "$baseVersion$versionSuffix"
 val minecraftVersion by extra("1.21.11")
 
-val nmsModules: List<String> = File(rootDir, "nms")
-    .listFiles()
-    ?.filter { it.isDirectory && it.name.matches(Regex("v[\\d_]+R\\d+")) }
-    ?.map { ":nms:${it.name}" }
-    ?: emptyList()
+@Suppress("UNCHECKED_CAST")
+val nmsModules: List<String> = gradle.extra["nmsModules"] as List<String>
 
 val bukkitPackets by extra(
     File(rootDir, "nms")
@@ -40,7 +37,6 @@ val bukkitPackets by extra(
 
 repositories {
     mavenCentral()
-    mavenLocal()
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
     maven("https://repo.mypet-plugin.de/")
 }
@@ -52,12 +48,9 @@ subprojects {
 
     repositories {
         mavenCentral()
-        mavenLocal()
         maven { url = uri("https://mvn.lib.co.nz/spigot/") }
         maven { url = uri("https://repo.md-5.net/content/groups/public/") }
         maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
-        maven { url = uri("https://repo.codemc.io/repository/maven-releases/") }
-        maven { url = uri("https://repo.codemc.io/repository/maven-snapshots/") }
         maven { url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/") }
         maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
         maven { url = uri("https://maven.enginehub.org/repo/") }
@@ -66,7 +59,6 @@ subprojects {
         maven { url = uri("https://dependency.download/releases") } // FactionsUUID
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://repo.mypet-plugin.de/") }
-        maven { url = uri("https://mvn.intellectualsites.com/content/repositories/releases/") } // PlotSquared V6+
     }
 
     // Use lazy task configuration for better configuration performance
@@ -75,9 +67,11 @@ subprojects {
     tasks.named("compileTestJava") { enabled = false }
     tasks.named("processTestResources") { enabled = false }
 
-    plugins.withId("maven-publish") {
-        tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
-        tasks.withType<PublishToMavenLocal>().configureEach { enabled = false }
+    if (project.name != "api") {
+        plugins.withId("maven-publish") {
+            tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
+            tasks.withType<PublishToMavenLocal>().configureEach { enabled = false }
+        }
     }
 
     java {

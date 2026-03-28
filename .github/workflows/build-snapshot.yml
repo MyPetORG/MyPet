@@ -179,6 +179,11 @@ jobs:
         run: |
           ./gradlew --no-daemon --build-cache build -PbuildType=dev -PBUILD_NUMBER=${BUILD_NUMBER} -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
 
+      - name: Publish API snapshot to Reposilite
+        run: ./gradlew --no-daemon :api:publish -PbuildType=dev
+        env:
+          REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}
+
       - name: Find JAR
         id: findjar
         shell: bash
