@@ -46,10 +46,12 @@ import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
 @EntitySize(width = 0.9F, height = 1.7F)
 public class EntityMyCamel extends EntityMyPet {
 
+    // Declaration order determines entity data IDs. Must match vanilla Camel hierarchy:
+    // AgeableMob(16) → AbstractHorse(17) → Camel(18,19)
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BYTE);
     public static final EntityDataAccessor<Boolean> DASH = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.LONG);
-    protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BYTE);
-    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BOOLEAN);
     private static final int SITDOWN_DURATION_TICKS = 40;
     private static final int STANDUP_DURATION_TICKS = 52;
 

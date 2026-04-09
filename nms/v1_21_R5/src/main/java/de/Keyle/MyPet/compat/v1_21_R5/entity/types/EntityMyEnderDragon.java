@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyFlyingPet;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPetPart;
-import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.attack.MeleeAttack;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -99,7 +98,9 @@ public class EntityMyEnderDragon extends EntityMyFlyingPet {
     @Override
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 8.5, 20));
+        var mobGoals = org.bukkit.Bukkit.getMobGoals();
+        org.bukkit.entity.Mob mob = (org.bukkit.entity.Mob) getBukkitEntity();
+        mobGoals.addGoal(mob, 5, new de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal(getBukkitEntity(), 0.1F, 8.5, 20));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

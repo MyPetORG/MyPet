@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyGiant;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_21_R1.entity.ai.attack.MeleeAttack;
 import net.minecraft.world.level.Level;
 import org.bukkit.Sound;
 
@@ -59,7 +58,9 @@ public class EntityMyGiant extends EntityMyPet {
     public void setPathfinder() {
         super.setPathfinder();
         if (myPet.getDamage() > 0) {
-            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 8, 20));
+            var mobGoals = org.bukkit.Bukkit.getMobGoals();
+            org.bukkit.entity.Mob mob = (org.bukkit.entity.Mob) getBukkitEntity();
+            mobGoals.addGoal(mob, 5, new de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal(getBukkitEntity(), 0.1F, 8, 20));
         }
     }
 

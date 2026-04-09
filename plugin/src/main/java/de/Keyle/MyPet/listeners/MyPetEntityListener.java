@@ -27,8 +27,6 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
-import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
-import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
 import de.Keyle.MyPet.api.event.MyPetOnHitSkillEvent;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
@@ -279,20 +277,26 @@ public class MyPetEntityListener implements Listener {
                     event.setCancelled(true);
                 }
             }
-            if (event.getDamager() instanceof CraftMyPetProjectile) {
-                EntityMyPetProjectile projectile = ((CraftMyPetProjectile) event.getDamager()).getMyPetProjectile();
-
-                if (projectile != null && projectile.getShooter() instanceof MyPetBukkitEntity myPetShooter) {
-                    if (myPet == myPetShooter.getMyPet()) {
+            if (event.getDamager() instanceof Projectile projectile) {
+                // Identify MyPet-fired projectiles via the PDC owner tag that
+                // PetRangedAttackGoal sets at launch. This replaces the legacy
+                // `instanceof CraftMyPetProjectile` check which matched against
+                // NMS projectile subclasses that no longer exist after the
+                // Paper-goal migration.
+                MyPet shooterPet = de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal.getSourceMyPet(projectile);
+                if (shooterPet != null && shooterPet.getEntity().isPresent()) {
+                    MyPetBukkitEntity myPetShooter = shooterPet.getEntity().get();
+                    // Self-damage prevention: a pet's own projectile cannot damage it.
+                    if (myPet == shooterPet) {
                         event.setCancelled(true);
                     }
-                    // Allow damage if both pets are dueling each other (bypasses PvP restrictions)
-                    // Must verify: shooter is in duel mode, target is in duel mode, AND shooter's target is the hit pet
+                    // Duel bypass: both pets in Duel mode AND the shooter is
+                    // currently targeting this pet → allow damage through PvP restrictions.
                     boolean inDuel = myPetShooter.getHandle().getTargetPriority() == TargetPriority.Duel
                             && myPet.getEntity().isPresent()
                             && myPet.getEntity().get().getHandle().getTargetPriority() == TargetPriority.Duel
                             && myPetShooter.getHandle().getMyPetTarget() == craftMyPet;
-                    if (!inDuel && !MyPetApi.getHookHelper().canHurt(myPetShooter.getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
+                    if (!inDuel && !MyPetApi.getHookHelper().canHurt(shooterPet.getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
                         event.setCancelled(true);
                     }
                 }

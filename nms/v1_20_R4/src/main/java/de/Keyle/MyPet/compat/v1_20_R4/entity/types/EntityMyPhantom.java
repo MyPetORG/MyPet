@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyPhantom;
 import de.Keyle.MyPet.compat.v1_20_R4.entity.EntityMyFlyingPet;
-import de.Keyle.MyPet.compat.v1_20_R4.entity.ai.attack.MeleeAttack;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -69,9 +68,9 @@ public class EntityMyPhantom extends EntityMyFlyingPet {
         int size = Math.max(1, getMyPet().getSize());
         getEntityData().set(SIZE_WATCHER, size);
         this.refreshDimensions();
-        if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
-            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.2), 20));
-        }
+        var mobGoals = org.bukkit.Bukkit.getMobGoals();
+        org.bukkit.entity.Mob mob = (org.bukkit.entity.Mob) getBukkitEntity();
+        mobGoals.addGoal(mob, 5, new de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal(getBukkitEntity(), 0.1F, 3 + (getMyPet().getSize() * 0.2), 20));
     }
 
     @Override

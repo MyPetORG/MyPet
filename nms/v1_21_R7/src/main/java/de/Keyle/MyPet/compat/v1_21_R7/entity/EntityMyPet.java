@@ -40,14 +40,11 @@ import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.compat.v1_21_R7.PlatformHelper;
-import de.Keyle.MyPet.compat.v1_21_R7.entity.ai.attack.MeleeAttack;
-import de.Keyle.MyPet.compat.v1_21_R7.entity.ai.attack.RangedAttack;
-import de.Keyle.MyPet.compat.v1_21_R7.entity.ai.movement.*;
-import de.Keyle.MyPet.compat.v1_21_R7.entity.ai.movement.Float;
-import de.Keyle.MyPet.compat.v1_21_R7.entity.ai.navigation.VanillaNavigation;
-import de.Keyle.MyPet.compat.v1_21_R7.entity.ai.target.*;
+import de.Keyle.MyPet.entity.ai.navigation.PaperNavigation;
 import de.Keyle.MyPet.compat.v1_21_R7.entity.types.EntityMyDolphin;
 import de.Keyle.MyPet.compat.v1_21_R7.entity.types.EntityMySeat;
+import de.Keyle.MyPet.entity.ai.movement.*;
+import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.RideImpl;
 import net.minecraft.core.BlockPos;
@@ -68,7 +65,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.MoveControl;
+
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.item.ItemStack;
@@ -124,14 +121,14 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     protected int flyCheckCounter = 0;
     protected int sitCounter = 0;
     protected AbstractNavigation petNavigation;
-    protected Sit sitPathfinder;
+    protected PetSitGoal sitPathfinder;
     protected int contributorParticleCounter = 0;
     protected float limitCounter = 0;
     protected DamageSource deathReason = null;
     protected CraftMyPet bukkitEntity = null;
     protected AttributeMap attributeMap;
     protected boolean indirectRiding = false;
-    // Needed for the MyPetFlyingMoveControl - Sometimes overwritten by specific pets
+    // Needed for the MyPetFlyingMovementGoal - Sometimes overwritten by specific pets
     protected float maxTurn = 20;
 
     public EntityMyPet(Level world, MyPet myPet) {
@@ -147,8 +144,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             this.petTargetSelector = new AIGoalSelector(Configuration.Entity.SKIP_TARGET_AI_TICKS);
             this.walkSpeed = MyPetApi.getMyPetInfo().getSpeed(myPet.getPetType());
             this.navigation = this.setSpecialNav();
-            this.petNavigation = new VanillaNavigation(this);
-            this.sitPathfinder = new Sit(this);
+            this.petNavigation = new PaperNavigation(this);
+            this.sitPathfinder = new PetSitGoal(getBukkitEntity());
             this.attributeMap = this.getAttributes(); // Make sure to initiate the attributeMap, otherwise teleporting crashes the server
             getBukkitAttribute(MAX_HEALTH).setBaseValue(Integer.MAX_VALUE);
             this.setHealth((float) myPet.getHealth());
@@ -206,26 +203,44 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
     @Override
     public void setPathfinder() {
-        petPathfinderSelector.addGoal("Float", new Float(this));
-        petPathfinderSelector.addGoal("Sit", sitPathfinder);
-        petPathfinderSelector.addGoal("Sprint", new Sprint(this, 0.25F));
-        petPathfinderSelector.addGoal("RangedTarget", new RangedAttack(this, -0.1F, 12.0F));
-        if (!(this instanceof EntityMyFlyingPet)) {
-            petPathfinderSelector.addGoal("Control", new Control(this, 0.1F));
+        // All goals now use Paper Mob Goal API (version-independent)
+        var mobGoals = org.bukkit.Bukkit.getMobGoals();
+        MyPetBukkitEntity bukkit = getBukkitEntity();
+        org.bukkit.entity.Mob mob = (org.bukkit.entity.Mob) bukkit;
+
+        boolean flying = this instanceof EntityMyFlyingPet;
+        boolean aquatic = this instanceof EntityMyAquaticPet;
+
+        // Flying pets have setNoGravity(true) and use MyPetFlyingMovementGoal
+        // to drive their velocity. PetFloatGoal nudges velocity upward when
+        // in water, fighting the flying movement system — skip it for flying
+        // pets. PetFloatGoal and the flying movement goal share no GoalType,
+        // so Paper's mutual exclusion won't do this for us.
+        if (!flying) {
+            mobGoals.addGoal(mob, 0, new PetFloatGoal(bukkit));
         }
-        petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
-        if (!(this instanceof EntityMyAquaticPet) && !(this instanceof EntityMyFlyingPet)) {
-            petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, this.getBbWidth() + 1.3, 20));
-            petPathfinderSelector.addGoal("RandomStroll", new MyPetRandomStroll(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
+        mobGoals.addGoal(mob, 1, sitPathfinder);
+        mobGoals.addGoal(mob, 3, new PetSprintGoal(bukkit, 0.25F));
+        mobGoals.addGoal(mob, 4, new de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal(bukkit, -0.1F, 12.0F));
+        mobGoals.addGoal(mob, 6, new PetFollowOwnerGoal(bukkit, Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F, flying, aquatic));
+        if (!flying) {
+            PetControlGoal controlGoal = new PetControlGoal(bukkit, 0.1F);
+            mobGoals.addGoal(mob, 2, controlGoal);
+            PetControlTargetGoal controlTargetGoal = new PetControlTargetGoal(bukkit, this.getBbWidth() + 2.5F);
+            controlTargetGoal.setControlGoal(controlGoal);
+            mobGoals.addGoal(mob, 12, controlTargetGoal);
         }
-        petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
-        petPathfinderSelector.addGoal("RandomLookaround", new RandomLookaround(this));
-        petTargetSelector.addGoal("OwnerHurtByTarget", new OwnerHurtByTarget(this));
-        petTargetSelector.addGoal("HurtByTarget", new HurtByTarget(this));
-        petTargetSelector.addGoal("ControlTarget", new ControlTarget(this, 1));
-        petTargetSelector.addGoal("AggressiveTarget", new BehaviorAggressiveTarget(this, 16));
-        petTargetSelector.addGoal("FarmTarget", new BehaviorFarmTarget(this, 16));
-        petTargetSelector.addGoal("DuelTarget", new BehaviorDuelTarget(this, 5));
+        if (!aquatic && !flying) {
+            mobGoals.addGoal(mob, 5, new de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal(bukkit, 0.1F, this.getBbWidth() + 1.3, 20));
+            mobGoals.addGoal(mob, 7, new PetRandomStrollGoal(bukkit));
+        }
+        mobGoals.addGoal(mob, 8, new PetLookAtPlayerGoal(bukkit, 8.0F));
+        mobGoals.addGoal(mob, 9, new PetRandomLookaroundGoal(bukkit));
+        mobGoals.addGoal(mob, 10, new PetOwnerHurtByTargetGoal(bukkit));
+        mobGoals.addGoal(mob, 11, new PetHurtByTargetGoal(bukkit));
+        mobGoals.addGoal(mob, 13, new PetAggressiveTargetGoal(bukkit, 16));
+        mobGoals.addGoal(mob, 14, new PetFarmTargetGoal(bukkit, 16));
+        mobGoals.addGoal(mob, 15, new PetDuelTargetGoal(bukkit, 5));
     }
 
     @Override
@@ -384,6 +399,18 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         return walkSpeed;
     }
 
+    @Override
+    public void broadcastEntityEvent(byte eventId) {
+        this.level().broadcastEntityEvent(this, eventId);
+    }
+
+    /**
+     * Called each tick before MoveControl.tick(). Subclasses can override to swap
+     * MoveControl dynamically (e.g., aquatic pets swap between swim and ground).
+     */
+    protected void updateMoveControl() {
+    }
+
     public boolean canEat(ItemStack itemstack) {
         List<ConfigItem> foodList = MyPetApi.getMyPetInfo().getFood(myPet.getPetType());
         for (ConfigItem foodItem : foodList) {
@@ -437,6 +464,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
      * Is called when a MyPet attemps to do damge to another entity
      */
     public boolean attack(Entity entity) {
+        this.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
         boolean damageEntity = false;
         try {
             double damage = isMyPet() ? myPet.getDamage() : 0;
@@ -507,6 +535,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 getOwner().sendMessage(Translation.getFormattedComponent("Message.Sit.Follow", myPet.getOwner(), getMyPet().getDisplayName()));
             }
             sitCounter = 0;
+            applySittingVisual(isSitting());
         }
         return !sitEvent.isCancelled();
     }
@@ -524,7 +553,19 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
             if (!sitEvent.isCancelled()) {
                 this.sitPathfinder.toggleSitting();
                 sitCounter = 0;
+                applySittingVisual(sitting);
             }
+        }
+    }
+
+    public void applySittingVisual(boolean sitting) {
+        switch (this) {
+            case de.Keyle.MyPet.compat.v1_21_R7.entity.types.EntityMyWolf w -> w.applySitting(sitting);
+            case de.Keyle.MyPet.compat.v1_21_R7.entity.types.EntityMyCat c -> c.applySitting(sitting);
+            case de.Keyle.MyPet.compat.v1_21_R7.entity.types.EntityMyCamel m -> m.applySitting(sitting);
+            case de.Keyle.MyPet.compat.v1_21_R7.entity.types.EntityMyFox f -> f.updateActionsWatcher(1, sitting);
+            case de.Keyle.MyPet.compat.v1_21_R7.entity.types.EntityMyPanda p -> p.updateActionsWatcher(8, sitting);
+            default -> {}
         }
     }
 
@@ -606,9 +647,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                     if (owner != null && !Permissions.hasExtended(owner, "MyPet.extended.feed")) {
                         return InteractionResult.CONSUME;
                     }
-                    if (this.petTargetSelector.hasGoal("DuelTarget")) {
-                        BehaviorDuelTarget duelTarget = (BehaviorDuelTarget) this.petTargetSelector.getGoal("DuelTarget");
-                        if (duelTarget.getDuelOpponent() != null) {
+                    {
+                        com.destroystokyo.paper.entity.ai.Goal<org.bukkit.entity.Mob> duelGoal =
+                                org.bukkit.Bukkit.getMobGoals().getGoal((org.bukkit.entity.Mob) getBukkitEntity(), de.Keyle.MyPet.entity.ai.PetGoalKey.DUEL_TARGET);
+                        if (duelGoal instanceof PetDuelTargetGoal duelTarget && duelTarget.getDuelOpponent() != null) {
                             return InteractionResult.CONSUME;
                         }
                     }
@@ -1162,10 +1204,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 Preconditions.checkState(!entity.getPassengers().contains(this), "Circular entity riding! %s %s", this, entity);
                 boolean cancelled = MountEventWrapper.callEvent(entity.getBukkitEntity(), this.getBukkitEntity());
                 if (!cancelled) {
-                    if (this.getMoveControl() instanceof MyPetAquaticMoveControl ||
-                            this.getMoveControl() instanceof MyPetFlyingMoveControl) {
-                        this.switchMovement(new MoveControl(this));
-                    }
                     mountOwner(entity);
                 }
             }
@@ -1190,15 +1228,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     @Override
     protected boolean removePassenger(Entity entity) {
         boolean result = super.removePassenger(entity);
-
-        if ((this.isInWater() || getBukkitEntity().isInBubbleColumn()) && this instanceof EntityMyAquaticPet
-                && !(this.getMoveControl() instanceof MyPetAquaticMoveControl)) {
-            this.switchMovement(new MyPetAquaticMoveControl(this));
-        }
-
-        if (this instanceof EntityMyFlyingPet && !(this.getMoveControl() instanceof MyPetFlyingMoveControl)) {
-            this.switchMovement(new MyPetFlyingMoveControl(this, this.maxTurn));
-        }
 
         PlatformHelper platformHelper = (PlatformHelper) MyPetApi.getPlatformHelper();
         AABB bb = entity.getBoundingBox();
@@ -1240,9 +1269,15 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
                 }
 
                 if (!hasMyPetRider()) {
-                    petTargetSelector.tick(); // target selector
-                    petPathfinderSelector.tick(); // pathfinder selector
-                    petNavigation.tick(); // navigation
+                    // Swap MoveControl BEFORE navigation ticks, so navigation sets
+                    // the wanted position on the correct controller (swim vs ground)
+                    updateMoveControl();
+                    petTargetSelector.tick(); // custom target selector (legacy NMS goals)
+                    petPathfinderSelector.tick(); // custom pathfinder selector (legacy NMS goals)
+                    this.goalSelector.tick(); // vanilla goal selector (Paper Mob Goal API goals)
+                    this.targetSelector.tick(); // vanilla target selector (Paper Mob Goal API goals)
+                    petNavigation.tick(); // navigation parameters
+                    this.getNavigation().tick(); // NMS PathNavigation — actually progresses along the path
                 }
 
                 Ride rideSkill = myPet.getSkills().get(RideImpl.class);
@@ -1256,8 +1291,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
             customServerAiStep(this.level().getMinecraftWorld());
 
-            // controls
-            getMoveControl().tick(); // move
+            // controls — skip MoveControl tick for pets using Paper movement goals
+            if (!usesPaperMovement()) {
+                getMoveControl().tick(); // move
+            }
             getLookControl().tick(); // look
             getJumpControl().tick(); // jump
         } catch (Exception e) {
@@ -1497,10 +1534,6 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
     public boolean specialFloat() { //Some entities do strange stuff in Water/Lava - this enables that
         return false;
-    }
-
-    public void switchMovement(MoveControl mvcontrol) {    //This is for switching between Movesets
-        this.moveControl = mvcontrol;
     }
 
     protected PathNavigation setSpecialNav() { //Some Pets have special PathNavigations

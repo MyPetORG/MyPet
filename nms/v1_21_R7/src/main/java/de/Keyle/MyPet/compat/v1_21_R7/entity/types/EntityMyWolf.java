@@ -53,13 +53,15 @@ import java.util.Optional;
 @EntitySize(width = 0.6F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
 
-    protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BYTE);
-    protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
-    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN); //Interested
-    private static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Long> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.LONG);
-    private static final EntityDataAccessor<Holder<WolfVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.WOLF_VARIANT);
+    // Declaration order determines entity data IDs. Must match vanilla Wolf hierarchy:
+    // AgeableMob(16) → TamableAnimal(17,18) → Wolf(19,20,21,22)
+    private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);                                      // 16: AgeableMob baby
+    protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BYTE);                                          // 17: TamableAnimal flags (bit 0=sit, bit 2=tame)
+    protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE); // 18: TamableAnimal owner
+    private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);                                   // 19: Wolf interested
+    private static final EntityDataAccessor<Integer> COLLAR_COLOR_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.INT);                                  // 20: Wolf collar color
+    private static final EntityDataAccessor<Long> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.LONG);                                          // 21: Wolf anger time
+    private static final EntityDataAccessor<Holder<WolfVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.WOLF_VARIANT);                  // 22: Wolf variant
 
     protected boolean shaking;
     protected boolean isWet;

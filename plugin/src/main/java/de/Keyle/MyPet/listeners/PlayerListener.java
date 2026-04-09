@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -54,6 +53,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -297,18 +297,22 @@ public class PlayerListener implements Listener {
             if (WorldGroup.getGroupByWorld(victim.getWorld()).isDisabled()) {
                 return;
             }
-            if (event.getDamager() instanceof CraftMyPetProjectile projectile) {
-                Entity shooter = projectile.getMyPetProjectile().getShooter();
-                if (shooter instanceof MyPetBukkitEntity myPetShooter) {
+            if (event.getDamager() instanceof Projectile projectile) {
+                // Identify MyPet-fired projectiles via the PDC owner tag that
+                // PetRangedAttackGoal sets at launch. Replaces the legacy
+                // `instanceof CraftMyPetProjectile` check against NMS projectile
+                // subclasses that no longer exist after the Paper-goal migration.
+                MyPet shooterPet = de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal.getSourceMyPet(projectile);
+                if (shooterPet != null) {
+                    // Owner-protection: a pet's projectile cannot hit its own owner.
                     if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
-                        MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
-                        if (myPetPlayerDamagee.hasMyPet()) {
-                            if (myPetPlayerDamagee.getMyPet() == myPetShooter.getMyPet()) {
-                                event.setCancelled(true);
-                            }
+                        MyPetPlayer victimMyPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
+                        if (victimMyPetPlayer.hasMyPet() && victimMyPetPlayer.getMyPet() == shooterPet) {
+                            event.setCancelled(true);
                         }
                     }
-                    if (!MyPetApi.getHookHelper().canHurt(myPetShooter.getOwner().getPlayer(), victim, true)) {
+                    // PvP respect: shooter's owner must be allowed to hurt the victim.
+                    if (!MyPetApi.getHookHelper().canHurt(shooterPet.getOwner().getPlayer(), victim, true)) {
                         event.setCancelled(true);
                     }
                 }

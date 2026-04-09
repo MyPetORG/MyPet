@@ -60,6 +60,18 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
     }
 
     @Override
+    public boolean attackEntity(org.bukkit.entity.LivingEntity target) {
+        // Guard the downcast: third-party plugins are free to implement the
+        // Bukkit LivingEntity interface without backing it with a CraftEntity
+        // (NPC frameworks, custom companion mods, etc.). Unguarded, the cast
+        // would leak a ClassCastException through MyPet's public API.
+        if (!(target instanceof CraftEntity craftTarget)) {
+            return false;
+        }
+        return getHandle().attack(craftTarget.getHandle());
+    }
+
+    @Override
     public boolean isInvisible() {
         return getHandle().isInvisible();
     }
@@ -192,6 +204,16 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
     @Override
     public void forgetTarget() {
         getHandle().forgetTarget();
+    }
+
+    @Override
+    public boolean hasTarget() {
+        return petEntity.hasTarget();
+    }
+
+    @Override
+    public LivingEntity getMyPetTarget() {
+        return petEntity.getMyPetTarget();
     }
 
     @Override

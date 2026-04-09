@@ -23,12 +23,12 @@ package de.Keyle.MyPet.compat.v1_21_R7.entity;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.compat.v1_21_R7.entity.ai.attack.MeleeAttack;
-import de.Keyle.MyPet.compat.v1_21_R7.entity.ai.movement.Control;
-import de.Keyle.MyPet.compat.v1_21_R7.entity.ai.movement.MyPetFlyingMoveControl;
-import de.Keyle.MyPet.compat.v1_21_R7.entity.ai.movement.MyPetRandomFly;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.entity.ai.movement.*;
+import de.Keyle.MyPet.entity.ai.target.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
@@ -39,10 +39,30 @@ import net.minecraft.world.phys.Vec3;
 @EntitySize(width = 0.5F, height = 0.3f)
 public abstract class EntityMyFlyingPet extends EntityMyPet {
 
+    protected MyPetFlyingMovementGoal flyingMovementGoal;
+
     public EntityMyFlyingPet(Level world, MyPet myPet) {
         super(world, myPet);
+        // Forwarding MoveControl: NMS PathNavigation.tick() calls setWantedPosition on
+        // this.moveControl each tick of an active path. We relay that call to the Paper
+        // goal (which is the real movement pipeline when usesPaperMovement() == true)
+        // while keeping the NMS fields in sync for any code that reads them.
+        // flyingMovementGoal was populated by setPathfinder() during super(...) above,
+        // so the anonymous class below can read it at call time.
+        this.moveControl = new FlyingMoveControl(this, (int) maxTurn, true) {
+            @Override
+            public void setWantedPosition(double x, double y, double z, double speedModifier) {
+                super.setWantedPosition(x, y, z, speedModifier);
+                flyingMovementGoal.setWantedPosition(x, y, z, speedModifier);
+            }
+        };
+        this.setNoGravity(true);
         this.setPathfindingMalus(PathType.WATER, -1.0f);
-        this.switchMovement(new MyPetFlyingMoveControl(this, this.maxTurn));
+    }
+
+    @Override
+    public boolean usesPaperMovement() {
+        return true;
     }
 
     @Override
@@ -75,7 +95,9 @@ public abstract class EntityMyFlyingPet extends EntityMyPet {
                     f = this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getBlock().getFriction() * 0.91F;
                 }
 
-                this.moveRelative(this.onGround() ? 0.1F * f1 : 0.02F, vec3d);
+                float flySpeed = this.onGround() ? 0.1F * f1
+                        : (float) this.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+                this.moveRelative(flySpeed, vec3d);
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 this.setDeltaMovement(this.getDeltaMovement().scale(f));
             }
@@ -87,8 +109,29 @@ public abstract class EntityMyFlyingPet extends EntityMyPet {
     @Override
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.addGoal("RandomFly", new MyPetRandomFly(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
-        petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.7F, this.getBbWidth() + 1.3, 20));
-        petPathfinderSelector.addGoal("Control", new Control(this, 0.8f));
+
+        var mobGoals = org.bukkit.Bukkit.getMobGoals();
+        MyPetBukkitEntity bukkit = getBukkitEntity();
+        org.bukkit.entity.Mob mob = (org.bukkit.entity.Mob) bukkit;
+
+        // Create the Paper flying movement goal here (not in the constructor).
+        // setPathfinder() is invoked from EntityMyPet.<init> via super(...) before
+        // the EntityMyFlyingPet constructor body runs, so the constructor cannot
+        // create this instance ahead of time — `this.flyingMovementGoal` would
+        // still be null. Creating it here and assigning the field ensures the
+        // forwarding FlyingMoveControl (installed after super() returns) can
+        // read it at call time.
+        this.flyingMovementGoal = new MyPetFlyingMovementGoal(bukkit, this.maxTurn);
+        mobGoals.addGoal(mob, -1, flyingMovementGoal);
+
+        mobGoals.addGoal(mob, 5, new de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal(bukkit, 0.7F, this.getBbWidth() + 1.3, 20));
+        mobGoals.addGoal(mob, 7, new PetRandomFlyGoal(bukkit));
+
+        // Register flying Control goal via Paper MobGoals (higher speed than ground pets)
+        PetControlGoal controlGoal = new PetControlGoal(bukkit, 0.8F);
+        mobGoals.addGoal(mob, 2, controlGoal);
+        PetControlTargetGoal controlTargetGoal = new PetControlTargetGoal(bukkit, this.getBbWidth() + 2.5F);
+        controlTargetGoal.setControlGoal(controlGoal);
+        mobGoals.addGoal(mob, 12, controlTargetGoal);
     }
 }

@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
-import de.Keyle.MyPet.api.entity.ai.movement.MyPetRandomStroll;
 import de.Keyle.MyPet.api.event.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -688,6 +687,11 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         if (status == PetState.Here) {
             health = bukkitEntity.getHealth();
             updateStatus(PetState.Despawned);
+            // Drop the pet's entry from the damage tracker before clearing
+            // bukkitEntity — otherwise the ConcurrentHashMap in
+            // PetDamageTracker grows unboundedly as pets are despawned and
+            // respawned with new UUIDs.
+            de.Keyle.MyPet.entity.ai.target.PetDamageTracker.cleanup(bukkitEntity.getUniqueId());
             bukkitEntity.removeEntity();
             bukkitEntity = null;
 
@@ -762,14 +766,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     if (skill instanceof Scheduler scheduler) {
                         scheduler.schedule();
                     }
-                }
-
-                if (bukkitEntity.getHandle().getPathfinder().hasGoal("RandomStroll")) {
-                    ((MyPetRandomStroll) bukkitEntity.getHandle().getPathfinder().getGoal("RandomStroll")).schedule();
-                } else if (bukkitEntity.getHandle().getPathfinder().hasGoal("RandomSwim")) {
-                    ((MyPetRandomStroll) bukkitEntity.getHandle().getPathfinder().getGoal("RandomSwim")).schedule();
-                } else if (bukkitEntity.getHandle().getPathfinder().hasGoal("RandomFly")) {
-                    ((MyPetRandomStroll) bukkitEntity.getHandle().getPathfinder().getGoal("RandomFly")).schedule();
                 }
 
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {

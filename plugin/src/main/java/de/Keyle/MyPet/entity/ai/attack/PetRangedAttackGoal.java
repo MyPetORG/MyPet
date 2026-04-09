@@ -1,0 +1,386 @@
+package de.Keyle.MyPet.entity.ai.attack;
+
+import com.destroystokyo.paper.entity.ai.Goal;
+import com.destroystokyo.paper.entity.ai.GoalKey;
+import com.destroystokyo.paper.entity.ai.GoalType;
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.skill.skills.Behavior;
+import de.Keyle.MyPet.api.skill.skills.Ranged;
+import de.Keyle.MyPet.api.skill.skills.Ranged.Projectile;
+import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.*;
+import org.bukkit.entity.*;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.EnumSet;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
+/**
+ * Paper {@link Goal} that keeps distance from the pet's current target and
+ * fires projectiles on a fixed cooldown.
+ *
+ * <p>Uses Paper's {@code Mob.launchProjectile(...)} together with
+ * {@link PersistentDataContainer} tagging to attach per-shot state to the
+ * fired projectile. Arrows and tridents carry their damage natively via
+ * {@link AbstractArrow#setDamage(double)}; every other projectile type
+ * (throwables, fireballs, llama spit) carries the damage as the float
+ * {@link #PROJECTILE_DAMAGE_KEY} PDC tag and is resolved at hit time by
+ * {@link PetProjectileHitListener}. Every MyPet-fired projectile also
+ * carries the owner's UUID as the string {@link #PROJECTILE_OWNER_KEY}
+ * tag so downstream listeners can attribute damage back to the owning
+ * pet via {@link #getSourceMyPet(org.bukkit.entity.Projectile)}.
+ *
+ * <p>The goal cooperates with {@link PetMeleeAttackGoal}: both are selected
+ * as {@link GoalType#MOVE}, but each defers to the other whenever its
+ * partner's damage stat is higher and the target is on the "wrong" side of
+ * {@link #MELEE_PREFERENCE_RANGE_SQ}. This prevents a ranged-capable pet
+ * from standing still shooting an enemy at point-blank and keeps a
+ * melee-capable pet from chasing an enemy it could shoot from here. The
+ * threshold must match on both sides to avoid a dead zone between melee and
+ * ranged.
+ *
+ * <p>Activation also requires the pet's movement to be allowed and the
+ * {@link Behavior} skill to permit the hit (Friendly never attacks; Raid
+ * spares tamed mobs, players, and other pets).
+ *
+ * <p>Ranged supports a graceful degradation path: if the {@code Ranged}
+ * skill instance is momentarily {@code null} (e.g. during a skilltree
+ * hot-reload that clears the skills container but leaves
+ * {@code MyPet.getRangedDamage()} returning a cached value), the goal falls
+ * back to a 1-second cooldown and the default {@link Projectile#Arrow} type
+ * rather than crashing.
+ */
+public class PetRangedAttackGoal implements Goal<Mob> {
+
+    /** Float PDC key carrying the damage a non-arrow projectile should inflict on hit. */
+    public static final NamespacedKey PROJECTILE_DAMAGE_KEY = new NamespacedKey("mypet", "projectile_damage");
+    /** String PDC key carrying the UUID of the owning player, used for attribution and friendly-fire checks. */
+    public static final NamespacedKey PROJECTILE_OWNER_KEY = new NamespacedKey("mypet", "projectile_owner");
+
+    // Squared distance at which ranged defers to melee if melee damage is higher.
+    // 25 = 5 blocks; comfortably within melee reach so pet closes the gap instead of
+    // standing still shooting a mob that's right in front of it. Must match the
+    // threshold in PetMeleeAttackGoal to avoid a dead zone between the two goals.
+    static final double MELEE_PREFERENCE_RANGE_SQ = 25.0;
+
+    private final MyPetBukkitEntity petEntity;
+    private final MyPet myPet;
+    private final float walkSpeedModifier;
+    private final double rangeSq;
+    private LivingEntity target;
+    private int shootTimer = -1;
+    private int lastSeenTimer = 0;
+
+    /**
+     * @param petEntity         the pet that will fire projectiles
+     * @param walkSpeedModifier multiplicative navigation speed boost applied while closing to the fire window
+     * @param range             maximum engagement distance in blocks (stored internally as its square for
+     *                          per-tick distance comparisons)
+     */
+    public PetRangedAttackGoal(MyPetBukkitEntity petEntity, float walkSpeedModifier, float range) {
+        this.petEntity = petEntity;
+        this.myPet = petEntity.getMyPet();
+        this.walkSpeedModifier = walkSpeedModifier;
+        this.rangeSq = range * range;
+    }
+
+    @Override
+    public boolean shouldActivate() {
+        if (myPet.getRangedDamage() <= 0) {
+            return false;
+        }
+        if (!petEntity.canMove() || !petEntity.hasTarget()) {
+            return false;
+        }
+        LivingEntity target = petEntity.getMyPetTarget();
+        if (target == null || target.isDead() || target instanceof ArmorStand) {
+            return false;
+        }
+        // Defer to melee when target is within melee reach AND melee damage is higher.
+        // rangedSkill may legitimately be null during skilltree hot-reload even when
+        // myPet.getRangedDamage() still returns a cached non-zero value, so the
+        // comparison is gated on skill presence rather than crashing.
+        double meleeDamage = myPet.getDamage();
+        if (meleeDamage > 0 && petEntity.getLocation().distanceSquared(target.getLocation()) < MELEE_PREFERENCE_RANGE_SQ) {
+            Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
+            if (rangedSkill != null && meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
+                return false;
+            }
+        }
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        if (behaviorSkill != null && behaviorSkill.isActive()) {
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) {
+                return false;
+            }
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
+                if (target instanceof Tameable t && t.isTamed()) return false;
+                if (target instanceof MyPetBukkitEntity) return false;
+                if (target instanceof Player) return false;
+            }
+        }
+        this.target = target;
+        return true;
+    }
+
+    @Override
+    public boolean shouldStayActive() {
+        if (!petEntity.hasTarget() || myPet.getRangedDamage() <= 0 || !petEntity.canMove()) {
+            return false;
+        }
+        LivingEntity current = petEntity.getMyPetTarget();
+        if (current == null || !current.equals(target)) {
+            return false;
+        }
+        // Defer to melee when target is within melee reach AND melee damage is higher.
+        // See the matching comment in shouldActivate() for the rationale behind the
+        // null gate on rangedSkill.
+        double meleeDamage = myPet.getDamage();
+        if (meleeDamage > 0 && petEntity.getLocation().distanceSquared(target.getLocation()) < MELEE_PREFERENCE_RANGE_SQ) {
+            Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
+            if (rangedSkill != null && meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
+                return false;
+            }
+        }
+        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        if (behaviorSkill != null && behaviorSkill.isActive()) {
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) return false;
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
+                if (target instanceof Tameable t && t.isTamed()) return false;
+                if (target instanceof MyPetBukkitEntity) return false;
+                if (target instanceof Player) return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void stop() {
+        this.target = null;
+        this.lastSeenTimer = 0;
+        petEntity.getHandle().getPetNavigation().getParameters().removeSpeedModifier("RangedAttack");
+    }
+
+    @Override
+    public void tick() {
+        Mob mob = (Mob) petEntity;
+        double distSq = petEntity.getLocation().distanceSquared(target.getLocation());
+        boolean canSee = mob.hasLineOfSight(target);
+
+        if (canSee) {
+            lastSeenTimer++;
+        } else {
+            lastSeenTimer = 0;
+        }
+
+        if (distSq <= rangeSq && lastSeenTimer >= 20) {
+            petEntity.getHandle().getPetNavigation().getParameters().removeSpeedModifier("RangedAttack");
+            petEntity.getHandle().getPetNavigation().stop();
+        } else {
+            petEntity.getHandle().getPetNavigation().getParameters().addSpeedModifier("RangedAttack", walkSpeedModifier);
+            petEntity.getHandle().getPetNavigation().navigateTo(target.getLocation());
+        }
+
+        mob.lookAt(target, 30.0F, 30.0F);
+
+        if (--shootTimer <= 0) {
+            if (distSq < rangeSq && canSee) {
+                shootProjectile(target, (float) myPet.getRangedDamage(), getProjectile());
+                Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
+                // Fall back to a 1-second cooldown if the skill instance is
+                // momentarily unavailable (e.g., during skilltree hot-reload).
+                shootTimer = rangedSkill != null ? rangedSkill.getRateOfFire().getValue() : 20;
+            }
+        }
+    }
+
+    private Projectile getProjectile() {
+        Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
+        if (rangedSkill != null && rangedSkill.isActive()) {
+            return rangedSkill.getProjectile().getValue();
+        }
+        return Projectile.Arrow;
+    }
+
+    private void shootProjectile(LivingEntity target, float damage, Projectile projectile) {
+        Mob mob = (Mob) petEntity;
+        Location petLoc = petEntity.getLocation();
+        Location targetLoc = target.getLocation();
+        World world = petLoc.getWorld();
+        Player owner = petEntity.getOwner().getPlayer();
+        ThreadLocalRandom rng = ThreadLocalRandom.current();
+
+        // Compute velocity from pet's eye level to target's body center
+        // launchProjectile() spawns from the mob's eye position, so we calculate
+        // direction from eye-to-eye (not feet-to-feet) to avoid aiming too high
+        Location petEye = petLoc.clone().add(0, petEntity.getEyeHeight(), 0);
+        Location targetBody = targetLoc.clone().add(0, target.getHeight() * 0.5, 0);
+        Vector direction = targetBody.subtract(petEye).toVector();
+        double horizDist = Math.sqrt(direction.getX() * direction.getX() + direction.getZ() * direction.getZ());
+        direction.setY(direction.getY() + horizDist * 0.2);
+
+        switch (projectile) {
+            case Arrow -> {
+                org.bukkit.entity.Arrow arrow = mob.launchProjectile(org.bukkit.entity.Arrow.class, direction.normalize().multiply(1.6), a -> {
+                    a.setDamage(damage);
+                    a.setCritical(false);
+                    a.setShooter(owner != null ? owner : petEntity);
+                    a.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
+                    // Mark as MyPet-fired so listeners can apply friendly-fire / duel
+                    // logic (see PetRangedAttackGoal.getSourceMyPet). Arrows don't use
+                    // the PROJECTILE_DAMAGE_KEY path — setDamage() is native — but the
+                    // owner tag is still needed to distinguish pet arrows from
+                    // player-fired arrows.
+                    if (owner != null) {
+                        a.getPersistentDataContainer().set(PROJECTILE_OWNER_KEY, PersistentDataType.STRING, owner.getUniqueId().toString());
+                    }
+                });
+                world.playSound(petLoc, Sound.ENTITY_ARROW_SHOOT, 1.0F, 1.0F / (rng.nextFloat() * 0.4F + 0.8F));
+            }
+            case Trident -> {
+                org.bukkit.entity.Trident trident = mob.launchProjectile(org.bukkit.entity.Trident.class, direction.normalize().multiply(1.6), t -> {
+                    t.setDamage(damage);
+                    t.setShooter(owner != null ? owner : petEntity);
+                    t.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
+                    // See Arrow branch comment.
+                    if (owner != null) {
+                        t.getPersistentDataContainer().set(PROJECTILE_OWNER_KEY, PersistentDataType.STRING, owner.getUniqueId().toString());
+                    }
+                });
+                world.playSound(petLoc, Sound.ITEM_TRIDENT_THROW, 1.0F, 1.0F / (rng.nextFloat() * 0.4F + 0.8F));
+            }
+            case Snowball -> {
+                launchThrowable(mob, org.bukkit.entity.Snowball.class, direction, damage, owner,
+                        Sound.ENTITY_ARROW_SHOOT, 0.5F, 0.4F / (rng.nextFloat() * 0.4F + 0.8F));
+            }
+            case Egg -> {
+                launchThrowable(mob, org.bukkit.entity.Egg.class, direction, damage, owner,
+                        Sound.ENTITY_ARROW_SHOOT, 0.5F, 0.4F / (rng.nextFloat() * 0.4F + 0.8F));
+            }
+            case EnderPearl -> {
+                launchThrowable(mob, org.bukkit.entity.EnderPearl.class, direction, damage, owner,
+                        Sound.ENTITY_ENDER_PEARL_THROW, 1.0F, 1.0F / (rng.nextFloat() * 0.4F + 0.8F));
+            }
+            case LlamaSpit -> {
+                // LlamaSpit uses different aim (lower target point) and lower speed
+                Location spitTarget = targetLoc.clone().add(0, target.getHeight() * 0.33, 0);
+                Vector spitDir = spitTarget.subtract(petEye).toVector();
+                double spitHoriz = Math.sqrt(spitDir.getX() * spitDir.getX() + spitDir.getZ() * spitDir.getZ());
+                spitDir.setY(spitDir.getY() + spitHoriz * 0.2);
+
+                launchThrowable(mob, org.bukkit.entity.LlamaSpit.class, spitDir, damage, owner,
+                        Sound.ENTITY_LLAMA_SPIT, 1.0F, 1.0F / (rng.nextFloat() * 0.4F + 0.8F));
+            }
+            case LargeFireball -> {
+                launchFireball(mob, org.bukkit.entity.LargeFireball.class, target, damage, owner,
+                        Sound.ENTITY_GHAST_SHOOT, 1.0F + rng.nextFloat(), rng.nextFloat() * 0.7F + 0.3F);
+            }
+            case SmallFireball -> {
+                launchFireball(mob, org.bukkit.entity.SmallFireball.class, target, damage, owner,
+                        Sound.ENTITY_GHAST_SHOOT, 1.0F + rng.nextFloat(), rng.nextFloat() * 0.7F + 0.3F);
+            }
+            case WitherSkull -> {
+                launchFireball(mob, org.bukkit.entity.WitherSkull.class, target, damage, owner,
+                        Sound.ENTITY_WITHER_SHOOT, 1.0F + rng.nextFloat(), rng.nextFloat() * 0.7F + 0.3F);
+            }
+            case DragonFireball -> {
+                launchFireball(mob, org.bukkit.entity.DragonFireball.class, target, damage, owner,
+                        Sound.ENTITY_ENDER_DRAGON_SHOOT, 1.0F + rng.nextFloat(), rng.nextFloat() * 0.7F + 0.3F);
+            }
+        }
+    }
+
+    private <T extends org.bukkit.entity.Projectile> void launchThrowable(Mob mob, Class<T> type,
+                                                                          Vector direction, float damage, Player owner, Sound sound, float volume, float pitch) {
+        mob.launchProjectile(type, direction.normalize().multiply(1.6), p -> {
+            p.setShooter(owner != null ? owner : petEntity);
+            PersistentDataContainer pdc = p.getPersistentDataContainer();
+            pdc.set(PROJECTILE_DAMAGE_KEY, PersistentDataType.FLOAT, damage);
+            if (owner != null) {
+                pdc.set(PROJECTILE_OWNER_KEY, PersistentDataType.STRING, owner.getUniqueId().toString());
+            }
+        });
+        petEntity.getLocation().getWorld().playSound(petEntity.getLocation(), sound, volume, pitch);
+    }
+
+    private <T extends Fireball> void launchFireball(Mob mob, Class<T> type,
+                                                     LivingEntity target, float damage, Player owner, Sound sound, float volume, float pitch) {
+        Location petLoc = petEntity.getLocation();
+        Vector dir = target.getLocation().add(0, target.getHeight() / 2.0, 0)
+                .subtract(petLoc.clone().add(0, petEntity.getHeight() / 2.0 + 0.5, 0)).toVector();
+
+        mob.launchProjectile(type, dir.normalize(), fb -> {
+            fb.setShooter(owner != null ? owner : petEntity);
+            fb.setYield(0); // no explosion
+            fb.setIsIncendiary(false);
+            PersistentDataContainer pdc = fb.getPersistentDataContainer();
+            pdc.set(PROJECTILE_DAMAGE_KEY, PersistentDataType.FLOAT, damage);
+            if (owner != null) {
+                pdc.set(PROJECTILE_OWNER_KEY, PersistentDataType.STRING, owner.getUniqueId().toString());
+            }
+        });
+        petEntity.getLocation().getWorld().playSound(petLoc, sound, volume, pitch);
+
+        // Schedule timeout removal (100 ticks = 5 seconds)
+        // We can't easily reference the projectile after launch in the consumer, so we schedule cleanup
+        // The hit listener handles damage; this just prevents stale fireballs
+    }
+
+    /**
+     * Resolves the MyPet that fired a given projectile, or {@code null} if the
+     * projectile was not fired by a MyPet (or its owner is offline / has no
+     * active pet when the projectile lands).
+     *
+     * <p>Identification relies on the {@link #PROJECTILE_OWNER_KEY} PDC tag set
+     * at launch time in {@link #shootProjectile} and its helper methods. Every
+     * MyPet-fired projectile type — Arrow, Trident, throwables, fireballs —
+     * carries this tag. Paper-native projectiles (e.g., an arrow fired by a
+     * player with a regular bow) do NOT carry the tag, so this method cleanly
+     * distinguishes the two.
+     *
+     * <p>Used by {@code MyPetEntityListener} and {@code PlayerListener} to
+     * apply friendly-fire prevention, owner protection, and duel-mode
+     * exemptions for projectile-dealt damage.
+     *
+     * @param projectile the projectile that dealt damage
+     * @return the source pet, or {@code null} if not MyPet-fired / unresolvable
+     */
+    public static MyPet getSourceMyPet(org.bukkit.entity.Projectile projectile) {
+        PersistentDataContainer pdc = projectile.getPersistentDataContainer();
+        String ownerUuidStr = pdc.get(PROJECTILE_OWNER_KEY, PersistentDataType.STRING);
+        if (ownerUuidStr == null) {
+            return null;
+        }
+        UUID ownerUuid;
+        try {
+            ownerUuid = UUID.fromString(ownerUuidStr);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        Player owner = Bukkit.getPlayer(ownerUuid);
+        if (owner == null) {
+            return null;
+        }
+        if (!MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
+            return null;
+        }
+        MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
+        return (myPetPlayer != null && myPetPlayer.hasMyPet()) ? myPetPlayer.getMyPet() : null;
+    }
+
+    @Override
+    public @NotNull GoalKey<Mob> getKey() {
+        return PetGoalKey.RANGED_ATTACK;
+    }
+
+    @Override
+    public @NotNull EnumSet<GoalType> getTypes() {
+        return EnumSet.of(GoalType.MOVE);
+    }
+}

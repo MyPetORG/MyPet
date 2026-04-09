@@ -47,4 +47,16 @@ public interface MyPetBukkitEntity extends Creature {
     void setTarget(LivingEntity target);
 
     void forgetTarget();
+
+    boolean hasTarget();
+
+    LivingEntity getMyPetTarget();
+
+    /**
+     * Attacks the target using the pet's damage system (MyPet skills, not vanilla attributes).
+     * This delegates to the NMS entity's attack method which handles skill damage, kill credit,
+     * and swing animation — unlike Bukkit's {@code LivingEntity.attack()} which calls the
+     * wrong NMS method signature for MyPet entities.
+     */
+    boolean attackEntity(LivingEntity target);
 }

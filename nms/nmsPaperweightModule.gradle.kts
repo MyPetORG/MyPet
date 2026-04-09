@@ -4,6 +4,7 @@ apply(plugin = "java-library")
 dependencies {
     add("compileOnly", project(":api"))
     add("compileOnly", project(":skills"))
+    add("compileOnly", project(":plugin"))
 
     add("compileOnly", "com.mojang:brigadier:1.0.18")
     add("compileOnly", "com.mojang:datafixerupper:8.0.16")

@@ -23,16 +23,18 @@ package de.Keyle.MyPet.util.hooks;
 import com.SirBlobman.combatlogx.config.ConfigOptions;
 import com.SirBlobman.combatlogx.utility.CombatUtil;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
-import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -81,8 +83,16 @@ public class CombatLogXHook implements PluginHook {
         Entity damaged = e.getEntity();
         Entity damager = e.getDamager();
 
-        if ((damager instanceof CraftMyPetProjectile) && (ConfigOptions.OPTION_LINK_PROJECTILES || IGNORE_PLUGIN_SETTINGS)) {
-            damager = ((CraftMyPetProjectile) damager).getShootingMyPet();
+        // Resolve MyPet-fired projectiles back to the shooting pet (so the
+        // pet-link check below can then resolve it to the owner Player).
+        // Replaces the legacy `instanceof CraftMyPetProjectile` check —
+        // identification is now via the PDC owner tag that
+        // PetRangedAttackGoal writes at launch time.
+        if (damager instanceof Projectile projectile && (ConfigOptions.OPTION_LINK_PROJECTILES || IGNORE_PLUGIN_SETTINGS)) {
+            MyPet sourcePet = PetRangedAttackGoal.getSourceMyPet(projectile);
+            if (sourcePet != null && sourcePet.getEntity().isPresent()) {
+                damager = (Entity) sourcePet.getEntity().get();
+            }
         }
 
         if ((damager instanceof MyPetBukkitEntity) && (ConfigOptions.OPTION_LINK_PETS || IGNORE_PLUGIN_SETTINGS)) {

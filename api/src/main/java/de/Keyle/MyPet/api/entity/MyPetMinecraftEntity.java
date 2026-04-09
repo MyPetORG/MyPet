@@ -78,4 +78,28 @@ public interface MyPetMinecraftEntity {
     LivingEntity getMyPetTarget();
 
     void setMyPetTarget(LivingEntity entity, TargetPriority priority);
+
+    /**
+     * Broadcasts an NMS entity event to all tracking players.
+     * Used for client-side animations (e.g., byte 10 = sheep eat animation).
+     */
+    void broadcastEntityEvent(byte eventId);
+
+    default boolean floatsInLava() {
+        return false;
+    }
+
+    default boolean specialFloat() {
+        return false;
+    }
+
+    /**
+     * Whether this entity uses Paper Goal-based movement control instead of NMS MoveControl.
+     * When true, the NMS {@code getMoveControl().tick()} call should be skipped because
+     * a Paper Goal (e.g., MyPetFlyingMovementGoal or MyPetAquaticMovementGoal) handles
+     * per-tick movement execution via Paper API.
+     */
+    default boolean usesPaperMovement() {
+        return false;
+    }
 }

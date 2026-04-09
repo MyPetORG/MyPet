@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MyMagmaCube;
 import de.Keyle.MyPet.compat.v1_21_R2.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_21_R2.entity.ai.attack.MeleeAttack;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -81,9 +80,9 @@ public class EntityMyMagmaCube extends EntityMyPet {
         int size = Math.max(1, getMyPet().getSize());
         getEntityData().set(SIZE_WATCHER, size);
         this.refreshDimensions();
-        if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
-            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
-        }
+        var mobGoals = org.bukkit.Bukkit.getMobGoals();
+        org.bukkit.entity.Mob mob = (org.bukkit.entity.Mob) getBukkitEntity();
+        mobGoals.addGoal(mob, 5, new de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal(getBukkitEntity(), 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
     }
 
     @Override
@@ -106,6 +105,8 @@ public class EntityMyMagmaCube extends EntityMyPet {
     @Override
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
+        var mobGoals = org.bukkit.Bukkit.getMobGoals();
+        org.bukkit.entity.Mob mob = (org.bukkit.entity.Mob) getBukkitEntity();
+        mobGoals.addGoal(mob, 5, new de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal(getBukkitEntity(), 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
     }
 }

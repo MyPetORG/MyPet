@@ -27,6 +27,14 @@ public class NavigationParameters {
     private boolean avoidWater = false;
     private double speed;
     private Map<String, Double> speedModifier = new HashMap<>();
+    /**
+     * Optional callback fired whenever a speed modifier is added or removed.
+     * PaperNavigation uses this to re-apply parameters to MOVEMENT_SPEED
+     * immediately, so that goals which only call removeSpeedModifier() (e.g.
+     * PetSprintGoal) actually see their speed drop without waiting for the
+     * next navigateTo() or nav.stop().
+     */
+    private Runnable onSpeedChange;
 
     public NavigationParameters(double baseSpeed) {
         speed = baseSpeed;
@@ -50,13 +58,26 @@ public class NavigationParameters {
 
     public void addSpeedModifier(String id, double speedModifier) {
         this.speedModifier.put(id, speedModifier);
+        notifySpeedChange();
     }
 
     public void removeSpeedModifier(String id) {
-        this.speedModifier.remove(id);
+        if (this.speedModifier.remove(id) != null) {
+            notifySpeedChange();
+        }
     }
 
     public double speedModifier() {
         return this.speedModifier.values().stream().mapToDouble(Double::doubleValue).sum();
+    }
+
+    public void setOnSpeedChange(Runnable onSpeedChange) {
+        this.onSpeedChange = onSpeedChange;
+    }
+
+    private void notifySpeedChange() {
+        if (onSpeedChange != null) {
+            onSpeedChange.run();
+        }
     }
 }

@@ -20,17 +20,18 @@
 
 package de.Keyle.MyPet.compat.v1_21_R3.entity;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.attack.MeleeAttack;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.movement.MyPetRandomSwim;
-import de.Keyle.MyPet.compat.v1_21_R3.entity.ai.navigation.MyAquaticPetPathNavigation;
+import de.Keyle.MyPet.entity.ai.movement.MyPetAquaticMovementGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
+import net.minecraft.world.level.pathfinder.AmphibiousNodeEvaluator;
+import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -42,8 +43,29 @@ public abstract class EntityMyAquaticPet extends EntityMyPet {
     }
 
     @Override
+    public boolean usesPaperMovement() {
+        return false;
+    }
+
+    @Override
     protected PathNavigation setSpecialNav() {
-        return new MyAquaticPetPathNavigation(this, this.level());
+        return new WaterBoundPathNavigation(this, this.level()) {
+            @Override
+            protected boolean canUpdatePath() {
+                return true;
+            }
+
+            @Override
+            protected PathFinder createPathFinder(int maxVisitedNodes) {
+                this.nodeEvaluator = new AmphibiousNodeEvaluator(false);
+                return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
+            }
+
+            @Override
+            public boolean isStableDestination(BlockPos pos) {
+                return !this.level.getBlockState(pos.below()).isAir();
+            }
+        };
     }
 
     @Override
@@ -59,8 +81,14 @@ public abstract class EntityMyAquaticPet extends EntityMyPet {
     @Override
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.addGoal("RandomSwim", new MyPetRandomSwim(this, (int) Configuration.Entity.MYPET_FOLLOW_START_DISTANCE));
-        petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.8F, this.getBbWidth() + 1.9, 20));
+        var mobGoals = org.bukkit.Bukkit.getMobGoals();
+        de.Keyle.MyPet.api.entity.MyPetBukkitEntity bukkit = getBukkitEntity();
+        org.bukkit.entity.Mob mob = (org.bukkit.entity.Mob) bukkit;
+        // Register Paper-based aquatic movement goal (replaces NMS MyPetAquaticMoveControl)
+        mobGoals.addGoal(mob, -1, new MyPetAquaticMovementGoal(bukkit));
+
+        mobGoals.addGoal(mob, 7, new de.Keyle.MyPet.entity.ai.movement.PetRandomSwimGoal(bukkit));
+        mobGoals.addGoal(mob, 5, new de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal(bukkit, 0.8F, this.getBbWidth() + 1.9, 20));
     }
 
     @Override

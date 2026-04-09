@@ -1,0 +1,105 @@
+package de.Keyle.MyPet.entity.ai.movement;
+
+import com.destroystokyo.paper.entity.ai.Goal;
+import com.destroystokyo.paper.entity.ai.GoalKey;
+import com.destroystokyo.paper.entity.ai.GoalType;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.entity.Mob;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.EnumSet;
+
+/**
+ * Paper {@link Goal} that keeps a pet at the surface when it enters water
+ * (or lava, for pets that can float on lava) and nudges it back toward its
+ * owner when stuck in lava. This replaces vanilla's {@code FloatGoal} for
+ * MyPet entities.
+ *
+ * <p>Activation:
+ * <ul>
+ *   <li>A non-lava-floating pet only activates in water.</li>
+ *   <li>A lava-floating pet (see {@code EntityMyPet.floatsInLava()})
+ *       activates in either water or lava.</li>
+ * </ul>
+ *
+ * <p>While active, each tick applies a small upward velocity so the pet
+ * rises to the surface. If the pet has been in lava for {@code ~0.5s} of
+ * continuous ticks, the goal also issues a navigation request to the owner
+ * so a pet that can't naturally escape the lava column gets pulled out.
+ *
+ * <p>The goal declares no {@link GoalType GoalTypes}, meaning Paper's
+ * selector won't treat it as mutually exclusive with any other goal — it
+ * always runs concurrently with movement and target goals, mirroring
+ * vanilla's always-on floating behaviour.
+ *
+ * <p>This goal also sets {@code canFloat(true)} on the pathfinder at
+ * construction time so A* path candidates over water are not rejected.
+ */
+public class PetFloatGoal implements Goal<Mob> {
+
+    private final MyPetBukkitEntity petEntity;
+    private int lavaCounter = 10;
+    private boolean inLava = false;
+
+    /**
+     * @param petEntity the pet that should float on water (and possibly lava)
+     */
+    public PetFloatGoal(MyPetBukkitEntity petEntity) {
+        this.petEntity = petEntity;
+        petEntity.getPathfinder().setCanFloat(true);
+    }
+
+    @Override
+    public boolean shouldActivate() {
+        if (petEntity.getHandle().floatsInLava()) {
+            return petEntity.isInWater() || petEntity.isInLava();
+        }
+        return petEntity.isInWater();
+    }
+
+    @Override
+    public void stop() {
+        inLava = false;
+    }
+
+    @Override
+    public void tick() {
+        if (petEntity.getHandle().specialFloat()) {
+            return;
+        }
+        // During pet removal (unlink / death / release) the owner reference
+        // may be cleared before the entity is despawned, so both getOwner()
+        // and its .getPlayer() result can be null. Bail out before touching
+        // either.
+        if (petEntity.getOwner() == null) {
+            return;
+        }
+
+        Vector velocity = ((Mob) petEntity).getVelocity();
+        ((Mob) petEntity).setVelocity(velocity.add(new Vector(0, 0.05D, 0)));
+
+        if (inLava && lavaCounter-- <= 0) {
+            Player owner = petEntity.getOwner().getPlayer();
+            if (owner != null && petEntity.getHandle().getPetNavigation().navigateTo(owner)) {
+                lavaCounter = 10;
+            }
+        }
+        if (!inLava && petEntity.isInLava()) {
+            // Approximate isEyeInFluid(LAVA) — if in lava at all, treat as eye-level
+            inLava = true;
+        }
+    }
+
+    @Override
+    public @NotNull GoalKey<Mob> getKey() {
+        return PetGoalKey.FLOAT;
+    }
+
+    @Override
+    public @NotNull EnumSet<GoalType> getTypes() {
+        return EnumSet.noneOf(GoalType.class);
+    }
+}

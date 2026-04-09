@@ -438,6 +438,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             getServer().getPluginManager().registerEvents(creakingHeartListener, this);
         }
 
+        // Paper Mob Goal API support listeners
+        getServer().getPluginManager().registerEvents(new de.Keyle.MyPet.entity.ai.target.PetDamageTracker(), this);
+        getServer().getPluginManager().registerEvents(new de.Keyle.MyPet.entity.ai.attack.PetProjectileHitListener(), this);
+
         // Register commands via Paper's Brigadier Lifecycle API
         this.helpRegistry = new HelpRegistry();
         this.getLifecycleManager().registerEventHandler(io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents.COMMANDS, event -> {

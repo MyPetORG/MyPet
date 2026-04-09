@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.types.MySheep;
 import de.Keyle.MyPet.compat.v1_21_R5.entity.EntityMyPet;
-import de.Keyle.MyPet.compat.v1_21_R5.entity.ai.movement.EatGrass;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -164,6 +163,8 @@ public class EntityMySheep extends EntityMyPet {
     @Override
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.addGoal("EatGrass", new EatGrass(this));
+        var mobGoals = org.bukkit.Bukkit.getMobGoals();
+        org.bukkit.entity.Mob mob = (org.bukkit.entity.Mob) getBukkitEntity();
+        mobGoals.addGoal(mob, 6, new de.Keyle.MyPet.entity.ai.movement.PetEatGrassGoal(getBukkitEntity()));
     }
 }

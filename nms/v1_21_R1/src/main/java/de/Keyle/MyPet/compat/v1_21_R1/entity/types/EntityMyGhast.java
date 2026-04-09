@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.EntitySize;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.compat.v1_21_R1.entity.EntityMyFlyingPet;
-import de.Keyle.MyPet.compat.v1_21_R1.entity.ai.attack.MeleeAttack;
 import net.minecraft.world.level.Level;
 
 @EntitySize(width = 4.F, height = 4.F)
@@ -52,7 +51,9 @@ public class EntityMyGhast extends EntityMyFlyingPet {
     @Override
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 5.5, 20));
+        var mobGoals = org.bukkit.Bukkit.getMobGoals();
+        org.bukkit.entity.Mob mob = (org.bukkit.entity.Mob) getBukkitEntity();
+        mobGoals.addGoal(mob, 5, new de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal(getBukkitEntity(), 0.1F, 5.5, 20));
     }
 
     @Override
