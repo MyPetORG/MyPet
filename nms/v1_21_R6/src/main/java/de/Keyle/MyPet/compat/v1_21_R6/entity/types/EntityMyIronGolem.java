@@ -43,8 +43,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
-import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
-
 @EntitySize(width = 1.4F, height = 2.7F)
 public class EntityMyIronGolem extends EntityMyPet {
 
@@ -131,7 +129,7 @@ public class EntityMyIronGolem extends EntityMyPet {
                 getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                 getMyPet().setFlower(null);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    itemStack.hurtAndBreak(1, entityhuman, enumhand);
                 }
 
                 return InteractionResult.CONSUME;

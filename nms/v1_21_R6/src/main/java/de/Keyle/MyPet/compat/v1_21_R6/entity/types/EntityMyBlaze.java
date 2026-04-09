@@ -35,8 +35,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
-
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
 
@@ -86,7 +84,7 @@ public class EntityMyBlaze extends EntityMyPet {
                 getMyPet().setOnFire(true);
                 makeSound("item.flintandsteel.use", 1.0F, 1.0F);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    itemStack.hurtAndBreak(1, entityhuman, enumhand);
                 }
                 return InteractionResult.CONSUME;
             }

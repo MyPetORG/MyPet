@@ -44,8 +44,6 @@ import org.bukkit.Sound;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.Keyle.MyPet.compat.v1_21_R7.util.HandSlot.getSlotForHand;
-
 @EntitySize(width = 0.7F, height = 1.2349999f)
 public class EntityMySheep extends EntityMyPet {
 
@@ -120,7 +118,7 @@ public class EntityMySheep extends EntityMyPet {
                 }
                 getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    itemStack.hurtAndBreak(1, entityhuman, enumhand);
                 }
                 return InteractionResult.CONSUME;
             } else if (Configuration.MyPet.Sheep.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {

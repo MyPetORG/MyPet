@@ -36,8 +36,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
-import static de.Keyle.MyPet.compat.v1_21_R7.util.HandSlot.getSlotForHand;
-
 @EntitySize(width = 0.7F, height = 1.7F)
 public class EntityMySnowGolem extends EntityMyPet {
 
@@ -67,7 +65,7 @@ public class EntityMySnowGolem extends EntityMyPet {
                 getMyPet().setSheared(true);
                 getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    itemStack.hurtAndBreak(1, entityhuman, enumhand);
                 }
                 return InteractionResult.CONSUME;
             }

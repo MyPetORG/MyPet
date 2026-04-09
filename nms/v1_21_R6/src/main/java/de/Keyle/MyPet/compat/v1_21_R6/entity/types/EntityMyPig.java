@@ -51,8 +51,6 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
-
 @EntitySize(width = 0.7F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
 
@@ -127,7 +125,7 @@ public class EntityMyPig extends EntityMyPet {
                 getBukkitEntity().getWorld().playSound(getBukkitEntity().getLocation(), org.bukkit.Sound.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
                 getMyPet().setSaddle(null);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    itemStack.hurtAndBreak(1, entityhuman, enumhand);
                 }
 
                 return InteractionResult.CONSUME;

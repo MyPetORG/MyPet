@@ -46,8 +46,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
-import static de.Keyle.MyPet.compat.v1_21_R7.util.HandSlot.getSlotForHand;
-
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyMule extends EntityMyPet {
 
@@ -140,7 +138,7 @@ public class EntityMyMule extends EntityMyPet {
                     getMyPet().setChest(null);
                     getMyPet().setSaddle(null);
                     if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                        itemStack.hurtAndBreak(1, entityhuman, enumhand);
                     }
 
                     return InteractionResult.CONSUME;

@@ -45,8 +45,6 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
-import static de.Keyle.MyPet.compat.v1_21_R7.util.HandSlot.getSlotForHand;
-
 @EntitySize(width = 0.7F, height = 0.7F)
 public class EntityMyCopperGolem extends EntityMyPet {
 
@@ -148,7 +146,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
                 getMyPet().setWaxed(false);
                 getMyPet().setOxidationTickCounter(0);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    itemStack.hurtAndBreak(1, entityhuman, enumhand);
                 }
                 makeSound("item.axe.wax_off", 1.0F, 1.0F);
                 spawnParticlesAroundEntity(Particle.WAX_OFF);
@@ -168,7 +166,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
                     getMyPet().setOxidationState(newState);
                     getMyPet().setOxidationTickCounter(0);
                     if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                        itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                        itemStack.hurtAndBreak(1, entityhuman, enumhand);
                     }
                     makeSound("item.axe.scrape", 1.0F, 1.0F);
                     spawnParticlesAroundEntity(Particle.SCRAPE);
@@ -197,7 +195,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
                 makeSound("entity.sheep.shear", 1.0F, 1.0F);
                 getMyPet().setPoppy(null);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    itemStack.hurtAndBreak(1, entityhuman, enumhand);
                 }
                 return InteractionResult.CONSUME;
             }

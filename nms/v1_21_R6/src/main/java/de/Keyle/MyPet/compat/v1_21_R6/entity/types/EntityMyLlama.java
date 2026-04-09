@@ -39,8 +39,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
-import static de.Keyle.MyPet.compat.v1_21_R6.util.HandSlot.getSlotForHand;
-
 @EntitySize(width = 0.9F, height = 1.87F)
 public class EntityMyLlama extends EntityMyPet {
 
@@ -113,7 +111,7 @@ public class EntityMyLlama extends EntityMyPet {
                 getMyPet().setChest(null);
                 getMyPet().setDecor(null);
                 if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
-                    itemStack.hurtAndBreak(1, entityhuman, getSlotForHand(enumhand));
+                    itemStack.hurtAndBreak(1, entityhuman, enumhand);
                 }
 
                 return InteractionResult.CONSUME;
