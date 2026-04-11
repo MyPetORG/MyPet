@@ -82,7 +82,7 @@ public class HealImpl implements Heal {
                         if (myPet.getHealth() < myPet.getMaxHealth() - 0.01f) {
                             if (!particles) {
                                 particles = true;
-                                entity.getHandle().showPotionParticles(Color.LIME);
+                                myPet.showPotionParticles(Color.LIME);
                             }
                             entity.setHealth(myPet.getHealth() + heal.getValue().doubleValue());
                         }
@@ -93,7 +93,7 @@ public class HealImpl implements Heal {
                 }
                 if (particles) {
                     particles = false;
-                    entity.getHandle().hidePotionParticles();
+                    myPet.hidePotionParticles();
                 }
             });
         } else if (particles) {

@@ -5,21 +5,21 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import org.bukkit.Location;
-import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
 public class PetControlGoal implements Goal<Mob>, Scheduler {
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private final MyPet myPet;
     private final float speedModifier;
     private final AbstractNavigation nav;
@@ -28,16 +28,17 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
     private boolean stopControl = false;
     private boolean isRunning = false;
 
-    public PetControlGoal(MyPetBukkitEntity petEntity, float speedModifier) {
-        this.petEntity = petEntity;
-        this.myPet = petEntity.getMyPet();
+    public PetControlGoal(MyPet pet, Mob mob, float speedModifier) {
+        this.pet = pet;
+        this.mob = mob;
+        this.myPet = pet;
         this.speedModifier = speedModifier;
-        this.nav = petEntity.getHandle().getPetNavigation();
+        this.nav = pet.getPetNavigation();
     }
 
     @Override
     public boolean shouldActivate() {
-        if (!petEntity.canMove()) {
+        if (!pet.canMove()) {
             return false;
         }
         ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
@@ -49,7 +50,7 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
 
     @Override
     public boolean shouldStayActive() {
-        if (!petEntity.canMove()) {
+        if (!pet.canMove()) {
             return false;
         }
         ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);

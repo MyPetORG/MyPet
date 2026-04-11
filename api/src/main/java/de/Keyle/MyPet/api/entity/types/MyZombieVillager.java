@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.entity.Villager;
 
 @ShopInfo(displayName = "Zombie Villager")
 @DefaultInfo(food = {"rotten_flesh"})
@@ -33,9 +34,9 @@ public interface MyZombieVillager extends MyPet, MyPetEquipment, MyPetBaby {
 
     void setProfession(int value);
 
-    MyVillager.Type getType();
+    Villager.Type getType();
 
-    void setType(MyVillager.Type value);
+    void setType(Villager.Type value);
 
     int getTradingLevel();
 

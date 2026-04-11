@@ -3,7 +3,8 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPet;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,7 +49,8 @@ public class PetRandomSwimGoal implements Goal<Mob> {
     private static final double SWIM_SPEED = 0.25;
     private static final int MAX_ATTEMPTS = 5;
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private Location moveTo = null;
     private int timeToMove = 0;
     private boolean ownerStationary = false;
@@ -59,8 +61,9 @@ public class PetRandomSwimGoal implements Goal<Mob> {
     /**
      * @param petEntity the aquatic pet that will drift when its owner stands still
      */
-    public PetRandomSwimGoal(MyPetBukkitEntity petEntity) {
-        this.petEntity = petEntity;
+    public PetRandomSwimGoal(MyPet pet, Mob mob) {
+        this.pet = pet;
+        this.mob = mob;
     }
 
     private void updateOwnerMovement(Player owner) {
@@ -92,28 +95,28 @@ public class PetRandomSwimGoal implements Goal<Mob> {
     @Override
     public boolean shouldActivate() {
         if (ThreadLocalRandom.current().nextFloat() >= SWIM_STROLL_CHANCE) return false;
-        if (!petEntity.canMove()) return false;
-        if (petEntity.hasTarget() && !petEntity.getMyPetTarget().isDead()) return false;
+        if (!pet.canMove()) return false;
+        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) return false;
 
-        Player owner = petEntity.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
 
         updateOwnerMovement(owner);
         if (!ownerStationary) return false;
 
-        return petEntity.getLocation().distanceSquared(owner.getLocation()) <= STATIONARY_MAX_DIST_SQ;
+        return mob.getLocation().distanceSquared(owner.getLocation()) <= STATIONARY_MAX_DIST_SQ;
     }
 
     @Override
     public boolean shouldStayActive() {
-        Player owner = petEntity.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
         updateOwnerMovement(owner);
-        if (!petEntity.canMove()) return false;
+        if (!pet.canMove()) return false;
         if (moveTo == null) return false;
-        if (petEntity.getLocation().distance(moveTo) < 0.75) return false;
+        if (mob.getLocation().distance(moveTo) < 0.75) return false;
         if (timeToMove <= 0) return false;
-        if (petEntity.hasTarget() && !petEntity.getMyPetTarget().isDead()) return false;
+        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) return false;
         return true;
     }
 
@@ -122,11 +125,11 @@ public class PetRandomSwimGoal implements Goal<Mob> {
         Location target = findSwimTarget();
         if (target == null) return;
         moveTo = target;
-        timeToMove = Math.max(3, (int) (petEntity.getLocation().distance(moveTo) / 3));
+        timeToMove = Math.max(3, (int) (mob.getLocation().distance(moveTo) / 3));
         // See PetRandomStrollGoal.start(): gate the speed modifier on a
         // successful navigateTo() to avoid leaking it on path rejection.
-        if (petEntity.getHandle().getPetNavigation().navigateTo(moveTo)) {
-            petEntity.getHandle().getPetNavigation().getParameters().addSpeedModifier("RandomStroll", SWIM_SPEED);
+        if (pet.getPetNavigation().navigateTo(moveTo)) {
+            pet.getPetNavigation().getParameters().addSpeedModifier("RandomStroll", SWIM_SPEED);
         } else {
             moveTo = null;
         }
@@ -134,8 +137,8 @@ public class PetRandomSwimGoal implements Goal<Mob> {
 
     @Override
     public void stop() {
-        petEntity.getHandle().getPetNavigation().getParameters().removeSpeedModifier("RandomStroll");
-        petEntity.getHandle().getPetNavigation().stop();
+        pet.getPetNavigation().getParameters().removeSpeedModifier("RandomStroll");
+        pet.getPetNavigation().stop();
         moveTo = null;
     }
 
@@ -145,11 +148,11 @@ public class PetRandomSwimGoal implements Goal<Mob> {
     }
 
     private Location findSwimTarget() {
-        Player owner = petEntity.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         if (owner == null) return null;
 
         // If not in water, don't swim-stroll
-        if (!petEntity.isInWater()) return null;
+        if (!mob.isInWater()) return null;
 
         Location ownerLoc = owner.getLocation();
         ThreadLocalRandom rng = ThreadLocalRandom.current();
@@ -165,7 +168,7 @@ public class PetRandomSwimGoal implements Goal<Mob> {
             if (type != Material.WATER && type != Material.BUBBLE_COLUMN) continue;
 
             // Check distance from pet
-            if (petEntity.getLocation().distanceSquared(candidate) > 9.0) continue;
+            if (mob.getLocation().distanceSquared(candidate) > 9.0) continue;
 
             return candidate;
         }

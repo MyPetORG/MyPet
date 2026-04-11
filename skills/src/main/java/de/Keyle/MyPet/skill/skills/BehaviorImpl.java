@@ -48,7 +48,7 @@ import static de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode.*;
  * Robustness: The implementation ensures the selected behavior is always one of the
  * currently active modes and aligns the internal iterator using a bounded algorithm
  * to avoid infinite loops. When an unavailable mode is requested, it falls back to
- * {@link de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode#Normal}.
+ * {@link Behavior.BehaviorMode#Normal}.
  */
 public class BehaviorImpl implements Behavior {
 

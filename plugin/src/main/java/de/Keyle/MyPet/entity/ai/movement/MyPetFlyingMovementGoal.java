@@ -23,7 +23,8 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPet;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -77,7 +78,7 @@ public class MyPetFlyingMovementGoal implements Goal<Mob> {
      */
     private static final double DIRECT_VELOCITY_SCALE = 0.25D;
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
     private final Mob mob;
     private final float maxTurn;
 
@@ -86,9 +87,9 @@ public class MyPetFlyingMovementGoal implements Goal<Mob> {
     private double wantedX, wantedY, wantedZ;
     private double speedModifier = 1.0D;
 
-    public MyPetFlyingMovementGoal(MyPetBukkitEntity petEntity, float maxTurn) {
-        this.petEntity = petEntity;
-        this.mob = (Mob) petEntity;
+    public MyPetFlyingMovementGoal(MyPet pet, Mob mob, float maxTurn) {
+        this.pet = pet;
+        this.mob = mob;
         this.maxTurn = maxTurn;
     }
 

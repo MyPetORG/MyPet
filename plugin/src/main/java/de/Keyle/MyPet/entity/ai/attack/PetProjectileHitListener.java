@@ -1,6 +1,8 @@
 package de.Keyle.MyPet.entity.ai.attack;
 
 import org.bukkit.Bukkit;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -66,17 +68,31 @@ public class PetProjectileHitListener implements Listener {
             return;
         }
 
-        // Resolve the owner for kill credit
-        Entity damager = event.getEntity().getShooter() instanceof Entity e ? e : event.getEntity();
+        // Resolve the owner and pet mob for Paper DamageSource kill credit.
+        Entity shooter = event.getEntity().getShooter() instanceof Entity e ? e : event.getEntity();
+        Player owner = null;
         String ownerUuid = pdc.get(PetRangedAttackGoal.PROJECTILE_OWNER_KEY, PersistentDataType.STRING);
         if (ownerUuid != null) {
-            Player owner = Bukkit.getPlayer(UUID.fromString(ownerUuid));
-            if (owner != null) {
-                damager = owner;
-            }
+            owner = Bukkit.getPlayer(UUID.fromString(ownerUuid));
         }
 
-        target.damage(damage, damager);
+        // Build a Paper DamageSource that credits the owner as the causing
+        // entity (routing XP + drops to them) while naming the pet or the
+        // projectile as the direct source.
+        DamageSource.Builder builder = DamageSource
+                .builder(DamageType.MOB_PROJECTILE)
+                .withDirectEntity(event.getEntity());
+        if (owner != null && owner.isOnline()) {
+            builder = builder.withCausingEntity(owner);
+        } else if (shooter != null) {
+            builder = builder.withCausingEntity(shooter);
+        }
+
+        try {
+            target.damage(damage, builder.build());
+        } catch (IllegalStateException ignored) {
+            target.damage(damage, owner != null ? owner : shooter);
+        }
 
         // Do not call event.getEntity().remove() here. ProjectileHitEvent
         // fires before vanilla onHit() runs. Calling remove() pre-empts

@@ -53,7 +53,7 @@ public class MyCamel extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             this.saddle.setAmount(1);
         }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -66,7 +66,7 @@ public class MyCamel extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         CompoundBinaryTag info = super.writeExtendedInfo();
 
         // Write saddle with string slot name for MC versions before 1.21 (which lack EquipmentSlot.SADDLE)
-        if (hasSaddle() && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21") < 0) {
+        if (hasSaddle() && !MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21")) {
             CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
             for (String key : info.keySet()) {
                 builder.put(key, info.get(key));

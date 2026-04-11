@@ -5,7 +5,8 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
@@ -46,16 +47,18 @@ import java.util.EnumSet;
  */
 public class PetHurtByTargetGoal implements Goal<Mob> {
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private final MyPet myPet;
     private LivingEntity target = null;
 
     /**
      * @param petEntity the pet that will retaliate when struck
      */
-    public PetHurtByTargetGoal(MyPetBukkitEntity petEntity) {
-        this.petEntity = petEntity;
-        this.myPet = petEntity.getMyPet();
+    public PetHurtByTargetGoal(MyPet pet, Mob mob) {
+        this.pet = pet;
+        this.mob = mob;
+        this.myPet = pet;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
         if (ownerPlayer == null) {
             return false;
         }
-        LivingEntity attacker = PetDamageTracker.getLastAttacker((LivingEntity) petEntity);
+        LivingEntity attacker = PetDamageTracker.getLastAttacker(mob);
         if (attacker == null) {
             return false;
         }
@@ -80,7 +83,7 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
             return false;
         }
         target = attacker;
-        if (target.equals(petEntity)) {
+        if (target.equals(mob)) {
             return false;
         }
         if (target instanceof ArmorStand) {
@@ -93,8 +96,10 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
             if (!MyPetApi.getHookHelper().canHurt(ownerPlayer, targetPlayer, true)) {
                 return false;
             }
-        } else if (target instanceof MyPetBukkitEntity otherPet) {
-            if (!MyPetApi.getHookHelper().canHurt(ownerPlayer, otherPet.getMyPet().getOwner().getPlayer(), true)) {
+        } else if (PetEntityMarker.isMarked(target)) {
+            MyPet otherPet = MyPetApi.getMyPetManager().getMyPetFromEntity(target);
+            if (otherPet != null && otherPet.getOwner() != null
+                    && !MyPetApi.getHookHelper().canHurt(ownerPlayer, otherPet.getOwner().getPlayer(), true)) {
                 return false;
             }
         } else if (target instanceof Tameable tameable) {
@@ -120,7 +125,7 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
                 if (target instanceof Tameable tameable && tameable.isTamed()) {
                     return false;
                 }
-                if (target instanceof MyPetBukkitEntity) {
+                if (PetEntityMarker.isMarked(target)) {
                     return false;
                 }
                 return !(target instanceof Player);
@@ -131,34 +136,34 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
-        if (!petEntity.canMove()) {
+        if (!pet.canMove()) {
             return false;
         }
-        if (!petEntity.hasTarget()) {
+        if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity currentTarget = petEntity.getMyPetTarget();
+        LivingEntity currentTarget = pet.getMyPetTarget();
         if (currentTarget == null || currentTarget.isDead()) {
             return false;
         }
-        if (!currentTarget.getWorld().equals(petEntity.getWorld())) {
+        if (!currentTarget.getWorld().equals(mob.getWorld())) {
             return false;
         }
-        if (petEntity.getLocation().distanceSquared(currentTarget.getLocation()) > 400) {
+        if (mob.getLocation().distanceSquared(currentTarget.getLocation()) > 400) {
             return false;
         }
-        Player owner = petEntity.getOwner().getPlayer();
-        return owner != null && petEntity.getLocation().distanceSquared(owner.getLocation()) <= 600;
+        Player owner = pet.getOwner().getPlayer();
+        return owner != null && mob.getLocation().distanceSquared(owner.getLocation()) <= 600;
     }
 
     @Override
     public void start() {
-        petEntity.setTarget(this.target, TargetPriority.GetHurt);
+        pet.setTarget(this.target, TargetPriority.GetHurt);
     }
 
     @Override
     public void stop() {
-        petEntity.forgetTarget();
+        pet.forgetTarget();
     }
 
     @Override

@@ -20,27 +20,29 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 /**
  * Handles riding pets when players interact with them using the configured ride item.
  */
 public class RideInteractListener implements Listener {
 
-    private static boolean isOwner(Player player, MyPetBukkitEntity petEntity) {
-        MyPet apiPet = petEntity.getMyPet();
-        return apiPet != null && apiPet.getOwner() != null && apiPet.getOwner().getPlayer() != null
-                && apiPet.getOwner().getPlayer().getUniqueId().equals(player.getUniqueId());
+    private static boolean isOwner(Player player, MyPet pet) {
+        return pet != null && pet.getOwner() != null && pet.getOwner().getPlayer() != null
+                && pet.getOwner().getPlayer().getUniqueId().equals(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -48,17 +50,18 @@ public class RideInteractListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (!(event.getRightClicked() instanceof MyPetBukkitEntity petEntity)) {
+        if (!PetEntityMarker.isMarked(event.getRightClicked())) {
             return;
         }
-        // Only consider main-hand interactions
-        if (event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) {
+        if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
 
         final Player player = event.getPlayer();
+        MyPet myPet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getRightClicked());
+        if (myPet == null) return;
 
-        if (!isOwner(player, petEntity)) {
+        if (!isOwner(player, myPet)) {
             return;
         }
 
@@ -66,8 +69,7 @@ public class RideInteractListener implements Listener {
             return;
         }
 
-        MyPet myPet = petEntity.getMyPet();
-        if (myPet == null || !petEntity.canMove() || !myPet.getSkills().isActive(Ride.class)) {
+        if (!myPet.canMove() || !myPet.getSkills().isActive(Ride.class)) {
             return;
         }
         if (!Permissions.hasExtended(player, "MyPet.extended.ride")) {
@@ -75,9 +77,10 @@ public class RideInteractListener implements Listener {
             return;
         }
 
-        // Use Bukkit API for riding (available since 1.11)
-        if (!petEntity.getPassengers().contains(player)) {
-            boolean mounted = petEntity.addPassenger(player);
+        Mob mob = myPet.getBukkitEntity();
+        if (mob == null) return;
+        if (!mob.getPassengers().contains(player)) {
+            boolean mounted = mob.addPassenger(player);
             if (mounted) {
                 event.setCancelled(true);
             }
@@ -86,20 +89,24 @@ public class RideInteractListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onMonitorRideFinisher(PlayerInteractEntityEvent event) {
-        if (!(event.getRightClicked() instanceof MyPetBukkitEntity petEntity)) {
+        if (!PetEntityMarker.isMarked(event.getRightClicked())) {
             return;
         }
-        if (event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) {
+        if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
+        MyPet myPet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getRightClicked());
+        if (myPet == null) return;
         final Player player = event.getPlayer();
-        if (!isOwner(player, petEntity)) {
+        if (!isOwner(player, myPet)) {
             return;
         }
         if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM != null && !Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(player.getInventory().getItemInMainHand())) {
             return;
         }
-        if (event.isCancelled() && !petEntity.getPassengers().contains(player)) {
+        Mob mob = myPet.getBukkitEntity();
+        if (mob == null) return;
+        if (event.isCancelled() && !mob.getPassengers().contains(player)) {
             event.setCancelled(false);
         }
     }

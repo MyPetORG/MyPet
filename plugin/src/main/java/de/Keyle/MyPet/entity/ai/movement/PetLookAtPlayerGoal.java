@@ -3,7 +3,8 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPet;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -41,7 +42,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PetLookAtPlayerGoal implements Goal<Mob> {
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private final double range;
     private final float lookAtPlayerChance;
     private Player targetPlayer;
@@ -54,8 +56,8 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
      * @param petEntity the pet whose head will rotate
      * @param range     maximum look distance in blocks
      */
-    public PetLookAtPlayerGoal(MyPetBukkitEntity petEntity, float range) {
-        this(petEntity, range, 0.02F);
+    public PetLookAtPlayerGoal(MyPet pet, Mob mob, float range) {
+        this(pet, mob, range, 0.02F);
     }
 
     /**
@@ -64,8 +66,9 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
      * @param lookAtPlayerChance per-tick probability of activation ({@code 0}..{@code 1});
      *                           only rolled when an eligible player is in range
      */
-    public PetLookAtPlayerGoal(MyPetBukkitEntity petEntity, float range, float lookAtPlayerChance) {
-        this.petEntity = petEntity;
+    public PetLookAtPlayerGoal(MyPet pet, Mob mob, float range, float lookAtPlayerChance) {
+        this.pet = pet;
+        this.mob = mob;
         this.range = range;
         this.lookAtPlayerChance = lookAtPlayerChance;
     }
@@ -75,15 +78,15 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
         if (ThreadLocalRandom.current().nextFloat() >= this.lookAtPlayerChance) {
             return false;
         }
-        if (petEntity.hasTarget() && !petEntity.getMyPetTarget().isDead()) {
+        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) {
             return false;
         }
-        if (!petEntity.getPassengers().isEmpty()) {
+        if (!mob.getPassengers().isEmpty()) {
             return false;
         }
-        Location loc = petEntity.getLocation();
+        Location loc = mob.getLocation();
         Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, range, range, range,
-                e -> e instanceof Player && !e.equals(petEntity));
+                e -> e instanceof Player && !e.equals(mob));
         Player nearest = null;
         double nearestDistSq = Double.MAX_VALUE;
         for (Entity e : nearby) {
@@ -102,10 +105,10 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
         if (targetPlayer == null || targetPlayer.isDead()) {
             return false;
         }
-        if (petEntity.getLocation().distanceSquared(targetPlayer.getLocation()) > range * range) {
+        if (mob.getLocation().distanceSquared(targetPlayer.getLocation()) > range * range) {
             return false;
         }
-        if (!petEntity.getPassengers().isEmpty()) {
+        if (!mob.getPassengers().isEmpty()) {
             return false;
         }
         return this.ticksUntilStopLooking > 0;
@@ -130,7 +133,6 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
         if (targetPlayer == null) {
             return;
         }
-        Mob mob = (Mob) petEntity;
         mob.lookAt(targetPlayer, mob.getHeadRotationSpeed(), mob.getMaxHeadPitch());
         this.ticksUntilStopLooking--;
     }

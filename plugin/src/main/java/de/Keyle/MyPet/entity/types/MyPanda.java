@@ -22,52 +22,108 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Panda;
 
-@Getter
 public class MyPanda extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPanda {
 
-    protected Panda.Gene mainGene = Panda.Gene.NORMAL;
-    protected Panda.Gene hiddenGene = Panda.Gene.NORMAL;
+    /**
+     * Gene storage by name (e.g. "NORMAL", "LAZY", "WORRIED") — drift-safe
+     * across Paper updates that reorder or extend {@code Panda.Gene}.
+     */
+    protected String mainGeneName = Panda.Gene.NORMAL.name();
+    protected String hiddenGeneName = Panda.Gene.NORMAL.name();
 
     public MyPanda(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
+    public Panda.Gene getMainGene() {
+        try {
+            return Panda.Gene.valueOf(mainGeneName);
+        } catch (Throwable ignored) {
+            return Panda.Gene.NORMAL;
+        }
+    }
+
+    @Override
+    public Panda.Gene getHiddenGene() {
+        try {
+            return Panda.Gene.valueOf(hiddenGeneName);
+        } catch (Throwable ignored) {
+            return Panda.Gene.NORMAL;
+        }
+    }
+
+    @Override
     public void setMainGene(Panda.Gene gene) {
-        this.mainGene = gene;
+        if (gene != null) {
+            this.mainGeneName = gene.name();
+        }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
     @Override
     public void setHiddenGene(Panda.Gene gene) {
-        this.hiddenGene = gene;
+        if (gene != null) {
+            this.hiddenGeneName = gene.name();
+        }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
     @Override
     public CompoundBinaryTag writeExtendedInfo() {
         CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putInt("MainGene", getMainGene().ordinal());
-        info = info.putInt("HiddenGene", getHiddenGene().ordinal());
+        info = info.putString("MainGeneName", mainGeneName);
+        info = info.putString("HiddenGeneName", hiddenGeneName);
         return info;
     }
 
     @Override
     public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.keySet().contains("MainGene")) {
-            setMainGene(Panda.Gene.values()[info.getInt("MainGene")]);
+        if (info.keySet().contains("MainGeneName")) {
+            String name = info.getString("MainGeneName");
+            if (name != null && !name.isEmpty()) {
+                try {
+                    Panda.Gene.valueOf(name);
+                    this.mainGeneName = name;
+                } catch (Throwable ignored) {
+                }
+            }
+        } else if (info.keySet().contains("MainGene")) {
+            try {
+                int ord = info.getInt("MainGene");
+                Panda.Gene[] values = Panda.Gene.values();
+                if (ord >= 0 && ord < values.length) {
+                    this.mainGeneName = values[ord].name();
+                }
+            } catch (Throwable ignored) {
+            }
         }
-        if (info.keySet().contains("HiddenGene")) {
-            setHiddenGene(Panda.Gene.values()[info.getInt("HiddenGene")]);
+        if (info.keySet().contains("HiddenGeneName")) {
+            String name = info.getString("HiddenGeneName");
+            if (name != null && !name.isEmpty()) {
+                try {
+                    Panda.Gene.valueOf(name);
+                    this.hiddenGeneName = name;
+                } catch (Throwable ignored) {
+                }
+            }
+        } else if (info.keySet().contains("HiddenGene")) {
+            try {
+                int ord = info.getInt("HiddenGene");
+                Panda.Gene[] values = Panda.Gene.values();
+                if (ord >= 0 && ord < values.length) {
+                    this.hiddenGeneName = values[ord].name();
+                }
+            } catch (Throwable ignored) {
+            }
         }
     }
 }

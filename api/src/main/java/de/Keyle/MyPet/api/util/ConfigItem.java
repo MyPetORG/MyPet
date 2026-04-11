@@ -21,11 +21,17 @@
 package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
-public abstract class ConfigItem {
+/**
+ * A configured item — typically loaded from config (e.g., {@code RIDE_ITEM},
+ * {@code CONTROL_ITEM}, {@code GROW_UP_ITEM}) and compared against items the
+ * player is holding.
+ */
+public class ConfigItem {
 
     protected ItemStack item = null;
     protected DurabilityMode durabilityMode = DurabilityMode.NotUsed;
@@ -37,8 +43,8 @@ public abstract class ConfigItem {
 
     public ConfigItem(String data) {
         if (data.startsWith(".")) {
-            // Assumption: This is a 1.20.5+ Item
-            load(data.replace(". ", ""));
+            // "1.20.5+" item encoding: dot prefix indicates modern component string.
+            load(data.replaceFirst("^\\.\\s?", ""));
             return;
         }
 
@@ -58,14 +64,14 @@ public abstract class ConfigItem {
     }
 
     public static ConfigItem createConfigItem(String data) {
-        if (data.equalsIgnoreCase("none")) {    //For enabling non itembound interaction (riding etc)
+        if (data.equalsIgnoreCase("none")) {
             return null;
         }
-        return MyPetApi.getCompatUtil().getCompatInstance(ConfigItem.class, "util", "ConfigItem", data);
+        return new ConfigItem(data);
     }
 
     public static ConfigItem createConfigItem(ItemStack item, DurabilityMode durabilityMode) {
-        return MyPetApi.getCompatUtil().getCompatInstance(ConfigItem.class, "util", "ConfigItem", item, durabilityMode);
+        return new ConfigItem(item, durabilityMode);
     }
 
     public boolean compare(ItemStack compareItem) {
@@ -99,6 +105,12 @@ public abstract class ConfigItem {
                     break;
             }
         }
+        // If the configured item has metadata (custom name, lore, data components),
+        // require the compared item to match metadata too. Without this, a plain
+        // wheat would match a renamed "Super Wheat" configured as a special food.
+        if (item.hasItemMeta() && !item.isSimilar(compareItem)) {
+            return false;
+        }
         return true;
     }
 
@@ -110,17 +122,53 @@ public abstract class ConfigItem {
         return durabilityMode;
     }
 
+    @Override
     public String toString() {
         return "ConfigItem{mode: " + durabilityMode.name() + ", item: " + item + "}";
     }
 
-    public abstract boolean compare(Object compareItem);
-
+    /**
+     * Parses a modern-format item string like {@code "minecraft:wheat[custom_name='...']"}
+     * via Paper's {@link org.bukkit.inventory.ItemFactory#createItemStack(String)}.
+     */
     public void load(String data) {
-        MyPetApi.getLogger().warning("You are trying to use 1.20.5+ item-NBT! You need to use 1.13 item IDs and NBT for this version.");
+        try {
+            this.item = Bukkit.getItemFactory().createItemStack(data);
+        } catch (Throwable e) {
+            MyPetApi.getLogger().warning("Error parsing config item: " + e.getMessage() + " caused by: " + data);
+        }
     }
 
-    public abstract void load(String materialId, String data);
+    /**
+     * Parses a legacy format where the material ID is separate from the optional
+     * NBT/components suffix. Delegates to Paper's
+     * {@link org.bukkit.inventory.ItemFactory#createItemStack(String)} with the
+     * concatenated string, or falls back to a bare material-only ItemStack.
+     */
+    public void load(String materialId, String data) {
+        Material material = Material.matchMaterial(materialId);
+        if (material == null) {
+            MyPetApi.getLogger().warning(materialId + " is not a valid item ID!");
+            return;
+        }
+
+        // Default: bare material, no extra data.
+        this.item = new ItemStack(material);
+
+        if (data != null && !data.trim().isEmpty()) {
+            String trimmed = data.trim();
+            // Legacy NBT format ({...}) or modern component format ([...]) — both
+            // parseable by ItemFactory.createItemStack() when prefixed with the material.
+            if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+                try {
+                    this.item = Bukkit.getItemFactory().createItemStack(materialId + trimmed);
+                } catch (Throwable e) {
+                    MyPetApi.getLogger().warning("Error parsing config item data: " + e.getMessage()
+                            + " caused by: " + materialId + " " + trimmed);
+                }
+            }
+        }
+    }
 
     public enum DurabilityMode {
         Smaller, Bigger, NotUsed, Equal

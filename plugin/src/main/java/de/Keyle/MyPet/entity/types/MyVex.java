@@ -52,7 +52,7 @@ public class MyVex extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVe
     public void setGlowing(boolean flag) {
         this.glowing = flag;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 

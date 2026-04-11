@@ -19,13 +19,11 @@ tasks.processResources {
 
     val buildNumber = rootProject.findProperty("BUILD_NUMBER")?.toString() ?: "local"
     val minecraftVersion: String by rootProject.extra
-    val bukkitPackets: String by rootProject.extra
 
     val filteringProps = mapOf(
         "buildNumber" to buildNumber,
         "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
         "minecraft" to mapOf("version" to minecraftVersion),
-        "bukkit" to mapOf("packets" to bukkitPackets),
         "mypetVersion" to rootProject.version,
         "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
     )

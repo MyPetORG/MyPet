@@ -5,11 +5,11 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
-import de.Keyle.MyPet.api.skill.skills.Ranged.Projectile;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -54,7 +54,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * skill instance is momentarily {@code null} (e.g. during a skilltree
  * hot-reload that clears the skills container but leaves
  * {@code MyPet.getRangedDamage()} returning a cached value), the goal falls
- * back to a 1-second cooldown and the default {@link Projectile#Arrow} type
+ * back to a 1-second cooldown and the default {@link Ranged.Projectile#Arrow} type
  * rather than crashing.
  */
 public class PetRangedAttackGoal implements Goal<Mob> {
@@ -70,7 +70,8 @@ public class PetRangedAttackGoal implements Goal<Mob> {
     // threshold in PetMeleeAttackGoal to avoid a dead zone between the two goals.
     static final double MELEE_PREFERENCE_RANGE_SQ = 25.0;
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private final MyPet myPet;
     private final float walkSpeedModifier;
     private final double rangeSq;
@@ -84,9 +85,10 @@ public class PetRangedAttackGoal implements Goal<Mob> {
      * @param range             maximum engagement distance in blocks (stored internally as its square for
      *                          per-tick distance comparisons)
      */
-    public PetRangedAttackGoal(MyPetBukkitEntity petEntity, float walkSpeedModifier, float range) {
-        this.petEntity = petEntity;
-        this.myPet = petEntity.getMyPet();
+    public PetRangedAttackGoal(MyPet pet, Mob mob, float walkSpeedModifier, float range) {
+        this.pet = pet;
+        this.mob = mob;
+        this.myPet = pet;
         this.walkSpeedModifier = walkSpeedModifier;
         this.rangeSq = range * range;
     }
@@ -96,10 +98,10 @@ public class PetRangedAttackGoal implements Goal<Mob> {
         if (myPet.getRangedDamage() <= 0) {
             return false;
         }
-        if (!petEntity.canMove() || !petEntity.hasTarget()) {
+        if (!pet.canMove() || !pet.hasTarget()) {
             return false;
         }
-        LivingEntity target = petEntity.getMyPetTarget();
+        LivingEntity target = pet.getMyPetTarget();
         if (target == null || target.isDead() || target instanceof ArmorStand) {
             return false;
         }
@@ -108,7 +110,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
         // myPet.getRangedDamage() still returns a cached non-zero value, so the
         // comparison is gated on skill presence rather than crashing.
         double meleeDamage = myPet.getDamage();
-        if (meleeDamage > 0 && petEntity.getLocation().distanceSquared(target.getLocation()) < MELEE_PREFERENCE_RANGE_SQ) {
+        if (meleeDamage > 0 && mob.getLocation().distanceSquared(target.getLocation()) < MELEE_PREFERENCE_RANGE_SQ) {
             Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
             if (rangedSkill != null && meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return false;
@@ -121,7 +123,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
             }
             if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
                 if (target instanceof Tameable t && t.isTamed()) return false;
-                if (target instanceof MyPetBukkitEntity) return false;
+                if (PetEntityMarker.isMarked(target)) return false;
                 if (target instanceof Player) return false;
             }
         }
@@ -131,10 +133,10 @@ public class PetRangedAttackGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
-        if (!petEntity.hasTarget() || myPet.getRangedDamage() <= 0 || !petEntity.canMove()) {
+        if (!pet.hasTarget() || myPet.getRangedDamage() <= 0 || !pet.canMove()) {
             return false;
         }
-        LivingEntity current = petEntity.getMyPetTarget();
+        LivingEntity current = pet.getMyPetTarget();
         if (current == null || !current.equals(target)) {
             return false;
         }
@@ -142,7 +144,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
         // See the matching comment in shouldActivate() for the rationale behind the
         // null gate on rangedSkill.
         double meleeDamage = myPet.getDamage();
-        if (meleeDamage > 0 && petEntity.getLocation().distanceSquared(target.getLocation()) < MELEE_PREFERENCE_RANGE_SQ) {
+        if (meleeDamage > 0 && mob.getLocation().distanceSquared(target.getLocation()) < MELEE_PREFERENCE_RANGE_SQ) {
             Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
             if (rangedSkill != null && meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return false;
@@ -153,7 +155,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
             if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) return false;
             if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
                 if (target instanceof Tameable t && t.isTamed()) return false;
-                if (target instanceof MyPetBukkitEntity) return false;
+                if (PetEntityMarker.isMarked(target)) return false;
                 if (target instanceof Player) return false;
             }
         }
@@ -164,13 +166,12 @@ public class PetRangedAttackGoal implements Goal<Mob> {
     public void stop() {
         this.target = null;
         this.lastSeenTimer = 0;
-        petEntity.getHandle().getPetNavigation().getParameters().removeSpeedModifier("RangedAttack");
+        pet.getPetNavigation().getParameters().removeSpeedModifier("RangedAttack");
     }
 
     @Override
     public void tick() {
-        Mob mob = (Mob) petEntity;
-        double distSq = petEntity.getLocation().distanceSquared(target.getLocation());
+        double distSq = mob.getLocation().distanceSquared(target.getLocation());
         boolean canSee = mob.hasLineOfSight(target);
 
         if (canSee) {
@@ -180,11 +181,11 @@ public class PetRangedAttackGoal implements Goal<Mob> {
         }
 
         if (distSq <= rangeSq && lastSeenTimer >= 20) {
-            petEntity.getHandle().getPetNavigation().getParameters().removeSpeedModifier("RangedAttack");
-            petEntity.getHandle().getPetNavigation().stop();
+            pet.getPetNavigation().getParameters().removeSpeedModifier("RangedAttack");
+            pet.getPetNavigation().stop();
         } else {
-            petEntity.getHandle().getPetNavigation().getParameters().addSpeedModifier("RangedAttack", walkSpeedModifier);
-            petEntity.getHandle().getPetNavigation().navigateTo(target.getLocation());
+            pet.getPetNavigation().getParameters().addSpeedModifier("RangedAttack", walkSpeedModifier);
+            pet.getPetNavigation().navigateTo(target.getLocation());
         }
 
         mob.lookAt(target, 30.0F, 30.0F);
@@ -200,26 +201,25 @@ public class PetRangedAttackGoal implements Goal<Mob> {
         }
     }
 
-    private Projectile getProjectile() {
+    private Ranged.Projectile getProjectile() {
         Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
         if (rangedSkill != null && rangedSkill.isActive()) {
             return rangedSkill.getProjectile().getValue();
         }
-        return Projectile.Arrow;
+        return Ranged.Projectile.Arrow;
     }
 
-    private void shootProjectile(LivingEntity target, float damage, Projectile projectile) {
-        Mob mob = (Mob) petEntity;
-        Location petLoc = petEntity.getLocation();
+    private void shootProjectile(LivingEntity target, float damage, Ranged.Projectile projectile) {
+        Location petLoc = mob.getLocation();
         Location targetLoc = target.getLocation();
         World world = petLoc.getWorld();
-        Player owner = petEntity.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         ThreadLocalRandom rng = ThreadLocalRandom.current();
 
         // Compute velocity from pet's eye level to target's body center
         // launchProjectile() spawns from the mob's eye position, so we calculate
         // direction from eye-to-eye (not feet-to-feet) to avoid aiming too high
-        Location petEye = petLoc.clone().add(0, petEntity.getEyeHeight(), 0);
+        Location petEye = petLoc.clone().add(0, mob.getEyeHeight(), 0);
         Location targetBody = targetLoc.clone().add(0, target.getHeight() * 0.5, 0);
         Vector direction = targetBody.subtract(petEye).toVector();
         double horizDist = Math.sqrt(direction.getX() * direction.getX() + direction.getZ() * direction.getZ());
@@ -227,10 +227,10 @@ public class PetRangedAttackGoal implements Goal<Mob> {
 
         switch (projectile) {
             case Arrow -> {
-                org.bukkit.entity.Arrow arrow = mob.launchProjectile(org.bukkit.entity.Arrow.class, direction.normalize().multiply(1.6), a -> {
+                Arrow arrow = mob.launchProjectile(Arrow.class, direction.normalize().multiply(1.6), a -> {
                     a.setDamage(damage);
                     a.setCritical(false);
-                    a.setShooter(owner != null ? owner : petEntity);
+                    a.setShooter(owner != null ? owner : mob);
                     a.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
                     // Mark as MyPet-fired so listeners can apply friendly-fire / duel
                     // logic (see PetRangedAttackGoal.getSourceMyPet). Arrows don't use
@@ -244,9 +244,9 @@ public class PetRangedAttackGoal implements Goal<Mob> {
                 world.playSound(petLoc, Sound.ENTITY_ARROW_SHOOT, 1.0F, 1.0F / (rng.nextFloat() * 0.4F + 0.8F));
             }
             case Trident -> {
-                org.bukkit.entity.Trident trident = mob.launchProjectile(org.bukkit.entity.Trident.class, direction.normalize().multiply(1.6), t -> {
+                Trident trident = mob.launchProjectile(Trident.class, direction.normalize().multiply(1.6), t -> {
                     t.setDamage(damage);
-                    t.setShooter(owner != null ? owner : petEntity);
+                    t.setShooter(owner != null ? owner : mob);
                     t.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
                     // See Arrow branch comment.
                     if (owner != null) {
@@ -256,15 +256,15 @@ public class PetRangedAttackGoal implements Goal<Mob> {
                 world.playSound(petLoc, Sound.ITEM_TRIDENT_THROW, 1.0F, 1.0F / (rng.nextFloat() * 0.4F + 0.8F));
             }
             case Snowball -> {
-                launchThrowable(mob, org.bukkit.entity.Snowball.class, direction, damage, owner,
+                launchThrowable(mob, Snowball.class, direction, damage, owner,
                         Sound.ENTITY_ARROW_SHOOT, 0.5F, 0.4F / (rng.nextFloat() * 0.4F + 0.8F));
             }
             case Egg -> {
-                launchThrowable(mob, org.bukkit.entity.Egg.class, direction, damage, owner,
+                launchThrowable(mob, Egg.class, direction, damage, owner,
                         Sound.ENTITY_ARROW_SHOOT, 0.5F, 0.4F / (rng.nextFloat() * 0.4F + 0.8F));
             }
             case EnderPearl -> {
-                launchThrowable(mob, org.bukkit.entity.EnderPearl.class, direction, damage, owner,
+                launchThrowable(mob, EnderPearl.class, direction, damage, owner,
                         Sound.ENTITY_ENDER_PEARL_THROW, 1.0F, 1.0F / (rng.nextFloat() * 0.4F + 0.8F));
             }
             case LlamaSpit -> {
@@ -274,49 +274,49 @@ public class PetRangedAttackGoal implements Goal<Mob> {
                 double spitHoriz = Math.sqrt(spitDir.getX() * spitDir.getX() + spitDir.getZ() * spitDir.getZ());
                 spitDir.setY(spitDir.getY() + spitHoriz * 0.2);
 
-                launchThrowable(mob, org.bukkit.entity.LlamaSpit.class, spitDir, damage, owner,
+                launchThrowable(mob, LlamaSpit.class, spitDir, damage, owner,
                         Sound.ENTITY_LLAMA_SPIT, 1.0F, 1.0F / (rng.nextFloat() * 0.4F + 0.8F));
             }
             case LargeFireball -> {
-                launchFireball(mob, org.bukkit.entity.LargeFireball.class, target, damage, owner,
+                launchFireball(mob, LargeFireball.class, target, damage, owner,
                         Sound.ENTITY_GHAST_SHOOT, 1.0F + rng.nextFloat(), rng.nextFloat() * 0.7F + 0.3F);
             }
             case SmallFireball -> {
-                launchFireball(mob, org.bukkit.entity.SmallFireball.class, target, damage, owner,
+                launchFireball(mob, SmallFireball.class, target, damage, owner,
                         Sound.ENTITY_GHAST_SHOOT, 1.0F + rng.nextFloat(), rng.nextFloat() * 0.7F + 0.3F);
             }
             case WitherSkull -> {
-                launchFireball(mob, org.bukkit.entity.WitherSkull.class, target, damage, owner,
+                launchFireball(mob, WitherSkull.class, target, damage, owner,
                         Sound.ENTITY_WITHER_SHOOT, 1.0F + rng.nextFloat(), rng.nextFloat() * 0.7F + 0.3F);
             }
             case DragonFireball -> {
-                launchFireball(mob, org.bukkit.entity.DragonFireball.class, target, damage, owner,
+                launchFireball(mob, DragonFireball.class, target, damage, owner,
                         Sound.ENTITY_ENDER_DRAGON_SHOOT, 1.0F + rng.nextFloat(), rng.nextFloat() * 0.7F + 0.3F);
             }
         }
     }
 
-    private <T extends org.bukkit.entity.Projectile> void launchThrowable(Mob mob, Class<T> type,
+    private <T extends Projectile> void launchThrowable(Mob mob, Class<T> type,
                                                                           Vector direction, float damage, Player owner, Sound sound, float volume, float pitch) {
         mob.launchProjectile(type, direction.normalize().multiply(1.6), p -> {
-            p.setShooter(owner != null ? owner : petEntity);
+            p.setShooter(owner != null ? owner : mob);
             PersistentDataContainer pdc = p.getPersistentDataContainer();
             pdc.set(PROJECTILE_DAMAGE_KEY, PersistentDataType.FLOAT, damage);
             if (owner != null) {
                 pdc.set(PROJECTILE_OWNER_KEY, PersistentDataType.STRING, owner.getUniqueId().toString());
             }
         });
-        petEntity.getLocation().getWorld().playSound(petEntity.getLocation(), sound, volume, pitch);
+        mob.getLocation().getWorld().playSound(mob.getLocation(), sound, volume, pitch);
     }
 
     private <T extends Fireball> void launchFireball(Mob mob, Class<T> type,
                                                      LivingEntity target, float damage, Player owner, Sound sound, float volume, float pitch) {
-        Location petLoc = petEntity.getLocation();
+        Location petLoc = mob.getLocation();
         Vector dir = target.getLocation().add(0, target.getHeight() / 2.0, 0)
-                .subtract(petLoc.clone().add(0, petEntity.getHeight() / 2.0 + 0.5, 0)).toVector();
+                .subtract(petLoc.clone().add(0, mob.getHeight() / 2.0 + 0.5, 0)).toVector();
 
         mob.launchProjectile(type, dir.normalize(), fb -> {
-            fb.setShooter(owner != null ? owner : petEntity);
+            fb.setShooter(owner != null ? owner : mob);
             fb.setYield(0); // no explosion
             fb.setIsIncendiary(false);
             PersistentDataContainer pdc = fb.getPersistentDataContainer();
@@ -325,7 +325,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
                 pdc.set(PROJECTILE_OWNER_KEY, PersistentDataType.STRING, owner.getUniqueId().toString());
             }
         });
-        petEntity.getLocation().getWorld().playSound(petLoc, sound, volume, pitch);
+        mob.getLocation().getWorld().playSound(petLoc, sound, volume, pitch);
 
         // Schedule timeout removal (100 ticks = 5 seconds)
         // We can't easily reference the projectile after launch in the consumer, so we schedule cleanup
@@ -351,7 +351,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
      * @param projectile the projectile that dealt damage
      * @return the source pet, or {@code null} if not MyPet-fired / unresolvable
      */
-    public static MyPet getSourceMyPet(org.bukkit.entity.Projectile projectile) {
+    public static MyPet getSourceMyPet(Projectile projectile) {
         PersistentDataContainer pdc = projectile.getPersistentDataContainer();
         String ownerUuidStr = pdc.get(PROJECTILE_OWNER_KEY, PersistentDataType.STRING);
         if (ownerUuidStr == null) {

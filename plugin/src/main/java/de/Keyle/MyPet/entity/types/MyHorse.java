@@ -29,6 +29,7 @@ import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.ListBinaryTag;
 import org.bukkit.Material;
+import org.bukkit.entity.Horse;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
@@ -40,7 +41,13 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     protected ItemStack armor = null;
     protected ItemStack saddle = null;
-    protected int variant = 0;
+    /**
+     * Stored by enum-name for drift-safety. The public {@code int} variant API
+     * preserves the legacy packed encoding ({@code color | (style << 8)}) by
+     * deriving it from {@link #colorName}/{@link #styleName} on demand.
+     */
+    protected String colorName = "WHITE";
+    protected String styleName = "NONE";
 
     public MyHorse(MyPetPlayer petOwner) {
         super(petOwner);
@@ -61,7 +68,7 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         }
 
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -78,12 +85,69 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             this.saddle.setAmount(1);
         }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
     public boolean hasSaddle() {
         return saddle != null;
+    }
+
+    /**
+     * Returns the legacy packed variant: {@code color.ordinal() | style.ordinal() << 8}.
+     * Ordinals are computed from the currently resolved {@link Horse.Color}
+     * and {@link Horse.Style} enums.
+     */
+    public int getVariant() {
+        try {
+            Horse.Color color = resolveColor();
+            Horse.Style style = resolveStyle();
+            int c = color != null ? color.ordinal() : 0;
+            int s = style != null ? style.ordinal() : 0;
+            return (c & 0xFF) | ((s & 0xFF) << 8);
+        } catch (Throwable ignored) {
+            return 0;
+        }
+    }
+
+    public void setVariant(int variant) {
+        int colorIdx = variant & 0xFF;
+        int styleIdx = (variant >> 8) & 0xFF;
+        try {
+            Horse.Color[] colors = Horse.Color.values();
+            if (colorIdx >= 0 && colorIdx < colors.length) {
+                this.colorName = colors[colorIdx].name();
+            }
+        } catch (Throwable ignored) {
+        }
+        try {
+            Horse.Style[] styles = Horse.Style.values();
+            if (styleIdx >= 0 && styleIdx < styles.length) {
+                this.styleName = styles[styleIdx].name();
+            }
+        } catch (Throwable ignored) {
+        }
+        if (status == PetState.Here) {
+            updateVisuals();
+        }
+    }
+
+    public Horse.Color resolveColor() {
+        try {
+            return Horse.Color.valueOf(colorName);
+        } catch (Throwable ignored) {
+            Horse.Color[] values = Horse.Color.values();
+            return values.length > 0 ? values[0] : null;
+        }
+    }
+
+    public Horse.Style resolveStyle() {
+        try {
+            return Horse.Style.valueOf(styleName);
+        } catch (Throwable ignored) {
+            Horse.Style[] values = Horse.Style.values();
+            return values.length > 0 ? values[0] : null;
+        }
     }
 
     @Override
@@ -93,11 +157,12 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         for (String key : info.keySet()) {
             builder.put(key, info.get(key));
         }
-        builder.putInt("Variant", getVariant());
+        builder.putString("ColorName", colorName);
+        builder.putString("StyleName", styleName);
 
         // Write horse-specific equipment with string slot names for MC versions before 1.21
         // (which lack EquipmentSlot.BODY and EquipmentSlot.SADDLE)
-        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21") < 0) {
+        if (!MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21")) {
             List<BinaryTag> itemList = new ArrayList<>();
 
             // Preserve any existing equipment from parent
@@ -128,27 +193,23 @@ public class MyHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     @Override
     public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.keySet().contains("Variant")) {
+        // New format: color/style stored as enum names.
+        if (info.keySet().contains("ColorName")) {
+            String name = info.getString("ColorName");
+            if (name != null && !name.isEmpty()) {
+                this.colorName = name;
+            }
+        }
+        if (info.keySet().contains("StyleName")) {
+            String name = info.getString("StyleName");
+            if (name != null && !name.isEmpty()) {
+                this.styleName = name;
+            }
+        }
+        // Legacy format: packed int ordinal.
+        if (!info.keySet().contains("ColorName") && !info.keySet().contains("StyleName")
+                && info.keySet().contains("Variant")) {
             setVariant(info.getInt("Variant"));
-        }
-    }
-
-    public void setVariant(int variant) {
-        if (variant >= 0 && variant <= 6) {
-            this.variant = variant;
-        } else if (variant >= 256 && variant <= 262) {
-            this.variant = variant;
-        } else if (variant >= 512 && variant <= 518) {
-            this.variant = variant;
-        } else if (variant >= 768 && variant <= 774) {
-            this.variant = variant;
-        } else if (variant >= 1024 && variant <= 1030) {
-            this.variant = variant;
-        } else {
-            this.variant = 0;
-        }
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
         }
     }
 

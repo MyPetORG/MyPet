@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import lombok.Getter;
@@ -49,7 +50,7 @@ import org.bukkit.entity.Player;
  * other components can veto the action. The inventory size is automatically
  * recalculated when the row-upgrade changes via a callback.
  */
-public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
+public class BackpackImpl implements Backpack {
 
     /**
      * Number of inventory rows available to the Pet. Each row equals 9 slots.

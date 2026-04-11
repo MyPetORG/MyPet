@@ -1,6 +1,6 @@
 package de.Keyle.MyPet.entity.ai.target;
 
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -73,7 +73,7 @@ public class PetDamageTracker implements Listener {
             return;
         }
         // Only track damage to players and pet entities
-        if (!(victim instanceof Player) && !(victim instanceof MyPetBukkitEntity)) {
+        if (!(victim instanceof Player) && !(PetEntityMarker.isMarked(victim))) {
             return;
         }
         LivingEntity attacker = resolveAttacker(event.getDamager());

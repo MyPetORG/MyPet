@@ -24,25 +24,13 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
-import lombok.Getter;
+import org.bukkit.entity.MushroomCow;
 
 @ShopInfo
 @DefaultInfo(food = {"wheat"})
 public interface MyMooshroom extends MyPet, MyPetBaby {
 
-    Type getType();
+    MushroomCow.Variant getType();
 
-    void setType(Type type);
-
-    enum Type {
-        Red("red"),
-        Brown("brown");
-
-        @Getter
-        private String type;
-
-        Type(String type) {
-            this.type = type;
-        }
-    }
+    void setType(MushroomCow.Variant type);
 }

@@ -29,51 +29,7 @@ import org.bukkit.entity.Rabbit;
 @ShopInfo
 @DefaultInfo(food = {"carrot"})
 public interface MyRabbit extends MyPet, MyPetBaby {
-    RabbitType getVariant();
+    Rabbit.Type getVariant();
 
-    void setVariant(RabbitType variant);
-
-    enum RabbitType {
-        BROWN(Rabbit.Type.BROWN, (byte) 0),
-        WHITE(Rabbit.Type.WHITE, (byte) 1),
-        BLACK(Rabbit.Type.BLACK, (byte) 2),
-        BLACK_AND_WHITE(Rabbit.Type.BLACK_AND_WHITE, (byte) 3),
-        GOLD(Rabbit.Type.GOLD, (byte) 4),
-        SALT_AND_PEPPER(Rabbit.Type.SALT_AND_PEPPER, (byte) 5),
-        THE_KILLER_BUNNY(Rabbit.Type.THE_KILLER_BUNNY, (byte) 99);
-
-        Rabbit.Type type;
-        byte id;
-
-        RabbitType(Rabbit.Type type, byte id) {
-            this.type = type;
-            this.id = id;
-        }
-
-        public static RabbitType getTypeByID(byte id) {
-            for (RabbitType type : values()) {
-                if (type.id == id) {
-                    return type;
-                }
-            }
-            return BROWN;
-        }
-
-        public static RabbitType getTypeByBukkitEnum(Rabbit.Type bukkitType) {
-            for (RabbitType type : values()) {
-                if (type.type == bukkitType) {
-                    return type;
-                }
-            }
-            return BROWN;
-        }
-
-        public Rabbit.Type getBukkitType() {
-            return type;
-        }
-
-        public byte getId() {
-            return id;
-        }
-    }
+    void setVariant(Rabbit.Type variant);
 }

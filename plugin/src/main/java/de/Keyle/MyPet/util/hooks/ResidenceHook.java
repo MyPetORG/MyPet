@@ -24,7 +24,6 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
@@ -32,6 +31,7 @@ import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
 import de.Keyle.MyPet.api.util.hooks.types.MountInsideHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -122,7 +122,7 @@ public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntity
     @EventHandler
     public void on(EntityInteractEvent event) {
         Entity ent = event.getEntity();
-        if (ent instanceof MyPetBukkitEntity) {
+        if (PetEntityMarker.isMarked(ent)) {
             Block block = event.getBlock();
             String blockTypeName = block.getType().name();
 
@@ -134,7 +134,7 @@ public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntity
                 blockTypeName.equals("GOLD_PLATE")) {
 
                 try {
-                    Player owner = ((MyPetBukkitEntity) ent).getOwner().getPlayer();
+                    Player owner = MyPetApi.getMyPetManager().getMyPetFromEntity(ent).getOwner().getPlayer();
                     FlagPermissions flagPermissions = residence.getPermsByLoc(block.getLocation());
 
                     // Check "use" flag for the player (pressure plates fall under "use" permission)

@@ -29,7 +29,9 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.ErrorUtil;
+import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -126,7 +128,7 @@ public class Updater {
             JsonArray resultArr = new Gson().fromJson(content, JsonArray.class);
             Optional<Update> update = Optional.empty();
 
-            String currentMcVersion = MyPetApi.getCompatUtil().getMinecraftVersion();
+            String currentMcVersion = Bukkit.getVersion();
             boolean isDevBuild = MyPetVersion.isDevBuild();
 
             for (int i = 0; i < resultArr.size(); i++) {
@@ -297,7 +299,7 @@ public class Updater {
         String newBase = newVersion.split("-")[0];
         String currentBase = currentVersion.split("-")[0];
 
-        int baseCompare = Util.versionCompare(newBase, currentBase);
+        int baseCompare = CompatUtil.versionCompare(newBase, currentBase);
         if (baseCompare != 0) {
             return baseCompare > 0;
         }

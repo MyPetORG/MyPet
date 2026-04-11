@@ -28,11 +28,12 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 @DefaultInfo(food = {"seagrass"})
 public interface MyPufferfish extends MyPet {
 
-    PuffState getPuffState();
+    /**
+     * @return the pufferfish's current puff state: {@code 0} (unpuffed),
+     *         {@code 1} (semi-puffed), or {@code 2} (fully puffed). Matches
+     *         the int form used by {@link org.bukkit.entity.PufferFish#getPuffState}.
+     */
+    int getPuffState();
 
-    void setPuffState(PuffState state);
-
-    enum PuffState {
-        Unpuffed, SemiPuffed, FullyPuffed
-    }
+    void setPuffState(int state);
 }

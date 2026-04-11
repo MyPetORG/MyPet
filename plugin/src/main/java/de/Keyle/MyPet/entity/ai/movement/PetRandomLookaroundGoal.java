@@ -3,7 +3,8 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPet;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Location;
 import org.bukkit.entity.Mob;
@@ -28,7 +29,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PetRandomLookaroundGoal implements Goal<Mob> {
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private double directionX;
     private double directionZ;
     private int ticksUntilStopLooking;
@@ -36,16 +38,17 @@ public class PetRandomLookaroundGoal implements Goal<Mob> {
     /**
      * @param petEntity the pet whose head will glance around
      */
-    public PetRandomLookaroundGoal(MyPetBukkitEntity petEntity) {
-        this.petEntity = petEntity;
+    public PetRandomLookaroundGoal(MyPet pet, Mob mob) {
+        this.pet = pet;
+        this.mob = mob;
     }
 
     @Override
     public boolean shouldActivate() {
-        if (petEntity.hasTarget() && !petEntity.getMyPetTarget().isDead()) {
+        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) {
             return false;
         }
-        if (!petEntity.getPassengers().isEmpty()) {
+        if (!mob.getPassengers().isEmpty()) {
             return false;
         }
         return ThreadLocalRandom.current().nextFloat() < 0.02F;
@@ -53,7 +56,7 @@ public class PetRandomLookaroundGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
-        return this.ticksUntilStopLooking > 0 && petEntity.getPassengers().isEmpty();
+        return this.ticksUntilStopLooking > 0 && mob.getPassengers().isEmpty();
     }
 
     @Override
@@ -66,11 +69,10 @@ public class PetRandomLookaroundGoal implements Goal<Mob> {
 
     @Override
     public void tick() {
-        Location loc = petEntity.getLocation();
-        Mob mob = (Mob) petEntity;
+        Location loc = mob.getLocation();
         mob.lookAt(
                 loc.getX() + this.directionX,
-                loc.getY() + petEntity.getEyeHeight(),
+                loc.getY() + mob.getEyeHeight(),
                 loc.getZ() + this.directionZ,
                 mob.getHeadRotationSpeed(),
                 mob.getMaxHeadPitch()

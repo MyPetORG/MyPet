@@ -28,7 +28,11 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Optional;
 
@@ -48,6 +52,28 @@ public abstract class MyPetManager {
 
     public MyPet[] getAllActiveMyPets() {
         return mActivePetsPlayer.keySet().toArray(new MyPet[0]);
+    }
+
+    /**
+     * Resolves a Bukkit entity to its owning {@link MyPet} by checking the
+     * {@code mypet:pet} PDC marker and scanning active pets by UUID. Returns
+     * {@code null} if the entity is not a MyPet or the pet is no longer tracked.
+     */
+    public MyPet getMyPetFromEntity(Entity entity) {
+        if (entity == null) return null;
+        NamespacedKey markerKey = new NamespacedKey("mypet", "pet");
+        if (!entity.getPersistentDataContainer().has(markerKey,
+                PersistentDataType.BYTE)) {
+            return null;
+        }
+        java.util.UUID uuid = entity.getUniqueId();
+        for (MyPet pet : getAllActiveMyPets()) {
+            Mob mob = pet.getBukkitEntity();
+            if (mob != null && uuid.equals(mob.getUniqueId())) {
+                return pet;
+            }
+        }
+        return null;
     }
 
     public boolean hasActiveMyPet(MyPetPlayer player) {

@@ -84,7 +84,7 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
         }
         this.oxidationState = state;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -92,7 +92,7 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     public void setWaxed(boolean waxed) {
         this.waxed = waxed;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -100,7 +100,7 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     public void setPoppy(ItemStack item) {
         this.poppy = item;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 

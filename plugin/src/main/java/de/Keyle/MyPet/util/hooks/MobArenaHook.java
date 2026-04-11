@@ -24,20 +24,23 @@ import com.garbagemule.MobArena.MobArenaHandler;
 import com.garbagemule.MobArena.events.ArenaPlayerJoinEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+
+import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
 
 @PluginHookName(value = "MobArena", classPath = "com.garbagemule.MobArena.MobArena")
 public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
@@ -113,16 +116,16 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onMyPetDamageInArena(EntityDamageByEntityEvent event) {
-        MyPetBukkitEntity damager;
-
-        if (event.getDamager() instanceof MyPetBukkitEntity) {
-            damager = (MyPetBukkitEntity) event.getDamager();
-        } else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof MyPetBukkitEntity) {
-            damager = (MyPetBukkitEntity) ((Projectile) event.getDamager()).getShooter();
-        } else {
+        Entity damagerEntity = event.getDamager();
+        if (damagerEntity instanceof Projectile p && p.getShooter() instanceof Entity shooter) {
+            damagerEntity = shooter;
+        }
+        if (!PetEntityMarker.isMarked(damagerEntity)) {
             return;
         }
-        if (!isPetAllowed(damager.getOwner())) {
+        MyPet pet = getMyPetManager().getMyPetFromEntity(damagerEntity);
+        if (pet == null) return;
+        if (!isPetAllowed(pet.getOwner())) {
             event.setCancelled(false);
         }
     }

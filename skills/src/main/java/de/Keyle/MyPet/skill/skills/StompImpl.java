@@ -22,7 +22,6 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Stomp;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -116,9 +115,10 @@ public class StompImpl implements Stomp {
                                 }
                             }
                         }
-                    } else if (livingEntity instanceof MyPetBukkitEntity) {
-                        MyPet targetMyPet = ((MyPetBukkitEntity) livingEntity).getMyPet();
-                        if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
+                    } else {
+                        MyPet targetMyPet = MyPetApi.getMyPetManager().getMyPetFromEntity(livingEntity);
+                        if (targetMyPet != null && targetMyPet.getOwner() != null
+                                && !MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                             continue;
                         }
                     }

@@ -38,7 +38,7 @@ public class DefaultCreakingService extends CreakingService {
 
     public DefaultCreakingService() {
         // Check if we're on 1.21.4+ where Creaking exists
-        this.supported = MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4") >= 0;
+        this.supported = MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21.4");
     }
 
     @Override

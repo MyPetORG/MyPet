@@ -69,7 +69,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
             return Optional.empty();
         }
 
-        if (storedMyPet.getPetType().equals(MyPetType.byName("EnderDragon")) && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4") >= 0)
+        if (storedMyPet.getPetType().equals(MyPetType.byName("EnderDragon")) && MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21.4"))
             return Optional.empty();
 
         if (!storedMyPet.getOwner().isOnline()) {

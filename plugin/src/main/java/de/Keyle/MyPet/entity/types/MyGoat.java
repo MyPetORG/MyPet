@@ -71,21 +71,21 @@ public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyG
     public void setScreaming(boolean flag) {
         this.screaming = flag;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
     public void setLeftHorn(boolean leftHorn) {
         this.leftHorn = leftHorn;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
     public void setRightHorn(boolean rightHorn) {
         this.rightHorn = rightHorn;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 }

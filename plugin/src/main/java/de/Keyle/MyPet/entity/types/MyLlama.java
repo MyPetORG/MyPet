@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Material;
+import org.bukkit.entity.Llama;
 import org.bukkit.inventory.ItemStack;
 
 @Getter
@@ -35,7 +36,11 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     protected ItemStack chest = null;
     protected ItemStack decor = null;
     protected byte horseType = 0;
-    protected int variant = 0;
+    /**
+     * Stored as {@link Llama.Color} enum name for drift-safety across Paper
+     * versions. Public {@code int} variant API preserved for backward compat.
+     */
+    protected String colorName = "CREAMY";
 
     public MyLlama(MyPetPlayer petOwner) {
         super(petOwner);
@@ -50,7 +55,7 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             this.chest.setAmount(1);
         }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -88,7 +93,7 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
             this.decor.setAmount(1);
         }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -99,7 +104,7 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     @Override
     public CompoundBinaryTag writeExtendedInfo() {
         CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putInt("Variant", getVariant());
+        info = info.putString("ColorName", colorName);
         if (hasChest()) {
             info = info.put("Chest", MyPetApi.getPlatformHelper().itemStackToCompound(getChest()));
         }
@@ -112,7 +117,12 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     @Override
     public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.keySet().contains("Variant")) {
+        if (info.keySet().contains("ColorName")) {
+            String name = info.getString("ColorName");
+            if (name != null && !name.isEmpty()) {
+                this.colorName = name;
+            }
+        } else if (info.keySet().contains("Variant")) {
             setVariant(info.getInt("Variant"));
         }
         if (info.keySet().contains("Chest")) {
@@ -143,24 +153,33 @@ public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.My
         }
     }
 
+    public int getVariant() {
+        try {
+            Llama.Color color = resolveColor();
+            return color != null ? color.ordinal() : 0;
+        } catch (Throwable ignored) {
+            return 0;
+        }
+    }
+
     public void setVariant(int variant) {
-        if (horseType != 0) {
-            this.variant = 0;
-        } else if (variant >= 0 && variant <= 6) {
-            this.variant = variant;
-        } else if (variant >= 256 && variant <= 262) {
-            this.variant = variant;
-        } else if (variant >= 512 && variant <= 518) {
-            this.variant = variant;
-        } else if (variant >= 768 && variant <= 774) {
-            this.variant = variant;
-        } else if (variant >= 1024 && variant <= 1030) {
-            this.variant = variant;
-        } else {
-            this.variant = 0;
+        try {
+            Llama.Color[] values = Llama.Color.values();
+            int idx = Math.min(values.length - 1, Math.max(0, variant & 0xFF));
+            this.colorName = values[idx].name();
+        } catch (Throwable ignored) {
         }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
+        }
+    }
+
+    public Llama.Color resolveColor() {
+        try {
+            return Llama.Color.valueOf(colorName);
+        } catch (Throwable ignored) {
+            Llama.Color[] values = Llama.Color.values();
+            return values.length > 0 ? values[0] : null;
         }
     }
 }

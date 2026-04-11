@@ -42,7 +42,7 @@ public class MyTropicalFish extends MyPet implements de.Keyle.MyPet.api.entity.t
     public void setVariant(int variant) {
         this.variant = Util.clamp(variant, 0, 235799809);
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 

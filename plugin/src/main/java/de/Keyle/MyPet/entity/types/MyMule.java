@@ -54,7 +54,7 @@ public class MyMule extends MyPet implements de.Keyle.MyPet.api.entity.types.MyM
             this.chest.setAmount(1);
         }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -71,7 +71,7 @@ public class MyMule extends MyPet implements de.Keyle.MyPet.api.entity.types.MyM
             this.saddle.setAmount(1);
         }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -91,7 +91,7 @@ public class MyMule extends MyPet implements de.Keyle.MyPet.api.entity.types.MyM
             builder.put("Chest", MyPetApi.getPlatformHelper().itemStackToCompound(getChest()));
         }
         // Write saddle with string slot name for MC versions before 1.21 (which lack EquipmentSlot.SADDLE)
-        if (hasSaddle() && MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21") < 0) {
+        if (hasSaddle() && !MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21")) {
             List<BinaryTag> itemList = new ArrayList<>();
             if (info.keySet().contains("Equipment")) {
                 ListBinaryTag existingEquip = info.getList("Equipment");

@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.commands.HelpEntry;
 import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
@@ -102,7 +101,7 @@ public class CommandStop {
                 return;
             }
             petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Stop.Attack", petOwner, myPet.getDisplayName()));
-            myPet.getEntity().ifPresent(MyPetBukkitEntity::forgetTarget);
+            myPet.forgetTarget();
         } else {
             petOwner.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
         }

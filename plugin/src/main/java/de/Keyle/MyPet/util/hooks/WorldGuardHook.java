@@ -33,18 +33,17 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.experience.modifier.ExperienceModifier;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.*;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -61,6 +60,8 @@ import org.bukkit.event.entity.EntityInteractEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
 
 @PluginHookName("WorldGuard")
 public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, AllowedHook, MountInsideHook, BeaconHook {
@@ -88,10 +89,6 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     public WorldGuardHook() {
         if (MyPetApi.getPluginHookManager().getConfig().getConfig().getBoolean("WorldGuard.Enabled")) {
-            if (ReflectionUtil.getMethod(com.sk89q.worldedit.util.Location.class, "toVector") == null) {
-                return;
-            }
-
             wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
 
             try {
@@ -142,9 +139,6 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     @Override
     public boolean onEnable() {
-        if (ReflectionUtil.getMethod(com.sk89q.worldedit.util.Location.class, "toVector") == null) {
-            return false;
-        }
         if (customFlags) {
             Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
             MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
@@ -342,12 +336,12 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     @EventHandler
     public void on(EntityInteractEvent event) {
         Entity ent = event.getEntity();
-        if (ent instanceof MyPetBukkitEntity) {
+        if (PetEntityMarker.isMarked(ent)) {
             Block block = event.getBlock();
             String blockTypeName = block.getType().name();
 
             if (blockTypeName.contains("PRESSURE_PLATE")) {
-                Player p = ((MyPetBukkitEntity) ent).getOwner().getPlayer();
+                Player p = getMyPetManager().getMyPetFromEntity(ent).getOwner().getPlayer();
                 StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
                 if (s == null || s == StateFlag.State.DENY) {
                     event.setCancelled(true);

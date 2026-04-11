@@ -65,6 +65,13 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
                 if (saddle) {
                     ItemStack item = new ItemStack(Material.SADDLE);
                     setSaddle(item);
+                } else {
+                    // Explicit Saddle: false — clear any existing saddle.
+                    // Needed for the post-interaction re-sync path: shearing a
+                    // pig writes Saddle: false into the snapshot, and we need
+                    // to propagate that to the MyPet field so it persists
+                    // across despawn/respawn cycles.
+                    setSaddle(null);
                 }
             }
         }
@@ -84,7 +91,7 @@ public class MyPig extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPi
         }
 
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 

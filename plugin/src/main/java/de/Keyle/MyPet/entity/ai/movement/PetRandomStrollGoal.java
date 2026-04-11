@@ -3,7 +3,9 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPet;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -60,7 +62,8 @@ public class PetRandomStrollGoal implements Goal<Mob> {
     private static final int MAX_ATTEMPTS = 5;
     private static final double DESTINATION_REACHED = 0.75;
 
-    protected final MyPetBukkitEntity petEntity;
+    protected final MyPet pet;
+    protected final Mob mob;
     protected Location moveTo = null;
     protected int timeToMove = 0;
     protected float strollChance = DEFAULT_STROLL_CHANCE;
@@ -80,8 +83,9 @@ public class PetRandomStrollGoal implements Goal<Mob> {
     /**
      * @param petEntity the pet that will wander when its owner stands still
      */
-    public PetRandomStrollGoal(MyPetBukkitEntity petEntity) {
-        this.petEntity = petEntity;
+    public PetRandomStrollGoal(MyPet pet, Mob mob) {
+        this.pet = pet;
+        this.mob = mob;
     }
 
     protected void updateOwnerMovement(Player owner) {
@@ -109,20 +113,22 @@ public class PetRandomStrollGoal implements Goal<Mob> {
             return false;
         }
         if (controlGoal == null && !controlGoalLookupDone) {
-            var goal = org.bukkit.Bukkit.getMobGoals().getGoal((Mob) petEntity, PetGoalKey.CONTROL);
+            // petEntity may be a LegacyBukkitAdapter proxy — use the real Bukkit Mob
+            // for Paper's internal CraftMob-keyed lookup.
+            var goal = Bukkit.getMobGoals().getGoal(pet.getBukkitEntity(), PetGoalKey.CONTROL);
             if (goal instanceof PetControlGoal pcg) controlGoal = pcg;
             controlGoalLookupDone = true;
         }
-        if (!petEntity.canMove()) return false;
-        if (petEntity.hasTarget() && !petEntity.getMyPetTarget().isDead()) return false;
+        if (!pet.canMove()) return false;
+        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) return false;
 
-        Player owner = petEntity.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
 
         updateOwnerMovement(owner);
         if (!ownerStationary) return false;
 
-        double distSq = petEntity.getLocation().distanceSquared(owner.getLocation());
+        double distSq = mob.getLocation().distanceSquared(owner.getLocation());
         if (distSq > STATIONARY_MAX_DIST_SQ) return false;
 
         return controlGoal == null || controlGoal.moveTo == null;
@@ -131,16 +137,16 @@ public class PetRandomStrollGoal implements Goal<Mob> {
     @Override
     public boolean shouldStayActive() {
         if (controlGoal != null && controlGoal.moveTo != null) return false;
-        Player owner = petEntity.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
         updateOwnerMovement(owner);
-        if (!ownerStationary && petEntity.getLocation().distanceSquared(owner.getLocation()) > STATIONARY_MAX_DIST_SQ)
+        if (!ownerStationary && mob.getLocation().distanceSquared(owner.getLocation()) > STATIONARY_MAX_DIST_SQ)
             return false;
-        if (!petEntity.canMove()) return false;
+        if (!pet.canMove()) return false;
         if (moveTo == null) return false;
-        if (petEntity.getLocation().distance(moveTo) < DESTINATION_REACHED) return false;
+        if (mob.getLocation().distance(moveTo) < DESTINATION_REACHED) return false;
         if (timeToMove <= 0) return false;
-        if (petEntity.hasTarget() && !petEntity.getMyPetTarget().isDead()) return false;
+        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) return false;
         return true;
     }
 
@@ -149,12 +155,12 @@ public class PetRandomStrollGoal implements Goal<Mob> {
         Location target = findStrollTarget();
         if (target == null) return;
         moveTo = target;
-        timeToMove = Math.max(3, (int) (petEntity.getLocation().distance(moveTo) / 3));
+        timeToMove = Math.max(3, (int) (mob.getLocation().distance(moveTo) / 3));
         // Add the speed modifier only after navigation is accepted, so a
         // rejected path doesn't leave a live "RandomStroll" modifier that
         // stop() will only clean up on some later tick.
-        if (petEntity.getHandle().getPetNavigation().navigateTo(moveTo)) {
-            petEntity.getHandle().getPetNavigation().getParameters().addSpeedModifier("RandomStroll", STROLL_SPEED);
+        if (pet.getPetNavigation().navigateTo(moveTo)) {
+            pet.getPetNavigation().getParameters().addSpeedModifier("RandomStroll", STROLL_SPEED);
         } else {
             moveTo = null;
         }
@@ -162,8 +168,8 @@ public class PetRandomStrollGoal implements Goal<Mob> {
 
     @Override
     public void stop() {
-        petEntity.getHandle().getPetNavigation().getParameters().removeSpeedModifier("RandomStroll");
-        petEntity.getHandle().getPetNavigation().stop();
+        pet.getPetNavigation().getParameters().removeSpeedModifier("RandomStroll");
+        pet.getPetNavigation().stop();
         moveTo = null;
     }
 
@@ -173,7 +179,7 @@ public class PetRandomStrollGoal implements Goal<Mob> {
     }
 
     protected Location findStrollTarget() {
-        Player owner = petEntity.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         if (owner == null) return null;
         Location ownerLoc = owner.getLocation();
         ThreadLocalRandom rng = ThreadLocalRandom.current();

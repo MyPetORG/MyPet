@@ -24,11 +24,10 @@ import com.SirBlobman.combatlogx.config.ConfigOptions;
 import com.SirBlobman.combatlogx.utility.CombatUtil;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -42,6 +41,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import static com.SirBlobman.combatlogx.event.PlayerTagEvent.TagReason;
 import static com.SirBlobman.combatlogx.event.PlayerTagEvent.TagType;
+import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
 
 @PluginHookName("CombatLogX")
 public class CombatLogXHook implements PluginHook {
@@ -53,12 +53,6 @@ public class CombatLogXHook implements PluginHook {
         try {
             TagType.PLAYER.ordinal();
             Class.forName("com.SirBlobman.combatlogx.config.ConfigOptions");
-            if (ReflectionUtil.getField(ConfigOptions.class, "OPTION_LINK_PROJECTILES") == null) {
-                throw new Throwable();
-            }
-            if (ReflectionUtil.getField(ConfigOptions.class, "OPTION_LINK_PETS") == null) {
-                throw new Throwable();
-            }
         } catch (Throwable e) {
             return false;
         }
@@ -95,8 +89,8 @@ public class CombatLogXHook implements PluginHook {
             }
         }
 
-        if ((damager instanceof MyPetBukkitEntity) && (ConfigOptions.OPTION_LINK_PETS || IGNORE_PLUGIN_SETTINGS)) {
-            damager = ((MyPetBukkitEntity) damager).getOwner().getPlayer();
+        if ((PetEntityMarker.isMarked(damager)) && (ConfigOptions.OPTION_LINK_PETS || IGNORE_PLUGIN_SETTINGS)) {
+            damager = getMyPetManager().getMyPetFromEntity(damager).getOwner().getPlayer();
         } else {
             return;
         }

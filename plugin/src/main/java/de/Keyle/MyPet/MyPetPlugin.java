@@ -21,7 +21,6 @@
 package de.Keyle.MyPet;
 
 import de.Keyle.MyPet.api.*;
-import de.Keyle.MyPet.api.entity.EntityRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -44,8 +43,15 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
+import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.commands.*;
+import de.Keyle.MyPet.entity.ai.attack.PetProjectileHitListener;
+import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
+import de.Keyle.MyPet.entity.info.MyPetInfoImpl;
 import de.Keyle.MyPet.entity.leashing.*;
+import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
+import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
+import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.types.MongoDbRepository;
@@ -132,16 +138,11 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     @Getter
     private PlatformHelper platformHelper;
 
-    /** Version-specific entity type registry, loaded via NMS reflection in {@link #onLoad()}. */
-    @Getter
-    private EntityRegistry entityRegistry;
-
     /** Minecraft version detection and NMS class loading utility. Initialized in {@link #onLoad()}. */
     @Getter
     private CompatUtil compatUtil;
 
     /** Version-specific compatibility manager that registers NMS services and listeners. Initialized in {@link #onLoad()}. */
-    private CompatManager compatManager;
 
     /** Manages online {@link MyPetPlayer} instances. Initialized in {@link #onLoad()}. */
     @Getter
@@ -271,7 +272,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                 }
             }
             repository.disable();
-            entityRegistry.unregisterEntityTypes();
             Timer.reset();
         }
         Bukkit.getServer().getScheduler().cancelTasks(this);
@@ -301,7 +301,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
      *   <li>Loads, upgrades, and applies configuration</li>
      *   <li>Creates the {@link ServiceManager} and {@link PluginHookManager}</li>
      *   <li>Loads version-specific NMS instances (pet info, platform helper, entity registry)</li>
-     *   <li>Initializes the {@link CompatManager} and activates {@link Load.State#OnLoad} services</li>
+     *   <li>Registers {@code EggIconService} and activates {@link Load.State#OnLoad} services</li>
      *   <li>Registers third-party plugin hooks</li>
      * </ol>
      *
@@ -336,21 +336,15 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager = new ServiceManager();
         pluginHookManager = new PluginHookManager();
 
-        if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
-            return;
-        }
-
-        myPetInfo = compatUtil.getCompatInstance(MyPetInfo.class, "entity", "MyPetInfo");
-        platformHelper = compatUtil.getCompatInstance(PlatformHelper.class, "", "PlatformHelper");
-        entityRegistry = compatUtil.getCompatInstance(EntityRegistry.class, "entity", "EntityRegistry");
+        myPetInfo = new MyPetInfoImpl();
+        platformHelper = new PlatformHelper();
         myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
         hookHelper = new de.Keyle.MyPet.util.HookHelper();
 
         registerServices();
 
-        compatManager = compatUtil.getCompatInstance(CompatManager.class, "", "CompatManager");
-        compatManager.init();
+        MyPetApi.getServiceManager().registerService(EggIconService.class);
 
         serviceManager.activate(Load.State.OnLoad);
 
@@ -384,20 +378,9 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         String updateStatus = updater.update();
         printSplashScreen(updateStatus);
 
-        if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
-            getLogger().warning("This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + " on " + compatUtil.getMinecraftVersion() + "\". Is MyPet up to date?");
-            updater.waitForDownload();
-            setEnabled(false);
-            return;
-        }
-
         serviceManager.activate(Load.State.OnEnable);
 
-        entityRegistry.registerEntityTypes();
-
         DebugLogHandler.setup(getLogger());
-
-        compatManager.enable();
 
         ConfigurationLoader.loadCompatConfiguration();
 
@@ -433,14 +416,24 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         RideInteractListener rideInteractListener = new RideInteractListener();
         getServer().getPluginManager().registerEvents(rideInteractListener, this);
         // Register CreakingHeartListener for 1.21.4+ (when Creaking Heart was added)
-        if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4") >= 0) {
+        if (MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21.4")) {
             CreakingHeartListener creakingHeartListener = new CreakingHeartListener();
             getServer().getPluginManager().registerEvents(creakingHeartListener, this);
         }
 
         // Paper Mob Goal API support listeners
-        getServer().getPluginManager().registerEvents(new de.Keyle.MyPet.entity.ai.target.PetDamageTracker(), this);
-        getServer().getPluginManager().registerEvents(new de.Keyle.MyPet.entity.ai.attack.PetProjectileHitListener(), this);
+        getServer().getPluginManager().registerEvents(new PetDamageTracker(), this);
+        getServer().getPluginManager().registerEvents(new PetProjectileHitListener(), this);
+
+        getServer().getPluginManager().registerEvents(new PetInteractionListener(), this);
+        getServer().getPluginManager().registerEvents(new PetDamageListener(), this);
+        getServer().getPluginManager().registerEvents(new PetDespawnListener(), this);
+
+        RideSkillFlightController.start(this);
+
+        PetPotionParticleController.start(this);
+
+        PetSitParticleController.start(this);
 
         // Register commands via Paper's Brigadier Lifecycle API
         this.helpRegistry = new HelpRegistry();
@@ -814,9 +807,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
      */
     private void printSplashScreen(@Nullable String updateStatus) {
         String version = MyPetVersion.getFormattedVersion();
-        String compatLine = compatUtil.getInternalVersion() != null
-                ? "<green>✔</green> Compatible with " + compatUtil.getMinecraftVersion() + " (" + compatUtil.getInternalVersion() + ")"
-                : "";
         String dbType = Configuration.Repository.REPOSITORY_TYPE;
 
         String splash = String.join("\n",
@@ -827,7 +817,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                 "<green>  ▄▄ ▀▀      ▄██▄  </green><green>  2011-" + Year.now() + "</green>",
                 "<green> ████  ▄███▄ ▀██▀  </green>",
                 "<green>  ▀▀ ▄███████▄     </green>" + (updateStatus != null ? "  " + updateStatus : ""),
-                "<green>   ▄███████████▄   </green>" + (!compatLine.isEmpty() ? "  " + compatLine : ""),
+                "<green>   ▄███████████▄   </green>",
                 "<green>   ▀███▀▀▀▀▀███▀   </green>  Connecting to " + dbType + "...",
                 "",
                 "<green>Please consider supporting active development: https://ko-fi.com/userderezzed</green>"

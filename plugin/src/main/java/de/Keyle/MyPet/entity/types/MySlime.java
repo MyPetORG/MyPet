@@ -52,7 +52,7 @@ public class MySlime extends MyPet implements de.Keyle.MyPet.api.entity.types.My
     public void setSize(int value) {
         this.size = Math.max(1, value);
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 }

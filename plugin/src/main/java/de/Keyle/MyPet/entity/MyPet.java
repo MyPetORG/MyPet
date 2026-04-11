@@ -25,6 +25,8 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
+import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
+import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.event.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -34,6 +36,11 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.*;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.entity.ai.navigation.PaperNavigation;
+import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
+import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
+import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
+import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.DamageImpl;
 import de.Keyle.MyPet.skill.skills.LifeImpl;
@@ -47,13 +54,13 @@ import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.ListBinaryTag;
 import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.entity.Sittable;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -67,7 +74,10 @@ import static org.bukkit.Bukkit.getServer;
 public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorage {
 
     protected final MyPetPlayer petOwner;
-    protected MyPetBukkitEntity bukkitEntity;
+    protected Mob bukkitEntity;
+    protected boolean sitting = false;
+    protected LivingEntity targetEntity;
+    protected TargetPriority targetPriority = TargetPriority.None;
     @Getter
     protected String petName;
     protected double health;
@@ -105,12 +115,176 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         petName = Translation.getString("Name." + getPetType().name(), petOwner);
     }
 
-    public static float[] getEntitySize(Class<? extends MyPetMinecraftEntity> entityMyPetClass) {
-        EntitySize es = entityMyPetClass.getAnnotation(EntitySize.class);
-        if (es != null) {
-            return new float[]{es.height(), es.width()};
+    protected AbstractNavigation petNavigation;
+
+    @Override
+    public Mob getBukkitEntity() {
+        return bukkitEntity;
+    }
+
+    @Override
+    public void setBukkitEntity(Mob mob) {
+        this.bukkitEntity = mob;
+        if (mob != null) {
+            double walkSpeed = MyPetApi.getMyPetInfo().getSpeed(getPetType());
+            this.petNavigation = new PaperNavigation(mob, walkSpeed);
+        } else {
+            this.petNavigation = null;
         }
-        return new float[]{0, 0};
+    }
+
+    @Override
+    public AbstractNavigation getPetNavigation() {
+        return petNavigation;
+    }
+
+    @Override
+    public boolean isSitting() {
+        return sitting;
+    }
+
+    @Override
+    public void setSitting(boolean sitting) {
+        this.sitting = sitting;
+        if (bukkitEntity instanceof Sittable s) {
+            s.setSitting(sitting);
+        }
+    }
+
+    @Override
+    public boolean canMove() {
+        return !sitting;
+    }
+
+    @Override
+    public LivingEntity getMyPetTarget() {
+        return targetEntity;
+    }
+
+    @Override
+    public void setTarget(LivingEntity target) {
+        this.targetEntity = target;
+    }
+
+    @Override
+    public void setTarget(LivingEntity target, TargetPriority priority) {
+        this.targetEntity = target;
+        this.targetPriority = priority;
+    }
+
+    @Override
+    public void forgetTarget() {
+        this.targetEntity = null;
+        this.targetPriority = TargetPriority.None;
+    }
+
+    @Override
+    public TargetPriority getTargetPriority() {
+        return targetPriority;
+    }
+
+    @Override
+    public boolean hasTarget() {
+        return targetEntity != null && !targetEntity.isDead();
+    }
+
+    @Override
+    public void removeEntity() {
+        if (bukkitEntity != null) {
+            bukkitEntity.remove();
+        }
+        bukkitEntity = null;
+    }
+
+    @Override
+    public void updateVisuals() {
+        Mob mob = getBukkitEntity();
+        if (mob != null) {
+            PetVisualSyncer.sync(this, mob);
+        }
+    }
+
+    @Override
+    public void updateNameTag() {
+        Mob mob = getBukkitEntity();
+        if (mob == null) return;
+        if (!Configuration.Name.Tag.SHOW) {
+            mob.setCustomNameVisible(false);
+            return;
+        }
+        String miniMessageString = Configuration.Name.Tag.PREFIX + petName + Configuration.Name.Tag.SUFFIX;
+        try {
+            net.kyori.adventure.text.Component name = MyPetApi.getPlugin().getMiniMessage().deserialize(miniMessageString);
+            mob.customName(name);
+        } catch (Throwable t) {
+            mob.customName(net.kyori.adventure.text.Component.text(petName));
+        }
+        mob.setCustomNameVisible(true);
+    }
+
+    @Override
+    public void showPotionParticles(Color color) {
+        PetPotionParticleController.show(this, color);
+    }
+
+    @Override
+    public void hidePotionParticles() {
+        PetPotionParticleController.hide(this);
+    }
+
+    @Override
+    public boolean onInteract(Player player, ItemStack item, EquipmentSlot hand) {
+        if (bukkitEntity == null || !player.equals(getOwner().getPlayer())) {
+            return false;
+        }
+
+        // Empty hand: sneak-toggle sit
+        if (item == null || item.getType().isAir()) {
+            if (player.isSneaking()) {
+                boolean willSit = !isSitting();
+                MyPetSitEvent sitEvent = new MyPetSitEvent(this,
+                        willSit ? MyPetSitEvent.Action.Stay : MyPetSitEvent.Action.Follow);
+                Bukkit.getPluginManager().callEvent(sitEvent);
+                if (sitEvent.isCancelled()) {
+                    return true;
+                }
+                setSitting(willSit);
+                String messageKey = willSit ? "Message.Sit.Stay" : "Message.Sit.Follow";
+                player.sendMessage(Translation.getFormattedComponent(messageKey, getOwner(), getDisplayName()));
+                bukkitEntity.getWorld().playSound(bukkitEntity.getLocation(),
+                        willSit ? Sound.ENTITY_WOLF_WHINE : Sound.ENTITY_WOLF_AMBIENT,
+                        0.8f, 1.2f);
+                return true;
+            }
+            return false;
+        }
+
+        // Feed: check if the item matches any configured food
+        java.util.List<ConfigItem> foods = MyPetApi.getMyPetInfo().getFood(getPetType());
+        for (ConfigItem food : foods) {
+            if (food.compare(item)) {
+                double saturationPerFeed = Configuration.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED;
+                MyPetFeedEvent feedEvent = new MyPetFeedEvent(
+                        this, item, saturationPerFeed, MyPetFeedEvent.Result.Eat);
+                Bukkit.getPluginManager().callEvent(feedEvent);
+                if (feedEvent.isCancelled()) {
+                    return false;
+                }
+                setSaturation(Math.min(100, getSaturation() + feedEvent.getSaturation()));
+                if (player.getGameMode() != GameMode.CREATIVE) {
+                    item.setAmount(item.getAmount() - 1);
+                }
+                setHealth(Math.min(getMaxHealth(), getHealth() + 1));
+                bukkitEntity.getWorld().spawnParticle(
+                        Particle.ITEM,
+                        bukkitEntity.getLocation().add(0, bukkitEntity.getHeight() * 0.5, 0),
+                        6, 0.2, 0.2, 0.2, 0.05, item);
+                bukkitEntity.getWorld().playSound(bukkitEntity.getLocation(),
+                        Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -143,19 +317,20 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
     }
 
-    public java.util.Optional<MyPetBukkitEntity> getEntity() {
-        if (getStatus() == PetState.Here) {
-            return java.util.Optional.of(bukkitEntity);
-        }
-        return java.util.Optional.empty();
-    }
+    // getEntity() is provided as a default method on the MyPet api interface (returns
+    // Optional.ofNullable(getBukkitEntity())). No override needed here.
 
     public double getYSpawnOffset() {
         return 0;
     }
 
     public java.util.Optional<Location> getLocation() {
-        if (status == PetState.Here) {
+        // The bukkitEntity != null guard protects against the window in which
+        // status is still PetState.Here but bukkitEntity has been detached
+        // (e.g. VanillaMobSpawner#releaseToWild between the detach and the
+        // subsequent removePet() status transition). Without the guard this
+        // method NPEs for any caller that runs inside that window.
+        if (status == PetState.Here && bukkitEntity != null) {
             return java.util.Optional.of(bukkitEntity.getLocation());
         } else if (petOwner.isOnline()) {
             return java.util.Optional.of(petOwner.getPlayer().getLocation());
@@ -164,8 +339,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
     }
 
+    @Override
     public void setLocation(Location loc) {
-        if (status == PetState.Here && MyPetApi.getPlatformHelper().canSpawn(loc, this.bukkitEntity.getHandle())) {
+        if (status == PetState.Here && bukkitEntity != null
+                && MyPetApi.getPlatformHelper().canSpawn(loc, bukkitEntity.getClass().asSubclass(Mob.class))) {
             bukkitEntity.teleport(loc);
         }
     }
@@ -182,10 +359,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return getDamage() == 0 && getRangedDamage() == 0;
     }
 
-    public boolean hasTarget() {
-        return this.getStatus() == PetState.Here && bukkitEntity.getHandle().hasTarget();
-    }
-
     public double getExp() {
         return getExperience().getExp();
     }
@@ -200,8 +373,9 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
         List<BinaryTag> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (getEquipment(slot) != null) {
-                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(getEquipment(slot));
+            ItemStack slotItem = getEquipment(slot);
+            if (slotItem != null && !slotItem.getType().isAir() && slotItem.getAmount() > 0) {
+                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(slotItem);
                 item = item.putString("Slot", slot.name());
                 itemList.add(item);
             }
@@ -210,7 +384,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             builder.put("Equipment", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, itemList));
         }
         if (this instanceof MyPetBaby) {
-            builder.putBoolean("Baby", isBaby());
+            builder.putBoolean("Baby", isBaby);
         }
         return builder.build();
     }
@@ -291,7 +465,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public void setBaby(boolean flag) {
         this.isBaby = flag;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -301,7 +475,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public double getHealth() {
         double health;
-        if (status == PetState.Here) {
+        // bukkitEntity != null guard — see getLocation() for the rationale.
+        if (status == PetState.Here && bukkitEntity != null) {
             health = bukkitEntity.getHealth();
         } else {
             health = this.health;
@@ -360,7 +535,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         this.petName = newName;
         if (status == PetState.Here) {
             if (Configuration.Name.Tag.SHOW) {
-                getEntity().ifPresent(entity -> entity.getHandle().updateNameTag());
+                updateNameTag();
             }
         }
     }
@@ -436,7 +611,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public PetState getStatus() {
         if (status == PetState.Here) {
-            if (bukkitEntity == null || bukkitEntity.getHandle() == null) {
+            if (bukkitEntity == null) {
                 updateStatus(PetState.Despawned);
             } else if (bukkitEntity.getHealth() <= 0 || bukkitEntity.isDead()) {
                 updateStatus(PetState.Dead);
@@ -461,7 +636,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
     }
 
-    protected void updateStatus(PetState status) {
+    public void updateStatus(PetState status) {
         if (this.status != status) {
             this.status = status;
             Bukkit.getPluginManager().callEvent(new MyPetStatusEvent(this, status));
@@ -555,24 +730,36 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     return SpawnFlags.NotAllowed;
                 }
 
-                MyPetMinecraftEntity minecraftEntity = MyPetApi.getEntityRegistry().createMinecraftEntity(this, loc.getWorld());
-
-                if (minecraftEntity == null) {
-                    updateStatus(PetState.Despawned);
-                    return SpawnFlags.Canceled;
+                if (getYSpawnOffset() > 0) {
+                    loc = loc.add(0, getYSpawnOffset(), 0);
                 }
-                bukkitEntity = minecraftEntity.getBukkitEntity();
+                loc.setPitch(0);
+                loc.setYaw(0);
 
+                WorldGuardHook wgHook = MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class);
+                if (wgHook != null) {
+                    wgHook.fixMissingEntityType(loc.getWorld(), true);
+                }
+                boolean spawned = new VanillaMobSpawner().spawn(this, loc);
+                if (wgHook != null) {
+                    wgHook.fixMissingEntityType(loc.getWorld(), false);
+                }
+
+                if (!spawned) {
+                    updateStatus(PetState.Despawned);
+                    return SpawnFlags.NoSpace;
+                }
+
+                // bukkitEntity is now set by VanillaMobSpawner via setBukkitEntity().
                 bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), true));
 
+                // Team creation for no-collision behaviour — post-spawn because we need the entity's UUID.
                 Random r = new Random(petOwner.getUniqueId().toString().hashCode());
                 final char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
                 StringBuilder sb = new StringBuilder(10);
-
                 for (int i = 0; i < 10; i++) {
                     sb.append(chars[r.nextInt(chars.length)]);
                 }
-
                 String random = sb.toString();
 
                 Team t;
@@ -582,98 +769,25 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     t = owner.getScoreboard().registerNewTeam("MyPet-" + random);
                     t.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
                 }
-
                 for (String entry : t.getEntries()) {
                     try {
                         t.removeEntry(entry);
                     } catch (IllegalStateException ignored) {
                     }
                 }
-                t.addEntry(minecraftEntity.getUniqueID().toString());
+                t.addEntry(bukkitEntity.getUniqueId().toString());
 
-                if (getYSpawnOffset() > 0) {
-                    loc = loc.add(0, getYSpawnOffset(), 0);
-                }
-                loc.setPitch(0);
-                loc.setYaw(0);
+                updateStatus(PetState.Here);
 
-                Location origin = loc.clone();
-                boolean positionFound = false;
-
-                // If an explicit spawn location was provided (e.g., from capturing), try to use it directly first
-                if (spawnLocation != null) {
-                    minecraftEntity.setLocation(loc);
-                    if (MyPetApi.getPlatformHelper().canSpawn(loc, minecraftEntity)) {
-                        positionFound = true;
-                    }
+                if (worldGroup == null || worldGroup.isEmpty()) {
+                    setWorldGroup(WorldGroup.getGroupByWorld(loc.getWorld().getName()).getName());
                 }
 
-                // If the exact location doesn't work, search for a nearby valid position
-                if (!positionFound) {
-                    loc.subtract(1, 0, 1);
-                    for (double x = 0; x <= 2; x += 0.5) {
-                        for (double z = 0; z <= 2; z += 0.5) {
-                            if (x != 1 && z != 1) {
-                                minecraftEntity.setLocation(loc);
-                                if (MyPetApi.getPlatformHelper().canSpawn(loc, minecraftEntity)) {
-                                    Block b = loc.getBlock();
-                                    if (b.getRelative(BlockFace.DOWN).getType().isSolid()) {
-                                        positionFound = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            loc.add(0, 0, 0.5);
-                        }
-                        if (positionFound) {
-                            break;
-                        }
-                        loc.subtract(0, 0, 2);
-                        loc.add(0.5, 0, 0);
-                    }
-                }
+                autoAssignSkilltree();
 
-                if (!positionFound) {
-                    minecraftEntity.setLocation(origin);
-                    if (!MyPetApi.getPlatformHelper().canSpawn(origin, minecraftEntity)) {
-                        updateStatus(PetState.Despawned);
-                        return SpawnFlags.NoSpace;
-                    }
-                }
+                wantsToRespawn = false;
 
-                // Sync equipment before spawning so it's included in the spawn packet
-                if (this instanceof MyPetEquipment equipmentPet) {
-                    EntityEquipment equipment = bukkitEntity.getEquipment();
-                    for (org.bukkit.inventory.EquipmentSlot slot : EquipmentSlot.values()) {
-                        equipment.setItem(slot, equipmentPet.getEquipment(slot));
-                    }
-                }
-
-                WorldGuardHook wgHook = MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class);
-                if (wgHook != null) {
-                    wgHook.fixMissingEntityType(loc.getWorld(), true);
-                }
-                if (MyPetApi.getEntityRegistry().spawnMinecraftEntity(minecraftEntity, loc.getWorld())) {
-                    if (wgHook != null) {
-                        wgHook.fixMissingEntityType(loc.getWorld(), false);
-                    }
-
-                    updateStatus(PetState.Here);
-
-                    if (worldGroup == null || worldGroup.isEmpty()) {
-                        setWorldGroup(WorldGroup.getGroupByWorld(loc.getWorld().getName()).getName());
-                    }
-
-                    autoAssignSkilltree();
-
-                    wantsToRespawn = false;
-
-                    return SpawnFlags.Success;
-                }
-                if (wgHook != null) {
-                    wgHook.fixMissingEntityType(loc.getWorld(), false);
-                }
-                return SpawnFlags.Canceled;
+                return SpawnFlags.Success;
             }
         }
         if (status == PetState.Dead) {
@@ -685,15 +799,21 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public void removePet() {
         if (status == PetState.Here) {
-            health = bukkitEntity.getHealth();
+            // bukkitEntity may be null if ownership has already been handed
+            // off (e.g. VanillaMobSpawner#releaseToWild during /petrelease).
+            // In that case only the status transition and backpack-close
+            // steps apply.
+            if (bukkitEntity != null) {
+                health = bukkitEntity.getHealth();
+                // Drop the pet's entry from the damage tracker before clearing
+                // bukkitEntity — otherwise the ConcurrentHashMap in
+                // PetDamageTracker grows unboundedly as pets are despawned and
+                // respawned with new UUIDs.
+                PetDamageTracker.cleanup(bukkitEntity.getUniqueId());
+                bukkitEntity.remove();
+                bukkitEntity = null;
+            }
             updateStatus(PetState.Despawned);
-            // Drop the pet's entry from the damage tracker before clearing
-            // bukkitEntity — otherwise the ConcurrentHashMap in
-            // PetDamageTracker grows unboundedly as pets are despawned and
-            // respawned with new UUIDs.
-            de.Keyle.MyPet.entity.ai.target.PetDamageTracker.cleanup(bukkitEntity.getUniqueId());
-            bukkitEntity.removeEntity();
-            bukkitEntity = null;
 
             getSkills().get(BackpackImpl.class).closeInventory();
         }
@@ -786,14 +906,14 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                         }
                     }
                     if (saturation == 1 && (getHealth() >= 2 || Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
+                            && this.bukkitEntity != null
                             && this.bukkitEntity.getTicksLived() >= Configuration.HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE * 20) {
-                        getEntity().ifPresent(entity -> {
-                            double leDamage = Configuration.HungerSystem.HUNGER_SYSTEM_FIXED +
-                                    entity.getMyPet().getMaxHealth() * Configuration.HungerSystem.HUNGER_SYSTEM_FACTOR;
-                            if (leDamage >= entity.getHealth() && !Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
-                                leDamage = entity.getHealth() - 1;
-                            entity.damage(leDamage);
-                        });
+                        Mob entity = this.bukkitEntity;
+                        double leDamage = Configuration.HungerSystem.HUNGER_SYSTEM_FIXED +
+                                getMaxHealth() * Configuration.HungerSystem.HUNGER_SYSTEM_FACTOR;
+                        if (leDamage >= entity.getHealth() && !Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
+                            leDamage = entity.getHealth() - 1;
+                        entity.damage(leDamage);
                     }
                 }
             }

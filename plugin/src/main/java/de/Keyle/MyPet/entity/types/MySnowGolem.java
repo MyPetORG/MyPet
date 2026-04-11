@@ -38,7 +38,7 @@ public class MySnowGolem extends MyPet implements de.Keyle.MyPet.api.entity.type
     public void setSheared(boolean flag) {
         this.sheared = flag;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 

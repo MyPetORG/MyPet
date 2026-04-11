@@ -21,7 +21,6 @@
 package de.Keyle.MyPet;
 
 import de.Keyle.MyPet.api.PlatformHelper;
-import de.Keyle.MyPet.api.entity.EntityRegistry;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
 import de.Keyle.MyPet.api.plugin.MyPetPlugin;
@@ -93,13 +92,6 @@ public class MyPetApi {
      */
     public static MyPetInfo getMyPetInfo() {
         return plugin.getMyPetInfo();
-    }
-
-    /**
-     * @return register and create entities here
-     */
-    public static EntityRegistry getEntityRegistry() {
-        return plugin.getEntityRegistry();
     }
 
     /**

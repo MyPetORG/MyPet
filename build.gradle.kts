@@ -22,19 +22,6 @@ val versionSuffix = if (buildType == "dev") {
 version = "$baseVersion$versionSuffix"
 val minecraftVersion by extra("1.21.11")
 
-@Suppress("UNCHECKED_CAST")
-val nmsModules: List<String> = gradle.extra["nmsModules"] as List<String>
-
-val bukkitPackets by extra(
-    File(rootDir, "nms")
-        .listFiles()
-        ?.filter { it.isDirectory && it.name.matches(Regex("v[\\d_]+R\\d+")) }
-        ?.map { it.name }
-        ?.sorted()
-        ?.joinToString(";")
-        ?: ""
-)
-
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
@@ -134,9 +121,7 @@ fun Manifest.attributesForMyPet() = attributes(
         "Project-Build" to buildNumber,
         "Project-Type" to buildType,
         "Project-Minecraft-Version" to minecraftVersion,
-        "Project-Bukkit-Packets" to bukkitPackets,
-        "Git-Commit" to (System.getenv("GIT_COMMIT") ?: ""),
-        "paperweight-mappings-namespace" to "mojang+yarn"
+        "Git-Commit" to (System.getenv("GIT_COMMIT") ?: "")
     )
 )
 
@@ -162,7 +147,6 @@ dependencies {
     add("shade", project(path = ":plugin", configuration = "runtimeElements"))
     add("shade", project(path = ":api", configuration = "runtimeElements"))
     add("shade", project(path = ":skills", configuration = "runtimeElements"))
-    nmsModules.forEach { add("shade", project(path = it, configuration = "runtimeElements")) }
 
     // External libs to be shaded
     add("shade", "org.bstats:bstats-bukkit:1.7")
@@ -192,7 +176,6 @@ tasks.shadowJar {
         exclude(project(":plugin"))
         exclude(project(":api"))
         exclude(project(":skills"))
-        nmsModules.forEach { exclude(project(it)) }
     }
 
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")

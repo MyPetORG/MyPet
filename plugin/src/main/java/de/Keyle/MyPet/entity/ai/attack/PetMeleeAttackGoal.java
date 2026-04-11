@@ -4,7 +4,9 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import de.Keyle.MyPet.listeners.PetDamageListener;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Location;
@@ -55,7 +57,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class PetMeleeAttackGoal implements Goal<Mob> {
 
     private final int ticksUntilNextHit;
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private final MyPet myPet;
     private final double range;
     private final float walkSpeedModifier;
@@ -71,9 +74,10 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
      *                          width plus a small constant
      * @param ticksUntilNextHit cooldown in ticks between successful hits
      */
-    public PetMeleeAttackGoal(MyPetBukkitEntity petEntity, float walkSpeedModifier, double range, int ticksUntilNextHit) {
-        this.petEntity = petEntity;
-        this.myPet = petEntity.getMyPet();
+    public PetMeleeAttackGoal(MyPet pet, Mob mob, float walkSpeedModifier, double range, int ticksUntilNextHit) {
+        this.pet = pet;
+        this.mob = mob;
+        this.myPet = pet;
         this.walkSpeedModifier = walkSpeedModifier;
         this.range = range;
         this.ticksUntilNextHit = ticksUntilNextHit;
@@ -84,10 +88,10 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
         if (myPet.getDamage() <= 0) {
             return false;
         }
-        if (!petEntity.hasTarget()) {
+        if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity target = petEntity.getMyPetTarget();
+        LivingEntity target = pet.getMyPetTarget();
         if (target == null || target.isDead()) {
             return false;
         }
@@ -97,7 +101,7 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
         // Defer to ranged when target is far AND ranged damage is higher (mirrors
         // the logic in PetRangedAttackGoal — must use the same distance threshold)
         double rangedDamage = myPet.getRangedDamage();
-        if (rangedDamage > 0 && petEntity.getLocation().distanceSquared(target.getLocation()) >= PetRangedAttackGoal.MELEE_PREFERENCE_RANGE_SQ) {
+        if (rangedDamage > 0 && mob.getLocation().distanceSquared(target.getLocation()) >= PetRangedAttackGoal.MELEE_PREFERENCE_RANGE_SQ) {
             if (rangedDamage >= myPet.getDamage()) {
                 return false;
             }
@@ -111,7 +115,7 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
                 if (target instanceof Tameable tameable && tameable.isTamed()) {
                     return false;
                 }
-                if (target instanceof MyPetBukkitEntity) {
+                if (PetEntityMarker.isMarked(target)) {
                     return false;
                 }
                 if (target instanceof Player) {
@@ -125,16 +129,16 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
-        if (!petEntity.hasTarget() || !petEntity.canMove()) {
+        if (!pet.hasTarget() || !pet.canMove()) {
             return false;
         }
-        LivingEntity currentTarget = petEntity.getMyPetTarget();
+        LivingEntity currentTarget = pet.getMyPetTarget();
         if (currentTarget == null || !currentTarget.equals(targetEntity)) {
             return false;
         }
         // Defer to ranged when target is far AND ranged damage is higher
         double stayRangedDamage = myPet.getRangedDamage();
-        if (stayRangedDamage > 0 && petEntity.getLocation().distanceSquared(targetEntity.getLocation()) >= PetRangedAttackGoal.MELEE_PREFERENCE_RANGE_SQ) {
+        if (stayRangedDamage > 0 && mob.getLocation().distanceSquared(targetEntity.getLocation()) >= PetRangedAttackGoal.MELEE_PREFERENCE_RANGE_SQ) {
             if (stayRangedDamage >= myPet.getDamage()) {
                 return false;
             }
@@ -148,7 +152,7 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
                 if (targetEntity instanceof Tameable tameable && tameable.isTamed()) {
                     return false;
                 }
-                if (targetEntity instanceof MyPetBukkitEntity) {
+                if (PetEntityMarker.isMarked(targetEntity)) {
                     return false;
                 }
                 if (targetEntity instanceof Player) {
@@ -161,27 +165,26 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
 
     @Override
     public void start() {
-        petEntity.getHandle().getPetNavigation().getParameters().addSpeedModifier("MeleeAttack", walkSpeedModifier);
-        petEntity.getHandle().getPetNavigation().navigateTo(this.targetEntity);
+        pet.getPetNavigation().getParameters().addSpeedModifier("MeleeAttack", walkSpeedModifier);
+        pet.getPetNavigation().navigateTo(this.targetEntity);
         this.timeUntilNextNavigationUpdate = 0;
     }
 
     @Override
     public void stop() {
-        petEntity.getHandle().getPetNavigation().getParameters().removeSpeedModifier("MeleeAttack");
+        pet.getPetNavigation().getParameters().removeSpeedModifier("MeleeAttack");
         this.targetEntity = null;
-        petEntity.getHandle().getPetNavigation().stop();
+        pet.getPetNavigation().stop();
     }
 
     @Override
     public void tick() {
-        Mob mob = (Mob) petEntity;
         mob.lookAt(targetEntity, 30.0F, 30.0F);
         if (--this.timeUntilNextNavigationUpdate <= 0) {
             this.timeUntilNextNavigationUpdate = 4 + ThreadLocalRandom.current().nextInt(7);
-            petEntity.getHandle().getPetNavigation().navigateTo(targetEntity);
+            pet.getPetNavigation().navigateTo(targetEntity);
         }
-        double distSq = petEntity.getLocation().distanceSquared(targetEntity.getLocation());
+        double distSq = mob.getLocation().distanceSquared(targetEntity.getLocation());
         // Range is passed as a linear distance (pet bbWidth + 1.3). Square it
         // before comparing against distSq so melee reach resolves to ~3 blocks
         // for a player-sized target rather than ~1.6 blocks.
@@ -191,7 +194,7 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
             // walls when the pet is pressed against one — the raycast backing
             // hasLineOfSight skips the starting block, so it would otherwise
             // return true through the wall).
-            Location eyeLoc = petEntity.getLocation().add(0, ((LivingEntity) petEntity).getEyeHeight(), 0);
+            Location eyeLoc = mob.getLocation().add(0, mob.getEyeHeight(), 0);
             if (eyeLoc.getBlock().isPassable() && mob.hasLineOfSight(targetEntity)) {
                 // Only decrement the cooldown while the attack is actually
                 // eligible (in range + line of sight). Previously the counter
@@ -201,7 +204,8 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
                 // soon as LoS cleared.
                 if (this.ticksUntilNextHitLeft-- <= 0) {
                     this.ticksUntilNextHitLeft = ticksUntilNextHit;
-                    petEntity.attackEntity(targetEntity);
+                    PetDamageListener.applyPetDamage(
+                            pet, targetEntity, pet.getDamage());
                 }
             }
         }

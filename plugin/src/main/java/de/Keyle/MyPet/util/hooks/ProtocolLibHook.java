@@ -26,13 +26,11 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
-import de.Keyle.MyPet.api.entity.MyPetBukkitPart;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -49,17 +47,12 @@ import java.util.function.Supplier;
 @PluginHookName("ProtocolLib")
 public class ProtocolLibHook implements PluginHook {
 
-    protected boolean checkTemporaryPlayers = false;
     private Set<Player> tempBlockedPlayers = ConcurrentHashMap.newKeySet();
 
     @Override
     public boolean onEnable() {
         try {
             registerSyncEnderDragonInteractionFix();
-
-            checkTemporaryPlayers = ReflectionUtil.getMethod(PacketEvent.class, "isPlayerTemporary") != null;
-
-            // reverse dragon facing direction
             registerEnderDragonRotationFix();
             return true;
         } catch (Throwable e) {
@@ -82,7 +75,7 @@ public class ProtocolLibHook implements PluginHook {
             @Override
             public void onPacketReceiving(PacketEvent event) {
 
-                if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
+                if (event.isPlayerTemporary() || event.isCancelled()) {
                     return;
                 }
 
@@ -108,9 +101,6 @@ public class ProtocolLibHook implements PluginHook {
                             }
                             if (entity == null && event.getPlayer() != null) {
                                 entity = MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld());
-                            }
-                            if (entity instanceof MyPetBukkitPart) {
-                                entity = ((MyPetBukkitPart) entity).getPetOwner();
                             }
                             return entity;
                         });
@@ -158,7 +148,7 @@ public class ProtocolLibHook implements PluginHook {
                 new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
                     @Override
                     public void onPacketSending(PacketEvent event) {
-                        if ((checkTemporaryPlayers && event.isPlayerTemporary()) || event.isCancelled()) {
+                        if (event.isPlayerTemporary() || event.isCancelled()) {
                             return;
                         }
 
@@ -175,7 +165,7 @@ public class ProtocolLibHook implements PluginHook {
                             ErrorUtil.reportWarning("Third-party plugin integration failed", e);
                         }
 
-                        if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType().equals(MyPetType.byName("EnderDragon"))) {
+                        if (PetEntityMarker.isMarked(entity) && MyPetApi.getMyPetManager().getMyPetFromEntity(entity).getPetType().equals(MyPetType.byName("EnderDragon"))) {
                             byte angle = packet.getBytes().read(0);
                             angle += Byte.MAX_VALUE;
                             packet.getBytes().write(0, angle);

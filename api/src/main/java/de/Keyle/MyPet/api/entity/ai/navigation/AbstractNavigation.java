@@ -17,24 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.Keyle.MyPet.api.entity.ai.navigation;
 
-import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
 public abstract class AbstractNavigation {
-    protected MyPetMinecraftEntity entityMyPet;
     protected NavigationParameters parameters;
 
-    public AbstractNavigation(MyPetMinecraftEntity entityMyPet) {
-        this.entityMyPet = entityMyPet;
-        parameters = new NavigationParameters(entityMyPet.getWalkSpeed());
+    public AbstractNavigation(double walkSpeed) {
+        this.parameters = new NavigationParameters(walkSpeed);
     }
 
-    public AbstractNavigation(MyPetMinecraftEntity entityMyPet, NavigationParameters parameters) {
-        this.entityMyPet = entityMyPet;
+    public AbstractNavigation(NavigationParameters parameters) {
         this.parameters = parameters;
     }
 

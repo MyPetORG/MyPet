@@ -25,8 +25,8 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.Villager;
 
 import java.util.Set;
 
@@ -42,9 +42,9 @@ public interface MyVillager extends MyPet, MyPetBaby, MyPetEquipment {
 
     void setProfession(int value);
 
-    Type getType();
+    Villager.Type getType();
 
-    void setType(Type value);
+    void setType(Villager.Type value);
 
     int getLevel();
 
@@ -56,45 +56,4 @@ public interface MyVillager extends MyPet, MyPetBaby, MyPetEquipment {
 
     boolean hasOriginalData();
 
-    enum Type {
-        Desert("desert"),
-        Jungle("jungle"),
-        Plains("plains"),
-        Savanna("savanna"),
-        Snow("snow"),
-        Swamp("swamp"),
-        Taiga("taiga");
-
-        @Getter
-        String key;
-
-        Type(String key) {
-            this.key = key;
-        }
-    }
-
-    enum Profession {
-        NONE("none"),
-        ARMORER("armorer"),
-        BUTCHER("butcher"),
-        CARTOGRAPHER("cartographer"),
-        CLERIC("cleric"),
-        FARMER("farmer"),
-        FISHERMAN("fisherman"),
-        FLETCHER("fletcher"),
-        LEATHERWORKER("leatherworker"),
-        LIBRARIAN("librarian"),
-        MASON("mason"),
-        NITWIT("nitwit"),
-        SHEPHERD("shepherd"),
-        TOOLSMITH("toolsmith"),
-        WEAPONSMITH("weaponsmith");
-
-        @Getter
-        String key;
-
-        Profession(String key) {
-            this.key = key;
-        }
-    }
 }

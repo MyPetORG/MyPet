@@ -5,7 +5,7 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
@@ -36,7 +36,8 @@ import java.util.EnumSet;
  */
 public class PetFarmTargetGoal implements Goal<Mob> {
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private final MyPet myPet;
     private final double range;
     private LivingEntity target;
@@ -45,9 +46,10 @@ public class PetFarmTargetGoal implements Goal<Mob> {
      * @param petEntity the pet that will acquire monster targets while in Farm mode
      * @param range     radius (in blocks) of the "near owner" search box
      */
-    public PetFarmTargetGoal(MyPetBukkitEntity petEntity, float range) {
-        this.petEntity = petEntity;
-        this.myPet = petEntity.getMyPet();
+    public PetFarmTargetGoal(MyPet pet, Mob mob, float range) {
+        this.pet = pet;
+        this.mob = mob;
+        this.myPet = pet;
         this.range = range;
     }
 
@@ -60,19 +62,19 @@ public class PetFarmTargetGoal implements Goal<Mob> {
         if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
-        if (!petEntity.canMove()) {
+        if (!pet.canMove()) {
             return false;
         }
-        if (petEntity.hasTarget()) {
+        if (pet.hasTarget()) {
             return false;
         }
 
-        Player owner = petEntity.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         if (owner == null) {
             return false;
         }
         Location ownerLoc = owner.getLocation();
-        Location petLoc = petEntity.getLocation();
+        Location petLoc = mob.getLocation();
 
         for (Entity entity : ownerLoc.getWorld().getNearbyEntities(ownerLoc, range, range, range)) {
             if (!(entity instanceof Monster monster)) {
@@ -95,13 +97,13 @@ public class PetFarmTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
-        if (!petEntity.canMove()) {
+        if (!pet.canMove()) {
             return false;
         }
-        if (!petEntity.hasTarget()) {
+        if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity currentTarget = petEntity.getMyPetTarget();
+        LivingEntity currentTarget = pet.getMyPetTarget();
         if (currentTarget == null || currentTarget.isDead()) {
             return false;
         }
@@ -112,24 +114,24 @@ public class PetFarmTargetGoal implements Goal<Mob> {
         if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
-        if (!currentTarget.getWorld().equals(petEntity.getWorld())) {
+        if (!currentTarget.getWorld().equals(mob.getWorld())) {
             return false;
         }
-        if (petEntity.getLocation().distanceSquared(currentTarget.getLocation()) > 400) {
+        if (mob.getLocation().distanceSquared(currentTarget.getLocation()) > 400) {
             return false;
         }
-        Player owner = petEntity.getOwner().getPlayer();
-        return owner != null && petEntity.getLocation().distanceSquared(owner.getLocation()) <= 600;
+        Player owner = pet.getOwner().getPlayer();
+        return owner != null && mob.getLocation().distanceSquared(owner.getLocation()) <= 600;
     }
 
     @Override
     public void start() {
-        petEntity.setTarget(this.target, TargetPriority.Farm);
+        pet.setTarget(this.target, TargetPriority.Farm);
     }
 
     @Override
     public void stop() {
-        petEntity.forgetTarget();
+        pet.forgetTarget();
         target = null;
     }
 

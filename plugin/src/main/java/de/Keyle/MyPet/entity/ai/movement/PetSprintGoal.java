@@ -4,11 +4,10 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import de.Keyle.MyPet.skill.skills.SprintImpl;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
@@ -41,7 +40,8 @@ import java.util.EnumSet;
  */
 public class PetSprintGoal implements Goal<Mob> {
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private final MyPet myPet;
     private final float walkSpeedModifier;
     private LivingEntity lastTarget = null;
@@ -50,9 +50,10 @@ public class PetSprintGoal implements Goal<Mob> {
      * @param petEntity         the pet whose chase should get the sprint boost
      * @param walkSpeedModifier multiplicative navigation speed modifier applied while sprinting
      */
-    public PetSprintGoal(MyPetBukkitEntity petEntity, float walkSpeedModifier) {
-        this.petEntity = petEntity;
-        this.myPet = petEntity.getMyPet();
+    public PetSprintGoal(MyPet pet, Mob mob, float walkSpeedModifier) {
+        this.pet = pet;
+        this.mob = mob;
+        this.myPet = pet;
         this.walkSpeedModifier = walkSpeedModifier;
     }
 
@@ -64,17 +65,17 @@ public class PetSprintGoal implements Goal<Mob> {
         if (myPet.getDamage() <= 0) {
             return false;
         }
-        if (!petEntity.hasTarget()) {
+        if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity target = petEntity.getMyPetTarget();
+        LivingEntity target = pet.getMyPetTarget();
         if (target == null || target.isDead()) {
             return false;
         }
         if (target.equals(lastTarget)) {
             return false;
         }
-        if (myPet.getRangedDamage() > 0 && petEntity.getLocation().distanceSquared(target.getLocation()) >= 16) {
+        if (myPet.getRangedDamage() > 0 && mob.getLocation().distanceSquared(target.getLocation()) >= 16) {
             return false;
         }
         this.lastTarget = target;
@@ -83,26 +84,26 @@ public class PetSprintGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
-        if (petEntity.getOwner() == null) {
+        if (pet.getOwner() == null) {
             return false;
         }
         if (lastTarget == null || lastTarget.isDead()) {
             return false;
         }
-        if (petEntity.getLocation().distanceSquared(lastTarget.getLocation()) < 16) {
+        if (mob.getLocation().distanceSquared(lastTarget.getLocation()) < 16) {
             return false;
         }
-        return petEntity.canMove();
+        return pet.canMove();
     }
 
     @Override
     public void start() {
-        petEntity.getHandle().getPetNavigation().getParameters().addSpeedModifier("Sprint", walkSpeedModifier);
+        pet.getPetNavigation().getParameters().addSpeedModifier("Sprint", walkSpeedModifier);
     }
 
     @Override
     public void stop() {
-        petEntity.getHandle().getPetNavigation().getParameters().removeSpeedModifier("Sprint");
+        pet.getPetNavigation().getParameters().removeSpeedModifier("Sprint");
     }
 
     @Override

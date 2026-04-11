@@ -20,9 +20,9 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.checks.access.IViolationInfo;
 import fr.neatmonster.nocheatplus.hooks.NCPHook;
@@ -59,9 +59,9 @@ public class NoCheatPlusHook implements PluginHook {
                     case "MOVING_VEHICLE_MOREPACKETS":
                         if (player.isInsideVehicle()) {
                             if (player.getVehicle().getType() == EntityType.ARMOR_STAND && player.getVehicle().isInsideVehicle()) {
-                                return player.getVehicle().getVehicle() instanceof MyPetBukkitEntity;
+                                return PetEntityMarker.isMarked(player.getVehicle().getVehicle());
                             }
-                            return player.getVehicle() instanceof MyPetBukkitEntity;
+                            return PetEntityMarker.isMarked(player.getVehicle());
                         }
                 }
                 return false;

@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.player.ContributorCheck;
@@ -37,6 +36,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.CreakingService;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
@@ -431,7 +431,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
             entityLoop:
             for (Entity entity : entities) {
-                if (entity instanceof LivingEntity && !(entity instanceof Player) && !(entity instanceof MyPetBukkitEntity)) {
+                if (entity instanceof LivingEntity && !(entity instanceof Player) && !(PetEntityMarker.isMarked(entity))) {
                     // Skip Creakings here - they're handled separately with particles on their heart block
                     if ("CREAKING".equals(entity.getType().name())) {
                         continue;
@@ -463,7 +463,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             }
 
             // Show particles above Creaking Heart blocks for heart-linked Creakings
-            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4") >= 0) {
+            if (MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21.4")) {
                 // Search in a wider radius since Creakings can wander far from their heart
                 List<Entity> nearbyEntities = p.getNearbyEntities(32, 32, 32);
                 Set<Location> shownHeartLocations = new HashSet<>();

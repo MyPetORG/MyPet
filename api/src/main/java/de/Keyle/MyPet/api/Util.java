@@ -274,47 +274,6 @@ public class Util {
     }
 
     /**
-     * Compares two version strings.
-     * <p>
-     * Use this instead of String.compareTo() for a non-lexicographical
-     * comparison that works for version strings. e.g. "1.10".compareTo("1.6").
-     *
-     * @param str1 a string of ordinal numbers separated by decimal points.
-     * @param str2 a string of ordinal numbers separated by decimal points.
-     * @return The result is a negative integer if str1 is _numerically_ less than str2.
-     * The result is a positive integer if str1 is _numerically_ greater than str2.
-     * The result is zero if the strings are _numerically_ equal.
-     */
-    public static int versionCompare(String str1, String str2) {
-        String[] vals1 = str1.split("\\.");
-        String[] vals2 = str2.split("\\.");
-        if (vals1.length > vals2.length) {
-            int oldLength = vals2.length;
-            vals2 = Arrays.copyOf(vals2, vals1.length);
-            for (int i = oldLength; i < vals1.length; i++) {
-                vals2[i] = "0";
-            }
-        } else if (vals2.length > vals1.length) {
-            int oldLength = vals1.length;
-            vals1 = Arrays.copyOf(vals1, vals2.length);
-            for (int i = oldLength; i < vals2.length; i++) {
-                vals1[i] = "0";
-            }
-        }
-        int i = 0;
-        while (i < vals1.length - 1 && vals1[i].equals(vals2[i])) {
-            i++;
-        }
-        if (i < vals1.length) {
-            try {
-                return Integer.compare(Integer.parseInt(vals1[i]), Integer.parseInt(vals2[i]));
-            } catch (NumberFormatException ignored) {
-            }
-        }
-        return 0;
-    }
-
-    /**
      * Checks whether a value falls within an inclusive range.
      *
      * @param intMin   the minimum bound (inclusive)

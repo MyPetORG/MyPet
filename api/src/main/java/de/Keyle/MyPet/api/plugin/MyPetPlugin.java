@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api.plugin;
 
 import de.Keyle.MyPet.api.PlatformHelper;
-import de.Keyle.MyPet.api.entity.EntityRegistry;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
@@ -44,8 +43,6 @@ public interface MyPetPlugin extends Plugin {
     File getFile();
 
     MyPetInfo getMyPetInfo();
-
-    EntityRegistry getEntityRegistry();
 
     CompatUtil getCompatUtil();
 

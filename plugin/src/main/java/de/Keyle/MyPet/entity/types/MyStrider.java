@@ -79,7 +79,7 @@ public class MyStrider extends MyPet implements de.Keyle.MyPet.api.entity.types.
         }
 
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 

@@ -40,7 +40,6 @@ public class MyPetVersion {
     private static String build = "";
     private static String buildType = "local";
     private static String minecraftVersion = "0.0.0";
-    private static List<String> bukkitPackets = new ArrayList<>();
 
     private static void loadData() {
         try {
@@ -63,11 +62,6 @@ public class MyPetVersion {
             }
             if (attr.getValue("Project-Minecraft-Version") != null) {
                 minecraftVersion = attr.getValue("Project-Minecraft-Version");
-            }
-            if (attr.getValue("Project-Bukkit-Packets") != null) {
-                String bukkitPackets = attr.getValue("Project-Bukkit-Packets");
-                MyPetVersion.bukkitPackets.clear();
-                Collections.addAll(MyPetVersion.bukkitPackets, bukkitPackets.split(";"));
             }
         } catch (IOException | URISyntaxException e) {
             ErrorUtil.report(e);
@@ -124,27 +118,6 @@ public class MyPetVersion {
             updated = true;
         }
         return minecraftVersion;
-    }
-
-    public static boolean isValidBukkitPacket(String p1) {
-        if (!updated) {
-            loadData();
-            updated = true;
-        }
-        for (String p2 : bukkitPackets) {
-            if (p1.equals(p2)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static List<String> getBukkitPackets() {
-        if (!updated) {
-            loadData();
-            updated = true;
-        }
-        return Collections.unmodifiableList(bukkitPackets);
     }
 
     public static void reset() {

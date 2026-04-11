@@ -24,7 +24,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -35,6 +34,7 @@ import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.BeaconImpl;
@@ -47,6 +47,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -127,7 +128,7 @@ public class PlayerListener implements Listener {
         }
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getInventory().getItemInMainHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(event.getPlayer());
-            if (myPet.getStatus() == MyPet.PetState.Here && myPet.getEntity().isPresent() && myPet.getEntity().get().canMove()) {
+            if (myPet.getStatus() == MyPet.PetState.Here && myPet.getEntity().isPresent() && myPet.canMove()) {
                 if (myPet.getSkills().isActive(ControlImpl.class)) {
                     if (myPet.getSkills().isActive(Behavior.class)) {
                         Behavior behavior = myPet.getSkills().get(Behavior.class);
@@ -137,7 +138,7 @@ public class PlayerListener implements Listener {
                         }
                     }
                     if (myPet.getSkills().isActive(Ride.class)) {
-                        if (myPet.getEntity().get().getHandle().hasMyPetRider()) {
+                        if (myPet.hasMyPetRider()) {
                             event.getPlayer().sendMessage(Translation.getFormattedComponent("Message.Skill.Control.Ride", event.getPlayer(), myPet.getDisplayName()));
                             return;
                         }
@@ -189,19 +190,16 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(PlayerInteractEntityEvent event) {
-        String internalVersion = MyPetApi.getCompatUtil().getInternalVersion();
-        if (internalVersion != null) {
-            try {
-                // If we're running on a server using the v1_21_* (or newer) compat module, skip this logic
-                if (internalVersion.startsWith("v1_21_")) {
-                    return;
-                }
-            } catch (Exception ignored) {
-            }
+        // The un-cancel logic below is only needed on 1.20.x; 1.21+ handles
+        // pet right-click interactions correctly without it.
+        if (MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21")) {
+            return;
         }
         if (event.isCancelled()) {
-            if (event.getRightClicked() instanceof MyPetBukkitEntity) {
-                if (((MyPetBukkitEntity) event.getRightClicked()).getOwner().equals(event.getPlayer())) {
+            if (PetEntityMarker.isMarked(event.getRightClicked())) {
+                MyPet clickedPet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getRightClicked());
+                if (clickedPet != null && clickedPet.getOwner() != null
+                        && clickedPet.getOwner().equals(event.getPlayer())) {
                     event.setCancelled(false);
                 }
             }
@@ -330,7 +328,7 @@ public class PlayerListener implements Listener {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
                 if (event.getCause() == EntityDamageEvent.DamageCause.FALL &&
                         victim.isInsideVehicle() &&
-                        (victim.getVehicle() instanceof MyPetBukkitEntity ||
+                        (PetEntityMarker.isMarked(victim.getVehicle()) ||
                                 (victim.getVehicle().getType() == EntityType.ARMOR_STAND && victim.getVehicle().isInsideVehicle()))) {
                     event.setCancelled(true);
                     return;
@@ -471,8 +469,8 @@ public class PlayerListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        if ((player.isInsideVehicle() && player.getVehicle() instanceof MyPetBukkitEntity) ||
-                (player.isInsideVehicle() && player.getVehicle().isInsideVehicle() && player.getVehicle().getVehicle() instanceof MyPetBukkitEntity)) {
+        if ((player.isInsideVehicle() && PetEntityMarker.isMarked(player.getVehicle())) ||
+                (player.isInsideVehicle() && player.getVehicle().isInsideVehicle() && PetEntityMarker.isMarked(player.getVehicle().getVehicle()))) {
             if (player.getLocation().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(event.getFrom(), event.getTo()) > 10) {
                 if (Configuration.Skilltree.Skill.Ride.PREVENT_TELEPORTATION) {
                     event.setCancelled(true);
@@ -543,7 +541,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    private void checkBeaconZoneState(Player player, MyPetPlayer mpPlayer, org.bukkit.Location to) {
+    private void checkBeaconZoneState(Player player, MyPetPlayer mpPlayer, Location to) {
         // Only process if zone messages are enabled
         if (!Configuration.Skilltree.Skill.Beacon.ZONE_MESSAGES) {
             return;

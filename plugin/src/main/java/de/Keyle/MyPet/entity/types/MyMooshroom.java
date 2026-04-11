@@ -24,11 +24,12 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.MushroomCow;
 
 @Getter
 public class MyMooshroom extends MyPet implements de.Keyle.MyPet.api.entity.types.MyMooshroom {
 
-    protected Type type = Type.Red;
+    protected MushroomCow.Variant type = MushroomCow.Variant.RED;
 
     public MyMooshroom(MyPetPlayer petOwner) {
         super(petOwner);
@@ -37,22 +38,30 @@ public class MyMooshroom extends MyPet implements de.Keyle.MyPet.api.entity.type
     @Override
     public CompoundBinaryTag writeExtendedInfo() {
         CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putInt("CowType", getType().ordinal());
+        // New format: stores the Bukkit enum name — "RED" or "BROWN".
+        return info.putString("CowTypeName", getType().name());
     }
 
     @Override
     public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.keySet().contains("CowType")) {
-            setType(Type.values()[info.getInt("CowType")]);
+        if (info.keySet().contains("CowTypeName")) {
+            String name = info.getString("CowTypeName");
+            if (name != null && !name.isEmpty()) {
+                try {
+                    setType(MushroomCow.Variant.valueOf(name));
+                } catch (IllegalArgumentException ignored) {
+                }
+            }
         }
     }
 
     @Override
-    public void setType(Type type) {
+    public void setType(MushroomCow.Variant type) {
+        if (type == null) return;
         this.type = type;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 }

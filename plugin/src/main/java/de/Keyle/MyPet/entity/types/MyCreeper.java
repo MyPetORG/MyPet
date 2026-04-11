@@ -52,7 +52,7 @@ public class MyCreeper extends MyPet implements de.Keyle.MyPet.api.entity.types.
     public void setPowered(boolean flag) {
         this.isPowered = flag;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 }

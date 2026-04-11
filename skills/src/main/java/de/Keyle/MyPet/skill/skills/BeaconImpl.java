@@ -41,6 +41,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -63,10 +64,10 @@ public class BeaconImpl implements Beacon {
     protected BuffReceiver receiver = BuffReceiver.Owner;
     protected int beaconTimer = 0;
     protected Set<Buff> selectedBuffs = new HashSet<>();
-    org.bukkit.inventory.meta.SkullMeta disabledMeta;
-    org.bukkit.inventory.meta.SkullMeta partyMeta;
-    org.bukkit.inventory.meta.SkullMeta everyoneMeta;
-    org.bukkit.inventory.meta.SkullMeta ownerMeta;
+    SkullMeta disabledMeta;
+    SkullMeta partyMeta;
+    SkullMeta everyoneMeta;
+    SkullMeta ownerMeta;
 
     public BeaconImpl(MyPet myPet) {
         this.myPet = myPet;
@@ -84,7 +85,7 @@ public class BeaconImpl implements Beacon {
             partyMeta = createTexturedSkullMeta(headMaterial,
                     "http://textures.minecraft.net/texture/5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd");
             // owner skin
-            ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(headMaterial).getItemMeta();
+            ownerMeta = (SkullMeta) new ItemStack(headMaterial).getItemMeta();
             ownerMeta.setOwningPlayer(myPet.getOwner().getPlayer());
         }
 
@@ -678,8 +679,8 @@ public class BeaconImpl implements Beacon {
                 '}';
     }
 
-    private static org.bukkit.inventory.meta.SkullMeta createTexturedSkullMeta(Material headMaterial, String textureUrl) {
-        org.bukkit.inventory.meta.SkullMeta meta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(headMaterial).getItemMeta();
+    private static SkullMeta createTexturedSkullMeta(Material headMaterial, String textureUrl) {
+        SkullMeta meta = (SkullMeta) new ItemStack(headMaterial).getItemMeta();
         PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), null);
         String textureJson = "{\"textures\":{\"SKIN\":{\"url\":\"" + textureUrl + "\"}}}";
         String base64 = Base64.getEncoder().encodeToString(textureJson.getBytes());

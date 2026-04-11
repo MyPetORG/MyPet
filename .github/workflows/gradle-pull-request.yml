@@ -34,16 +34,6 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Cache Paperweight Dev Bundles
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches/paperweight
-            ~/.gradle/caches/VanillaGradle
-          key: ${{ runner.os }}-paperweight-${{ hashFiles('nms/**/build.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-paperweight-
-
       - name: Compile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

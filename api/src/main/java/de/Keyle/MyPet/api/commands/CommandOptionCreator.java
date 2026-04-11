@@ -38,7 +38,7 @@ public class CommandOptionCreator {
     }
 
     public CommandOptionCreator add(String from, String option) {
-        if (MyPetApi.getCompatUtil().isCompatible(from)) {
+        if (MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove(from)) {
             options.add(option);
         }
         return this;

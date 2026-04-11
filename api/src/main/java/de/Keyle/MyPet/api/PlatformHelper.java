@@ -22,25 +22,32 @@ package de.Keyle.MyPet.api;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetMinecraftEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import net.kyori.adventure.nbt.BinaryTagIO;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,9 +55,18 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.UUID;
 
-public abstract class PlatformHelper {
+/**
+ * Concrete platform helper using pure Bukkit/Paper API.
+ */
+public class PlatformHelper {
 
-    public abstract boolean canSpawn(Location loc, MyPetMinecraftEntity entity);
+    public boolean canSpawn(Location loc, Class<? extends Mob> mobClass) {
+        if (loc == null || loc.getWorld() == null) return false;
+        Block at = loc.getBlock();
+        if (!at.isPassable()) return false;
+        Block below = at.getRelative(BlockFace.DOWN);
+        return below.getType().isSolid();
+    }
 
     public String getPlayerLanguage(Player player) {
         String locale = player.getLocale();
@@ -59,10 +75,6 @@ public abstract class PlatformHelper {
         }
         return locale;
     }
-
-    public abstract CompoundBinaryTag entityToTag(Entity entity);
-
-    public abstract void applyTagToEntity(CompoundBinaryTag tag, Entity entity);
 
     public String getCommandSenderLanguage(CommandSender sender) {
         if (sender instanceof Player player) {
@@ -85,14 +97,40 @@ public abstract class PlatformHelper {
         }
     }
 
-    public abstract CompoundBinaryTag itemStackToCompound(ItemStack itemStack);
-
-    public abstract ItemStack compoundToItemStack(CompoundBinaryTag compound);
+    /**
+     * Serializes a Bukkit ItemStack to an adventure-nbt CompoundBinaryTag via
+     * Paper's {@code ItemStack#serializeAsBytes()} (vanilla codec format).
+     * Returns an empty tag for null/air/empty stacks — Paper's underlying
+     * serialization throws on empty items.
+     */
+    public CompoundBinaryTag itemStackToCompound(ItemStack itemStack) {
+        if (itemStack == null || itemStack.getType().isAir() || itemStack.getAmount() <= 0) {
+            return CompoundBinaryTag.empty();
+        }
+        try {
+            byte[] bytes = itemStack.serializeAsBytes();
+            return BinaryTagIO.reader().read(new ByteArrayInputStream(bytes), BinaryTagIO.Compression.GZIP);
+        } catch (Throwable e) {
+            ErrorUtil.report(e);
+            return CompoundBinaryTag.empty();
+        }
+    }
 
     /**
-     * Builds the action bar message for pet health updates so it can be reused by all NMS modules.
-     * This method only constructs the message; caller is responsible for sending and for any gating (e.g., config flags).
+     * Deserializes an adventure-nbt CompoundBinaryTag to a Bukkit ItemStack via
+     * Paper's {@code ItemStack.deserializeBytes()} (vanilla codec format).
      */
+    public ItemStack compoundToItemStack(CompoundBinaryTag compound) {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            BinaryTagIO.writer().write(compound, out, BinaryTagIO.Compression.GZIP);
+            return ItemStack.deserializeBytes(out.toByteArray());
+        } catch (Throwable e) {
+            ErrorUtil.report(e);
+            return ItemStack.empty();
+        }
+    }
+
     public Component buildPetHealthActionBar(MyPet myPet, double health, double maxHealth) {
         if (myPet == null) {
             return Component.empty();
@@ -127,16 +165,23 @@ public abstract class PlatformHelper {
         return parsed;
     }
 
-    public abstract void addZombieTargetGoal(Zombie zombie);
+    public boolean comparePlayerWithEntity(MyPetPlayer player, Object obj) {
+        if (obj instanceof Player p) {
+            return p.getUniqueId().equals(player.getUniqueId());
+        }
+        return false;
+    }
 
-    public abstract boolean comparePlayerWithEntity(MyPetPlayer player, Object obj);
+    public void doPickupAnimation(Entity entity, Entity target) {
+        // NMS sent a ClientboundTakeItemEntityPacket. No pure-Bukkit equivalent.
+        // The visual pickup animation is cosmetic; skip for now.
+    }
 
-    public abstract boolean isEquipment(ItemStack itemStack);
-
-
-    public abstract void doPickupAnimation(Entity entity, Entity target);
-
-    public abstract Entity getEntity(int id, World world);
+    public Entity getEntity(int id, World world) {
+        // NMS entity lookup by network ID — no Bukkit equivalent.
+        // Callers should use UUID-based lookup instead.
+        return null;
+    }
 
     public double distanceSquared(Location a, Location b) {
         if (!a.getWorld().equals(b.getWorld())) {
@@ -162,11 +207,20 @@ public abstract class PlatformHelper {
         return Bukkit.getEntity(uuid);
     }
 
-    public abstract String getLastDamageSource(LivingEntity e);
+    public String getLastDamageSource(LivingEntity e) {
+        EntityDamageEvent event = e.getLastDamageCause();
+        return event != null ? event.getCause().name() : "GENERIC";
+    }
 
-    public abstract String itemstackToString(ItemStack itemStack);
+    public String itemstackToString(ItemStack itemStack) {
+        if (itemStack == null || itemStack.getType().isAir()) return "AIR";
+        return itemStack.getType().name();
+    }
 
-    public abstract boolean gameruleDoDeathMessages(LivingEntity e);
+    public boolean gameruleDoDeathMessages(LivingEntity e) {
+        Boolean value = e.getWorld().getGameRuleValue(GameRule.SHOW_DEATH_MESSAGES);
+        return value != null && value;
+    }
 
     public boolean doStackWalking(Class<?> leClass, int oldDepth) {
         return false;

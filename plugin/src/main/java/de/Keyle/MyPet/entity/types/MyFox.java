@@ -22,40 +22,70 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Fox.Type;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-@Getter
 public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFox {
 
-    protected Type foxType = Type.RED;
+    /**
+     * Storage is by enum name (e.g. "RED", "SNOW") rather than ordinal so the
+     * value is drift-safe if Paper reorders or adds {@code Fox.Type} variants.
+     */
+    protected String foxTypeName = Type.RED.name();
 
     public MyFox(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
+    @Override
+    public Type getFoxType() {
+        try {
+            return Type.valueOf(foxTypeName);
+        } catch (Throwable ignored) {
+            return Type.RED;
+        }
+    }
+
     public void setFoxType(Type value) {
-        this.foxType = value;
+        if (value != null) {
+            this.foxTypeName = value.name();
+        }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
     @Override
     public CompoundBinaryTag writeExtendedInfo() {
         CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putInt("FoxType", getFoxType().ordinal());
+        info = info.putString("FoxTypeName", foxTypeName);
         return info;
     }
 
     @Override
     public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.keySet().contains("FoxType")) {
-            setFoxType(Type.values()[info.getInt("FoxType")]);
+        if (info.keySet().contains("FoxTypeName")) {
+            String name = info.getString("FoxTypeName");
+            if (name != null && !name.isEmpty()) {
+                try {
+                    Type.valueOf(name); // validate
+                    this.foxTypeName = name;
+                } catch (Throwable ignored) {
+                }
+            }
+        } else if (info.keySet().contains("FoxType")) {
+            // Legacy format: int ordinal. Migrate via current runtime's values().
+            try {
+                int ord = info.getInt("FoxType");
+                Type[] values = Type.values();
+                if (ord >= 0 && ord < values.length) {
+                    this.foxTypeName = values[ord].name();
+                }
+            } catch (Throwable ignored) {
+            }
         }
     }
 

@@ -22,9 +22,8 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Location;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +34,12 @@ public class VehicleListener implements Listener {
 
     @EventHandler
     public void on(VehicleEnterEvent event) {
-        if (event.getEntered() instanceof Player player && !(event.getVehicle() instanceof Horse)) {
+        // Despawn the player's pet when they enter a foreign vehicle (boat,
+        // minecart, etc.) so it doesn't get stranded. Riding the pet itself
+        // also fires VehicleEnterEvent with vehicle = the pet mob — exempt
+        // that case via the PetEntityMarker check.
+        if (event.getEntered() instanceof Player player
+                && !PetEntityMarker.isMarked(event.getVehicle())) {
             if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
                 MyPet pet = MyPetApi.getMyPetManager().getMyPet(player);
                 if (pet.getStatus() == MyPet.PetState.Here) {
@@ -43,7 +47,7 @@ public class VehicleListener implements Listener {
                 }
             }
         }
-        if (event.getEntered() instanceof MyPetBukkitEntity) {
+        if (PetEntityMarker.isMarked(event.getEntered())) {
             event.setCancelled(true);
         }
     }
@@ -51,7 +55,7 @@ public class VehicleListener implements Listener {
     @EventHandler
     public void onSuffocate(EntityDamageEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION && event.getEntity() instanceof Player) {
-            if (event.getEntity().getVehicle() instanceof MyPetBukkitEntity) {
+            if (PetEntityMarker.isMarked(event.getEntity().getVehicle())) {
                 Location loc = event.getEntity().getLocation();
                 if (loc.getWorld().getWorldBorder().isInside(loc)) {
                     event.setCancelled(true);

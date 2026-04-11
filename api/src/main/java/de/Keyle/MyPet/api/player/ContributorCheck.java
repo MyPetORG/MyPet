@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.player;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import org.bukkit.Bukkit;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,7 +33,7 @@ public class ContributorCheck {
     private static final long REFRESH_INTERVAL_TICKS = 10 * 60 * 20L; // 10 minutes in ticks
 
     public static void startRefreshTask() {
-        org.bukkit.Bukkit.getScheduler().runTaskTimerAsynchronously(
+        Bukkit.getScheduler().runTaskTimerAsynchronously(
                 MyPetApi.getPlugin(),
                 ContributorCheck::refreshContributorMap,
                 REFRESH_INTERVAL_TICKS,

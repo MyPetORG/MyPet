@@ -23,30 +23,36 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
-import lombok.Setter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 @Getter
 public class MyPufferfish extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPufferfish {
 
-    @Setter
-    protected PuffState puffState = PuffState.Unpuffed;
+    protected int puffState = 0;
 
     public MyPufferfish(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
+    public void setPuffState(int state) {
+        this.puffState = Math.max(0, Math.min(2, state));
+        if (status == PetState.Here) {
+            updateVisuals();
+        }
+    }
+
+    @Override
     public CompoundBinaryTag writeExtendedInfo() {
         CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putInt("PuffState", puffState.ordinal());
+        return info.putInt("PuffState", puffState);
     }
 
     @Override
     public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
         if (info.keySet().contains("PuffState")) {
-            setPuffState(PuffState.values()[info.getInt("PuffState")]);
+            setPuffState(info.getInt("PuffState"));
         }
     }
 }

@@ -60,7 +60,7 @@ public class MyPiglin extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     public void setShakeImmune(boolean flag) {
         this.shakeImmune = flag;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 }

@@ -24,7 +24,9 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPet;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Location;
@@ -454,7 +456,8 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
     // ==================== INSTANCE FIELDS ====================
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private final AbstractNavigation nav;
     private final float stopDistance;
     private final double startDistance;
@@ -500,9 +503,10 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
      * @param flyingPet        whether this Pet uses flying movement
      * @param aquaticPet       whether this Pet has aquatic navigation capabilities
      */
-    public PetFollowOwnerGoal(MyPetBukkitEntity petEntity, double startDistance, float stopDistance, float teleportDistance, boolean flyingPet, boolean aquaticPet) {
-        this.petEntity = petEntity;
-        this.nav = petEntity.getHandle().getPetNavigation();
+    public PetFollowOwnerGoal(MyPet pet, Mob mob, double startDistance, float stopDistance, float teleportDistance, boolean flyingPet, boolean aquaticPet) {
+        this.pet = pet;
+        this.mob = mob;
+        this.nav = pet.getPetNavigation();
         this.startDistance = startDistance * startDistance;
         this.stopDistance = stopDistance * stopDistance;
         this.teleportDistance = teleportDistance * teleportDistance;
@@ -518,11 +522,11 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
      * {@code true} if the owner is present and online.
      */
     private boolean refreshOwner() {
-        if (petEntity.getOwner() == null) {
+        if (pet.getOwner() == null) {
             this.owner = null;
             return false;
         }
-        this.owner = petEntity.getOwner().getPlayer();
+        this.owner = pet.getOwner().getPlayer();
         return this.owner != null;
     }
 
@@ -535,7 +539,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
      * @return {@code true} if the Pet is in water and has aquatic navigation
      */
     private boolean isSwimmingPet() {
-        return (petEntity.isInWater() || petEntity.isInBubbleColumn()) && aquaticPet;
+        return (mob.isInWater() || mob.isInBubbleColumn()) && aquaticPet;
     }
 
     /**
@@ -566,16 +570,18 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         // activations don't iterate the goal list every tick for flying pets
         // (which have no PetControlGoal registered).
         if (controlPathfinderGoal == null && !controlGoalLookupDone) {
+            // petEntity may be a LegacyBukkitAdapter proxy — use the real Bukkit Mob
+            // for Paper's internal CraftMob-keyed lookup.
             Goal<Mob> goal =
-                    org.bukkit.Bukkit.getMobGoals().getGoal((Mob) petEntity, PetGoalKey.CONTROL);
+                    Bukkit.getMobGoals().getGoal(pet.getBukkitEntity(), PetGoalKey.CONTROL);
             if (goal instanceof PetControlGoal pcg) {
                 controlPathfinderGoal = pcg;
             }
             controlGoalLookupDone = true;
         }
-        if (!this.petEntity.canMove()) {
+        if (!this.pet.canMove()) {
             return false;
-        } else if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
+        } else if (this.pet.getMyPetTarget() != null && !this.pet.getMyPetTarget().isDead()) {
             return false;
         } else if (!refreshOwner()) {
             return false;
@@ -583,7 +589,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
         // Use tighter constraint when owner is stationary to eliminate dead zone with RandomStroll
         // ownerMovementSpeed might not be initialized yet on first tick, so also check position delta
-        double distSqToOwner = petEntity.getLocation().distanceSquared(owner.getLocation());
+        double distSqToOwner = mob.getLocation().distanceSquared(owner.getLocation());
         double effectiveStartDistance = this.startDistance;
         if (ownerMovementSpeed < OWNER_STATIONARY_THRESHOLD) {
             // Owner is stationary - use same tight constraint as RandomStroll
@@ -610,12 +616,12 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
             effectiveStopDistance = STATIONARY_MAX_DIST_SQ;
         }
 
-        double distSq = petEntity.getLocation().distanceSquared(owner.getLocation());
+        double distSq = mob.getLocation().distanceSquared(owner.getLocation());
         if (distSq < effectiveStopDistance) {
             return false;
-        } else if (!this.petEntity.canMove()) {
+        } else if (!this.pet.canMove()) {
             return false;
-        } else if (this.petEntity.getMyPetTarget() != null && !this.petEntity.getMyPetTarget().isDead()) {
+        } else if (this.pet.getMyPetTarget() != null && !this.pet.getMyPetTarget().isDead()) {
             return false;
         }
         return true;
@@ -626,7 +632,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         if (!refreshOwner()) {
             return;
         }
-        double distance = Math.sqrt(petEntity.getLocation().distanceSquared(owner.getLocation()));
+        double distance = Math.sqrt(mob.getLocation().distanceSquared(owner.getLocation()));
         applyWalkSpeed(distance);
     }
 
@@ -664,7 +670,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         }
 
         // Check world match to avoid cross-world distance calculations
-        if (!petEntity.getWorld().equals(owner.getWorld())) {
+        if (!mob.getWorld().equals(owner.getWorld())) {
             return;
         }
 
@@ -675,7 +681,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         double currentOwnerZ = ownerLoc.getZ();
         // Use server tick count, not local counter — local counter doesn't advance while goal is stopped,
         // causing massive speed spikes when the goal restarts after a gap
-        int currentTick = org.bukkit.Bukkit.getCurrentTick();
+        int currentTick = Bukkit.getCurrentTick();
         int ticksSinceLastUpdate = currentTick - lastTrackingTick;
         lastTrackingTick = currentTick;
 
@@ -701,13 +707,12 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         lastOwnerX = currentOwnerX;
         lastOwnerZ = currentOwnerZ;
 
-        Location petLoc = petEntity.getLocation();
+        Location petLoc = mob.getLocation();
         double distanceSqr = petLoc.distanceSquared(ownerLoc);
         double distance = Math.sqrt(distanceSqr);
 
         // Look at owner only every LOOKAT_INTERVAL ticks
         if (--lookAtTimer <= 0) {
-            Mob mob = (Mob) petEntity;
             mob.lookAt(owner, mob.getHeadRotationSpeed(), mob.getMaxHeadPitch());
             lookAtTimer = LOOKAT_INTERVAL;
         }
@@ -733,7 +738,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
             // Swim on the surface toward owner's horizontal position
             // Use velocity-based movement since we can't use normal pathfinding underwater
-            Vector vel = ((Mob) petEntity).getVelocity();
+            Vector vel = mob.getVelocity();
 
             // Normalize horizontal direction
             double dirX = hdx / horizontalDist;
@@ -751,10 +756,10 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
             newVelZ = vel.getZ() * SURFACE_SWIM_BLEND + newVelZ * SURFACE_SWIM_BLEND;
 
             Vector newVel = new Vector(newVelX, vel.getY(), newVelZ);
-            ((Mob) petEntity).setVelocity(newVel);
+            mob.setVelocity(newVel);
 
             // Look at owner while swimming
-            Mob swimmingMob = (Mob) petEntity;
+            Mob swimmingMob = mob;
             swimmingMob.lookAt(owner, swimmingMob.getHeadRotationSpeed(), swimmingMob.getMaxHeadPitch());
 
             // Don't do normal pathfinding or teleporting - we're handling movement ourselves
@@ -764,7 +769,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         }
 
         // Teleportation
-        if (this.petEntity.canMove()) {
+        if (this.pet.canMove()) {
             if ((!owner.isFlying() && !owner.isGliding()) || flyingPet) {
                 if (!waitForGround) {
                     if (owner.getFallDistance() <= 4 || flyingPet) {
@@ -773,15 +778,15 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                             // so controlPathfinderGoal is always null for them.
                             // Treat a null reference as "not control-moving".
                             boolean noControlMove = controlPathfinderGoal == null || controlPathfinderGoal.moveTo == null;
-                            if (noControlMove && !petEntity.hasTarget()) {
+                            if (noControlMove && !pet.hasTarget()) {
                                 Location ownerLocation = owner.getLocation();
-                                if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, this.petEntity.getHandle())) {
+                                if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, mob.getClass().asSubclass(Mob.class))) {
                                     // Stop navigation and velocity before teleport
                                     this.nav.stop();
-                                    ((Mob) petEntity).setVelocity(new Vector(0, 0, 0));
+                                    mob.setVelocity(new Vector(0, 0, 0));
                                     // Teleport without collision checks
-                                    ((Mob) petEntity).teleport(new Location(owner.getWorld(), ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ()));
-                                    ((Mob) petEntity).setFallDistance(0);
+                                    mob.teleport(new Location(owner.getWorld(), ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ()));
+                                    mob.setFallDistance(0);
                                     return;
                                 }
                             }
@@ -800,7 +805,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                 // Ground Pets use pathfinder + MOVEMENT_SPEED attribute — no velocity manipulation
                 boolean swimmingPet = isSwimmingPet();
                 if (flyingPet || swimmingPet) {
-                    Vector vel = ((Mob) petEntity).getVelocity();
+                    Vector vel = mob.getVelocity();
                     float ownerSpeed = owner.getWalkSpeed();
                     // Cap speed multiplier - Pets can't handle extreme speeds
                     // At speed 5 (0.5 walkspeed), raw multiplier would be 5.0, cap at MAX_SPEED_MULTIPLIER
@@ -840,7 +845,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                         double newY = vel.getY() * 0.3 + targetY * 0.7;
                         newY = Math.max(-maxYVel, Math.min(maxYVel, newY)); // Hard cap both directions
                         vel = new Vector(vel.getX(), newY, vel.getZ());
-                        ((Mob) petEntity).setVelocity(vel);
+                        mob.setVelocity(vel);
                     } // End of flyingPet Y-control block
 
                     double speed = vel.length();
@@ -928,7 +933,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                             double newVelZ = horizontalVel.getZ() * keepFactor + toOwnerNormalized.getZ() * horizontalSpeed * steerFactor;
 
                             Vector newVel = new Vector(newVelX, vel.getY(), newVelZ);
-                            ((Mob) petEntity).setVelocity(newVel);
+                            mob.setVelocity(newVel);
                             // Update vel for subsequent checks
                             vel = newVel;
                             speed = vel.length();
@@ -958,11 +963,11 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                                 brakeFactor = minBrakeSpeed / speed;
                             }
                             Vector newVel = vel.clone().multiply(brakeFactor);
-                            ((Mob) petEntity).setVelocity(newVel);
+                            mob.setVelocity(newVel);
                         } else if (speed > maxVel) {
                             // Cap velocity to prevent runaway acceleration
                             Vector newVel = vel.clone().normalize().multiply(maxVel);
-                            ((Mob) petEntity).setVelocity(newVel);
+                            mob.setVelocity(newVel);
                         }
                     }
                 }
@@ -973,7 +978,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                 // Very close - stop navigation and clear momentum
                 this.nav.stop();
                 if (flyingPet || isSwimmingPet()) {
-                    ((Mob) petEntity).setVelocity(new Vector(0, 0, 0));
+                    mob.setVelocity(new Vector(0, 0, 0));
                 }
             }
         }

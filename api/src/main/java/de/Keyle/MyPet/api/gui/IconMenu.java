@@ -191,7 +191,7 @@ public class IconMenu implements Listener {
             return;
         }
         if (inventory == null) {
-            inventory = MyPetApi.getCompatUtil().getCompatInstance(IconMenuInventory.class, "util.iconmenu", "IconMenuInventory");
+            inventory = new IconMenuInventory();
         }
         inventory.open(this, player);
     }

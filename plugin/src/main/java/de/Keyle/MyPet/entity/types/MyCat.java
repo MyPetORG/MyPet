@@ -20,48 +20,76 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.DyeColor;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.entity.Cat.Type;
 
-@Getter
 public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCat {
 
+    @Getter
     protected boolean tamed = false;
-    protected Type catType = Type.TABBY;
+    /**
+     * Storage uses the NamespacedKey path (e.g. "tabby", "black", "calico")
+     * rather than an ordinal, so the variant is drift-safe across Paper
+     * version upgrades that reorder the {@code Cat.Type} registry. The public
+     * {@link #getCatType()} / {@link #setCatType(Type)} API is unchanged.
+     */
+    protected String catTypeKey = "tabby";
+    @Getter
     protected DyeColor collarColor = DyeColor.RED;
+
     public MyCat(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
+    @Override
+    public Type getCatType() {
+        try {
+            Type type = Registry.CAT_VARIANT.get(NamespacedKey.minecraft(catTypeKey));
+            if (type != null) return type;
+        } catch (Throwable ignored) {
+        }
+        try {
+            return Registry.CAT_VARIANT.get(NamespacedKey.minecraft("tabby"));
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    @Override
     public void setCatType(Type value) {
-        this.catType = value;
+        if (value != null && value.getKey() != null) {
+            this.catTypeKey = value.getKey().getKey();
+        }
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
     public void setCollarColor(DyeColor value) {
         this.collarColor = value;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
     public void setTamed(boolean flag) {
         this.tamed = flag;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
     @Override
     public CompoundBinaryTag writeExtendedInfo() {
         CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putInt("CatType", getCatType().ordinal());
+        info = info.putString("CatTypeKey", catTypeKey);
         info = info.putInt("CollarColor", getCollarColor().ordinal());
         info = info.putBoolean("Tamed", isTamed());
         return info;
@@ -70,9 +98,23 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
     @Override
     public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.keySet().contains("CatType")) {
-            Type leType = OwnCatType.values()[info.getInt("CatType")].getBukkitType();
-            setCatType(leType);
+        if (info.keySet().contains("CatTypeKey")) {
+            String key = info.getString("CatTypeKey");
+            if (key != null && !key.isEmpty()) {
+                this.catTypeKey = key;
+            }
+        } else if (info.keySet().contains("CatType")) {
+            // Legacy format: int ordinal written by pre-fix writeExtendedInfo.
+            // Migrate by looking up the name from the hardcoded legacy table.
+            try {
+                int ord = info.getInt("CatType");
+                String legacyKey = legacyOrdinalKey(ord);
+                if (legacyKey != null) {
+                    this.catTypeKey = legacyKey;
+                }
+            } catch (Exception e) {
+                MyPetApi.getLogger().warning("Failed to migrate legacy Cat variant ordinal: " + e.getMessage());
+            }
         }
         if (info.keySet().contains("CollarColor")) {
             if (info.get("CollarColor") instanceof net.kyori.adventure.nbt.IntBinaryTag) {
@@ -86,29 +128,13 @@ public class MyCat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCa
         }
     }
 
-    // Needed as some newer versions have integer -> Type mismatches
-    enum OwnCatType {
-        TABBY(Type.TABBY),
-        BLACK(Type.BLACK),
-        RED(Type.RED),
-        SIAMESE(Type.SIAMESE),
-        BRITISH_SHORTHAIR(Type.BRITISH_SHORTHAIR),
-        CALICO(Type.CALICO),
-        PERSIAN(Type.PERSIAN),
-        RAGDOLL(Type.RAGDOLL),
-        WHITE(Type.WHITE),
-        JELLIE(Type.JELLIE),
-        ALL_BLACK(Type.ALL_BLACK),
-        ;
+    private static final String[] LEGACY_CAT_ORDINAL_KEYS = {
+            "tabby", "black", "red", "siamese", "british_shorthair",
+            "calico", "persian", "ragdoll", "white", "jellie", "all_black"
+    };
 
-        private Type bukkitType;
-
-        OwnCatType(Type type) {
-            bukkitType = type;
-        }
-
-        public Type getBukkitType() {
-            return bukkitType;
-        }
+    private static String legacyOrdinalKey(int ord) {
+        if (ord < 0 || ord >= LEGACY_CAT_ORDINAL_KEYS.length) return null;
+        return LEGACY_CAT_ORDINAL_KEYS[ord];
     }
 }

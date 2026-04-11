@@ -4,7 +4,8 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
@@ -14,12 +15,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.EnumSet;
+
+import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
 
 /**
  * Paper {@link Goal} that pairs up two MyPets whose owners have both set
@@ -54,19 +56,21 @@ import java.util.EnumSet;
  */
 public class PetDuelTargetGoal implements Goal<Mob> {
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private final MyPet myPet;
     private final double range;
-    private MyPetBukkitEntity target;
-    private MyPetBukkitEntity duelOpponent = null;
+    private Mob target;
+    private Mob duelOpponent = null;
 
     /**
      * @param petEntity the pet that will look for a duel partner
      * @param range     radius (in blocks) of the "near owner" search box
      */
-    public PetDuelTargetGoal(MyPetBukkitEntity petEntity, float range) {
-        this.petEntity = petEntity;
-        this.myPet = petEntity.getMyPet();
+    public PetDuelTargetGoal(MyPet pet, Mob mob, float range) {
+        this.pet = pet;
+        this.mob = mob;
+        this.myPet = pet;
         this.range = range;
     }
 
@@ -79,10 +83,10 @@ public class PetDuelTargetGoal implements Goal<Mob> {
         if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
-        if (!petEntity.canMove()) {
+        if (!pet.canMove()) {
             return false;
         }
-        if (petEntity.hasTarget()) {
+        if (pet.hasTarget()) {
             return false;
         }
         if (duelOpponent != null) {
@@ -90,7 +94,7 @@ public class PetDuelTargetGoal implements Goal<Mob> {
             return true;
         }
 
-        Player owner = petEntity.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         if (owner == null) {
             return false;
         }
@@ -98,31 +102,30 @@ public class PetDuelTargetGoal implements Goal<Mob> {
 
         Collection<Entity> nearby = ownerLoc.getWorld().getNearbyEntities(ownerLoc, range, range, range);
         for (Entity entity : nearby) {
-            if (!(entity instanceof MyPetBukkitEntity otherPet) || entity.equals(petEntity)) {
+            if (!PetEntityMarker.isMarked(entity) || entity.equals(mob)) {
                 continue;
             }
-            if (otherPet.isDead()) {
+            if (!(entity instanceof Mob otherMob) || otherMob.isDead()) {
                 continue;
             }
-            MyPet targetMyPet = otherPet.getMyPet();
+            MyPet targetMyPet = getMyPetManager().getMyPetFromEntity(otherMob);
+            if (targetMyPet == null) {
+                continue;
+            }
             if (!targetMyPet.getSkills().isActive(BehaviorImpl.class)) {
                 continue;
             }
-            if (!otherPet.canMove()) {
+            if (!targetMyPet.canMove()) {
                 continue;
             }
             BehaviorImpl targetBehavior = targetMyPet.getSkills().get(BehaviorImpl.class);
             if (targetBehavior.getBehavior() != BehaviorMode.Duel) {
                 continue;
             }
-            // Accept opponents that can deal damage via either melee or ranged,
-            // matching the self-eligibility check at the top of this method.
-            // A pet built purely around a bow/crossbow skilltree is a valid
-            // duel partner.
             if (targetMyPet.getDamage() == 0 && targetMyPet.getRangedDamage() == 0) {
                 continue;
             }
-            this.target = otherPet;
+            this.target = otherMob;
             return true;
         }
         return false;
@@ -130,13 +133,13 @@ public class PetDuelTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
-        if (!petEntity.canMove()) {
+        if (!pet.canMove()) {
             return false;
         }
-        if (!petEntity.hasTarget()) {
+        if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity currentTarget = petEntity.getMyPetTarget();
+        LivingEntity currentTarget = pet.getMyPetTarget();
         if (currentTarget == null || currentTarget.isDead()) {
             return false;
         }
@@ -147,47 +150,42 @@ public class PetDuelTargetGoal implements Goal<Mob> {
         if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
-        if (!currentTarget.getWorld().equals(petEntity.getWorld())) {
+        if (!currentTarget.getWorld().equals(mob.getWorld())) {
             return false;
         }
-        if (petEntity.getLocation().distanceSquared(currentTarget.getLocation()) > 400) {
+        if (mob.getLocation().distanceSquared(currentTarget.getLocation()) > 400) {
             return false;
         }
-        Player owner = petEntity.getOwner().getPlayer();
-        return owner != null && petEntity.getLocation().distanceSquared(owner.getLocation()) <= 600;
+        Player owner = pet.getOwner().getPlayer();
+        return owner != null && mob.getLocation().distanceSquared(owner.getLocation()) <= 600;
     }
 
     @Override
     public void start() {
-        petEntity.setTarget(this.target, TargetPriority.Duel);
+        pet.setTarget(this.target, TargetPriority.Duel);
         setDuelOpponent(this.target);
-        Goal<Mob> opponentGoal = Bukkit.getMobGoals().getGoal((Mob) target, PetGoalKey.DUEL_TARGET);
+        Goal<Mob> opponentGoal = Bukkit.getMobGoals().getGoal(target, PetGoalKey.DUEL_TARGET);
         if (opponentGoal instanceof PetDuelTargetGoal opponentDuelGoal) {
-            opponentDuelGoal.setDuelOpponent(this.petEntity);
+            opponentDuelGoal.setDuelOpponent(mob);
         }
     }
 
     @Override
     public void stop() {
-        // Symmetric de-wire: start() wired both pets' duelOpponent fields, so
-        // stop() must clear BOTH. Without this, the other pet's shouldActivate()
-        // sees its own duelOpponent != null on the next tick and instantly
-        // re-engages, causing the duel to loop forever even after the first
-        // pet has been despawned or switched behavior mode.
-        MyPetBukkitEntity opponent = duelOpponent != null ? duelOpponent : target;
+        Mob opponent = duelOpponent != null ? duelOpponent : target;
         if (opponent != null) {
-            Goal<Mob> opponentGoal = Bukkit.getMobGoals().getGoal((Mob) opponent, PetGoalKey.DUEL_TARGET);
+            Goal<Mob> opponentGoal = Bukkit.getMobGoals().getGoal(opponent, PetGoalKey.DUEL_TARGET);
             if (opponentGoal instanceof PetDuelTargetGoal opponentDuelGoal && opponentDuelGoal != this) {
                 opponentDuelGoal.duelOpponent = null;
             }
         }
-        petEntity.forgetTarget();
+        pet.forgetTarget();
         duelOpponent = null;
         target = null;
     }
 
     /** @return the pet currently being dueled, or {@code null} if none */
-    public MyPetBukkitEntity getDuelOpponent() {
+    public Mob getDuelOpponent() {
         return duelOpponent;
     }
 
@@ -196,7 +194,7 @@ public class PetDuelTargetGoal implements Goal<Mob> {
      * sides of a duel so each pet can resolve its partner without
      * rescanning the entity list on subsequent ticks.
      */
-    public void setDuelOpponent(MyPetBukkitEntity opponent) {
+    public void setDuelOpponent(Mob opponent) {
         this.duelOpponent = opponent;
     }
 

@@ -60,13 +60,13 @@ public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBe
 
     @Override
     public boolean hasNectar() {
-        return false;
+        return hasNectar;
     }
 
     public void setHasNectar(boolean flag) {
         this.hasNectar = flag;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -79,7 +79,7 @@ public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBe
     public void setHasStung(boolean flag) {
         this.hasStung = flag;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 
@@ -87,7 +87,7 @@ public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBe
     public void setAngry(boolean flag) {
         this.angry = flag;
         if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+            updateVisuals();
         }
     }
 }

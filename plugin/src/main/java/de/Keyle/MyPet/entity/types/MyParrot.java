@@ -22,13 +22,17 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.Parrot;
 
-@Getter
 public class MyParrot extends MyPet implements de.Keyle.MyPet.api.entity.types.MyParrot {
 
-    protected int variant = 0;
+    /**
+     * Variant stored by enum-name (e.g. "RED_BLUE", "BLUE", "GREEN") rather
+     * than ordinal — drift-safe across Paper updates that reorder or extend
+     * {@code Parrot.Variant}.
+     */
+    protected String variantName = "RED_BLUE";
 
     public MyParrot(MyPetPlayer petOwner) {
         super(petOwner);
@@ -38,24 +42,59 @@ public class MyParrot extends MyPet implements de.Keyle.MyPet.api.entity.types.M
         return 1;
     }
 
-    public void setVariant(int variant) {
-        this.variant = Math.min(4, Math.max(0, variant));
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());
+    /**
+     * Returns the ordinal of the stored variant in the current runtime's
+     * {@code Parrot.Variant} registry.
+     */
+    public int getVariant() {
+        try {
+            Parrot.Variant v = resolveBukkitVariant();
+            return v != null ? v.ordinal() : 0;
+        } catch (Throwable ignored) {
+            return 0;
         }
+    }
+
+    public void setVariant(int variant) {
+        try {
+            Parrot.Variant[] values = Parrot.Variant.values();
+            int clamped = Math.min(values.length - 1, Math.max(0, variant));
+            this.variantName = values[clamped].name();
+        } catch (Throwable ignored) {
+        }
+        if (status == PetState.Here) {
+            updateVisuals();
+        }
+    }
+
+    public Parrot.Variant resolveBukkitVariant() {
+        try {
+            for (Parrot.Variant v : Parrot.Variant.values()) {
+                if (v.name().equals(variantName)) return v;
+            }
+            Parrot.Variant[] values = Parrot.Variant.values();
+            if (values.length > 0) return values[0];
+        } catch (Throwable ignored) {
+        }
+        return null;
     }
 
     @Override
     public CompoundBinaryTag writeExtendedInfo() {
         CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putInt("Variant", getVariant());
+        info = info.putString("VariantName", variantName);
         return info;
     }
 
     @Override
     public void readExtendedInfo(CompoundBinaryTag info) {
         super.readExtendedInfo(info);
-        if (info.keySet().contains("Variant")) {
+        if (info.keySet().contains("VariantName")) {
+            String name = info.getString("VariantName");
+            if (name != null && !name.isEmpty()) {
+                this.variantName = name;
+            }
+        } else if (info.keySet().contains("Variant")) {
             setVariant(info.getInt("Variant"));
         }
     }

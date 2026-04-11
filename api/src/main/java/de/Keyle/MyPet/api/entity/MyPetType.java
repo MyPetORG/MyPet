@@ -21,7 +21,9 @@
 package de.Keyle.MyPet.api.entity;
 
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Mob;
 
 import java.util.*;
 
@@ -59,11 +61,26 @@ public final class MyPetType {
     private final String name;
     private final String bukkitName;
     private final Class<? extends MyPet> mypetClass;
+    private final Class<? extends Mob> bukkitEntityClass;
 
     private MyPetType(String name, String bukkitName, Class<? extends MyPet> mypetClass) {
         this.name = name;
         this.bukkitName = bukkitName;
         this.mypetClass = mypetClass;
+        this.bukkitEntityClass = resolveBukkitEntityClass(bukkitName);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Class<? extends Mob> resolveBukkitEntityClass(String bukkitName) {
+        try {
+            EntityType bukkitType = EntityType.valueOf(bukkitName);
+            Class<? extends Entity> cls = bukkitType.getEntityClass();
+            if (cls != null && Mob.class.isAssignableFrom(cls)) {
+                return cls.asSubclass(Mob.class);
+            }
+        } catch (IllegalArgumentException ignored) {
+        }
+        return null;
     }
 
     /**
@@ -162,6 +179,39 @@ public final class MyPetType {
 
     public Class<? extends MyPet> getMyPetClass() {
         return mypetClass;
+    }
+
+    public Class<? extends Mob> getBukkitEntityClass() {
+        return bukkitEntityClass;
+    }
+
+    private static final Set<String> FLYING_PET_NAMES = Set.of(
+            "Bat", "Bee", "Allay", "Parrot", "Vex", "Phantom", "Ghast", "Wither", "EnderDragon"
+    );
+
+    private static final Set<String> AQUATIC_PET_NAMES = Set.of(
+            "Frog", "GlowSquid", "Dolphin", "Cod", "Tadpole", "Salmon", "Axolotl",
+            "Squid", "Drowned", "ElderGuardian", "Turtle", "Pufferfish", "Guardian", "TropicalFish"
+    );
+
+    public boolean isFlyingPet() {
+        return FLYING_PET_NAMES.contains(name);
+    }
+
+    public boolean isAquaticPet() {
+        return AQUATIC_PET_NAMES.contains(name);
+    }
+
+    public boolean usesPaperMovement() {
+        return isFlyingPet() || isAquaticPet();
+    }
+
+    public boolean floatsInLava() {
+        return false;
+    }
+
+    public boolean specialFloat() {
+        return false;
     }
 
     public boolean checkMinecraftVersion() {

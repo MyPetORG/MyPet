@@ -108,7 +108,7 @@ public class LevelListener implements Listener {
 
         if (myPet.getStatus() == MyPet.PetState.Here) {
             myPet.getEntity().ifPresent(entity -> {
-                entity.getHandle().updateNameTag();
+                myPet.updateNameTag();
                 if (!event.isQuiet()) {
                     myPet.setHealth(myPet.getMaxHealth());
                     myPet.setSaturation(100);
@@ -156,7 +156,7 @@ public class LevelListener implements Listener {
 
         if (myPet.getStatus() == MyPet.PetState.Here) {
             myPet.getEntity().ifPresent(entity -> {
-                entity.getHandle().updateNameTag();
+                myPet.updateNameTag();
                 if (!event.isQuiet()) {
                     myPet.setHealth(myPet.getMaxHealth());
                     myPet.setSaturation(100);

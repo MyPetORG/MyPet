@@ -43,16 +43,6 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Cache Paperweight Dev Bundles
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches/paperweight
-            ~/.gradle/caches/VanillaGradle
-          key: ${{ runner.os }}-paperweight-${{ hashFiles('nms/**/build.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-paperweight-
-
       - name: Read version and game versions
         shell: bash
         run: |
@@ -60,13 +50,24 @@ jobs:
           PROJECT_VERSION=$(grep -Po 'baseVersion\s*=\s*"\K[^"]+' build.gradle.kts)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> "$GITHUB_ENV"
 
-          # Extract Minecraft versions from MinecraftVersion.java enum constants
-          MC_VERSION_FILE=api/src/main/java/de/Keyle/MyPet/api/util/MinecraftVersion.java
-          GAME_VERSIONS=$(grep -oP '"\K\d+\.\d+(?:\.\d+)?(?=")' "$MC_VERSION_FILE")
-          if [[ -z "$GAME_VERSIONS" ]]; then
-            echo "ERROR: No Minecraft versions extracted from $MC_VERSION_FILE" >&2
-            exit 1
-          fi
+          # Supported Minecraft versions for this build. Keep in sync with
+          # the twin copy in build-snapshot.yml and with the api-version floor
+          # in plugin/src/main/resources/plugin.yml.
+          GAME_VERSIONS=$(printf '%s\n' \
+            1.20.5 \
+            1.20.6 \
+            1.21 \
+            1.21.1 \
+            1.21.2 \
+            1.21.3 \
+            1.21.4 \
+            1.21.5 \
+            1.21.6 \
+            1.21.7 \
+            1.21.8 \
+            1.21.9 \
+            1.21.10 \
+            1.21.11)
           echo "GAME_VERSIONS<<EOF" >> "$GITHUB_ENV"
           echo "$GAME_VERSIONS" >> "$GITHUB_ENV"
           echo "EOF" >> "$GITHUB_ENV"

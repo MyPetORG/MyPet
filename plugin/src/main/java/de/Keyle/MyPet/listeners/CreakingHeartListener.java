@@ -36,8 +36,8 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.entity.visual.PetStateSnapshot;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -181,8 +181,7 @@ public class CreakingHeartListener implements Listener {
         inactiveMyPet.setWorldGroup(worldGroup.getName());
         inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
 
-        Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
-        converter.ifPresent(service -> inactiveMyPet.setInfo(service.convertEntity(linkedCreaking)));
+        inactiveMyPet.setInfo(PetStateSnapshot.toTag(linkedCreaking));
 
         // Store the location before removing
         final Location capturedEntityLocation = linkedCreaking.getLocation().clone();

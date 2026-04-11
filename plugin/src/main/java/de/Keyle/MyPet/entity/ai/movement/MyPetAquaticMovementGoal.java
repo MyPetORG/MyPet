@@ -3,7 +3,8 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPet;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -36,12 +37,12 @@ public class MyPetAquaticMovementGoal implements Goal<Mob> {
     private static final double MIN_Y_FORCE = 0.03D;
     private static final double RAD_TO_DEG = 57.2957763671875D;
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
     private final Mob mob;
 
-    public MyPetAquaticMovementGoal(MyPetBukkitEntity petEntity) {
-        this.petEntity = petEntity;
-        this.mob = (Mob) petEntity;
+    public MyPetAquaticMovementGoal(MyPet pet, Mob mob) {
+        this.pet = pet;
+        this.mob = mob;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class MyPetAquaticMovementGoal implements Goal<Mob> {
             return; // On land: default MoveControl handles everything
         }
 
-        Player owner = petEntity.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         if (owner == null) return;
 
         Location petLoc = mob.getLocation();
@@ -68,11 +69,11 @@ public class MyPetAquaticMovementGoal implements Goal<Mob> {
         float speed = (float) mob.getAttribute(Attribute.MOVEMENT_SPEED).getValue();
 
         boolean hasPath = mob.getPathfinder().hasPath();
-        boolean hasTarget = petEntity.hasTarget() && petEntity.getMyPetTarget() != null;
+        boolean hasTarget = pet.hasTarget() && pet.getMyPetTarget() != null;
 
         if (hasPath || hasTarget) {
             // Active swimming: apply Y velocity toward target
-            Location targetLoc = hasTarget ? petEntity.getMyPetTarget().getLocation() : ownerLoc;
+            Location targetLoc = hasTarget ? pet.getMyPetTarget().getLocation() : ownerLoc;
             double dy = targetLoc.getY() - petLoc.getY();
             double dx = targetLoc.getX() - petLoc.getX();
             double dz = targetLoc.getZ() - petLoc.getZ();
@@ -113,7 +114,7 @@ public class MyPetAquaticMovementGoal implements Goal<Mob> {
     }
 
     private boolean isInWaterOrBubble() {
-        return mob.isInWater() || petEntity.isInBubbleColumn();
+        return mob.isInWater() || mob.isInBubbleColumn();
     }
 
     private static float rotlerp(float current, float target, float maxDelta) {

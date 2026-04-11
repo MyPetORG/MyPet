@@ -5,7 +5,8 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
@@ -50,7 +51,8 @@ import java.util.EnumSet;
  */
 public class PetControlTargetGoal implements Goal<Mob> {
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private final MyPet myPet;
     private final double range;
     private LivingEntity target;
@@ -60,9 +62,10 @@ public class PetControlTargetGoal implements Goal<Mob> {
      * @param petEntity the pet that will acquire targets while under owner control
      * @param range     horizontal radius of the "near pet" search box
      */
-    public PetControlTargetGoal(MyPetBukkitEntity petEntity, float range) {
-        this.petEntity = petEntity;
-        this.myPet = petEntity.getMyPet();
+    public PetControlTargetGoal(MyPet pet, Mob mob, float range) {
+        this.pet = pet;
+        this.mob = mob;
+        this.myPet = pet;
         this.range = range;
     }
 
@@ -83,7 +86,7 @@ public class PetControlTargetGoal implements Goal<Mob> {
         if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
-        if (controlGoal.moveTo == null || !petEntity.canMove()) {
+        if (controlGoal.moveTo == null || !pet.canMove()) {
             return false;
         }
         // Cache the owner Player once. Returning null means the owner is
@@ -99,9 +102,9 @@ public class PetControlTargetGoal implements Goal<Mob> {
             return false;
         }
 
-        Location petLoc = petEntity.getLocation();
+        Location petLoc = mob.getLocation();
         for (Entity entity : petLoc.getWorld().getNearbyEntities(petLoc, range, 4.0, range)) {
-            if (!(entity instanceof LivingEntity living) || entity.equals(petEntity)) {
+            if (!(entity instanceof LivingEntity living) || entity.equals(mob)) {
                 continue;
             }
             if (entity instanceof ArmorStand) {
@@ -122,9 +125,10 @@ public class PetControlTargetGoal implements Goal<Mob> {
                 if (!MyPetApi.getHookHelper().canHurt(owner, tameableOwner, true)) {
                     continue;
                 }
-            } else if (entity instanceof MyPetBukkitEntity otherPet) {
-                MyPet targetMyPet = otherPet.getMyPet();
-                if (!MyPetApi.getHookHelper().canHurt(owner, targetMyPet.getOwner().getPlayer(), true)) {
+            } else if (PetEntityMarker.isMarked(entity)) {
+                MyPet targetMyPet = MyPetApi.getMyPetManager().getMyPetFromEntity(entity);
+                if (targetMyPet != null && targetMyPet.getOwner() != null
+                        && !MyPetApi.getHookHelper().canHurt(owner, targetMyPet.getOwner().getPlayer(), true)) {
                     continue;
                 }
             }
@@ -132,7 +136,7 @@ public class PetControlTargetGoal implements Goal<Mob> {
                 continue;
             }
             if (behaviorSkill != null && behaviorSkill.getBehavior() == BehaviorMode.Raid) {
-                if (entity instanceof Tameable || entity instanceof MyPetBukkitEntity || entity instanceof Player) {
+                if (entity instanceof Tameable || PetEntityMarker.isMarked(entity) || entity instanceof Player) {
                     continue;
                 }
             }
@@ -145,34 +149,34 @@ public class PetControlTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
-        if (!petEntity.canMove()) {
+        if (!pet.canMove()) {
             return false;
         }
-        if (!petEntity.hasTarget()) {
+        if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity currentTarget = petEntity.getMyPetTarget();
+        LivingEntity currentTarget = pet.getMyPetTarget();
         if (currentTarget == null || currentTarget.isDead()) {
             return false;
         }
-        if (!currentTarget.getWorld().equals(petEntity.getWorld())) {
+        if (!currentTarget.getWorld().equals(mob.getWorld())) {
             return false;
         }
-        if (petEntity.getLocation().distanceSquared(currentTarget.getLocation()) > 400) {
+        if (mob.getLocation().distanceSquared(currentTarget.getLocation()) > 400) {
             return false;
         }
-        Player owner = petEntity.getOwner().getPlayer();
-        return owner != null && petEntity.getLocation().distanceSquared(owner.getLocation()) <= 600;
+        Player owner = pet.getOwner().getPlayer();
+        return owner != null && mob.getLocation().distanceSquared(owner.getLocation()) <= 600;
     }
 
     @Override
     public void start() {
-        petEntity.setTarget(this.target, TargetPriority.Control);
+        pet.setTarget(this.target, TargetPriority.Control);
     }
 
     @Override
     public void stop() {
-        petEntity.forgetTarget();
+        pet.forgetTarget();
     }
 
     @Override

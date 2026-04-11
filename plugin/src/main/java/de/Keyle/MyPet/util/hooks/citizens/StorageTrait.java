@@ -41,6 +41,7 @@
 package de.Keyle.MyPet.util.hooks.citizens;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -152,7 +153,7 @@ public class StorageTrait extends Trait {
                                                 myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", player, activePet.get().getDisplayName()));
                                                 break;
                                             case Dead:
-                                                if (de.Keyle.MyPet.api.Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
                                                     myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", myPetPlayer, activePet.get().getDisplayName()));
                                                 } else {
                                                     myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead.Respawn", myPetPlayer, activePet.get().getDisplayName(), activePet.get().getRespawnTime()));
@@ -269,7 +270,7 @@ public class StorageTrait extends Trait {
                                                 myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPetPlayer, myPet.get().getDisplayName()));
                                                 break;
                                             case Dead:
-                                                if (de.Keyle.MyPet.api.Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
                                                     myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", myPetPlayer, myPet.get().getDisplayName()));
                                                 } else {
                                                     myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead.Respawn", myPetPlayer, myPet.get().getDisplayName(), myPet.get().getRespawnTime()));

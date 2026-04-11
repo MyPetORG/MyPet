@@ -3,7 +3,8 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPet;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -40,24 +41,26 @@ import java.util.EnumSet;
  */
 public class PetFloatGoal implements Goal<Mob> {
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private int lavaCounter = 10;
     private boolean inLava = false;
 
     /**
      * @param petEntity the pet that should float on water (and possibly lava)
      */
-    public PetFloatGoal(MyPetBukkitEntity petEntity) {
-        this.petEntity = petEntity;
-        petEntity.getPathfinder().setCanFloat(true);
+    public PetFloatGoal(MyPet pet, Mob mob) {
+        this.pet = pet;
+        this.mob = mob;
+        mob.getPathfinder().setCanFloat(true);
     }
 
     @Override
     public boolean shouldActivate() {
-        if (petEntity.getHandle().floatsInLava()) {
-            return petEntity.isInWater() || petEntity.isInLava();
+        if (pet.getPetType().floatsInLava()) {
+            return mob.isInWater() || mob.isInLava();
         }
-        return petEntity.isInWater();
+        return mob.isInWater();
     }
 
     @Override
@@ -67,27 +70,27 @@ public class PetFloatGoal implements Goal<Mob> {
 
     @Override
     public void tick() {
-        if (petEntity.getHandle().specialFloat()) {
+        if (pet.getPetType().specialFloat()) {
             return;
         }
         // During pet removal (unlink / death / release) the owner reference
         // may be cleared before the entity is despawned, so both getOwner()
         // and its .getPlayer() result can be null. Bail out before touching
         // either.
-        if (petEntity.getOwner() == null) {
+        if (pet.getOwner() == null) {
             return;
         }
 
-        Vector velocity = ((Mob) petEntity).getVelocity();
-        ((Mob) petEntity).setVelocity(velocity.add(new Vector(0, 0.05D, 0)));
+        Vector velocity = mob.getVelocity();
+        mob.setVelocity(velocity.add(new Vector(0, 0.05D, 0)));
 
         if (inLava && lavaCounter-- <= 0) {
-            Player owner = petEntity.getOwner().getPlayer();
-            if (owner != null && petEntity.getHandle().getPetNavigation().navigateTo(owner)) {
+            Player owner = pet.getOwner().getPlayer();
+            if (owner != null && pet.getPetNavigation().navigateTo(owner)) {
                 lavaCounter = 10;
             }
         }
-        if (!inLava && petEntity.isInLava()) {
+        if (!inLava && mob.isInLava()) {
             // Approximate isEyeInFluid(LAVA) — if in lava at all, treat as eye-level
             inLava = true;
         }

@@ -3,7 +3,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
@@ -31,37 +31,38 @@ import java.util.Set;
  * {@link GoalType#JUMP JUMP}) so while sitting the pet is locked out of
  * every other motion goal — no strolling, no head-turning, no jumping.
  *
- * <p>{@link #isSitting()} / {@link #setSitting(boolean)} /
- * {@link #toggleSitting()} form the public handle used by the sit
- * command's executor; they simply flip the {@code sitting} flag and let
- * the goal selector pick the goal up (or drop it) on the next tick.
+ * <p>This goal is a pure <em>view</em> over {@link MyPet#isSitting()} —
+ * it owns no sitting state of its own. The interact handler in
+ * {@code MyPet#onInteract} flips {@code MyPet.sitting} and the goal
+ * selector picks the change up on its next tick.
  */
 public class PetSitGoal implements Goal<Mob> {
 
     private static final Set<String> SITTABLE_TYPES = Set.of("Wolf", "Cat", "Camel", "Panda", "Fox");
 
-    private final MyPetBukkitEntity petEntity;
-    private boolean sitting = false;
+    private final MyPet pet;
+    private final Mob mob;
 
     /**
      * @param petEntity the pet that will be commanded to sit
      */
-    public PetSitGoal(MyPetBukkitEntity petEntity) {
-        this.petEntity = petEntity;
+    public PetSitGoal(MyPet pet, Mob mob) {
+        this.pet = pet;
+        this.mob = mob;
     }
 
     @Override
     public boolean shouldActivate() {
-        if (!SITTABLE_TYPES.contains(petEntity.getPetType().name())) {
+        if (!SITTABLE_TYPES.contains(pet.getPetType().name())) {
             return false;
         }
-        if (petEntity.isInWater()) {
+        if (mob.isInWater()) {
             return false;
         }
-        if (!petEntity.isOnGround()) {
+        if (!mob.isOnGround()) {
             return false;
         }
-        return this.sitting;
+        return pet.isSitting();
     }
 
     @Override
@@ -69,19 +70,17 @@ public class PetSitGoal implements Goal<Mob> {
         // Deliberately does NOT re-run shouldActivate(): a one-tick bump
         // off the ground or water splash would otherwise cancel the sit.
         // Hold it until the owner explicitly toggles sitting off.
-        return this.sitting;
+        return pet.isSitting();
     }
 
     @Override
     public void start() {
-        petEntity.getPathfinder().stopPathfinding();
-        petEntity.setSitting(true);
-        petEntity.setTarget(null);
+        mob.getPathfinder().stopPathfinding();
+        pet.setTarget(null);
     }
 
     @Override
     public void stop() {
-        petEntity.setSitting(false);
     }
 
     @Override
@@ -92,24 +91,5 @@ public class PetSitGoal implements Goal<Mob> {
     @Override
     public @NotNull EnumSet<GoalType> getTypes() {
         return EnumSet.of(GoalType.MOVE, GoalType.LOOK, GoalType.JUMP);
-    }
-
-    /** @return {@code true} if the pet is currently commanded to sit */
-    public boolean isSitting() {
-        return this.sitting;
-    }
-
-    /**
-     * Commands the pet to sit or stand. Paper's goal selector picks up
-     * the change on its next tick — this method does not itself start
-     * or stop the goal.
-     */
-    public void setSitting(boolean sitting) {
-        this.sitting = sitting;
-    }
-
-    /** Flips the sit state, exactly as the {@code /petsit} command toggles it. */
-    public void toggleSitting() {
-        this.sitting = !this.sitting;
     }
 }

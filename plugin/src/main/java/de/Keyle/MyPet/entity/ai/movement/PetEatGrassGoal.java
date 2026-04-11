@@ -4,16 +4,13 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
+import de.Keyle.MyPet.api.entity.MyPet;
+import org.bukkit.*;
+import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.types.MySheep;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
-import org.bukkit.GameRule;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
@@ -26,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * <p>Activates only when <em>all</em> of the following are true:
  * <ul>
- *   <li>{@link de.Keyle.MyPet.api.Configuration.MyPet.Sheep#CAN_REGROW_WOOL}
+ *   <li>{@link Configuration.MyPet.Sheep#CAN_REGROW_WOOL}
  *       is enabled in config.yml.</li>
  *   <li>The underlying {@link MySheep} is currently sheared.</li>
  *   <li>A random 1-in-1000 roll succeeds (matches vanilla frequency).</li>
@@ -45,14 +42,16 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PetEatGrassGoal implements Goal<Mob> {
 
-    private final MyPetBukkitEntity petEntity;
+    private final MyPet pet;
+    private final Mob mob;
     private int eatTicks = 0;
 
     /**
      * @param petEntity the sheep pet that should eat grass when sheared
      */
-    public PetEatGrassGoal(MyPetBukkitEntity petEntity) {
-        this.petEntity = petEntity;
+    public PetEatGrassGoal(MyPet pet, Mob mob) {
+        this.pet = pet;
+        this.mob = mob;
     }
 
     @Override
@@ -60,17 +59,17 @@ public class PetEatGrassGoal implements Goal<Mob> {
         if (!Configuration.MyPet.Sheep.CAN_REGROW_WOOL) {
             return false;
         }
-        MySheep mySheep = (MySheep) petEntity.getMyPet();
+        MySheep mySheep = (MySheep) pet;
         if (!mySheep.isSheared()) {
             return false;
         }
         if (ThreadLocalRandom.current().nextInt(1000) != 0) {
             return false;
         }
-        if (petEntity.hasTarget() && !petEntity.getMyPetTarget().isDead()) {
+        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) {
             return false;
         }
-        Location loc = petEntity.getLocation();
+        Location loc = mob.getLocation();
         Block blockAt = loc.getBlock();
         Block blockBelow = blockAt.getRelative(BlockFace.DOWN);
         return blockAt.getType() == Material.SHORT_GRASS || blockBelow.getType() == Material.GRASS_BLOCK;
@@ -84,9 +83,19 @@ public class PetEatGrassGoal implements Goal<Mob> {
     @Override
     public void start() {
         this.eatTicks = 30;
-        petEntity.getHandle().getPetNavigation().stop();
-        // Entity event 10 triggers the sheep head-bob eat animation on the client
-        petEntity.getHandle().broadcastEntityEvent((byte) 10);
+        pet.getPetNavigation().stop();
+        Location loc = mob.getLocation();
+        World world = loc.getWorld();
+        if (world != null) {
+            world.spawnParticle(
+                    Particle.BLOCK,
+                    loc.clone().add(0, 0.2, 0),
+                    12,
+                    0.3, 0.1, 0.3,
+                    0.05,
+                    Material.GRASS_BLOCK.createBlockData());
+            world.playSound(loc, Sound.ENTITY_SHEEP_AMBIENT, 0.6f, 1.2f);
+        }
     }
 
     @Override
@@ -97,7 +106,7 @@ public class PetEatGrassGoal implements Goal<Mob> {
     @Override
     public void tick() {
         if (--this.eatTicks == 0) {
-            Location loc = petEntity.getLocation();
+            Location loc = mob.getLocation();
             World world = loc.getWorld();
             Block blockAt = loc.getBlock();
             Block blockBelow = blockAt.getRelative(BlockFace.DOWN);
@@ -109,10 +118,10 @@ public class PetEatGrassGoal implements Goal<Mob> {
 
             if (blockAt.getType() == Material.SHORT_GRASS) {
                 blockAt.setType(Material.AIR);
-                ((MySheep) petEntity.getMyPet()).setSheared(false);
+                ((MySheep) pet).setSheared(false);
             } else if (blockBelow.getType() == Material.GRASS_BLOCK) {
                 blockBelow.setType(Material.DIRT);
-                ((MySheep) petEntity.getMyPet()).setSheared(false);
+                ((MySheep) pet).setSheared(false);
             }
         }
     }

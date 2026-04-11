@@ -20,104 +20,53 @@
 
 package de.Keyle.MyPet.api.util;
 
-import de.Keyle.MyPet.api.Util;
 import org.bukkit.Bukkit;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+/**
+ * Version detection and comparison helpers.
+ * <p>
+ * {@link #minecraftVersionEqualsOrAbove(String)} is the feature-gate entry
+ * point for Minecraft-version checks (e.g. Creaking added in 1.21.4).
+ * {@link #versionCompare(String, String)} is a generic numeric-version
+ * comparator also used by the self-updater for MyPet plugin versions.
+ */
+public final class CompatUtil {
 
-public class CompatUtil {
-    private static final Pattern PACKAGE_VERSION_MATCHER = Pattern.compile(".*\\.(v\\d+_\\d+_R\\d+)(?:.+)?");
-    private static final Pattern MINECRAFT_VERSION_MATCHER = Pattern.compile("\\(MC: (\\d\\.\\d+(?:\\.\\d+)?)");
-    private static final Pattern VERSION_MATCHER = Pattern.compile("\\d\\.\\d+(?:\\.\\d+)?");
-
-    private String internalVersion = null;
-    private String minecraftVersion = "0.0.0";
-
-    private Map<String, Integer> compareCache = new HashMap<>();
-
-    public CompatUtil() {
-        Matcher regexMatcher = PACKAGE_VERSION_MATCHER.matcher(Bukkit.getServer().getClass().getCanonicalName());
-        if (regexMatcher.find()) {
-            internalVersion = regexMatcher.group(1);
-        }
-        regexMatcher = MINECRAFT_VERSION_MATCHER.matcher(Bukkit.getVersion());
-        if (regexMatcher.find()) {
-            minecraftVersion = regexMatcher.group(1);
-        }
-
-        if (internalVersion == null) {
-            internalVersion = getBukkitVersionFromMinecraftVersion();
-        }
+    /**
+     * Checks whether the running server's Minecraft version is numerically
+     * greater than or equal to the given version. Intended for feature
+     * gating — e.g. {@code minecraftVersionEqualsOrAbove("1.21.4")} returns
+     * {@code true} on any server running 1.21.4 or later.
+     *
+     * @param version the Minecraft version to compare against, as a
+     *                dotted-numeric string such as {@code "1.21"} or
+     *                {@code "1.21.4"}
+     * @return {@code true} if the server's Minecraft version is at or
+     *         above {@code version}
+     * @throws IllegalArgumentException if {@code version} is not a valid
+     *         dotted-numeric version
+     */
+    public boolean minecraftVersionEqualsOrAbove(String version) {
+        return versionCompare(Bukkit.getMinecraftVersion(), version) >= 0;
     }
 
-    public <T> T getCompatInstance(Class<? extends T> clazz, String path, String className, Object... parameters) {
-        if (internalVersion == null || minecraftVersion == null) {
-            return null;
-        }
-
-        String classPath = clazz.getCanonicalName();
-        if (classPath.startsWith("de.Keyle.MyPet")) {
-            classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
-        }
-
-        try {
-            @SuppressWarnings("unchecked")
-            Class<? extends T> compatClass = (Class<? extends T>) Class.forName(classPath);
-
-            if (Modifier.isAbstract(compatClass.getModifiers())) {
-                return null;
-            }
-            if (Modifier.isInterface(compatClass.getModifiers())) {
-                return null;
-            }
-
-            Class<?>[] parameterClasses = new Class<?>[parameters.length];
-            for (int i = 0; i < parameters.length; i++) {
-                parameterClasses[i] = parameters[i].getClass();
-            }
-
-            Constructor<? extends T> constructor = compatClass.getConstructor(parameterClasses);
-            return constructor.newInstance(parameters);
-
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException |
-                 InvocationTargetException e) {
-            ErrorUtil.report(e);
-        }
-
-        return null;
-    }
-
-    public String getInternalVersion() {
-        return internalVersion;
-    }
-
-    public String getMinecraftVersion() {
-        return minecraftVersion;
-    }
-
-    public int compareWithMinecraftVersion(String version) {
-        if (VERSION_MATCHER.matcher(version).find()) {
-            if (compareCache.containsKey(minecraftVersion + "-::-" + version)) {
-                return compareCache.get(minecraftVersion + "-::-" + version);
-            }
-            int compare = Util.versionCompare(minecraftVersion, version);
-            compareCache.put(minecraftVersion + "-::-" + version, compare);
-            return compare;
-        }
-        throw new IllegalArgumentException("\"version\" must be a valid Minecraft version. \"" + version + "\" given.");
-    }
-
-    private String getBukkitVersionFromMinecraftVersion() {
-        return MinecraftVersion.getNmsVersion(minecraftVersion);
-    }
-
-    public boolean isCompatible(String version) {
-        return compareWithMinecraftVersion(version) >= 0;
+    /**
+     * Compares two dotted-numeric version strings numerically.
+     * <p>
+     * Delegates to {@link Runtime.Version}, whose parser accepts any
+     * dot-separated sequence of non-negative integers and does
+     * component-wise numeric comparison with implicit zero-padding for
+     * missing trailing components. This matches the Minecraft and MyPet
+     * plugin version formats exactly.
+     *
+     * @param str1 a string of ordinal numbers separated by decimal points.
+     * @param str2 a string of ordinal numbers separated by decimal points.
+     * @return a negative integer, zero, or a positive integer as {@code str1}
+     *         is numerically less than, equal to, or greater than {@code str2}.
+     * @throws IllegalArgumentException if either string is not a valid
+     *         dotted-numeric version
+     */
+    public static int versionCompare(String str1, String str2) {
+        return Runtime.Version.parse(str1).compareTo(Runtime.Version.parse(str2));
     }
 }
