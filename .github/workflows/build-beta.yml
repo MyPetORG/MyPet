@@ -34,13 +34,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 100
+          fetch-depth: 0
 
       - name: Set up Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -194,36 +195,40 @@ jobs:
             -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
 
       - name: Send a Discord webhook notification
-        shell: bash
         env:
           CHANGELOG: ${{ steps.changelog.outputs.content }}
         run: |
-          set -euo pipefail
+          VERSION="${PROJECT_VERSION}"
+          MODRINTH_URL="https://modrinth.com/plugin/mypet/version/${VERSION}"
+
+          # Truncate changelog if it exceeds Discord's 4096 char limit
+          if [[ ${#CHANGELOG} -gt 4000 ]]; then
+            CHANGELOG="${CHANGELOG:0:3997}..."
+          fi
+
+          # Build JSON payload safely with jq
           PAYLOAD=$(jq -n \
-            --arg version "$PROJECT_VERSION" \
+            --arg version "$VERSION" \
             --arg changelog "$CHANGELOG" \
-            --arg actor "${{ github.actor }}" \
-            --arg actor_id "${{ github.actor_id }}" \
+            --arg modrinth_url "$MODRINTH_URL" \
             '{
-              username: "MyPet Beta",
-              content: "<@&1431929679626895450>",
+              content: ("MyPet **" + $version + "** has released!\n<@&1431929679626895450>\n**Please test before using in production.**"),
               embeds: [
                 {
-                  type: "rich",
-                  title: $version,
-                  description: ("New beta released. **Test before using in production.**\n\n" + $changelog),
+                  title: "Changelog",
+                  description: $changelog,
                   color: 16761095,
-                  thumbnail: {
-                    url: "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
-                  },
-                  author: {
-                    name: $actor,
-                    url: ("https://github.com/" + $actor),
-                    icon_url: ("https://avatars.githubusercontent.com/u/" + $actor_id + "?v=4")
-                  },
-                  url: ("https://github.com/MyPetORG/MyPet/releases/tag/" + $version)
+                  fields: []
+                },
+                {
+                  title: "Download from Modrinth",
+                  url: $modrinth_url
                 }
-              ]
+              ],
+              components: [],
+              username: "MyPet Beta",
+              avatar_url: "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
             }')
+
           RESPONSE=$(curl -s -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$WEBHOOK_URL")
           echo "Webhook server response: $RESPONSE"
