@@ -407,8 +407,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         getServer().getPluginManager().registerEvents(vehicleListener, this);
         EntityListener entityListener = new EntityListener();
         getServer().getPluginManager().registerEvents(entityListener, this);
-        MyPetEntityListener myPetEntityListener = new MyPetEntityListener();
-        getServer().getPluginManager().registerEvents(myPetEntityListener, this);
         LevelListener levelupListener = new LevelListener();
         getServer().getPluginManager().registerEvents(levelupListener, this);
         WorldListener worldListener = new WorldListener();
@@ -427,6 +425,13 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         getServer().getPluginManager().registerEvents(new PetInteractionListener(), this);
         getServer().getPluginManager().registerEvents(new PetDamageListener(), this);
+        getServer().getPluginManager().registerEvents(new PetEnvironmentListener(), this);
+        getServer().getPluginManager().registerEvents(new PetInfoOnLeashListener(), this);
+        getServer().getPluginManager().registerEvents(new PetSurvivalListener(), this);
+        getServer().getPluginManager().registerEvents(new PetXpAttributionListener(), this);
+        getServer().getPluginManager().registerEvents(new PetPvPListener(), this);
+        getServer().getPluginManager().registerEvents(new PetSkillTriggerListener(), this);
+        getServer().getPluginManager().registerEvents(new PetDeathListener(), this);
         getServer().getPluginManager().registerEvents(new PetDespawnListener(), this);
 
         RideSkillFlightController.start(this);

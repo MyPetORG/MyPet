@@ -24,8 +24,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
  *       {@code withDirectEntity(mob)}.</li>
  *   <li><b>Incoming damage</b> — the event listener below cancels friendly fire
  *       (owner hitting their own pet). Hook-plugin interactions (WorldGuard,
- *       MobArena, etc.) are still routed through the existing
- *       {@code MyPetEntityListener} in {@code plugin/listeners/}.</li>
+ *       MobArena, etc.) are handled by {@code PetPvPListener}.</li>
  * </ul>
  */
 public class PetDamageListener implements Listener {
@@ -75,8 +74,8 @@ public class PetDamageListener implements Listener {
     /**
      * Cancels owner-on-pet damage. All other incoming damage paths
      * (external mobs, plugins, environment) continue to the existing
-     * {@link de.Keyle.MyPet.listeners.MyPetEntityListener} which handles
-     * the hook-plugin nuance (WorldGuard claims, MobArena, CombatLogX, etc.).
+     * {@link PetPvPListener} which handles the hook-plugin nuance
+     * (WorldGuard claims, MobArena, CombatLogX, etc.).
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {

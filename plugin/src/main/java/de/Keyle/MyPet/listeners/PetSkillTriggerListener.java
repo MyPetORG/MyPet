@@ -1,0 +1,142 @@
+package de.Keyle.MyPet.listeners;
+
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.event.MyPetDamageEvent;
+import de.Keyle.MyPet.api.event.MyPetOnHitSkillEvent;
+import de.Keyle.MyPet.api.skill.OnDamageByEntitySkill;
+import de.Keyle.MyPet.api.skill.OnHitSkill;
+import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.projectiles.ProjectileSource;
+
+import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
+
+/**
+ * Skill dispatch pipeline for pet damage events:
+ * <ul>
+ *   <li><b>NORMAL priority</b> — {@link OnDamageByEntitySkill} dispatch: triggers
+ *       defensive skills (Thorns, etc.) when a pet takes damage from an entity.</li>
+ *   <li><b>MONITOR priority</b> — {@link OnHitSkill} dispatch + {@link MyPetDamageEvent}
+ *       emission: triggers offensive skills (Poison, Bleed, etc.) and emits the
+ *       custom damage event when a pet deals damage to something.</li>
+ * </ul>
+ *
+ * <p>The {@code isSkillActive} flag prevents reentrancy: Bukkit fires events
+ * synchronously, so if a skill's {@code apply()} calls {@code target.damage()},
+ * a new {@code EntityDamageByEntityEvent} fires and re-enters this handler
+ * before {@code apply()} returns. The flag short-circuits that recursion.
+ * Wrapped in try/finally to prevent permanent skill lockout if a skill throws.
+ */
+public class PetSkillTriggerListener implements Listener {
+
+    private boolean isSkillActive = false;
+
+    /**
+     * Dispatches {@link OnDamageByEntitySkill} skills when a marked pet takes
+     * damage from a living entity. Only runs if the event has not been
+     * cancelled (e.g. by PvP policy) and the hook-plugin canHurt check passes.
+     */
+    @EventHandler
+    public void onPetTakesDamage(final EntityDamageByEntityEvent event) {
+        MyPet myPet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
+        if (myPet == null) return;
+        if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) return;
+
+        if (event.isCancelled()) return;
+        if (!(event.getDamager() instanceof LivingEntity damager)) return;
+
+        if (damager instanceof Player) {
+            if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), (Player) damager, true)) {
+                return;
+            }
+        }
+
+        if (!isSkillActive) {
+            for (Skill skill : myPet.getSkills().all()) {
+                if (skill instanceof OnDamageByEntitySkill damageByEntitySkill) {
+                    if (damageByEntitySkill.trigger()) {
+                        isSkillActive = true;
+                        try {
+                            damageByEntitySkill.apply(damager, event);
+                        } finally {
+                            isSkillActive = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * At MONITOR priority, when a marked pet deals damage:
+     * <ol>
+     *   <li>Emits {@link MyPetDamageEvent} so other plugins can adjust pet damage</li>
+     *   <li>Dispatches {@link OnHitSkill} skills (Poison, Bleed, Fire, etc.)</li>
+     * </ol>
+     */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPetDealsDamage(final EntityDamageByEntityEvent event) {
+        @SuppressWarnings("ConstantConditions")
+        boolean nullEntity = event.getEntity() == null;
+        if (nullEntity) return;
+
+        Entity target = event.getEntity();
+        if (WorldGroup.getGroupByWorld(target.getWorld()).isDisabled()) return;
+        if (!(target instanceof LivingEntity)) return;
+
+        Entity source = event.getDamager();
+        if (source instanceof Projectile) {
+            ProjectileSource projectileSource = ((Projectile) source).getShooter();
+            if (projectileSource instanceof Entity) {
+                source = (Entity) projectileSource;
+            }
+        }
+
+        if (!PetEntityMarker.isMarked(source)) return;
+        MyPet myPet = getMyPetManager().getMyPetFromEntity(source);
+        if (myPet == null || myPet.getStatus() != PetState.Here) return;
+
+        // Emit MyPetDamageEvent so other plugins can adjust pet damage
+        MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
+        Bukkit.getPluginManager().callEvent(petDamageEvent);
+        if (petDamageEvent.isCancelled()) {
+            event.setCancelled(true);
+            return;
+        } else {
+            event.setDamage(petDamageEvent.getDamage());
+        }
+
+        // Dispatch OnHitSkill skills
+        if (!isSkillActive) {
+            for (Skill skill : myPet.getSkills().all()) {
+                if (skill instanceof OnHitSkill onHitSkill) {
+                    if (onHitSkill.trigger()) {
+                        MyPetOnHitSkillEvent skillEvent = new MyPetOnHitSkillEvent(myPet, onHitSkill, (LivingEntity) target);
+                        Bukkit.getPluginManager().callEvent(skillEvent);
+                        if (!skillEvent.isCancelled()) {
+                            isSkillActive = true;
+                            try {
+                                onHitSkill.apply((LivingEntity) target);
+                            } finally {
+                                isSkillActive = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

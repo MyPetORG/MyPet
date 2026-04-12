@@ -344,7 +344,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
      * player with a regular bow) do NOT carry the tag, so this method cleanly
      * distinguishes the two.
      *
-     * <p>Used by {@code MyPetEntityListener} and {@code PlayerListener} to
+     * <p>Used by {@code PetPvPListener} and {@code PlayerListener} to
      * apply friendly-fire prevention, owner protection, and duel-mode
      * exemptions for projectile-dealt damage.
      *

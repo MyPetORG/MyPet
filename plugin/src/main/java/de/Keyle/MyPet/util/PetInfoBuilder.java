@@ -42,7 +42,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * Utility class for building consistent pet information displays.
  * Provides reusable Component builders for common pet info patterns used
- * in CommandInfo, MyPetEntityListener, and other places.
+ * in CommandInfo, PetInfoOnLeashListener, and other places.
  * <p>
  * This eliminates code duplication and ensures consistent formatting across
  * all pet information displays.
