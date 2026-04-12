@@ -39,7 +39,6 @@ public class MyPetVersion {
     private static String version = "0.0.0";
     private static String build = "";
     private static String buildType = "local";
-    private static String minecraftVersion = "0.0.0";
 
     private static void loadData() {
         try {
@@ -59,9 +58,6 @@ public class MyPetVersion {
             }
             if ((val = attr.getValue("Project-Type")) != null && !val.isEmpty()) {
                 buildType = val;
-            }
-            if (attr.getValue("Project-Minecraft-Version") != null) {
-                minecraftVersion = attr.getValue("Project-Minecraft-Version");
             }
         } catch (IOException | URISyntaxException e) {
             ErrorUtil.report(e);
@@ -83,15 +79,12 @@ public class MyPetVersion {
     }
 
     public static boolean isDevBuild() {
-        return getVersion().contains("SNAPSHOT");
+        String v = getVersion();
+        return v.contains("-alpha") || v.contains("-beta");
     }
 
     public static boolean isLocalBuild() {
-        if (!updated) {
-            loadData();
-            updated = true;
-        }
-        return "local".equalsIgnoreCase(buildType);
+        return getVersion().endsWith("-local");
     }
 
     public static String getBuild() {
@@ -103,21 +96,7 @@ public class MyPetVersion {
     }
 
     public static String getFormattedVersion() {
-        String result = getVersion();
-        String b = getBuild();
-        if (b != null && !b.isEmpty()) {
-            boolean numeric = b.chars().allMatch(Character::isDigit);
-            result += "-" + (numeric ? "b" : "") + b;
-        }
-        return result;
-    }
-
-    public static String getMinecraftVersion() {
-        if (!updated) {
-            loadData();
-            updated = true;
-        }
-        return minecraftVersion;
+        return getVersion();
     }
 
     public static void reset() {

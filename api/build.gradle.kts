@@ -19,19 +19,15 @@ tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
 }
 
-val buildType = rootProject.findProperty("buildType")?.toString() ?: "local"
-val versionSuffix = when (buildType) {
-    "release" -> ""
-    "snapshot", "dev" -> "-SNAPSHOT"
-    else -> "-SNAPSHOT-local"
-}
-val apiVersion = "${rootProject.version}$versionSuffix"
+val buildType = rootProject.findProperty("buildType")?.toString() ?: "alpha"
+val baseVersion = rootProject.version.toString().split("-")[0]
+val apiVersion = if (buildType == "release") baseVersion else "$baseVersion-SNAPSHOT"
 
 publishing {
     repositories {
         maven {
             name = "UserDerezzed"
-            val repoPath = if (apiVersion.endsWith("-SNAPSHOT") || apiVersion.endsWith("-SNAPSHOT-local")) "snapshots" else "releases"
+            val repoPath = if (apiVersion.endsWith("-SNAPSHOT")) "snapshots" else "releases"
             url = uri("https://repo.userderezzed.dev/$repoPath")
             credentials {
                 username = "MyPetORG"

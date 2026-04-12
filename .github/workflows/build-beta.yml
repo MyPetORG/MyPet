@@ -1,8 +1,6 @@
-name: Build Development Snapshot
+name: Build Beta
 
 on:
-  push:
-    branches: [ development, v4 ]
   workflow_dispatch:
 
 permissions:
@@ -10,11 +8,11 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: build-snapshot-${{ github.ref }}
+  group: build-beta-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  snapshot:
+  beta:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -25,7 +23,6 @@ jobs:
       BUILD_NUMBER: 0
       GAME_VERSIONS: ""
       GAME_VERSIONS_JSON: ""
-      CHANGELOG: ""
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
       TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
       USER_GITHUB: ${{ secrets.USER_GITHUB }}
@@ -81,58 +78,7 @@ jobs:
           GAME_VERSIONS_JSON=$(echo "$GAME_VERSIONS" | jq -R . | jq -sc .)
           echo "GAME_VERSIONS_JSON=$GAME_VERSIONS_JSON" >> "$GITHUB_ENV"
 
-      - name: Ensure PR to master exists with release title
-        continue-on-error: true
-        env:
-          HEAD_BRANCH: ${{ github.ref_name }}
-          BASE_BRANCH: master
-        shell: bash
-        run: |
-          set -euo pipefail
-          : "${BASE_PROJECT_VERSION?Missing BASE_PROJECT_VERSION}"
-          TITLE="Release (${BASE_PROJECT_VERSION})"
-
-          # Skip if on base branch
-          if [[ "$HEAD_BRANCH" == "$BASE_BRANCH" ]]; then
-            echo "On $BASE_BRANCH; nothing to do."; exit 0
-          fi
-
-          OWNER_REPO="${GITHUB_REPOSITORY}"
-          OWNER="${OWNER_REPO%%/*}"
-
-          echo "Checking for existing open PR from $HEAD_BRANCH to $BASE_BRANCH"
-          PR_NUMBER=$(gh pr list \
-            --state open \
-            --base "$BASE_BRANCH" \
-            --head "$HEAD_BRANCH" \
-            --json number \
-            --jq '.[0].number' || true)
-
-          if [[ -z "${PR_NUMBER}" || "${PR_NUMBER}" == "null" ]]; then
-            PR_NUMBER=$(gh pr list \
-              --state open \
-              --base "$BASE_BRANCH" \
-              --head "$OWNER:$HEAD_BRANCH" \
-              --json number \
-              --jq '.[0].number' || true)
-          fi
-
-          if [[ -z "${PR_NUMBER}" || "${PR_NUMBER}" == "null" ]]; then
-            echo "No open PR found. Creating one with title: $TITLE"
-            BODY=$(cat <<'EOF'
-          This pull request was automatically created by the snapshot build to keep master up to date with development.
-          EOF
-            )
-            # Try unqualified head first, then qualified
-            if ! gh pr create --base "$BASE_BRANCH" --head "$HEAD_BRANCH" --title "$TITLE" --body "$BODY"; then
-              gh pr create --base "$BASE_BRANCH" --head "$OWNER:$HEAD_BRANCH" --title "$TITLE" --body "$BODY"
-            fi
-          else
-            echo "Open PR #$PR_NUMBER exists. Ensuring title is set to: $TITLE"
-            gh pr edit "$PR_NUMBER" --title "$TITLE" || echo "Warning: failed to update PR title"
-          fi
-
-      - name: Compute snapshot BUILD_NUMBER from GitHub Releases
+      - name: Compute beta BUILD_NUMBER from GitHub Releases
         shell: bash
         run: |
           set -euo pipefail
@@ -142,46 +88,45 @@ jobs:
           LINES=$(gh release list --limit 200 --json tagName --jq '.[].tagName' | tr -d '"' || true)
           LINES=$(printf '%s\n' "$LINES" | sed -E 's/^v//' )
 
-          # Match exact tags like "<version>-SNAPSHOT-bNN"
-          CANDS=$(printf '%s\n' "$LINES" | grep -E "^${BASE_PROJECT_VERSION}-SNAPSHOT-b[0-9]+$" || true)
-          NUMS=$(printf '%s\n' "$CANDS" | sed -E "s/^${BASE_PROJECT_VERSION}-SNAPSHOT-b([0-9]+)$/\1/" || true)
+          # Match exact tags like "<version>-beta-NN"
+          CANDS=$(printf '%s\n' "$LINES" | grep -E "^${BASE_PROJECT_VERSION}-beta-[0-9]+$" || true)
+          NUMS=$(printf '%s\n' "$CANDS" | sed -E "s/^${BASE_PROJECT_VERSION}-beta-([0-9]+)$/\1/" || true)
           MAX_B=$(printf '%s\n' "${NUMS:-}" | grep -E '^[0-9]+$' | sort -n | tail -1 || true)
           [[ -z "${MAX_B:-}" ]] && MAX_B=0
 
           BUILD_NUMBER=$((MAX_B + 1))
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_ENV"
 
-          PROJECT_VERSION="${BASE_PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER}"
+          PROJECT_VERSION="${BASE_PROJECT_VERSION}-beta-$(printf '%02d' $BUILD_NUMBER)"
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> "$GITHUB_ENV"
           echo "Building version: $PROJECT_VERSION"
 
-      - name: Generate changelog
+      - name: Read changelog
+        id: changelog
         shell: bash
         run: |
-          set -euo pipefail
-          # Get the previous snapshot tag
-          PREV_TAG=$(gh release list --limit 20 --json tagName,isPrerelease -q '.[] | select(.isPrerelease) | .tagName' | head -1 || echo "")
-          if [[ -n "$PREV_TAG" && "$PREV_TAG" != "null" ]]; then
-            CHANGELOG=$(gh api "repos/${{ github.repository }}/releases/generate-notes" \
-              -f tag_name="${PROJECT_VERSION}" \
-              -f target_commitish="${{ github.sha }}" \
-              -f previous_tag_name="${PREV_TAG}" \
-              -q '.body' || echo "Snapshot ${PROJECT_VERSION}")
+          CHANGELOG_FILE=".github/changelogs/${BASE_PROJECT_VERSION}-beta.md"
+          if [[ -f "$CHANGELOG_FILE" ]]; then
+            echo "Found changelog: $CHANGELOG_FILE"
+            {
+              echo 'content<<EOF'
+              cat "$CHANGELOG_FILE"
+              echo ""
+              echo 'EOF'
+            } >> "$GITHUB_OUTPUT"
           else
-            CHANGELOG="Snapshot ${PROJECT_VERSION}"
+            echo "No changelog found at $CHANGELOG_FILE, using default message"
+            echo "content=Beta build. **Test before using in production.**" >> "$GITHUB_OUTPUT"
           fi
-          echo "CHANGELOG<<EOF" >> "$GITHUB_ENV"
-          echo "$CHANGELOG" >> "$GITHUB_ENV"
-          echo "EOF" >> "$GITHUB_ENV"
 
       - name: Build MyPet
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
-          ./gradlew --no-daemon --build-cache build -PbuildType=dev -PBUILD_NUMBER=${BUILD_NUMBER} -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
+          ./gradlew --no-daemon --build-cache build -PbuildType=beta -PBUILD_NUMBER=${BUILD_NUMBER} -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
 
       - name: Publish API snapshot to Reposilite
-        run: ./gradlew --no-daemon :api:publish -PbuildType=dev
+        run: ./gradlew --no-daemon :api:publish -PbuildType=beta
         env:
           REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}
 
@@ -202,7 +147,7 @@ jobs:
       - name: Upload workflow artifact (jar)
         uses: actions/upload-artifact@v4
         with:
-          name: mypet-snapshot-jar
+          name: mypet-beta-jar
           path: ${{ steps.findjar.outputs.jar }}
           if-no-files-found: error
           retention-days: 90
@@ -212,15 +157,16 @@ jobs:
         with:
           tag_name: ${{ env.PROJECT_VERSION }}
           name: v${{ env.PROJECT_VERSION }}
-          generate_release_notes: true
           prerelease: true
           files: ${{ steps.findjar.outputs.jar }}
+          body: |
+            ${{ steps.changelog.outputs.content }}
 
       - name: Publish to Hangar
         continue-on-error: true
         env:
           HANGAR_TOKEN: ${{ env.HANGAR_TOKEN }}
-          HANGAR_CHANGELOG: ${{ env.CHANGELOG }}
+          HANGAR_CHANGELOG: ${{ steps.changelog.outputs.content }}
         run: |
           ./gradlew --no-daemon publishPluginPublicationToHangar
 
@@ -230,11 +176,11 @@ jobs:
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
           project: SnE2iTno
-          channel: alpha
+          channel: beta
           featured: false
           name: ${{ env.PROJECT_VERSION }}
           version: ${{ env.PROJECT_VERSION }}
-          changelog: ${{ env.CHANGELOG }}
+          changelog: ${{ steps.changelog.outputs.content }}
           loaders: paper
           game-versions: ${{ env.GAME_VERSIONS }}
           files: ${{ steps.findjar.outputs.jar }}
@@ -249,6 +195,8 @@ jobs:
 
       - name: Send a Discord webhook notification
         shell: bash
+        env:
+          CHANGELOG: ${{ steps.changelog.outputs.content }}
         run: |
           set -euo pipefail
           PAYLOAD=$(jq -n \
@@ -257,14 +205,14 @@ jobs:
             --arg actor "${{ github.actor }}" \
             --arg actor_id "${{ github.actor_id }}" \
             '{
-              username: "MyPet Snapshot",
+              username: "MyPet Beta",
               content: "<@&1431929679626895450>",
               embeds: [
                 {
                   type: "rich",
                   title: $version,
-                  description: ("New snapshot released. **Do NOT use in production!**\n\n" + $changelog),
-                  color: 439741,
+                  description: ("New beta released. **Test before using in production.**\n\n" + $changelog),
+                  color: 16761095,
                   thumbnail: {
                     url: "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
                   },

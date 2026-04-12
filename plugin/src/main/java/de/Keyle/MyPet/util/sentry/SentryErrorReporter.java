@@ -153,10 +153,7 @@ public class SentryErrorReporter implements ErrorReporter {
             }
 
             // Minecraft version tag
-            String mcVersion = MyPetVersion.getMinecraftVersion();
-            if (mcVersion != null && !mcVersion.isEmpty() && !mcVersion.equals("0.0.0")) {
-                scope.setTag("minecraft_version", mcVersion);
-            }
+            scope.setTag("minecraft_version", Bukkit.getMinecraftVersion());
 
             // Server type tag (Paper, Spigot, etc.)
             scope.setTag("server_type", detectServerType());

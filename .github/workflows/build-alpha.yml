@@ -1,23 +1,26 @@
-name: Build Release
+name: Build Alpha
 
 on:
   workflow_dispatch:
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
-  group: build-release-${{ github.ref }}
+  group: build-alpha-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  release:
+  alpha:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     env:
       JAVA_VERSION: '21'
+      BASE_PROJECT_VERSION: ""
       PROJECT_VERSION: ""
+      BUILD_NUMBER: 0
       GAME_VERSIONS: ""
       GAME_VERSIONS_JSON: ""
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
@@ -46,11 +49,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          PROJECT_VERSION=$(grep -Po 'baseVersion\s*=\s*"\K[^"]+' build.gradle.kts)
-          echo "PROJECT_VERSION=$PROJECT_VERSION" >> "$GITHUB_ENV"
+          BASE_PROJECT_VERSION=$(grep -Po 'baseVersion\s*=\s*"\K[^"]+' build.gradle.kts)
+          echo "BASE_PROJECT_VERSION=$BASE_PROJECT_VERSION" >> "$GITHUB_ENV"
 
           # Supported Minecraft versions for this build. Keep in sync with
-          # the twin copy in build-alpha.yml / build-beta.yml and with the api-version floor
+          # the twin copy in build-release.yml and with the api-version floor
           # in plugin/src/main/resources/plugin.yml.
           GAME_VERSIONS=$(printf '%s\n' \
             1.20.5 \
@@ -75,11 +78,85 @@ jobs:
           GAME_VERSIONS_JSON=$(echo "$GAME_VERSIONS" | jq -R . | jq -sc .)
           echo "GAME_VERSIONS_JSON=$GAME_VERSIONS_JSON" >> "$GITHUB_ENV"
 
+      - name: Ensure PR to master exists with release title
+        continue-on-error: true
+        env:
+          HEAD_BRANCH: ${{ github.ref_name }}
+          BASE_BRANCH: master
+        shell: bash
+        run: |
+          set -euo pipefail
+          : "${BASE_PROJECT_VERSION?Missing BASE_PROJECT_VERSION}"
+          TITLE="Release (${BASE_PROJECT_VERSION})"
+
+          # Skip if on base branch
+          if [[ "$HEAD_BRANCH" == "$BASE_BRANCH" ]]; then
+            echo "On $BASE_BRANCH; nothing to do."; exit 0
+          fi
+
+          OWNER_REPO="${GITHUB_REPOSITORY}"
+          OWNER="${OWNER_REPO%%/*}"
+
+          echo "Checking for existing open PR from $HEAD_BRANCH to $BASE_BRANCH"
+          PR_NUMBER=$(gh pr list \
+            --state open \
+            --base "$BASE_BRANCH" \
+            --head "$HEAD_BRANCH" \
+            --json number \
+            --jq '.[0].number' || true)
+
+          if [[ -z "${PR_NUMBER}" || "${PR_NUMBER}" == "null" ]]; then
+            PR_NUMBER=$(gh pr list \
+              --state open \
+              --base "$BASE_BRANCH" \
+              --head "$OWNER:$HEAD_BRANCH" \
+              --json number \
+              --jq '.[0].number' || true)
+          fi
+
+          if [[ -z "${PR_NUMBER}" || "${PR_NUMBER}" == "null" ]]; then
+            echo "No open PR found. Creating one with title: $TITLE"
+            BODY=$(cat <<'EOF'
+          This pull request was automatically created by the alpha build to keep master up to date with development.
+          EOF
+            )
+            # Try unqualified head first, then qualified
+            if ! gh pr create --base "$BASE_BRANCH" --head "$HEAD_BRANCH" --title "$TITLE" --body "$BODY"; then
+              gh pr create --base "$BASE_BRANCH" --head "$OWNER:$HEAD_BRANCH" --title "$TITLE" --body "$BODY"
+            fi
+          else
+            echo "Open PR #$PR_NUMBER exists. Ensuring title is set to: $TITLE"
+            gh pr edit "$PR_NUMBER" --title "$TITLE" || echo "Warning: failed to update PR title"
+          fi
+
+      - name: Compute alpha BUILD_NUMBER from GitHub Releases
+        shell: bash
+        run: |
+          set -euo pipefail
+          : "${BASE_PROJECT_VERSION?Missing BASE_PROJECT_VERSION}"
+
+          # List existing release tag names, strip quotes, and normalize optional leading 'v'
+          LINES=$(gh release list --limit 200 --json tagName --jq '.[].tagName' | tr -d '"' || true)
+          LINES=$(printf '%s\n' "$LINES" | sed -E 's/^v//' )
+
+          # Match exact tags like "<version>-alpha-NN"
+          CANDS=$(printf '%s\n' "$LINES" | grep -E "^${BASE_PROJECT_VERSION}-alpha-[0-9]+$" || true)
+          NUMS=$(printf '%s\n' "$CANDS" | sed -E "s/^${BASE_PROJECT_VERSION}-alpha-([0-9]+)$/\1/" || true)
+          MAX_B=$(printf '%s\n' "${NUMS:-}" | grep -E '^[0-9]+$' | sort -n | tail -1 || true)
+          [[ -z "${MAX_B:-}" ]] && MAX_B=0
+
+          BUILD_NUMBER=$((MAX_B + 1))
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_ENV"
+
+          PROJECT_VERSION="${BASE_PROJECT_VERSION}-alpha-$(printf '%02d' $BUILD_NUMBER)"
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> "$GITHUB_ENV"
+          echo "Building version: $PROJECT_VERSION"
+
       - name: Read changelog
         id: changelog
         shell: bash
         run: |
-          CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}.md"
+          CHANGELOG_FILE=".github/changelogs/${BASE_PROJECT_VERSION}-alpha.md"
           if [[ -f "$CHANGELOG_FILE" ]]; then
             echo "Found changelog: $CHANGELOG_FILE"
             {
@@ -90,17 +167,17 @@ jobs:
             } >> "$GITHUB_OUTPUT"
           else
             echo "No changelog found at $CHANGELOG_FILE, using default message"
-            echo "content=Release ${PROJECT_VERSION}" >> "$GITHUB_OUTPUT"
+            echo "content=Alpha build. **Do NOT use in production!**" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build MyPet
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
-          ./gradlew --no-daemon --build-cache build -PbuildType=release -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
+          ./gradlew --no-daemon --build-cache build -PbuildType=alpha -PBUILD_NUMBER=${BUILD_NUMBER} -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
 
-      - name: Publish API release to Reposilite
-        run: ./gradlew --no-daemon :api:publish -PbuildType=release
+      - name: Publish API snapshot to Reposilite
+        run: ./gradlew --no-daemon :api:publish -PbuildType=alpha
         env:
           REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}
 
@@ -121,7 +198,7 @@ jobs:
       - name: Upload workflow artifact (jar)
         uses: actions/upload-artifact@v4
         with:
-          name: mypet-release-jar
+          name: mypet-alpha-jar
           path: ${{ steps.findjar.outputs.jar }}
           if-no-files-found: error
           retention-days: 90
@@ -131,7 +208,7 @@ jobs:
         with:
           tag_name: ${{ env.PROJECT_VERSION }}
           name: v${{ env.PROJECT_VERSION }}
-          prerelease: false
+          prerelease: true
           files: ${{ steps.findjar.outputs.jar }}
           body: |
             ${{ steps.changelog.outputs.content }}
@@ -150,8 +227,8 @@ jobs:
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
           project: SnE2iTno
-          channel: release
-          featured: true
+          channel: alpha
+          featured: false
           name: ${{ env.PROJECT_VERSION }}
           version: ${{ env.PROJECT_VERSION }}
           changelog: ${{ steps.changelog.outputs.content }}
@@ -163,7 +240,6 @@ jobs:
         continue-on-error: true
         run: |
           ./gradlew --no-daemon createPolymartRelease \
-            -PbuildType=release \
             -PPOLYMART_TOKEN=${POLYMART_TOKEN} \
             -PPOLYMART_VERSION=${PROJECT_VERSION} \
             -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
@@ -180,14 +256,14 @@ jobs:
             --arg actor "${{ github.actor }}" \
             --arg actor_id "${{ github.actor_id }}" \
             '{
-              username: "MyPet Release",
+              username: "MyPet Alpha",
               content: "<@&1431929679626895450>",
               embeds: [
                 {
                   type: "rich",
                   title: $version,
-                  description: ("New release published\n\n" + $changelog),
-                  color: 65280,
+                  description: ("New alpha released. **Do NOT use in production!**\n\n" + $changelog),
+                  color: 439741,
                   thumbnail: {
                     url: "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
                   },
@@ -196,7 +272,7 @@ jobs:
                     url: ("https://github.com/" + $actor),
                     icon_url: ("https://avatars.githubusercontent.com/u/" + $actor_id + "?v=4")
                   },
-                  url: ("https://hangar.papermc.io/MyPet/MyPet/versions/" + $version)
+                  url: ("https://github.com/MyPetORG/MyPet/releases/tag/" + $version)
                 }
               ]
             }')

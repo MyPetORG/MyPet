@@ -167,7 +167,6 @@ public class Updater {
                 String versionNumber = version.get("version_number").getAsString();
 
                 // Only consider this an update if the version is actually newer
-                // Handle versions like "3.14.1" and "3.14.1-SNAPSHOT-b42"
                 if (!isNewerVersion(versionNumber, currentPluginVersion)) {
                     continue;
                 }
@@ -291,11 +290,10 @@ public class Updater {
 
     /**
      * Compares two version strings to determine if the first is newer.
-     * Handles formats like "3.14.1", "3.14.1-SNAPSHOT", and "3.14.1-SNAPSHOT-b42".
-     * A release (3.14.1) is always considered newer than snapshots of the same base (3.14.1-SNAPSHOT-b10).
+     * Handles formats like "4.0.0", "4.0.0-alpha-03", "4.0.0-beta-01".
+     * Ordering for the same base version: alpha &lt; beta &lt; release.
      */
     private static boolean isNewerVersion(String newVersion, String currentVersion) {
-        // Extract base version (before any dash)
         String newBase = newVersion.split("-")[0];
         String currentBase = currentVersion.split("-")[0];
 
@@ -304,20 +302,15 @@ public class Updater {
             return baseCompare > 0;
         }
 
-        // Base versions are equal - check if release vs snapshot
-        boolean newIsSnapshot = newVersion.contains("-SNAPSHOT");
-        boolean currentIsSnapshot = currentVersion.contains("-SNAPSHOT");
+        // Base versions are equal — compare pre-release tier (release=2, beta=1, alpha=0)
+        int newTier = preReleaseTier(newVersion);
+        int currentTier = preReleaseTier(currentVersion);
 
-        // A release is always newer than a snapshot of the same base version
-        if (!newIsSnapshot && currentIsSnapshot) {
-            return true;
-        }
-        // A snapshot is never newer than a release of the same base version
-        if (newIsSnapshot && !currentIsSnapshot) {
-            return false;
+        if (newTier != currentTier) {
+            return newTier > currentTier;
         }
 
-        // Both are snapshots (or both releases), compare build numbers
+        // Same tier — compare build numbers
         int newBuild = extractBuildNumber(newVersion);
         int currentBuild = extractBuildNumber(currentVersion);
 
@@ -325,16 +318,25 @@ public class Updater {
     }
 
     /**
-     * Extracts build number from version string like "3.14.1-SNAPSHOT-b42".
+     * Returns a numeric tier for version ordering: alpha=0, beta=1, release=2.
+     */
+    private static int preReleaseTier(String version) {
+        if (version.contains("-alpha")) return 0;
+        if (version.contains("-beta")) return 1;
+        return 2;
+    }
+
+    /**
+     * Extracts build number from version string like "4.0.0-alpha-03".
      * Returns 0 if no build number is found.
      */
     private static int extractBuildNumber(String version) {
-        int bIndex = version.lastIndexOf("-b");
-        if (bIndex == -1) {
+        int lastDash = version.lastIndexOf('-');
+        if (lastDash == -1) {
             return 0;
         }
         try {
-            return Integer.parseInt(version.substring(bIndex + 2));
+            return Integer.parseInt(version.substring(lastDash + 1));
         } catch (NumberFormatException e) {
             return 0;
         }

@@ -13,12 +13,16 @@ plugins {
 
 group = "de.keyle"
 
-val buildType = project.findProperty("buildType")?.toString() ?: "dev"
+val buildType = project.findProperty("buildType")?.toString() ?: "alpha"
 val buildNumber = project.findProperty("BUILD_NUMBER")?.toString() ?: "local"
 val baseVersion = "4.0.0"
-val versionSuffix = if (buildType == "dev") {
-    if (buildNumber == "local") "-SNAPSHOT-local" else "-SNAPSHOT-b${buildNumber}"
-} else ""
+val versionSuffix = when (buildType) {
+    "alpha", "beta" -> {
+        val buildSuffix = if (buildNumber == "local") "-local" else "-${buildNumber.padStart(2, '0')}"
+        "-${buildType}${buildSuffix}"
+    }
+    else -> ""
+}
 version = "$baseVersion$versionSuffix"
 val minecraftVersion by extra("1.21.11")
 
@@ -211,7 +215,7 @@ polymart {
     title = "MyPet $polymartVersion"
     message = "View the full changelog on Modrinth: https://modrinth.com/plugin/mypet/version/$polymartVersion"
     file.set(file(polymartFile))
-    beta = buildType != "release"
+    beta = buildType == "beta" || buildType == "alpha"
 }
 
 /* ---------- Hangar Release ---------- */
@@ -228,7 +232,11 @@ hangarPublish {
 
         version.set(hangarVersion)
         id.set("MyPet")
-        channel.set(if (buildType == "release") "Release" else "Snapshot")
+        channel.set(when (buildType) {
+                "release" -> "Release"
+                "beta" -> "Beta"
+                else -> "Alpha"
+            })
         changelog.set(hangarChangelog)
         apiKey.set(
             providers.gradleProperty("HANGAR_TOKEN").orNull
