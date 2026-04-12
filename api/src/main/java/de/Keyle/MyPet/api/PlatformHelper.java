@@ -34,8 +34,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -62,10 +60,7 @@ public class PlatformHelper {
 
     public boolean canSpawn(Location loc, Class<? extends Mob> mobClass) {
         if (loc == null || loc.getWorld() == null) return false;
-        Block at = loc.getBlock();
-        if (!at.isPassable()) return false;
-        Block below = at.getRelative(BlockFace.DOWN);
-        return below.getType().isSolid();
+        return loc.getBlock().isPassable();
     }
 
     public String getPlayerLanguage(Player player) {
