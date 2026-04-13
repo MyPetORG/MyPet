@@ -27,8 +27,8 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.Util;
+import java.util.function.Consumer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -55,7 +55,7 @@ public class MyPetSelectionGui {
         this.page = page;
     }
 
-    public void open(List<StoredMyPet> pets, final RepositoryCallback<StoredMyPet> callback) {
+    public void open(List<StoredMyPet> pets, final Consumer<StoredMyPet> callback) {
         List<StoredMyPet> pagedPets;
         // restrict the number of pets to 54 per page
         int startIndex = (page - 1) * 54;
@@ -74,7 +74,7 @@ public class MyPetSelectionGui {
             if (petSlotList.containsKey(event.getPosition())) {
                 StoredMyPet storedMyPet = petSlotList.get(event.getPosition());
                 if (storedMyPet != null && callback != null) {
-                    callback.callback(storedMyPet);
+                    callback.accept(storedMyPet);
                 }
             }
 

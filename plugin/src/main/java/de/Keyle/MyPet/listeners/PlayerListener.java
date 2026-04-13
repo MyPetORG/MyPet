@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.skill.skills.Ride;
@@ -216,9 +215,9 @@ public class PlayerListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                MyPetApi.getRepository().getMyPetPlayer(event.getPlayer(), new RepositoryCallback<>() {
-                    @Override
-                    public void callback(final MyPetPlayer p) {
+                MyPetApi.getRepository().getMyPetPlayer(event.getPlayer()).thenAccept(p -> {
+                    if (p == null) return;
+                    Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                         final MyPetPlayerImpl joinedPlayer = (MyPetPlayerImpl) p;
 
                         MyPetApi.getPlayerManager().setOnline(joinedPlayer);
@@ -233,9 +232,8 @@ public class PlayerListener implements Listener {
 
                         if (!joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                             final UUID petUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
-                            MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<>() {
-                                @Override
-                                public void callback(StoredMyPet storedMyPet) {
+                            MyPetApi.getRepository().getMyPet(petUUID).thenAccept(storedMyPet -> {
+                                Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                                     MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
 
                                     if (joinedPlayer.hasMyPet()) {
@@ -264,13 +262,13 @@ public class PlayerListener implements Listener {
                                             }
                                         }
                                     }
-                                }
+                                });
                             });
                         }
                         joinedPlayer.checkForContribution();
 
                         Bukkit.getServer().getPluginManager().callEvent(new MyPetPlayerJoinEvent(joinedPlayer));
-                    }
+                    });
                 });
             }
         }.runTaskLater(MyPetApi.getPlugin(), delay);
@@ -430,12 +428,11 @@ public class PlayerListener implements Listener {
 
                 if (myPetPlayer.hasMyPetInWorldGroup(toGroup)) {
                     final UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup);
-                    MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<>() {
-                        @Override
-                        public void callback(List<StoredMyPet> pets) {
-                            for (StoredMyPet myPet : pets) {
-                                if (myPet.getUUID().equals(groupMyPetUUID)) {
-                                    MyPetApi.getMyPetManager().activateMyPet(myPet);
+                    MyPetApi.getRepository().getMyPets(myPetPlayer).thenAccept(pets -> {
+                        Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                            for (StoredMyPet storedPet : pets) {
+                                if (storedPet.getUUID().equals(groupMyPetUUID)) {
+                                    MyPetApi.getMyPetManager().activateMyPet(storedPet);
                                     break;
                                 }
                             }
@@ -446,7 +443,7 @@ public class PlayerListener implements Listener {
                             } else {
                                 myPetPlayer.setMyPetForWorldGroup(toGroup, null);
                             }
-                        }
+                        });
                     });
                 } else if (hadMyPetInFromWorld) {
                     myPetPlayer.sendMessage(Translation.getComponent("Message.MultiWorld.NoActivePetInThisWorld", myPetPlayer));

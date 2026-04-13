@@ -31,7 +31,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -148,9 +147,7 @@ public class CommandOptionClone {
         MyPetSaveEvent event = new MyPetSaveEvent(newPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        MyPetApi.getRepository().addMyPet(newPet, new RepositoryCallback<>() {
-            @Override
-            public void callback(Boolean added) {
+        MyPetApi.getRepository().addMyPet(newPet).thenAccept(added -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                 if (!added) {
                     sender.sendMessage(MessageUtil.prefixed(Component.text("Failed to clone MyPet!")));
                     return;
@@ -160,11 +157,10 @@ public class CommandOptionClone {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(newPet.getOwner().getPlayer().getWorld().getName());
                     newPet.setWorldGroup(worldGroup.getName());
                     newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
-                    MyPetApi.getRepository().updateMyPetPlayer(newPetOwner, null);
+                    MyPetApi.getRepository().updateMyPetPlayer(newPetOwner);
 
                     sender.sendMessage(MessageUtil.prefixed(Component.text("MyPet successfully cloned to " + newPetOwner.getName() + "!")));
                 }
-            }
-        });
+        }));
     }
 }

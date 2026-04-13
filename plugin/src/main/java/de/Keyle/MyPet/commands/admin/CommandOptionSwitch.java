@@ -34,7 +34,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -44,6 +43,7 @@ import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSele
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -124,18 +124,15 @@ public class CommandOptionSwitch {
                                                 .resolve(ctx.getSource()).getFirst();
                                         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                                             MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
-                                            MyPetApi.getRepository().getMyPets(petPlayer, new RepositoryCallback<>() {
-                                                @Override
-                                                public void callback(List<StoredMyPet> pets) {
-                                                    try {
-                                                        for (StoredMyPet pet : pets) {
-                                                            String name = Util.SANITIZED_MINIMESSAGE.stripTags(pet.getPetName());
-                                                            builder.suggest(name);
-                                                        }
-                                                        future.complete(builder.build());
-                                                    } catch (Exception e) {
-                                                        future.complete(builder.build());
+                                            MyPetApi.getRepository().getMyPets(petPlayer).thenAccept(pets -> {
+                                                try {
+                                                    for (StoredMyPet pet : pets) {
+                                                        String name = Util.SANITIZED_MINIMESSAGE.stripTags(pet.getPetName());
+                                                        builder.suggest(name);
                                                     }
+                                                    future.complete(builder.build());
+                                                } catch (Exception e) {
+                                                    future.complete(builder.build());
                                                 }
                                             });
                                             return future;
@@ -187,9 +184,7 @@ public class CommandOptionSwitch {
      */
     private void showPetList(CommandSender sender, MyPetPlayer owner, String playerName) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
-        MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
-            @Override
-            public void callback(List<StoredMyPet> value) {
+        MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                 sender.sendMessage("Select the MyPet you want the player to switch to:");
                 if (sender instanceof Player) {
                     TextComponent.Builder messageBuilder = Component.text();
@@ -213,8 +208,7 @@ public class CommandOptionSwitch {
                         sender.sendMessage(strippedName + " (" + mypet.getPetType().name() + ") -> /petadmin switch " + playerName + " " + strippedName);
                     }
                 }
-            }
-        });
+        }));
     }
 
     /**
@@ -238,9 +232,7 @@ public class CommandOptionSwitch {
         }
         MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-        MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
-            @Override
-            public void callback(List<StoredMyPet> pets) {
+        MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                 // Find pet by name (stripped of MiniMessage tags)
                 StoredMyPet newPet = null;
                 for (StoredMyPet pet : pets) {
@@ -293,7 +285,6 @@ public class CommandOptionSwitch {
                             break;
                     }
                 }
-            }
-        });
+        }));
     }
 }

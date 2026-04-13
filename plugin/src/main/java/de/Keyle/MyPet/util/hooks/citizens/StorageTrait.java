@@ -49,7 +49,6 @@ import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
 import de.Keyle.MyPet.util.hooks.CitizensHook;
@@ -59,6 +58,7 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -96,9 +96,7 @@ public class StorageTrait extends Trait {
 
                 final NPC npc = this.npc;
 
-                MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<>() {
-                    @Override
-                    public void callback(List<StoredMyPet> pets) {
+                MyPetApi.getRepository().getMyPets(myPetPlayer).thenAccept(pets -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                         WorldGroup wg = WorldGroup.getGroupByWorld(myPetPlayer.getPlayer().getWorld().getName());
                         int inactivePetCount = 0;
                         UUID activePetUUID = myPetPlayer.getMyPet().getUUID();
@@ -131,16 +129,14 @@ public class StorageTrait extends Trait {
                             String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
                             final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Component.text(stats + " ").append(Translation.getComponent("Message.Npc.SwitchTitle", player)));
-                            gui.open(pets, new RepositoryCallback<>() {
-                                @Override
-                                public void callback(StoredMyPet storedMyPet) {
+                            gui.open(pets, storedMyPet -> {
                                     MyPetApi.getMyPetManager().deactivateMyPet(myPetPlayer, true);
                                     Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
                                     if (activePet.isPresent() && myPetPlayer.isOnline()) {
                                         Player p = myPetPlayer.getPlayer();
                                         myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Npc.ChosenPet", player, activePet.get().getDisplayName()));
-                                        WorldGroup wg = WorldGroup.getGroupByWorld(p.getWorld().getName());
-                                        myPetPlayer.setMyPetForWorldGroup(wg, activePet.get().getUUID());
+                                        WorldGroup activeWg = WorldGroup.getGroupByWorld(p.getWorld().getName());
+                                        myPetPlayer.setMyPetForWorldGroup(activeWg, activePet.get().getUUID());
 
                                         switch (activePet.get().createEntity()) {
                                             case Canceled:
@@ -164,7 +160,6 @@ public class StorageTrait extends Trait {
                                                 break;
                                         }
                                     }
-                                }
                             });
                         } else {
                             IconMenu menu = new IconMenu(Translation.getComponent("Message.Npc.HandOverTitle", myPetPlayer), event -> {
@@ -193,7 +188,7 @@ public class StorageTrait extends Trait {
                                             // remove pet from world groups
                                             String wg1 = myPetPlayer.getWorldGroupForMyPet(storedMyPet.getUUID());
                                             myPetPlayer.setMyPetForWorldGroup(wg1, null);
-                                            MyPetApi.getRepository().updateMyPetPlayer(myPetPlayer, null);
+                                            MyPetApi.getRepository().updateMyPetPlayer(myPetPlayer);
 
                                             player.sendMessage(Translation.getFormattedComponent("Message.Npc.HandOver", myPetPlayer, storedMyPet.getDisplayName(), npcEvent.getNPC().getName()));
                                         }
@@ -228,12 +223,9 @@ public class StorageTrait extends Trait {
                             menu.setOption(5, noIcon);
                             menu.open(player);
                         }
-                    }
-                });
+                }));
             } else {
-                MyPetApi.getRepository().getMyPets(myPetPlayer, new RepositoryCallback<>() {
-                    @Override
-                    public void callback(List<StoredMyPet> pets) {
+                MyPetApi.getRepository().getMyPets(myPetPlayer).thenAccept(pets -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                         if (!pets.isEmpty()) {
                             int maxPetCount = 0;
                             if (!Permissions.has(player, "MyPet.admin")) {
@@ -248,16 +240,14 @@ public class StorageTrait extends Trait {
                             }
                             String stats = "(" + pets.size() + "/" + maxPetCount + ")";
                             MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Translation.getComponent("Message.Npc.TakeTitle", myPetPlayer).append(Component.text(" " + stats)));
-                            gui.open(pets, new RepositoryCallback<>() {
-                                @Override
-                                public void callback(StoredMyPet storedMyPet) {
+                            gui.open(pets, storedMyPet -> {
                                     Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
                                     if (myPet.isPresent()) {
-                                        Player player = myPetPlayer.getPlayer();
+                                        Player ownerPlayer = myPetPlayer.getPlayer();
                                         myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Npc.ChosenPet", myPetPlayer, myPet.get().getDisplayName()));
-                                        WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                                        myPetPlayer.setMyPetForWorldGroup(wg, myPet.get().getUUID());
-                                        MyPetApi.getRepository().updateMyPetPlayer(myPetPlayer, null);
+                                        WorldGroup takeWg = WorldGroup.getGroupByWorld(ownerPlayer.getWorld().getName());
+                                        myPetPlayer.setMyPetForWorldGroup(takeWg, myPet.get().getUUID());
+                                        MyPetApi.getRepository().updateMyPetPlayer(myPetPlayer);
 
                                         switch (myPet.get().createEntity()) {
                                             case Canceled:
@@ -278,13 +268,11 @@ public class StorageTrait extends Trait {
                                                 break;
                                         }
                                     }
-                                }
                             });
                         } else {
                             myPetPlayer.sendMessage(Translation.getComponent("Message.No.HasPet", myPetPlayer), 5000);
                         }
-                    }
-                });
+                }));
             }
             return;
         }

@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.WalletType;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -150,9 +149,7 @@ public class PetShop {
                                     clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
                                     clonedPet.setUUID(null);
 
-                                    MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<>() {
-                                        @Override
-                                        public void callback(Boolean value) {
+                                    MyPetApi.getRepository().addMyPet(clonedPet).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                                             p.sendMessage(Translation.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
                                             MyPetCreateEvent createEvent = new MyPetCreateEvent(clonedPet, MyPetCreateEvent.Source.PetShop);
                                             Bukkit.getServer().getPluginManager().callEvent(createEvent);
@@ -160,11 +157,10 @@ public class PetShop {
                                                 p.sendMessage(Translation.getFormattedComponent("Message.Shop.SuccessStorage", player, clonedPet.getDisplayName()));
                                             } else {
                                                 petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
-                                                MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
+                                                MyPetApi.getRepository().updateMyPetPlayer(petOwner);
                                                 MyPetApi.getMyPetManager().activateMyPet(clonedPet).ifPresent(MyPet::createEntity);
                                             }
-                                        }
-                                    });
+                                    }));
                                 }
                                 event1.setWillClose(true);
                                 event1.setWillDestroy(true);
@@ -188,9 +184,7 @@ public class PetShop {
                     };
 
                     if (owner != null && owner.hasMyPet()) {
-                        MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
-                            @Override
-                            public void callback(List<StoredMyPet> value) {
+                        MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                                 int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
                                 int limit = getMaxPetCount(p);
                                 if (petCount >= limit) {
@@ -198,8 +192,7 @@ public class PetShop {
                                     return;
                                 }
                                 confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);
-                            }
-                        });
+                        }));
                     } else {
                         confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);
                     }

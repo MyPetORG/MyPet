@@ -33,7 +33,6 @@ import de.Keyle.MyPet.api.event.MyPetCreateEvent;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
@@ -354,9 +353,8 @@ public class EntityListener implements Listener {
                         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
                         justLeashed.add(player.getUniqueId());
-                        MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<>() {
-                            @Override
-                            public void callback(Boolean value) {
+                        MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet).thenAccept(value -> {
+                            Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                                 owner.sendMessage(Translation.getComponent("Message.Leash.Add", owner));
 
                                 Optional<MyPet> myPet = getMyPetManager().activateMyPet(inactiveMyPet);
@@ -374,7 +372,10 @@ public class EntityListener implements Listener {
                                     owner.sendMessage(Translation.getFormattedComponent("Message.Command.CaptureHelper.Mode", owner, Translation.getComponent("Name.Disabled", owner)));
                                 }
                                 justLeashed.remove(player.getUniqueId());
-                            }
+                            });
+                        }).exceptionally(err -> {
+                            MyPetApi.getLogger().warning("Failed to save captured pet: " + err);
+                            return null;
                         });
                     }
                 }

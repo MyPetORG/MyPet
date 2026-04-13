@@ -628,32 +628,30 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             @Override
             public void run() {
                 for (final Player player : getServer().getOnlinePlayers()) {
-                    repository.getMyPetPlayer(player, new RepositoryCallback<>() {
-                        @Override
-                        public void callback(final MyPetPlayer p) {
-                            if (p != null) {
-                                final MyPetPlayerImpl onlinePlayer = (MyPetPlayerImpl) p;
+                    repository.getMyPetPlayer(player).thenAccept(p -> {
+                        if (p == null) return;
+                        Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                            final MyPetPlayerImpl onlinePlayer = (MyPetPlayerImpl) p;
 
-                                playerManager.setOnline(onlinePlayer);
+                            playerManager.setOnline(onlinePlayer);
 
-                                final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                                if (joinGroup.isDisabled()) {
-                                    return;
+                            final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
+                            if (joinGroup.isDisabled()) {
+                                return;
+                            }
+                            if (onlinePlayer.hasMyPet()) {
+                                MyPet myPet = onlinePlayer.getMyPet();
+                                if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
+                                    myPetManager.deactivateMyPet(onlinePlayer, true);
                                 }
-                                if (onlinePlayer.hasMyPet()) {
-                                    MyPet myPet = onlinePlayer.getMyPet();
-                                    if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
-                                        myPetManager.deactivateMyPet(onlinePlayer, true);
-                                    }
-                                }
+                            }
 
-                                if (!onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
-                                    final UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
+                            if (!onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
+                                final UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
 
-                                    MyPetApi.getRepository().getMyPet(petUUID, new RepositoryCallback<>() {
-                                        @Override
-                                        public void callback(StoredMyPet storedMyPet) {
-                                            myPetManager.activateMyPet(storedMyPet);
+                                MyPetApi.getRepository().getMyPet(petUUID).thenAccept(storedMyPet -> {
+                                    Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                                        myPetManager.activateMyPet(storedMyPet);
 
                                             if (onlinePlayer.hasMyPet()) {
                                                 final MyPet myPet = onlinePlayer.getMyPet();
@@ -688,13 +686,12 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                                                     }
                                                 }
                                             }
-                                        }
+                                        });
                                     });
                                 }
                                 onlinePlayer.checkForContribution();
-                            }
-                        }
-                    });
+                            });
+                        });
                 }
             }
         }.runTaskLater(this, 0);

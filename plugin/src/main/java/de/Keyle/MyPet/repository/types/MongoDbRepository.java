@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -42,21 +41,31 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bson.Document;
 import org.bson.types.Binary;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 public class MongoDbRepository implements Repository {
 
     private MongoClient mongo;
-    private HashMap<UUID, StoredMyPet> petsToBeSaved = new HashMap<>();
-    private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
+    private final Map<UUID, StoredMyPet> petsToBeSaved = new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<UUID, MyPetPlayer> playersToBeSaved = new java.util.concurrent.ConcurrentHashMap<>();
     private MongoDatabase db;
     private int version = 4;
+
+    // MongoDB Java driver is thread-safe per MongoClient.
+    private final ExecutorService executor = Executors.newCachedThreadPool(r -> {
+        Thread t = new Thread(r, "MyPet-Mongo");
+        t.setDaemon(true);
+        return t;
+    });
 
     private void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
         if (data == null || data.length == 0) {
@@ -74,11 +83,20 @@ public class MongoDbRepository implements Repository {
             MyPetApi.getLogger().warning("Failed to backup corrupted data for pet " + pet.getUUID() + ": " + e.getMessage());
         }
     }
-    // https://search.maven.org/remotecontent?filepath=org/mongodb/mongo-java-driver/3.2.1/mongo-java-driver-3.2.1.jar
 
     @Override
     public void disable() {
         saveData();
+
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
 
         if (this.mongo != null) {
             this.mongo.close();
@@ -191,45 +209,27 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    public void cleanup(final long timestamp, final RepositoryCallback<Integer> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                long result = petCollection.deleteMany(new Document("last_used", new Document("$lt", timestamp))).getDeletedCount();
-                if (callback != null) {
-                    callback.runTask((int) result);
-                }
-            }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+    public CompletableFuture<Integer> cleanup(final long timestamp) {
+        return CompletableFuture.supplyAsync(() -> {
+            MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+            return (int) petCollection.deleteMany(new Document("last_used", new Document("$lt", timestamp))).getDeletedCount();
+        }, executor);
     }
 
     @Override
-    public void countMyPets(final RepositoryCallback<Integer> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (callback != null) {
-                    MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                    long result = petCollection.count();
-                    callback.runTask((int) result);
-                }
-            }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+    public CompletableFuture<Integer> countMyPets() {
+        return CompletableFuture.supplyAsync(() -> {
+            MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+            return (int) petCollection.count();
+        }, executor);
     }
 
     @Override
-    public void countMyPets(final MyPetType type, final RepositoryCallback<Integer> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (callback != null) {
-                    MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                    long result = petCollection.count(new Document("type", type.name()));
-                    callback.runTask((int) result);
-                }
-            }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+    public CompletableFuture<Integer> countMyPets(final MyPetType type) {
+        return CompletableFuture.supplyAsync(() -> {
+            MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+            return (int) petCollection.count(new Document("type", type.name()));
+        }, executor);
     }
 
     public void saveData() {
@@ -352,109 +352,78 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    public void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback) {
-        if (callback != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                    long result = petCollection.count(new Document("owner_uuid", myPetPlayer.getUniqueId().toString()));
-                    callback.runTask(result > 0);
-                }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
+    public CompletableFuture<Boolean> hasMyPets(final MyPetPlayer myPetPlayer) {
+        if (myPetPlayer == null) {
+            return CompletableFuture.completedFuture(false);
         }
+        return CompletableFuture.supplyAsync(() -> {
+            MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+            return petCollection.count(new Document("owner_uuid", myPetPlayer.getUniqueId().toString())) > 0;
+        }, executor);
     }
 
     @Override
-    public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback) {
-        if (callback != null && owner != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    final List<StoredMyPet> pets = new ArrayList<>();
-                    MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                    FindIterable<Document> petDocuments = petCollection.find(new Document("owner_uuid", owner.getUniqueId().toString()));
-                    petDocuments.forEach((Block<Document>) document -> {
-                        StoredMyPet storedMyPet = documentToMyPet(owner, document);
-                        if (storedMyPet != null) {
-                            pets.add(storedMyPet);
-                        }
-                    });
-                    callback.runTask(pets);
-                }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
+    public CompletableFuture<List<StoredMyPet>> getMyPets(final MyPetPlayer owner) {
+        if (owner == null) {
+            return CompletableFuture.completedFuture(new ArrayList<>());
         }
-    }
-
-    @Override
-    public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
-        if (callback != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
-                private int retries = 0;
-                private static final int MAX_RETRIES = 100;
-
-                @Override
-                public void run() {
-                    if (!MyPetApi.getPlugin().isEnabled()) {
-                        return;
-                    }
-
-                    if (petsToBeSaved.containsKey(uuid)) {
-                        if (++retries >= MAX_RETRIES) {
-                            callback.runTask((StoredMyPet) null);
-                            return;
-                        }
-                        Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), this, 5);
-                        return;
-                    }
-
-                    StoredMyPet result = null;
-                    MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                    Document petDocument = petCollection.find(new Document("uuid", uuid.toString())).first();
-                    if (petDocument != null) {
-                        MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(petDocument.getString("owner_uuid")));
-                        result = documentToMyPet(owner, petDocument);
-                    }
-                    callback.runTask(result);
+        return CompletableFuture.supplyAsync(() -> {
+            final List<StoredMyPet> pets = new ArrayList<>();
+            MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+            FindIterable<Document> petDocuments = petCollection.find(new Document("owner_uuid", owner.getUniqueId().toString()));
+            petDocuments.forEach((Block<Document>) document -> {
+                StoredMyPet storedMyPet = documentToMyPet(owner, document);
+                if (storedMyPet != null) {
+                    pets.add(storedMyPet);
                 }
             });
-        }
+            return pets;
+        }, executor);
     }
 
     @Override
-    public void removeMyPet(final UUID uuid, final RepositoryCallback<Boolean> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                boolean result = petCollection.deleteOne(new Document("uuid", uuid.toString())).getDeletedCount() > 0;
-                if (callback != null) {
-                    callback.runTask(result);
-                }
+    public CompletableFuture<StoredMyPet> getMyPet(final UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (!MyPetApi.getPlugin().isEnabled()) {
+                return null;
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
-    }
-
-    @Override
-    public void removeMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
-        removeMyPet(storedMyPet.getUUID(), callback);
-    }
-
-    @Override
-    public void addMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                addMyPet(storedMyPet);
-
-                if (callback != null) {
-                    callback.runTask(true);
-                }
+            StoredMyPet pending = petsToBeSaved.get(uuid);
+            if (pending != null) {
+                return pending;
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+            StoredMyPet result = null;
+            MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+            Document petDocument = petCollection.find(new Document("uuid", uuid.toString())).first();
+            if (petDocument != null) {
+                MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(petDocument.getString("owner_uuid")));
+                result = documentToMyPet(owner, petDocument);
+            }
+            return result;
+        }, executor);
     }
 
-    public void addMyPet(StoredMyPet storedMyPet) {
+    @Override
+    public CompletableFuture<Boolean> removeMyPet(final UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
+            return petCollection.deleteOne(new Document("uuid", uuid.toString())).getDeletedCount() > 0;
+        }, executor);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> removeMyPet(final StoredMyPet storedMyPet) {
+        return removeMyPet(storedMyPet.getUUID());
+    }
+
+    @Override
+    public CompletableFuture<Boolean> addMyPet(final StoredMyPet storedMyPet) {
+        return CompletableFuture.supplyAsync(() -> {
+            insertMyPet(storedMyPet);
+            return true;
+        }, executor);
+    }
+
+    private void insertMyPet(StoredMyPet storedMyPet) {
         MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
 
         Document petDocument = new Document();
@@ -482,22 +451,15 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    public void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
+    public CompletableFuture<Boolean> updateMyPet(final StoredMyPet storedMyPet) {
         petsToBeSaved.put(storedMyPet.getUUID(), storedMyPet);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                boolean result = savePet(storedMyPet);
-
-                if (result) {
-                    petsToBeSaved.remove(storedMyPet.getUUID());
-                }
-
-                if (callback != null) {
-                    callback.runTask(result);
-                }
+        return CompletableFuture.supplyAsync(() -> {
+            boolean result = savePet(storedMyPet);
+            if (result) {
+                petsToBeSaved.remove(storedMyPet.getUUID());
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+            return result;
+        }, executor);
     }
 
     public boolean savePet(StoredMyPet storedMyPet) {
@@ -592,73 +554,47 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    public void isMyPetPlayer(final Player player, final RepositoryCallback<Boolean> callback) {
-        if (callback != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-                    long result = playerCollection.count(new BasicDBObject("uuid", player.getUniqueId().toString()));
-                    callback.runTask(result > 0);
-                }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
-        }
-    }
-
-    public void getMyPetPlayer(final UUID uuid, final RepositoryCallback<MyPetPlayer> callback) {
-        if (callback != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-                    Document playerDocument = playerCollection.find(new Document("uuid", uuid.toString())).first();
-                    if (playerDocument != null) {
-                        MyPetPlayer player = documentToPlayer(playerDocument);
-                        if (player != null) {
-                            callback.runTask(player);
-                        }
-                    }
-                }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
-        }
+    public CompletableFuture<Boolean> isMyPetPlayer(final Player player) {
+        return CompletableFuture.supplyAsync(() -> {
+            MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+            return playerCollection.count(new BasicDBObject("uuid", player.getUniqueId().toString())) > 0;
+        }, executor);
     }
 
     @Override
-    public void getMyPetPlayer(final Player player, final RepositoryCallback<MyPetPlayer> callback) {
-        if (callback != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-                    Document playerDocument = playerCollection.find(new BasicDBObject("uuid", player.getUniqueId().toString())).first();
-                    if (playerDocument != null) {
-                        MyPetPlayer myPetPlayer = documentToPlayer(playerDocument);
-                        if (myPetPlayer != null) {
-                            callback.runTask(myPetPlayer);
-                        }
-                    }
-                }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
-        }
-    }
-
-    @Override
-    public void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        playersToBeSaved.put(player.getUniqueId(), player);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                boolean result = updatePlayer(player);
-
-                if (result) {
-                    playersToBeSaved.remove(player);
-                }
-
-                if (callback != null) {
-                    callback.runTask(MyPetApi.getPlugin(), result);
-                }
+    public CompletableFuture<MyPetPlayer> getMyPetPlayer(final UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+            Document playerDocument = playerCollection.find(new Document("uuid", uuid.toString())).first();
+            if (playerDocument != null) {
+                return documentToPlayer(playerDocument);
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+            return null;
+        }, executor);
+    }
+
+    @Override
+    public CompletableFuture<MyPetPlayer> getMyPetPlayer(final Player player) {
+        return CompletableFuture.supplyAsync(() -> {
+            MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+            Document playerDocument = playerCollection.find(new BasicDBObject("uuid", player.getUniqueId().toString())).first();
+            if (playerDocument != null) {
+                return documentToPlayer(playerDocument);
+            }
+            return null;
+        }, executor);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> updateMyPetPlayer(final MyPetPlayer player) {
+        playersToBeSaved.put(player.getUniqueId(), player);
+        return CompletableFuture.supplyAsync(() -> {
+            boolean result = updatePlayer(player);
+            if (result) {
+                playersToBeSaved.remove(player.getUniqueId());
+            }
+            return result;
+        }, executor);
     }
 
     public boolean updatePlayer(final MyPetPlayer player) {
@@ -701,20 +637,11 @@ public class MongoDbRepository implements Repository {
 
 
     @Override
-    public void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                addMyPetPlayer(player);
-
-                if (callback != null) {
-                    callback.runTask(MyPetApi.getPlugin(), true);
-                }
-            }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+    public CompletableFuture<Boolean> addMyPetPlayer(final MyPetPlayer player) {
+        return CompletableFuture.supplyAsync(() -> insertMyPetPlayer(player), executor);
     }
 
-    public boolean addMyPetPlayer(MyPetPlayer player) {
+    private boolean insertMyPetPlayer(MyPetPlayer player) {
         Document playerDocument = new Document();
         setPlayerData(player, playerDocument);
 
@@ -724,16 +651,10 @@ public class MongoDbRepository implements Repository {
     }
 
     @Override
-    public void removeMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-                boolean result = playerCollection.deleteOne(new Document("uuid", player.getUniqueId().toString())).getDeletedCount() > 0;
-                if (callback != null) {
-                    callback.runTask(result);
-                }
-            }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+    public CompletableFuture<Boolean> removeMyPetPlayer(final MyPetPlayer player) {
+        return CompletableFuture.supplyAsync(() -> {
+            MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
+            return playerCollection.deleteOne(new Document("uuid", player.getUniqueId().toString())).getDeletedCount() > 0;
+        }, executor);
     }
 }

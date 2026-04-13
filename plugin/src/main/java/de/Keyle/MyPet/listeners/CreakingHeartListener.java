@@ -30,7 +30,6 @@ import de.Keyle.MyPet.api.event.MyPetCreateEvent;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
@@ -218,9 +217,8 @@ public class CreakingHeartListener implements Listener {
         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
         // Save and activate
-        MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
-            @Override
-            public void callback(Boolean value) {
+        MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet).thenAccept(value -> {
+            Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                 if (value == null || !value) {
                     MyPetApi.getLogger().warning("Failed to save captured Creaking pet for " + owner.getName());
                     return;
@@ -234,7 +232,10 @@ public class CreakingHeartListener implements Listener {
                     owner.setCaptureHelperActive(false);
                     owner.sendMessage(Translation.getFormattedComponent("Message.Command.CaptureHelper.Mode", owner, Translation.getComponent("Name.Disabled", owner)));
                 }
-            }
+            });
+        }).exceptionally(err -> {
+            MyPetApi.getLogger().warning("Failed to save captured Creaking pet: " + err);
+            return null;
         });
     }
 

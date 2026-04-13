@@ -57,7 +57,7 @@ public abstract class PlayerManager {
 
     public void setOffline(MyPetPlayer player) {
         onlinePlayers.remove(player.getUniqueId());
-        MyPetApi.getRepository().updateMyPetPlayer(player, null);
+        MyPetApi.getRepository().updateMyPetPlayer(player);
     }
 
     public abstract MyPetPlayer createMyPetPlayer(Player player);
@@ -77,7 +77,7 @@ public abstract class PlayerManager {
 
     public MyPetPlayer registerMyPetPlayer(Player player) {
         MyPetPlayer myPetPlayer = createMyPetPlayer(player);
-        MyPetApi.getRepository().addMyPetPlayer(myPetPlayer, null);
+        MyPetApi.getRepository().addMyPetPlayer(myPetPlayer);
         setOnline(myPetPlayer);
         return myPetPlayer;
     }

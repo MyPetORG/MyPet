@@ -26,13 +26,14 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.Util;
+import java.util.function.Consumer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -50,20 +51,17 @@ public class MyPetAdminSelectionGui {
         this.title = title;
     }
 
-    public void open(final RepositoryCallback<StoredMyPet> callback) {
-        MyPetApi.getRepository().getMyPets(petOwner, new RepositoryCallback<>() {
-            @Override
-            public void callback(List<StoredMyPet> pets) {
-                open(pets, callback);
-            }
+    public void open(final Consumer<StoredMyPet> callback) {
+        MyPetApi.getRepository().getMyPets(petOwner).thenAccept(pets -> {
+            Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> open(pets, callback));
         });
     }
 
-    public void open(List<StoredMyPet> pets, final RepositoryCallback<StoredMyPet> callback) {
+    public void open(List<StoredMyPet> pets, final Consumer<StoredMyPet> callback) {
         open(pets, 1, callback);
     }
 
-    public void open(final List<StoredMyPet> pets, int page, final RepositoryCallback<StoredMyPet> callback) {
+    public void open(final List<StoredMyPet> pets, int page, final Consumer<StoredMyPet> callback) {
         if (!pets.isEmpty()) {
             if (page < 1 || Math.ceil(pets.size() / 45.) < page) {
                 page = 1;
@@ -106,7 +104,7 @@ public class MyPetAdminSelectionGui {
                 } else if (petSlotList.containsKey(event.getPosition())) {
                     StoredMyPet storedMyPet = petSlotList.get(event.getPosition());
                     if (storedMyPet != null && callback != null) {
-                        callback.callback(storedMyPet);
+                        callback.accept(storedMyPet);
                     }
                 }
                 event.setWillClose(true);

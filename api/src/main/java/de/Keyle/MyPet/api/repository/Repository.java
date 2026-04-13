@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface Repository {
     void disable();
@@ -39,37 +40,37 @@ public interface Repository {
 
     List<MyPetPlayer> getAllMyPetPlayers();
 
-    void cleanup(long timestamp, final RepositoryCallback<Integer> callback);
+    CompletableFuture<Integer> cleanup(long timestamp);
 
-    void countMyPets(final RepositoryCallback<Integer> callback);
+    CompletableFuture<Integer> countMyPets();
 
-    void countMyPets(final MyPetType type, final RepositoryCallback<Integer> callback);
+    CompletableFuture<Integer> countMyPets(MyPetType type);
 
-    void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback);
+    CompletableFuture<Boolean> hasMyPets(MyPetPlayer myPetPlayer);
 
-    void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback);
+    CompletableFuture<List<StoredMyPet>> getMyPets(MyPetPlayer owner);
 
-    void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback);
+    CompletableFuture<StoredMyPet> getMyPet(UUID uuid);
 
-    void removeMyPet(final UUID uuid, final RepositoryCallback<Boolean> callback);
+    CompletableFuture<Boolean> removeMyPet(UUID uuid);
 
-    void removeMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback);
+    CompletableFuture<Boolean> removeMyPet(StoredMyPet storedMyPet);
 
-    void addMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback);
+    CompletableFuture<Boolean> addMyPet(StoredMyPet storedMyPet);
 
-    boolean savePet(final StoredMyPet storedMyPet);
+    boolean savePet(StoredMyPet storedMyPet);
 
-    void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback);
+    CompletableFuture<Boolean> updateMyPet(StoredMyPet storedMyPet);
 
-    void isMyPetPlayer(final Player player, final RepositoryCallback<Boolean> callback);
+    CompletableFuture<Boolean> isMyPetPlayer(Player player);
 
-    void getMyPetPlayer(final UUID uuid, final RepositoryCallback<MyPetPlayer> callback);
+    CompletableFuture<MyPetPlayer> getMyPetPlayer(UUID uuid);
 
-    void getMyPetPlayer(final Player player, final RepositoryCallback<MyPetPlayer> callback);
+    CompletableFuture<MyPetPlayer> getMyPetPlayer(Player player);
 
-    void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback);
+    CompletableFuture<Boolean> updateMyPetPlayer(MyPetPlayer player);
 
-    void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback);
+    CompletableFuture<Boolean> addMyPetPlayer(MyPetPlayer player);
 
-    void removeMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback);
+    CompletableFuture<Boolean> removeMyPetPlayer(MyPetPlayer player);
 }

@@ -218,7 +218,7 @@ public class CommandRelease {
 
             petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Release.Success", petOwner, myPet.getDisplayName()));
             MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
-            MyPetApi.getRepository().removeMyPet(myPet.getUUID(), null);
+            MyPetApi.getRepository().removeMyPet(myPet.getUUID());
         } else {
             showReleasePrompt(petOwner, myPet);
         }

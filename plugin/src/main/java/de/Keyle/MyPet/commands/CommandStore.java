@@ -30,9 +30,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import io.papermc.paper.command.brigadier.Commands;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -116,9 +116,7 @@ public class CommandStore {
             }
 
             if (owner.hasMyPet()) {
-                MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
-                    @Override
-                    public void callback(List<StoredMyPet> pets) {
+                MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                         if (owner.hasMyPet()) {
                             MyPet myPet = owner.getMyPet();
                             String worldGroup = myPet.getWorldGroup();
@@ -135,8 +133,7 @@ public class CommandStore {
                         } else {
                             player.sendMessage(Translation.getComponent("Message.Command.Switch.NoPet", player));
                         }
-                    }
-                });
+                }));
                 return;
             }
         }

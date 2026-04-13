@@ -33,7 +33,6 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -41,9 +40,7 @@ import de.Keyle.MyPet.api.util.NbtUtil;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -52,14 +49,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class MySqlRepository implements Repository {
 
     protected Gson gson = new Gson();
-    private HashMap<UUID, StoredMyPet> petsToBeSaved = new HashMap<>();
-    private HashMap<UUID, MyPetPlayer> playersToBeSaved = new HashMap<>();
+    private final Map<UUID, StoredMyPet> petsToBeSaved = new ConcurrentHashMap<>();
+    private final Map<UUID, MyPetPlayer> playersToBeSaved = new ConcurrentHashMap<>();
     private HikariDataSource dataSource;
     private int version = 10;
+
+    private ExecutorService executor;
 
     private void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
         if (data == null || data.length == 0) {
@@ -81,6 +86,17 @@ public class MySqlRepository implements Repository {
     @Override
     public void disable() {
         saveData();
+        if (executor != null) {
+            executor.shutdown();
+            try {
+                if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+                    executor.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executor.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }
         dataSource.close();
     }
 
@@ -100,6 +116,14 @@ public class MySqlRepository implements Repository {
         dataSource.setMaximumPoolSize(Configuration.Repository.MySQL.POOL_SIZE);
         dataSource.addDataSourceProperty("cachePrepStmts", true);
         dataSource.setLeakDetectionThreshold(10000);
+
+        this.executor = Executors.newFixedThreadPool(
+                Math.max(1, Configuration.Repository.MySQL.POOL_SIZE),
+                r -> {
+                    Thread t = new Thread(r, "MyPet-MySQL");
+                    t.setDaemon(true);
+                    return t;
+                });
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "info;");
@@ -193,12 +217,12 @@ public class MySqlRepository implements Repository {
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
                     ")");
 
-            PreparedStatement insert = connection.prepareStatement("INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "info (version, mypet_version, mypet_build) VALUES (?,?,?);");
-            insert.setInt(1, version);
-            insert.setString(2, MyPetVersion.getVersion());
-            insert.setString(3, MyPetVersion.getBuild());
-            insert.executeUpdate();
-            insert.close();
+            try (PreparedStatement insert = connection.prepareStatement("INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "info (version, mypet_version, mypet_build) VALUES (?,?,?);")) {
+                insert.setInt(1, version);
+                insert.setString(2, MyPetVersion.getVersion());
+                insert.setString(3, MyPetVersion.getBuild());
+                insert.executeUpdate();
+            }
         } catch (SQLException e) {
             ErrorUtil.reportError("MySQL database operation failed", e);
         }
@@ -288,65 +312,49 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public void cleanup(final long timestamp, final RepositoryCallback<Integer> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try (Connection connection = dataSource.getConnection();
-                     PreparedStatement statement = connection.prepareStatement("DELETE FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE last_used<?;")) {
-                    statement.setLong(1, timestamp);
-
-                    int result = statement.executeUpdate();
-
-                    if (callback != null) {
-                        callback.runTask(MyPetApi.getPlugin(), result);
-                    }
-                } catch (SQLException e) {
-                    ErrorUtil.reportError("MySQL database operation failed", e);
-                    if (callback != null) {
-                        callback.runTask(MyPetApi.getPlugin(), 0);
-                    }
-                }
+    public CompletableFuture<Integer> cleanup(final long timestamp) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("DELETE FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE last_used<?;")) {
+                statement.setLong(1, timestamp);
+                return statement.executeUpdate();
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                return 0;
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+        }, executor);
     }
 
     @Override
-    public void countMyPets(final RepositoryCallback<Integer> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try (Connection connection = dataSource.getConnection();
-                     PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "pets;");
-                     ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    callback.setValue(resultSet.getInt(1));
-                    callback.runTask(MyPetApi.getPlugin());
-                } catch (SQLException e) {
-                    ErrorUtil.reportError("MySQL database operation failed", e);
-                }
+    public CompletableFuture<Integer> countMyPets() {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "pets;");
+                 ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                return resultSet.getInt(1);
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                throw new CompletionException(e);
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+        }, executor);
     }
 
     @Override
-    public void countMyPets(final MyPetType type, final RepositoryCallback<Integer> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try (Connection connection = dataSource.getConnection();
-                     PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE type=?;")) {
-                    statement.setString(1, type.name());
-                    ResultSet resultSet = statement.executeQuery();
+    public CompletableFuture<Integer> countMyPets(final MyPetType type) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE type=?;")) {
+                statement.setString(1, type.name());
+                try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
-                    callback.setValue(resultSet.getInt(1));
-                    callback.runTask(MyPetApi.getPlugin());
-                    resultSet.close();
-                } catch (SQLException e) {
-                    ErrorUtil.reportError("MySQL database operation failed", e);
+                    return resultSet.getInt(1);
                 }
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                throw new CompletionException(e);
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+        }, executor);
     }
 
     public void saveData() {
@@ -583,181 +591,145 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback) {
-        if (callback != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    try (Connection connection = dataSource.getConnection();
-                         PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE owner_uuid=?;")) {
-                        statement.setString(1, myPetPlayer.getUniqueId().toString());
-                        ResultSet resultSet = statement.executeQuery();
-                        resultSet.next();
-
-                        callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
-                        resultSet.close();
-                    } catch (SQLException e) {
-                        ErrorUtil.reportError("MySQL database operation failed", e);
-                    }
-                }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
+    public CompletableFuture<Boolean> hasMyPets(final MyPetPlayer myPetPlayer) {
+        if (myPetPlayer == null) {
+            return CompletableFuture.completedFuture(false);
         }
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE owner_uuid=?;")) {
+                statement.setString(1, myPetPlayer.getUniqueId().toString());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    return resultSet.getInt(1) > 0;
+                }
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                throw new CompletionException(e);
+            }
+        }, executor);
     }
 
     @Override
-    public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<StoredMyPet>> callback) {
-        if (callback != null && owner != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    try (Connection connection = dataSource.getConnection();
-                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE owner_uuid=?;")) {
-                        statement.setString(1, owner.getUniqueId().toString());
-                        ResultSet resultSet = statement.executeQuery();
-                        List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet);
-                        callback.runTask(MyPetApi.getPlugin(), pets);
-                        resultSet.close();
-                    } catch (SQLException e) {
-                        ErrorUtil.reportError("MySQL database operation failed", e);
-                    }
-                }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
+    public CompletableFuture<List<StoredMyPet>> getMyPets(final MyPetPlayer owner) {
+        if (owner == null) {
+            return CompletableFuture.completedFuture(new ArrayList<>());
         }
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE owner_uuid=?;")) {
+                statement.setString(1, owner.getUniqueId().toString());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return resultSetToMyPet(owner, resultSet);
+                }
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                throw new CompletionException(e);
+            }
+        }, executor);
     }
 
     @Override
-    public void getMyPet(final UUID uuid, final RepositoryCallback<StoredMyPet> callback) {
-        if (callback != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(MyPetApi.getPlugin(), new Runnable() {
-                private int retries = 0;
-                private static final int MAX_RETRIES = 100;
-
-                @Override
-                public void run() {
-                    if (!MyPetApi.getPlugin().isEnabled()) {
-                        return;
-                    }
-
-                    if (petsToBeSaved.containsKey(uuid)) {
-                        if (++retries >= MAX_RETRIES) {
-                            callback.runTask(MyPetApi.getPlugin(), null);
-                            return;
-                        }
-                        Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), this, 5);
-                        return;
-                    }
-
-                    StoredMyPet result = null;
-                    try (Connection connection = dataSource.getConnection();
-                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE uuid=?;",
-                                 ResultSet.TYPE_SCROLL_SENSITIVE,
-                                 ResultSet.CONCUR_UPDATABLE)) {
-                        statement.setString(1, uuid.toString());
-
-                        ResultSet resultSet = statement.executeQuery();
-
-                        if (resultSet.first()) {
-                            MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(resultSet.getString("owner_uuid")));
-                            if (owner != null) {
-                                resultSet.beforeFirst();
-                                List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet);
-                                if (!pets.isEmpty()) {
-                                    result = pets.get(0);
-                                }
+    public CompletableFuture<StoredMyPet> getMyPet(final UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (!MyPetApi.getPlugin().isEnabled()) {
+                return null;
+            }
+            StoredMyPet pending = petsToBeSaved.get(uuid);
+            if (pending != null) {
+                return pending;
+            }
+            StoredMyPet result = null;
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE uuid=?;",
+                         ResultSet.TYPE_SCROLL_SENSITIVE,
+                         ResultSet.CONCUR_UPDATABLE)) {
+                statement.setString(1, uuid.toString());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.first()) {
+                        MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(resultSet.getString("owner_uuid")));
+                        if (owner != null) {
+                            resultSet.beforeFirst();
+                            List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet);
+                            if (!pets.isEmpty()) {
+                                result = pets.get(0);
                             }
                         }
-                        resultSet.close();
-                    } catch (SQLException e) {
-                        ErrorUtil.reportError("MySQL database operation failed", e);
-                    }
-                    callback.runTask(MyPetApi.getPlugin(), result);
-                }
-            });
-        }
-    }
-
-    @Override
-    public void removeMyPet(final UUID uuid, final RepositoryCallback<Boolean> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try (Connection connection = dataSource.getConnection();
-                     PreparedStatement statement = connection.prepareStatement("DELETE FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE uuid=?;")) {
-                    statement.setString(1, uuid.toString());
-
-                    int result = statement.executeUpdate();
-
-                    if (callback != null) {
-                        callback.runTask(MyPetApi.getPlugin(), result > 0);
-                    }
-                } catch (SQLException e) {
-                    ErrorUtil.reportError("MySQL database operation failed", e);
-                    if (callback != null) {
-                        callback.runTask(MyPetApi.getPlugin(), false);
                     }
                 }
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                throw new CompletionException(e);
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+            return result;
+        }, executor);
     }
 
     @Override
-    public void removeMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
-        removeMyPet(storedMyPet.getUUID(), callback);
+    public CompletableFuture<Boolean> removeMyPet(final UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("DELETE FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE uuid=?;")) {
+                statement.setString(1, uuid.toString());
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                return false;
+            }
+        }, executor);
     }
 
     @Override
-    public void addMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try (Connection connection = dataSource.getConnection();
-                     PreparedStatement statement = connection.prepareStatement(
-                             "INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "pets (uuid, " +
-                                     "owner_uuid, " +
-                                     "exp, " +
-                                     "health, " +
-                                     "respawn_time, " +
-                                     "name, " +
-                                     "type, " +
-                                     "last_used, " +
-                                     "hunger, " +
-                                     "world_group, " +
-                                     "wants_to_spawn, " +
-                                     "skilltree, " +
-                                     "skills, " +
-                                     "info) " +
-                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
-                    statement.setString(1, storedMyPet.getUUID().toString());
-                    statement.setString(2, storedMyPet.getOwner().getUniqueId().toString());
-                    statement.setDouble(3, storedMyPet.getExp());
-                    statement.setDouble(4, storedMyPet.getHealth());
-                    statement.setInt(5, storedMyPet.getRespawnTime());
-                    statement.setString(6, storedMyPet.getPetName());
-                    statement.setString(7, storedMyPet.getPetType().name());
-                    statement.setLong(8, storedMyPet.getLastUsed());
-                    statement.setDouble(9, storedMyPet.getSaturation());
-                    statement.setString(10, storedMyPet.getWorldGroup());
-                    statement.setBoolean(11, storedMyPet.wantsToRespawn());
-                    statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
+    public CompletableFuture<Boolean> removeMyPet(final StoredMyPet storedMyPet) {
+        return removeMyPet(storedMyPet.getUUID());
+    }
 
-                    try {
-                        statement.setBlob(13, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getSkillInfo())));
-                        statement.setBlob(14, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getInfo())));
-                    } catch (IOException e) {
-                        ErrorUtil.reportError("MySQL database operation failed", e);
-                    }
+    @Override
+    public CompletableFuture<Boolean> addMyPet(final StoredMyPet storedMyPet) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(
+                         "INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "pets (uuid, " +
+                                 "owner_uuid, " +
+                                 "exp, " +
+                                 "health, " +
+                                 "respawn_time, " +
+                                 "name, " +
+                                 "type, " +
+                                 "last_used, " +
+                                 "hunger, " +
+                                 "world_group, " +
+                                 "wants_to_spawn, " +
+                                 "skilltree, " +
+                                 "skills, " +
+                                 "info) " +
+                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
+                statement.setString(1, storedMyPet.getUUID().toString());
+                statement.setString(2, storedMyPet.getOwner().getUniqueId().toString());
+                statement.setDouble(3, storedMyPet.getExp());
+                statement.setDouble(4, storedMyPet.getHealth());
+                statement.setInt(5, storedMyPet.getRespawnTime());
+                statement.setString(6, storedMyPet.getPetName());
+                statement.setString(7, storedMyPet.getPetType().name());
+                statement.setLong(8, storedMyPet.getLastUsed());
+                statement.setDouble(9, storedMyPet.getSaturation());
+                statement.setString(10, storedMyPet.getWorldGroup());
+                statement.setBoolean(11, storedMyPet.wantsToRespawn());
+                statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
 
-                    boolean result = statement.executeUpdate() > 0;
-
-                    if (callback != null) {
-                        callback.runTask(MyPetApi.getPlugin(), result);
-                    }
-                } catch (SQLException e) {
+                try {
+                    statement.setBlob(13, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getSkillInfo())));
+                    statement.setBlob(14, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getInfo())));
+                } catch (IOException e) {
                     ErrorUtil.reportError("MySQL database operation failed", e);
                 }
 
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                return false;
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+        }, executor);
     }
 
     public boolean addMyPets(List<StoredMyPet> pets) {
@@ -821,57 +793,52 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public void updateMyPet(final StoredMyPet storedMyPet, final RepositoryCallback<Boolean> callback) {
+    public CompletableFuture<Boolean> updateMyPet(final StoredMyPet storedMyPet) {
         petsToBeSaved.put(storedMyPet.getUUID(), storedMyPet);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try (Connection connection = dataSource.getConnection();
-                     PreparedStatement statement = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "pets SET " +
-                             "owner_uuid=?, " +
-                             "exp=?, " +
-                             "health=?, " +
-                             "respawn_time=?, " +
-                             "name=?, " +
-                             "type=?, " +
-                             "last_used=?, " +
-                             "hunger=?, " +
-                             "world_group=?, " +
-                             "wants_to_spawn=?, " +
-                             "skilltree=?, " +
-                             "skills=?, " +
-                             "info=? " +
-                             "WHERE uuid=?;")) {
-                    statement.setString(1, storedMyPet.getOwner().getUniqueId().toString());
-                    statement.setDouble(2, storedMyPet.getExp());
-                    statement.setDouble(3, storedMyPet.getHealth());
-                    statement.setInt(4, storedMyPet.getRespawnTime());
-                    statement.setBinaryStream(5, new ByteArrayInputStream(storedMyPet.getPetName().getBytes(StandardCharsets.UTF_8)));
-                    statement.setString(6, storedMyPet.getPetType().name());
-                    statement.setLong(7, storedMyPet.getLastUsed());
-                    statement.setDouble(8, storedMyPet.getSaturation());
-                    statement.setString(9, storedMyPet.getWorldGroup());
-                    statement.setBoolean(10, storedMyPet.wantsToRespawn());
-                    statement.setString(11, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
-                    statement.setBlob(12, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getSkillInfo())));
-                    statement.setBlob(13, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getInfo())));
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "pets SET " +
+                         "owner_uuid=?, " +
+                         "exp=?, " +
+                         "health=?, " +
+                         "respawn_time=?, " +
+                         "name=?, " +
+                         "type=?, " +
+                         "last_used=?, " +
+                         "hunger=?, " +
+                         "world_group=?, " +
+                         "wants_to_spawn=?, " +
+                         "skilltree=?, " +
+                         "skills=?, " +
+                         "info=? " +
+                         "WHERE uuid=?;")) {
+                statement.setString(1, storedMyPet.getOwner().getUniqueId().toString());
+                statement.setDouble(2, storedMyPet.getExp());
+                statement.setDouble(3, storedMyPet.getHealth());
+                statement.setInt(4, storedMyPet.getRespawnTime());
+                statement.setBinaryStream(5, new ByteArrayInputStream(storedMyPet.getPetName().getBytes(StandardCharsets.UTF_8)));
+                statement.setString(6, storedMyPet.getPetType().name());
+                statement.setLong(7, storedMyPet.getLastUsed());
+                statement.setDouble(8, storedMyPet.getSaturation());
+                statement.setString(9, storedMyPet.getWorldGroup());
+                statement.setBoolean(10, storedMyPet.wantsToRespawn());
+                statement.setString(11, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
+                statement.setBlob(12, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getSkillInfo())));
+                statement.setBlob(13, new ByteArrayInputStream(NbtUtil.writeCompressed(storedMyPet.getInfo())));
 
-                    statement.setString(14, storedMyPet.getUUID().toString());
+                statement.setString(14, storedMyPet.getUUID().toString());
 
-                    int result = statement.executeUpdate();
+                int result = statement.executeUpdate();
 
-                    if (result > 0) {
-                        petsToBeSaved.remove(storedMyPet.getUUID());
-                    }
-
-                    if (callback != null) {
-                        callback.runTask(MyPetApi.getPlugin(), result > 0);
-                    }
-                } catch (SQLException | IOException e) {
-                    ErrorUtil.reportError("MySQL database operation failed", e);
+                if (result > 0) {
+                    petsToBeSaved.remove(storedMyPet.getUUID());
                 }
+                return result > 0;
+            } catch (SQLException | IOException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                throw new CompletionException(e);
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+        }, executor);
     }
 
     // Players ---------------------------------------------------------------------------------------------------------
@@ -950,90 +917,64 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public void isMyPetPlayer(final Player player, final RepositoryCallback<Boolean> callback) {
-        if (callback != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    try (Connection connection = dataSource.getConnection();
-                         PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE uuid=?;")) {
-                        statement.setString(1, player.getUniqueId().toString());
-                        ResultSet resultSet = statement.executeQuery();
-                        resultSet.next();
-
-                        callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
-                        resultSet.close();
-                    } catch (SQLException e) {
-                        ErrorUtil.reportError("MySQL database operation failed", e);
-                    }
+    public CompletableFuture<Boolean> isMyPetPlayer(final Player player) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE uuid=?;")) {
+                statement.setString(1, player.getUniqueId().toString());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    return resultSet.getInt(1) > 0;
                 }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
-        }
-    }
-
-    public void getMyPetPlayer(final UUID uuid, final RepositoryCallback<MyPetPlayer> callback) {
-        if (callback != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    try (Connection connection = dataSource.getConnection();
-                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE uuid=?;")) {
-                        statement.setString(1, uuid.toString());
-                        ResultSet resultSet = statement.executeQuery();
-                        MyPetPlayer player = resultSetToMyPetPlayer(resultSet);
-                        if (player != null) {
-                            callback.runTask(MyPetApi.getPlugin(), player);
-                        }
-                        resultSet.close();
-                    } catch (SQLException e) {
-                        ErrorUtil.reportError("MySQL database operation failed", e);
-                    }
-                }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
-        }
-    }
-
-    @Override
-    public void getMyPetPlayer(final Player player, final RepositoryCallback<MyPetPlayer> callback) {
-        if (callback != null) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    try (Connection connection = dataSource.getConnection();
-                         PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE uuid=?;")) {
-                        statement.setString(1, player.getUniqueId().toString());
-                        ResultSet resultSet = statement.executeQuery();
-
-                        MyPetPlayer myPetPlayer = resultSetToMyPetPlayer(resultSet);
-                        if (myPetPlayer != null) {
-                            callback.runTask(MyPetApi.getPlugin(), myPetPlayer);
-                        }
-                        resultSet.close();
-                    } catch (SQLException e) {
-                        ErrorUtil.reportError("MySQL database operation failed", e);
-                    }
-                }
-            }.runTaskAsynchronously(MyPetApi.getPlugin());
-        }
-    }
-
-    @Override
-    public void updateMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        playersToBeSaved.put(player.getUniqueId(), player);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                boolean result = updatePlayer(player);
-
-                if (result) {
-                    playersToBeSaved.remove(player);
-                }
-
-                if (callback != null) {
-                    callback.runTask(MyPetApi.getPlugin(), result);
-                }
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                throw new CompletionException(e);
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+        }, executor);
+    }
+
+    @Override
+    public CompletableFuture<MyPetPlayer> getMyPetPlayer(final UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE uuid=?;")) {
+                statement.setString(1, uuid.toString());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return resultSetToMyPetPlayer(resultSet);
+                }
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                throw new CompletionException(e);
+            }
+        }, executor);
+    }
+
+    @Override
+    public CompletableFuture<MyPetPlayer> getMyPetPlayer(final Player player) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE uuid=?;")) {
+                statement.setString(1, player.getUniqueId().toString());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return resultSetToMyPetPlayer(resultSet);
+                }
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                throw new CompletionException(e);
+            }
+        }, executor);
+    }
+
+    @Override
+    public CompletableFuture<Boolean> updateMyPetPlayer(final MyPetPlayer player) {
+        playersToBeSaved.put(player.getUniqueId(), player);
+        return CompletableFuture.supplyAsync(() -> {
+            boolean result = updatePlayer(player);
+            if (result) {
+                playersToBeSaved.remove(player.getUniqueId());
+            }
+            return result;
+        }, executor);
     }
 
     @SuppressWarnings("unchecked")
@@ -1074,52 +1015,45 @@ public class MySqlRepository implements Repository {
 
 
     @Override
-    public void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try (Connection connection = dataSource.getConnection();
-                     PreparedStatement statement = connection.prepareStatement(
-                             "INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "players (" +
-                                     "uuid, " +
-                                     "auto_respawn, " +
-                                     "auto_respawn_min, " +
-                                     "capture_mode, " +
-                                     "health_bar, " +
-                                     "pet_idle_volume, " +
-                                     "extended_info, " +
-                                     "multi_world) " +
-                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?);")) {
-                    statement.setString(1, player.getUniqueId().toString());
-                    statement.setBoolean(2, player.hasAutoRespawnEnabled());
-                    statement.setInt(3, player.getAutoRespawnMin());
-                    statement.setBoolean(4, player.isCaptureHelperActive());
-                    statement.setBoolean(5, player.isHealthBarActive());
-                    statement.setFloat(6, player.getPetLivingSoundVolume());
-                    try {
-                        statement.setBlob(7, new ByteArrayInputStream(NbtUtil.writeCompressed(player.getExtendedInfo())));
-                    } catch (IOException e) {
-                        ErrorUtil.reportError("MySQL database operation failed", e);
-                    }
-
-                    JsonObject multiWorldObject = new JsonObject();
-                    for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
-                        //noinspection unchecked
-                        multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
-                    }
-                    statement.setString(8, gson.toJson(multiWorldObject));
-
-
-                    boolean result = statement.executeUpdate() > 0;
-
-                    if (callback != null) {
-                        callback.runTask(MyPetApi.getPlugin(), result);
-                    }
-                } catch (SQLException e) {
+    public CompletableFuture<Boolean> addMyPetPlayer(final MyPetPlayer player) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(
+                         "INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "players (" +
+                                 "uuid, " +
+                                 "auto_respawn, " +
+                                 "auto_respawn_min, " +
+                                 "capture_mode, " +
+                                 "health_bar, " +
+                                 "pet_idle_volume, " +
+                                 "extended_info, " +
+                                 "multi_world) " +
+                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?);")) {
+                statement.setString(1, player.getUniqueId().toString());
+                statement.setBoolean(2, player.hasAutoRespawnEnabled());
+                statement.setInt(3, player.getAutoRespawnMin());
+                statement.setBoolean(4, player.isCaptureHelperActive());
+                statement.setBoolean(5, player.isHealthBarActive());
+                statement.setFloat(6, player.getPetLivingSoundVolume());
+                try {
+                    statement.setBlob(7, new ByteArrayInputStream(NbtUtil.writeCompressed(player.getExtendedInfo())));
+                } catch (IOException e) {
                     ErrorUtil.reportError("MySQL database operation failed", e);
                 }
+
+                JsonObject multiWorldObject = new JsonObject();
+                for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
+                    //noinspection unchecked
+                    multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
+                }
+                statement.setString(8, gson.toJson(multiWorldObject));
+
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                return false;
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+        }, executor);
     }
 
     @SuppressWarnings("unchecked")
@@ -1180,26 +1114,16 @@ public class MySqlRepository implements Repository {
     }
 
     @Override
-    public void removeMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try (Connection connection = dataSource.getConnection();
-                     PreparedStatement statement = connection.prepareStatement("DELETE FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE uuid=?;")) {
-                    statement.setString(1, player.getUniqueId().toString());
-
-                    int result = statement.executeUpdate();
-
-                    if (callback != null) {
-                        callback.runTask(MyPetApi.getPlugin(), result > 0);
-                    }
-                } catch (SQLException e) {
-                    ErrorUtil.reportError("MySQL database operation failed", e);
-                    if (callback != null) {
-                        callback.runTask(MyPetApi.getPlugin(), false);
-                    }
-                }
+    public CompletableFuture<Boolean> removeMyPetPlayer(final MyPetPlayer player) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("DELETE FROM " + Configuration.Repository.MySQL.PREFIX + "players WHERE uuid=?;")) {
+                statement.setString(1, player.getUniqueId().toString());
+                return statement.executeUpdate() > 0;
+            } catch (SQLException e) {
+                ErrorUtil.reportError("MySQL database operation failed", e);
+                return false;
             }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+        }, executor);
     }
 }

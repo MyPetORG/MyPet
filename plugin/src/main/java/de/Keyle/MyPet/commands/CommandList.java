@@ -30,7 +30,6 @@ import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
@@ -133,9 +132,7 @@ public class CommandList {
         }
 
         if (owner != null) {
-            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
-                @Override
-                public void callback(List<StoredMyPet> value) {
+            MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                     if (petOwner == sender) {
                         sender.sendMessage(Translation.getFormattedComponent("Message.Command.List.Yours", lang, owner.getName()));
                     } else {
@@ -156,8 +153,7 @@ public class CommandList {
                         }
                     }
                     sender.sendMessage(messageBuilder.build());
-                }
-            });
+            }));
         }
     }
 }

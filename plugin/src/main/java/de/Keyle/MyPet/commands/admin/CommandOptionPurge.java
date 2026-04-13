@@ -30,11 +30,11 @@ import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.HelpEntry;
 import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.time.Instant;
@@ -147,11 +147,7 @@ public class CommandOptionPurge {
             sender.sendMessage(MessageUtil.prefixed(Component.text("delete MyPets older than " + formatted + "...")));
         }
 
-        MyPetApi.getRepository().cleanup(timestamp, new RepositoryCallback<>() {
-            @Override
-            public void callback(Integer value) {
-                sender.sendMessage(MessageUtil.prefixed(Component.text("removed " + value + " MyPets.")));
-            }
-        });
+        MyPetApi.getRepository().cleanup(timestamp).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () ->
+                sender.sendMessage(MessageUtil.prefixed(Component.text("removed " + value + " MyPets.")))));
     }
 }

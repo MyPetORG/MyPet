@@ -30,11 +30,11 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -111,9 +111,7 @@ public class CommandSwitch {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             final MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<>() {
-                @Override
-                public void callback(List<StoredMyPet> pets) {
+            MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                     if (pets.size() - (owner.hasMyPet() ? 1 : 0) == 0) {
                         owner.sendMessage(Translation.getComponent("Message.Command.Switch.NoStoredPets", owner));
                         return;
@@ -134,14 +132,12 @@ public class CommandSwitch {
                         Component stats = Component.text(" (" + inactivePetCount + "/" + maxPetCount + ")");
 
                         final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title.append(stats), 1);
-                        gui.open(pets, new RepositoryCallback<>() {
-                            @Override
-                            public void callback(StoredMyPet storedMyPet) {
+                        gui.open(pets, storedMyPet -> {
                                 Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
                                 if (activePet.isPresent() && owner.isOnline()) {
-                                    Player player = owner.getPlayer();
+                                    Player ownerPlayer = owner.getPlayer();
                                     activePet.get().getOwner().sendMessage(Translation.getFormattedComponent("Message.Npc.ChosenPet", owner, activePet.get().getDisplayName()));
-                                    WorldGroup wg = WorldGroup.getGroupByWorld(player.getWorld().getName());
+                                    WorldGroup wg = WorldGroup.getGroupByWorld(ownerPlayer.getWorld().getName());
                                     owner.setMyPetForWorldGroup(wg, activePet.get().getUUID());
 
                                     switch (activePet.get().createEntity()) {
@@ -166,11 +162,9 @@ public class CommandSwitch {
                                             break;
                                     }
                                 }
-                            }
                         });
                     }
-                }
-            });
+            }));
         } else {
             player.sendMessage(Translation.getComponent("Message.No.HasPet", player));
         }

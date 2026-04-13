@@ -35,7 +35,6 @@ import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.Repository;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
@@ -196,19 +195,17 @@ public class CommandTrade {
                 final StoredMyPet pet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.pet());
 
                 final Repository repo = MyPetApi.getRepository();
-                repo.removeMyPet(pet, new RepositoryCallback<>() {
-                    @Override
-                    public void callback(Boolean value) {
+                repo.removeMyPet(pet).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                         pet.setOwner(newOwner);
                         MyPetSaveEvent event = new MyPetSaveEvent(pet);
                         Bukkit.getServer().getPluginManager().callEvent(event);
-                        repo.addMyPet(pet, null);
+                        repo.addMyPet(pet);
                         Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(pet);
 
                         oldOwner.setMyPetForWorldGroup(worldGroup, null);
                         newOwner.setMyPetForWorldGroup(worldGroup, pet.getUUID());
-                        repo.updateMyPetPlayer(oldOwner, null);
-                        repo.updateMyPetPlayer(newOwner, null);
+                        repo.updateMyPetPlayer(oldOwner);
+                        repo.updateMyPetPlayer(newOwner);
 
                         if (myPet.isPresent()) {
 
@@ -237,8 +234,7 @@ public class CommandTrade {
                         } else {
                             newOwner.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.Error", newOwner));
                         }
-                    }
-                });
+                }));
             } else {
                 player.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                 offers.remove(player.getUniqueId());

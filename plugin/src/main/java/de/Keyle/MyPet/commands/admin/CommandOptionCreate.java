@@ -38,7 +38,6 @@ import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.InactiveMyPet;
@@ -601,13 +600,11 @@ public class CommandOptionCreate {
                 MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
                 Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
-                MyPetApi.getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<>() {
-                    @Override
-                    public void callback(Boolean added) {
+                MyPetApi.getRepository().addMyPet(inactiveMyPet).thenAccept(added -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
                         if (added) {
                             if (!newOwner.hasMyPet()) {
                                 inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
-                                MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner(), null);
+                                MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner());
 
                                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
                                 if (myPet.isPresent()) {
@@ -620,8 +617,7 @@ public class CommandOptionCreate {
                                 sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
                             }
                         }
-                    }
-                });
+                }));
             }
         } catch (MyPetTypeNotFoundException e) {
             sender.sendMessage(Translation.getComponent("Message.Command.PetType.Unknown", lang));
