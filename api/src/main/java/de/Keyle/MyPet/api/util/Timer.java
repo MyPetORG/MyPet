@@ -23,45 +23,111 @@ package de.Keyle.MyPet.api.util;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Mob;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Timer {
     private static final List<Scheduler> tasksToSchedule = new ArrayList<>();
-    private static List<Integer> timerIDs = new ArrayList<>();
+    private static final List<ScheduledTask> miscTasks = new ArrayList<>();
+    private static final Map<UUID, ScheduledTask> petTasks = new ConcurrentHashMap<>();
+    private static final Map<UUID, ScheduledTask> playerTasks = new ConcurrentHashMap<>();
 
     private Timer() {
     }
 
     public static void stopTimer() {
-        if (!timerIDs.isEmpty()) {
-            for (int timerID : timerIDs) {
-                Bukkit.getScheduler().cancelTask(timerID);
+        for (ScheduledTask task : miscTasks) {
+            try {
+                task.cancel();
+            } catch (Exception ignored) {
             }
-            timerIDs.clear();
         }
+        miscTasks.clear();
+        for (ScheduledTask task : petTasks.values()) {
+            try {
+                task.cancel();
+            } catch (Exception ignored) {
+            }
+        }
+        petTasks.clear();
+        for (ScheduledTask task : playerTasks.values()) {
+            try {
+                task.cancel();
+            } catch (Exception ignored) {
+            }
+        }
+        playerTasks.clear();
     }
 
     public static void startTimer() {
         stopTimer();
 
-        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
-            for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
-                myPet.schedule();
+        Plugin plugin = MyPetApi.getPlugin();
+        ScheduledTask miscTask = Bukkit.getServer().getGlobalRegionScheduler().runAtFixedRate(plugin, task -> {
+            for (Scheduler s : tasksToSchedule) {
+                s.schedule();
             }
-        }, 0L, 20L));
-        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
-            for (Scheduler task : tasksToSchedule) {
-                task.schedule();
+        }, 5L, 20L);
+        miscTasks.add(miscTask);
+    }
+
+    public static void startPetTicking(MyPet pet) {
+        Mob mob = pet.getBukkitEntity();
+        if (mob == null) {
+            return;
+        }
+        Plugin plugin = MyPetApi.getPlugin();
+        UUID key = pet.getUUID();
+        stopPetTicking(pet);
+        ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> pet.schedule(), null, 1L, 20L);
+        if (task != null) {
+            petTasks.put(key, task);
+        }
+    }
+
+    public static void stopPetTicking(MyPet pet) {
+        UUID key = pet.getUUID();
+        ScheduledTask task = petTasks.remove(key);
+        if (task != null) {
+            try {
+                task.cancel();
+            } catch (Exception ignored) {
             }
-        }, 5L, 20L));
-        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
-            for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
-                player.schedule();
+        }
+    }
+
+    public static void startPlayerTicking(MyPetPlayer myPetPlayer) {
+        Player player = myPetPlayer.getPlayer();
+        if (player == null) {
+            return;
+        }
+        Plugin plugin = MyPetApi.getPlugin();
+        UUID key = myPetPlayer.getUniqueId();
+        stopPlayerTicking(myPetPlayer);
+        ScheduledTask task = player.getScheduler().runAtFixedRate(plugin, t -> myPetPlayer.schedule(), null, 10L, 20L);
+        if (task != null) {
+            playerTasks.put(key, task);
+        }
+    }
+
+    public static void stopPlayerTicking(MyPetPlayer myPetPlayer) {
+        UUID key = myPetPlayer.getUniqueId();
+        ScheduledTask task = playerTasks.remove(key);
+        if (task != null) {
+            try {
+                task.cancel();
+            } catch (Exception ignored) {
             }
-        }, 10L, 20L));
+        }
     }
 
     public static void reset() {

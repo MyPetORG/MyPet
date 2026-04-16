@@ -26,18 +26,20 @@ import org.bukkit.Bukkit;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class ContributorCheck {
     private static final Map<String, Character> contributorMap = new ConcurrentHashMap<>();
     private static volatile boolean contributorMapLoaded = false;
-    private static final long REFRESH_INTERVAL_TICKS = 10 * 60 * 20L; // 10 minutes in ticks
+    private static final long REFRESH_INTERVAL_MINUTES = 10L;
 
     public static void startRefreshTask() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(
+        Bukkit.getServer().getAsyncScheduler().runAtFixedRate(
                 MyPetApi.getPlugin(),
-                ContributorCheck::refreshContributorMap,
-                REFRESH_INTERVAL_TICKS,
-                REFRESH_INTERVAL_TICKS
+                t -> refreshContributorMap(),
+                REFRESH_INTERVAL_MINUTES,
+                REFRESH_INTERVAL_MINUTES,
+                TimeUnit.MINUTES
         );
     }
 

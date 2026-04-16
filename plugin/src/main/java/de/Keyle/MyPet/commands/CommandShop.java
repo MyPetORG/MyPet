@@ -37,7 +37,6 @@ import de.Keyle.MyPet.util.shop.ShopManager;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -183,12 +182,7 @@ public class CommandShop {
             String shopname = shops.get(event.getPosition());
             if (shopname != null) {
                 final String finalShopname = shopname;
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        shopManager.open(finalShopname, player);
-                    }
-                }.runTaskLater(MyPetApi.getPlugin(), 5L);
+                player.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> shopManager.open(finalShopname, player), null, 5L);
 
                 event.setWillClose(true);
                 event.setWillDestroy(true);

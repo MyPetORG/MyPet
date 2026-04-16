@@ -565,6 +565,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         // Cache the PetControlGoal reference on first successful lookup, and
         // remember a negative result via controlGoalLookupDone so subsequent
         // activations don't iterate the goal list every tick for flying pets
@@ -604,6 +607,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null) {
             return false;
         } else if (!refreshOwner()) {
@@ -629,6 +635,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
     @Override
     public void start() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         if (!refreshOwner()) {
             return;
         }
@@ -655,6 +664,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
     @Override
     public void tick() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         tickCounter++;
 
         // Skip the first few ticks to let the entity settle into the world
@@ -671,6 +683,24 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
         // Check world match to avoid cross-world distance calculations
         if (!mob.getWorld().equals(owner.getWorld())) {
+            return;
+        }
+
+        // Cross-region snap: if the owner has moved into a different Folia region, snap-teleport
+        // to them instead of inspecting their state (which would trip the thread check). Once in
+        // the same region, the normal follow logic resumes on a subsequent tick.
+        if (!Bukkit.isOwnedByCurrentRegion(owner)) {
+            if (pet.canMove() && !pet.hasTarget()) {
+                Location ownerLocation = owner.getLocation();
+                nav.stop();
+                mob.setVelocity(new Vector(0, 0, 0));
+                // Reset fall distance BEFORE teleportAsync — once the async teleport begins,
+                // the entity is in a transitional state on Folia and may no longer be owned
+                // by the current region, so any further state mutation would fail the thread
+                // check.
+                mob.setFallDistance(0);
+                mob.teleportAsync(new Location(owner.getWorld(), ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ()));
+            }
             return;
         }
 
@@ -780,15 +810,17 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                             boolean noControlMove = controlPathfinderGoal == null || controlPathfinderGoal.moveTo == null;
                             if (noControlMove && !pet.hasTarget()) {
                                 Location ownerLocation = owner.getLocation();
-                                if (MyPetApi.getPlatformHelper().canSpawn(ownerLocation, mob.getClass().asSubclass(Mob.class))) {
-                                    // Stop navigation and velocity before teleport
-                                    this.nav.stop();
-                                    mob.setVelocity(new Vector(0, 0, 0));
-                                    // Teleport without collision checks
-                                    mob.teleport(new Location(owner.getWorld(), ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ()));
-                                    mob.setFallDistance(0);
-                                    return;
-                                }
+                                // The canSpawn passability check was previously applied here, but it
+                                // reads blocks at the owner's location — which on Folia may be in a
+                                // different region from the pet. Skip it: the owner is already
+                                // standing at ownerLocation, so the space is passable by definition.
+                                this.nav.stop();
+                                mob.setVelocity(new Vector(0, 0, 0));
+                                // Reset fall distance BEFORE teleportAsync — see the cross-region
+                                // snap branch above for rationale.
+                                mob.setFallDistance(0);
+                                mob.teleportAsync(new Location(owner.getWorld(), ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ()));
+                                return;
                             }
                         }
                     }

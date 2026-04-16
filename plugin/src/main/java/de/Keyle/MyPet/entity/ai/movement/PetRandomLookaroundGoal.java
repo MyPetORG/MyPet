@@ -6,8 +6,8 @@ import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
@@ -45,6 +45,9 @@ public class PetRandomLookaroundGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) {
             return false;
         }
@@ -56,6 +59,9 @@ public class PetRandomLookaroundGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         return this.ticksUntilStopLooking > 0 && mob.getPassengers().isEmpty();
     }
 
@@ -69,6 +75,12 @@ public class PetRandomLookaroundGoal implements Goal<Mob> {
 
     @Override
     public void tick() {
+        // Skip this tick if the mob isn't currently owned by this region thread. This happens
+        // briefly on Folia during cross-region teleport transitions — the old region may still
+        // run the goal for a tick or two while the entity has already moved to the new region.
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         Location loc = mob.getLocation();
         mob.lookAt(
                 loc.getX() + this.directionX,

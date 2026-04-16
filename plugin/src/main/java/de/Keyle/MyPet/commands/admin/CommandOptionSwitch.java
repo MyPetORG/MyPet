@@ -184,7 +184,8 @@ public class CommandOptionSwitch {
      */
     private void showPetList(CommandSender sender, MyPetPlayer owner, String playerName) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
-        MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+        MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> {
+            Runnable listBody = () -> {
                 sender.sendMessage("Select the MyPet you want the player to switch to:");
                 if (sender instanceof Player) {
                     TextComponent.Builder messageBuilder = Component.text();
@@ -208,7 +209,13 @@ public class CommandOptionSwitch {
                         sender.sendMessage(strippedName + " (" + mypet.getPetType().name() + ") -> /petadmin switch " + playerName + " " + strippedName);
                     }
                 }
-        }));
+            };
+            if (sender instanceof Player senderPlayer) {
+                senderPlayer.getScheduler().run(MyPetApi.getPlugin(), folaTask -> listBody.run(), null);
+            } else {
+                Bukkit.getServer().getGlobalRegionScheduler().run(MyPetApi.getPlugin(), folaTask -> listBody.run());
+            }
+        });
     }
 
     /**
@@ -232,7 +239,7 @@ public class CommandOptionSwitch {
         }
         MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-        MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+        MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 // Find pet by name (stripped of MiniMessage tags)
                 StoredMyPet newPet = null;
                 for (StoredMyPet pet : pets) {
@@ -285,6 +292,6 @@ public class CommandOptionSwitch {
                             break;
                     }
                 }
-        }));
+        }, null));
     }
 }

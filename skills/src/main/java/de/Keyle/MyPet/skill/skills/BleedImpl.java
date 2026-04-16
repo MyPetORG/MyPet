@@ -25,16 +25,14 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Bleed;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -57,7 +55,6 @@ public class BleedImpl implements Bleed {
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
 
     private final Map<UUID, BleedEffect> activeEffects = new ConcurrentHashMap<>();
-    private BukkitTask bleedTask = null;
 
     public BleedImpl(MyPet myPet) {
         this.myPet = myPet;
@@ -74,8 +71,10 @@ public class BleedImpl implements Bleed {
         interval.removeAllUpgrades();
         duration.removeAllUpgrades();
         chance.removeAllUpgrades();
+        for (BleedEffect effect : activeEffects.values()) {
+            effect.cancel();
+        }
         activeEffects.clear();
-        stopBleedTask();
     }
 
     @Override
@@ -136,68 +135,23 @@ public class BleedImpl implements Bleed {
             // Apply first bleed damage immediately on hit
             LivingEntity petEntity = myPet.getEntity().map(e -> (LivingEntity) e).orElse(null);
             effect.applyDamage(petEntity);
-        }
 
-        // Start the bleed task if not already running
-        startBleedTask();
-    }
-
-    private void startBleedTask() {
-        if (bleedTask != null) {
-            return;
-        }
-
-        bleedTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                processBleedEffects();
-
-                // Stop task if no more effects
-                if (activeEffects.isEmpty()) {
-                    stopBleedTask();
-                }
-            }
-        }.runTaskTimer(MyPetApi.getPlugin(), 20L, 20L);
-    }
-
-    private void stopBleedTask() {
-        if (bleedTask != null) {
-            bleedTask.cancel();
-            bleedTask = null;
+            // Schedule per-target tick on the target's entity scheduler — this
+            // follows the target across Folia regions.
+            effect.start(this, target);
         }
     }
 
-    private void processBleedEffects() {
-        // Get pet entity if available (may be null if pet died)
-        LivingEntity petEntity = myPet.getEntity().map(e -> (LivingEntity) e).orElse(null);
-
-        Iterator<Map.Entry<UUID, BleedEffect>> iterator = activeEffects.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry<UUID, BleedEffect> entry = iterator.next();
-            BleedEffect effect = entry.getValue();
-
-            // Check if the target is still valid
-            if (!effect.isTargetValid()) {
-                iterator.remove();
-                continue;
-            }
-
-            // Check if the effect has expired
-            if (effect.isExpired()) {
-                iterator.remove();
-                continue;
-            }
-
-            // Process tick (petEntity may be null if pet died - damage continues without attribution)
-            effect.tick(petEntity);
+    private void onEffectExpired(UUID targetId) {
+        BleedEffect effect = activeEffects.remove(targetId);
+        if (effect != null) {
+            effect.cancel();
         }
     }
 
     @Override
     public void schedule() {
-        // Bleed uses its own Bukkit task for persistence through pet death
-        // This method is kept for interface compliance but does nothing
+        // Bleed uses per-target scheduled tasks via EntityScheduler — nothing to do here.
     }
 
     @Override
@@ -212,14 +166,15 @@ public class BleedImpl implements Bleed {
     }
 
     /**
-     * Inner class representing an active bleed effect on a target entity
+     * Inner class representing an active bleed effect on a target entity.
      */
-    private static class BleedEffect {
+    private class BleedEffect {
         private LivingEntity target;
         private double damagePerTick;
         private int intervalTicks;
         private int remainingTicks;
         private int ticksSinceLastDamage;
+        private ScheduledTask task;
 
         public BleedEffect(LivingEntity target, double damagePerTick, int intervalTicks, int durationTicks) {
             this.target = target;
@@ -227,6 +182,32 @@ public class BleedImpl implements Bleed {
             this.intervalTicks = intervalTicks;
             this.remainingTicks = durationTicks;
             this.ticksSinceLastDamage = 0; // First damage applied in apply(), start interval fresh
+        }
+
+        public void start(BleedImpl owner, LivingEntity target) {
+            this.task = target.getScheduler().runAtFixedRate(MyPetApi.getPlugin(), t -> {
+                // Check if the target is still valid
+                if (!isTargetValid()) {
+                    owner.onEffectExpired(target.getUniqueId());
+                    return;
+                }
+                if (isExpired()) {
+                    owner.onEffectExpired(target.getUniqueId());
+                    return;
+                }
+                LivingEntity petEntity = owner.myPet.getEntity().map(e -> (LivingEntity) e).orElse(null);
+                tick(petEntity);
+            }, () -> owner.onEffectExpired(target.getUniqueId()), 20L, 20L);
+        }
+
+        public void cancel() {
+            if (task != null) {
+                try {
+                    task.cancel();
+                } catch (Exception ignored) {
+                }
+                task = null;
+            }
         }
 
         public void refresh(LivingEntity target, double newDamage, int newIntervalTicks, int newDurationTicks) {

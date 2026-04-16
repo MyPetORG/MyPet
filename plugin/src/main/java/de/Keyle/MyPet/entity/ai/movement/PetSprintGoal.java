@@ -7,6 +7,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import de.Keyle.MyPet.skill.skills.SprintImpl;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,6 +60,9 @@ public class PetSprintGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (!myPet.getSkills().isActive(SprintImpl.class)) {
             return false;
         }
@@ -84,6 +88,9 @@ public class PetSprintGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (pet.getOwner() == null) {
             return false;
         }

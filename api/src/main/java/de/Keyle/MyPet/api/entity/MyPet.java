@@ -51,6 +51,13 @@ public interface MyPet extends StoredMyPet, Scheduler {
 
     PetState getStatus();
 
+    /**
+     * Returns the last cached pet status without touching the Bukkit entity.
+     * Safe to call from any thread on Folia. Use this when ticking from a thread
+     * that does not own the pet's region.
+     */
+    PetState getCachedStatus();
+
     void setStatus(PetState status);
 
     Optional<Location> getLocation();
@@ -132,7 +139,7 @@ public interface MyPet extends StoredMyPet, Scheduler {
 
     default void setLocation(Location loc) {
         Mob mob = getBukkitEntity();
-        if (mob != null) mob.teleport(loc);
+        if (mob != null) mob.teleportAsync(loc);
     }
 
     // ─── Passenger state ───

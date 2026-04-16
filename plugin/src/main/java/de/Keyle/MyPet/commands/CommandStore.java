@@ -116,7 +116,7 @@ public class CommandStore {
             }
 
             if (owner.hasMyPet()) {
-                MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         if (owner.hasMyPet()) {
                             MyPet myPet = owner.getMyPet();
                             String worldGroup = myPet.getWorldGroup();
@@ -133,7 +133,7 @@ public class CommandStore {
                         } else {
                             player.sendMessage(Translation.getComponent("Message.Command.Switch.NoPet", player));
                         }
-                }));
+                }, null));
                 return;
             }
         }

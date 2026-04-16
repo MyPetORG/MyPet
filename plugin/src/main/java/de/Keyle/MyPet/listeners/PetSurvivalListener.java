@@ -6,6 +6,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -55,7 +56,9 @@ public class PetSurvivalListener implements Listener {
             myPet.removePet();
             myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Despawn", myPetPlayer.getLanguage(), myPet.getDisplayName()));
 
-            MyPetApi.getPlugin().getServer().getScheduler().runTaskLater(MyPetApi.getPlugin(), () -> {
+            Player ownerPlayer = myPetPlayer.getPlayer();
+            if (ownerPlayer == null) return;
+            ownerPlayer.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> {
                 if (myPetPlayer.hasMyPet()) {
                     MyPet runMyPet = myPetPlayer.getMyPet();
                     switch (runMyPet.createEntity()) {
@@ -78,7 +81,7 @@ public class PetSurvivalListener implements Listener {
                             break;
                     }
                 }
-            }, 10L);
+            }, null, 10L);
         }
     }
 }

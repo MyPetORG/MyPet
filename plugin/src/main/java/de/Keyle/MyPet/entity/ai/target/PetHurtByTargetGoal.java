@@ -11,6 +11,7 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,6 +64,9 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
@@ -136,6 +140,9 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (!pet.canMove()) {
             return false;
         }

@@ -4,7 +4,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.entity.visual.PetStateSnapshot;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -95,12 +94,12 @@ public class PetInteractionListener implements Listener {
         if (!(entity instanceof LivingEntity living)) {
             return;
         }
-        Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+        entity.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
             if (concretePet.getBukkitEntity() == null) return;
             try {
                 concretePet.readExtendedInfo(PetStateSnapshot.toTag(living, false));
             } catch (Throwable ignored) {
             }
-        });
+        }, null);
     }
 }

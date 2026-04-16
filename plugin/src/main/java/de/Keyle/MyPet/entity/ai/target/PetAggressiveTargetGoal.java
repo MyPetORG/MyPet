@@ -11,6 +11,7 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
@@ -86,10 +87,19 @@ public class PetAggressiveTargetGoal implements Goal<Mob> {
         if (owner == null) {
             return false;
         }
-        Location ownerLoc = owner.getLocation();
         Location petLoc = mob.getLocation();
+        // Skip the scan if the pet isn't currently owned by this region thread. Folia can run
+        // goal activation checks during cross-region transitions or via `inactiveTick` on
+        // regions that don't own the entity; getNearbyEntities would then read world data we
+        // don't own.
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
+        // Search around the pet. Searching around the owner would touch the owner's region from
+        // the pet's thread, which Folia rejects. The existing distance-to-pet filter below
+        // already narrowed results to a small radius of the pet, so this is behaviourally equivalent.
 
-        for (Entity entity : ownerLoc.getWorld().getNearbyEntities(ownerLoc, range, range, range)) {
+        for (Entity entity : mob.getWorld().getNearbyEntities(petLoc, range, range, range)) {
             if (!(entity instanceof LivingEntity living) || entity.equals(mob)) {
                 continue;
             }
@@ -138,6 +148,9 @@ public class PetAggressiveTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (!pet.canMove()) {
             return false;
         }

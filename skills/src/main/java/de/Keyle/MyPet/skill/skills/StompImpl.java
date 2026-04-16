@@ -29,7 +29,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.entity.*;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.Random;
@@ -138,12 +137,7 @@ public class StompImpl implements Stomp {
                             double motFactor = (1.0D - distancePercent);
                             final Vector velocity = livingEntity.getVelocity();
                             velocity.multiply(motFactor);
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    livingEntity.setVelocity(velocity);
-                                }
-                            }.runTaskLater(MyPetApi.getPlugin(), 0);
+                            livingEntity.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> livingEntity.setVelocity(velocity), null, 1L);
                         }
                     }
                 }

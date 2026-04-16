@@ -6,6 +6,7 @@ import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
@@ -75,6 +76,9 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (ThreadLocalRandom.current().nextFloat() >= this.lookAtPlayerChance) {
             return false;
         }
@@ -102,7 +106,17 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
-        if (targetPlayer == null || targetPlayer.isDead()) {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
+        if (targetPlayer == null) {
+            return false;
+        }
+        // Drop the target if it has moved to a different Folia region (can't inspect state safely).
+        if (!Bukkit.isOwnedByCurrentRegion(targetPlayer)) {
+            return false;
+        }
+        if (targetPlayer.isDead()) {
             return false;
         }
         if (mob.getLocation().distanceSquared(targetPlayer.getLocation()) > range * range) {
@@ -126,6 +140,9 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
 
     @Override
     public void tick() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         // Guard against goal preemption races: stop() nulls targetPlayer, and
         // Paper's goal selector can in principle interleave a preempted
         // stop() with a still-pending tick() from the same activation cycle.

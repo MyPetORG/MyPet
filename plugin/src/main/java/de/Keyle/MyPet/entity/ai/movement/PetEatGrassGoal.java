@@ -56,6 +56,9 @@ public class PetEatGrassGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (!Configuration.MyPet.Sheep.CAN_REGROW_WOOL) {
             return false;
         }
@@ -82,6 +85,9 @@ public class PetEatGrassGoal implements Goal<Mob> {
 
     @Override
     public void start() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         this.eatTicks = 30;
         pet.getPetNavigation().stop();
         Location loc = mob.getLocation();
@@ -105,6 +111,9 @@ public class PetEatGrassGoal implements Goal<Mob> {
 
     @Override
     public void tick() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         if (--this.eatTicks == 0) {
             Location loc = mob.getLocation();
             World world = loc.getWorld();

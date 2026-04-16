@@ -600,7 +600,7 @@ public class CommandOptionCreate {
                 MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
                 Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
-                MyPetApi.getRepository().addMyPet(inactiveMyPet).thenAccept(added -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                MyPetApi.getRepository().addMyPet(inactiveMyPet).thenAccept(added -> owner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         if (added) {
                             if (!newOwner.hasMyPet()) {
                                 inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
@@ -617,7 +617,7 @@ public class CommandOptionCreate {
                                 sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
                             }
                         }
-                }));
+                }, null));
             }
         } catch (MyPetTypeNotFoundException e) {
             sender.sendMessage(Translation.getComponent("Message.Command.PetType.Unknown", lang));

@@ -218,7 +218,7 @@ public class CreakingHeartListener implements Listener {
 
         // Save and activate
         MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet).thenAccept(value -> {
-            Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+            player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 if (value == null || !value) {
                     MyPetApi.getLogger().warning("Failed to save captured Creaking pet for " + owner.getName());
                     return;
@@ -232,7 +232,7 @@ public class CreakingHeartListener implements Listener {
                     owner.setCaptureHelperActive(false);
                     owner.sendMessage(Translation.getFormattedComponent("Message.Command.CaptureHelper.Mode", owner, Translation.getComponent("Name.Disabled", owner)));
                 }
-            });
+            }, null);
         }).exceptionally(err -> {
             MyPetApi.getLogger().warning("Failed to save captured Creaking pet: " + err);
             return null;

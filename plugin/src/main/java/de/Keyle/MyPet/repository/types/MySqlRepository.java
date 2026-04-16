@@ -377,14 +377,18 @@ public class MySqlRepository implements Repository {
 
     private void savePets() {
         for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
-            savePet(myPet);
+            savePetSync(myPet);
         }
         for (StoredMyPet myPet : petsToBeSaved.values()) {
-            savePet(myPet);
+            savePetSync(myPet);
         }
     }
 
-    public boolean savePet(StoredMyPet myPet) {
+    public CompletableFuture<Boolean> savePet(StoredMyPet myPet) {
+        return CompletableFuture.supplyAsync(() -> savePetSync(myPet), executor);
+    }
+
+    private boolean savePetSync(StoredMyPet myPet) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "pets SET " +
                      "owner_uuid=?, " +

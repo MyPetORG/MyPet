@@ -6,6 +6,7 @@ import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -57,6 +58,9 @@ public class PetFloatGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (pet.getPetType().floatsInLava()) {
             return mob.isInWater() || mob.isInLava();
         }
@@ -70,6 +74,9 @@ public class PetFloatGoal implements Goal<Mob> {
 
     @Override
     public void tick() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         if (pet.getPetType().specialFloat()) {
             return;
         }

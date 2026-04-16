@@ -32,7 +32,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -283,17 +282,14 @@ public class IconMenu implements Listener {
                 handler.onOptionClick(e);
 
                 final Player p = (Player) event.getWhoClicked();
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if (e.willClose()) {
-                            p.closeInventory();
-                        }
-                        if (e.willDestroy()) {
-                            destroy();
-                        }
+                p.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> {
+                    if (e.willClose()) {
+                        p.closeInventory();
                     }
-                }.runTaskLater(MyPetApi.getPlugin(), 0);
+                    if (e.willDestroy()) {
+                        destroy();
+                    }
+                }, null, 1L);
             }
         }
     }

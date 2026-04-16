@@ -96,7 +96,7 @@ public class StorageTrait extends Trait {
 
                 final NPC npc = this.npc;
 
-                MyPetApi.getRepository().getMyPets(myPetPlayer).thenAccept(pets -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                MyPetApi.getRepository().getMyPets(myPetPlayer).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         WorldGroup wg = WorldGroup.getGroupByWorld(myPetPlayer.getPlayer().getWorld().getName());
                         int inactivePetCount = 0;
                         UUID activePetUUID = myPetPlayer.getMyPet().getUUID();
@@ -223,9 +223,9 @@ public class StorageTrait extends Trait {
                             menu.setOption(5, noIcon);
                             menu.open(player);
                         }
-                }));
+                }, null));
             } else {
-                MyPetApi.getRepository().getMyPets(myPetPlayer).thenAccept(pets -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                MyPetApi.getRepository().getMyPets(myPetPlayer).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         if (!pets.isEmpty()) {
                             int maxPetCount = 0;
                             if (!Permissions.has(player, "MyPet.admin")) {
@@ -272,7 +272,7 @@ public class StorageTrait extends Trait {
                         } else {
                             myPetPlayer.sendMessage(Translation.getComponent("Message.No.HasPet", myPetPlayer), 5000);
                         }
-                }));
+                }, null));
             }
             return;
         }

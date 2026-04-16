@@ -58,7 +58,7 @@ public interface Repository {
 
     CompletableFuture<Boolean> addMyPet(StoredMyPet storedMyPet);
 
-    boolean savePet(StoredMyPet storedMyPet);
+    CompletableFuture<Boolean> savePet(StoredMyPet storedMyPet);
 
     CompletableFuture<Boolean> updateMyPet(StoredMyPet storedMyPet);
 

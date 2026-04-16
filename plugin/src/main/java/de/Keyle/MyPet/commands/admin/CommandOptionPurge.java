@@ -36,6 +36,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -147,7 +148,13 @@ public class CommandOptionPurge {
             sender.sendMessage(MessageUtil.prefixed(Component.text("delete MyPets older than " + formatted + "...")));
         }
 
-        MyPetApi.getRepository().cleanup(timestamp).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () ->
-                sender.sendMessage(MessageUtil.prefixed(Component.text("removed " + value + " MyPets.")))));
+        MyPetApi.getRepository().cleanup(timestamp).thenAccept(value -> {
+            Runnable reply = () -> sender.sendMessage(MessageUtil.prefixed(Component.text("removed " + value + " MyPets.")));
+            if (sender instanceof Player senderPlayer) {
+                senderPlayer.getScheduler().run(MyPetApi.getPlugin(), folaTask -> reply.run(), null);
+            } else {
+                Bukkit.getServer().getGlobalRegionScheduler().run(MyPetApi.getPlugin(), folaTask -> reply.run());
+            }
+        });
     }
 }

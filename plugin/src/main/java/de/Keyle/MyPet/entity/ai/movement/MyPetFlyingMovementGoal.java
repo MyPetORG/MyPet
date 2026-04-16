@@ -26,6 +26,7 @@ import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Mob;
@@ -124,6 +125,9 @@ public class MyPetFlyingMovementGoal implements Goal<Mob> {
 
     @Override
     public void tick() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         if (hasTarget) {
             hasTarget = false; // Consume the target — one velocity write per setWantedPosition call
 

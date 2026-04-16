@@ -9,6 +9,7 @@ import de.Keyle.MyPet.listeners.PetDamageListener;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
@@ -85,6 +86,9 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (myPet.getDamage() <= 0) {
             return false;
         }
@@ -129,6 +133,9 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (!pet.hasTarget() || !pet.canMove()) {
             return false;
         }
@@ -179,6 +186,9 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
 
     @Override
     public void tick() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         mob.lookAt(targetEntity, 30.0F, 30.0F);
         if (--this.timeUntilNextNavigationUpdate <= 0) {
             this.timeUntilNextNavigationUpdate = 4 + ThreadLocalRandom.current().nextInt(7);
@@ -195,7 +205,9 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
             // hasLineOfSight skips the starting block, so it would otherwise
             // return true through the wall).
             Location eyeLoc = mob.getLocation().add(0, mob.getEyeHeight(), 0);
-            if (eyeLoc.getBlock().isPassable() && mob.hasLineOfSight(targetEntity)) {
+            // Skip line-of-sight check when the target is in a different Folia region
+            // (hasLineOfSight touches the target's NMS handle and would trip the thread check).
+            if (eyeLoc.getBlock().isPassable() && Bukkit.isOwnedByCurrentRegion(targetEntity) && mob.hasLineOfSight(targetEntity)) {
                 // Only decrement the cooldown while the attack is actually
                 // eligible (in range + line of sight). Previously the counter
                 // ticked down unconditionally inside the outer `distSq`

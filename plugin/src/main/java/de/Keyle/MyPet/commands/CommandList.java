@@ -132,7 +132,8 @@ public class CommandList {
         }
 
         if (owner != null) {
-            MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+            MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> {
+                Runnable listBody = () -> {
                     if (petOwner == sender) {
                         sender.sendMessage(Translation.getFormattedComponent("Message.Command.List.Yours", lang, owner.getName()));
                     } else {
@@ -153,7 +154,13 @@ public class CommandList {
                         }
                     }
                     sender.sendMessage(messageBuilder.build());
-            }));
+                };
+                if (sender instanceof Player senderPlayer) {
+                    senderPlayer.getScheduler().run(MyPetApi.getPlugin(), schedTask -> listBody.run(), null);
+                } else {
+                    Bukkit.getServer().getGlobalRegionScheduler().run(MyPetApi.getPlugin(), schedTask -> listBody.run());
+                }
+            });
         }
     }
 }

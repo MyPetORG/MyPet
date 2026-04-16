@@ -36,8 +36,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import java.util.*;
 
 public class MyPetAdminSelectionGui {
@@ -53,7 +51,7 @@ public class MyPetAdminSelectionGui {
 
     public void open(final Consumer<StoredMyPet> callback) {
         MyPetApi.getRepository().getMyPets(petOwner).thenAccept(pets -> {
-            Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> open(pets, callback));
+            admin.getScheduler().run(MyPetApi.getPlugin(), folaTask -> open(pets, callback), null);
         });
     }
 
@@ -85,19 +83,9 @@ public class MyPetAdminSelectionGui {
 
             IconMenu menu = new IconMenu(title, event -> {
                 if (event.getPosition() == 45) {
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            open(pets, previousPage, callback);
-                        }
-                    }.runTaskLater(MyPetApi.getPlugin(), 1L);
+                    admin.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> open(pets, previousPage, callback), null, 1L);
                 } else if (event.getPosition() == 53) {
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            open(pets, nextPage, callback);
-                        }
-                    }.runTaskLater(MyPetApi.getPlugin(), 1L);
+                    admin.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> open(pets, nextPage, callback), null, 1L);
 
                 } else if (event.getPosition() > 45) {
                     return;

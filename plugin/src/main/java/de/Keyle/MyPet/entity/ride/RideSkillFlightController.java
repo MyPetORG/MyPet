@@ -3,44 +3,63 @@ package de.Keyle.MyPet.entity.ride;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.skills.Ride;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Input;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Drives a pet's velocity from its rider's WASD/jump/sneak input when the Ride
  * skill is active.
  *
- * <p>Runs as a single per-tick scheduler iterating every active pet with a
- * rider. Reads input via {@code Player.getCurrentInput()}.
- * Handles fly fuel depletion and regeneration.
+ * <p>Per-pet scheduling: one task per pet, registered on spawn and cancelled on
+ * despawn. Fuel state is held in the controller instance so each pet gets its
+ * own fuel value naturally (no more shared map with leaked entries).
  */
-public class RideSkillFlightController extends BukkitRunnable {
+public class RideSkillFlightController {
 
-    /** Fuel remaining (ticks) per pet UUID. */
-    private final Map<UUID, Double> fuelByPet = new HashMap<>();
+    private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
+    private static final Map<UUID, RideSkillFlightController> controllers = new ConcurrentHashMap<>();
 
-    public static void start(Plugin plugin) {
-        new RideSkillFlightController().runTaskTimer(plugin, 1L, 1L);
+    /** Fuel remaining (ticks) for this pet. */
+    private double fuelTicks = -1;
+
+    public static void startForPet(MyPet pet) {
+        Mob mob = pet.getBukkitEntity();
+        if (mob == null) return;
+        Plugin plugin = MyPetApi.getPlugin();
+        UUID key = pet.getUUID();
+        stopForPet(pet);
+        RideSkillFlightController controller = new RideSkillFlightController();
+        controllers.put(key, controller);
+        ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> {
+            try {
+                controller.tickPet(pet);
+            } catch (Throwable ignored) {
+            }
+        }, null, 1L, 1L);
+        if (task != null) {
+            tasks.put(key, task);
+        }
     }
 
-    @Override
-    public void run() {
-        for (MyPet pet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
+    public static void stopForPet(MyPet pet) {
+        UUID key = pet.getUUID();
+        ScheduledTask task = tasks.remove(key);
+        if (task != null) {
             try {
-                tickPet(pet);
-            } catch (Throwable t) {
-                // Swallow to protect the scheduler from one bad pet
+                task.cancel();
+            } catch (Exception ignored) {
             }
         }
+        controllers.remove(key);
     }
 
     private void tickPet(MyPet pet) {
@@ -103,8 +122,9 @@ public class RideSkillFlightController extends BukkitRunnable {
         double flyRegen = rideSkill.getFlyRegenRate() != null && rideSkill.getFlyRegenRate().getValue() != null
                 ? rideSkill.getFlyRegenRate().getValue().doubleValue() : 0;
 
-        UUID petId = mob.getUniqueId();
-        double fuelTicks = fuelByPet.getOrDefault(petId, flyLimitSeconds * 20.0);
+        if (fuelTicks < 0) {
+            fuelTicks = flyLimitSeconds * 20.0;
+        }
 
         double worldY = mob.getVelocity().getY();
 
@@ -128,7 +148,6 @@ public class RideSkillFlightController extends BukkitRunnable {
             }
         }
 
-        fuelByPet.put(petId, fuelTicks);
         mob.setVelocity(new Vector(worldX, worldY, worldZ));
     }
 }

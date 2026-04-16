@@ -64,7 +64,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -98,12 +97,7 @@ public class EntityListener implements Listener {
         if (Configuration.Misc.ALLOW_RANGED_LEASHING) {
             if (event.useItemInHand() != Event.Result.DENY && event.getItem() != null) {
                 usedItems.put(event.getPlayer().getUniqueId(), event.getItem().clone());
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        usedItems.remove(event.getPlayer().getUniqueId());
-                    }
-                }.runTaskLater(MyPetApi.getPlugin(), 0);
+                event.getPlayer().getScheduler().runDelayed(MyPetApi.getPlugin(), t -> usedItems.remove(event.getPlayer().getUniqueId()), null, 1L);
             }
         }
     }
@@ -354,7 +348,7 @@ public class EntityListener implements Listener {
 
                         justLeashed.add(player.getUniqueId());
                         MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet).thenAccept(value -> {
-                            Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                            player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                                 owner.sendMessage(Translation.getComponent("Message.Leash.Add", owner));
 
                                 Optional<MyPet> myPet = getMyPetManager().activateMyPet(inactiveMyPet);
@@ -372,7 +366,7 @@ public class EntityListener implements Listener {
                                     owner.sendMessage(Translation.getFormattedComponent("Message.Command.CaptureHelper.Mode", owner, Translation.getComponent("Name.Disabled", owner)));
                                 }
                                 justLeashed.remove(player.getUniqueId());
-                            });
+                            }, null);
                         }).exceptionally(err -> {
                             MyPetApi.getLogger().warning("Failed to save captured pet: " + err);
                             return null;

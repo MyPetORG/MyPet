@@ -85,7 +85,7 @@ public class ProtocolLibHook implements PluginHook {
                 } else {
                     tempBlockedPlayers.add(event.getPlayer());
                     //Register Rate-Limit-Clear-Task
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), () -> tempBlockedPlayers.remove(event.getPlayer()), 2L);
+                    Bukkit.getServer().getAsyncScheduler().runDelayed(MyPetApi.getPlugin(), t -> tempBlockedPlayers.remove(event.getPlayer()), 100L, TimeUnit.MILLISECONDS);
                 }
 
                 PacketContainer packet = event.getPacket();

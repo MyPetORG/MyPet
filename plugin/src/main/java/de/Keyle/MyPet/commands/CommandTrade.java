@@ -195,7 +195,7 @@ public class CommandTrade {
                 final StoredMyPet pet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.pet());
 
                 final Repository repo = MyPetApi.getRepository();
-                repo.removeMyPet(pet).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                repo.removeMyPet(pet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         pet.setOwner(newOwner);
                         MyPetSaveEvent event = new MyPetSaveEvent(pet);
                         Bukkit.getServer().getPluginManager().callEvent(event);
@@ -234,7 +234,7 @@ public class CommandTrade {
                         } else {
                             newOwner.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.Error", newOwner));
                         }
-                }));
+                }, null));
             } else {
                 player.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                 offers.remove(player.getUniqueId());

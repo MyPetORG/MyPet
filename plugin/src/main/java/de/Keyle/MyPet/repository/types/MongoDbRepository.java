@@ -255,10 +255,10 @@ public class MongoDbRepository implements Repository {
 
     private void savePets() {
         for (StoredMyPet storedMyPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
-            savePet(storedMyPet);
+            savePetSync(storedMyPet);
         }
         for (StoredMyPet myPet : petsToBeSaved.values()) {
-            savePet(myPet);
+            savePetSync(myPet);
         }
     }
 
@@ -454,7 +454,7 @@ public class MongoDbRepository implements Repository {
     public CompletableFuture<Boolean> updateMyPet(final StoredMyPet storedMyPet) {
         petsToBeSaved.put(storedMyPet.getUUID(), storedMyPet);
         return CompletableFuture.supplyAsync(() -> {
-            boolean result = savePet(storedMyPet);
+            boolean result = savePetSync(storedMyPet);
             if (result) {
                 petsToBeSaved.remove(storedMyPet.getUUID());
             }
@@ -462,7 +462,12 @@ public class MongoDbRepository implements Repository {
         }, executor);
     }
 
-    public boolean savePet(StoredMyPet storedMyPet) {
+    @Override
+    public CompletableFuture<Boolean> savePet(StoredMyPet storedMyPet) {
+        return CompletableFuture.supplyAsync(() -> savePetSync(storedMyPet), executor);
+    }
+
+    private boolean savePetSync(StoredMyPet storedMyPet) {
         MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
         Document filter = new Document("uuid", storedMyPet.getUUID().toString());
         Document petDocument = petCollection.find(filter).first();

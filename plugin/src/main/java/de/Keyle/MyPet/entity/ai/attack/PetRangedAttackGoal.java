@@ -95,6 +95,9 @@ public class PetRangedAttackGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (myPet.getRangedDamage() <= 0) {
             return false;
         }
@@ -133,6 +136,9 @@ public class PetRangedAttackGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (!pet.hasTarget() || myPet.getRangedDamage() <= 0 || !pet.canMove()) {
             return false;
         }
@@ -171,8 +177,14 @@ public class PetRangedAttackGoal implements Goal<Mob> {
 
     @Override
     public void tick() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         double distSq = mob.getLocation().distanceSquared(target.getLocation());
-        boolean canSee = mob.hasLineOfSight(target);
+        // hasLineOfSight touches both entities' NMS handles; on Folia this fails when the
+        // target is in a different region from the pet. Treat cross-region targets as
+        // "out of sight" — the goal will chase until they're in the same region again.
+        boolean canSee = Bukkit.isOwnedByCurrentRegion(target) && mob.hasLineOfSight(target);
 
         if (canSee) {
             lastSeenTimer++;

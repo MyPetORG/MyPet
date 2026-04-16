@@ -38,16 +38,19 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PetDamageTracker implements Listener {
 
-    private static final int EXPIRY_TICKS = 100;
+    private static final long EXPIRY_MS = 5000L; // 5 seconds, matches the old 100-tick window
     private static final Map<UUID, DamageRecord> lastAttackers = new ConcurrentHashMap<>();
 
     /**
      * A single "last-hit" entry in the tracker map.
      *
-     * @param attacker  the living entity that dealt the damage (projectile shooter, if applicable)
-     * @param tickStamp the server tick at which the hit occurred; used to age-out stale entries
+     * @param attacker      the living entity that dealt the damage (projectile shooter, if applicable)
+     * @param timestampMs   wall-clock time (ms) at which the hit occurred; used to age-out stale entries.
+     *                      Wall-clock is chosen over {@code Server#getCurrentTick()} because Folia's tick
+     *                      counters are region-local — a record written on the victim's region and read
+     *                      from another region would produce garbage diffs.
      */
-    public record DamageRecord(LivingEntity attacker, int tickStamp) {
+    public record DamageRecord(LivingEntity attacker, long timestampMs) {
     }
 
     /**
@@ -80,8 +83,7 @@ public class PetDamageTracker implements Listener {
         if (attacker == null) {
             return;
         }
-        int currentTick = victim.getServer().getCurrentTick();
-        lastAttackers.put(victim.getUniqueId(), new DamageRecord(attacker, currentTick));
+        lastAttackers.put(victim.getUniqueId(), new DamageRecord(attacker, System.currentTimeMillis()));
     }
 
     /**
@@ -100,8 +102,7 @@ public class PetDamageTracker implements Listener {
         if (record == null) {
             return null;
         }
-        int currentTick = victim.getServer().getCurrentTick();
-        if (currentTick - record.tickStamp() > EXPIRY_TICKS) {
+        if (System.currentTimeMillis() - record.timestampMs() > EXPIRY_MS) {
             lastAttackers.remove(victim.getUniqueId());
             return null;
         }

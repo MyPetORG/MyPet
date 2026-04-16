@@ -39,7 +39,10 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.ai.navigation.PaperNavigation;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
+import de.Keyle.MyPet.api.util.Timer;
+import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
+import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.DamageImpl;
@@ -65,7 +68,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scoreboard.Team;
 
 import java.util.*;
 
@@ -190,6 +192,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     @Override
     public void removeEntity() {
+        Timer.stopPetTicking(this);
+        PetSitParticleController.stopForPet(this);
+        PetPotionParticleController.stopForPet(this);
+        RideSkillFlightController.stopForPet(this);
         if (bukkitEntity != null) {
             bukkitEntity.remove();
         }
@@ -208,6 +214,17 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public void updateNameTag() {
         Mob mob = getBukkitEntity();
         if (mob == null) return;
+        // Touching customName / setCustomNameVisible requires owning the pet's region on Folia.
+        // If called from another region (e.g. a level-up event fired by an admin command), dispatch
+        // to the pet's scheduler so the mutation runs on the correct thread.
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            mob.getScheduler().run(MyPetApi.getPlugin(), task -> applyNameTag(mob), null);
+            return;
+        }
+        applyNameTag(mob);
+    }
+
+    private void applyNameTag(Mob mob) {
         if (!Configuration.Name.Tag.SHOW) {
             mob.setCustomNameVisible(false);
             return;
@@ -251,9 +268,17 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 setSitting(willSit);
                 String messageKey = willSit ? "Message.Sit.Stay" : "Message.Sit.Follow";
                 player.sendMessage(Translation.getFormattedComponent(messageKey, getOwner(), getDisplayName()));
-                bukkitEntity.getWorld().playSound(bukkitEntity.getLocation(),
-                        willSit ? Sound.ENTITY_WOLF_WHINE : Sound.ENTITY_WOLF_AMBIENT,
-                        0.8f, 1.2f);
+                final boolean finalWillSit = willSit;
+                if (Bukkit.isOwnedByCurrentRegion(bukkitEntity)) {
+                    bukkitEntity.getWorld().playSound(bukkitEntity.getLocation(),
+                            finalWillSit ? Sound.ENTITY_WOLF_WHINE : Sound.ENTITY_WOLF_AMBIENT,
+                            0.8f, 1.2f);
+                } else {
+                    bukkitEntity.getScheduler().run(MyPetApi.getPlugin(), task ->
+                            bukkitEntity.getWorld().playSound(bukkitEntity.getLocation(),
+                                    finalWillSit ? Sound.ENTITY_WOLF_WHINE : Sound.ENTITY_WOLF_AMBIENT,
+                                    0.8f, 1.2f), null);
+                }
                 return true;
             }
             return false;
@@ -275,12 +300,24 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     item.setAmount(item.getAmount() - 1);
                 }
                 setHealth(Math.min(getMaxHealth(), getHealth() + 1));
-                bukkitEntity.getWorld().spawnParticle(
-                        Particle.ITEM,
-                        bukkitEntity.getLocation().add(0, bukkitEntity.getHeight() * 0.5, 0),
-                        6, 0.2, 0.2, 0.2, 0.05, item);
-                bukkitEntity.getWorld().playSound(bukkitEntity.getLocation(),
-                        Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
+                final ItemStack finalItem = item;
+                if (Bukkit.isOwnedByCurrentRegion(bukkitEntity)) {
+                    bukkitEntity.getWorld().spawnParticle(
+                            Particle.ITEM,
+                            bukkitEntity.getLocation().add(0, bukkitEntity.getHeight() * 0.5, 0),
+                            6, 0.2, 0.2, 0.2, 0.05, finalItem);
+                    bukkitEntity.getWorld().playSound(bukkitEntity.getLocation(),
+                            Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
+                } else {
+                    bukkitEntity.getScheduler().run(MyPetApi.getPlugin(), task -> {
+                        bukkitEntity.getWorld().spawnParticle(
+                                Particle.ITEM,
+                                bukkitEntity.getLocation().add(0, bukkitEntity.getHeight() * 0.5, 0),
+                                6, 0.2, 0.2, 0.2, 0.05, finalItem);
+                        bukkitEntity.getWorld().playSound(bukkitEntity.getLocation(),
+                                Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
+                    }, null);
+                }
                 return true;
             }
         }
@@ -343,7 +380,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public void setLocation(Location loc) {
         if (status == PetState.Here && bukkitEntity != null
                 && MyPetApi.getPlatformHelper().canSpawn(loc, bukkitEntity.getClass().asSubclass(Mob.class))) {
-            bukkitEntity.teleport(loc);
+            bukkitEntity.teleportAsync(loc);
         }
     }
 
@@ -492,7 +529,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         double maxHealth = getMaxHealth();
         health = Math.min(health, maxHealth);
         if (status == PetState.Here) {
-            bukkitEntity.setHealth(health);
+            this.health = health;
+            final double finalHealth = health;
+            if (Bukkit.isOwnedByCurrentRegion(bukkitEntity)) {
+                bukkitEntity.setHealth(finalHealth);
+            } else {
+                bukkitEntity.getScheduler().run(MyPetApi.getPlugin(), task -> bukkitEntity.setHealth(finalHealth), null);
+            }
         } else {
             this.health = health;
         }
@@ -613,10 +656,24 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         if (status == PetState.Here) {
             if (bukkitEntity == null) {
                 updateStatus(PetState.Despawned);
-            } else if (bukkitEntity.getHealth() <= 0 || bukkitEntity.isDead()) {
-                updateStatus(PetState.Dead);
+            } else if (Bukkit.isOwnedByCurrentRegion(bukkitEntity)) {
+                // Only touch the live entity when we own its region (always true on Paper,
+                // conditional on Folia). Otherwise fall through and return the cached status.
+                if (bukkitEntity.getHealth() <= 0 || bukkitEntity.isDead()) {
+                    updateStatus(PetState.Dead);
+                }
             }
         }
+        return status;
+    }
+
+    /**
+     * Returns the last cached pet status without touching the Bukkit entity.
+     * Safe to call from any thread on Folia (will not trip the region thread check).
+     * Callers that need an up-to-date status must call {@link #getStatus()} from the pet's
+     * owning region thread.
+     */
+    public PetState getCachedStatus() {
         return status;
     }
 
@@ -753,29 +810,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 // bukkitEntity is now set by VanillaMobSpawner via setBukkitEntity().
                 bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), true));
 
-                // Team creation for no-collision behaviour — post-spawn because we need the entity's UUID.
-                Random r = new Random(petOwner.getUniqueId().toString().hashCode());
-                final char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
-                StringBuilder sb = new StringBuilder(10);
-                for (int i = 0; i < 10; i++) {
-                    sb.append(chars[r.nextInt(chars.length)]);
-                }
-                String random = sb.toString();
-
-                Team t;
-                if (owner.getScoreboard().getTeam("MyPet-" + random) != null) {
-                    t = owner.getScoreboard().getTeam("MyPet-" + random);
-                } else {
-                    t = owner.getScoreboard().registerNewTeam("MyPet-" + random);
-                    t.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
-                }
-                for (String entry : t.getEntries()) {
-                    try {
-                        t.removeEntry(entry);
-                    } catch (IllegalStateException ignored) {
-                    }
-                }
-                t.addEntry(bukkitEntity.getUniqueId().toString());
+                bukkitEntity.setCollidable(false);
 
                 updateStatus(PetState.Here);
 
@@ -804,14 +839,48 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             // In that case only the status transition and backpack-close
             // steps apply.
             if (bukkitEntity != null) {
-                health = bukkitEntity.getHealth();
+                final Mob entityRef = bukkitEntity;
+                final boolean ownedByCurrentRegion = Bukkit.isOwnedByCurrentRegion(entityRef);
+
+                // Only read live entity state when we own its region. Cross-region reads would
+                // trip Folia's thread check and log (even when the exception is caught). If we
+                // can't read, fall back to the last cached health/state on this object.
+                if (ownedByCurrentRegion) {
+                    health = entityRef.getHealth();
+                }
                 // Drop the pet's entry from the damage tracker before clearing
                 // bukkitEntity — otherwise the ConcurrentHashMap in
                 // PetDamageTracker grows unboundedly as pets are despawned and
-                // respawned with new UUIDs.
-                PetDamageTracker.cleanup(bukkitEntity.getUniqueId());
-                bukkitEntity.remove();
+                // respawned with new UUIDs. Tracker uses only UUID so this is safe
+                // from any thread.
+                PetDamageTracker.cleanup(entityRef.getUniqueId());
+                Timer.stopPetTicking(this);
+                PetSitParticleController.stopForPet(this);
+                PetPotionParticleController.stopForPet(this);
+                RideSkillFlightController.stopForPet(this);
                 bukkitEntity = null;
+
+                if (ownedByCurrentRegion) {
+                    try {
+                        entityRef.remove();
+                    } catch (NullPointerException foliaShutdown) {
+                        // On Folia, the region tick scheduler has already stopped by the time
+                        // onDisable runs, so the entity chunk system can't complete the removal
+                        // callback (ServerLevel#getCurrentWorldData() is null). The entity will
+                        // be saved with the world at shutdown step 7.
+                    }
+                } else {
+                    // Cross-region: dispatch the remove() to the entity's owning scheduler so it
+                    // runs on the correct region thread.
+                    entityRef.getScheduler().run(MyPetApi.getPlugin(), task -> {
+                        try {
+                            entityRef.remove();
+                        } catch (Throwable ignored) {
+                            // Entity may have already been removed or region may have transitioned
+                            // by the time this task runs — best-effort.
+                        }
+                    }, null);
+                }
             }
             updateStatus(PetState.Despawned);
 

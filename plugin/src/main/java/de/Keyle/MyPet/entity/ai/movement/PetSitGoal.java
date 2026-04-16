@@ -5,6 +5,7 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,6 +54,9 @@ public class PetSitGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (!SITTABLE_TYPES.contains(pet.getPetType().name())) {
             return false;
         }
@@ -75,6 +79,9 @@ public class PetSitGoal implements Goal<Mob> {
 
     @Override
     public void start() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
         mob.getPathfinder().stopPathfinding();
         pet.setTarget(null);
     }

@@ -44,7 +44,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -107,9 +106,7 @@ public class PetShop {
                         owner = null;
                     }
 
-                    final BukkitRunnable confirmRunner = new BukkitRunnable() {
-                        @Override
-                        public void run() {
+                    final Runnable confirmRunner = () -> {
                             IconMenu menu = new IconMenu(Translation.getFormattedComponent("Message.Shop.Confirm.Title", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())), event1 -> {
                                 if (event1.getPosition() == 3) {
                                     if (pet.getPrice() > 0) {
@@ -149,7 +146,7 @@ public class PetShop {
                                     clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
                                     clonedPet.setUUID(null);
 
-                                    MyPetApi.getRepository().addMyPet(clonedPet).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                                    MyPetApi.getRepository().addMyPet(clonedPet).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
                                             p.sendMessage(Translation.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
                                             MyPetCreateEvent createEvent = new MyPetCreateEvent(clonedPet, MyPetCreateEvent.Source.PetShop);
                                             Bukkit.getServer().getPluginManager().callEvent(createEvent);
@@ -160,7 +157,7 @@ public class PetShop {
                                                 MyPetApi.getRepository().updateMyPetPlayer(petOwner);
                                                 MyPetApi.getMyPetManager().activateMyPet(clonedPet).ifPresent(MyPet::createEntity);
                                             }
-                                    }));
+                                    }, null));
                                 }
                                 event1.setWillClose(true);
                                 event1.setWillDestroy(true);
@@ -180,21 +177,20 @@ public class PetShop {
                                     .setTitle(Translation.getComponent("Name.No", player).color(NamedTextColor.RED))
                                     .addLoreLine(Translation.getFormattedComponent("Message.Shop.Confirm.No", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice()))));
                             menu.open(player);
-                        }
                     };
 
                     if (owner != null && owner.hasMyPet()) {
-                        MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+                        MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), pTask -> {
                                 int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
                                 int limit = getMaxPetCount(p);
                                 if (petCount >= limit) {
                                     p.sendMessage(Translation.getFormattedComponent("Message.Command.Switch.Limit", player, limit));
                                     return;
                                 }
-                                confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);
-                        }));
+                                p.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> confirmRunner.run(), null, 5L);
+                        }, null));
                     } else {
-                        confirmRunner.runTaskLater(MyPetApi.getPlugin(), 5L);
+                        p.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> confirmRunner.run(), null, 5L);
                     }
                 }
             }

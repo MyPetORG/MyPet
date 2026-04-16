@@ -76,6 +76,9 @@ public class PetDuelTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
         if (!behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorMode.Duel) {
             return false;
@@ -98,9 +101,11 @@ public class PetDuelTargetGoal implements Goal<Mob> {
         if (owner == null) {
             return false;
         }
-        Location ownerLoc = owner.getLocation();
+        // Scan around the pet (owning region thread). Scanning around the owner would touch
+        // the owner's region from the pet's thread on Folia.
+        Location petLoc = mob.getLocation();
 
-        Collection<Entity> nearby = ownerLoc.getWorld().getNearbyEntities(ownerLoc, range, range, range);
+        Collection<Entity> nearby = mob.getWorld().getNearbyEntities(petLoc, range, range, range);
         for (Entity entity : nearby) {
             if (!PetEntityMarker.isMarked(entity) || entity.equals(mob)) {
                 continue;
@@ -133,6 +138,9 @@ public class PetDuelTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (!pet.canMove()) {
             return false;
         }

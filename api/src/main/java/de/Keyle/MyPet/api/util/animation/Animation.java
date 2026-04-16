@@ -42,6 +42,7 @@ package de.Keyle.MyPet.api.util.animation;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.location.LocationHolder;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -52,7 +53,7 @@ public abstract class Animation {
     protected int loops = 0;
     protected int tickRate = 1;
     protected LocationHolder locationHolder;
-    int taskID = -1;
+    ScheduledTask task = null;
 
     public Animation(int length, LocationHolder locationHolder) {
         this.length = length;
@@ -75,72 +76,84 @@ public abstract class Animation {
 
     public void once() {
         if (!running()) {
-            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
+            task = Bukkit.getServer().getGlobalRegionScheduler().runAtFixedRate(MyPetApi.getPlugin(), t -> {
                 if (locationHolder.isValid()) {
-                    for (int i = 0; i < framesPerTick; i++) {
-                        tick(frame, locationHolder.getLocation());
-                        if (++frame >= length) {
-                            stop();
-                            break;
+                    Location loc = locationHolder.getLocation();
+                    Bukkit.getServer().getRegionScheduler().execute(MyPetApi.getPlugin(), loc, () -> {
+                        for (int i = 0; i < framesPerTick; i++) {
+                            tick(frame, loc);
+                            if (++frame >= length) {
+                                stop();
+                                break;
+                            }
                         }
-                    }
+                    });
                 } else {
                     stop();
                 }
-            }, 0, tickRate);
+            }, 1L, tickRate);
         }
     }
 
     public void stop() {
-        if (taskID != -1) {
-            Bukkit.getScheduler().cancelTask(taskID);
-            taskID = -1;
+        if (task != null) {
+            try {
+                task.cancel();
+            } catch (Exception ignored) {
+            }
+            task = null;
             onStop();
         }
     }
 
     public boolean running() {
-        return taskID != -1;
+        return task != null;
     }
 
     public void loop() {
         if (!running()) {
-            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
+            task = Bukkit.getServer().getGlobalRegionScheduler().runAtFixedRate(MyPetApi.getPlugin(), t -> {
                 if (locationHolder.isValid()) {
-                    for (int i = 0; i < framesPerTick; i++) {
-                        tick(frame, locationHolder.getLocation());
-                        if (++frame >= length) {
-                            reset();
-                            break;
+                    Location loc = locationHolder.getLocation();
+                    Bukkit.getServer().getRegionScheduler().execute(MyPetApi.getPlugin(), loc, () -> {
+                        for (int i = 0; i < framesPerTick; i++) {
+                            tick(frame, loc);
+                            if (++frame >= length) {
+                                reset();
+                                break;
+                            }
                         }
-                    }
+                    });
                 } else {
                     stop();
                 }
-            }, 0, tickRate);
+            }, 1L, tickRate);
         }
     }
 
     public void loop(int quantity) {
         if (!running()) {
             this.loops = quantity;
-            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), () -> {
+            task = Bukkit.getServer().getGlobalRegionScheduler().runAtFixedRate(MyPetApi.getPlugin(), t -> {
                 if (locationHolder.isValid()) {
-                    for (int i = 0; i < framesPerTick; i++) {
-                        tick(frame, locationHolder.getLocation());
-                        if (++frame >= length) {
-                            if (--Animation.this.loops > 0) {
-                                reset();
-                            } else {
-                                stop();
+                    Location loc = locationHolder.getLocation();
+                    Bukkit.getServer().getRegionScheduler().execute(MyPetApi.getPlugin(), loc, () -> {
+                        for (int i = 0; i < framesPerTick; i++) {
+                            tick(frame, loc);
+                            if (++frame >= length) {
+                                if (--Animation.this.loops > 0) {
+                                    reset();
+                                } else {
+                                    stop();
+                                }
+                                break;
                             }
-                            break;
                         }
-                    }
+                    });
                 } else {
                     stop();
                 }
-            }, 0, tickRate);
+            }, 1L, tickRate);
         }
     }
 

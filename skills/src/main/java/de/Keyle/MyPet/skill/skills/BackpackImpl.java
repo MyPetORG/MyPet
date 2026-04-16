@@ -34,6 +34,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -152,9 +153,19 @@ public class BackpackImpl implements Backpack {
                 myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
                 return false;
             }
-            if (myPet.getLocation().isPresent() && !myPet.getLocation().get().getBlock().isLiquid()) {
-                openInventory(myPet.getOwner().getPlayer());
-                return true;
+            if (myPet.getLocation().isPresent()) {
+                Location petLoc = myPet.getLocation().get();
+                // Reading the block at the pet's location requires owning that region on Folia.
+                // If the player issued the command from a different region, skip the swim check
+                // and allow opening — the "pet is swimming" guard is cosmetic, not a hard rule.
+                boolean inLiquid = Bukkit.isOwnedByCurrentRegion(petLoc) && petLoc.getBlock().isLiquid();
+                if (!inLiquid) {
+                    openInventory(myPet.getOwner().getPlayer());
+                    return true;
+                } else {
+                    myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Inventory.Swimming", myPet.getOwner(), myPet.getDisplayName()));
+                    return false;
+                }
             } else {
                 myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Inventory.Swimming", myPet.getOwner(), myPet.getDisplayName()));
                 return false;

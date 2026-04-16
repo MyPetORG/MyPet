@@ -2,68 +2,79 @@ package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.entity.Mob;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Renders custom-coloured potion particles around MyPet pets via a per-tick
- * {@code Particle.DUST} scheduler.
+ * Renders custom-coloured potion particles around MyPet pets via per-pet
+ * {@code Particle.DUST} scheduler tasks.
  *
- * <p>Pets register themselves via {@link #show(MyPet, Color)} and deregister via
- * {@link #hide(MyPet)}. The controller runs a single scheduler iterating all
- * active particles and spawns 1-2 DUST particles per tick around each pet's
- * bounding box.
+ * <p>Pets register themselves via {@link #show(MyPet, Color)} and deregister
+ * via {@link #hide(MyPet)}. Each pet also registers a tick task on spawn
+ * (see {@link #startForPet}) that emits particles when the pet is in the
+ * "showing" map.
  */
-public class PetPotionParticleController extends BukkitRunnable {
+public class PetPotionParticleController {
 
-    private static final PetPotionParticleController INSTANCE = new PetPotionParticleController();
+    private static final Map<UUID, Color> activeByPet = new ConcurrentHashMap<>();
+    private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
 
-    private final Map<UUID, Color> activeByPet = new HashMap<>();
+    public static void startForPet(MyPet pet) {
+        Mob mob = pet.getBukkitEntity();
+        if (mob == null) return;
+        Plugin plugin = MyPetApi.getPlugin();
+        UUID key = pet.getUUID();
+        stopForPet(pet);
+        ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> tickPet(pet), null, 1L, 2L);
+        if (task != null) {
+            tasks.put(key, task);
+        }
+    }
 
-    public static void start(Plugin plugin) {
-        INSTANCE.runTaskTimer(plugin, 1L, 2L);
+    public static void stopForPet(MyPet pet) {
+        UUID key = pet.getUUID();
+        ScheduledTask task = tasks.remove(key);
+        if (task != null) {
+            try {
+                task.cancel();
+            } catch (Exception ignored) {
+            }
+        }
+        activeByPet.remove(key);
     }
 
     public static void show(MyPet pet, Color color) {
         if (pet == null || color == null) return;
-        Mob mob = pet.getBukkitEntity();
-        if (mob == null) return;
-        INSTANCE.activeByPet.put(mob.getUniqueId(), color);
+        activeByPet.put(pet.getUUID(), color);
     }
 
     public static void hide(MyPet pet) {
         if (pet == null) return;
-        Mob mob = pet.getBukkitEntity();
-        if (mob == null) return;
-        INSTANCE.activeByPet.remove(mob.getUniqueId());
+        activeByPet.remove(pet.getUUID());
     }
 
-    @Override
-    public void run() {
-        if (activeByPet.isEmpty()) return;
-        for (MyPet pet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
-            Mob mob = pet.getBukkitEntity();
-            if (mob == null || mob.isDead()) continue;
-            Color color = activeByPet.get(mob.getUniqueId());
-            if (color == null) continue;
+    private static void tickPet(MyPet pet) {
+        Color color = activeByPet.get(pet.getUUID());
+        if (color == null) return;
+        Mob mob = pet.getBukkitEntity();
+        if (mob == null || mob.isDead()) return;
 
-            Particle.DustOptions options = new Particle.DustOptions(color, 1.0f);
-            double width = mob.getWidth();
-            double height = mob.getHeight();
-            mob.getWorld().spawnParticle(
-                    Particle.DUST,
-                    mob.getLocation().add(0, height * 0.5, 0),
-                    3,
-                    width * 0.5, height * 0.5, width * 0.5,
-                    0.0,
-                    options);
-        }
+        Particle.DustOptions options = new Particle.DustOptions(color, 1.0f);
+        double width = mob.getWidth();
+        double height = mob.getHeight();
+        mob.getWorld().spawnParticle(
+                Particle.DUST,
+                mob.getLocation().add(0, height * 0.5, 0),
+                3,
+                width * 0.5, height * 0.5, width * 0.5,
+                0.0,
+                options);
     }
 }

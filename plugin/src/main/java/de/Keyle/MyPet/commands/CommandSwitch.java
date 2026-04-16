@@ -111,7 +111,7 @@ public class CommandSwitch {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             final MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-            MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
+            MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), schedTask -> {
                     if (pets.size() - (owner.hasMyPet() ? 1 : 0) == 0) {
                         owner.sendMessage(Translation.getComponent("Message.Command.Switch.NoStoredPets", owner));
                         return;
@@ -164,7 +164,7 @@ public class CommandSwitch {
                                 }
                         });
                     }
-            }));
+            }, null));
         } else {
             player.sendMessage(Translation.getComponent("Message.No.HasPet", player));
         }

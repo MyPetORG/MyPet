@@ -6,6 +6,7 @@ import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -84,6 +85,7 @@ public class PetRandomFlyGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) return false;
         if (ThreadLocalRandom.current().nextFloat() >= FLY_STROLL_CHANCE) return false;
         if (!pet.canMove()) return false;
         if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) return false;
@@ -99,6 +101,7 @@ public class PetRandomFlyGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) return false;
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
         updateOwnerMovement(owner);
@@ -112,6 +115,7 @@ public class PetRandomFlyGoal implements Goal<Mob> {
 
     @Override
     public void start() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) return;
         Location target = findFlyTarget();
         if (target == null) return;
         moveTo = target;

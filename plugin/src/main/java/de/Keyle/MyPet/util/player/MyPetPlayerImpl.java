@@ -44,10 +44,12 @@ import org.bukkit.*;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class MyPetPlayerImpl implements MyPetPlayer {
 
@@ -282,7 +284,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     public void checkForContribution() {
         if (!contributorChecked) {
             contributorChecked = true;
-            Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetApi.getPlugin(), () -> rank = ContributorCheck.getContributorRank(MyPetPlayerImpl.this), 60L);
+            Bukkit.getServer().getAsyncScheduler().runDelayed(MyPetApi.getPlugin(), t -> rank = ContributorCheck.getContributorRank(MyPetPlayerImpl.this), 3L, TimeUnit.SECONDS);
         }
     }
 
@@ -379,19 +381,37 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         if (hasMyPet()) {
             MyPet myPet = getMyPet();
             Player p = this.getPlayer();
-            if (myPet.getStatus() == PetState.Here) {
-                if (myPet.getLocation().get().getWorld() != p.getLocation().getWorld() || MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), p.getLocation()) > 40) {
-                    myPet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
-                    if (!p.isGliding()) {
-                        myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Despawn", myPet.getOwner(), myPet.getDisplayName()));
+            // Use cached status: the pet entity may be in a different Folia region, so touching
+            // it (including health checks inside getStatus()) from the player's tick is unsafe.
+            PetState cachedStatus = myPet.getCachedStatus();
+            if (cachedStatus == PetState.Here) {
+                Optional<Location> petLocOpt = myPet.getLocation();
+                if (petLocOpt.isPresent()) {
+                    Location petLoc = petLocOpt.get();
+                    boolean tooFar = petLoc.getWorld() != p.getLocation().getWorld()
+                            || MyPetApi.getPlatformHelper().distance(petLoc, p.getLocation()) > 40;
+                    if (tooFar) {
+                        Mob petMob = myPet.getBukkitEntity();
+                        if (petMob != null) {
+                            petMob.getScheduler().run(MyPetApi.getPlugin(), t -> {
+                                myPet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
+                                if (!p.isGliding()) {
+                                    myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Despawn", myPet.getOwner(), myPet.getDisplayName()));
+                                }
+                            }, null);
+                        }
+                    } else if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES && showHealthBar) {
+                        // Dispatch to the pet's scheduler to safely read health; sendActionBar is thread-safe.
+                        Mob petMob = myPet.getBukkitEntity();
+                        if (petMob != null) {
+                            petMob.getScheduler().run(MyPetApi.getPlugin(), t -> {
+                                Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, myPet.getHealth(), myPet.getMaxHealth());
+                                p.sendActionBar(msg);
+                            }, null);
+                        }
                     }
                 }
-
-                if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES && showHealthBar) {
-                    Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, myPet.getHealth(), myPet.getMaxHealth());
-                    getPlayer().sendActionBar(msg);
-                }
-            } else if (myPet.getStatus() == PetState.Despawned) {
+            } else if (cachedStatus == PetState.Despawned) {
                 if (myPet.wantsToRespawn() && !p.isFlying()) {
                     boolean velocity = p.getVelocity().getY() >= 0;
                     boolean fall = p.getFallDistance() == 0;

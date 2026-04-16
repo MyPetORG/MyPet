@@ -109,6 +109,9 @@ public class PetRandomStrollGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (ThreadLocalRandom.current().nextFloat() >= strollChance) {
             return false;
         }
@@ -136,6 +139,7 @@ public class PetRandomStrollGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) return false;
         if (controlGoal != null && controlGoal.moveTo != null) return false;
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
@@ -152,6 +156,7 @@ public class PetRandomStrollGoal implements Goal<Mob> {
 
     @Override
     public void start() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) return;
         Location target = findStrollTarget();
         if (target == null) return;
         moveTo = target;

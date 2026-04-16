@@ -10,6 +10,7 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
@@ -55,6 +56,9 @@ public class PetFarmTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
         if (!behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorMode.Farm) {
             return false;
@@ -73,10 +77,12 @@ public class PetFarmTargetGoal implements Goal<Mob> {
         if (owner == null) {
             return false;
         }
-        Location ownerLoc = owner.getLocation();
         Location petLoc = mob.getLocation();
+        // Scan around the pet (owning region thread). Scanning around the owner would touch
+        // the owner's region from the pet's thread on Folia. The distance-to-pet filter
+        // below already restricts results to a small radius of the pet.
 
-        for (Entity entity : ownerLoc.getWorld().getNearbyEntities(ownerLoc, range, range, range)) {
+        for (Entity entity : mob.getWorld().getNearbyEntities(petLoc, range, range, range)) {
             if (!(entity instanceof Monster monster)) {
                 continue;
             }
@@ -97,6 +103,9 @@ public class PetFarmTargetGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldStayActive() {
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
         if (!pet.canMove()) {
             return false;
         }

@@ -49,9 +49,6 @@ import de.Keyle.MyPet.entity.ai.attack.PetProjectileHitListener;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.info.MyPetInfoImpl;
 import de.Keyle.MyPet.entity.leashing.*;
-import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
-import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
-import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.types.MongoDbRepository;
@@ -77,8 +74,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Team;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -274,7 +269,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             repository.disable();
             Timer.reset();
         }
-        Bukkit.getServer().getScheduler().cancelTasks(this);
+        Bukkit.getServer().getGlobalRegionScheduler().cancelTasks(this);
+        Bukkit.getServer().getAsyncScheduler().cancelTasks(this);
 
         DebugLogHandler.disable(getLogger());
 
@@ -434,12 +430,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         getServer().getPluginManager().registerEvents(new PetDeathListener(), this);
         getServer().getPluginManager().registerEvents(new PetDespawnListener(), this);
 
-        RideSkillFlightController.start(this);
-
-        PetPotionParticleController.start(this);
-
-        PetSitParticleController.start(this);
-
         // Register commands via Paper's Brigadier Lifecycle API
         this.helpRegistry = new HelpRegistry();
         this.getLifecycleManager().registerEventHandler(io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents.COMMANDS, event -> {
@@ -499,12 +489,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             platformHelper.copyResource(this, "locale-readme.txt", new File(getDataFolder(), "locale" + File.separator + "readme.txt"));
         }
         Translation.init();
-
-        for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-            if (team.getName().startsWith("MyPet-")) {
-                team.unregister();
-            }
-        }
 
         // init repository
         if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
@@ -624,77 +608,74 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager.activate(Load.State.OnReady);
 
         // load pets for online players
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (final Player player : getServer().getOnlinePlayers()) {
-                    repository.getMyPetPlayer(player).thenAccept(p -> {
-                        if (p == null) return;
-                        Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
-                            final MyPetPlayerImpl onlinePlayer = (MyPetPlayerImpl) p;
+        Bukkit.getServer().getGlobalRegionScheduler().run(this, deferredTask -> {
+            for (final Player player : getServer().getOnlinePlayers()) {
+                repository.getMyPetPlayer(player).thenAccept(p -> {
+                    if (p == null) return;
+                    player.getScheduler().run(MyPetApi.getPlugin(), playerTask -> {
+                        final MyPetPlayerImpl onlinePlayer = (MyPetPlayerImpl) p;
 
-                            playerManager.setOnline(onlinePlayer);
+                        playerManager.setOnline(onlinePlayer);
 
-                            final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                            if (joinGroup.isDisabled()) {
-                                return;
+                        final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
+                        if (joinGroup.isDisabled()) {
+                            return;
+                        }
+                        if (onlinePlayer.hasMyPet()) {
+                            MyPet myPet = onlinePlayer.getMyPet();
+                            if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
+                                myPetManager.deactivateMyPet(onlinePlayer, true);
                             }
-                            if (onlinePlayer.hasMyPet()) {
-                                MyPet myPet = onlinePlayer.getMyPet();
-                                if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
-                                    myPetManager.deactivateMyPet(onlinePlayer, true);
-                                }
-                            }
+                        }
 
-                            if (!onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
-                                final UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
+                        if (!onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
+                            final UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
 
-                                MyPetApi.getRepository().getMyPet(petUUID).thenAccept(storedMyPet -> {
-                                    Bukkit.getScheduler().runTask(MyPetApi.getPlugin(), () -> {
-                                        myPetManager.activateMyPet(storedMyPet);
+                            MyPetApi.getRepository().getMyPet(petUUID).thenAccept(storedMyPet -> {
+                                player.getScheduler().run(MyPetApi.getPlugin(), petTask -> {
+                                    myPetManager.activateMyPet(storedMyPet);
 
-                                            if (onlinePlayer.hasMyPet()) {
-                                                final MyPet myPet = onlinePlayer.getMyPet();
-                                                final MyPetPlayer myPetPlayer = myPet.getOwner();
-                                                if (myPet.wantsToRespawn()) {
-                                                    if (myPetPlayer.hasMyPet()) {
-                                                        MyPet runMyPet = myPetPlayer.getMyPet();
-                                                        switch (runMyPet.createEntity()) {
-                                                            case Canceled:
-                                                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", myPet.getOwner(), runMyPet.getDisplayName()));
-                                                                break;
-                                                            case NoSpace:
-                                                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", myPet.getOwner(), runMyPet.getDisplayName()));
-                                                                break;
-                                                            case NotAllowed:
-                                                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
-                                                                break;
-                                                            case Dead:
-                                                                if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                                    runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Call.Dead", myPet.getOwner(), myPet.getDisplayName()));
-                                                                } else {
-                                                                    runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Respawn.In", myPet.getOwner(), myPet.getDisplayName(), myPet.getRespawnTime()));
-                                                                }
-                                                                break;
-                                                            case Flying:
-                                                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", myPet.getOwner(), myPet.getDisplayName()));
-                                                                break;
-                                                            case Success:
-                                                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", myPet.getOwner(), runMyPet.getDisplayName()));
-                                                                break;
+                                    if (onlinePlayer.hasMyPet()) {
+                                        final MyPet myPet = onlinePlayer.getMyPet();
+                                        final MyPetPlayer myPetPlayer = myPet.getOwner();
+                                        if (myPet.wantsToRespawn()) {
+                                            if (myPetPlayer.hasMyPet()) {
+                                                MyPet runMyPet = myPetPlayer.getMyPet();
+                                                switch (runMyPet.createEntity()) {
+                                                    case Canceled:
+                                                        runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", myPet.getOwner(), runMyPet.getDisplayName()));
+                                                        break;
+                                                    case NoSpace:
+                                                        runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", myPet.getOwner(), runMyPet.getDisplayName()));
+                                                        break;
+                                                    case NotAllowed:
+                                                        runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
+                                                        break;
+                                                    case Dead:
+                                                        if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                            runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Call.Dead", myPet.getOwner(), myPet.getDisplayName()));
+                                                        } else {
+                                                            runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Respawn.In", myPet.getOwner(), myPet.getDisplayName(), myPet.getRespawnTime()));
                                                         }
-                                                    }
+                                                        break;
+                                                    case Flying:
+                                                        runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", myPet.getOwner(), myPet.getDisplayName()));
+                                                        break;
+                                                    case Success:
+                                                        runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", myPet.getOwner(), runMyPet.getDisplayName()));
+                                                        break;
                                                 }
                                             }
-                                        });
-                                    });
-                                }
-                                onlinePlayer.checkForContribution();
+                                        }
+                                    }
+                                }, null);
                             });
-                        });
-                }
+                        }
+                        onlinePlayer.checkForContribution();
+                    }, null);
+                });
             }
-        }.runTaskLater(this, 0);
+        });
     }
 
     /**
