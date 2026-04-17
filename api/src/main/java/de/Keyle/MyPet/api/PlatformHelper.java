@@ -104,7 +104,7 @@ public class PlatformHelper {
         }
         try {
             byte[] bytes = itemStack.serializeAsBytes();
-            return BinaryTagIO.reader().read(new ByteArrayInputStream(bytes), BinaryTagIO.Compression.GZIP);
+            return BinaryTagIO.unlimitedReader().read(new ByteArrayInputStream(bytes), BinaryTagIO.Compression.GZIP);
         } catch (Throwable e) {
             ErrorUtil.report(e);
             return CompoundBinaryTag.empty();

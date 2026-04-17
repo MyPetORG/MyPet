@@ -69,7 +69,7 @@ public class ConfigurationNBT {
         try (InputStream is = Files.newInputStream(NBTFile.toPath())) {
             // Try compressed first
             try {
-                CompoundBinaryTag tag = BinaryTagIO.reader().read(is, BinaryTagIO.Compression.GZIP);
+                CompoundBinaryTag tag = BinaryTagIO.unlimitedReader().read(is, BinaryTagIO.Compression.GZIP);
                 nbtTagCompound = tag;
                 return true;
             } catch (IOException ignored) {
@@ -81,7 +81,7 @@ public class ConfigurationNBT {
 
         // Retry with uncompressed
         try (InputStream is = Files.newInputStream(NBTFile.toPath())) {
-            CompoundBinaryTag tag = BinaryTagIO.reader().read(is, BinaryTagIO.Compression.NONE);
+            CompoundBinaryTag tag = BinaryTagIO.unlimitedReader().read(is, BinaryTagIO.Compression.NONE);
             nbtTagCompound = tag;
             return true;
         } catch (IOException e) {

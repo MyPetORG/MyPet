@@ -50,13 +50,13 @@ public final class NbtUtil {
      * Reads a CompoundBinaryTag from a GZIP-compressed byte array.
      */
     public static CompoundBinaryTag readCompressed(byte[] bytes) throws IOException {
-        return BinaryTagIO.reader().read(new ByteArrayInputStream(bytes), BinaryTagIO.Compression.GZIP);
+        return BinaryTagIO.unlimitedReader().read(new ByteArrayInputStream(bytes), BinaryTagIO.Compression.GZIP);
     }
 
     /**
      * Reads a CompoundBinaryTag from a GZIP-compressed InputStream.
      */
     public static CompoundBinaryTag readCompressed(InputStream inputStream) throws IOException {
-        return BinaryTagIO.reader().read(inputStream, BinaryTagIO.Compression.GZIP);
+        return BinaryTagIO.unlimitedReader().read(inputStream, BinaryTagIO.Compression.GZIP);
     }
 }
