@@ -62,7 +62,6 @@ public class MySqlRepository implements Repository {
     private final Map<UUID, StoredMyPet> petsToBeSaved = new ConcurrentHashMap<>();
     private final Map<UUID, MyPetPlayer> playersToBeSaved = new ConcurrentHashMap<>();
     private HikariDataSource dataSource;
-    private int version = 10;
 
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
@@ -183,16 +182,14 @@ public class MySqlRepository implements Repository {
                     ")");
 
             create.executeUpdate("CREATE TABLE " + Configuration.Repository.MySQL.PREFIX + "info (" +
-                    "version INTEGER UNIQUE, " +
                     "mypet_version VARCHAR(20), " +
                     "mypet_build VARCHAR(20), " +
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
                     ")");
 
-            try (PreparedStatement insert = connection.prepareStatement("INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "info (version, mypet_version, mypet_build) VALUES (?,?,?);")) {
-                insert.setInt(1, version);
-                insert.setString(2, MyPetVersion.getVersion());
-                insert.setString(3, MyPetVersion.getBuild());
+            try (PreparedStatement insert = connection.prepareStatement("INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "info (mypet_version, mypet_build) VALUES (?,?);")) {
+                insert.setString(1, MyPetVersion.getVersion());
+                insert.setString(2, MyPetVersion.getBuild());
                 insert.executeUpdate();
             }
         } catch (SQLException e) {
@@ -254,10 +251,9 @@ public class MySqlRepository implements Repository {
 
     private void updateInfo() {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement update = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "info SET version=?, mypet_version=?, mypet_build=?;")) {
-            update.setInt(1, version);
-            update.setString(2, MyPetVersion.getVersion());
-            update.setString(3, MyPetVersion.getBuild());
+             PreparedStatement update = connection.prepareStatement("UPDATE " + Configuration.Repository.MySQL.PREFIX + "info SET mypet_version=?, mypet_build=?;")) {
+            update.setString(1, MyPetVersion.getVersion());
+            update.setString(2, MyPetVersion.getBuild());
             update.executeUpdate();
         } catch (SQLException e) {
             ErrorUtil.reportError("MySQL database operation failed", e);

@@ -59,7 +59,6 @@ public class SqLiteRepository implements Repository {
     private final Map<UUID, StoredMyPet> petsToBeSaved = new ConcurrentHashMap<>();
     private final Map<UUID, MyPetPlayer> playersToBeSaved = new ConcurrentHashMap<>();
     private Connection connection;
-    private int version = 1;
 
     public Connection getConnection() {
         return connection;
@@ -181,18 +180,14 @@ public class SqLiteRepository implements Repository {
             createTimestampTrigger("players", "last_update", "uuid");
 
             create.executeUpdate("CREATE TABLE info (" +
-                    "version INTEGER UNIQUE, " +
                     "mypet_version VARCHAR(20), " +
                     "mypet_build VARCHAR(20), " +
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                     ")");
-            createTimestampTrigger("info", "last_update", "version");
 
-
-            try (PreparedStatement insert = connection.prepareStatement("INSERT INTO info (version, mypet_version, mypet_build) VALUES (?,?,?);")) {
-                insert.setInt(1, version);
-                insert.setString(2, MyPetVersion.getVersion());
-                insert.setString(3, MyPetVersion.getBuild());
+            try (PreparedStatement insert = connection.prepareStatement("INSERT INTO info (mypet_version, mypet_build) VALUES (?,?);")) {
+                insert.setString(1, MyPetVersion.getVersion());
+                insert.setString(2, MyPetVersion.getBuild());
                 insert.executeUpdate();
             }
         } catch (SQLException e) {
@@ -265,10 +260,9 @@ public class SqLiteRepository implements Repository {
     }
 
     private void updateInfo() {
-        try (PreparedStatement update = connection.prepareStatement("UPDATE info SET version=?, mypet_version=?, mypet_build=?;")) {
-            update.setInt(1, version);
-            update.setString(2, MyPetVersion.getVersion());
-            update.setString(3, MyPetVersion.getBuild());
+        try (PreparedStatement update = connection.prepareStatement("UPDATE info SET mypet_version=?, mypet_build=?;")) {
+            update.setString(1, MyPetVersion.getVersion());
+            update.setString(2, MyPetVersion.getBuild());
             update.executeUpdate();
         } catch (SQLException e) {
             ErrorUtil.reportError("SQLite database operation failed", e);
