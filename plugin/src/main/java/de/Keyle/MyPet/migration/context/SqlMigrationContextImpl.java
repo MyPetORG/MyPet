@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SqlMigrationContextImpl implements SqlMigrationContext {
+public class SqlMigrationContextImpl implements SqlMigrationContext, AutoCloseable {
     private final Connection connection;
     private final String tablePrefix;
 
@@ -19,6 +19,11 @@ public class SqlMigrationContextImpl implements SqlMigrationContext {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    @Override
+    public void close() throws SQLException {
+        connection.close();
     }
 
     @Override

@@ -521,15 +521,13 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             Timer.addTask((Scheduler) repository);
         }
 
-        // Run migrations (gated — any failure disables the plugin before hooks/pets load).
+        // Run migrations synchronously — any failure disables the plugin before hooks/pets load.
         serviceManager.activate(Load.State.Migration);
         Optional<MigrationService> migrationServiceOpt = serviceManager.getService(MigrationService.class);
-        if (migrationServiceOpt.isPresent()) {
-            if (!migrationServiceOpt.get().awaitCompletion()) {
-                MyPetApi.getLogger().severe("[MyPet] Migration failed — disabling plugin.");
-                setEnabled(false);
-                return;
-            }
+        if (migrationServiceOpt.isPresent() && !migrationServiceOpt.get().wasSuccessful()) {
+            MyPetApi.getLogger().severe("[MyPet] Migration failed — disabling plugin.");
+            setEnabled(false);
+            return;
         }
 
         File shopConfig = new File(getDataFolder(), "pet-shops.yml");

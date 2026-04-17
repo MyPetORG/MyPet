@@ -23,10 +23,10 @@ import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -36,7 +36,6 @@ import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -51,22 +50,17 @@ public class MigrationService implements ServiceContainer {
     private static final String INFO_TABLE = "info";
     private static final String MIGRATIONS_TABLE = "migrations";
 
-    private final CompletableFuture<Boolean> completionFuture = new CompletableFuture<>();
     private final Logger logger = MyPetApi.getLogger();
+    private boolean success = false;
 
     @Override
     public boolean onEnable() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    completionFuture.complete(executeMigrations());
-                } catch (Exception e) {
-                    logger.log(Level.SEVERE, "[MyPet] Unexpected error during migration", e);
-                    completionFuture.complete(false);
-                }
-            }
-        }.runTaskAsynchronously(MyPetApi.getPlugin());
+        try {
+            success = executeMigrations();
+        } catch (Throwable t) {
+            logger.log(Level.SEVERE, "[MyPet] Unexpected error during migration", t);
+            success = false;
+        }
         return true;
     }
 
@@ -80,19 +74,21 @@ public class MigrationService implements ServiceContainer {
     }
 
     /**
-     * Blocks until all migrations complete. Returns true if all migrations succeeded.
+     * Returns true if {@link #onEnable()} completed all migrations successfully, false
+     * otherwise. Callers check this immediately after {@code ServiceManager.activate}.
      */
-    public boolean awaitCompletion() {
-        try {
-            return completionFuture.get();
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "[MyPet] Error waiting for migrations", e);
-            return false;
-        }
+    public boolean wasSuccessful() {
+        return success;
     }
 
     private boolean executeMigrations() {
         String prefix = getTablePrefix();
+
+        // Capture BEFORE bootstrap: if the migrations table didn't exist, this is the first
+        // time MigrationService has ever run against this database. Combined with the install
+        // type, that lets us distinguish a fresh v4 install (initStructure created v4 schema;
+        // nothing to migrate) from a genuine 3.x upgrade.
+        boolean migrationsTableExisted = tableExists(prefix + MIGRATIONS_TABLE);
 
         if (!bootstrapTrackingTable(prefix)) {
             return false;
@@ -108,9 +104,29 @@ public class MigrationService implements ServiceContainer {
             return false;
         }
 
+        // Fresh v4 install: v4's initStructure already created the new schema, and the
+        // migrations table didn't exist before now — there is nothing historic to migrate.
+        // Mark every discovered migration COMPLETE and skip execution.
+        if (!migrationsTableExisted && installType == InstallType.NORMAL_4X) {
+            installType = InstallType.FRESH;
+        }
+
         if (installType == InstallType.FRESH) {
             markAllComplete(discovered, prefix);
             return true;
+        }
+
+        // Recovery: UPGRADE_3X means the legacy columns are still present, which implies no
+        // 4.0-targeted migration has successfully run (a success would have dropped them).
+        // Any COMPLETE records on the tracking table are therefore stale — written by an
+        // earlier build whose FRESH detection misfired. Drop them so migrations actually run.
+        if (installType == InstallType.UPGRADE_3X) {
+            int cleared = clearStaleCompleteRecords(prefix);
+            if (cleared > 0) {
+                logger.warning("[MyPet] Cleared " + cleared + " stale COMPLETE migration "
+                        + "records — the 3.x schema is still present, so those records were "
+                        + "incorrectly written by a previous run. Re-running migrations now.");
+            }
         }
 
         if (installType == InstallType.UPGRADE_3X) {
@@ -250,15 +266,21 @@ public class MigrationService implements ServiceContainer {
         Object migration = entry.getMigrationClass().getDeclaredConstructor().newInstance();
 
         if (migration instanceof DatabaseMigration dbm) {
-            dbm.migrateSql(createSqlContext());
+            try (SqlMigrationContextImpl ctx = createSqlContext()) {
+                dbm.migrateSql(ctx);
+            }
         } else if (migration instanceof ConfigMigration cm) {
             cm.migrate(createConfigContext());
         } else if (migration instanceof SkilltreeMigration sm) {
             sm.migrate(createSkilltreeContext());
         } else if (migration instanceof PetDataMigration pdm) {
-            pdm.migrateSql(createSqlContext());
+            try (SqlMigrationContextImpl ctx = createSqlContext()) {
+                pdm.migrateSql(ctx);
+            }
         } else if (migration instanceof PlayerDataMigration plm) {
-            plm.migrateSql(createSqlContext());
+            try (SqlMigrationContextImpl ctx = createSqlContext()) {
+                plm.migrateSql(ctx);
+            }
         }
     }
 
@@ -360,7 +382,7 @@ public class MigrationService implements ServiceContainer {
 
     // --- Context creation ---
 
-    private SqlMigrationContext createSqlContext() throws SQLException {
+    private SqlMigrationContextImpl createSqlContext() throws SQLException {
         Repository repo = MyPetApi.getRepository();
         Connection connection;
         if (repo instanceof SqLiteRepository sqlite) {
@@ -384,6 +406,36 @@ public class MigrationService implements ServiceContainer {
     }
 
     // --- Tracking table operations ---
+
+    private int clearStaleCompleteRecords(String prefix) {
+        try (Connection connection = openSqlConnection();
+             Statement stmt = connection.createStatement()) {
+            return stmt.executeUpdate("DELETE FROM " + prefix + MIGRATIONS_TABLE
+                    + " WHERE status = '" + MigrationStatus.COMPLETE.name() + "'");
+        } catch (SQLException e) {
+            logger.log(Level.WARNING, "[MyPet] Failed to clear stale tracking records", e);
+            return 0;
+        }
+    }
+
+    private boolean tableExists(String tableName) {
+        try (Connection connection = openSqlConnection()) {
+            DatabaseMetaData meta = connection.getMetaData();
+            try (ResultSet rs = meta.getTables(null, null, tableName, null)) {
+                if (rs.next()) {
+                    return true;
+                }
+            }
+            // MySQL lowercases table names on some platforms; retry.
+            try (ResultSet rs = meta.getTables(null, null, tableName.toLowerCase(), null)) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            logger.log(Level.WARNING, "[MyPet] Failed to check if table " + tableName
+                    + " exists; assuming it does not", e);
+            return false;
+        }
+    }
 
     private boolean bootstrapTrackingTable(String prefix) {
         try (Connection connection = openSqlConnection();
@@ -419,50 +471,53 @@ public class MigrationService implements ServiceContainer {
         throw new IllegalStateException("No SQL repository active");
     }
 
+    /**
+     * Classify the install by inspecting the schema, not {@code info.mypet_version}.
+     * The repository's {@code updateInfo()} overwrites mypet_version with the current
+     * plugin version on every startup before the migration service runs, so the version
+     * string can't distinguish a 3.x upgrade from a v4 install. The schema can:
+     * <ul>
+     *   <li>No {@code players} table → genuine fresh install</li>
+     *   <li>{@code players.internal_uuid} column present → pre-v4 shape, run migrations</li>
+     *   <li>{@code players} present without {@code internal_uuid} → already on v4</li>
+     * </ul>
+     */
     private InstallType detectInstallType(String prefix) {
-        try (Connection connection = openSqlConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT mypet_version FROM " + prefix + INFO_TABLE + " LIMIT 1")) {
-            if (!rs.next()) {
+        try (Connection connection = openSqlConnection()) {
+            DatabaseMetaData meta = connection.getMetaData();
+            if (!schemaHasTable(meta, prefix + "players")) {
                 return InstallType.FRESH;
             }
-            return classifyInstall(rs.getString(1));
+            if (schemaHasColumn(meta, prefix + "players", "internal_uuid")) {
+                return InstallType.UPGRADE_3X;
+            }
+            return InstallType.NORMAL_4X;
         } catch (SQLException e) {
-            if (isTableNotFound(e)) {
-                return InstallType.FRESH;
-            }
-            logger.log(Level.SEVERE, "[MyPet] Failed to detect install type "
-                    + "(SQLState=" + e.getSQLState() + ", errorCode=" + e.getErrorCode() + ")", e);
-            return null;
-        } catch (Exception e) {
             logger.log(Level.SEVERE, "[MyPet] Failed to detect install type", e);
             return null;
         }
     }
 
-    /**
-     * Heuristic for "table or column does not exist" across SQLite and MySQL. We only want to
-     * treat that case as a fresh install — lock errors, I/O errors, and corruption should fail
-     * loudly so the operator doesn't silently have all migrations marked COMPLETE on bad data.
-     */
-    private boolean isTableNotFound(SQLException e) {
-        String sqlState = e.getSQLState();
-        if ("42S02".equals(sqlState) || "42S22".equals(sqlState)) {
-            return true;
+    private boolean schemaHasTable(DatabaseMetaData meta, String table) throws SQLException {
+        try (ResultSet rs = meta.getTables(null, null, table, null)) {
+            if (rs.next()) {
+                return true;
+            }
         }
-        String message = e.getMessage();
-        if (message == null) {
-            return false;
+        try (ResultSet rs = meta.getTables(null, null, table.toLowerCase(), null)) {
+            return rs.next();
         }
-        String lower = message.toLowerCase();
-        return lower.contains("no such table") || lower.contains("no such column");
     }
 
-    private InstallType classifyInstall(String version) {
-        if (version == null || version.isEmpty() || version.startsWith("3.")) {
-            return InstallType.UPGRADE_3X;
+    private boolean schemaHasColumn(DatabaseMetaData meta, String table, String column) throws SQLException {
+        try (ResultSet rs = meta.getColumns(null, null, table, column)) {
+            if (rs.next()) {
+                return true;
+            }
         }
-        return InstallType.NORMAL_4X;
+        try (ResultSet rs = meta.getColumns(null, null, table.toLowerCase(), column)) {
+            return rs.next();
+        }
     }
 
     private List<MigrationRecord> loadTrackingRecords(String prefix) {
