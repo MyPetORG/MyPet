@@ -63,7 +63,7 @@ public class RebuildPlayersSchemaOnMojangUuid implements DatabaseMigration {
         try {
             if (hasColumn(connection, playersTable, "uuid")
                     && !hasColumn(connection, playersTable, "internal_uuid")) {
-                LOG.info("[MyPet] players table is already on the v4 shape — skipping rebuild.");
+                LOG.info("players table is already on the v4 shape — skipping rebuild.");
                 return;
             }
         } catch (SQLException e) {
@@ -142,13 +142,13 @@ public class RebuildPlayersSchemaOnMojangUuid implements DatabaseMigration {
             connection.commit();
 
             if (nullMojangCount > 0) {
-                LOG.warning("[MyPet] Dropped " + nullMojangCount + " player rows with NULL "
+                LOG.warning("Dropped " + nullMojangCount + " player rows with NULL "
                         + "mojang_uuid during SQLite rebuild. These could not be migrated to the "
                         + "v4 uuid primary key. Sample internal_uuid values: " + nullMojangSamples
                         + (nullMojangCount > nullMojangSamples.size()
                                 ? " (showing first " + nullMojangSamples.size() + ")" : ""));
             }
-            LOG.info("[MyPet] SQLite players table rebuilt on new uuid PK.");
+            LOG.info("SQLite players table rebuilt on new uuid PK.");
         } catch (SQLException e) {
             try {
                 connection.rollback();
@@ -193,7 +193,7 @@ public class RebuildPlayersSchemaOnMojangUuid implements DatabaseMigration {
                 execute(connection, "ALTER TABLE " + playersTable + " ADD PRIMARY KEY (uuid)");
             }
 
-            LOG.info("[MyPet] MySQL players table rebuilt on new uuid PK.");
+            LOG.info("MySQL players table rebuilt on new uuid PK.");
         } catch (SQLException e) {
             throw new MigrationException("MySQL players rebuild failed", e);
         }
@@ -237,7 +237,7 @@ public class RebuildPlayersSchemaOnMojangUuid implements DatabaseMigration {
                 "DELETE FROM " + playersTable + " WHERE mojang_uuid IS NULL")) {
             ps.executeUpdate();
         }
-        LOG.warning("[MyPet] Dropped " + count + " player rows with NULL mojang_uuid during "
+        LOG.warning("Dropped " + count + " player rows with NULL mojang_uuid during "
                 + "MySQL rebuild. These could not be migrated to the v4 uuid primary key. "
                 + "Sample internal_uuid values: " + samples
                 + (count > samples.size() ? " (showing first " + samples.size() + ")" : ""));

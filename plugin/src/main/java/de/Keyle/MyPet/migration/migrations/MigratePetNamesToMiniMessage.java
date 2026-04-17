@@ -109,7 +109,7 @@ public class MigratePetNamesToMiniMessage implements PetDataMigration {
                 }
             } catch (Exception e) {
                 failed++;
-                LOG.warning("[MyPet] Failed to convert pet name for " + uuid + ": "
+                LOG.warning("Failed to convert pet name for " + uuid + ": "
                         + e.getClass().getSimpleName() + ": " + e.getMessage()
                         + " — leaving name unchanged");
             }
@@ -151,11 +151,11 @@ public class MigratePetNamesToMiniMessage implements PetDataMigration {
             }
         }
 
-        LOG.info("[MyPet] Pet name migration complete. "
-                + "Converted: " + conversions.size() + ". "
-                + "Already clean (no legacy codes): " + alreadyClean + ". "
-                + "Null names: " + nullNames + ". "
-                + "Failed (left unchanged): " + failed + ".");
+        LOG.info("Pet name migration complete.");
+        LOG.info("  Converted: " + conversions.size() + ".");
+        LOG.info("  Already clean (no legacy codes): " + alreadyClean + ".");
+        LOG.info("  Null names: " + nullNames + ".");
+        LOG.info("  Failed (left unchanged): " + failed + ".");
     }
 
     private static boolean hasLegacyCode(String name) {

@@ -47,7 +47,7 @@ public class DropLegacyInfoVersionColumn implements DatabaseMigration {
 
         try {
             if (!hasColumn(connection, infoTable, "version")) {
-                LOG.info("[MyPet] info.version column already absent — skipping drop.");
+                LOG.info("info.version column already absent — skipping drop.");
                 return;
             }
         } catch (SQLException e) {
@@ -60,7 +60,7 @@ public class DropLegacyInfoVersionColumn implements DatabaseMigration {
                 && (product.toLowerCase().contains("mysql") || product.toLowerCase().contains("mariadb"))) {
             try {
                 execute(connection, "ALTER TABLE " + infoTable + " DROP COLUMN version");
-                LOG.info("[MyPet] Dropped legacy info.version column (MySQL).");
+                LOG.info("Dropped legacy info.version column (MySQL).");
             } catch (SQLException e) {
                 throw new MigrationException("Failed to drop info.version on MySQL", e);
             }
@@ -109,7 +109,7 @@ public class DropLegacyInfoVersionColumn implements DatabaseMigration {
             }
 
             connection.commit();
-            LOG.info("[MyPet] Dropped legacy info.version column (SQLite table rewrite).");
+            LOG.info("Dropped legacy info.version column (SQLite table rewrite).");
         } catch (SQLException e) {
             try {
                 connection.rollback();

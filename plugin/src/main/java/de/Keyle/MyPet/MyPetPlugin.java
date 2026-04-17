@@ -525,7 +525,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager.activate(Load.State.Migration);
         Optional<MigrationService> migrationServiceOpt = serviceManager.getService(MigrationService.class);
         if (migrationServiceOpt.isPresent() && !migrationServiceOpt.get().wasSuccessful()) {
-            MyPetApi.getLogger().severe("[MyPet] Migration failed — disabling plugin.");
+            MyPetApi.getLogger().severe("Migration failed — disabling plugin.");
             setEnabled(false);
             return;
         }

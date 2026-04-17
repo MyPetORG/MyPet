@@ -52,13 +52,13 @@ public class MigrateLocaleColorCodesToMiniMessage implements ConfigMigration {
     public void migrate(ConfigMigrationContext ctx) throws MigrationException {
         File localeDir = new File(ctx.getDataFolder(), "locale");
         if (!localeDir.isDirectory()) {
-            LOG.info("[MyPet] No locale/ override directory — skipping locale color-code migration.");
+            LOG.info("No locale/ override directory — skipping locale color-code migration.");
             return;
         }
 
         File[] files = localeDir.listFiles((dir, name) -> LOCALE_FILE.matcher(name).matches());
         if (files == null || files.length == 0) {
-            LOG.info("[MyPet] No MyPet_<locale>.properties override files — skipping locale color-code migration.");
+            LOG.info("No MyPet_<locale>.properties override files — skipping locale color-code migration.");
             return;
         }
 
@@ -76,16 +76,16 @@ public class MigrateLocaleColorCodesToMiniMessage implements ConfigMigration {
                     filesUntouched++;
                 }
             } catch (Exception e) {
-                LOG.warning("[MyPet] Failed to process locale file " + file.getName()
+                LOG.warning("Failed to process locale file " + file.getName()
                         + ": " + e.getClass().getSimpleName() + ": " + e.getMessage()
                         + " — leaving file unchanged");
             }
         }
 
-        LOG.info("[MyPet] Locale color-code migration complete. "
-                + "Files updated: " + filesUpdated + ". "
-                + "Files untouched: " + filesUntouched + ". "
-                + "Total strings converted: " + totalConverted + ".");
+        LOG.info("Locale color-code migration complete.");
+        LOG.info("  Files updated: " + filesUpdated + ".");
+        LOG.info("  Files untouched: " + filesUntouched + ".");
+        LOG.info("  Total strings converted: " + totalConverted + ".");
     }
 
     private FileResult migrateFile(File file) throws IOException {
@@ -132,11 +132,11 @@ public class MigrateLocaleColorCodesToMiniMessage implements ConfigMigration {
                 String converted = convert(value);
                 newLines.add(keyAndDelimiter + converted);
                 result.converted++;
-                LOG.info("[MyPet] Converted " + file.getName() + ":" + lineNumber
+                LOG.info("Converted " + file.getName() + ":" + lineNumber
                         + " " + value + "  →  " + converted);
             } catch (Exception e) {
                 newLines.add(line);
-                LOG.warning("[MyPet] Failed to convert " + file.getName() + ":" + lineNumber
+                LOG.warning("Failed to convert " + file.getName() + ":" + lineNumber
                         + ": " + e.getClass().getSimpleName() + ": " + e.getMessage()
                         + " — leaving line unchanged");
             }
@@ -147,7 +147,7 @@ public class MigrateLocaleColorCodesToMiniMessage implements ConfigMigration {
         }
 
         if (sawContinuation) {
-            LOG.warning("[MyPet] " + file.getName() + " contains line continuations — those "
+            LOG.warning("" + file.getName() + " contains line continuations — those "
                     + "lines were not migrated. Inspect manually if they contain legacy color codes.");
         }
 

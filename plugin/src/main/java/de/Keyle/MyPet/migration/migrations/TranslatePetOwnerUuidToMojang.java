@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 @Migration(
         version = "4.0.0",
-        description = "Translate pets.owner_uuid from players.internal_uuid to players.mojang_uuid"
+        description = "Switch pets.owner_uuid from players.internal_uuid to players.mojang_uuid"
 )
 public class TranslatePetOwnerUuidToMojang implements DatabaseMigration {
 
@@ -64,7 +64,7 @@ public class TranslatePetOwnerUuidToMojang implements DatabaseMigration {
                 });
 
         if (untranslatableCount > 0) {
-            LOG.warning("[MyPet] " + untranslatableCount + " pet rows are owned by a player "
+            LOG.warning("" + untranslatableCount + " pet rows are owned by a player "
                     + "whose mojang_uuid is NULL. These cannot be translated and will be left "
                     + "with their legacy internal_uuid (they will be surfaced as orphans by the "
                     + "subsequent players-rebuild migration). Sample owner_uuid values: "
@@ -94,7 +94,7 @@ public class TranslatePetOwnerUuidToMojang implements DatabaseMigration {
                 });
 
         if (orphanCount > 0) {
-            LOG.warning("[MyPet] " + orphanCount + " pet rows have an owner_uuid that matches "
+            LOG.warning("" + orphanCount + " pet rows have an owner_uuid that matches "
                     + "neither players.internal_uuid nor players.mojang_uuid. These rows will be "
                     + "left unchanged. Sample UUIDs: " + orphanSamples
                     + (orphanCount > orphanSamples.size() ? " (showing first " + orphanSamples.size() + ")" : ""));
@@ -123,11 +123,11 @@ public class TranslatePetOwnerUuidToMojang implements DatabaseMigration {
                         + " WHERE mojang_uuid IS NOT NULL)",
                 rs -> rs.next() ? rs.getLong(1) : -1L);
 
-        LOG.info("[MyPet] pets.owner_uuid translation complete. "
-                + "Translatable rows remaining on internal_uuid: " + stillTranslatable + " (expected 0). "
-                + "Joins to players.mojang_uuid: " + nowMojang + ". "
-                + "Untranslatable (NULL mojang_uuid owner, left unchanged): " + untranslatableCount + ". "
-                + "Orphans (left unchanged): " + orphanCount + ".");
+        LOG.info("pets.owner_uuid translation complete.");
+        LOG.info("  Translatable rows remaining on internal_uuid: " + stillTranslatable + " (expected 0).");
+        LOG.info("  Joins to players.mojang_uuid: " + nowMojang + ".");
+        LOG.info("  Untranslatable (NULL mojang_uuid owner, left unchanged): " + untranslatableCount + ".");
+        LOG.info("  Orphans (left unchanged): " + orphanCount + ".");
 
         if (stillTranslatable > 0) {
             throw new MigrationException("Post-condition failed: " + stillTranslatable

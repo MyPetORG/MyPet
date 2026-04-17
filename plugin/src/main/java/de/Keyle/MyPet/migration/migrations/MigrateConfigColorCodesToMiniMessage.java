@@ -57,8 +57,8 @@ public class MigrateConfigColorCodesToMiniMessage implements ConfigMigration {
         totalConverted = 0;
         migrateMainConfig(ctx);
         migratePetShops(ctx);
-        LOG.info("[MyPet] Config color-code migration complete. "
-                + "Total strings converted: " + totalConverted + ".");
+        LOG.info("Config color-code migration complete.");
+        LOG.info("  Total strings converted: " + totalConverted + ".");
     }
 
     // --------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ public class MigrateConfigColorCodesToMiniMessage implements ConfigMigration {
 
     private void migrateMainConfig(ConfigMigrationContext ctx) throws MigrationException {
         if (!fileExists(ctx, MAIN_CONFIG)) {
-            LOG.info("[MyPet] " + MAIN_CONFIG + " not found — skipping main config color migration.");
+            LOG.info("" + MAIN_CONFIG + " not found — skipping main config color migration.");
             return;
         }
         YamlConfiguration config = ctx.getConfig(MAIN_CONFIG);
@@ -89,7 +89,7 @@ public class MigrateConfigColorCodesToMiniMessage implements ConfigMigration {
 
     private void migratePetShops(ConfigMigrationContext ctx) throws MigrationException {
         if (!fileExists(ctx, PET_SHOPS_CONFIG)) {
-            LOG.info("[MyPet] " + PET_SHOPS_CONFIG + " not found — skipping pet-shops color migration.");
+            LOG.info("" + PET_SHOPS_CONFIG + " not found — skipping pet-shops color migration.");
             return;
         }
         YamlConfiguration config = ctx.getConfig(PET_SHOPS_CONFIG);
@@ -138,11 +138,11 @@ public class MigrateConfigColorCodesToMiniMessage implements ConfigMigration {
             String newValue = convert(oldValue);
             section.set(key, newValue);
             totalConverted++;
-            LOG.info("[MyPet] Converted " + fullPath(section, key)
+            LOG.info("Converted " + fullPath(section, key)
                     + ": " + oldValue + "  →  " + newValue);
             return true;
         } catch (Exception e) {
-            LOG.warning("[MyPet] Failed to convert " + fullPath(section, key)
+            LOG.warning("Failed to convert " + fullPath(section, key)
                     + ": " + e.getClass().getSimpleName() + ": " + e.getMessage()
                     + " — leaving unchanged");
             return false;
@@ -167,10 +167,10 @@ public class MigrateConfigColorCodesToMiniMessage implements ConfigMigration {
                 newList.add(converted);
                 totalConverted++;
                 anyChanged = true;
-                LOG.info("[MyPet] Converted " + fullPath(section, key) + "[" + i + "]"
+                LOG.info("Converted " + fullPath(section, key) + "[" + i + "]"
                         + ": " + line + "  →  " + converted);
             } catch (Exception e) {
-                LOG.warning("[MyPet] Failed to convert " + fullPath(section, key) + "[" + i + "]"
+                LOG.warning("Failed to convert " + fullPath(section, key) + "[" + i + "]"
                         + ": " + e.getClass().getSimpleName() + ": " + e.getMessage()
                         + " — leaving unchanged");
                 newList.add(line);

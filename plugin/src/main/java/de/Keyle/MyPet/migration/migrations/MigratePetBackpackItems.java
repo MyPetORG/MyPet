@@ -107,7 +107,7 @@ public class MigratePetBackpackItems implements PetDataMigration {
                 }
             } catch (Exception e) {
                 stats.petsFailed++;
-                LOG.warning("[MyPet] Failed to process skills blob for pet " + petUuid
+                LOG.warning("Failed to process skills blob for pet " + petUuid
                         + ": " + e.getClass().getSimpleName() + ": " + e.getMessage());
             }
         }
@@ -149,15 +149,15 @@ public class MigratePetBackpackItems implements PetDataMigration {
             }
         }
 
-        LOG.info("[MyPet] Backpack item migration complete. "
-                + "Pets updated: " + stats.petsUpdated + ". "
-                + "Pets untouched (already on PaperItem or no backpack): " + stats.petsUntouched + ". "
-                + "Pets without a skills blob: " + stats.petsWithoutSkills + ". "
-                + "Pets failed (blob unreadable): " + stats.petsFailed + ". "
-                + "Items converted from BukkitItem: " + stats.itemsFromBukkit + ". "
-                + "Items converted from NMS NBT (full fidelity): " + stats.itemsFromNmsFull + ". "
-                + "Items converted from NMS NBT (material+count only): " + stats.itemsFromNmsPartial + ". "
-                + "Items dropped (unreadable): " + stats.itemsDropped + ".");
+        LOG.info("Backpack item migration complete.");
+        LOG.info("  Pets updated: " + stats.petsUpdated + ".");
+        LOG.info("  Pets untouched (already on PaperItem or no backpack): " + stats.petsUntouched + ".");
+        LOG.info("  Pets without a skills blob: " + stats.petsWithoutSkills + ".");
+        LOG.info("  Pets failed (blob unreadable): " + stats.petsFailed + ".");
+        LOG.info("  Items converted from BukkitItem: " + stats.itemsFromBukkit + ".");
+        LOG.info("  Items converted from NMS NBT (full fidelity): " + stats.itemsFromNmsFull + ".");
+        LOG.info("  Items converted from NMS NBT (material+count only): " + stats.itemsFromNmsPartial + ".");
+        LOG.info("  Items dropped (unreadable): " + stats.itemsDropped + ".");
     }
 
     private CompoundBinaryTag convertBackpack(CompoundBinaryTag skills, String petUuid, Stats stats) {
@@ -177,7 +177,7 @@ public class MigratePetBackpackItems implements PetDataMigration {
             if (!(entry instanceof CompoundBinaryTag itemCompound)) {
                 anyChanged = true;
                 stats.itemsDropped++;
-                LOG.warning("[MyPet] Pet " + petUuid + " item index " + i
+                LOG.warning("Pet " + petUuid + " item index " + i
                         + ": unexpected non-compound list entry, dropping");
                 continue;
             }
@@ -214,7 +214,7 @@ public class MigratePetBackpackItems implements PetDataMigration {
         if (itemCompound.keySet().contains(BUKKIT_ITEM)) {
             ItemStack item = decodeBukkitItem(itemCompound.getString(BUKKIT_ITEM));
             if (item == null) {
-                LOG.warning("[MyPet] Pet " + petUuid + " slot " + slot
+                LOG.warning("Pet " + petUuid + " slot " + slot
                         + ": BukkitItem decode failed; dropping");
                 return null;
             }
@@ -225,7 +225,7 @@ public class MigratePetBackpackItems implements PetDataMigration {
         if (itemCompound.keySet().contains(LEGACY_ID)) {
             DecodedLegacy decoded = decodeLegacyNmsItem(itemCompound);
             if (decoded == null) {
-                LOG.warning("[MyPet] Pet " + petUuid + " slot " + slot
+                LOG.warning("Pet " + petUuid + " slot " + slot
                         + ": legacy NMS item could not be decoded (unknown material?); dropping");
                 return null;
             }
@@ -238,7 +238,7 @@ public class MigratePetBackpackItems implements PetDataMigration {
         }
 
         // No recognised encoding.
-        LOG.warning("[MyPet] Pet " + petUuid + " slot " + slot
+        LOG.warning("Pet " + petUuid + " slot " + slot
                 + ": item compound has no PaperItem / BukkitItem / id key; dropping");
         return null;
     }

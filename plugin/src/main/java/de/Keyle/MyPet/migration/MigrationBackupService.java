@@ -51,7 +51,7 @@ public class MigrationBackupService {
     public void backupSqliteFile(File dbFile) throws IOException {
         File dbBackupDir = new File(backupDir, "database");
         dbBackupDir.mkdirs();
-        logger.info("[MyPet] Backing up database...");
+        logger.info("Backing up database...");
         Files.copy(dbFile.toPath(),
                 new File(dbBackupDir, dbFile.getName()).toPath(),
                 StandardCopyOption.REPLACE_EXISTING);
@@ -60,7 +60,7 @@ public class MigrationBackupService {
     public void backupMysqlTables(Connection connection, String tablePrefix) throws Exception {
         File dbBackupDir = new File(backupDir, "database");
         dbBackupDir.mkdirs();
-        logger.info("[MyPet] Backing up database...");
+        logger.info("Backing up database...");
 
         for (String table : TABLES) {
             String fullTable = tablePrefix + table;
@@ -91,7 +91,7 @@ public class MigrationBackupService {
     public void backupConfigFiles(File dataFolder) throws IOException {
         File configBackupDir = new File(backupDir, "config");
         configBackupDir.mkdirs();
-        logger.info("[MyPet] Backing up config files...");
+        logger.info("Backing up config files...");
 
         File[] ymlFiles = dataFolder.listFiles((dir, name) -> name.endsWith(".yml"));
         if (ymlFiles == null) {
@@ -107,7 +107,7 @@ public class MigrationBackupService {
     public void backupSkilltreeFiles(File skilltreeDir) throws IOException {
         File stBackupDir = new File(backupDir, "skilltrees");
         stBackupDir.mkdirs();
-        logger.info("[MyPet] Backing up skilltree files...");
+        logger.info("Backing up skilltree files...");
 
         File[] stFiles = skilltreeDir.listFiles((dir, name) -> name.endsWith(".st.json"));
         if (stFiles == null) {

@@ -58,7 +58,7 @@ public class MigrationService implements ServiceContainer {
         try {
             success = executeMigrations();
         } catch (Throwable t) {
-            logger.log(Level.SEVERE, "[MyPet] Unexpected error during migration", t);
+            logger.log(Level.SEVERE, "Unexpected error during migration", t);
             success = false;
         }
         return true;
@@ -123,14 +123,14 @@ public class MigrationService implements ServiceContainer {
         if (installType == InstallType.UPGRADE_3X) {
             int cleared = clearStaleCompleteRecords(prefix);
             if (cleared > 0) {
-                logger.warning("[MyPet] Cleared " + cleared + " stale COMPLETE migration "
+                logger.warning("Cleared " + cleared + " stale COMPLETE migration "
                         + "records — the 3.x schema is still present, so those records were "
                         + "incorrectly written by a previous run. Re-running migrations now.");
             }
         }
 
         if (installType == InstallType.UPGRADE_3X) {
-            logger.info("[MyPet] Detected upgrade from 3.x — running migrations...");
+            logger.info("Detected upgrade from 3.x — running migrations...");
         }
 
         List<MigrationRecord> existingRecords = loadTrackingRecords(prefix);
@@ -140,10 +140,10 @@ public class MigrationService implements ServiceContainer {
 
         for (MigrationRecord record : existingRecords) {
             if (record.getStatus() == MigrationStatus.IN_PROGRESS) {
-                logger.severe("[MyPet] Migration " + record.getMigrationId()
+                logger.severe("Migration " + record.getMigrationId()
                         + " has status IN_PROGRESS from a previous interrupted run.");
-                logger.severe("[MyPet] Data may be in an inconsistent state. Manual intervention required.");
-                logger.severe("[MyPet] MyPet has been disabled.");
+                logger.severe("Data may be in an inconsistent state. Manual intervention required.");
+                logger.severe("MyPet has been disabled.");
                 return false;
             }
         }
@@ -167,7 +167,7 @@ public class MigrationService implements ServiceContainer {
         pending = filterUnsatisfiedDependencies(pending, completedIds);
 
         if (pending.isEmpty()) {
-            logger.info("[MyPet] No pending migrations.");
+            logger.info("No pending migrations.");
             updateInfoVersion(prefix);
             return true;
         }
@@ -179,8 +179,8 @@ public class MigrationService implements ServiceContainer {
                     .filter(pending::contains)
                     .collect(Collectors.toList());
         } catch (IllegalStateException e) {
-            logger.severe("[MyPet] " + e.getMessage());
-            logger.severe("[MyPet] MyPet has been disabled. Please fix the issue and restart.");
+            logger.severe("" + e.getMessage());
+            logger.severe("MyPet has been disabled. Please fix the issue and restart.");
             return false;
         }
 
@@ -188,7 +188,7 @@ public class MigrationService implements ServiceContainer {
         if (!performBackups(backupService, ordered, prefix)) {
             return false;
         }
-        logger.info("[MyPet] Backups saved to: " + backupService.getBackupDir().getPath());
+        logger.info("Backups saved to: " + backupService.getBackupDir().getPath());
 
         long totalStart = System.currentTimeMillis();
         int applied = 0;
@@ -197,7 +197,7 @@ public class MigrationService implements ServiceContainer {
             insertTrackingRecord(entry, prefix);
 
             String versionLabel = entry.hasVersion() ? entry.getVersion() : "MC " + entry.getMinecraftVersion();
-            logger.info("[MyPet] Running migration: " + entry.getId()
+            logger.info("Running migration: " + entry.getId()
                     + " (" + versionLabel + ", " + entry.getDomain() + ")...");
 
             long start = System.currentTimeMillis();
@@ -212,17 +212,17 @@ public class MigrationService implements ServiceContainer {
                 String errorMsg = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
                 updateTrackingRecord(entry.getId(), MigrationStatus.FAILED, elapsed, errorMsg, prefix);
                 logger.severe("FAILED");
-                logger.severe("[MyPet] Migration failed: " + entry.getId());
-                logger.log(Level.SEVERE, "[MyPet] " + e, e);
-                logger.severe("[MyPet] A backup was created at: " + backupService.getBackupDir().getPath());
-                logger.severe("[MyPet] MyPet has been disabled due to a migration failure. "
+                logger.severe("Migration failed: " + entry.getId());
+                logger.log(Level.SEVERE, "" + e, e);
+                logger.severe("A backup was created at: " + backupService.getBackupDir().getPath());
+                logger.severe("MyPet has been disabled due to a migration failure. "
                         + "Please check the error above and restart.");
                 return false;
             }
         }
 
         long totalElapsed = System.currentTimeMillis() - totalStart;
-        logger.info("[MyPet] All migrations complete (" + applied + " applied, " + totalElapsed + "ms total)");
+        logger.info("All migrations complete (" + applied + " applied, " + totalElapsed + "ms total)");
 
         updateInfoVersion(prefix);
         return true;

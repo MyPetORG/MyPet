@@ -58,7 +58,7 @@ public class MigrateSkilltreeColorCodesToMiniMessage implements SkilltreeMigrati
     public void migrate(SkilltreeMigrationContext ctx) throws MigrationException {
         List<File> files = ctx.getSkilltreeFiles();
         if (files.isEmpty()) {
-            LOG.info("[MyPet] No skilltree files found — skipping skilltree color-code migration.");
+            LOG.info("No skilltree files found — skipping skilltree color-code migration.");
             return;
         }
 
@@ -78,16 +78,16 @@ public class MigrateSkilltreeColorCodesToMiniMessage implements SkilltreeMigrati
                     filesUntouched++;
                 }
             } catch (Exception e) {
-                LOG.warning("[MyPet] Failed to process skilltree " + file.getName()
+                LOG.warning("Failed to process skilltree " + file.getName()
                         + ": " + e.getClass().getSimpleName() + ": " + e.getMessage()
                         + " — leaving file unchanged");
             }
         }
 
-        LOG.info("[MyPet] Skilltree color-code migration complete. "
-                + "Files updated: " + filesUpdated + ". "
-                + "Files untouched: " + filesUntouched + ". "
-                + "Total strings converted: " + totalConverted + ".");
+        LOG.info("Skilltree color-code migration complete.");
+        LOG.info("  Files updated: " + filesUpdated + ".");
+        LOG.info("  Files untouched: " + filesUntouched + ".");
+        LOG.info("  Total strings converted: " + totalConverted + ".");
     }
 
     private FileResult migrateFile(JsonObject root, String fileName) {
@@ -127,11 +127,11 @@ public class MigrateSkilltreeColorCodesToMiniMessage implements SkilltreeMigrati
         try {
             String newValue = convert(oldValue);
             obj.addProperty(key, newValue);
-            LOG.info("[MyPet] Converted " + fileName + "::" + key
+            LOG.info("Converted " + fileName + "::" + key
                     + ": " + oldValue + "  →  " + newValue);
             return true;
         } catch (Exception e) {
-            LOG.warning("[MyPet] Failed to convert " + fileName + "::" + key
+            LOG.warning("Failed to convert " + fileName + "::" + key
                     + ": " + e.getClass().getSimpleName() + ": " + e.getMessage()
                     + " — leaving unchanged");
             return false;
@@ -160,11 +160,11 @@ public class MigrateSkilltreeColorCodesToMiniMessage implements SkilltreeMigrati
                 String newValue = convert(oldValue);
                 newArray.add(newValue);
                 changed++;
-                LOG.info("[MyPet] Converted " + fileName + "::" + key + "[" + i + "]"
+                LOG.info("Converted " + fileName + "::" + key + "[" + i + "]"
                         + ": " + oldValue + "  →  " + newValue);
             } catch (Exception e) {
                 newArray.add(element);
-                LOG.warning("[MyPet] Failed to convert " + fileName + "::" + key + "[" + i + "]"
+                LOG.warning("Failed to convert " + fileName + "::" + key + "[" + i + "]"
                         + ": " + e.getClass().getSimpleName() + ": " + e.getMessage()
                         + " — leaving unchanged");
             }
@@ -199,7 +199,7 @@ public class MigrateSkilltreeColorCodesToMiniMessage implements SkilltreeMigrati
                 String newValue = convert(oldValue);
                 nested.addProperty(entry.getKey(), newValue);
                 changed++;
-                LOG.info("[MyPet] Converted " + fileName + "::" + key + "." + entry.getKey()
+                LOG.info("Converted " + fileName + "::" + key + "." + entry.getKey()
                         + ": " + oldValue + "  →  " + newValue);
             } catch (Exception e) {
                 LOG.warning("[MyPet] Failed to convert " + fileName + "::" + key
