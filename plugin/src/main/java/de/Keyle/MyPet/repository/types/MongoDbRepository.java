@@ -20,9 +20,12 @@
 
 package de.Keyle.MyPet.repository.types;
 
-import com.google.common.collect.Lists;
-import com.mongodb.*;
+import com.mongodb.MongoCredential;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import de.Keyle.MyPet.MyPetApi;
@@ -59,6 +62,10 @@ public class MongoDbRepository implements Repository {
     private final Map<UUID, MyPetPlayer> playersToBeSaved = new java.util.concurrent.ConcurrentHashMap<>();
     private MongoDatabase db;
     private int version = 4;
+
+    public MongoDatabase getMongoDatabase() {
+        return db;
+    }
 
     // MongoDB Java driver is thread-safe per MongoClient.
     private final ExecutorService executor = Executors.newCachedThreadPool(r -> {
@@ -114,12 +121,6 @@ public class MongoDbRepository implements Repository {
 
         if (!collectionExists(Configuration.Repository.MongoDB.PREFIX + "info")) {
             initStructure();
-        } else {
-
-            MongoCollection<Document> infoCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "info");
-            Document info = infoCollection.find().first();
-
-            updateStructure(info.getInteger("version"));
         }
 
         updateInfo();
@@ -131,10 +132,10 @@ public class MongoDbRepository implements Repository {
         db.createCollection(Configuration.Repository.MongoDB.PREFIX + "players");
 
         MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-        petCollection.createIndex(new BasicDBObject("uuid", 1));
-        petCollection.createIndex(new BasicDBObject("owner_uuid", 1));
+        petCollection.createIndex(new Document("uuid", 1));
+        petCollection.createIndex(new Document("owner_uuid", 1));
         MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-        playerCollection.createIndex(new BasicDBObject("uuid", 1));
+        playerCollection.createIndex(new Document("uuid", 1));
 
         Document info = new Document();
 
@@ -142,43 +143,6 @@ public class MongoDbRepository implements Repository {
 
         MongoCollection<Document> infoCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "info");
         infoCollection.insertOne(info);
-    }
-
-    private void updateStructure(int oldVersion) {
-        if (oldVersion < version) {
-            MyPetApi.getLogger().info("Updating database from version " + oldVersion + " to version " + version + ".");
-
-            switch (oldVersion) {
-                case 1:
-                    updateToV2();
-                case 2:
-                    updateToV3();
-                case 3:
-                    updateToV4();
-            }
-        }
-    }
-
-    private void updateToV2() {
-        MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-        petCollection.createIndex(new BasicDBObject("uuid", 1));
-        petCollection.createIndex(new BasicDBObject("owner_uuid", 1));
-        MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-        playerCollection.createIndex(new BasicDBObject("uuid", 1));
-    }
-
-    private void updateToV3() {
-        MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-        playerCollection.dropIndex(new BasicDBObject("offline_uuid", 1));
-        playerCollection.createIndex(new BasicDBObject("name", 1));
-    }
-
-    private void updateToV4() {
-        MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-        Document filter = new Document();
-        Document data = new Document("$set", new Document("last_update", System.currentTimeMillis()));
-
-        playerCollection.updateMany(filter, data);
     }
 
     public boolean collectionExists(final String collectionName) {
@@ -192,17 +156,23 @@ public class MongoDbRepository implements Repository {
 
     private void connect() throws RepositoryInitException {
         try {
-            MongoClientOptions.Builder o = MongoClientOptions.builder().connectTimeout(3000);
-            if (Configuration.Repository.MongoDB.USER.isEmpty()) {
-                this.mongo = new MongoClient(new ServerAddress(Configuration.Repository.MongoDB.HOST, Configuration.Repository.MongoDB.PORT), o.build());
-            } else {
-                MongoCredential credentials = MongoCredential.createCredential(Configuration.Repository.MongoDB.USER, Configuration.Repository.MongoDB.DATABASE, Configuration.Repository.MongoDB.PASSWORD.toCharArray());
-                this.mongo = new MongoClient(new ServerAddress(Configuration.Repository.MongoDB.HOST, Configuration.Repository.MongoDB.PORT), Lists.newArrayList(credentials), o.build());
+            ServerAddress address = new ServerAddress(
+                    Configuration.Repository.MongoDB.HOST,
+                    Configuration.Repository.MongoDB.PORT);
+            MongoClientSettings.Builder settings = MongoClientSettings.builder()
+                    .applyToClusterSettings(s -> s.hosts(Collections.singletonList(address)))
+                    .applyToSocketSettings(s -> s.connectTimeout(3000, TimeUnit.MILLISECONDS));
+            if (!Configuration.Repository.MongoDB.USER.isEmpty()) {
+                settings.credential(MongoCredential.createCredential(
+                        Configuration.Repository.MongoDB.USER,
+                        Configuration.Repository.MongoDB.DATABASE,
+                        Configuration.Repository.MongoDB.PASSWORD.toCharArray()));
             }
-
-            this.mongo.getAddress();
+            this.mongo = MongoClients.create(settings.build());
 
             this.db = this.mongo.getDatabase(Configuration.Repository.MongoDB.DATABASE);
+            // Fail fast if we can't reach the server — MongoClients.create() is lazy.
+            this.db.runCommand(new Document("ping", 1));
         } catch (Exception e) {
             throw new RepositoryInitException(e);
         }
@@ -220,7 +190,7 @@ public class MongoDbRepository implements Repository {
     public CompletableFuture<Integer> countMyPets() {
         return CompletableFuture.supplyAsync(() -> {
             MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-            return (int) petCollection.count();
+            return (int) petCollection.countDocuments();
         }, executor);
     }
 
@@ -228,7 +198,7 @@ public class MongoDbRepository implements Repository {
     public CompletableFuture<Integer> countMyPets(final MyPetType type) {
         return CompletableFuture.supplyAsync(() -> {
             MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-            return (int) petCollection.count(new Document("type", type.name()));
+            return (int) petCollection.countDocuments(new Document("type", type.name()));
         }, executor);
     }
 
@@ -337,7 +307,7 @@ public class MongoDbRepository implements Repository {
 
         final List<StoredMyPet> myPetList = new ArrayList<>();
 
-        petCollection.find().forEach((Block<Document>) document -> {
+        petCollection.find().forEach(document -> {
             UUID ownerUUID = UUID.fromString(document.getString("owner_uuid"));
             if (owners.containsKey(ownerUUID)) {
                 StoredMyPet storedMyPet = documentToMyPet(owners.get(ownerUUID), document);
@@ -358,7 +328,7 @@ public class MongoDbRepository implements Repository {
         }
         return CompletableFuture.supplyAsync(() -> {
             MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-            return petCollection.count(new Document("owner_uuid", myPetPlayer.getUniqueId().toString())) > 0;
+            return petCollection.countDocuments(new Document("owner_uuid", myPetPlayer.getUniqueId().toString())) > 0;
         }, executor);
     }
 
@@ -371,7 +341,7 @@ public class MongoDbRepository implements Repository {
             final List<StoredMyPet> pets = new ArrayList<>();
             MongoCollection<Document> petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
             FindIterable<Document> petDocuments = petCollection.find(new Document("owner_uuid", owner.getUniqueId().toString()));
-            petDocuments.forEach((Block<Document>) document -> {
+            petDocuments.forEach(document -> {
                 StoredMyPet storedMyPet = documentToMyPet(owner, document);
                 if (storedMyPet != null) {
                     pets.add(storedMyPet);
@@ -549,7 +519,7 @@ public class MongoDbRepository implements Repository {
         MongoCollection<Document> playerCollection = this.db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
 
         final List<MyPetPlayer> playerList = new ArrayList<>();
-        playerCollection.find().forEach((Block<Document>) document -> {
+        playerCollection.find().forEach(document -> {
             MyPetPlayer player = documentToPlayer(document);
             if (player != null) {
                 playerList.add(player);
@@ -562,7 +532,7 @@ public class MongoDbRepository implements Repository {
     public CompletableFuture<Boolean> isMyPetPlayer(final Player player) {
         return CompletableFuture.supplyAsync(() -> {
             MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-            return playerCollection.count(new BasicDBObject("uuid", player.getUniqueId().toString())) > 0;
+            return playerCollection.countDocuments(new Document("uuid", player.getUniqueId().toString())) > 0;
         }, executor);
     }
 
@@ -582,7 +552,7 @@ public class MongoDbRepository implements Repository {
     public CompletableFuture<MyPetPlayer> getMyPetPlayer(final Player player) {
         return CompletableFuture.supplyAsync(() -> {
             MongoCollection<Document> playerCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "players");
-            Document playerDocument = playerCollection.find(new BasicDBObject("uuid", player.getUniqueId().toString())).first();
+            Document playerDocument = playerCollection.find(new Document("uuid", player.getUniqueId().toString())).first();
             if (playerDocument != null) {
                 return documentToPlayer(playerDocument);
             }

@@ -64,6 +64,10 @@ public class MySqlRepository implements Repository {
     private HikariDataSource dataSource;
     private int version = 10;
 
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
+
     private ExecutorService executor;
 
     private void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
@@ -130,7 +134,6 @@ public class MySqlRepository implements Repository {
              ResultSet resultSet = statement.executeQuery()) {
 
             if (resultSet.next()) {
-                updateStructure(resultSet);
                 updateInfo();
             } else {
                 initStructure();
@@ -139,37 +142,6 @@ public class MySqlRepository implements Repository {
             initStructure();
         } catch (Exception e) {
             throw new RepositoryInitException(e);
-        }
-    }
-
-    private void updateStructure(ResultSet resultSet) {
-        try {
-            int oldVersion = resultSet.getInt("version");
-
-            if (oldVersion < version) {
-                MyPetApi.getLogger().info("[MySQL] Updating database from v" + oldVersion + " to v" + version + ".");
-
-                switch (oldVersion) {
-                    case 1:
-                        updateToV2();
-                    case 2:
-                        updateToV3();
-                    case 3:
-                        updateToV4();
-                    case 4:
-                        updateToV5();
-                    case 5:
-                        updateToV6();
-                    case 6:
-                    case 7:
-                        updateToV8();
-                    case 8:
-                    case 9:
-                        updateToV10();
-                }
-            }
-        } catch (SQLException e) {
-            ErrorUtil.reportError("MySQL database operation failed", e);
         }
     }
 
@@ -223,89 +195,6 @@ public class MySqlRepository implements Repository {
                 insert.setString(3, MyPetVersion.getBuild());
                 insert.executeUpdate();
             }
-        } catch (SQLException e) {
-            ErrorUtil.reportError("MySQL database operation failed", e);
-        }
-    }
-
-    private void updateToV2() {
-        try (Connection connection = dataSource.getConnection();
-             Statement update = connection.createStatement()) {
-
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets ADD COLUMN last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "info ADD COLUMN last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-        } catch (SQLException e) {
-            ErrorUtil.reportError("MySQL database operation failed", e);
-        }
-    }
-
-    private void updateToV3() {
-        List<MyPetPlayer> players = getAllMyPetPlayers();
-
-        try (Connection connection = dataSource.getConnection();
-             Statement update = connection.createStatement()) {
-
-            update.executeUpdate("UPDATE " + Configuration.Repository.MySQL.PREFIX + "players SET multi_world=NULL;");
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players MODIFY multi_world VARCHAR(2000) DEFAULT \"\";");
-
-            for (MyPetPlayer player : players) {
-                updatePlayer(player);
-            }
-        } catch (SQLException e) {
-            ErrorUtil.reportError("MySQL database operation failed", e);
-        }
-    }
-
-    private void updateToV4() {
-        try (Connection connection = dataSource.getConnection();
-             Statement update = connection.createStatement()) {
-
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN pet_idle_volume FLOAT DEFAULT 1 AFTER health_bar;");
-            update.executeUpdate("ALTER IGNORE TABLE " + Configuration.Repository.MySQL.PREFIX + "info ADD UNIQUE (version);");
-        } catch (SQLException e) {
-            ErrorUtil.reportError("MySQL database operation failed", e);
-        }
-    }
-
-    private void updateToV5() {
-        try (Connection connection = dataSource.getConnection();
-             Statement update = connection.createStatement()) {
-
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets MODIFY COLUMN hunger DOUBLE NOT NULL;");
-        } catch (SQLException e) {
-            ErrorUtil.reportError("MySQL database operation failed", e);
-        }
-    }
-
-    private void updateToV6() {
-        try (Connection connection = dataSource.getConnection();
-             Statement update = connection.createStatement()) {
-
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players DROP COLUMN offline_uuid;");
-            update.executeUpdate("ALTER IGNORE TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD UNIQUE (name);");
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets ADD INDEX `owner_uuid` (`owner_uuid`);");
-        } catch (SQLException e) {
-            ErrorUtil.reportError("MySQL database operation failed", e);
-        }
-    }
-
-    private void updateToV8() {
-        try (Connection connection = dataSource.getConnection();
-             Statement update = connection.createStatement()) {
-
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players ADD COLUMN resource_pack BOOLEAN NULL DEFAULT NULL AFTER `pet_idle_volume`;");
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "pets MODIFY name VARBINARY (1024)");
-        } catch (SQLException e) {
-            ErrorUtil.reportError("MySQL database operation failed", e);
-        }
-    }
-
-    private void updateToV10() {
-        try (Connection connection = dataSource.getConnection();
-             Statement update = connection.createStatement()) {
-
-            update.executeUpdate("ALTER TABLE " + Configuration.Repository.MySQL.PREFIX + "players DROP COLUMN resource_pack;");
         } catch (SQLException e) {
             ErrorUtil.reportError("MySQL database operation failed", e);
         }

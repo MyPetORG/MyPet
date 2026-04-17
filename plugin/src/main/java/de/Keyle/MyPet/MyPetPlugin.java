@@ -50,6 +50,7 @@ import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.info.MyPetInfoImpl;
 import de.Keyle.MyPet.entity.leashing.*;
 import de.Keyle.MyPet.listeners.*;
+import de.Keyle.MyPet.migration.MigrationService;
 import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
@@ -82,6 +83,7 @@ import java.io.File;
 import java.time.Year;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -529,6 +531,17 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             Timer.addTask((Scheduler) repository);
         }
 
+        // Run migrations (gated — any failure disables the plugin before hooks/pets load).
+        serviceManager.activate(Load.State.Migration);
+        Optional<MigrationService> migrationServiceOpt = serviceManager.getService(MigrationService.class);
+        if (migrationServiceOpt.isPresent()) {
+            if (!migrationServiceOpt.get().awaitCompletion()) {
+                MyPetApi.getLogger().severe("[MyPet] Migration failed — disabling plugin.");
+                setEnabled(false);
+                return;
+            }
+        }
+
         File shopConfig = new File(getDataFolder(), "pet-shops.yml");
         ShopConfigGenerator.generateIfMissing(shopConfig);
         new ShopManager();
@@ -694,6 +707,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager.registerService(SkilltreeManager.class);
         serviceManager.registerService(ShopManager.class);
         serviceManager.registerService(DefaultCreakingService.class);
+        serviceManager.registerService(MigrationService.class);
     }
 
     /**

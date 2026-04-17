@@ -61,6 +61,10 @@ public class SqLiteRepository implements Repository {
     private Connection connection;
     private int version = 1;
 
+    public Connection getConnection() {
+        return connection;
+    }
+
     // Single-thread executor so the JDBC Connection is only touched by one thread.
     private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(r, "MyPet-SQLite");
@@ -109,20 +113,28 @@ public class SqLiteRepository implements Repository {
         saveData();
     }
 
+    private File dbFile;
+
+    /**
+     * Opens a fresh JDBC connection to the same SQLite database file. Callers own the
+     * returned connection and must close it. Used by the migration service so it can
+     * run on its own thread without sharing the repository's long-lived connection
+     * (SQLite JDBC connections are not thread-safe).
+     */
+    public Connection openNewConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
+    }
+
     @Override
     public void init() throws RepositoryInitException {
         try {
-            File dbFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "pets.db");
+            dbFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "pets.db");
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
 
             try (PreparedStatement statement = connection.prepareStatement("SELECT name FROM sqlite_master WHERE type='table' AND name='info';");
                  ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    try (PreparedStatement infoStatement = connection.prepareStatement("SELECT * FROM info;");
-                         ResultSet infoSet = infoStatement.executeQuery()) {
-                        updateStructure(infoSet);
-                    }
                     updateInfo();
                 } else {
                     initStructure();
@@ -131,23 +143,6 @@ public class SqLiteRepository implements Repository {
         } catch (Exception e) {
             ErrorUtil.reportError("SQLite database operation failed", e);
             throw new RepositoryInitException(e);
-        }
-    }
-
-    private void updateStructure(ResultSet resultSet) {
-        try {
-            int oldVersion = resultSet.getInt("version");
-
-            if (oldVersion < version) {
-                MyPetApi.getLogger().info("[SQLite] Updating database from v" + oldVersion + " to v" + version + ".");
-
-                switch (oldVersion) {
-                    case 1:
-                        //updateToV2();
-                }
-            }
-        } catch (SQLException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
         }
     }
 
