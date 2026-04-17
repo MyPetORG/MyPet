@@ -199,6 +199,10 @@ public class MigrationService implements ServiceContainer {
             String versionLabel = entry.hasVersion() ? entry.getVersion() : "MC " + entry.getMinecraftVersion();
             logger.info("Running migration: " + entry.getId()
                     + " (" + versionLabel + ", " + entry.getDomain() + ")...");
+            String description = entry.getAnnotation().description();
+            if (description != null && !description.isEmpty()) {
+                logger.info("  " + description);
+            }
 
             long start = System.currentTimeMillis();
             try {
