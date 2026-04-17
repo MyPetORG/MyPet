@@ -84,15 +84,6 @@ public class Configuration {
             public static int POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
         }
 
-        public static class MongoDB {
-
-            public static String DATABASE = "mypet";
-            public static String PREFIX = "";
-            public static String HOST = "localhost";
-            public static String PASSWORD = "";
-            public static String USER = "";
-            public static int PORT = 27017;
-        }
     }
 
     public static class Respawn {

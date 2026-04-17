@@ -97,12 +97,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Repository.MySQL.MaxConnections", Repository.MySQL.POOL_SIZE);
         config.addDefault("MyPet.Repository.MySQL.CharacterEncoding", Repository.MySQL.CHARACTER_ENCODING);
 
-        config.addDefault("MyPet.Repository.MongoDB.Database", Repository.MongoDB.DATABASE);
-        config.addDefault("MyPet.Repository.MongoDB.CollectionPrefix", Repository.MongoDB.PREFIX);
-        config.addDefault("MyPet.Repository.MongoDB.Host", Repository.MongoDB.HOST);
-        config.addDefault("MyPet.Repository.MongoDB.Password", Repository.MongoDB.PASSWORD);
-        config.addDefault("MyPet.Repository.MongoDB.User", Repository.MongoDB.USER);
-        config.addDefault("MyPet.Repository.MongoDB.Port", Repository.MongoDB.PORT);
 
         config.addDefault("MyPet.Respawn.Time.Disabled", Respawn.DISABLE_AUTO_RESPAWN);
         config.addDefault("MyPet.Respawn.Time.Default.Factor", Respawn.TIME_FACTOR);
@@ -460,12 +454,6 @@ public class ConfigurationLoader {
         Repository.MySQL.POOL_SIZE = config.getInt("MyPet.Repository.MySQL.MaxConnections", Repository.MySQL.POOL_SIZE);
         Repository.MySQL.CHARACTER_ENCODING = config.getString("MyPet.Repository.MySQL.CharacterEncoding", Repository.MySQL.CHARACTER_ENCODING);
 
-        Repository.MongoDB.DATABASE = config.getString("MyPet.Repository.MongoDB.Database", Repository.MongoDB.DATABASE);
-        Repository.MongoDB.PREFIX = config.getString("MyPet.Repository.MongoDB.CollectionPrefix", Repository.MongoDB.PREFIX);
-        Repository.MongoDB.HOST = config.getString("MyPet.Repository.MongoDB.Host", Repository.MongoDB.HOST);
-        Repository.MongoDB.PASSWORD = config.getString("MyPet.Repository.MongoDB.Password", Repository.MongoDB.PASSWORD);
-        Repository.MongoDB.USER = config.getString("MyPet.Repository.MongoDB.User", Repository.MongoDB.USER);
-        Repository.MongoDB.PORT = config.getInt("MyPet.Repository.MongoDB.Port", Repository.MongoDB.PORT);
 
         Misc.WIKI_URL = config.getString("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
 

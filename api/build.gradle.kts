@@ -9,7 +9,6 @@ dependencies {
 
     compileOnly("net.kyori:adventure-nbt:4.17.0")
     compileOnly("org.jetbrains:annotations:16.0.2")
-    compileOnly("org.mongodb:mongodb-driver-sync:5.6.5")
     compileOnly("net.kyori:adventure-text-minimessage:4.17.0")
     compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0")
     compileOnly("net.kyori:adventure-text-serializer-legacy:4.17.0")

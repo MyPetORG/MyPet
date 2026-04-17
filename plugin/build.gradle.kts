@@ -88,7 +88,6 @@ dependencies {
     compileOnly("net.kyori:adventure-text-minimessage:4.17.0")
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
-    compileOnly("org.mongodb:mongodb-driver-sync:5.6.5")
 
     compileOnly("io.sentry:sentry:8.22.0")
     compileOnly("ch.qos.logback:logback-classic:1.2.11")

@@ -52,7 +52,6 @@ import de.Keyle.MyPet.entity.leashing.*;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.migration.MigrationService;
 import de.Keyle.MyPet.repository.Converter;
-import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.services.DefaultCreakingService;
@@ -123,7 +122,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     // guaranteed non-null once the plugin is fully active. They lack initializers because
     // they depend on runtime version detection, configuration, and NMS reflection.
 
-    /** The active persistence backend (SQLite, MySQL, or MongoDB). Initialized in {@link #onEnable()}. */
+    /** The active persistence backend (SQLite or MySQL). Initialized in {@link #onEnable()}. */
     @Getter
     private Repository repository;
 
@@ -360,7 +359,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
      *   <li>Command registration</li>
      *   <li>Leash flag, skilltree requirement, and experience calculator registration</li>
      *   <li>World group loading and default skilltree extraction</li>
-     *   <li>Repository initialization with fallback chain: MySQL/MongoDB → SQLite</li>
+     *   <li>Repository initialization with fallback chain: MySQL → SQLite</li>
      *   <li>Pet shop configuration and bStats metrics setup</li>
      *   <li>Service activation through {@link Load.State#OnEnable}, {@link Load.State#AfterHooks},
      *       and {@link Load.State#OnReady}</li>
@@ -502,15 +501,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                 ErrorUtil.reportSevere("MySQL database connection failed during initialization", e);
                 repository = null;
             }
-        } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
-            repository = new MongoDbRepository();
-            try {
-                repository.init();
-                MyPetApi.getLogger().info("MongoDB connection successful.");
-            } catch (RepositoryInitException e) {
-                ErrorUtil.reportSevere("MongoDB database connection failed during initialization", e);
-                repository = null;
-            }
         }
 
         if (repository == null) {
@@ -592,8 +582,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                         type = "SQLite";
                     } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
                         type = "MySQL";
-                    } else if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MongoDB")) {
-                        type = "MongoDB";
                     }
                     return type;
                 }));

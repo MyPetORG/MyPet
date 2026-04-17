@@ -26,12 +26,9 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
-import de.Keyle.MyPet.repository.types.MongoDbRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 
-import java.util.HashSet;
-import java.util.UUID;
 import java.util.List;
 
 public class Converter {
@@ -46,8 +43,6 @@ public class Converter {
 
         if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MySQL")) {
             fromRepo = new MySqlRepository();
-        } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MongoDB")) {
-            fromRepo = new MongoDbRepository();
         } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("SQLite")) {
             fromRepo = new SqLiteRepository();
         } else {
@@ -69,21 +64,6 @@ public class Converter {
             ((MySqlRepository) toRepo).addMyPetPlayers(playerList);
         } else if (toRepo instanceof SqLiteRepository) {
             ((SqLiteRepository) toRepo).addMyPetPlayers(playerList);
-        } else if (toRepo instanceof MongoDbRepository) {
-            HashSet<UUID> playerUUIDs = new HashSet<>();
-            for (MyPetPlayer player : playerList) {
-                UUID mojangUUID = player.getUniqueId();
-                if (mojangUUID == null) {
-                    MyPetApi.getLogger().warning("Skipping player with no uuid: " + player);
-                    continue;
-                }
-                if (playerUUIDs.contains(mojangUUID)) {
-                    MyPetApi.getLogger().info("Found duplicate Player: " + player);
-                    continue;
-                }
-                playerUUIDs.add(mojangUUID);
-                ((MongoDbRepository) toRepo).addMyPetPlayer(player);
-            }
         }
 
         List<StoredMyPet> pets = fromRepo.getAllMyPets();
@@ -92,10 +72,6 @@ public class Converter {
             ((MySqlRepository) toRepo).addMyPets(pets);
         } else if (toRepo instanceof SqLiteRepository) {
             ((SqLiteRepository) toRepo).addMyPets(pets);
-        } else if (toRepo instanceof MongoDbRepository) {
-            for (StoredMyPet pet : pets) {
-                ((MongoDbRepository) toRepo).addMyPet(pet);
-            }
         }
 
         toRepo.save();

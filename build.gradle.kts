@@ -118,7 +118,6 @@ tasks.processResources { enabled = false }
 
 fun Manifest.attributesForMyPet() = attributes(
     mapOf(
-        "Class-Path" to "MyPet/mongo-java-driver.jar MyPet/mongo-java-driver-3.12.11.jar",
         "Main-Class" to "de.Keyle.MyPet.Main",
         "Project-Name" to project.name,
         "Project-Version" to version,

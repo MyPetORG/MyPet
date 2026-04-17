@@ -2,9 +2,7 @@ package de.Keyle.MyPet.migration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mongodb.client.MongoDatabase;
 import de.Keyle.MyPet.MyPetApi;
-import org.bson.Document;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -86,30 +84,6 @@ public class MigrationBackupService {
             }
             try (Writer writer = new FileWriter(new File(dbBackupDir, fullTable + ".json"))) {
                 GSON.toJson(rows, writer);
-            }
-        }
-    }
-
-    public void backupMongoCollections(MongoDatabase database, String collectionPrefix) throws IOException {
-        File dbBackupDir = new File(backupDir, "database");
-        dbBackupDir.mkdirs();
-        logger.info("[MyPet] Backing up database...");
-
-        for (String collection : TABLES) {
-            String fullCollection = collectionPrefix + collection;
-            List<String> docs = new ArrayList<>();
-            for (Document doc : database.getCollection(fullCollection).find()) {
-                docs.add(doc.toJson());
-            }
-            try (Writer writer = new FileWriter(new File(dbBackupDir, fullCollection + ".json"))) {
-                writer.write("[\n");
-                for (int i = 0; i < docs.size(); i++) {
-                    writer.write(docs.get(i));
-                    if (i < docs.size() - 1) {
-                        writer.write(",\n");
-                    }
-                }
-                writer.write("\n]");
             }
         }
     }
