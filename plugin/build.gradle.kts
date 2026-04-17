@@ -87,6 +87,7 @@ dependencies {
     compileOnly("de.keyle:mypet-premium-apis:1.0-SNAPSHOT")
     compileOnly("net.kyori:adventure-text-minimessage:4.17.0")
     compileOnly("net.kyori:adventure-text-serializer-legacy:4.17.0")
+    compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0")
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
 

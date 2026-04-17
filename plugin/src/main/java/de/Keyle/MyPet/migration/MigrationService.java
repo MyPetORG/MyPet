@@ -22,6 +22,9 @@ import de.Keyle.MyPet.migration.context.SkilltreeMigrationContextImpl;
 import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -49,6 +52,9 @@ public class MigrationService implements ServiceContainer {
     private static final String MIGRATIONS_PACKAGE_PATH = "de/Keyle/MyPet/migration/migrations/";
     private static final String INFO_TABLE = "info";
     private static final String MIGRATIONS_TABLE = "migrations";
+
+    private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
+    private static final ANSIComponentSerializer ANSI_SERIALIZER = ANSIComponentSerializer.ansi();
 
     private final Logger logger = MyPetApi.getLogger();
     private boolean success = false;
@@ -130,7 +136,7 @@ public class MigrationService implements ServiceContainer {
         }
 
         if (installType == InstallType.UPGRADE_3X) {
-            logger.info("Detected upgrade from 3.x — running migrations...");
+            logger.info("Detected upgrade from pre-v4 — running migrations...");
         }
 
         List<MigrationRecord> existingRecords = loadTrackingRecords(prefix);
@@ -197,8 +203,8 @@ public class MigrationService implements ServiceContainer {
             insertTrackingRecord(entry, prefix);
 
             String versionLabel = entry.hasVersion() ? entry.getVersion() : "MC " + entry.getMinecraftVersion();
-            logger.info("Running migration: " + entry.getId()
-                    + " (" + versionLabel + ", " + entry.getDomain() + ")...");
+            logger.info(renderMiniMessage("<gold>Running migration: " + entry.getId()
+                    + " (" + versionLabel + ", " + entry.getDomain() + ")...</gold>"));
             String description = entry.getAnnotation().description();
             if (description != null && !description.isEmpty()) {
                 logger.info("  " + description);
@@ -209,7 +215,7 @@ public class MigrationService implements ServiceContainer {
                 executeMigration(entry);
                 long elapsed = System.currentTimeMillis() - start;
                 updateTrackingRecord(entry.getId(), MigrationStatus.COMPLETE, elapsed, null, prefix);
-                logger.info("OK (" + elapsed + "ms)");
+                logger.info(renderMiniMessage("<green>OK (" + elapsed + "ms)</green>"));
                 applied++;
             } catch (Exception e) {
                 long elapsed = System.currentTimeMillis() - start;
@@ -226,10 +232,20 @@ public class MigrationService implements ServiceContainer {
         }
 
         long totalElapsed = System.currentTimeMillis() - totalStart;
-        logger.info("All migrations complete (" + applied + " applied, " + totalElapsed + "ms total)");
+        logger.info(renderMiniMessage("<green>All migrations complete (" + applied + " applied, " + totalElapsed + "ms total)</green>"));
 
         updateInfoVersion(prefix);
         return true;
+    }
+
+    /**
+     * Renders a MiniMessage-tagged string to an ANSI-colored plain string suitable for
+     * the JUL / Log4j console appender that Paper uses. Paper's console interprets the
+     * SGR escapes; non-ANSI log consumers see harmless extra bytes they can strip.
+     */
+    private static String renderMiniMessage(String miniMessage) {
+        Component component = MINI_MESSAGE.deserialize(miniMessage);
+        return ANSI_SERIALIZER.serialize(component);
     }
 
     /**
@@ -249,7 +265,7 @@ public class MigrationService implements ServiceContainer {
                 boolean depsSatisfied = true;
                 for (String dep : entry.getAnnotation().dependsOn()) {
                     if (!completedIds.contains(dep) && !pendingIds.contains(dep)) {
-                        logger.info("[MyPet] Deferring migration " + entry.getId()
+                        logger.info("Deferring migration " + entry.getId()
                                 + " — dependency " + dep + " is not available on this server yet.");
                         depsSatisfied = false;
                         break;
@@ -345,7 +361,7 @@ public class MigrationService implements ServiceContainer {
                 }
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "[MyPet] Failed to discover migrations", e);
+            logger.log(Level.SEVERE, "Failed to discover migrations", e);
             return null;
         }
         return entries;
@@ -363,19 +379,19 @@ public class MigrationService implements ServiceContainer {
             }
             Migration annotation = clazz.getAnnotation(Migration.class);
             if (annotation.version().isEmpty() && annotation.minecraftVersion().isEmpty()) {
-                logger.severe("[MyPet] Migration " + clazz.getSimpleName()
+                logger.severe("Migration " + clazz.getSimpleName()
                         + " must have at least one of version or minecraftVersion set.");
                 return SENTINEL_ERROR;
             }
             MigrationDomain domain = inferDomain(clazz);
             if (domain == null) {
-                logger.severe("[MyPet] Migration " + clazz.getSimpleName()
+                logger.severe("Migration " + clazz.getSimpleName()
                         + " must implement exactly one domain interface.");
                 return SENTINEL_ERROR;
             }
             return new MigrationGraph.MigrationEntry(clazz, annotation, domain);
         } catch (ClassNotFoundException e) {
-            logger.log(Level.SEVERE, "[MyPet] Failed to load migration class: " + className, e);
+            logger.log(Level.SEVERE, "Failed to load migration class: " + className, e);
             return SENTINEL_ERROR;
         }
     }
@@ -417,7 +433,7 @@ public class MigrationService implements ServiceContainer {
             return stmt.executeUpdate("DELETE FROM " + prefix + MIGRATIONS_TABLE
                     + " WHERE status = '" + MigrationStatus.COMPLETE.name() + "'");
         } catch (SQLException e) {
-            logger.log(Level.WARNING, "[MyPet] Failed to clear stale tracking records", e);
+            logger.log(Level.WARNING, "Failed to clear stale tracking records", e);
             return 0;
         }
     }
@@ -435,7 +451,7 @@ public class MigrationService implements ServiceContainer {
                 return rs.next();
             }
         } catch (SQLException e) {
-            logger.log(Level.WARNING, "[MyPet] Failed to check if table " + tableName
+            logger.log(Level.WARNING, "Failed to check if table " + tableName
                     + " exists; assuming it does not", e);
             return false;
         }
@@ -455,7 +471,7 @@ public class MigrationService implements ServiceContainer {
                     + ")");
             return true;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "[MyPet] Failed to bootstrap migrations tracking table", e);
+            logger.log(Level.SEVERE, "Failed to bootstrap migrations tracking table", e);
             return false;
         }
     }
@@ -497,7 +513,7 @@ public class MigrationService implements ServiceContainer {
             }
             return InstallType.NORMAL_4X;
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "[MyPet] Failed to detect install type", e);
+            logger.log(Level.SEVERE, "Failed to detect install type", e);
             return null;
         }
     }
@@ -542,7 +558,7 @@ public class MigrationService implements ServiceContainer {
             }
             return records;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "[MyPet] Failed to load tracking records", e);
+            logger.log(Level.SEVERE, "Failed to load tracking records", e);
             return null;
         }
     }
@@ -583,7 +599,7 @@ public class MigrationService implements ServiceContainer {
                 connection.setAutoCommit(previousAutoCommit);
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "[MyPet] Failed to insert tracking record for " + entry.getId(), e);
+            logger.log(Level.SEVERE, "Failed to insert tracking record for " + entry.getId(), e);
         }
     }
 
@@ -598,7 +614,7 @@ public class MigrationService implements ServiceContainer {
             ps.setString(4, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "[MyPet] Failed to update tracking record for " + id, e);
+            logger.log(Level.SEVERE, "Failed to update tracking record for " + id, e);
         }
     }
 
@@ -618,7 +634,7 @@ public class MigrationService implements ServiceContainer {
                 ps.setString(7, null);
                 ps.executeUpdate();
             } catch (Exception e) {
-                logger.log(Level.SEVERE, "[MyPet] Failed to mark migration complete on fresh install: "
+                logger.log(Level.SEVERE, "Failed to mark migration complete on fresh install: "
                         + entry.getId(), e);
             }
         }
@@ -642,7 +658,7 @@ public class MigrationService implements ServiceContainer {
                 }
             }
         } catch (Exception e) {
-            logger.log(Level.WARNING, "[MyPet] Failed to update info.mypet_version — "
+            logger.log(Level.WARNING, "Failed to update info.mypet_version — "
                     + "migrations completed but version row could not be updated", e);
         }
     }
@@ -671,7 +687,7 @@ public class MigrationService implements ServiceContainer {
                     if (dbFile.exists()) {
                         backupService.backupSqliteFile(dbFile);
                     } else {
-                        logger.info("[MyPet] SQLite file not found at " + dbFile.getPath()
+                        logger.info("SQLite file not found at " + dbFile.getPath()
                                 + " — skipping database backup");
                     }
                 } else {
@@ -689,7 +705,7 @@ public class MigrationService implements ServiceContainer {
             }
             return true;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "[MyPet] Backup failed — aborting migration to protect data", e);
+            logger.log(Level.SEVERE, "Backup failed — aborting migration to protect data", e);
             return false;
         }
     }

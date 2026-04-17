@@ -202,7 +202,7 @@ public class MigrateSkilltreeColorCodesToMiniMessage implements SkilltreeMigrati
                 LOG.info("Converted " + fileName + "::" + key + "." + entry.getKey()
                         + ": " + oldValue + "  →  " + newValue);
             } catch (Exception e) {
-                LOG.warning("[MyPet] Failed to convert " + fileName + "::" + key
+                LOG.warning("Failed to convert " + fileName + "::" + key
                         + "." + entry.getKey()
                         + ": " + e.getClass().getSimpleName() + ": " + e.getMessage()
                         + " — leaving unchanged");
