@@ -648,7 +648,10 @@ public class CommandOptionCreate {
                     inactiveMyPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.AdminCreation);
                 }
             } else if (arg.startsWith("name:")) {
-                inactiveMyPet.setPetName(arg.substring("name:".length()));
+                String petName = arg.substring("name:".length());
+                if (!petName.isBlank()) {
+                    inactiveMyPet.setPetName(petName);
+                }
             }
         }
     }
