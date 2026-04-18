@@ -43,6 +43,7 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.entity.visual.PetStateSnapshot;
@@ -62,6 +63,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.*;
@@ -174,6 +176,21 @@ public class EntityListener implements Listener {
                 }
             }
         }
+    }
+
+    // Wither's head-targeting/skull-shooting is hardcoded in WitherBoss#customServerAiStep
+    // and runs independent of the goal selector, so PetGoalInstaller cannot suppress it.
+    // Skulls fired via PetRangedAttackGoal always tag PROJECTILE_DAMAGE_KEY; an untagged
+    // skull from a marked pet shooter is necessarily from the autonomous code path.
+    @EventHandler
+    public void onPetAutonomousWitherSkull(ProjectileLaunchEvent event) {
+        if (!(event.getEntity() instanceof WitherSkull skull)) return;
+        if (!(skull.getShooter() instanceof LivingEntity shooter)) return;
+        if (!PetEntityMarker.isMarked(shooter)) return;
+        if (skull.getPersistentDataContainer().has(PetRangedAttackGoal.PROJECTILE_DAMAGE_KEY, PersistentDataType.FLOAT)) {
+            return;
+        }
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
