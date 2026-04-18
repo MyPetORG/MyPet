@@ -420,7 +420,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         getServer().getPluginManager().registerEvents(new PetProjectileHitListener(), this);
 
         getServer().getPluginManager().registerEvents(new PetInteractionListener(), this);
-        getServer().getPluginManager().registerEvents(new PetDamageListener(), this);
         getServer().getPluginManager().registerEvents(new PetEnvironmentListener(), this);
         getServer().getPluginManager().registerEvents(new PetInfoOnLeashListener(), this);
         getServer().getPluginManager().registerEvents(new PetSurvivalListener(), this);

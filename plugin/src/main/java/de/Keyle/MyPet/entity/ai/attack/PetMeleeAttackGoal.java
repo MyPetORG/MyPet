@@ -5,7 +5,8 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
-import de.Keyle.MyPet.listeners.PetDamageListener;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
@@ -216,8 +217,7 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
                 // soon as LoS cleared.
                 if (this.ticksUntilNextHitLeft-- <= 0) {
                     this.ticksUntilNextHitLeft = ticksUntilNextHit;
-                    PetDamageListener.applyPetDamage(
-                            pet, targetEntity, pet.getDamage());
+                    applyPetDamage(pet, targetEntity, pet.getDamage());
                 }
             }
         }
@@ -231,5 +231,37 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
     @Override
     public @NotNull EnumSet<GoalType> getTypes() {
         return EnumSet.of(GoalType.MOVE);
+    }
+
+    /**
+     * Applies damage from a MyPet to a target entity using Paper's
+     * {@link DamageSource} builder. When the owner is online and in the same
+     * world, {@code withCausingEntity(owner)} routes kill credit through
+     * vanilla's {@code lastHurtByPlayer} tracking so mob drops and XP land
+     * on the owner. {@code withDirectEntity(mob)} keeps the pet as the
+     * visible attacker for death messages and knockback.
+     */
+    private static void applyPetDamage(MyPet pet, LivingEntity target, double damage) {
+        if (pet == null || target == null || target.isDead()) return;
+        Mob mob = pet.getBukkitEntity();
+        if (mob == null) return;
+
+        Player owner = pet.getOwner() != null ? pet.getOwner().getPlayer() : null;
+
+        DamageSource.Builder builder = DamageSource.builder(DamageType.MOB_ATTACK)
+                .withDirectEntity(mob);
+        if (owner != null && owner.isOnline() && owner.getWorld().equals(mob.getWorld())) {
+            builder = builder.withCausingEntity(owner);
+        }
+
+        try {
+            target.damage(damage, builder.build());
+        } catch (IllegalStateException ignored) {
+            // Paper may reject a damage source if the target is invulnerable
+            // or the damage type was registered after world load. Fall back
+            // to a plain damage call.
+            target.damage(damage, mob);
+        }
+        mob.swingMainHand();
     }
 }
