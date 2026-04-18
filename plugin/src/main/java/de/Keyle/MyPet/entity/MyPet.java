@@ -229,14 +229,21 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             mob.setCustomNameVisible(false);
             return;
         }
-        String miniMessageString = Configuration.Name.Tag.PREFIX + petName + Configuration.Name.Tag.SUFFIX;
+        String prefix = resolveTagPlaceholders(Configuration.Name.Tag.PREFIX);
+        String suffix = resolveTagPlaceholders(Configuration.Name.Tag.SUFFIX);
+        String miniMessageString = prefix + petName + suffix;
         try {
-            net.kyori.adventure.text.Component name = MyPetApi.getPlugin().getMiniMessage().deserialize(miniMessageString);
-            mob.customName(name);
+            mob.customName(Util.SANITIZED_MINIMESSAGE.deserialize(miniMessageString));
         } catch (Throwable t) {
             mob.customName(net.kyori.adventure.text.Component.text(petName));
         }
         mob.setCustomNameVisible(true);
+    }
+
+    private String resolveTagPlaceholders(String template) {
+        return template
+                .replace("<level>", Integer.toString(getExperience().getLevel()))
+                .replace("<owner>", getOwner().getName());
     }
 
     @Override
