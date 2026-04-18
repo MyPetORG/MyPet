@@ -125,6 +125,16 @@ public final class PetVisualSyncer {
                 bee.setAnger(beePet.isAngry() ? 400 : 0);
             } catch (Throwable ignored) {}
         }
+        // Hide the Wither's auto-managed boss bar. setVisible(false) flips the
+        // NMS ServerBossEvent visibility flag; startSeenByPlayer checks it before
+        // broadcasting add-packets, so the suppression persists across players
+        // entering range. Called pre-spawn from VanillaMobSpawner.configureMob
+        // so the bar is hidden before the initial spawn packet is sent.
+        if (mob instanceof Wither wither) {
+            try {
+                wither.getBossBar().setVisible(false);
+            } catch (Throwable ignored) {}
+        }
 
         // ─── Tier 2: colours / variants ───
 
