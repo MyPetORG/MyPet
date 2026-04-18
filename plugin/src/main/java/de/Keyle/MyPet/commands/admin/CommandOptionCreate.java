@@ -600,7 +600,7 @@ public class CommandOptionCreate {
                 MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
                 Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
-                MyPetApi.getRepository().addMyPet(inactiveMyPet).thenAccept(added -> owner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+                MyPetApi.getRepository().addPet(inactiveMyPet).thenAccept(added -> owner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         if (added) {
                             if (!newOwner.hasMyPet()) {
                                 inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());

@@ -33,7 +33,6 @@ import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import java.util.*;
@@ -50,7 +49,7 @@ public class MyPetAdminSelectionGui {
     }
 
     public void open(final Consumer<StoredMyPet> callback) {
-        MyPetApi.getRepository().getMyPets(petOwner).thenAccept(pets -> {
+        MyPetApi.getRepository().getPets(petOwner).thenAccept(pets -> {
             admin.getScheduler().run(MyPetApi.getPlugin(), folaTask -> open(pets, callback), null);
         });
     }

@@ -36,31 +36,31 @@ public interface Repository {
 
     void init() throws RepositoryInitException;
 
-    List<StoredMyPet> getAllMyPets();
+    List<StoredMyPet> getAllPets();
 
     List<MyPetPlayer> getAllMyPetPlayers();
 
     CompletableFuture<Integer> cleanup(long timestamp);
 
-    CompletableFuture<Integer> countMyPets();
+    CompletableFuture<Integer> countPets();
 
-    CompletableFuture<Integer> countMyPets(MyPetType type);
+    CompletableFuture<Integer> countPets(MyPetType type);
 
-    CompletableFuture<Boolean> hasMyPets(MyPetPlayer myPetPlayer);
+    CompletableFuture<Boolean> hasPets(MyPetPlayer myPetPlayer);
 
-    CompletableFuture<List<StoredMyPet>> getMyPets(MyPetPlayer owner);
+    CompletableFuture<List<StoredMyPet>> getPets(MyPetPlayer owner);
 
-    CompletableFuture<StoredMyPet> getMyPet(UUID uuid);
+    CompletableFuture<StoredMyPet> getPet(UUID uuid);
 
-    CompletableFuture<Boolean> removeMyPet(UUID uuid);
+    CompletableFuture<Boolean> removePet(UUID uuid);
 
-    CompletableFuture<Boolean> removeMyPet(StoredMyPet storedMyPet);
+    CompletableFuture<Boolean> removePet(StoredMyPet storedMyPet);
 
-    CompletableFuture<Boolean> addMyPet(StoredMyPet storedMyPet);
+    CompletableFuture<Boolean> addPet(StoredMyPet storedMyPet);
 
     CompletableFuture<Boolean> savePet(StoredMyPet storedMyPet);
 
-    CompletableFuture<Boolean> updateMyPet(StoredMyPet storedMyPet);
+    CompletableFuture<Boolean> updatePet(StoredMyPet storedMyPet);
 
     CompletableFuture<Boolean> isMyPetPlayer(Player player);
 

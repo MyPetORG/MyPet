@@ -49,7 +49,6 @@ import org.bukkit.entity.Player;
 
 import com.mojang.brigadier.suggestion.Suggestions;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -124,7 +123,7 @@ public class CommandOptionSwitch {
                                                 .resolve(ctx.getSource()).getFirst();
                                         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                                             MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
-                                            MyPetApi.getRepository().getMyPets(petPlayer).thenAccept(pets -> {
+                                            MyPetApi.getRepository().getPets(petPlayer).thenAccept(pets -> {
                                                 try {
                                                     for (StoredMyPet pet : pets) {
                                                         String name = Util.SANITIZED_MINIMESSAGE.stripTags(pet.getPetName());
@@ -184,7 +183,7 @@ public class CommandOptionSwitch {
      */
     private void showPetList(CommandSender sender, MyPetPlayer owner, String playerName) {
         String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
-        MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> {
+        MyPetApi.getRepository().getPets(owner).thenAccept(value -> {
             Runnable listBody = () -> {
                 sender.sendMessage("Select the MyPet you want the player to switch to:");
                 if (sender instanceof Player) {
@@ -239,7 +238,7 @@ public class CommandOptionSwitch {
         }
         MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-        MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+        MyPetApi.getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 // Find pet by name (stripped of MiniMessage tags)
                 StoredMyPet newPet = null;
                 for (StoredMyPet pet : pets) {

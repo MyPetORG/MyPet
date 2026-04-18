@@ -125,7 +125,7 @@ public class CommandOptionRemove {
 
         myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), null);
         MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
-        MyPetApi.getRepository().removeMyPet(myPet.getUUID());
+        MyPetApi.getRepository().removePet(myPet.getUUID());
 
         sender.sendMessage(MessageUtil.prefixed(Component.text("You removed the MyPet of: ").append(Component.text(petOwner.getName()).color(NamedTextColor.YELLOW))));
     }

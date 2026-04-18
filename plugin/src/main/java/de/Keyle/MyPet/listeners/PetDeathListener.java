@@ -66,7 +66,7 @@ public class PetDeathListener implements Listener {
             myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Release.Dead", owner, myPet.getDisplayName()));
 
             getMyPetManager().deactivateMyPet(owner, false);
-            MyPetApi.getRepository().removeMyPet(myPet.getUUID());
+            MyPetApi.getRepository().removePet(myPet.getUUID());
 
             return;
         }

@@ -113,7 +113,7 @@ public abstract class MyPetManager {
 
             myPet.removePet();
             if (update) {
-                MyPetApi.getRepository().updateMyPet(myPet);
+                MyPetApi.getRepository().updatePet(myPet);
             }
             mActivePetsPlayer.remove(myPet);
             return true;

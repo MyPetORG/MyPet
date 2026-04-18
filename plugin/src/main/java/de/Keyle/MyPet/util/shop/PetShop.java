@@ -146,7 +146,7 @@ public class PetShop {
                                     clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
                                     clonedPet.setUUID(null);
 
-                                    MyPetApi.getRepository().addMyPet(clonedPet).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
+                                    MyPetApi.getRepository().addPet(clonedPet).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
                                             p.sendMessage(Translation.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
                                             MyPetCreateEvent createEvent = new MyPetCreateEvent(clonedPet, MyPetCreateEvent.Source.PetShop);
                                             Bukkit.getServer().getPluginManager().callEvent(createEvent);
@@ -180,7 +180,7 @@ public class PetShop {
                     };
 
                     if (owner != null && owner.hasMyPet()) {
-                        MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), pTask -> {
+                        MyPetApi.getRepository().getPets(owner).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), pTask -> {
                                 int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
                                 int limit = getMaxPetCount(p);
                                 if (petCount >= limit) {

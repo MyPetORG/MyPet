@@ -43,12 +43,9 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Handles the {@code /petrelease} command (no aliases).
@@ -218,7 +215,7 @@ public class CommandRelease {
 
             petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Release.Success", petOwner, myPet.getDisplayName()));
             MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
-            MyPetApi.getRepository().removeMyPet(myPet.getUUID());
+            MyPetApi.getRepository().removePet(myPet.getUUID());
         } else {
             showReleasePrompt(petOwner, myPet);
         }

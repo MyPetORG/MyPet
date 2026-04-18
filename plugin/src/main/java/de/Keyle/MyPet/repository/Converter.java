@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
+import de.Keyle.MyPet.repository.types.AbstractSqlRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 
@@ -60,18 +61,13 @@ public class Converter {
         toRepo = MyPetApi.getRepository();
 
         List<MyPetPlayer> playerList = fromRepo.getAllMyPetPlayers();
-        if (toRepo instanceof MySqlRepository) {
-            ((MySqlRepository) toRepo).addMyPetPlayers(playerList);
-        } else if (toRepo instanceof SqLiteRepository) {
-            ((SqLiteRepository) toRepo).addMyPetPlayers(playerList);
+        if (toRepo instanceof AbstractSqlRepository sql) {
+            sql.addMyPetPlayers(playerList);
         }
 
-        List<StoredMyPet> pets = fromRepo.getAllMyPets();
-
-        if (toRepo instanceof MySqlRepository) {
-            ((MySqlRepository) toRepo).addMyPets(pets);
-        } else if (toRepo instanceof SqLiteRepository) {
-            ((SqLiteRepository) toRepo).addMyPets(pets);
+        List<StoredMyPet> pets = fromRepo.getAllPets();
+        if (toRepo instanceof AbstractSqlRepository sql) {
+            sql.addPets(pets);
         }
 
         toRepo.save();

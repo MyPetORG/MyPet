@@ -23,7 +23,6 @@ package de.Keyle.MyPet;
 import de.Keyle.MyPet.api.*;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
 import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -630,7 +629,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                         if (!onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                             final UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
 
-                            MyPetApi.getRepository().getMyPet(petUUID).thenAccept(storedMyPet -> {
+                            MyPetApi.getRepository().getPet(petUUID).thenAccept(storedMyPet -> {
                                 player.getScheduler().run(MyPetApi.getPlugin(), petTask -> {
                                     myPetManager.activateMyPet(storedMyPet);
 

@@ -49,7 +49,6 @@ import de.Keyle.MyPet.entity.visual.PetStateSnapshot;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
@@ -347,7 +346,7 @@ public class EntityListener implements Listener {
                         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
                         justLeashed.add(player.getUniqueId());
-                        MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet).thenAccept(value -> {
+                        MyPetApi.getPlugin().getRepository().addPet(inactiveMyPet).thenAccept(value -> {
                             player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                                 owner.sendMessage(Translation.getComponent("Message.Leash.Add", owner));
 

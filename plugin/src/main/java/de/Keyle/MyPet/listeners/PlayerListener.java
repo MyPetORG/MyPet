@@ -50,7 +50,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -232,7 +231,7 @@ public class PlayerListener implements Listener {
 
                     if (!joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                         final UUID petUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
-                        MyPetApi.getRepository().getMyPet(petUUID).thenAccept(storedMyPet -> {
+                        MyPetApi.getRepository().getPet(petUUID).thenAccept(storedMyPet -> {
                             joinPlayer.getScheduler().run(MyPetApi.getPlugin(), petTask -> {
                                 MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
 
@@ -427,7 +426,7 @@ public class PlayerListener implements Listener {
 
                 if (myPetPlayer.hasMyPetInWorldGroup(toGroup)) {
                     final UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup);
-                    MyPetApi.getRepository().getMyPets(myPetPlayer).thenAccept(pets -> {
+                    MyPetApi.getRepository().getPets(myPetPlayer).thenAccept(pets -> {
                         worldChangedPlayer.getScheduler().run(MyPetApi.getPlugin(), runTask -> {
                             for (StoredMyPet storedPet : pets) {
                                 if (storedPet.getUUID().equals(groupMyPetUUID)) {

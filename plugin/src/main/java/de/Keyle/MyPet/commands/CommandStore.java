@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import io.papermc.paper.command.brigadier.Commands;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -116,7 +115,7 @@ public class CommandStore {
             }
 
             if (owner.hasMyPet()) {
-                MyPetApi.getRepository().getMyPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+                MyPetApi.getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         if (owner.hasMyPet()) {
                             MyPet myPet = owner.getMyPet();
                             String worldGroup = myPet.getWorldGroup();

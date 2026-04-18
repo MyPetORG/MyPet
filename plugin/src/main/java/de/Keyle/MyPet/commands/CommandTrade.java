@@ -195,11 +195,11 @@ public class CommandTrade {
                 final StoredMyPet pet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.pet());
 
                 final Repository repo = MyPetApi.getRepository();
-                repo.removeMyPet(pet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+                repo.removePet(pet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         pet.setOwner(newOwner);
                         MyPetSaveEvent event = new MyPetSaveEvent(pet);
                         Bukkit.getServer().getPluginManager().callEvent(event);
-                        repo.addMyPet(pet);
+                        repo.addPet(pet);
                         Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(pet);
 
                         oldOwner.setMyPetForWorldGroup(worldGroup, null);

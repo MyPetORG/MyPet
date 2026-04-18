@@ -35,7 +35,6 @@ import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -132,7 +131,7 @@ public class CommandList {
         }
 
         if (owner != null) {
-            MyPetApi.getRepository().getMyPets(owner).thenAccept(value -> {
+            MyPetApi.getRepository().getPets(owner).thenAccept(value -> {
                 Runnable listBody = () -> {
                     if (petOwner == sender) {
                         sender.sendMessage(Translation.getFormattedComponent("Message.Command.List.Yours", lang, owner.getName()));

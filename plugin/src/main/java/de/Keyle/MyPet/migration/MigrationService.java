@@ -12,7 +12,6 @@ import de.Keyle.MyPet.api.migration.PetDataMigration;
 import de.Keyle.MyPet.api.migration.PlayerDataMigration;
 import de.Keyle.MyPet.api.migration.SkilltreeMigration;
 import de.Keyle.MyPet.api.migration.SkilltreeMigrationContext;
-import de.Keyle.MyPet.api.migration.SqlMigrationContext;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
@@ -20,8 +19,7 @@ import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.migration.context.ConfigMigrationContextImpl;
 import de.Keyle.MyPet.migration.context.SkilltreeMigrationContextImpl;
 import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
-import de.Keyle.MyPet.repository.types.MySqlRepository;
-import de.Keyle.MyPet.repository.types.SqLiteRepository;
+import de.Keyle.MyPet.repository.types.AbstractSqlRepository;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
@@ -404,16 +402,11 @@ public class MigrationService implements ServiceContainer {
 
     private SqlMigrationContextImpl createSqlContext() throws SQLException {
         Repository repo = MyPetApi.getRepository();
-        Connection connection;
-        if (repo instanceof SqLiteRepository sqlite) {
-            connection = sqlite.openNewConnection();
-        } else if (repo instanceof MySqlRepository mysql) {
-            connection = mysql.getConnection();
-        } else {
+        if (!(repo instanceof AbstractSqlRepository sql)) {
             throw new IllegalStateException("SQL migration requested but active repository is not SQL-backed: "
                     + (repo == null ? "null" : repo.getClass().getSimpleName()));
         }
-        return new SqlMigrationContextImpl(connection, getTablePrefix());
+        return new SqlMigrationContextImpl(sql.openIsolatedConnection(), getTablePrefix());
     }
 
     private ConfigMigrationContext createConfigContext() {
@@ -482,11 +475,8 @@ public class MigrationService implements ServiceContainer {
      */
     private Connection openSqlConnection() throws SQLException {
         Repository repo = MyPetApi.getRepository();
-        if (repo instanceof SqLiteRepository sqlite) {
-            return sqlite.openNewConnection();
-        }
-        if (repo instanceof MySqlRepository mysql) {
-            return mysql.getConnection();
+        if (repo instanceof AbstractSqlRepository sql) {
+            return sql.openIsolatedConnection();
         }
         throw new IllegalStateException("No SQL repository active");
     }

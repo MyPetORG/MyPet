@@ -20,109 +20,79 @@
 
 package de.Keyle.MyPet.repository.types;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetVersion;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
-import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.entity.InactiveMyPet;
-import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
-import de.Keyle.MyPet.api.util.NbtUtil;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
-import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.*;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
-public class SqLiteRepository implements Repository {
+public class SqLiteRepository extends AbstractSqlRepository {
 
-    protected Gson gson = new Gson();
-    private final Map<UUID, StoredMyPet> petsToBeSaved = new ConcurrentHashMap<>();
-    private final Map<UUID, MyPetPlayer> playersToBeSaved = new ConcurrentHashMap<>();
     private Connection connection;
 
-    public Connection getConnection() {
-        return connection;
-    }
-
-    // Single-thread executor so the JDBC Connection is only touched by one thread.
-    private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(r, "MyPet-SQLite");
-        t.setDaemon(true);
-        return t;
-    });
-
-    private void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
-        if (data == null || data.length == 0) {
-            return;
-        }
-        try {
-            Path corruptedDir = MyPetApi.getPlugin().getDataFolder().toPath().resolve("corrupted");
-            Files.createDirectories(corruptedDir);
-            String safePetName = pet.getPetName().replaceAll("[^a-zA-Z0-9_-]", "_");
-            String filename = pet.getOwner().getUniqueId() + "_" + safePetName + "_" + fieldName + ".dat";
-            Path backupFile = corruptedDir.resolve(filename);
-            Files.write(backupFile, data);
-            MyPetApi.getLogger().info("Corrupted data backed up to: " + backupFile);
-        } catch (IOException e) {
-            MyPetApi.getLogger().warning("Failed to backup corrupted data for pet " + pet.getUUID() + ": " + e.getMessage());
-        }
+    @Override
+    protected ConnectionHolder acquireConnection() {
+        // Single shared connection; close() is a no-op. SQLite JDBC is not
+        // thread-safe, so only the single-threaded executor touches this.
+        return new ConnectionHolder() {
+            @Override public Connection connection() { return connection; }
+            @Override public void close() { /* connection outlives individual calls */ }
+        };
     }
 
     @Override
-    public void disable() {
-        saveData();
-        executor.shutdown();
-        try {
-            if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
-                executor.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            executor.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
+    protected void disableBackend() {
         try {
             connection.close();
         } catch (SQLException e) {
-            ErrorUtil.reportError("Failed to close SQLite database connection", e);
+            reportError(e);
+        }
+    }
+
+    private boolean schemaExists(Connection c) throws SQLException {
+        try (PreparedStatement stmt = c.prepareStatement(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='info';");
+             ResultSet rs = stmt.executeQuery()) {
+            return rs.next();
         }
     }
 
     @Override
-    public void save() {
-        saveData();
+    protected String qualifyTable(String baseName) { return baseName; }
+
+    @Override
+    protected void bindBlob(PreparedStatement s, int idx, byte[] data) throws SQLException {
+        s.setBytes(idx, data);
+    }
+
+    @Override
+    protected byte[] readBlob(ResultSet rs, String col) throws SQLException {
+        return rs.getBytes(col);
+    }
+
+    @Override
+    protected void bindPetName(PreparedStatement s, int idx, String name) throws SQLException {
+        s.setBytes(idx, name.getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Override
+    protected String readPetName(ResultSet rs, String col) throws SQLException {
+        byte[] bytes = rs.getBytes(col);
+        return bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    @Override
+    protected String dbLabel() { return "SQLite"; }
+
+    @Override
+    public Connection openIsolatedConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
     }
 
     private File dbFile;
-
-    /**
-     * Opens a fresh JDBC connection to the same SQLite database file. Callers own the
-     * returned connection and must close it. Used by the migration service so it can
-     * run on its own thread without sharing the repository's long-lived connection
-     * (SQLite JDBC connections are not thread-safe).
-     */
-    public Connection openNewConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
-    }
 
     @Override
     public void init() throws RepositoryInitException {
@@ -130,6 +100,13 @@ public class SqLiteRepository implements Repository {
             dbFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "pets.db");
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
+
+            // Single-thread executor so the JDBC Connection is only touched by one thread.
+            this.executor = Executors.newSingleThreadExecutor(r -> {
+                Thread t = new Thread(r, "MyPet-SQLite");
+                t.setDaemon(true);
+                return t;
+            });
 
             try (PreparedStatement statement = connection.prepareStatement("SELECT name FROM sqlite_master WHERE type='table' AND name='info';");
                  ResultSet resultSet = statement.executeQuery()) {
@@ -140,7 +117,7 @@ public class SqLiteRepository implements Repository {
                 }
             }
         } catch (Exception e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
+            reportError(e);
             throw new RepositoryInitException(e);
         }
     }
@@ -191,7 +168,7 @@ public class SqLiteRepository implements Repository {
                 insert.executeUpdate();
             }
         } catch (SQLException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
+            reportError(e);
         }
     }
 
@@ -206,786 +183,8 @@ public class SqLiteRepository implements Repository {
                     "    WHERE NEW." + id + "=OLD." + id + ";" +
                     "END;");
         } catch (SQLException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
+            reportError(e);
         }
     }
 
-    @Override
-    public CompletableFuture<Integer> cleanup(final long timestamp) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE last_used<?;")) {
-                statement.setLong(1, timestamp);
-                return statement.executeUpdate();
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                return 0;
-            }
-        }, executor);
-    }
-
-    @Override
-    public CompletableFuture<Integer> countMyPets() {
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets;");
-                 ResultSet resultSet = statement.executeQuery()) {
-                resultSet.next();
-                return resultSet.getInt(1);
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                throw new CompletionException(e);
-            }
-        }, executor);
-    }
-
-    @Override
-    public CompletableFuture<Integer> countMyPets(final MyPetType type) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE type=?;")) {
-                statement.setString(1, type.name());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    return resultSet.getInt(1);
-                }
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                throw new CompletionException(e);
-            }
-        }, executor);
-    }
-
-    public void saveData() {
-        updateInfo();
-        savePets();
-        savePlayers();
-    }
-
-    private void updateInfo() {
-        try (PreparedStatement update = connection.prepareStatement("UPDATE info SET mypet_version=?, mypet_build=?;")) {
-            update.setString(1, MyPetVersion.getVersion());
-            update.setString(2, MyPetVersion.getBuild());
-            update.executeUpdate();
-        } catch (SQLException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
-        }
-    }
-
-    private void savePets() {
-        for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
-            savePetSync(myPet);
-        }
-        for (StoredMyPet myPet : petsToBeSaved.values()) {
-            savePetSync(myPet);
-        }
-    }
-
-    public CompletableFuture<Boolean> savePet(StoredMyPet myPet) {
-        return CompletableFuture.supplyAsync(() -> savePetSync(myPet), executor);
-    }
-
-    private boolean savePetSync(StoredMyPet myPet) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE pets SET " +
-                "owner_uuid=?, " +
-                "exp=?, " +
-                "health=?, " +
-                "respawn_time=?, " +
-                "name=?, " +
-                "type=?, " +
-                "last_used=?, " +
-                "hunger=?, " +
-                "world_group=?, " +
-                "wants_to_spawn=?, " +
-                "skilltree=?, " +
-                "skills=?, " +
-                "info=? " +
-                "WHERE uuid=?;")) {
-            statement.setString(1, myPet.getOwner().getUniqueId().toString());
-            statement.setDouble(2, myPet.getExp());
-            statement.setDouble(3, myPet.getHealth());
-            statement.setInt(4, myPet.getRespawnTime());
-            statement.setBytes(5, myPet.getPetName().getBytes(StandardCharsets.UTF_8));
-            statement.setString(6, myPet.getPetType().name());
-            statement.setLong(7, myPet.getLastUsed());
-            statement.setDouble(8, myPet.getSaturation());
-            statement.setString(9, myPet.getWorldGroup());
-            statement.setBoolean(10, myPet.wantsToRespawn());
-            statement.setString(11, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
-            statement.setBytes(12, NbtUtil.writeCompressed(myPet.getSkillInfo()));
-            statement.setBytes(13, NbtUtil.writeCompressed(myPet.getInfo()));
-
-            statement.setString(14, myPet.getUUID().toString());
-
-            statement.executeUpdate();
-        } catch (SQLException | IOException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
-            return false;
-        }
-        return true;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void savePlayers() {
-        for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
-            savePlayer(player);
-        }
-        for (MyPetPlayer player : playersToBeSaved.values()) {
-            savePlayer(player);
-        }
-    }
-
-    private void savePlayer(MyPetPlayer player) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "UPDATE players SET " +
-                        "auto_respawn=?, " +
-                        "auto_respawn_min=?, " +
-                        "capture_mode=?, " +
-                        "health_bar=?, " +
-                        "pet_idle_volume=?, " +
-                        "extended_info=?, " +
-                        "multi_world=? " +
-                        "WHERE uuid=?;")) {
-            statement.setBoolean(1, player.hasAutoRespawnEnabled());
-            statement.setInt(2, player.getAutoRespawnMin());
-            statement.setBoolean(3, player.isCaptureHelperActive());
-            statement.setBoolean(4, player.isHealthBarActive());
-            statement.setFloat(5, player.getPetLivingSoundVolume());
-            statement.setBytes(6, NbtUtil.writeCompressed(player.getExtendedInfo()));
-
-            JsonObject multiWorldObject = new JsonObject();
-            for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
-                multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
-            }
-            statement.setString(7, gson.toJson(multiWorldObject));
-            statement.setString(8, player.getUniqueId().toString());
-
-            statement.executeUpdate();
-        } catch (SQLException | IOException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
-        }
-    }
-
-    // Pets ------------------------------------------------------------------------------------------------------------
-
-    private List<StoredMyPet> resultSetToMyPet(MyPetPlayer owner, ResultSet resultSet, boolean next) {
-        List<StoredMyPet> pets = new ArrayList<>();
-        try {
-            while (!next || resultSet.next()) {
-                next = true;
-                InactiveMyPet pet = new InactiveMyPet(owner);
-                pet.setUUID(UUID.fromString(resultSet.getString("uuid")));
-                pet.setWorldGroup(resultSet.getString("world_group"));
-                pet.setExp(resultSet.getDouble("exp"));
-                pet.setHealth(resultSet.getDouble("health"));
-                pet.setRespawnTime(resultSet.getInt("respawn_time"));
-                pet.setPetName(new String(resultSet.getBytes("name"), StandardCharsets.UTF_8));
-                MyPetType type = MyPetType.byNameOrNull(resultSet.getString("type"));
-                if (type == null) continue;
-                pet.setPetType(type);
-                pet.setLastUsed(resultSet.getLong("last_used"));
-                pet.setSaturation(resultSet.getDouble("hunger"));
-                pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");
-
-                String skillTreeName = resultSet.getString("skilltree");
-                if (skillTreeName != null) {
-                    Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skillTreeName);
-                    if (skilltree != null) {
-                        pet.setSkilltree(skilltree);
-                    }
-                }
-
-                byte[] skillsData = resultSet.getBytes("skills");
-                try {
-                    pet.setSkills(NbtUtil.readCompressed(skillsData));
-                } catch (IOException e) {
-                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
-                    backupCorruptedData(pet, "skills", skillsData);
-                    pet.setSkills(CompoundBinaryTag.empty());
-                }
-
-                byte[] infoData = resultSet.getBytes("info");
-                try {
-                    pet.setInfo(NbtUtil.readCompressed(infoData));
-                } catch (IOException e) {
-                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
-                    backupCorruptedData(pet, "info", infoData);
-                    pet.setInfo(CompoundBinaryTag.empty());
-                }
-
-                pets.add(pet);
-            }
-        } catch (SQLException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
-        }
-        return pets;
-    }
-
-    @Override
-    public List<StoredMyPet> getAllMyPets() {
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM pets;")) {
-            List<MyPetPlayer> playerList = getAllMyPetPlayers();
-            Map<UUID, MyPetPlayer> owners = new HashMap<>();
-
-            for (MyPetPlayer player : playerList) {
-                owners.put(player.getUniqueId(), player);
-            }
-
-            List<StoredMyPet> pets = new ArrayList<>();
-            while (resultSet.next()) {
-                if (!owners.containsKey(UUID.fromString(resultSet.getString("owner_uuid")))) {
-                    continue;
-                }
-                MyPetPlayer owner = owners.get(UUID.fromString(resultSet.getString("owner_uuid")));
-
-                InactiveMyPet pet = new InactiveMyPet(owner);
-                pet.setUUID(UUID.fromString(resultSet.getString("uuid")));
-                pet.setWorldGroup(resultSet.getString("world_group"));
-                pet.setExp(resultSet.getDouble("exp"));
-                pet.setHealth(resultSet.getDouble("health"));
-                pet.setRespawnTime(resultSet.getInt("respawn_time"));
-                pet.setPetName(resultSet.getString("name"));
-                MyPetType type = MyPetType.byNameOrNull(resultSet.getString("type"));
-                if (type == null) continue;
-                pet.setPetType(type);
-                pet.setLastUsed(resultSet.getLong("last_used"));
-                pet.setSaturation(resultSet.getInt("hunger"));
-                pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");
-
-                String skillTreeName = resultSet.getString("skilltree");
-                if (skillTreeName != null) {
-                    Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skillTreeName);
-                    if (skilltree != null) {
-                        pet.setSkilltree(skilltree);
-                    }
-                }
-
-                byte[] skillsData = resultSet.getBytes("skills");
-                try {
-                    pet.setSkills(NbtUtil.readCompressed(skillsData));
-                } catch (IOException e) {
-                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
-                    backupCorruptedData(pet, "skills", skillsData);
-                    pet.setSkills(CompoundBinaryTag.empty());
-                }
-
-                byte[] infoData = resultSet.getBytes("info");
-                try {
-                    pet.setInfo(NbtUtil.readCompressed(infoData));
-                } catch (IOException e) {
-                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
-                    backupCorruptedData(pet, "info", infoData);
-                    pet.setInfo(CompoundBinaryTag.empty());
-                }
-
-                pets.add(pet);
-            }
-
-            return pets;
-        } catch (SQLException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
-    public CompletableFuture<Boolean> hasMyPets(final MyPetPlayer myPetPlayer) {
-        if (myPetPlayer == null) {
-            return CompletableFuture.completedFuture(false);
-        }
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE owner_uuid=?;")) {
-                statement.setString(1, myPetPlayer.getUniqueId().toString());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    return resultSet.getInt(1) > 0;
-                }
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                throw new CompletionException(e);
-            }
-        }, executor);
-    }
-
-    @Override
-    public CompletableFuture<List<StoredMyPet>> getMyPets(final MyPetPlayer owner) {
-        if (owner == null) {
-            return CompletableFuture.completedFuture(new ArrayList<>());
-        }
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE owner_uuid=?;")) {
-                statement.setString(1, owner.getUniqueId().toString());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSetToMyPet(owner, resultSet, true);
-                }
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                throw new CompletionException(e);
-            }
-        }, executor);
-    }
-
-    @Override
-    public CompletableFuture<StoredMyPet> getMyPet(final UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            if (!MyPetApi.getPlugin().isEnabled()) {
-                return null;
-            }
-            // If pet is pending save, prefer the in-memory snapshot.
-            StoredMyPet pending = petsToBeSaved.get(uuid);
-            if (pending != null) {
-                return pending;
-            }
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE uuid=?;")) {
-                statement.setString(1, uuid.toString());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(resultSet.getString("owner_uuid")));
-                        if (owner != null) {
-                            List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet, false);
-                            if (!pets.isEmpty()) {
-                                return pets.get(0);
-                            }
-                        }
-                    }
-                }
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                throw new CompletionException(e);
-            }
-            return null;
-        }, executor);
-    }
-
-    @Override
-    public CompletableFuture<Boolean> removeMyPet(final UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE uuid=?;")) {
-                statement.setString(1, uuid.toString());
-                return statement.executeUpdate() > 0;
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                return false;
-            }
-        }, executor);
-    }
-
-    @Override
-    public CompletableFuture<Boolean> removeMyPet(final StoredMyPet storedMyPet) {
-        return removeMyPet(storedMyPet.getUUID());
-    }
-
-    @Override
-    public CompletableFuture<Boolean> addMyPet(final StoredMyPet storedMyPet) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO pets (uuid, " +
-                            "owner_uuid, " +
-                            "exp, " +
-                            "health, " +
-                            "respawn_time, " +
-                            "name, " +
-                            "type, " +
-                            "last_used, " +
-                            "hunger, " +
-                            "world_group, " +
-                            "wants_to_spawn, " +
-                            "skilltree, " +
-                            "skills, " +
-                            "info) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
-                statement.setString(1, storedMyPet.getUUID().toString());
-                statement.setString(2, storedMyPet.getOwner().getUniqueId().toString());
-                statement.setDouble(3, storedMyPet.getExp());
-                statement.setDouble(4, storedMyPet.getHealth());
-                statement.setInt(5, storedMyPet.getRespawnTime());
-                statement.setString(6, storedMyPet.getPetName());
-                statement.setString(7, storedMyPet.getPetType().name());
-                statement.setLong(8, storedMyPet.getLastUsed());
-                statement.setDouble(9, storedMyPet.getSaturation());
-                statement.setString(10, storedMyPet.getWorldGroup());
-                statement.setBoolean(11, storedMyPet.wantsToRespawn());
-                statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
-
-                try {
-                    statement.setBytes(13, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
-                    statement.setBytes(14, NbtUtil.writeCompressed(storedMyPet.getInfo()));
-                } catch (IOException e) {
-                    ErrorUtil.reportError("SQLite database operation failed", e);
-                }
-
-                return statement.executeUpdate() > 0;
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                return false;
-            }
-        }, executor);
-    }
-
-    public boolean addMyPets(List<StoredMyPet> pets) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO pets (uuid, " +
-                        "owner_uuid, " +
-                        "exp, " +
-                        "health, " +
-                        "respawn_time, " +
-                        "name, " +
-                        "type, " +
-                        "last_used, " +
-                        "hunger, " +
-                        "world_group, " +
-                        "wants_to_spawn, " +
-                        "skilltree, " +
-                        "skills, " +
-                        "info) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
-
-            int i = 0;
-            for (StoredMyPet storedMyPet : pets) {
-                statement.setString(1, storedMyPet.getUUID().toString());
-                statement.setString(2, storedMyPet.getOwner().getUniqueId().toString());
-                statement.setDouble(3, storedMyPet.getExp());
-                statement.setDouble(4, storedMyPet.getHealth());
-                statement.setInt(5, storedMyPet.getRespawnTime());
-                statement.setString(6, storedMyPet.getPetName());
-                statement.setString(7, storedMyPet.getPetType().name());
-                statement.setLong(8, storedMyPet.getLastUsed());
-                statement.setDouble(9, storedMyPet.getSaturation());
-                statement.setString(10, storedMyPet.getWorldGroup());
-                statement.setBoolean(11, storedMyPet.wantsToRespawn());
-                statement.setString(12, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
-
-                try {
-                    statement.setBytes(13, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
-                } catch (IOException e) {
-                    ErrorUtil.reportError("SQLite database operation failed", e);
-                }
-                try {
-                    statement.setBytes(14, NbtUtil.writeCompressed(storedMyPet.getInfo()));
-                } catch (IOException e) {
-                    ErrorUtil.reportError("SQLite database operation failed", e);
-                }
-
-                statement.addBatch();
-
-                if (++i % 500 == 0 && i != pets.size()) {
-                    statement.executeBatch();
-                }
-            }
-            statement.executeBatch();
-            return true;
-        } catch (SQLException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
-        }
-        return false;
-    }
-
-    @Override
-    public CompletableFuture<Boolean> updateMyPet(final StoredMyPet storedMyPet) {
-        petsToBeSaved.put(storedMyPet.getUUID(), storedMyPet);
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("UPDATE pets SET " +
-                    "owner_uuid=?, " +
-                    "exp=?, " +
-                    "health=?, " +
-                    "respawn_time=?, " +
-                    "name=?, " +
-                    "type=?, " +
-                    "last_used=?, " +
-                    "hunger=?, " +
-                    "world_group=?, " +
-                    "wants_to_spawn=?, " +
-                    "skilltree=?, " +
-                    "skills=?, " +
-                    "info=? " +
-                    "WHERE uuid=?;")) {
-                statement.setString(1, storedMyPet.getOwner().getUniqueId().toString());
-                statement.setDouble(2, storedMyPet.getExp());
-                statement.setDouble(3, storedMyPet.getHealth());
-                statement.setInt(4, storedMyPet.getRespawnTime());
-                statement.setBytes(5, storedMyPet.getPetName().getBytes(StandardCharsets.UTF_8));
-                statement.setString(6, storedMyPet.getPetType().name());
-                statement.setLong(7, storedMyPet.getLastUsed());
-                statement.setDouble(8, storedMyPet.getSaturation());
-                statement.setString(9, storedMyPet.getWorldGroup());
-                statement.setBoolean(10, storedMyPet.wantsToRespawn());
-                statement.setString(11, storedMyPet.getSkilltree() != null ? storedMyPet.getSkilltree().getName() : null);
-                statement.setBytes(12, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
-                statement.setBytes(13, NbtUtil.writeCompressed(storedMyPet.getInfo()));
-
-                statement.setString(14, storedMyPet.getUUID().toString());
-
-                int result = statement.executeUpdate();
-
-                if (result > 0) {
-                    petsToBeSaved.remove(storedMyPet.getUUID());
-                }
-                return result > 0;
-            } catch (SQLException | IOException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                throw new CompletionException(e);
-            }
-        }, executor);
-    }
-
-    // Players ---------------------------------------------------------------------------------------------------------
-
-    private MyPetPlayer resultSetToMyPetPlayer(ResultSet resultSet) {
-        try {
-            if (resultSet.next()) {
-                UUID mojangUUID = UUID.fromString(resultSet.getString("uuid"));
-                MyPetPlayerImpl petPlayer = new MyPetPlayerImpl(mojangUUID);
-
-                petPlayer.setAutoRespawnEnabled(resultSet.getBoolean("auto_respawn"));
-                petPlayer.setAutoRespawnMin(resultSet.getInt("auto_respawn_min"));
-                petPlayer.setCaptureHelperActive(resultSet.getBoolean("capture_mode"));
-                petPlayer.setHealthBarActive(resultSet.getBoolean("health_bar"));
-                petPlayer.setPetLivingSoundVolume(resultSet.getFloat("pet_idle_volume"));
-                try {
-                    petPlayer.setExtendedInfo(NbtUtil.readCompressed(resultSet.getBytes("extended_info")));
-                } catch (IOException e) {
-                    MyPetApi.getLogger().warning("Extended info of player (" + mojangUUID + ") could not be loaded!");
-                }
-
-                try {
-                    JsonObject jsonObject = gson.fromJson(resultSet.getString("multi_world"), JsonObject.class);
-
-                    for (String uuid : jsonObject.keySet()) {
-                        String petUUID = jsonObject.get(uuid).getAsString();
-                        petPlayer.setMyPetForWorldGroup(uuid, UUID.fromString(petUUID));
-                    }
-                } catch (JsonParseException e) {
-                    ErrorUtil.reportError("SQLite database operation failed", e);
-                }
-
-                return petPlayer;
-            }
-        } catch (SQLException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
-        }
-        return null;
-    }
-
-    @Override
-    public List<MyPetPlayer> getAllMyPetPlayers() {
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM players;")) {
-
-            List<MyPetPlayer> players = new ArrayList<>();
-            MyPetPlayer player;
-            while (true) {
-                player = resultSetToMyPetPlayer(resultSet);
-                if (player == null) {
-                    break;
-                }
-                players.add(player);
-            }
-            return players;
-        } catch (SQLException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
-    public CompletableFuture<Boolean> isMyPetPlayer(final Player player) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM players WHERE uuid=?;")) {
-                statement.setString(1, player.getUniqueId().toString());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    return resultSet.getInt(1) > 0;
-                }
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                throw new CompletionException(e);
-            }
-        }, executor);
-    }
-
-    @Override
-    public CompletableFuture<MyPetPlayer> getMyPetPlayer(final UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?;")) {
-                statement.setString(1, uuid.toString());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSetToMyPetPlayer(resultSet);
-                }
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                throw new CompletionException(e);
-            }
-        }, executor);
-    }
-
-    @Override
-    public CompletableFuture<MyPetPlayer> getMyPetPlayer(final Player player) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE uuid=?;")) {
-                statement.setString(1, player.getUniqueId().toString());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSetToMyPetPlayer(resultSet);
-                }
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                throw new CompletionException(e);
-            }
-        }, executor);
-    }
-
-    @Override
-    public CompletableFuture<Boolean> updateMyPetPlayer(final MyPetPlayer player) {
-        playersToBeSaved.put(player.getUniqueId(), player);
-        return CompletableFuture.supplyAsync(() -> {
-            boolean result = updatePlayer(player);
-            if (result) {
-                playersToBeSaved.remove(player.getUniqueId());
-            }
-            return result;
-        }, executor);
-    }
-
-    @SuppressWarnings("unchecked")
-    public boolean updatePlayer(final MyPetPlayer player) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "UPDATE players SET " +
-                        "auto_respawn=?, " +
-                        "auto_respawn_min=?, " +
-                        "capture_mode=?, " +
-                        "health_bar=?, " +
-                        "pet_idle_volume=?, " +
-                        "extended_info=?, " +
-                        "multi_world=? " +
-                        "WHERE uuid=?;")) {
-            statement.setBoolean(1, player.hasAutoRespawnEnabled());
-            statement.setInt(2, player.getAutoRespawnMin());
-            statement.setBoolean(3, player.isCaptureHelperActive());
-            statement.setBoolean(4, player.isHealthBarActive());
-            statement.setFloat(5, player.getPetLivingSoundVolume());
-            statement.setBytes(6, NbtUtil.writeCompressed(player.getExtendedInfo()));
-
-            JsonObject multiWorldObject = new JsonObject();
-            for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
-                multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
-            }
-            statement.setString(7, gson.toJson(multiWorldObject));
-            statement.setString(8, player.getUniqueId().toString());
-
-            int result = statement.executeUpdate();
-
-            return result > 0;
-        } catch (SQLException | IOException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
-        }
-        return false;
-    }
-
-
-    @Override
-    public CompletableFuture<Boolean> addMyPetPlayer(final MyPetPlayer player) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO players (" +
-                            "uuid, " +
-                            "auto_respawn, " +
-                            "auto_respawn_min, " +
-                            "capture_mode, " +
-                            "health_bar, " +
-                            "pet_idle_volume, " +
-                            "extended_info, " +
-                            "multi_world) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);")) {
-                statement.setString(1, player.getUniqueId().toString());
-                statement.setBoolean(2, player.hasAutoRespawnEnabled());
-                statement.setInt(3, player.getAutoRespawnMin());
-                statement.setBoolean(4, player.isCaptureHelperActive());
-                statement.setBoolean(5, player.isHealthBarActive());
-                statement.setFloat(6, player.getPetLivingSoundVolume());
-                try {
-                    statement.setBytes(7, NbtUtil.writeCompressed(player.getExtendedInfo()));
-                } catch (IOException e) {
-                    ErrorUtil.reportError("SQLite database operation failed", e);
-                }
-
-                JsonObject multiWorldObject = new JsonObject();
-                for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
-                    multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
-                }
-                statement.setString(8, gson.toJson(multiWorldObject));
-
-                return statement.executeUpdate() > 0;
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                return false;
-            }
-        }, executor);
-    }
-
-    @SuppressWarnings("unchecked")
-    public boolean addMyPetPlayers(List<MyPetPlayer> players) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO players (" +
-                        "uuid, " +
-                        "auto_respawn, " +
-                        "auto_respawn_min, " +
-                        "capture_mode, " +
-                        "health_bar, " +
-                        "pet_idle_volume, " +
-                        "extended_info, " +
-                        "multi_world) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);")) {
-
-            int i = 0;
-
-            HashSet<UUID> playerUUIDs = new HashSet<>();
-
-            for (MyPetPlayer player : players) {
-                UUID mojangUUID = player.getUniqueId();
-                if (mojangUUID == null) {
-                    MyPetApi.getLogger().warning("Skipping player with no uuid: " + player);
-                    continue;
-                }
-                if (playerUUIDs.contains(mojangUUID)) {
-                    MyPetApi.getLogger().info("Found duplicate Player: " + player);
-                    continue;
-                }
-                playerUUIDs.add(mojangUUID);
-
-                statement.setString(1, mojangUUID.toString());
-                statement.setBoolean(2, player.hasAutoRespawnEnabled());
-                statement.setInt(3, player.getAutoRespawnMin());
-                statement.setBoolean(4, player.isCaptureHelperActive());
-                statement.setBoolean(5, player.isHealthBarActive());
-                statement.setFloat(6, player.getPetLivingSoundVolume());
-                statement.setBytes(7, NbtUtil.writeCompressed(player.getExtendedInfo()));
-
-                JsonObject multiWorldObject = new JsonObject();
-                for (String worldGroupName : player.getMyPetsForWorldGroups().keySet()) {
-                    multiWorldObject.addProperty(worldGroupName, player.getMyPetsForWorldGroups().get(worldGroupName).toString());
-                }
-                statement.setString(8, gson.toJson(multiWorldObject));
-
-                statement.addBatch();
-                if (++i % 500 == 0 && i != players.size()) {
-                    statement.executeBatch();
-                }
-            }
-            statement.executeBatch();
-            return true;
-        } catch (SQLException | IOException e) {
-            ErrorUtil.reportError("SQLite database operation failed", e);
-        }
-        return false;
-    }
-
-    @Override
-    public CompletableFuture<Boolean> removeMyPetPlayer(final MyPetPlayer player) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM players WHERE uuid=?;")) {
-                statement.setString(1, player.getUniqueId().toString());
-                return statement.executeUpdate() > 0;
-            } catch (SQLException e) {
-                ErrorUtil.reportError("SQLite database operation failed", e);
-                return false;
-            }
-        }, executor);
-    }
 }

@@ -217,7 +217,7 @@ public class CreakingHeartListener implements Listener {
         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
         // Save and activate
-        MyPetApi.getPlugin().getRepository().addMyPet(inactiveMyPet).thenAccept(value -> {
+        MyPetApi.getPlugin().getRepository().addPet(inactiveMyPet).thenAccept(value -> {
             player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 if (value == null || !value) {
                     MyPetApi.getLogger().warning("Failed to save captured Creaking pet for " + owner.getName());

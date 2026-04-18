@@ -147,7 +147,7 @@ public class CommandOptionClone {
         MyPetSaveEvent event = new MyPetSaveEvent(newPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        MyPetApi.getRepository().addMyPet(newPet).thenAccept(added -> newOwner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+        MyPetApi.getRepository().addPet(newPet).thenAccept(added -> newOwner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 if (!added) {
                     sender.sendMessage(MessageUtil.prefixed(Component.text("Failed to clone MyPet!")));
                     return;
