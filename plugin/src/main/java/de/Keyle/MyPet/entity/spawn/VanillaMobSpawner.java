@@ -6,6 +6,7 @@ import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
+import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
@@ -145,6 +146,7 @@ public final class VanillaMobSpawner {
         PetSitParticleController.stopForPet(pet);
         PetPotionParticleController.stopForPet(pet);
         RideSkillFlightController.stopForPet(pet);
+        CreakingActivationSuppressor.stopForPet(pet);
         pet.setBukkitEntity(null);
 
         // Safe to destroy the old mob now — MyPet already released the reference.
@@ -228,6 +230,7 @@ public final class VanillaMobSpawner {
         PetSitParticleController.startForPet(pet);
         PetPotionParticleController.startForPet(pet);
         RideSkillFlightController.startForPet(pet);
+        CreakingActivationSuppressor.startForPet(pet);
     }
 
     /**

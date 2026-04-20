@@ -41,6 +41,7 @@ import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
+import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
@@ -196,6 +197,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         PetSitParticleController.stopForPet(this);
         PetPotionParticleController.stopForPet(this);
         RideSkillFlightController.stopForPet(this);
+        CreakingActivationSuppressor.stopForPet(this);
         if (bukkitEntity != null) {
             bukkitEntity.remove();
         }

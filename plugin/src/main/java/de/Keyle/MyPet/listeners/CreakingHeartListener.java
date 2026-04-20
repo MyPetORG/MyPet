@@ -36,6 +36,7 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetStateSnapshot;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -53,17 +54,34 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 
 /**
- * Listener for capturing heart-linked Creaking entities when their Creaking Heart block is destroyed.
- * <p>
- * In vanilla Minecraft, heart-linked Creaking are invulnerable to damage and can only be killed
- * by destroying their linked Creaking Heart block. This listener enables MyPet to capture these
- * Creaking by intercepting the heart destruction and converting the linked entity into a pet.
+ * Bukkit listener for Creaking-specific pet flows. Registered only on 1.21.4+
+ * (gated in {@code MyPetPlugin}) so direct {@code Creaking} references are
+ * safe on older versions that don't ship the class.
+ *
+ * <p>Responsibilities:
+ * <ul>
+ *   <li><b>Heart-link capture</b> — in vanilla Minecraft, heart-linked
+ *       Creaking are invulnerable to damage and can only be killed by
+ *       destroying their linked Creaking Heart block. This listener
+ *       intercepts {@link BlockBreakEvent} on a Creaking Heart and converts
+ *       the linked Creaking into a MyPet instead of letting vanilla kill it.</li>
+ *   <li><b>Capture-helper interaction hint</b> — when a player with the
+ *       capture helper active right-clicks a Creaking Heart, report whether
+ *       they meet all leash requirements for the heart-based capture.</li>
+ *   <li><b>Creaking allies team membership</b> — forward {@link PlayerJoinEvent}
+ *       to {@link CreakingActivationSuppressor#onPlayerJoin} so newly-joined
+ *       players are added to the shared scoreboard team while any Creaking
+ *       pet is active (the team makes pet Creakings treat every player as
+ *       allied, preventing the vanilla stare-freeze + autonomous attack
+ *       behaviours). See {@link CreakingActivationSuppressor} for details.</li>
+ * </ul>
  */
 public class CreakingHeartListener implements Listener {
 
@@ -325,6 +343,16 @@ public class CreakingHeartListener implements Listener {
         if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
             myPetPlayer.sendMessage(LeashFlag.getComponentPrefix(false).append(Translation.getComponent("Message.Command.CaptureHelper.HasPet", player)), 2000);
         }
+    }
+
+    /**
+     * Adds the joining player to the Creaking allies team if any Creaking pet
+     * is currently active. See {@link CreakingActivationSuppressor} for why
+     * every online player is added to the team.
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        CreakingActivationSuppressor.onPlayerJoin(event.getPlayer());
     }
 
     /**
