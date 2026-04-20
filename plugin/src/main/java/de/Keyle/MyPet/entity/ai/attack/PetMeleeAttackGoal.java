@@ -240,6 +240,14 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
      * vanilla's {@code lastHurtByPlayer} tracking so mob drops and XP land
      * on the owner. {@code withDirectEntity(mob)} keeps the pet as the
      * visible attacker for death messages and knockback.
+     *
+     * <p>Owner attribution is deliberately skipped when the target is a
+     * {@link Player} — the drops/XP routing rationale only applies to mob
+     * kills (players drop their own XP orbs on death regardless of
+     * {@code lastHurtByPlayer}), and attributing PvP kills to the owner
+     * makes the pet's Aggressive mode read as the owner killing the victim
+     * in death messages and in {@code Player#getKiller()} for any combat
+     * / kill-tracking plugins.
      */
     private static void applyPetDamage(MyPet pet, LivingEntity target, double damage) {
         if (pet == null || target == null || target.isDead()) return;
@@ -250,7 +258,8 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
 
         DamageSource.Builder builder = DamageSource.builder(DamageType.MOB_ATTACK)
                 .withDirectEntity(mob);
-        if (owner != null && owner.isOnline() && owner.getWorld().equals(mob.getWorld())) {
+        if (owner != null && owner.isOnline() && owner.getWorld().equals(mob.getWorld())
+                && !(target instanceof Player)) {
             builder = builder.withCausingEntity(owner);
         }
 

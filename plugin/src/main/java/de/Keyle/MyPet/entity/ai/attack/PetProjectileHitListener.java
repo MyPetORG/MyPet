@@ -78,20 +78,26 @@ public class PetProjectileHitListener implements Listener {
 
         // Build a Paper DamageSource that credits the owner as the causing
         // entity (routing XP + drops to them) while naming the pet or the
-        // projectile as the direct source.
+        // projectile as the direct source. Owner attribution is skipped when
+        // the target is a Player — the drops/XP routing rationale only
+        // applies to mob kills, and attributing PvP kills to the owner
+        // makes pet-fired projectiles read as the owner killing the victim
+        // in death messages and Player#getKiller().
         DamageSource.Builder builder = DamageSource
                 .builder(DamageType.MOB_PROJECTILE)
                 .withDirectEntity(event.getEntity());
-        if (owner != null && owner.isOnline()) {
+        boolean creditOwner = !(target instanceof Player);
+        if (creditOwner && owner != null && owner.isOnline()) {
             builder = builder.withCausingEntity(owner);
-        } else if (shooter != null) {
+        } else if (creditOwner && shooter != null) {
             builder = builder.withCausingEntity(shooter);
         }
 
         try {
             target.damage(damage, builder.build());
         } catch (IllegalStateException ignored) {
-            target.damage(damage, owner != null ? owner : shooter);
+            Entity fallback = creditOwner && owner != null ? owner : shooter;
+            target.damage(damage, fallback);
         }
 
         // Do not call event.getEntity().remove() here. ProjectileHitEvent
