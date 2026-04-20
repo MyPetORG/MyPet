@@ -21,11 +21,8 @@ jobs:
       GAME_VERSIONS: ""
       GAME_VERSIONS_JSON: ""
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-      TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
-      USER_GITHUB: ${{ secrets.USER_GITHUB }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
       HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
-      POLYMART_TOKEN: ${{ secrets.POLYMART_TOKEN }}
 
     steps:
       - name: Checkout
@@ -98,7 +95,7 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
-          ./gradlew --no-daemon --build-cache build -PbuildType=release -PUSER_GITHUB=${USER_GITHUB} -PTOKEN_GITHUB=${TOKEN_GITHUB}
+          ./gradlew --no-daemon --build-cache build -PbuildType=release
 
       - name: Publish API release to Reposilite
         run: ./gradlew --no-daemon :api:publish -PbuildType=release
@@ -159,15 +156,6 @@ jobs:
           loaders: paper
           game-versions: ${{ env.GAME_VERSIONS }}
           files: ${{ steps.findjar.outputs.jar }}
-
-      - name: Upload to Polymart
-        continue-on-error: true
-        run: |
-          ./gradlew --no-daemon createPolymartRelease \
-            -PbuildType=release \
-            -PPOLYMART_TOKEN=${POLYMART_TOKEN} \
-            -PPOLYMART_VERSION=${PROJECT_VERSION} \
-            -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
 
       - name: Send a Discord webhook notification
         env:
