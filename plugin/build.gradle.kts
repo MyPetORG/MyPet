@@ -24,7 +24,7 @@ dependencies {
     compileOnly(project(":skills"))
 
     compileOnly("com.zaxxer:HikariCP:3.4.2")
-    compileOnly("de.keyle:knbt:0.0.5")
+    compileOnly("de.keyle:knbt:0.0.6")
     compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("org.mozilla:rhino:1.7.15")
 
@@ -98,7 +98,7 @@ dependencies {
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")
-    compileOnly("de.keyle:knbt:0.0.5")
+    compileOnly("de.keyle:knbt:0.0.6")
 
     compileOnly("io.sentry:sentry:8.22.0")
 

@@ -30,6 +30,7 @@ allprojects {
         mavenCentral()
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
         maven("https://repo.mypet-plugin.de/")
+        maven("https://repo.userderezzed.dev/releases")
     }
 }
 
@@ -194,7 +195,7 @@ dependencies {
 
     add("shade", "org.bstats:bstats-bukkit:1.7")
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
-    add("shade", "de.keyle:knbt:0.0.5")
+    add("shade", "de.keyle:knbt:0.0.6")
     add("shade", "com.google.code.gson:gson:2.8.9")
     add("shade", "io.sentry:sentry:8.22.0")
     add("shade", "io.sentry:sentry-logback:8.22.0")

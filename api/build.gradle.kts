@@ -8,7 +8,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
 
     compileOnly("com.google.code.gson:gson:2.8.9")
-    compileOnly("de.keyle:knbt:0.0.5")
+    compileOnly("de.keyle:knbt:0.0.6")
     compileOnly("org.jetbrains:annotations:16.0.2")
 }
 
