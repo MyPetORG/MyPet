@@ -34,6 +34,7 @@ import java.util.Set;
 @Compat("v1_12_R1")
 public class ItemStackNBTConverter {
     private static Field TAG_LIST_LIST = ReflectionUtil.getField(NBTTagList.class, "list");
+    private static Field TAG_LONG_ARRAY_DATA = ReflectionUtil.getField(NBTTagLongArray.class, "b");
 
     public static TagCompound itemStackToCompound(org.bukkit.inventory.ItemStack itemStack) {
         return itemStackToCompound(CraftItemStack.asNMSCopy(itemStack));
@@ -88,6 +89,8 @@ public class ItemStackNBTConverter {
                 return new NBTTagFloat(((TagFloat) tag).getFloatData());
             case Int_Array:
                 return new NBTTagIntArray(((TagIntArray) tag).getIntArrayData());
+            case Long_Array:
+                return new NBTTagLongArray(((TagLongArray) tag).getLongArrayData());
             case Long:
                 return new NBTTagLong(((TagLong) tag).getLongData());
             case List:
@@ -152,6 +155,14 @@ public class ItemStackNBTConverter {
                 return compound;
             case 11:
                 return new TagIntArray(((NBTTagIntArray) vanillaTag).d());
+            case 12:
+                // 1.12.2 NBTTagLongArray has no public accessor; read the private long[] field directly.
+                try {
+                    return new TagLongArray((long[]) TAG_LONG_ARRAY_DATA.get(vanillaTag));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    return null;
+                }
         }
         return null;
     }
