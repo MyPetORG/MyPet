@@ -92,9 +92,6 @@ jobs:
             echo "On $BASE_BRANCH; nothing to do."; exit 0
           fi
 
-          OWNER_REPO="${GITHUB_REPOSITORY}"
-          OWNER="${OWNER_REPO%%/*}"
-
           echo "Checking for existing open PR from $HEAD_BRANCH to $BASE_BRANCH"
           PR_NUMBER=$(gh pr list \
             --state open \
@@ -104,24 +101,12 @@ jobs:
             --jq '.[0].number' || true)
 
           if [[ -z "${PR_NUMBER}" || "${PR_NUMBER}" == "null" ]]; then
-            PR_NUMBER=$(gh pr list \
-              --state open \
-              --base "$BASE_BRANCH" \
-              --head "$OWNER:$HEAD_BRANCH" \
-              --json number \
-              --jq '.[0].number' || true)
-          fi
-
-          if [[ -z "${PR_NUMBER}" || "${PR_NUMBER}" == "null" ]]; then
             echo "No open PR found. Creating one with title: $TITLE"
             BODY=$(cat <<'EOF'
           This pull request was automatically created by the alpha build to keep master up to date with development.
           EOF
             )
-            # Try unqualified head first, then qualified
-            if ! gh pr create --base "$BASE_BRANCH" --head "$HEAD_BRANCH" --title "$TITLE" --body "$BODY"; then
-              gh pr create --base "$BASE_BRANCH" --head "$OWNER:$HEAD_BRANCH" --title "$TITLE" --body "$BODY"
-            fi
+            gh pr create --base "$BASE_BRANCH" --head "$HEAD_BRANCH" --title "$TITLE" --body "$BODY"
           else
             echo "Open PR #$PR_NUMBER exists. Ensuring title is set to: $TITLE"
             gh pr edit "$PR_NUMBER" --title "$TITLE" || echo "Warning: failed to update PR title"
