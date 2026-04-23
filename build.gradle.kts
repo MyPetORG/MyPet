@@ -7,7 +7,6 @@ plugins {
     java
     id("com.gradleup.shadow") version "9.3.1"
     id("io.freefair.lombok") version "9.1.0"
-    id("com.cjcrafter.polymart-release") version "1.0.1"
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
     id("io.sentry.jvm.gradle") version "5.12.2"
     `maven-publish`
@@ -16,25 +15,22 @@ plugins {
 group = "de.keyle"
 
 val buildType = project.findProperty("buildType")?.toString() ?: "local"
-val minecraftVersion by extra("1.21.11")
-val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6;v1_21_R7")
+val minecraftVersion by extra("26.1")
+val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6;v1_21_R7;v26_1_R1")
 val specialVersions by extra("")
 
-version = "3.14.1"
+version = "3.14.2"
 
-val nmsModules: List<String> = File(rootDir, "nms")
-    .listFiles()
-    ?.filter { it.isDirectory && it.name.matches(Regex("v[\\d_]+R\\d+")) }
-    ?.map { ":nms:${it.name}" }
-    ?: emptyList()
+@Suppress("UNCHECKED_CAST")
+val nmsModules: List<String> = gradle.extra["nmsModules"] as List<String>
 
 // Shared repositories for all projects (root + subprojects)
 allprojects {
     repositories {
         mavenCentral()
-        mavenLocal()
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
         maven("https://repo.mypet-plugin.de/")
+        maven("https://repo.userderezzed.dev/releases")
     }
 }
 
@@ -47,14 +43,11 @@ subprojects {
         maven("https://mvn.lib.co.nz/spigot/")
         maven("https://repo.md-5.net/content/groups/public/")
         maven("https://repo.papermc.io/repository/maven-public/")
-        maven("https://repo.codemc.io/repository/maven-releases/")
-        maven("https://repo.codemc.io/repository/maven-snapshots/")
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
         maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://maven.enginehub.org/repo/")
         maven("https://repo.md-5.net/content/repositories/public")
         maven("https://jitpack.io")
-        maven("https://mvn.intellectualsites.com/content/repositories/releases/") // PlotSquared V6+
     }
 
     tasks.named("processResources") { enabled = false }
@@ -62,14 +55,16 @@ subprojects {
     tasks.named("compileTestJava") { enabled = false }
     tasks.named("processTestResources") { enabled = false }
 
-    plugins.withId("maven-publish") {
-        tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
-        tasks.withType<PublishToMavenLocal>().configureEach { enabled = false }
+    if (project.name != "api") {
+        plugins.withId("maven-publish") {
+            tasks.withType<PublishToMavenRepository>().configureEach { enabled = false }
+            tasks.withType<PublishToMavenLocal>().configureEach { enabled = false }
+        }
     }
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(21))
+            languageVersion.set(JavaLanguageVersion.of(25))
         }
     }
 }
@@ -154,8 +149,7 @@ tasks.named<ProcessResources>("processResources") {
         "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
     )
 
-    filesMatching("plugin.yml") { expand(filteringProps) }
-    filesMatching("*.yml") { if (name != "plugin.yml") expand(filteringProps) }
+    filesMatching("*.yml") { expand(filteringProps) }
 }
 
 fun Manifest.attributesForMyPet() = attributes(
@@ -198,10 +192,10 @@ dependencies {
     nmsModules.forEach { add("shade", project(path = it, configuration = "runtimeElements")) }
 
     // External libs to be shaded
-    add("shade", "at.blvckbytes:RawMessage:0.2")
+
     add("shade", "org.bstats:bstats-bukkit:1.7")
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
-    add("shade", "de.keyle:knbt:0.0.5")
+    add("shade", "de.keyle:knbt:0.0.6")
     add("shade", "com.google.code.gson:gson:2.8.9")
     add("shade", "io.sentry:sentry:8.22.0")
     add("shade", "io.sentry:sentry-logback:8.22.0")
@@ -220,7 +214,7 @@ val shadowJar = tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.Sha
 
     configurations = listOf(shade)
 
-    relocate("at.blvckbytes.raw_message", "de.Keyle.MyPet.util.raw_message")
+
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
     relocate("com.zaxxer.hikari", "de.Keyle.MyPet.util.hikari")
     relocate("de.keyle.knbt", "de.Keyle.MyPet.util.nbt")
@@ -248,29 +242,11 @@ sentry {
 /* ---------- Root compilation settings (Java 8 output) ---------- */
 
 java {
-    toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
+    toolchain { languageVersion.set(JavaLanguageVersion.of(25)) }
 }
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(8)
     options.encoding = "UTF-8"
-}
-
-/* ---------- Polymart Release ---------- */
-
-polymart {
-    val polymartVersion = providers.gradleProperty("POLYMART_VERSION").orNull
-        ?: project.version.toString()
-    val polymartFile = providers.gradleProperty("POLYMART_FILE").orNull
-        ?: "build/libs/MyPet-${fullVersion}.jar"
-    apiKey = providers.gradleProperty("POLYMART_TOKEN").orNull
-        ?: System.getenv("POLYMART_TOKEN")
-        ?: ""
-    resourceId = 8915
-    version = polymartVersion
-    title = "MyPet $polymartVersion"
-    message = "View the full changelog on Modrinth: https://modrinth.com/plugin/mypet/version/$polymartVersion"
-    file.set(file(polymartFile))
-    beta = buildType != "release"
 }
 
 /* ---------- Hangar Release ---------- */
@@ -299,7 +275,7 @@ hangarPublish {
                 jar.set(file(hangarFile))
                 platformVersions.set(listOf(
                     "1.8.8", "1.12.2", "1.16.5", "1.17.1", "1.18.2",
-                    "1.19.x", "1.20.x", "1.21.x"
+                    "1.19.x", "1.20.x", "1.21.x", "26.1"
                 ))
             }
         }

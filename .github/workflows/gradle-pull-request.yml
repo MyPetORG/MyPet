@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 30
 
     env:
-      JAVA_VERSION: '21'
+      JAVA_VERSION: '25'
       BUILD_NUMBER: 1
 
     steps:
@@ -43,3 +43,5 @@ jobs:
             -PBUILD_NUMBER="${BUILD_NUMBER}" \
             -PGIT_COMMIT="${{ github.sha }}" \
             clean build
+        env:
+          REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}

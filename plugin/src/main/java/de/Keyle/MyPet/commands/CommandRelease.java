@@ -33,10 +33,10 @@ import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
-import at.blvckbytes.raw_message.MessageColor;
-import at.blvckbytes.raw_message.RawMessage;
-import at.blvckbytes.raw_message.click.RunCommandAction;
-import at.blvckbytes.raw_message.hover.ShowItemAction;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -115,71 +115,67 @@ public class CommandRelease implements CommandTabCompleter {
 
                     return true;
                 } else {
-                    ShowItemAction hoverItem = new ShowItemAction()
-                      .setName(myPet.getPetName())
-                      .addLoreLine(
-                        new RawMessage(Translation.getString("Name.Hunger", petOwner) + ": ")
-                          .clearImplicitStyling()
-                          .addExtra(
-                            new RawMessage(Math.round(myPet.getSaturation()))
-                              .setColor(MessageColor.GOLD)
-                          )
-                      );
+                    // Build hover text with pet stats
+                    TextComponent hoverText = new TextComponent("");
+                    TextComponent petTitle = new TextComponent(myPet.getPetName());
+                    petTitle.setColor(net.md_5.bungee.api.ChatColor.WHITE);
+                    petTitle.setBold(true);
+                    hoverText.addExtra(petTitle);
+
+                    hoverText.addExtra("\n");
+                    TextComponent hungerLabel = new TextComponent(Translation.getString("Name.Hunger", petOwner) + ": ");
+                    TextComponent hungerVal = new TextComponent(String.valueOf(Math.round(myPet.getSaturation())));
+                    hungerVal.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+                    hungerLabel.addExtra(hungerVal);
+                    hoverText.addExtra(hungerLabel);
 
                     if (myPet.getRespawnTime() > 0) {
-                        hoverItem.addLoreLine(
-                          new RawMessage(Translation.getString("Name.Respawntime", petOwner) + ": ")
-                            .clearImplicitStyling()
-                            .addExtra(
-                              new RawMessage(myPet.getRespawnTime() + "sec")
-                                .setColor(MessageColor.GOLD)
-                            )
-                        );
+                        hoverText.addExtra("\n");
+                        TextComponent rtLabel = new TextComponent(Translation.getString("Name.Respawntime", petOwner) + ": ");
+                        TextComponent rtVal = new TextComponent(myPet.getRespawnTime() + "sec");
+                        rtVal.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+                        rtLabel.addExtra(rtVal);
+                        hoverText.addExtra(rtLabel);
                     } else {
-                        hoverItem.addLoreLine(
-                          new RawMessage(Translation.getString("Name.HP", petOwner) + ": ")
-                            .clearImplicitStyling()
-                            .addExtra(
-                              new RawMessage(String.format("%1.2f", myPet.getHealth()))
-                                .setColor(MessageColor.GOLD)
-                            )
-                        );
+                        hoverText.addExtra("\n");
+                        TextComponent hpLabel = new TextComponent(Translation.getString("Name.HP", petOwner) + ": ");
+                        TextComponent hpVal = new TextComponent(String.format("%1.2f", myPet.getHealth()));
+                        hpVal.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+                        hpLabel.addExtra(hpVal);
+                        hoverText.addExtra(hpLabel);
                     }
 
-                    hoverItem
-                      .addLoreLine(
-                        new RawMessage(Translation.getString("Name.Exp", petOwner) + ": ")
-                          .clearImplicitStyling()
-                          .addExtra(
-                            new RawMessage(String.format("%1.2f", myPet.getExp()))
-                              .setColor(MessageColor.GOLD)
-                          )
-                      )
-                      .addLoreLine(
-                        new RawMessage(Translation.getString("Name.Type", petOwner) + ": ")
-                          .clearImplicitStyling()
-                          .addExtra(
-                            new RawMessage(Translation.getString("Name." + myPet.getPetType().name(), petOwner))
-                              .setColor(MessageColor.GOLD)
-                          )
-                      )
-                      .addLoreLine(
-                        new RawMessage(Translation.getString("Name.Skilltree", petOwner) + ": ")
-                          .clearImplicitStyling()
-                          .addExtra(
-                            new RawMessage(myPet.getSkilltree() != null ? Colorizer.setColors(myPet.getSkilltree().getDisplayName()) : "-")
-                              .setColor(MessageColor.GOLD)
-                          )
-                      );
+                    hoverText.addExtra("\n");
+                    TextComponent expLabel = new TextComponent(Translation.getString("Name.Exp", petOwner) + ": ");
+                    TextComponent expVal = new TextComponent(String.format("%1.2f", myPet.getExp()));
+                    expVal.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+                    expLabel.addExtra(expVal);
+                    hoverText.addExtra(expLabel);
 
-                    new RawMessage(Translation.getString("Message.Command.Release.Confirm", petOwner) + " ")
-                      .addExtra(
-                        new RawMessage(myPet.getPetName())
-                          .setColor(MessageColor.AQUA)
-                          .setClickAction(new RunCommandAction("/petrelease " + ChatColor.stripColor(myPet.getPetName())))
-                          .setHoverAction(hoverItem)
-                      )
-                      .tellRawTo((Player) sender);
+                    hoverText.addExtra("\n");
+                    TextComponent typeLabel = new TextComponent(Translation.getString("Name.Type", petOwner) + ": ");
+                    TextComponent typeVal = new TextComponent(Translation.getString("Name." + myPet.getPetType().name(), petOwner));
+                    typeVal.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+                    typeLabel.addExtra(typeVal);
+                    hoverText.addExtra(typeLabel);
+
+                    hoverText.addExtra("\n");
+                    TextComponent stLabel = new TextComponent(Translation.getString("Name.Skilltree", petOwner) + ": ");
+                    TextComponent stVal = new TextComponent(myPet.getSkilltree() != null ? Colorizer.setColors(myPet.getSkilltree().getDisplayName()) : "-");
+                    stVal.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+                    stLabel.addExtra(stVal);
+                    hoverText.addExtra(stLabel);
+
+                    HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{hoverText});
+
+                    TextComponent confirmMsg = new TextComponent(Translation.getString("Message.Command.Release.Confirm", petOwner) + " ");
+                    TextComponent petNamePart = new TextComponent(myPet.getPetName());
+                    petNamePart.setColor(net.md_5.bungee.api.ChatColor.AQUA);
+                    petNamePart.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                        "/petrelease " + ChatColor.stripColor(myPet.getPetName())));
+                    petNamePart.setHoverEvent(hoverEvent);
+                    confirmMsg.addExtra(petNamePart);
+                    ((Player) sender).spigot().sendMessage(confirmMsg);
 
                     return true;
                 }

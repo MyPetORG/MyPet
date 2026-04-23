@@ -73,6 +73,8 @@ public class ItemStackNBTConverter {
 				return NBTTagFloat.a(((TagFloat) tag).getFloatData());
 			case Int_Array:
 				return new NBTTagIntArray(((TagIntArray) tag).getIntArrayData());
+			case Long_Array:
+				return new NBTTagLongArray(((TagLongArray) tag).getLongArrayData());
 			case Long:
 				return NBTTagLong.a(((TagLong) tag).getLongData());
 			case List:
@@ -136,6 +138,8 @@ public class ItemStackNBTConverter {
 				return compound;
 			case 11:
 				return new TagIntArray(((NBTTagIntArray) vanillaTag).getInts());
+			case 12:
+				return new TagLongArray(((NBTTagLongArray) vanillaTag).getLongs());
 		}
 		return null;
 	}

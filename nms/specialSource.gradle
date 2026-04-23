@@ -6,13 +6,8 @@ configurations {
     }
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
 dependencies {
-    specialSourceTool 'net.md-5:SpecialSource:1.11.5:shaded'
+    specialSourceTool 'net.md-5:SpecialSource:1.11.6:shaded'
 }
 
 // Spigot server code remapping: https://www.spigotmc.org/threads/spigot-bungeecord-1-17-1-17-1.510208/

@@ -31,11 +31,10 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import at.blvckbytes.raw_message.MessageColor;
-import at.blvckbytes.raw_message.RawMessage;
-import at.blvckbytes.raw_message.click.RunCommandAction;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -93,24 +92,22 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                     sender.sendMessage("Select the MyPet you want the player to switch to:");
                     if (sender instanceof Player) {
                         boolean doComma = false;
-
-                        RawMessage message = new RawMessage();
+                        TextComponent message = new TextComponent("");
                         for (StoredMyPet mypet : value) {
-
                             if (doComma) {
                                 message.addExtra(", ");
                             }
-                            message.addExtra(
-                              new RawMessage(mypet.getPetName())
-                                .setColor(MessageColor.AQUA)
-                                .setClickAction(new RunCommandAction("/petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID()))
-                                .setHoverAction(Util.myPetToItemAction(mypet, lang))
-                            );
+                            TextComponent petName = new TextComponent(mypet.getPetName());
+                            petName.setColor(ChatColor.AQUA);
+                            petName.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                                "/petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID()));
+                            petName.setHoverEvent(Util.myPetToHoverEvent(mypet, lang));
+                            message.addExtra(petName);
                             if (!doComma) {
                                 doComma = true;
                             }
                         }
-                        message.tellRawTo((Player) sender);
+                        ((Player) sender).spigot().sendMessage(message);
                     } else {
                         for (StoredMyPet mypet : value) {
                             sender.sendMessage(mypet.getPetName() + "(" + mypet.getPetType().name() + ") -> /petadmin switch " + owner.getInternalUUID() + " " + mypet.getUUID());

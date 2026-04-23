@@ -24,7 +24,7 @@ dependencies {
     compileOnly(project(":skills"))
 
     compileOnly("com.zaxxer:HikariCP:3.4.2")
-    compileOnly("de.keyle:knbt:0.0.5")
+    compileOnly("de.keyle:knbt:0.0.6")
     compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("org.mozilla:rhino:1.7.15")
 
@@ -32,8 +32,6 @@ dependencies {
     compileOnly("org.slf4j:slf4j-nop:1.7.30")
 
     compileOnly("org.apache.logging.log4j:log4j-core:2.17.1")
-
-    compileOnly("at.blvckbytes:RawMessage:0.2")
 
     compileOnly("net.citizensnpcs:citizensapi:2.0.24")
     compileOnly("br.net.fabiozumbi12:PvPDiffTimer:1.4.4")
@@ -100,11 +98,7 @@ dependencies {
 
     compileOnly("org.bstats:bstats-bukkit:1.7")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")
-    compileOnly("de.keyle:knbt:0.0.5")
-
-    // Prefer Lombok as compileOnly + annotationProcessor in Gradle:
-    compileOnly("org.projectlombok:lombok:1.18.42")
-    annotationProcessor("org.projectlombok:lombok:1.18.42")
+    compileOnly("de.keyle:knbt:0.0.6")
 
     compileOnly("io.sentry:sentry:8.22.0")
 
@@ -113,31 +107,4 @@ dependencies {
 fun getVersionFromName(filename: String): String {
     return """\d+(\.\d+)+(-SNAPSHOT)?""".toRegex().find(filename)?.value
         ?: throw GradleException("Failed to get PE version from: '$filename'")
-}
-
-publishing {
-    repositories {
-        if (System.getenv("MVN_USER") != null) {
-            maven {
-                val repoType = if (project.version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
-                // Eg: https://mvn.lib.co.nz/repositories/maven-%branch%/
-                url = uri(System.getenv("MVN_PATH").replace("%branch%", repoType))
-
-                credentials {
-                    username = System.getenv("MVN_USER")
-                    password = System.getenv("MVN_PASS")
-                }
-            }
-        } else {
-            mavenLocal()
-        }
-    }
-
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-
-            artifactId = "mypet"
-        }
-    }
 }

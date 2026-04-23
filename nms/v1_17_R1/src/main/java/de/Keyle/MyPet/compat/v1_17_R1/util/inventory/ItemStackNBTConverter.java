@@ -38,6 +38,7 @@ import de.keyle.knbt.TagFloat;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagIntArray;
 import de.keyle.knbt.TagList;
+import de.keyle.knbt.TagLongArray;
 import de.keyle.knbt.TagLong;
 import de.keyle.knbt.TagShort;
 import de.keyle.knbt.TagString;
@@ -50,6 +51,7 @@ import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.LongArrayTag;
 import net.minecraft.nbt.LongTag;
 import net.minecraft.nbt.ShortTag;
 import net.minecraft.nbt.StringTag;
@@ -98,6 +100,8 @@ public class ItemStackNBTConverter {
                 return FloatTag.valueOf(((TagFloat) tag).getFloatData());
             case Int_Array:
                 return new IntArrayTag(((TagIntArray) tag).getIntArrayData());
+            case Long_Array:
+                return new LongArrayTag(((TagLongArray) tag).getLongArrayData());
             case Long:
                 return LongTag.valueOf(((TagLong) tag).getLongData());
             case List:
@@ -161,6 +165,8 @@ public class ItemStackNBTConverter {
                 return compound;
             case 11:
                 return new TagIntArray(((IntArrayTag) vanillaTag).getAsIntArray());
+            case 12:
+                return new TagLongArray(((LongArrayTag) vanillaTag).getAsLongArray());
         }
         return null;
     }
