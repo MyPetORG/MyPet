@@ -23,7 +23,6 @@ jobs:
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      POLYMART_TOKEN: ${{ secrets.POLYMART_TOKEN }}
 
     steps:
       - name: Checkout
@@ -163,9 +162,6 @@ jobs:
             -PHANGAR_VERSION=${PROJECT_VERSION} \
             -PHANGAR_FILE=${{ steps.findjar.outputs.jar }} \
             -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
-
-      - name: Publish to Polymart
-        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_TOKEN=${POLYMART_TOKEN} -PPOLYMART_VERSION=${PROJECT_VERSION} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
 
       - name: Send a Discord webhook notification
         env:
