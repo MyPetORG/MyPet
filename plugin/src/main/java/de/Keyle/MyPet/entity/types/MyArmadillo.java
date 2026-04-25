@@ -23,11 +23,65 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
+import org.bukkit.entity.Armadillo;
+import org.bukkit.entity.Mob;
+
+import java.lang.reflect.Method;
 
 @Getter
 public class MyArmadillo extends MyPet implements de.Keyle.MyPet.api.entity.types.MyArmadillo {
 
+    // Paper 1.21.5+ exposes Armadillo#getState() returning an Armadillo.State enum
+    // ({IDLE, ROLLING, SCARED, UNROLLING}). v4 compiles against 1.21.4 where the
+    // method does not exist yet but supports running on 1.21.5–1.21.11, so the
+    // lookup is performed reflectively once and cached.
+    // TODO Replace reflection when MyPet minimum MC version reaches 1.21.5
+    private static volatile Method getStateMethod;
+    private static volatile boolean stateLookupDone;
+
     public MyArmadillo(MyPetPlayer petOwner) {
         super(petOwner);
+    }
+
+    @Override
+    public boolean canMove() {
+        if (!super.canMove()) {
+            return false;
+        }
+        Mob entity = getBukkitEntity();
+        if (entity instanceof Armadillo armadillo) {
+            return !isCowering(armadillo);
+        }
+        return true;
+    }
+
+    private static boolean isCowering(Armadillo armadillo) {
+        Method method = resolveGetState(armadillo);
+        if (method == null) {
+            return false;
+        }
+        try {
+            Object state = method.invoke(armadillo);
+            return state != null && !"IDLE".equals(state.toString());
+        } catch (ReflectiveOperationException e) {
+            return false;
+        }
+    }
+
+    private static Method resolveGetState(Armadillo armadillo) {
+        if (stateLookupDone) {
+            return getStateMethod;
+        }
+        synchronized (MyArmadillo.class) {
+            if (!stateLookupDone) {
+                try {
+                    getStateMethod = armadillo.getClass().getMethod("getState");
+                } catch (NoSuchMethodException ignored) {
+                    getStateMethod = null;
+                }
+                stateLookupDone = true;
+            }
+        }
+        return getStateMethod;
     }
 }
