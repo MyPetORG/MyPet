@@ -178,10 +178,14 @@ public class EntityListener implements Listener {
         }
     }
 
-    // Wither's head-targeting/skull-shooting is hardcoded in WitherBoss#customServerAiStep
-    // and runs independent of the goal selector, so PetGoalInstaller cannot suppress it.
-    // Skulls fired via PetRangedAttackGoal always tag PROJECTILE_DAMAGE_KEY; an untagged
-    // skull from a marked pet shooter is necessarily from the autonomous code path.
+    // Belt-and-suspenders for Wither pets: WitherAutonomousAttackSuppressor clears
+    // the three head targets every tick so WitherBoss#customServerAiStep's fire loop
+    // finds nothing to shoot at, but there is a narrow intra-tick race on scan ticks
+    // (the side-head scan runs inside the same tick as the fire loop, after our
+    // target-clear runs). Any skull that does slip through is silently cancelled
+    // here so it never lands a hit. Skulls fired via PetRangedAttackGoal always tag
+    // PROJECTILE_DAMAGE_KEY; an untagged skull from a marked pet shooter is
+    // necessarily from the autonomous code path.
     @EventHandler
     public void onPetAutonomousWitherSkull(ProjectileLaunchEvent event) {
         if (!(event.getEntity() instanceof WitherSkull skull)) return;

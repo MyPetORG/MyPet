@@ -10,6 +10,7 @@ import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
+import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
@@ -147,6 +148,7 @@ public final class VanillaMobSpawner {
         PetPotionParticleController.stopForPet(pet);
         RideSkillFlightController.stopForPet(pet);
         CreakingActivationSuppressor.stopForPet(pet);
+        WitherAutonomousAttackSuppressor.stopForPet(pet);
         pet.setBukkitEntity(null);
 
         // Safe to destroy the old mob now — MyPet already released the reference.
@@ -231,6 +233,7 @@ public final class VanillaMobSpawner {
         PetPotionParticleController.startForPet(pet);
         RideSkillFlightController.startForPet(pet);
         CreakingActivationSuppressor.startForPet(pet);
+        WitherAutonomousAttackSuppressor.startForPet(pet);
     }
 
     /**

@@ -44,6 +44,7 @@ import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
+import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.DamageImpl;
@@ -198,6 +199,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         PetPotionParticleController.stopForPet(this);
         RideSkillFlightController.stopForPet(this);
         CreakingActivationSuppressor.stopForPet(this);
+        WitherAutonomousAttackSuppressor.stopForPet(this);
         if (bukkitEntity != null) {
             bukkitEntity.remove();
         }
@@ -867,6 +869,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 PetSitParticleController.stopForPet(this);
                 PetPotionParticleController.stopForPet(this);
                 RideSkillFlightController.stopForPet(this);
+                WitherAutonomousAttackSuppressor.stopForPet(this);
                 bukkitEntity = null;
 
                 if (ownedByCurrentRegion) {
