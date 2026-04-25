@@ -200,8 +200,7 @@ public final class VanillaMobSpawner {
 
         AttributeInstance health = mob.getAttribute(Attribute.MAX_HEALTH);
         if (health != null) {
-            // User has confirmed assumption: Integer.MAX_VALUE works on real vanilla mobs.
-            health.setBaseValue(Integer.MAX_VALUE);
+            health.setBaseValue(Math.max(1.0, pet.getMaxHealth()));
             mob.setHealth(Math.max(1.0, Math.min(pet.getHealth(), health.getValue())));
         }
 

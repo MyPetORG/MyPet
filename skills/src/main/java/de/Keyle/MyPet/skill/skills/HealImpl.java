@@ -84,7 +84,7 @@ public class HealImpl implements Heal {
                                 particles = true;
                                 myPet.showPotionParticles(Color.LIME);
                             }
-                            entity.setHealth(myPet.getHealth() + heal.getValue().doubleValue());
+                            myPet.setHealth(myPet.getHealth() + heal.getValue().doubleValue());
                         }
                         timeCounter = timer.getValue();
                     } else {

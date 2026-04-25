@@ -60,6 +60,8 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.ListBinaryTag;
 import lombok.Setter;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
@@ -542,10 +544,20 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         if (status == PetState.Here) {
             this.health = health;
             final double finalHealth = health;
-            if (Bukkit.isOwnedByCurrentRegion(bukkitEntity)) {
+            final double finalMaxHealth = Math.max(1.0, maxHealth);
+            Runnable apply = () -> {
+                AttributeInstance attr = bukkitEntity.getAttribute(Attribute.MAX_HEALTH);
+                if (attr != null && attr.getBaseValue() != finalMaxHealth) {
+                    // Cap must move before health: vanilla setHealth() throws when value > current attribute max,
+                    // which would happen on Life-skill upgrade if we wrote health first.
+                    attr.setBaseValue(finalMaxHealth);
+                }
                 bukkitEntity.setHealth(finalHealth);
+            };
+            if (Bukkit.isOwnedByCurrentRegion(bukkitEntity)) {
+                apply.run();
             } else {
-                bukkitEntity.getScheduler().run(MyPetApi.getPlugin(), task -> bukkitEntity.setHealth(finalHealth), null);
+                bukkitEntity.getScheduler().run(MyPetApi.getPlugin(), task -> apply.run(), null);
             }
         } else {
             this.health = health;
