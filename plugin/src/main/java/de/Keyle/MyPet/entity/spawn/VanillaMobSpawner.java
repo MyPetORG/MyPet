@@ -7,6 +7,7 @@ import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
+import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
@@ -233,6 +234,7 @@ public final class VanillaMobSpawner {
         RideSkillFlightController.startForPet(pet);
         CreakingActivationSuppressor.startForPet(pet);
         WitherAutonomousAttackSuppressor.startForPet(pet);
+        PetNoPushSuppressor.startForPet(pet);
     }
 
     /**

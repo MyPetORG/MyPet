@@ -42,6 +42,7 @@ import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
+import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
@@ -202,6 +203,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         RideSkillFlightController.stopForPet(this);
         CreakingActivationSuppressor.stopForPet(this);
         WitherAutonomousAttackSuppressor.stopForPet(this);
+        PetNoPushSuppressor.stopForPet(this);
         if (bukkitEntity != null) {
             bukkitEntity.remove();
         }
@@ -833,8 +835,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 // bukkitEntity is now set by VanillaMobSpawner via setBukkitEntity().
                 bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), true));
 
-                bukkitEntity.setCollidable(false);
-
                 updateStatus(PetState.Here);
 
                 if (worldGroup == null || worldGroup.isEmpty()) {
@@ -882,6 +882,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 PetPotionParticleController.stopForPet(this);
                 RideSkillFlightController.stopForPet(this);
                 WitherAutonomousAttackSuppressor.stopForPet(this);
+                PetNoPushSuppressor.stopForPet(this);
                 bukkitEntity = null;
 
                 if (ownedByCurrentRegion) {
