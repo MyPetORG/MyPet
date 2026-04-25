@@ -490,7 +490,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
         ItemStack finalItem = null;
-        if (item == null) {
+        if (item == null || item.getType().isAir()) {
             equipment.remove(slot);
         } else {
             finalItem = item.clone();

@@ -237,6 +237,27 @@ public final class PetStateSnapshot {
                     writeEquipmentItem(b, EquipmentSlot.BODY, camel.getInventory().getSaddle());
                 }
             }
+            case ALLAY -> {
+                // Allay's main-hand item is driven by vanilla Brain behavior in
+                // both directions — right-click-with-item places it in the
+                // entity hand, right-click-empty-handed returns it to the
+                // player and clears the hand. Both paths bypass
+                // MyPet#setEquipment, so the snapshot must reflect both states
+                // or stale items linger in the equipment map and duplicate on
+                // respawn. Empty hand round-trips as AIR through itemStackToCompound
+                // (returns an empty compound) → compoundToItemStack (returns
+                // ItemStack.empty()) → setEquipment, which treats AIR as a clear.
+                var eq = entity.getEquipment();
+                if (eq != null) {
+                    ItemStack hand = eq.getItemInMainHand();
+                    CompoundBinaryTag itemTag = MyPetApi.getPlatformHelper()
+                            .itemStackToCompound(hand)
+                            .putString("Slot", EquipmentSlot.HAND.name());
+                    List<CompoundBinaryTag> items = new ArrayList<>();
+                    items.add(itemTag);
+                    b.put("Equipment", ListBinaryTag.from(items));
+                }
+            }
             case LLAMA -> {
                 Llama llama = (Llama) entity;
                 if (fullSnapshot) {
