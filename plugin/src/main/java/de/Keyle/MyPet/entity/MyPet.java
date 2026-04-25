@@ -956,24 +956,29 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return wantsToRespawn;
     }
 
+    @Override
+    public void tickRespawnTimer() {
+        if (status != PetState.Dead || !getOwner().isOnline()) {
+            return;
+        }
+        if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+            respawnTime--;
+        }
+        if (respawnTime <= 0) {
+            respawnPet();
+        } else if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime <= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
+            double cost = respawnTime * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
+            VaultHook vaultHook = MyPetApi.getPluginHookManager().getHook(VaultHook.class);
+            if (vaultHook.canPay(getOwner().getPlayer(), cost)) {
+                vaultHook.pay(getOwner().getPlayer(), cost);
+                getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Respawn.Paid", petOwner.getLanguage(), getDisplayName(), cost + " " + vaultHook.currencyNameSingular()));
+                respawnTime = 0;
+            }
+        }
+    }
+
     public void schedule() {
         if (status != PetState.Despawned && getOwner().isOnline()) {
-            if (status == PetState.Dead) {
-                if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                    respawnTime--;
-                }
-                if (respawnTime <= 0) {
-                    respawnPet();
-                } else if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime <= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
-                    double cost = respawnTime * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
-                    VaultHook vaultHook = MyPetApi.getPluginHookManager().getHook(VaultHook.class);
-                    if (vaultHook.canPay(getOwner().getPlayer(), cost)) {
-                        vaultHook.pay(getOwner().getPlayer(), cost);
-                        getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Respawn.Paid", petOwner.getLanguage(), getDisplayName(), cost + " " + vaultHook.currencyNameSingular()));
-                        respawnTime = 0;
-                    }
-                }
-            }
             if (status == PetState.Here) {
                 for (Skill skill : skills.all()) {
                     if (skill instanceof Scheduler scheduler) {

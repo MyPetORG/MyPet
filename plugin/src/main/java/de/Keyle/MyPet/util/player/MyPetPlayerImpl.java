@@ -411,6 +411,8 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         }
                     }
                 }
+            } else if (cachedStatus == PetState.Dead) {
+                myPet.tickRespawnTimer();
             } else if (cachedStatus == PetState.Despawned) {
                 if (myPet.wantsToRespawn() && !p.isFlying()) {
                     boolean velocity = p.getVelocity().getY() >= 0;

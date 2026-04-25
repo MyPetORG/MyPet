@@ -120,6 +120,14 @@ public interface MyPet extends StoredMyPet, Scheduler {
     default void updateVisuals() {
     }
 
+    /**
+     * Ticks the respawn countdown for a dead pet. Must be invoked from the owner's
+     * scheduler (not the pet entity's), because the dead Bukkit mob is removed from
+     * the world shortly after death and its per-entity scheduler stops firing.
+     */
+    default void tickRespawnTimer() {
+    }
+
     default void showPotionParticles(Color color) {
     }
 
