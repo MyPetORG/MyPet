@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  * and an optional visibility predicate that controls whether the entry is shown to a given player.
  *
  * <p>Entries are registered via {@link HelpRegistry#register(HelpEntry)} and are typically
- * created during command registration in {@code MyPetPlugin.registerBrigadierCommands()}.
+ * created during command registration in {@code BuiltInCommands.register()}.
  *
  * @param translationKey the translation key used to look up the localized help description
  *                       for this command (e.g., {@code "Name.Help.Description"})

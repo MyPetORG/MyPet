@@ -130,7 +130,7 @@ public class CommandOptionReload {
      *   <li>Reloads the main configuration and version-specific compatibility config via
      *       {@link ConfigurationLoader}</li>
      *   <li>Updates the debug log level</li>
-     *   <li>Re-initialises the translation/locale system</li>
+     *   <li>Re-initializes the translation/locale system</li>
      *   <li>Adjusts {@code MyPet.petstorage.limit.*} permissions if the maximum stored
      *       pet count changed (registers new permissions or removes excess ones)</li>
      *   <li>Switches the experience calculator to match the configured calculation mode</li>
