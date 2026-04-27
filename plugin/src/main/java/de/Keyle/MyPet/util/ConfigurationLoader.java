@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.MyPetGlidingEntity;
+import de.Keyle.MyPet.api.entity.MyPetShake;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.ConfigItem;
@@ -250,10 +251,11 @@ public class ConfigurationLoader {
         }
 
 
-        // Dynamic per-type CanFly / CanGlide rows. Adding a new flying or gliding
-        // pet requires no edit here — implement the appropriate marker interface
-        // and the YAML row appears. Migration of pre-4.x configs (single CanGlide
-        // key on flying pets) is handled by MigrateFlyingPetsCanGlideToCanFly.
+        // Dynamic per-type CanFly / CanGlide / WillShake rows. Adding a new
+        // flying, gliding, or shaking pet requires no edit here — implement the
+        // appropriate marker interface and the YAML row appears. Migration of
+        // pre-4.x configs (single CanGlide key on flying pets) is handled by
+        // MigrateFlyingPetsCanGlideToCanFly.
         for (MyPetType type : MyPetType.values()) {
             String base = "MyPet.Pets." + type.name();
             if (MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
@@ -262,6 +264,9 @@ public class ConfigurationLoader {
             if (MyPetGlidingEntity.class.isAssignableFrom(type.getMyPetClass())) {
                 config.addDefault(base + ".CanGlide", true);
             }
+            if (MyPetShake.class.isAssignableFrom(type.getMyPetClass())) {
+                config.addDefault(base + ".WillShake", true);
+            }
         }
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
         if (MyPetType.byNameOrNull("CopperGolem") != null) {
@@ -269,18 +274,9 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets.CopperGolem.OxidationTime", 24000);
         }
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
-        if (MyPetType.byNameOrNull("Hoglin") != null) {
-            config.addDefault("MyPet.Pets.Hoglin.WillShake", MyPet.Hoglin.WILL_SHAKE);
-        }
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
         config.addDefault("MyPet.Pets.SnowGolem.FixSnowTrack", MyPet.SnowGolem.FIX_SNOW_TRACK);
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
-        if (MyPetType.byNameOrNull("Piglin") != null) {
-            config.addDefault("MyPet.Pets.Piglin.WillShake", MyPet.Piglin.WILL_SHAKE);
-        }
-        if (MyPetType.byNameOrNull("PiglinBrute") != null) {
-            config.addDefault("MyPet.Pets.PiglinBrute.WillShake", MyPet.PiglinBrute.WILL_SHAKE);
-        }
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
         config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
 
@@ -471,8 +467,9 @@ public class ConfigurationLoader {
         MyPet.SnowGolem.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.SnowGolem.FixSnowTrack", true);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
 
-        // Dynamic per-type CanFly / CanGlide load. Reads the separate
-        // MyPet.Pets.<Type>.CanFly and .CanGlide keys populated by setDefault().
+        // Dynamic per-type CanFly / CanGlide / WillShake load. Reads the
+        // MyPet.Pets.<Type>.CanFly, .CanGlide, and .WillShake keys populated
+        // by setDefault().
         for (MyPetType type : MyPetType.values()) {
             String base = "MyPet.Pets." + type.name();
             if (MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
@@ -480,6 +477,9 @@ public class ConfigurationLoader {
             }
             if (MyPetGlidingEntity.class.isAssignableFrom(type.getMyPetClass())) {
                 MyPet.setCanGlide(type.name(), config.getBoolean(base + ".CanGlide", true));
+            }
+            if (MyPetShake.class.isAssignableFrom(type.getMyPetClass())) {
+                MyPet.setWillShake(type.name(), config.getBoolean(base + ".WillShake", true));
             }
         }
     }
@@ -500,9 +500,6 @@ public class ConfigurationLoader {
                 MyPetApi.getLogger().warning("There was an error while loading pet-config.yml");
             }
         }
-        MyPet.Piglin.WILL_SHAKE = config.getBoolean("MyPet.Pets.Piglin.WillShake", true);
-        MyPet.PiglinBrute.WILL_SHAKE = config.getBoolean("MyPet.Pets.PiglinBrute.WillShake", true);
-        MyPet.Hoglin.WILL_SHAKE = config.getBoolean("MyPet.Pets.Hoglin.WillShake", true);
 
         for (MyPetType petType : MyPetType.values()) {
             if (!petType.checkMinecraftVersion()) {

@@ -201,10 +201,12 @@ public class Configuration {
         // implementing the appropriate marker:
         //   MyPetFlyingEntity   → CanFly + CanGlide rows + CAN_FLY/CAN_GLIDE entries
         //   MyPetGlidingEntity  → CanGlide row + CAN_GLIDE entry
+        //   MyPetShake          → WillShake row + WILL_SHAKE entry
         //   MyPetBaby           → GrowUpItem row + GROW_UP_ITEMS entry (default
         //                          comes from @DefaultInfo#growUpItem())
         private static final Map<String, Boolean> CAN_FLY = new HashMap<>();
         private static final Map<String, Boolean> CAN_GLIDE = new HashMap<>();
+        private static final Map<String, Boolean> WILL_SHAKE = new HashMap<>();
         private static final Map<String, ConfigItem> GROW_UP_ITEMS = new HashMap<>();
 
         public static boolean canFly(MyPetType type) {
@@ -221,6 +223,14 @@ public class Configuration {
 
         public static void setCanGlide(String typeName, boolean value) {
             CAN_GLIDE.put(typeName, value);
+        }
+
+        public static boolean willShake(MyPetType type) {
+            return WILL_SHAKE.getOrDefault(type.name(), true);
+        }
+
+        public static void setWillShake(String typeName, boolean value) {
+            WILL_SHAKE.put(typeName, value);
         }
 
         public static ConfigItem getGrowUpItem(MyPetType type) {
@@ -252,11 +262,6 @@ public class Configuration {
             public static boolean CAN_GIVE_MILK = true;
         }
 
-        public static class Hoglin {
-
-            public static boolean WILL_SHAKE;
-        }
-
         public static class IronGolem {
 
             public static boolean CAN_TOSS_UP = true;
@@ -265,16 +270,6 @@ public class Configuration {
         public static class Mooshroom {
 
             public static boolean CAN_GIVE_SOUP;
-        }
-
-        public static class Piglin {
-
-            public static boolean WILL_SHAKE;
-        }
-
-        public static class PiglinBrute {
-
-            public static boolean WILL_SHAKE;
         }
 
         public static class Sheep {

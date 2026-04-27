@@ -43,7 +43,7 @@ public class MyPiglinBrute extends MyPet implements de.Keyle.MyPet.api.entity.ty
     }
 
     public boolean isShakeImmune() {
-        if (Configuration.MyPet.PiglinBrute.WILL_SHAKE) {
+        if (willShake()) {
             return shakeImmune;
         }
         return true;

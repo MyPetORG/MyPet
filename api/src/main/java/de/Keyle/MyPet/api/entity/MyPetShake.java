@@ -20,8 +20,25 @@
 
 package de.Keyle.MyPet.api.entity;
 
-public interface MyPetShake {
+import de.Keyle.MyPet.api.Configuration;
+
+/**
+ * Marker for nether-native pet types whose underlying vanilla mob shakes when
+ * placed in a biome too cold for them (Hoglin, Piglin, PiglinBrute). The
+ * {@link #willShake()} default consults the per-pet preference loaded from
+ * {@code MyPet.Pets.<Type>.WillShake} in {@code pet-config.yml}; admins can
+ * suppress shaking by toggling that key.
+ *
+ * <p>The YAML row is auto-registered for every type that implements this marker
+ * — adding a new shaking pet only requires implementing this interface.
+ */
+public interface MyPetShake extends MyPet {
+
     boolean isShakeImmune();
 
     void setShakeImmune(boolean flag);
+
+    default boolean willShake() {
+        return Configuration.MyPet.willShake(getPetType());
+    }
 }

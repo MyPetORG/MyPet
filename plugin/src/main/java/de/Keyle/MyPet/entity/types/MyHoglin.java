@@ -51,7 +51,7 @@ public class MyHoglin extends MyPet implements de.Keyle.MyPet.api.entity.types.M
     }
 
     public boolean isShakeImmune() {
-        if (Configuration.MyPet.Hoglin.WILL_SHAKE) {
+        if (willShake()) {
             return shakeImmune;
         }
         return true;
