@@ -86,7 +86,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Right-Click-Command", Misc.RIGHT_CLICK_COMMAND);
         config.addDefault("MyPet.Recall-Pet-After-Despawn", Misc.RECALL_PET_AFTER_DESPAWN);
 
-        config.addDefault("MyPet.Entity.Skip-Target-AI-Ticks", Entity.SKIP_TARGET_AI_TICKS);
         config.addDefault("MyPet.Entity.FollowStartDistance", Entity.MYPET_FOLLOW_START_DISTANCE);
 
         config.addDefault("MyPet.Repository.Type", Repository.REPOSITORY_TYPE);
@@ -352,7 +351,6 @@ public class ConfigurationLoader {
         Misc.OVERWRITE_LANGUAGE = config.getString("MyPet.OverwriteLanguages", "");
         LevelSystem.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
         Entity.MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.Entity.FollowStartDistance", 7.0D);
-        Entity.SKIP_TARGET_AI_TICKS = config.getInt("MyPet.Entity.Skip-Target-AI-Ticks", 0);
 
         Log.LEVEL = config.getString("MyPet.Log.Level", Log.LEVEL);
 
