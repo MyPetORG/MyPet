@@ -241,17 +241,42 @@ public abstract class AbstractSqlRepository implements Repository {
     }
 
     /**
-     * Delete every pet row whose {@code last_used} is older than {@code timestamp}.
-     * Returns the number of rows deleted, or {@code 0} on error (matches the
-     * "nothing to clean up" case).
+     * Delete every pet row whose {@code last_used} is older than {@code timestamp},
+     * excluding any pet currently active in memory. Returns the number of rows
+     * deleted, or {@code 0} on error (matches the "nothing to clean up" case).
+     *
+     * <p>Active pets are skipped because their {@code last_used} reflects the time
+     * of activation (set in {@code createEntity}) and is not refreshed while the
+     * pet is in use, so a long-lived active pet looks "unused" to a time-based
+     * cutoff. Deleting the DB row of an active pet would orphan the in-memory
+     * state — the Bukkit entity stays in the world, {@code mActivePlayerPets}
+     * still holds the pet, and the owner's world-group still points at the UUID.
+     * That state only unwinds through proper deactivation (e.g. {@code /petstore}
+     * or {@code /petadmin remove}), and {@code /petswitch} shows {@code -1/max}
+     * in the meantime.
      */
     @Override
     public CompletableFuture<Integer> cleanup(final long timestamp) {
         return CompletableFuture.supplyAsync(() -> {
+            MyPet[] activePets = MyPetApi.getMyPetManager().getAllActiveMyPets();
+            StringBuilder sql = new StringBuilder("DELETE FROM ")
+                    .append(qualifyTable("pets"))
+                    .append(" WHERE last_used<?");
+            if (activePets.length > 0) {
+                sql.append(" AND uuid NOT IN (");
+                for (int i = 0; i < activePets.length; i++) {
+                    if (i > 0) sql.append(',');
+                    sql.append('?');
+                }
+                sql.append(')');
+            }
+            sql.append(';');
             try (ConnectionHolder h = acquireConnection();
-                 PreparedStatement stmt = h.connection().prepareStatement(
-                         "DELETE FROM " + qualifyTable("pets") + " WHERE last_used<?;")) {
+                 PreparedStatement stmt = h.connection().prepareStatement(sql.toString())) {
                 stmt.setLong(1, timestamp);
+                for (int i = 0; i < activePets.length; i++) {
+                    stmt.setString(2 + i, activePets[i].getUUID().toString());
+                }
                 return stmt.executeUpdate();
             } catch (SQLException e) {
                 reportError(e);
