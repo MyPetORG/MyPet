@@ -245,7 +245,7 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false);
             config.addDefault("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false);
             if (MyPetBaby.class.isAssignableFrom(petType.getMyPetClass())) {
-                config.addDefault("MyPet.Pets." + petType.name() + ".GrowUpItem", pi.growUpItem());
+                config.addDefault("MyPet.Pets." + petType.name() + ".GrowUpItem", pi.growUpItem().name().toLowerCase());
             }
         }
 
@@ -532,7 +532,7 @@ public class ConfigurationLoader {
             MyPetApi.getMyPetInfo().setRemoveAfterRelease(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false));
             MyPetApi.getMyPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "lead")));
             if (MyPetBaby.class.isAssignableFrom(petType.getMyPetClass())) {
-                String growUp = config.getString("MyPet.Pets." + petType.name() + ".GrowUpItem", pi.growUpItem());
+                String growUp = config.getString("MyPet.Pets." + petType.name() + ".GrowUpItem", pi.growUpItem().name().toLowerCase());
                 MyPet.setGrowUpItem(petType.name(), ConfigItem.createConfigItem(growUp));
             }
         }
@@ -542,8 +542,12 @@ public class ConfigurationLoader {
         // Config key migrations are now handled by the MigrationService via ConfigMigration classes.
     }
 
-    public static List<String> linkFood(String[] foodTypes) {
-        return new ArrayList<>(Arrays.asList(foodTypes));
+    public static List<String> linkFood(Material[] foodTypes) {
+        List<String> result = new ArrayList<>(foodTypes.length);
+        for (Material m : foodTypes) {
+            result.add(m.name().toLowerCase());
+        }
+        return result;
     }
 
     public static void loadLeashFlags(MyPetType type, List<String> leashFlagStrings) {

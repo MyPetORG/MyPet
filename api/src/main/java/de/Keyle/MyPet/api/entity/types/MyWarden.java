@@ -24,9 +24,10 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"bone"})
+@DefaultInfo(food = {Material.BONE})
 public interface MyWarden extends MyPet, MyPetLavaEntity {
     void setHeartAttack(boolean flag);
 

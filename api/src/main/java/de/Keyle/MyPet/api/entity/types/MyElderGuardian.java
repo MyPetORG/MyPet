@@ -24,8 +24,9 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo(displayName = "Elder Guardian")
-@DefaultInfo(food = {"sugar"})
+@DefaultInfo(food = {Material.SUGAR})
 public interface MyElderGuardian extends MyPet, MyPetAquaticEntity {
 }

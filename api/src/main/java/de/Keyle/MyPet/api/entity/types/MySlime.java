@@ -24,8 +24,9 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetSize;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo(options = {"size:2"})
-@DefaultInfo(food = {"sugar"})
+@DefaultInfo(food = {Material.SUGAR})
 public interface MySlime extends MyPet, MyPetSize {
 }

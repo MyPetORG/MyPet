@@ -25,9 +25,10 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"tropical_fish"})
+@DefaultInfo(food = {Material.TROPICAL_FISH})
 public interface MyAxolotl extends MyPet, MyPetBaby, MyPetAquaticEntity {
 
     int getVariant();

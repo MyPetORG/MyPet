@@ -24,8 +24,9 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo(displayName = "Polar Bear")
-@DefaultInfo(food = {"cod"})
+@DefaultInfo(food = {Material.COD})
 public interface MyPolarBear extends MyPet, MyPetBaby {
 }

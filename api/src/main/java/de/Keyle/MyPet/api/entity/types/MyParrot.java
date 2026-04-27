@@ -24,9 +24,10 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"cookie", "sweet_berries"}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {Material.COOKIE, Material.SWEET_BERRIES}, leashFlags = {"Tamed"})
 public interface MyParrot extends MyPet, MyPetFlyingEntity {
 
     int getVariant();

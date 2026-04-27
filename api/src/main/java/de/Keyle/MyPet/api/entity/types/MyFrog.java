@@ -24,9 +24,10 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"slime_ball"})
+@DefaultInfo(food = {Material.SLIME_BALL})
 public interface MyFrog extends MyPet, MyPetAquaticEntity {
 
     int getFrogVariant();

@@ -25,9 +25,10 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 
 @ShopInfo(options = {"tamed"})
-@DefaultInfo(food = {"beef", "mutton"}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {Material.BEEF, Material.MUTTON}, leashFlags = {"Tamed"})
 public interface MyWolf extends MyPet, MyPetBaby {
     DyeColor getCollarColor();
 

@@ -26,8 +26,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo(displayName = "Glow Squid")
-@DefaultInfo(food = {"cod"})
+@DefaultInfo(food = {Material.COD})
 public interface MyGlowSquid extends MyPet, MyPetBaby, MyPetAquaticEntity {
 }

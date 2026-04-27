@@ -24,8 +24,9 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"rotten_flesh"})
+@DefaultInfo(food = {Material.ROTTEN_FLESH})
 public interface MyGiant extends MyPet, MyPetEquipment {
 }

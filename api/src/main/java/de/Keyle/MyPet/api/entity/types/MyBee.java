@@ -25,22 +25,23 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {
-        "poppy",
-        "dandelion",
-        "blue_orchid",
-        "allium",
-        "azure_bluet",
-        "red_tulip",
-        "orange_tulip",
-        "white_tulip",
-        "pink_tulip",
-        "oxeye_daisy",
-        "cornflower",
-        "lily_of_the_valley",
-        "wither_rose",
+        Material.POPPY,
+        Material.DANDELION,
+        Material.BLUE_ORCHID,
+        Material.ALLIUM,
+        Material.AZURE_BLUET,
+        Material.RED_TULIP,
+        Material.ORANGE_TULIP,
+        Material.WHITE_TULIP,
+        Material.PINK_TULIP,
+        Material.OXEYE_DAISY,
+        Material.CORNFLOWER,
+        Material.LILY_OF_THE_VALLEY,
+        Material.WITHER_ROSE,
 })
 public interface MyBee extends MyPet, MyPetBaby, MyPetFlyingEntity {
 

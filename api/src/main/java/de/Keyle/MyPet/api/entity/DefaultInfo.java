@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.api.entity;
 
+import org.bukkit.Material;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -29,7 +31,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface DefaultInfo {
 
-    String[] food() default {};
+    Material[] food() default {};
 
     double hp() default 20D;
 
@@ -37,5 +39,5 @@ public @interface DefaultInfo {
 
     double walkSpeed() default 0.30D;
 
-    String growUpItem() default "experience_bottle";
+    Material growUpItem() default Material.EXPERIENCE_BOTTLE;
 }

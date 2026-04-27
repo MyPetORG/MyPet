@@ -25,8 +25,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"seagrass"})
+@DefaultInfo(food = {Material.SEAGRASS})
 public interface MyTurtle extends MyPet, MyPetBaby, MyPetAquaticEntity {
 }

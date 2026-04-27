@@ -24,9 +24,10 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.Material;
 
 @ShopInfo(displayName = "Wandering Trader")
-@DefaultInfo(food = {"apple"})
+@DefaultInfo(food = {Material.APPLE})
 public interface MyWanderingTrader extends MyPet {
 
     CompoundBinaryTag getOriginalData();

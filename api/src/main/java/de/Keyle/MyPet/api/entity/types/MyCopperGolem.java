@@ -23,10 +23,11 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 @ShopInfo(displayName = "Copper Golem")
-@DefaultInfo(food = {"copper_ingot"}, leashFlags = {"UserCreated"})
+@DefaultInfo(food = {Material.COPPER_INGOT}, leashFlags = {"UserCreated"})
 public interface MyCopperGolem extends MyPet {
 
     OxidationState getOxidationState();

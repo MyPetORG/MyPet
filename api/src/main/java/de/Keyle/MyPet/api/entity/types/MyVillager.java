@@ -26,12 +26,13 @@ import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.Material;
 import org.bukkit.entity.Villager;
 
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {"apple"})
+@DefaultInfo(food = {Material.APPLE})
 public interface MyVillager extends MyPet, MyPetBaby, MyPetEquipment {
     @Override
     default Set<String> getAllowedSlotNames() {

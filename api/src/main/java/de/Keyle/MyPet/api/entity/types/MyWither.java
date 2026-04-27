@@ -21,7 +21,8 @@
 package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.*;
+import org.bukkit.Material;
 
-@DefaultInfo(food = {"bone"}, leashFlags = {"Impossible"})
+@DefaultInfo(food = {Material.BONE}, leashFlags = {"Impossible"})
 public interface MyWither extends MyPet, MyPetBaby, MyPetLavaEntity, MyPetFlyingEntity {
 }

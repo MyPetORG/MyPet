@@ -26,9 +26,10 @@ import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 
 import java.util.Set;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"apple"})
+@DefaultInfo(food = {Material.APPLE})
 public interface MyVindicator extends MyPet, MyPetEquipment {
     @Override
     default Set<String> getAllowedSlotNames() {

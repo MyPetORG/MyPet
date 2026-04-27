@@ -25,12 +25,13 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
 
 @ShopInfo(displayName = "Zombie Horse")
-@DefaultInfo(food = {"rotten_flesh"})
+@DefaultInfo(food = {Material.ROTTEN_FLESH})
 public interface MyZombieHorse extends MyPet, MyPetBaby, MyPetEquipment {
     @Override
     default Set<String> getAllowedSlotNames() {

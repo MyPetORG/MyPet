@@ -25,8 +25,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo(displayName = "Wither Skeleton")
-@DefaultInfo(food = {"bone"})
+@DefaultInfo(food = {Material.BONE})
 public interface MyWitherSkeleton extends MyPet, MyPetEquipment, MyPetLavaEntity {
 }

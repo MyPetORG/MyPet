@@ -24,7 +24,8 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import org.bukkit.Material;
 
-@DefaultInfo(food = {"end_stone"}, leashFlags = {"Impossible"})
+@DefaultInfo(food = {Material.END_STONE}, leashFlags = {"Impossible"})
 public interface MyEnderDragon extends MyPet, MyPetLavaEntity, MyPetFlyingEntity {
 }

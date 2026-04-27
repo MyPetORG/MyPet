@@ -25,8 +25,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"crimson_fungus"})
+@DefaultInfo(food = {Material.CRIMSON_FUNGUS})
 public interface MyZoglin extends MyPet, MyPetBaby, MyPetLavaEntity {
 }

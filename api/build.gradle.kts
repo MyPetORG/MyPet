@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 
     compileOnly("net.kyori:adventure-nbt:4.17.0")
     compileOnly("org.jetbrains:annotations:16.0.2")

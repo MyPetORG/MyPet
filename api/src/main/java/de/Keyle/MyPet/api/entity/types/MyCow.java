@@ -24,9 +24,10 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"wheat"})
+@DefaultInfo(food = {Material.WHEAT})
 public interface MyCow extends MyPet, MyPetBaby {
     String getVariant();
 

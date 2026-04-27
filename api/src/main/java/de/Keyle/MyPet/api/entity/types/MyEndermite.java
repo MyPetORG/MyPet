@@ -23,8 +23,9 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"sugar"})
+@DefaultInfo(food = {Material.SUGAR})
 public interface MyEndermite extends MyPet {
 }

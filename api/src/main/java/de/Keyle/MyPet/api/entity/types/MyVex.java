@@ -27,9 +27,10 @@ import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 
 import java.util.Set;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"apple"})
+@DefaultInfo(food = {Material.APPLE})
 public interface MyVex extends MyPet, MyPetEquipment, MyPetFlyingEntity {
     @Override
     default Set<String> getAllowedSlotNames() {

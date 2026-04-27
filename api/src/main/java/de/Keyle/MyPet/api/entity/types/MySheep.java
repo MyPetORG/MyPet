@@ -25,9 +25,10 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"wheat"})
+@DefaultInfo(food = {Material.WHEAT})
 public interface MySheep extends MyPet, MyPetBaby {
     DyeColor getColor();
 

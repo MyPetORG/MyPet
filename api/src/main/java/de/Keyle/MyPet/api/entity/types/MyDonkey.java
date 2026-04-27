@@ -25,12 +25,13 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {"sugar", "wheat", "apple"}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {Material.SUGAR, Material.WHEAT, Material.APPLE}, leashFlags = {"Tamed"})
 public interface MyDonkey extends MyPet, MyPetBaby, MyPetEquipment {
     @Override
     default Set<String> getAllowedSlotNames() {

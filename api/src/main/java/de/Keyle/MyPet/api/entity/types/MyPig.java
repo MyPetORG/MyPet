@@ -24,10 +24,11 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 @ShopInfo
-@DefaultInfo(food = {"carrot"})
+@DefaultInfo(food = {Material.CARROT})
 public interface MyPig extends MyPet, MyPetBaby {
     ItemStack getSaddle();
 

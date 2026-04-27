@@ -25,8 +25,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {"gunpowder"}, leashFlags = {"Impossible"})
+@DefaultInfo(food = {Material.GUNPOWDER}, leashFlags = {"Impossible"})
 public interface MyGhast extends MyPet, MyPetLavaEntity, MyPetFlyingEntity {
 }
