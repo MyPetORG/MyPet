@@ -23,10 +23,11 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 
 @ShopInfo(displayName = "Glow Squid")
 @DefaultInfo(food = {"cod"})
-public interface MyGlowSquid extends MyPet, MyPetBaby {
+public interface MyGlowSquid extends MyPet, MyPetBaby, MyPetAquaticEntity {
 }

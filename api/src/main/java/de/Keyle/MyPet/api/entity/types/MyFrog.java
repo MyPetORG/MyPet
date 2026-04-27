@@ -22,11 +22,12 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 
 @ShopInfo
 @DefaultInfo(food = {"slime_ball"})
-public interface MyFrog extends MyPet {
+public interface MyFrog extends MyPet, MyPetAquaticEntity {
 
     int getFrogVariant();
 

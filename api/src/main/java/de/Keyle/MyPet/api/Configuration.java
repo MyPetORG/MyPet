@@ -20,9 +20,12 @@
 
 package de.Keyle.MyPet.api;
 
+import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.ConfigItem;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Configuration {
@@ -192,9 +195,29 @@ public class Configuration {
     }
 
     public static class MyPet {
-        public static class Allay {
 
-            public static boolean CAN_GLIDE = true;
+        // Dynamic per-type flags populated by ConfigurationLoader after pet types
+        // register. Keyed by MyPetType.name(). Adding a new flying pet only requires
+        // implementing MyPetFlyingEntity (which extends MyPetGlidingEntity) — the
+        // YAML rows appear automatically, and the runtime checks pick them up via
+        // MyPetFlyingEntity#canFly() and MyPetGlidingEntity#canGlide().
+        private static final Map<String, Boolean> CAN_FLY = new HashMap<>();
+        private static final Map<String, Boolean> CAN_GLIDE = new HashMap<>();
+
+        public static boolean canFly(MyPetType type) {
+            return CAN_FLY.getOrDefault(type.name(), true);
+        }
+
+        public static void setCanFly(String typeName, boolean value) {
+            CAN_FLY.put(typeName, value);
+        }
+
+        public static boolean canGlide(MyPetType type) {
+            return CAN_GLIDE.getOrDefault(type.name(), true);
+        }
+
+        public static void setCanGlide(String typeName, boolean value) {
+            CAN_GLIDE.put(typeName, value);
         }
 
         public static class Axolotl {
@@ -205,25 +228,9 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
-        public static class Bat {
-
-            public static boolean CAN_GLIDE = true;
-        }
-
         public static class Bee {
 
-            public static boolean CAN_GLIDE = true;
             public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Blaze {
-
-            public static boolean CAN_GLIDE = true;
-        }
-
-        public static class Breeze {
-
-            public static boolean CAN_GLIDE = true;
         }
 
         public static class Camel {
@@ -240,7 +247,6 @@ public class Configuration {
 
             public static ConfigItem GROW_UP_ITEM;
             public static boolean CAN_LAY_EGGS = true;
-            public static boolean CAN_GLIDE = true;
         }
 
         public static class CopperGolem {
@@ -268,16 +274,6 @@ public class Configuration {
         public static class Fox {
 
             public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class EnderDragon {
-
-            public static boolean CAN_GLIDE = true;
-        }
-
-        public static class Ghast {
-
-            public static boolean CAN_GLIDE = true;
         }
 
         public static class Goat {
@@ -331,16 +327,6 @@ public class Configuration {
         public static class Panda {
 
             public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Parrot {
-
-            public static boolean CAN_GLIDE = true;
-        }
-
-        public static class Phantom {
-
-            public static boolean CAN_GLIDE = true;
         }
 
         public static class Pig {
@@ -407,19 +393,9 @@ public class Configuration {
             public static ConfigItem GROW_UP_ITEM;
         }
 
-        public static class Vex {
-
-            public static boolean CAN_GLIDE = true;
-        }
-
         public static class Villager {
 
             public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Wither {
-
-            public static boolean CAN_GLIDE = true;
         }
 
         public static class Wolf {

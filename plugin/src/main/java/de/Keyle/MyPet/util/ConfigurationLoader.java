@@ -24,6 +24,8 @@ import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration.*;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.MyPetGlidingEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.ConfigItem;
@@ -246,22 +248,26 @@ public class ConfigurationLoader {
 
         if (MyPetType.byNameOrNull("Axolotl") != null)
             config.addDefault("MyPet.Pets.Axolotl.GrowUpItem", "experience_bottle");
-        if (MyPetType.byNameOrNull("Allay") != null)
-            config.addDefault("MyPet.Pets.Allay.CanGlide", MyPet.Allay.CAN_GLIDE);
-        config.addDefault("MyPet.Pets.Bat.CanGlide", MyPet.Bat.CAN_GLIDE);
         if (MyPetType.byNameOrNull("Bee") != null) {
             config.addDefault("MyPet.Pets.Bee.GrowUpItem", "experience_bottle");
-            config.addDefault("MyPet.Pets.Bee.CanGlide", MyPet.Bee.CAN_GLIDE);
         }
-        if (MyPetType.byNameOrNull("Armadillo") != null)
+        if (MyPetType.byNameOrNull("Armadillo") != null) {
             config.addDefault("MyPet.Pets.Armadillo.GrowUpItem", "experience_bottle");
+        }
 
-        config.addDefault("MyPet.Pets.Blaze.CanGlide", MyPet.Blaze.CAN_GLIDE);
-        if (MyPetType.byNameOrNull("Breeze") != null)
-            config.addDefault("MyPet.Pets.Breeze.CanGlide", MyPet.Breeze.CAN_GLIDE);
-        config.addDefault("MyPet.Pets.Ghast.CanGlide", MyPet.Ghast.CAN_GLIDE);
-        config.addDefault("MyPet.Pets.Chicken.CanGlide", MyPet.Chicken.CAN_GLIDE);
-        config.addDefault("MyPet.Pets.EnderDragon.CanGlide", MyPet.EnderDragon.CAN_GLIDE);
+        // Dynamic per-type CanFly / CanGlide rows. Adding a new flying or gliding
+        // pet requires no edit here — implement the appropriate marker interface
+        // and the YAML row appears. Migration of pre-4.x configs (single CanGlide
+        // key on flying pets) is handled by MigrateFlyingPetsCanGlideToCanFly.
+        for (MyPetType type : MyPetType.values()) {
+            String base = "MyPet.Pets." + type.name();
+            if (MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+                config.addDefault(base + ".CanFly", true);
+            }
+            if (MyPetGlidingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+                config.addDefault(base + ".CanGlide", true);
+            }
+        }
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
         if (MyPetType.byNameOrNull("Cat") != null) {
             config.addDefault("MyPet.Pets.Cat.GrowUpItem", "experience_bottle");
@@ -292,9 +298,6 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets.Mule.GrowUpItem", "experience_bottle");
         }
         config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", "experience_bottle");
-        if (MyPetType.byNameOrNull("Parrot") != null) {
-            config.addDefault("MyPet.Pets.Parrot.CanGlide", MyPet.Parrot.CAN_GLIDE);
-        }
         if (MyPetType.byNameOrNull("Camel") != null) {
             config.addDefault("MyPet.Pets.Camel.GrowUpItem", "experience_bottle");
         }
@@ -309,9 +312,6 @@ public class ConfigurationLoader {
         }
         if (MyPetType.byNameOrNull("Panda") != null) {
             config.addDefault("MyPet.Pets.Panda.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("Phantom") != null) {
-            config.addDefault("MyPet.Pets.Phantom.CanGlide", MyPet.Phantom.CAN_GLIDE);
         }
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", "experience_bottle");
         if (MyPetType.byNameOrNull("Piglin") != null) {
@@ -340,12 +340,8 @@ public class ConfigurationLoader {
         if (MyPetType.byNameOrNull("Turtle") != null) {
             config.addDefault("MyPet.Pets.Turtle.GrowUpItem", "experience_bottle");
         }
-        if (MyPetType.byNameOrNull("Vex") != null) {
-            config.addDefault("MyPet.Pets.Vex.CanGlide", MyPet.Vex.CAN_GLIDE);
-        }
         config.addDefault("MyPet.Pets.Villager.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.Wither.CanGlide", MyPet.Wither.CAN_GLIDE);
         if (MyPetType.byNameOrNull("Zoglin") != null) {
             config.addDefault("MyPet.Pets.Zoglin.GrowUpItem", "experience_bottle");
         }
@@ -546,18 +542,18 @@ public class ConfigurationLoader {
         MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanTossUp", true);
         MyPet.SnowGolem.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.SnowGolem.FixSnowTrack", true);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
-        MyPet.Allay.CAN_GLIDE = config.getBoolean("MyPet.Pets.Allay.CanGlide", true);
-        MyPet.Bee.CAN_GLIDE = config.getBoolean("MyPet.Pets.Bee.CanGlide", true);
-        MyPet.Bat.CAN_GLIDE = config.getBoolean("MyPet.Pets.Bat.CanGlide", true);
-        MyPet.Blaze.CAN_GLIDE = config.getBoolean("MyPet.Pets.Blaze.CanGlide", true);
-        MyPet.Breeze.CAN_GLIDE = config.getBoolean("MyPet.Pets.Breeze.CanGlide", true);
-        MyPet.Ghast.CAN_GLIDE = config.getBoolean("MyPet.Pets.Ghast.CanGlide", true);
-        MyPet.Chicken.CAN_GLIDE = config.getBoolean("MyPet.Pets.Chicken.CanGlide", true);
-        MyPet.EnderDragon.CAN_GLIDE = config.getBoolean("MyPet.Pets.EnderDragon.CanGlide", true);
-        MyPet.Wither.CAN_GLIDE = config.getBoolean("MyPet.Pets.Wither.CanGlide", true);
-        MyPet.Vex.CAN_GLIDE = config.getBoolean("MyPet.Pets.Vex.CanGlide", true);
-        MyPet.Parrot.CAN_GLIDE = config.getBoolean("MyPet.Pets.Parrot.CanGlide", true);
-        MyPet.Phantom.CAN_GLIDE = config.getBoolean("MyPet.Pets.Phantom.CanGlide", true);
+
+        // Dynamic per-type CanFly / CanGlide load. Reads the separate
+        // MyPet.Pets.<Type>.CanFly and .CanGlide keys populated by setDefault().
+        for (MyPetType type : MyPetType.values()) {
+            String base = "MyPet.Pets." + type.name();
+            if (MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+                MyPet.setCanFly(type.name(), config.getBoolean(base + ".CanFly", true));
+            }
+            if (MyPetGlidingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+                MyPet.setCanGlide(type.name(), config.getBoolean(base + ".CanGlide", true));
+            }
+        }
     }
 
     public static void loadCompatConfiguration() {

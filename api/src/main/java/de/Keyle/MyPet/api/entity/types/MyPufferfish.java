@@ -22,11 +22,12 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 
 @ShopInfo
 @DefaultInfo(food = {"seagrass"})
-public interface MyPufferfish extends MyPet {
+public interface MyPufferfish extends MyPet, MyPetAquaticEntity {
 
     /**
      * @return the pufferfish's current puff state: {@code 0} (unpuffed),

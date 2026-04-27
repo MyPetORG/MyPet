@@ -185,25 +185,19 @@ public final class MyPetType {
         return bukkitEntityClass;
     }
 
-    private static final Set<String> FLYING_PET_NAMES = Set.of(
-            "Bat", "Bee", "Allay", "Parrot", "Vex", "Phantom", "Ghast", "Wither", "EnderDragon"
-    );
-
-    private static final Set<String> AQUATIC_PET_NAMES = Set.of(
-            "Frog", "GlowSquid", "Dolphin", "Cod", "Tadpole", "Salmon", "Axolotl",
-            "Squid", "Drowned", "ElderGuardian", "Turtle", "Pufferfish", "Guardian", "TropicalFish"
-    );
-
+    /**
+     * Type-level capability check: does this pet type's interface declare
+     * {@link MyPetFlyingEntity}? The per-pet {@code CanFly} preference is
+     * checked separately at the pet *instance* level (see
+     * {@link MyPetFlyingEntity#canFly()}) — callers that need the combined
+     * capability and preference answer should use the instance check directly.
+     */
     public boolean isFlyingPet() {
-        return FLYING_PET_NAMES.contains(name);
+        return MyPetFlyingEntity.class.isAssignableFrom(mypetClass);
     }
 
     public boolean isAquaticPet() {
-        return AQUATIC_PET_NAMES.contains(name);
-    }
-
-    public boolean usesPaperMovement() {
-        return isFlyingPet() || isAquaticPet();
+        return MyPetAquaticEntity.class.isAssignableFrom(mypetClass);
     }
 
     public boolean floatsInLava() {

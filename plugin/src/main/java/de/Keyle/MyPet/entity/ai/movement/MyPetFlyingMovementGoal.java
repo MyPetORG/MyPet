@@ -44,12 +44,12 @@ import java.util.EnumSet;
  * direction, clamps the per-tick step to the remaining distance, and
  * interpolates the pet's yaw and pitch toward the velocity vector.
  *
- * <p><b>Integration with {@code EntityMyFlyingPet}:</b> the entity must
- * skip {@code getMoveControl().tick()} while this goal is active
- * (controlled by the {@code usesPaperMovement} flag on
- * {@code MyPetMinecraftEntity}) — otherwise the vanilla ground-based
- * {@code MoveControl} would fight this goal's direct velocity writes and
- * produce jittery motion.
+ * <p><b>Pre-v4 note:</b> in the NMS-era this goal was paired with an
+ * {@code EntityMyFlyingPet} override that suppressed
+ * {@code getMoveControl().tick()} so the vanilla ground-based
+ * {@code MoveControl} wouldn't fight this goal's direct velocity writes.
+ * That entity layer is gone; the equivalent suppression now happens via
+ * the goal-strip in {@code PetGoalInstaller}.
  */
 public class MyPetFlyingMovementGoal implements Goal<Mob> {
 

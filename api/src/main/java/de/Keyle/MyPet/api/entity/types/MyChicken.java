@@ -23,11 +23,12 @@ package de.Keyle.MyPet.api.entity.types;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetGlidingEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 
 @ShopInfo
 @DefaultInfo(food = {"wheat_seeds"})
-public interface MyChicken extends MyPet, MyPetBaby {
+public interface MyChicken extends MyPet, MyPetBaby, MyPetGlidingEntity {
     String getVariant();
 
     void setVariant(String key);

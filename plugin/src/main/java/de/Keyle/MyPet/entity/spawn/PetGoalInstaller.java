@@ -2,6 +2,8 @@ package de.Keyle.MyPet.entity.spawn;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetControlGoal;
@@ -37,8 +39,8 @@ public final class PetGoalInstaller {
     public static void install(MyPet pet, Mob mob) {
         Bukkit.getMobGoals().removeAllGoals(mob);
 
-        boolean flying = pet.getPetType().isFlyingPet();
-        boolean aquatic = pet.getPetType().isAquaticPet();
+        boolean flying = pet instanceof MyPetFlyingEntity flyer && flyer.canFly();
+        boolean aquatic = pet instanceof MyPetAquaticEntity;
 
         var goals = Bukkit.getMobGoals();
         if (!flying) {

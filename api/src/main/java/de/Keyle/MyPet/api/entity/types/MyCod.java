@@ -22,9 +22,10 @@ package de.Keyle.MyPet.api.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 
 @ShopInfo
 @DefaultInfo(food = {"seagrass"})
-public interface MyCod extends MyPet {
+public interface MyCod extends MyPet, MyPetAquaticEntity {
 }
