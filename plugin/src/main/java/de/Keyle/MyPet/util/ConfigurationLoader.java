@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration.*;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.MyPetGlidingEntity;
@@ -251,11 +252,11 @@ public class ConfigurationLoader {
         }
 
 
-        // Dynamic per-type CanFly / CanGlide / WillShake rows. Adding a new
-        // flying, gliding, or shaking pet requires no edit here — implement the
-        // appropriate marker interface and the YAML row appears. Migration of
-        // pre-4.x configs (single CanGlide key on flying pets) is handled by
-        // MigrateFlyingPetsCanGlideToCanFly.
+        // Dynamic per-type CanFly / CanGlide / CanSwim / WillShake rows. Adding
+        // a new flying, gliding, swimming, or shaking pet requires no edit here
+        // — implement the appropriate marker interface and the YAML row appears.
+        // Migration of pre-4.x configs (single CanGlide key on flying pets) is
+        // handled by MigrateFlyingPetsCanGlideToCanFly.
         for (MyPetType type : MyPetType.values()) {
             String base = "MyPet.Pets." + type.name();
             if (MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
@@ -263,6 +264,9 @@ public class ConfigurationLoader {
             }
             if (MyPetGlidingEntity.class.isAssignableFrom(type.getMyPetClass())) {
                 config.addDefault(base + ".CanGlide", true);
+            }
+            if (MyPetAquaticEntity.class.isAssignableFrom(type.getMyPetClass())) {
+                config.addDefault(base + ".CanSwim", true);
             }
             if (MyPetShake.class.isAssignableFrom(type.getMyPetClass())) {
                 config.addDefault(base + ".WillShake", true);
@@ -467,9 +471,9 @@ public class ConfigurationLoader {
         MyPet.SnowGolem.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.SnowGolem.FixSnowTrack", true);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
 
-        // Dynamic per-type CanFly / CanGlide / WillShake load. Reads the
-        // MyPet.Pets.<Type>.CanFly, .CanGlide, and .WillShake keys populated
-        // by setDefault().
+        // Dynamic per-type CanFly / CanGlide / CanSwim / WillShake load. Reads
+        // the MyPet.Pets.<Type>.{CanFly,CanGlide,CanSwim,WillShake} keys
+        // populated by setDefault().
         for (MyPetType type : MyPetType.values()) {
             String base = "MyPet.Pets." + type.name();
             if (MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
@@ -477,6 +481,9 @@ public class ConfigurationLoader {
             }
             if (MyPetGlidingEntity.class.isAssignableFrom(type.getMyPetClass())) {
                 MyPet.setCanGlide(type.name(), config.getBoolean(base + ".CanGlide", true));
+            }
+            if (MyPetAquaticEntity.class.isAssignableFrom(type.getMyPetClass())) {
+                MyPet.setCanSwim(type.name(), config.getBoolean(base + ".CanSwim", true));
             }
             if (MyPetShake.class.isAssignableFrom(type.getMyPetClass())) {
                 MyPet.setWillShake(type.name(), config.getBoolean(base + ".WillShake", true));

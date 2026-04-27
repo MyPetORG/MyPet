@@ -201,11 +201,13 @@ public class Configuration {
         // implementing the appropriate marker:
         //   MyPetFlyingEntity   → CanFly + CanGlide rows + CAN_FLY/CAN_GLIDE entries
         //   MyPetGlidingEntity  → CanGlide row + CAN_GLIDE entry
+        //   MyPetAquaticEntity  → CanSwim row + CAN_SWIM entry
         //   MyPetShake          → WillShake row + WILL_SHAKE entry
         //   MyPetBaby           → GrowUpItem row + GROW_UP_ITEMS entry (default
         //                          comes from @DefaultInfo#growUpItem())
         private static final Map<String, Boolean> CAN_FLY = new HashMap<>();
         private static final Map<String, Boolean> CAN_GLIDE = new HashMap<>();
+        private static final Map<String, Boolean> CAN_SWIM = new HashMap<>();
         private static final Map<String, Boolean> WILL_SHAKE = new HashMap<>();
         private static final Map<String, ConfigItem> GROW_UP_ITEMS = new HashMap<>();
 
@@ -223,6 +225,14 @@ public class Configuration {
 
         public static void setCanGlide(String typeName, boolean value) {
             CAN_GLIDE.put(typeName, value);
+        }
+
+        public static boolean canSwim(MyPetType type) {
+            return CAN_SWIM.getOrDefault(type.name(), true);
+        }
+
+        public static void setCanSwim(String typeName, boolean value) {
+            CAN_SWIM.put(typeName, value);
         }
 
         public static boolean willShake(MyPetType type) {

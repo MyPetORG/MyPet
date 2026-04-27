@@ -40,7 +40,7 @@ public final class PetGoalInstaller {
         Bukkit.getMobGoals().removeAllGoals(mob);
 
         boolean flying = pet instanceof MyPetFlyingEntity flyer && flyer.canFly();
-        boolean aquatic = pet instanceof MyPetAquaticEntity;
+        boolean aquatic = pet instanceof MyPetAquaticEntity swimmer && swimmer.canSwim();
 
         var goals = Bukkit.getMobGoals();
         if (!flying) {
