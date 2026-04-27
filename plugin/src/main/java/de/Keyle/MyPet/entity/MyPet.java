@@ -296,6 +296,22 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 }
                 return true;
             }
+            // Right-click command: owner-only, empty hand, not sneaking. Mirrors
+            // the legacy EntityMyPet#mobInteract branch — runs a configured
+            // command as the player after substituting per-pet placeholders.
+            if (!Configuration.Misc.RIGHT_CLICK_COMMAND.isEmpty()) {
+                String command = Configuration.Misc.RIGHT_CLICK_COMMAND
+                        .replace("%pet_name%", getPetName())
+                        .replace("%pet_owner%", getOwner().getName())
+                        .replace("%pet_level%", Integer.toString(getExperience().getLevel()))
+                        .replace("%pet_status%", getStatus().name())
+                        .replace("%pet_type%", getPetType().name())
+                        .replace("%pet_uuid%", getUUID().toString())
+                        .replace("%pet_world_group%", getWorldGroup())
+                        .replace("%pet_skilltree_name%",
+                                getSkilltree() != null ? getSkilltree().getName() : "");
+                return player.performCommand(command);
+            }
             return false;
         }
 
