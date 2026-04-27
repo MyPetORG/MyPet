@@ -196,13 +196,16 @@ public class Configuration {
 
     public static class MyPet {
 
-        // Dynamic per-type flags populated by ConfigurationLoader after pet types
-        // register. Keyed by MyPetType.name(). Adding a new flying pet only requires
-        // implementing MyPetFlyingEntity (which extends MyPetGlidingEntity) — the
-        // YAML rows appear automatically, and the runtime checks pick them up via
-        // MyPetFlyingEntity#canFly() and MyPetGlidingEntity#canGlide().
+        // Dynamic per-type maps populated by ConfigurationLoader after pet types
+        // register, all keyed by MyPetType.name(). Adding a new pet only requires
+        // implementing the appropriate marker:
+        //   MyPetFlyingEntity   → CanFly + CanGlide rows + CAN_FLY/CAN_GLIDE entries
+        //   MyPetGlidingEntity  → CanGlide row + CAN_GLIDE entry
+        //   MyPetBaby           → GrowUpItem row + GROW_UP_ITEMS entry (default
+        //                          comes from @DefaultInfo#growUpItem())
         private static final Map<String, Boolean> CAN_FLY = new HashMap<>();
         private static final Map<String, Boolean> CAN_GLIDE = new HashMap<>();
+        private static final Map<String, ConfigItem> GROW_UP_ITEMS = new HashMap<>();
 
         public static boolean canFly(MyPetType type) {
             return CAN_FLY.getOrDefault(type.name(), true);
@@ -220,32 +223,16 @@ public class Configuration {
             CAN_GLIDE.put(typeName, value);
         }
 
-        public static class Axolotl {
-            public static ConfigItem GROW_UP_ITEM;
+        public static ConfigItem getGrowUpItem(MyPetType type) {
+            return GROW_UP_ITEMS.get(type.name());
         }
 
-        public static class Armadillo {
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Bee {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Camel {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Cat {
-
-            public static ConfigItem GROW_UP_ITEM;
+        public static void setGrowUpItem(String typeName, ConfigItem item) {
+            GROW_UP_ITEMS.put(typeName, item);
         }
 
         public static class Chicken {
 
-            public static ConfigItem GROW_UP_ITEM;
             public static boolean CAN_LAY_EGGS = true;
         }
 
@@ -258,44 +245,16 @@ public class Configuration {
         public static class Cow {
 
             public static boolean CAN_GIVE_MILK = true;
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Donkey {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Drowned {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Fox {
-
-            public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Goat {
-            public static boolean CAN_GIVE_MILK = true;
-            public static ConfigItem GROW_UP_ITEM;
 
+            public static boolean CAN_GIVE_MILK = true;
         }
 
         public static class Hoglin {
 
             public static boolean WILL_SHAKE;
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Horse {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Husk {
-
-            public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class IronGolem {
@@ -303,129 +262,30 @@ public class Configuration {
             public static boolean CAN_TOSS_UP = true;
         }
 
-        public static class Llama {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
         public static class Mooshroom {
 
-            public static ConfigItem GROW_UP_ITEM;
             public static boolean CAN_GIVE_SOUP;
-        }
-
-        public static class Mule {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Ocelot {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Panda {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Pig {
-
-            public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Piglin {
 
             public static boolean WILL_SHAKE;
-            public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class PiglinBrute {
 
             public static boolean WILL_SHAKE;
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class PolarBear {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Rabbit {
-
-            public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class Sheep {
 
             public static boolean CAN_BE_SHEARED = true;
             public static boolean CAN_REGROW_WOOL = true;
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class SkeletonHorse {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Sniffer {
-
-            public static ConfigItem GROW_UP_ITEM;
         }
 
         public static class SnowGolem {
 
             public static boolean FIX_SNOW_TRACK = true;
-        }
-
-        public static class Strider {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class TraderLlama {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Turtle {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Villager {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Wolf {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Zoglin {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class Zombie {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class ZombieHorse {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class ZombieVillager {
-
-            public static ConfigItem GROW_UP_ITEM;
-        }
-
-        public static class ZombifiedPiglin {
-
-            public static ConfigItem GROW_UP_ITEM;
         }
     }
 }

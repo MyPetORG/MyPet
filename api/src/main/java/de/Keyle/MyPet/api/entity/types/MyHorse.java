@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {"sugar", "wheat", "apple"}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {"sugar", "wheat", "apple"}, leashFlags = {"Tamed"}, growUpItem = "bread")
 public interface MyHorse extends MyPet, MyPetBaby, MyPetEquipment {
     @Override
     default Set<String> getAllowedSlotNames() {

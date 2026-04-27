@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration.*;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.MyPetGlidingEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -243,17 +244,11 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", "lead");
             config.addDefault("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false);
             config.addDefault("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false);
+            if (MyPetBaby.class.isAssignableFrom(petType.getMyPetClass())) {
+                config.addDefault("MyPet.Pets." + petType.name() + ".GrowUpItem", pi.growUpItem());
+            }
         }
 
-
-        if (MyPetType.byNameOrNull("Axolotl") != null)
-            config.addDefault("MyPet.Pets.Axolotl.GrowUpItem", "experience_bottle");
-        if (MyPetType.byNameOrNull("Bee") != null) {
-            config.addDefault("MyPet.Pets.Bee.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("Armadillo") != null) {
-            config.addDefault("MyPet.Pets.Armadillo.GrowUpItem", "experience_bottle");
-        }
 
         // Dynamic per-type CanFly / CanGlide rows. Adding a new flying or gliding
         // pet requires no edit here — implement the appropriate marker interface
@@ -269,92 +264,25 @@ public class ConfigurationLoader {
             }
         }
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
-        if (MyPetType.byNameOrNull("Cat") != null) {
-            config.addDefault("MyPet.Pets.Cat.GrowUpItem", "experience_bottle");
-        }
         if (MyPetType.byNameOrNull("CopperGolem") != null) {
             config.addDefault("MyPet.Pets.CopperGolem.CanOxidize", true);
             config.addDefault("MyPet.Pets.CopperGolem.OxidationTime", 24000);
         }
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
-        if (MyPetType.byNameOrNull("Donkey") != null) {
-            config.addDefault("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle");
-        }
         if (MyPetType.byNameOrNull("Hoglin") != null) {
             config.addDefault("MyPet.Pets.Hoglin.WillShake", MyPet.Hoglin.WILL_SHAKE);
-            config.addDefault("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle");
         }
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
         config.addDefault("MyPet.Pets.SnowGolem.FixSnowTrack", MyPet.SnowGolem.FIX_SNOW_TRACK);
-        config.addDefault("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.Cow.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.Horse.GrowUpItem", "bread");
-        if (MyPetType.byNameOrNull("Llama") != null) {
-            config.addDefault("MyPet.Pets.Llama.GrowUpItem", "experience_bottle");
-        }
-        config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", "experience_bottle");
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
-        if (MyPetType.byNameOrNull("Mule") != null) {
-            config.addDefault("MyPet.Pets.Mule.GrowUpItem", "experience_bottle");
-        }
-        config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", "experience_bottle");
-        if (MyPetType.byNameOrNull("Camel") != null) {
-            config.addDefault("MyPet.Pets.Camel.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("Drowned") != null) {
-            config.addDefault("MyPet.Pets.Drowned.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("Husk") != null) {
-            config.addDefault("MyPet.Pets.Husk.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("Sniffer") != null) {
-            config.addDefault("MyPet.Pets.Sniffer.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("Panda") != null) {
-            config.addDefault("MyPet.Pets.Panda.GrowUpItem", "experience_bottle");
-        }
-        config.addDefault("MyPet.Pets.Pig.GrowUpItem", "experience_bottle");
         if (MyPetType.byNameOrNull("Piglin") != null) {
             config.addDefault("MyPet.Pets.Piglin.WillShake", MyPet.Piglin.WILL_SHAKE);
-            config.addDefault("MyPet.Pets.Piglin.GrowUpItem", "experience_bottle");
         }
         if (MyPetType.byNameOrNull("PiglinBrute") != null) {
             config.addDefault("MyPet.Pets.PiglinBrute.WillShake", MyPet.PiglinBrute.WILL_SHAKE);
-            config.addDefault("MyPet.Pets.PiglinBrute.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("PolarBear") != null) {
-            config.addDefault("MyPet.Pets.PolarBear.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("Rabbit") != null) {
-            config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle");
         }
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
         config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
-        config.addDefault("MyPet.Pets.Sheep.GrowUpItem", "experience_bottle");
-        if (MyPetType.byNameOrNull("SkeletonHorse") != null) {
-            config.addDefault("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("Strider") != null) {
-            config.addDefault("MyPet.Pets.Strider.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("Turtle") != null) {
-            config.addDefault("MyPet.Pets.Turtle.GrowUpItem", "experience_bottle");
-        }
-        config.addDefault("MyPet.Pets.Villager.GrowUpItem", "experience_bottle");
-        config.addDefault("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle");
-        if (MyPetType.byNameOrNull("Zoglin") != null) {
-            config.addDefault("MyPet.Pets.Zoglin.GrowUpItem", "experience_bottle");
-        }
-        config.addDefault("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle");
-        if (MyPetType.byNameOrNull("ZombieHorse") != null) {
-            config.addDefault("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("ZombieVillager") != null) {
-            config.addDefault("MyPet.Pets.ZombieVillager.GrowUpItem", "experience_bottle");
-        }
-        if (MyPetType.byNameOrNull("ZombifiedPiglin") != null) {
-            config.addDefault("MyPet.Pets.ZombifiedPiglin.GrowUpItem", "experience_bottle");
-        }
 
         config.options().copyDefaults(true);
         try {
@@ -572,44 +500,6 @@ public class ConfigurationLoader {
                 MyPetApi.getLogger().warning("There was an error while loading pet-config.yml");
             }
         }
-        MyPet.Axolotl.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Axolotl.GrowUpItem", "experience_bottle"));
-        MyPet.Armadillo.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Armadillo.GrowUpItem", "experience_bottle"));
-        MyPet.Bee.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Bee.GrowUpItem", "experience_bottle"));
-        MyPet.Cat.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cat.GrowUpItem", "experience_bottle"));
-        MyPet.Chicken.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Chicken.GrowUpItem", "experience_bottle"));
-        MyPet.Camel.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Camel.GrowUpItem", "experience_bottle"));
-        MyPet.Cow.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cow.GrowUpItem", "experience_bottle"));
-        MyPet.Donkey.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Donkey.GrowUpItem", "experience_bottle"));
-        MyPet.Drowned.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Drowned.GrowUpItem", "experience_bottle"));
-        MyPet.Fox.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Fox.GrowUpItem", "experience_bottle"));
-        MyPet.Goat.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Goat.GrowUpItem", "experience_bottle"));
-        MyPet.Hoglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Hoglin.GrowUpItem", "experience_bottle"));
-        MyPet.Horse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "bread"));
-        MyPet.Husk.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Husk.GrowUpItem", "experience_bottle"));
-        MyPet.Llama.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Llama.GrowUpItem", "experience_bottle"));
-        MyPet.Mooshroom.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mooshroom.GrowUpItem", "experience_bottle"));
-        MyPet.Mule.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mule.GrowUpItem", "experience_bottle"));
-        MyPet.Ocelot.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Ocelot.GrowUpItem", "experience_bottle"));
-        MyPet.Panda.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Panda.GrowUpItem", "experience_bottle"));
-        MyPet.Pig.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "experience_bottle"));
-        MyPet.Piglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Piglin.GrowUpItem", "experience_bottle"));
-        MyPet.PiglinBrute.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PiglinBrute.GrowUpItem", "experience_bottle"));
-        MyPet.PolarBear.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PolarBear.GrowUpItem", "experience_bottle"));
-        MyPet.Rabbit.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Rabbit.GrowUpItem", "experience_bottle"));
-        MyPet.Sniffer.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sniffer.GrowUpItem", "experience_bottle"));
-        MyPet.Sheep.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sheep.GrowUpItem", "experience_bottle"));
-        MyPet.SkeletonHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.SkeletonHorse.GrowUpItem", "experience_bottle"));
-        MyPet.Strider.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Strider.GrowUpItem", "experience_bottle"));
-        MyPet.TraderLlama.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.TraderLlama.GrowUpItem", "experience_bottle"));
-        MyPet.Turtle.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Turtle.GrowUpItem", "experience_bottle"));
-        MyPet.Villager.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Villager.GrowUpItem", "experience_bottle"));
-        MyPet.Wolf.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "experience_bottle"));
-        MyPet.Zoglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zoglin.GrowUpItem", "experience_bottle"));
-        MyPet.Zombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "experience_bottle"));
-        MyPet.ZombieHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombieHorse.GrowUpItem", "experience_bottle"));
-        MyPet.ZombieVillager.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombieVillager.GrowUpItem", "experience_bottle"));
-        MyPet.ZombifiedPiglin.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.ZombifiedPiglin.GrowUpItem", "experience_bottle"));
-
         MyPet.Piglin.WILL_SHAKE = config.getBoolean("MyPet.Pets.Piglin.WillShake", true);
         MyPet.PiglinBrute.WILL_SHAKE = config.getBoolean("MyPet.Pets.PiglinBrute.WillShake", true);
         MyPet.Hoglin.WILL_SHAKE = config.getBoolean("MyPet.Pets.Hoglin.WillShake", true);
@@ -641,6 +531,10 @@ public class ConfigurationLoader {
             MyPetApi.getMyPetInfo().setReleaseOnDeath(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false));
             MyPetApi.getMyPetInfo().setRemoveAfterRelease(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false));
             MyPetApi.getMyPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "lead")));
+            if (MyPetBaby.class.isAssignableFrom(petType.getMyPetClass())) {
+                String growUp = config.getString("MyPet.Pets." + petType.name() + ".GrowUpItem", pi.growUpItem());
+                MyPet.setGrowUpItem(petType.name(), ConfigItem.createConfigItem(growUp));
+            }
         }
     }
 

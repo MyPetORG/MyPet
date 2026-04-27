@@ -36,4 +36,6 @@ public @interface DefaultInfo {
     String[] leashFlags() default {"LowHp"};
 
     double walkSpeed() default 0.30D;
+
+    String growUpItem() default "experience_bottle";
 }
