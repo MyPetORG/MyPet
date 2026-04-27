@@ -299,6 +299,33 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             return false;
         }
 
+        // Grow up: a baby pet right-clicked with its configured grow-up item
+        // becomes an adult. Gated on MyPetBaby so the branch only fires for
+        // types that actually have an Ageable Bukkit counterpart — matches the
+        // ConfigurationLoader gate that writes the GrowUpItem row.
+        if (this instanceof MyPetBaby baby && baby.isBaby()) {
+            ConfigItem growUpItem = Configuration.MyPet.getGrowUpItem(getPetType());
+            if (growUpItem != null && growUpItem.compare(item)) {
+                if (player.getGameMode() != GameMode.CREATIVE) {
+                    item.setAmount(item.getAmount() - 1);
+                }
+                baby.setBaby(false);
+                if (Bukkit.isOwnedByCurrentRegion(bukkitEntity)) {
+                    bukkitEntity.getWorld().spawnParticle(
+                            Particle.HAPPY_VILLAGER,
+                            bukkitEntity.getLocation().add(0, bukkitEntity.getHeight() * 0.5, 0),
+                            8, 0.3, 0.3, 0.3, 0.0);
+                } else {
+                    bukkitEntity.getScheduler().run(MyPetApi.getPlugin(), task ->
+                            bukkitEntity.getWorld().spawnParticle(
+                                    Particle.HAPPY_VILLAGER,
+                                    bukkitEntity.getLocation().add(0, bukkitEntity.getHeight() * 0.5, 0),
+                                    8, 0.3, 0.3, 0.3, 0.0), null);
+                }
+                return true;
+            }
+        }
+
         // Feed: check if the item matches any configured food
         java.util.List<ConfigItem> foods = MyPetApi.getMyPetInfo().getFood(getPetType());
         for (ConfigItem food : foods) {
