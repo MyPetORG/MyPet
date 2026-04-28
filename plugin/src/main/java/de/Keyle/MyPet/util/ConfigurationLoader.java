@@ -271,17 +271,21 @@ public class ConfigurationLoader {
                 config.addDefault(base + ".WillShake", true);
             }
         }
+        config.addDefault("MyPet.Pets.Armadillo.CanShedScute", MyPet.Armadillo.CAN_SHED_SCUTE);
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
         if (MyPetType.byNameOrNull("CopperGolem") != null) {
             config.addDefault("MyPet.Pets.CopperGolem.CanOxidize", true);
             config.addDefault("MyPet.Pets.CopperGolem.OxidationTime", 24000);
         }
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
+        config.addDefault("MyPet.Pets.Goat.CanDropHorn", MyPet.Goat.CAN_DROP_HORN);
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
         config.addDefault("MyPet.Pets.SnowGolem.FixSnowTrack", MyPet.SnowGolem.FIX_SNOW_TRACK);
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
+        config.addDefault("MyPet.Pets.Panda.CanDropSlimeball", MyPet.Panda.CAN_DROP_SLIMEBALL);
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
         config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
+        config.addDefault("MyPet.Pets.Sniffer.CanDigSeeds", MyPet.Sniffer.CAN_DIG_SEEDS);
 
         config.options().copyDefaults(true);
         try {
@@ -459,15 +463,19 @@ public class ConfigurationLoader {
                 MyPetApi.getLogger().warning("There was an error while loading pet-config.yml");
             }
         }
+        MyPet.Armadillo.CAN_SHED_SCUTE = config.getBoolean("MyPet.Pets.Armadillo.CanShedScute", true);
         MyPet.Chicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         MyPet.CopperGolem.CAN_OXIDIZE = config.getBoolean("MyPet.Pets.CopperGolem.CanOxidize", true);
         MyPet.CopperGolem.OXIDATION_TIME = config.getInt("MyPet.Pets.CopperGolem.OxidationTime", 24000);
         MyPet.Cow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
+        MyPet.Goat.CAN_DROP_HORN = config.getBoolean("MyPet.Pets.Goat.CanDropHorn", true);
         MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
         MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
         MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanTossUp", true);
         MyPet.SnowGolem.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.SnowGolem.FixSnowTrack", true);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
+        MyPet.Panda.CAN_DROP_SLIMEBALL = config.getBoolean("MyPet.Pets.Panda.CanDropSlimeball", true);
+        MyPet.Sniffer.CAN_DIG_SEEDS = config.getBoolean("MyPet.Pets.Sniffer.CanDigSeeds", true);
 
         // Dynamic per-type CanFly / CanGlide / CanSwim / WillShake load. Reads
         // the MyPet.Pets.<Type>.{CanFly,CanGlide,CanSwim,WillShake} keys

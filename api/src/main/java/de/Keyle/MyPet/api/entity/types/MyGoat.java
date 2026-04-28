@@ -20,15 +20,19 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
+import java.util.Set;
+
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
-public interface MyGoat extends MyPet, MyPetBaby {
+public interface MyGoat extends MyPet, MyPetBaby, MyPetNaturalDrop {
     boolean isScreaming();
 
     void setScreaming(boolean flag);
@@ -40,4 +44,14 @@ public interface MyGoat extends MyPet, MyPetBaby {
     void setLeftHorn(boolean flag);
 
     void setRightHorn(boolean flag);
+
+    @Override
+    default Set<Material> naturalDropMaterials() {
+        return Set.of(Material.GOAT_HORN);
+    }
+
+    @Override
+    default boolean isNaturalDropSuppressed() {
+        return !Configuration.MyPet.Goat.CAN_DROP_HORN;
+    }
 }

@@ -20,16 +20,20 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 import org.bukkit.entity.Panda;
 
+import java.util.Set;
+
 @ShopInfo
 @DefaultInfo(food = {Material.BAMBOO})
-public interface MyPanda extends MyPet, MyPetBaby {
+public interface MyPanda extends MyPet, MyPetBaby, MyPetNaturalDrop {
 
     Panda.Gene getMainGene();
 
@@ -38,4 +42,18 @@ public interface MyPanda extends MyPet, MyPetBaby {
     Panda.Gene getHiddenGene();
 
     void setHiddenGene(Panda.Gene gene);
+
+    /**
+     * Vanilla pandas drop slimeballs only as babies, when they sneeze. Adult
+     * pandas never trigger this, so the suppression rule is harmless for them.
+     */
+    @Override
+    default Set<Material> naturalDropMaterials() {
+        return Set.of(Material.SLIME_BALL);
+    }
+
+    @Override
+    default boolean isNaturalDropSuppressed() {
+        return !Configuration.MyPet.Panda.CAN_DROP_SLIMEBALL;
+    }
 }

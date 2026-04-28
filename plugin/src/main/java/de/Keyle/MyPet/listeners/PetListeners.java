@@ -46,7 +46,8 @@ public final class PetListeners {
             PetPvPListener::new,
             PetSkillTriggerListener::new,
             PetDeathListener::new,
-            PetDespawnListener::new
+            PetDespawnListener::new,
+            PetDropListener::new
     );
 
     private PetListeners() {

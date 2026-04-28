@@ -250,6 +250,11 @@ public class Configuration {
             GROW_UP_ITEMS.put(typeName, item);
         }
 
+        public static class Armadillo {
+
+            public static boolean CAN_SHED_SCUTE = true;
+        }
+
         public static class Chicken {
 
             public static boolean CAN_LAY_EGGS = true;
@@ -269,6 +274,7 @@ public class Configuration {
         public static class Goat {
 
             public static boolean CAN_GIVE_MILK = true;
+            public static boolean CAN_DROP_HORN = true;
         }
 
         public static class IronGolem {
@@ -281,10 +287,20 @@ public class Configuration {
             public static boolean CAN_GIVE_SOUP;
         }
 
+        public static class Panda {
+
+            public static boolean CAN_DROP_SLIMEBALL = true;
+        }
+
         public static class Sheep {
 
             public static boolean CAN_BE_SHEARED = true;
             public static boolean CAN_REGROW_WOOL = true;
+        }
+
+        public static class Sniffer {
+
+            public static boolean CAN_DIG_SEEDS = true;
         }
 
         public static class SnowGolem {

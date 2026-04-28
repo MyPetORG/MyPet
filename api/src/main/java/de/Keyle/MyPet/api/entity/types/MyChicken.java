@@ -20,17 +20,31 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetGlidingEntity;
+import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
+import java.util.Set;
+
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT_SEEDS})
-public interface MyChicken extends MyPet, MyPetBaby, MyPetGlidingEntity {
+public interface MyChicken extends MyPet, MyPetBaby, MyPetGlidingEntity, MyPetNaturalDrop {
     String getVariant();
 
     void setVariant(String key);
+
+    @Override
+    default Set<Material> naturalDropMaterials() {
+        return Set.of(Material.EGG);
+    }
+
+    @Override
+    default boolean isNaturalDropSuppressed() {
+        return !Configuration.MyPet.Chicken.CAN_LAY_EGGS;
+    }
 }

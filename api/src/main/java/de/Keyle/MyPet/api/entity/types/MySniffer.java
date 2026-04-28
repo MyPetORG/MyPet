@@ -20,13 +20,27 @@
 
 package de.Keyle.MyPet.api.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
+import java.util.Set;
+
 @ShopInfo
 @DefaultInfo(food = {Material.TORCHFLOWER_SEEDS}, leashFlags = {"Tamed"})
-public interface MySniffer extends MyPet, MyPetBaby {
+public interface MySniffer extends MyPet, MyPetBaby, MyPetNaturalDrop {
+
+    @Override
+    default Set<Material> naturalDropMaterials() {
+        return Set.of(Material.TORCHFLOWER_SEEDS, Material.PITCHER_POD);
+    }
+
+    @Override
+    default boolean isNaturalDropSuppressed() {
+        return !Configuration.MyPet.Sniffer.CAN_DIG_SEEDS;
+    }
 }
