@@ -263,7 +263,6 @@ public class Configuration {
         public static class CopperGolem {
 
             public static boolean CAN_OXIDIZE = true;
-            public static int OXIDATION_TIME = 24000;
         }
 
         public static class Cow {

@@ -345,6 +345,29 @@ public final class PetStateSnapshot {
             case SNOW_GOLEM -> {
                 b.putBoolean("Sheared", ((Snowman) entity).isDerp());
             }
+            case COPPER_GOLEM -> {
+                // Vanilla owns the oxidation tick. Read the weathering stage,
+                // the wax flag, and the remaining ticks until vanilla's next
+                // scheduled transition so a /petstore + /petswitch (or
+                // /petsendaway + /petcall) cycle resumes the timer instead
+                // of having vanilla roll a fresh schedule each respawn.
+                // Wax is encoded as the Oxidizing.Waxed variant of the same
+                // tagged union — there's no dedicated isWaxed() on CopperGolem.
+                try {
+                    CopperGolem cg = (CopperGolem) entity;
+                    b.putString("OxidationState", cg.getWeatheringState().name());
+                    CopperGolem.Oxidizing oxidizing = cg.getOxidizing();
+                    b.putBoolean("Waxed", oxidizing instanceof CopperGolem.Oxidizing.Waxed);
+                    if (oxidizing instanceof CopperGolem.Oxidizing.AtTime atTime) {
+                        long remaining = atTime.time() - cg.getWorld().getFullTime();
+                        b.putLong("OxidationRemainingTicks", Math.max(0L, remaining));
+                    } else {
+                        // Unset (vanilla just fired or never scheduled) or
+                        // Waxed (no schedule at all) — nothing to preserve.
+                        b.putLong("OxidationRemainingTicks", 0L);
+                    }
+                } catch (Throwable ignored) {}
+            }
             default -> {
                 // Types with no visual state — nothing to snapshot.
             }

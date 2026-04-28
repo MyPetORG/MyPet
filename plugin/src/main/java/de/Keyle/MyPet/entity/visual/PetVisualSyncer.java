@@ -1,8 +1,10 @@
 package de.Keyle.MyPet.entity.visual;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.entity.types.*;
+import io.papermc.paper.world.WeatheringCopperState;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.entity.*;
@@ -367,8 +369,29 @@ public final class PetVisualSyncer {
                 }
             } catch (Throwable ignored) {}
         }
+        if (pet instanceof MyCopperGolem cgPet && mob instanceof CopperGolem cgMob) {
+            try {
+                cgMob.setWeatheringState(
+                        WeatheringCopperState.valueOf(cgPet.getOxidationState().name()));
+                // Suppress vanilla's natural oxidation tick when the pet is
+                // waxed or the admin disabled CanOxidize. Otherwise resume
+                // the saved schedule (atTime offset by remaining ticks) so
+                // store/sendaway cycles don't reset oxidation progress;
+                // fall through to Unset on a fresh tame so vanilla picks
+                // its own first schedule.
+                CopperGolem.Oxidizing oxidizing;
+                if (cgPet.isWaxed() || !Configuration.MyPet.CopperGolem.CAN_OXIDIZE) {
+                    oxidizing = CopperGolem.Oxidizing.waxed();
+                } else if (cgPet.getOxidationRemainingTicks() > 0) {
+                    oxidizing = CopperGolem.Oxidizing.atTime(
+                            cgMob.getWorld().getFullTime() + cgPet.getOxidationRemainingTicks());
+                } else {
+                    oxidizing = CopperGolem.Oxidizing.unset();
+                }
+                cgMob.setOxidizing(oxidizing);
+            } catch (Throwable ignored) {}
+        }
         // ─── Tier 3 types with no straightforward Bukkit setter — deferred ───
-        // MyCopperGolem (oxidation state — no Bukkit API in 1.21.x)
         // MyWarden (heartAttack — no setter)
         // MyIronGolem (flower — no Bukkit API)
         // MyVex (glowing — vex glow driven by vanilla internally)

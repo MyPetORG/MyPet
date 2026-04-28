@@ -37,7 +37,7 @@ dependencies {
 
     compileOnly("com.zaxxer:HikariCP:3.4.2")
     compileOnly("net.kyori:adventure-nbt:4.17.0")
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     compileOnly("org.mozilla:rhino:1.8.0")
     compileOnly("com.mojang:brigadier:1.0.18")
 

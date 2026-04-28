@@ -33,7 +33,7 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     protected OxidationState oxidationState = OxidationState.UNAFFECTED;
     protected boolean waxed = false;
     protected ItemStack poppy = null;
-    protected int oxidationTickCounter = 0;
+    protected long oxidationRemainingTicks = 0;
 
     public MyCopperGolem(MyPetPlayer petOwner) {
         super(petOwner);
@@ -43,11 +43,11 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     public CompoundBinaryTag writeExtendedInfo() {
         CompoundBinaryTag info = super.writeExtendedInfo();
         info = info.putString("OxidationState", oxidationState.name())
-                   .putBoolean("Waxed", waxed);
+                   .putBoolean("Waxed", waxed)
+                   .putLong("OxidationRemainingTicks", oxidationRemainingTicks);
         if (hasPoppy()) {
             info = info.put("Poppy", MyPetApi.getPlatformHelper().itemStackToCompound(poppy));
         }
-        info = info.putInt("OxidationTickCounter", oxidationTickCounter);
         return info;
     }
 
@@ -64,6 +64,9 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
         if (info.keySet().contains("Waxed")) {
             waxed = info.getBoolean("Waxed");
         }
+        if (info.keySet().contains("OxidationRemainingTicks")) {
+            oxidationRemainingTicks = Math.max(0L, info.getLong("OxidationRemainingTicks"));
+        }
         if (info.keySet().contains("Poppy")) {
             CompoundBinaryTag poppyCompound = info.getCompound("Poppy");
             try {
@@ -71,9 +74,6 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
             } catch (Exception e) {
                 poppy = null;
             }
-        }
-        if (info.keySet().contains("OxidationTickCounter")) {
-            oxidationTickCounter = info.getInt("OxidationTickCounter");
         }
     }
 
@@ -105,13 +105,8 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
     }
 
     @Override
-    public int getOxidationTickCounter() {
-        return oxidationTickCounter;
-    }
-
-    @Override
-    public void setOxidationTickCounter(int ticks) {
-        this.oxidationTickCounter = ticks;
+    public void setOxidationRemainingTicks(long ticks) {
+        this.oxidationRemainingTicks = Math.max(0L, ticks);
     }
 
     @Override

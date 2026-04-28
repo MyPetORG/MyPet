@@ -275,7 +275,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
         if (MyPetType.byNameOrNull("CopperGolem") != null) {
             config.addDefault("MyPet.Pets.CopperGolem.CanOxidize", true);
-            config.addDefault("MyPet.Pets.CopperGolem.OxidationTime", 24000);
         }
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
         config.addDefault("MyPet.Pets.Goat.CanDropHorn", MyPet.Goat.CAN_DROP_HORN);
@@ -466,7 +465,6 @@ public class ConfigurationLoader {
         MyPet.Armadillo.CAN_SHED_SCUTE = config.getBoolean("MyPet.Pets.Armadillo.CanShedScute", true);
         MyPet.Chicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         MyPet.CopperGolem.CAN_OXIDIZE = config.getBoolean("MyPet.Pets.CopperGolem.CanOxidize", true);
-        MyPet.CopperGolem.OXIDATION_TIME = config.getInt("MyPet.Pets.CopperGolem.OxidationTime", 24000);
         MyPet.Cow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
         MyPet.Goat.CAN_DROP_HORN = config.getBoolean("MyPet.Pets.Goat.CanDropHorn", true);
         MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);

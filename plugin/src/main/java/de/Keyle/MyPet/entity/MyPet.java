@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
+import de.Keyle.MyPet.api.entity.types.MyCopperGolem;
 import de.Keyle.MyPet.api.event.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -45,6 +46,7 @@ import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
+import de.Keyle.MyPet.entity.visual.PetStateSnapshot;
 import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
@@ -65,6 +67,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -913,6 +916,20 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 // can't read, fall back to the last cached health/state on this object.
                 if (ownedByCurrentRegion) {
                     health = entityRef.getHealth();
+                    // Copper Golem: capture the vanilla-driven oxidation stage
+                    // and remaining schedule into the model so a /petstore +
+                    // /petswitch (or /petsendaway + /petcall) cycle resumes
+                    // from the same point instead of vanilla rolling a fresh
+                    // schedule on the new mob. Other pet types' state is
+                    // already kept in sync through their own setters or
+                    // PetInteractionListener; copper golem alone has vanilla
+                    // mutating state without any MyPet code path involved.
+                    if (this instanceof MyCopperGolem
+                            && entityRef.getType() == EntityType.COPPER_GOLEM) {
+                        try {
+                            this.readExtendedInfo(PetStateSnapshot.toTag(entityRef, false));
+                        } catch (Throwable ignored) {}
+                    }
                 }
                 // Drop the pet's entry from the damage tracker before clearing
                 // bukkitEntity — otherwise the ConcurrentHashMap in

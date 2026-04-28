@@ -42,9 +42,15 @@ public interface MyCopperGolem extends MyPet {
 
     void setPoppy(ItemStack item);
 
-    int getOxidationTickCounter();
+    /**
+     * Game ticks remaining in the current oxidation stage. Captured from
+     * vanilla on despawn, so the timer resumes from the same point on respawn,
+     * rather than vanilla rolling a fresh schedule each spawn cycle.
+     * {@code 0} means "no in-flight schedule — let vanilla pick a fresh one".
+     */
+    long getOxidationRemainingTicks();
 
-    void setOxidationTickCounter(int ticks);
+    void setOxidationRemainingTicks(long ticks);
 
     boolean hasPoppy();
 
