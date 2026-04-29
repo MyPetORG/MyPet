@@ -22,31 +22,22 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
-import lombok.Setter;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.Cow;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyCow extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCow {
-
-    @Setter
-    protected String variant = "temperate";
+@ShopInfo
+@DefaultInfo(food = {Material.WHEAT})
+public class MyCow extends MyPet implements MyPetBaby {
 
     public MyCow(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putString("Variant", getVariant());
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Variant")) {
-            setVariant(info.getString("Variant"));
-        }
-    }
 }

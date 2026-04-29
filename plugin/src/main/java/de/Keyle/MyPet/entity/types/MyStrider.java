@@ -20,70 +20,23 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import net.kyori.adventure.nbt.ByteBinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import lombok.Getter;
+import org.bukkit.entity.Strider;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
-@Getter
-public class MyStrider extends MyPet implements de.Keyle.MyPet.api.entity.types.MyStrider {
-
-    protected ItemStack saddle = null;
+@ShopInfo
+@DefaultInfo(food = {Material.WARPED_FUNGUS})
+public class MyStrider extends MyPet implements MyPetBaby, MyPetLavaEntity {
 
     public MyStrider(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        if (hasSaddle()) {
-            info = info.put("Saddle", MyPetApi.getPlatformHelper().itemStackToCompound(getSaddle()));
-        }
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Saddle")) {
-            if (info.get("Saddle") instanceof net.kyori.adventure.nbt.ByteBinaryTag) {
-                boolean saddle = info.getBoolean("Saddle");
-                if (saddle) {
-                    ItemStack item = new ItemStack(Material.SADDLE);
-                    setSaddle(item);
-                }
-            } else if (info.get("Saddle") instanceof CompoundBinaryTag) {
-                CompoundBinaryTag itemTag = info.getCompound("Saddle");
-                try {
-                    ItemStack item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
-                    setSaddle(item);
-                } catch (Exception e) {
-                    MyPetApi.getLogger().warning("Could not load Saddle item from pet data!");
-                }
-            }
-        }
-    }
-
-    public void setSaddle(ItemStack item) {
-        if (item != null && item.getType() != Material.SADDLE) {
-            return;
-        }
-
-        this.saddle = item;
-        if (this.saddle != null) {
-            this.saddle.setAmount(1);
-        }
-
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public boolean hasSaddle() {
-        return saddle != null;
-    }
 }

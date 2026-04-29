@@ -20,47 +20,22 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import lombok.Getter;
+import org.bukkit.entity.Hoglin;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetShake;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyHoglin extends MyPet implements de.Keyle.MyPet.api.entity.types.MyHoglin {
-
-    protected boolean shakeImmune = false;
+@ShopInfo
+@DefaultInfo(food = {Material.CRIMSON_FUNGUS})
+public class MyHoglin extends MyPet implements MyPetBaby, MyPetShake {
 
     public MyHoglin(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putBoolean("ShakeImmune", isShakeImmune());
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("ShakeImmune")) {
-            setShakeImmune(info.getBoolean("ShakeImmune"));
-        }
-    }
-
-    public boolean isShakeImmune() {
-        if (willShake()) {
-            return shakeImmune;
-        }
-        return true;
-    }
-
-    public void setShakeImmune(boolean flag) {
-        this.shakeImmune = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

@@ -22,49 +22,19 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Rabbit;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyRabbit extends MyPet implements de.Keyle.MyPet.api.entity.types.MyRabbit {
-
-    protected Rabbit.Type variant = Rabbit.Type.BROWN;
+@ShopInfo
+@DefaultInfo(food = {Material.CARROT})
+public class MyRabbit extends MyPet implements MyPetBaby {
 
     public MyRabbit(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        // New format: stores the Bukkit enum name under a NEW key to avoid
-        // colliding with the legacy byte-id Variant key.
-        info = info.putString("VariantName", variant.name());
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("VariantName")) {
-            String name = info.getString("VariantName");
-            if (name != null && !name.isEmpty()) {
-                try {
-                    setVariant(Rabbit.Type.valueOf(name));
-                } catch (IllegalArgumentException ignored) {
-                    // Unrecognised variant name — fall back to the default.
-                }
-            }
-        }
-    }
-
-    public void setVariant(Rabbit.Type variant) {
-        if (variant == null) return;
-        this.variant = variant;
-
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

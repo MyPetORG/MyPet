@@ -37,7 +37,8 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
-import de.Keyle.MyPet.entity.visual.PetStateSnapshot;
+import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -47,6 +48,7 @@ import org.bukkit.entity.Creaking;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -198,7 +200,8 @@ public class CreakingHeartListener implements Listener {
         inactiveMyPet.setWorldGroup(worldGroup.getName());
         inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
 
-        inactiveMyPet.setInfo(PetStateSnapshot.toTag(linkedCreaking));
+        byte[] snapshot = PetEntitySnapshot.capture((Mob) linkedCreaking);
+        inactiveMyPet.setInfo(PetEntitySnapshot.envelope(snapshot, CompoundBinaryTag.empty()));
 
         // Store the location before removing
         final Location capturedEntityLocation = linkedCreaking.getLocation().clone();

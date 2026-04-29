@@ -7,10 +7,11 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.*;
 import org.bukkit.entity.Mob;
-import de.Keyle.MyPet.api.entity.types.MySheep;
+import de.Keyle.MyPet.entity.types.MySheep;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Sheep;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
@@ -62,8 +63,7 @@ public class PetEatGrassGoal implements Goal<Mob> {
         if (!Configuration.MyPet.Sheep.CAN_REGROW_WOOL) {
             return false;
         }
-        MySheep mySheep = (MySheep) pet;
-        if (!mySheep.isSheared()) {
+        if (!(pet instanceof MySheep) || !(mob instanceof Sheep sheep) || !sheep.isSheared()) {
             return false;
         }
         if (ThreadLocalRandom.current().nextInt(1000) != 0) {
@@ -125,12 +125,13 @@ public class PetEatGrassGoal implements Goal<Mob> {
                 return;
             }
 
+            if (!(mob instanceof Sheep sheep)) return;
             if (blockAt.getType() == Material.SHORT_GRASS) {
                 blockAt.setType(Material.AIR);
-                ((MySheep) pet).setSheared(false);
+                sheep.setSheared(false);
             } else if (blockBelow.getType() == Material.GRASS_BLOCK) {
                 blockBelow.setType(Material.DIRT);
-                ((MySheep) pet).setSheared(false);
+                sheep.setSheared(false);
             }
         }
     }

@@ -22,134 +22,25 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.entity.Villager;
+import org.bukkit.entity.ZombieVillager;
 
-@Getter
-public class MyZombieVillager extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombieVillager {
+import java.util.Locale;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-    /** @see MyVillager#professionKey */
-    protected String professionKey = "none";
-    protected Villager.Type type = Villager.Type.PLAINS;
-    protected int tradingLevel = 1;
+@ShopInfo(displayName = "Zombie Villager")
+@DefaultInfo(food = {Material.ROTTEN_FLESH})
+public class MyZombieVillager extends MyPet implements MyPetEquipment, MyPetBaby {
 
     public MyZombieVillager(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public int getProfession() {
-        try {
-            Villager.Profession prof = Registry.VILLAGER_PROFESSION.get(
-                    NamespacedKey.minecraft(professionKey));
-            if (prof != null) return prof.ordinal();
-        } catch (Throwable ignored) {
-        }
-        return 0;
-    }
-
-    public String getProfessionKey() {
-        return professionKey;
-    }
-
-    @Override
-    public void setProfession(int value) {
-        try {
-            Villager.Profession[] values = Villager.Profession.values();
-            if (value >= 0 && value < values.length) {
-                Villager.Profession prof = values[value];
-                if (prof.getKey() != null) {
-                    this.professionKey = prof.getKey().getKey();
-                }
-            }
-        } catch (Throwable ignored) {
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public void setProfessionKey(String key) {
-        if (key != null && !key.isEmpty()) {
-            this.professionKey = key;
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putString("ProfessionKey", professionKey);
-        info = info.putString("VillagerTypeKey", type.getKey().getKey());
-        info = info.putInt("TradingLevel", getTradingLevel());
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("ProfessionKey")) {
-            String key = info.getString("ProfessionKey");
-            if (key != null && !key.isEmpty()) {
-                this.professionKey = key;
-            }
-        } else if (info.keySet().contains("Profession")) {
-            setProfession(info.getInt("Profession"));
-        }
-        // Villager type — new (namespaced-key path) then legacy (int ordinal).
-        // See MyVillager#readExtendedInfo for the legacy order rationale.
-        if (info.keySet().contains("VillagerTypeKey")) {
-            String key = info.getString("VillagerTypeKey");
-            Villager.Type matched = resolveType(key);
-            if (matched != null) {
-                setType(matched);
-            }
-        } else if (info.keySet().contains("VillagerType")) {
-            try {
-                int ord = info.getInt("VillagerType");
-                String[] legacyOrder = {"desert", "jungle", "plains", "savanna", "snow", "swamp", "taiga"};
-                if (ord >= 0 && ord < legacyOrder.length) {
-                    Villager.Type matched = resolveType(legacyOrder[ord]);
-                    if (matched != null) {
-                        setType(matched);
-                    }
-                }
-            } catch (Exception ignored) {
-            }
-        }
-        if (info.keySet().contains("TradingLevel")) {
-            setTradingLevel(info.getInt("TradingLevel"));
-        }
-    }
-
-    private static Villager.Type resolveType(String keyPath) {
-        if (keyPath == null || keyPath.isEmpty()) return null;
-        try {
-            return Registry.VILLAGER_TYPE.get(NamespacedKey.minecraft(keyPath.toLowerCase(java.util.Locale.ROOT)));
-        } catch (Throwable t) {
-            return null;
-        }
-    }
-
-    @Override
-    public void setType(Villager.Type value) {
-        if (value == null) return;
-        this.type = value;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public void setTradingLevel(int level) {
-        this.tradingLevel = Math.max(1, level);
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

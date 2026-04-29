@@ -24,65 +24,17 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Frog;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-public class MyFrog extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFrog {
-
-    protected String variantName = "TEMPERATE";
+@ShopInfo
+@DefaultInfo(food = {Material.SLIME_BALL})
+public class MyFrog extends MyPet implements MyPetAquaticEntity {
 
     public MyFrog(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putString("FrogTypeName", variantName);
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("FrogTypeName")) {
-            String name = info.getString("FrogTypeName");
-            if (name != null && !name.isEmpty()) {
-                this.variantName = name;
-            }
-        } else if (info.keySet().contains("FrogType")) {
-            setFrogVariant(info.getInt("FrogType"));
-        }
-    }
-
-    @Override
-    public void setFrogVariant(int variant) {
-        try {
-            Frog.Variant[] values = Frog.Variant.values();
-            int clamped = Math.min(values.length - 1, Math.max(0, variant));
-            this.variantName = values[clamped].name();
-        } catch (Throwable ignored) {
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public int getFrogVariant() {
-        try {
-            Frog.Variant v = resolveBukkitVariant();
-            return v != null ? v.ordinal() : 0;
-        } catch (Throwable ignored) {
-            return 0;
-        }
-    }
-
-    public Frog.Variant resolveBukkitVariant() {
-        try {
-            for (Frog.Variant v : Frog.Variant.values()) {
-                if (v.name().equals(variantName)) return v;
-            }
-            Frog.Variant[] values = Frog.Variant.values();
-            if (values.length > 0) return values[0];
-        } catch (Throwable ignored) {
-        }
-        return null;
-    }
 }

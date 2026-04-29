@@ -22,46 +22,19 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.MushroomCow;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyMooshroom extends MyPet implements de.Keyle.MyPet.api.entity.types.MyMooshroom {
-
-    protected MushroomCow.Variant type = MushroomCow.Variant.RED;
+@ShopInfo
+@DefaultInfo(food = {Material.WHEAT})
+public class MyMooshroom extends MyPet implements MyPetBaby {
 
     public MyMooshroom(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        // New format: stores the Bukkit enum name — "RED" or "BROWN".
-        return info.putString("CowTypeName", getType().name());
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("CowTypeName")) {
-            String name = info.getString("CowTypeName");
-            if (name != null && !name.isEmpty()) {
-                try {
-                    setType(MushroomCow.Variant.valueOf(name));
-                } catch (IllegalArgumentException ignored) {
-                }
-            }
-        }
-    }
-
-    @Override
-    public void setType(MushroomCow.Variant type) {
-        if (type == null) return;
-        this.type = type;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

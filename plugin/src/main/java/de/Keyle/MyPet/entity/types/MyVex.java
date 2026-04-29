@@ -23,37 +23,24 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import lombok.Getter;
+import org.bukkit.entity.Vex;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import java.util.Set;
+import org.bukkit.Material;
 
-@Getter
-public class MyVex extends MyPet implements de.Keyle.MyPet.api.entity.types.MyVex {
-
-    protected boolean glowing = false;
+@ShopInfo
+@DefaultInfo(food = {Material.APPLE})
+public class MyVex extends MyPet implements MyPetEquipment, MyPetFlyingEntity {
 
     public MyVex(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putBoolean("Glowing", isGlowing());
-        return info;
+    public Set<String> getAllowedSlotNames() {
+        return Set.of("HAND");
     }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Glowing")) {
-            setGlowing(info.getBoolean("Glowing"));
-        }
-    }
-
-    public void setGlowing(boolean flag) {
-        this.glowing = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
 }

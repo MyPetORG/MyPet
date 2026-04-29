@@ -22,36 +22,19 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.MagmaCube;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyMagmaCube extends MyPet implements de.Keyle.MyPet.api.entity.types.MyMagmaCube {
-
-    protected int size = 1;
+@ShopInfo(displayName = "Magma Cube", options = {"size:2"})
+@DefaultInfo(food = {Material.REDSTONE})
+public class MyMagmaCube extends MyPet implements MyPetLavaEntity {
 
     public MyMagmaCube(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putInt("Size", getSize());
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Size")) {
-            setSize(info.getInt("Size"));
-        }
-    }
-
-    public void setSize(int value) {
-        this.size = Math.max(1, value);
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

@@ -22,8 +22,14 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-public class MyGuardian extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGuardian {
+@ShopInfo
+@DefaultInfo(food = {Material.SUGAR})
+public class MyGuardian extends MyPet implements MyPetAquaticEntity {
 
     public MyGuardian(MyPetPlayer petOwner) {
         super(petOwner);

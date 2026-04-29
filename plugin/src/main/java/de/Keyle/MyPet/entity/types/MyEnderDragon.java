@@ -22,10 +22,13 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import org.bukkit.Material;
 
-@Getter
-public class MyEnderDragon extends MyPet implements de.Keyle.MyPet.api.entity.types.MyEnderDragon {
+@DefaultInfo(food = {Material.END_STONE}, leashFlags = {"Impossible"})
+public class MyEnderDragon extends MyPet implements MyPetLavaEntity, MyPetFlyingEntity {
 
     public MyEnderDragon(MyPetPlayer petOwner) {
         super(petOwner);

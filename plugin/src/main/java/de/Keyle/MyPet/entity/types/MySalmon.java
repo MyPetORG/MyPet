@@ -7,41 +7,21 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.Salmon;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-public class MySalmon extends MyPet implements de.Keyle.MyPet.api.entity.types.MySalmon {
-
-    protected int variant = 0;
+@ShopInfo
+@DefaultInfo(food = {Material.SEAGRASS})
+public class MySalmon extends MyPet implements MyPetAquaticEntity {
 
     public MySalmon(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public int getVariant() {
-        return variant;
-    }
-
-    public void setVariant(int variant) {
-        this.variant = Util.clamp(variant, 0, 2);
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putInt("Variant", variant);
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Variant")) {
-            setVariant(info.getInt("Variant"));
-        }
-    }
 }

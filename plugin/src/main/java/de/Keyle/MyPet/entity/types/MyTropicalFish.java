@@ -20,43 +20,21 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.TropicalFish;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyTropicalFish extends MyPet implements de.Keyle.MyPet.api.entity.types.MyTropicalFish {
-
-    protected int variant = 0;
+@ShopInfo(displayName = "Tropical Fish")
+@DefaultInfo(food = {Material.SEAGRASS})
+public class MyTropicalFish extends MyPet implements MyPetAquaticEntity {
 
     public MyTropicalFish(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public static int generateVariant(int shape, int pattern, int baseColor, int patternColor) {
-        return shape & 255 | (pattern & 255) << 8 | (baseColor & 255) << 16 | (patternColor & 255) << 24;
-    }
-
-    public void setVariant(int variant) {
-        this.variant = Util.clamp(variant, 0, 235799809);
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putInt("Variant", getVariant());
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Variant")) {
-            setVariant(info.getInt("Variant"));
-        }
-    }
 }

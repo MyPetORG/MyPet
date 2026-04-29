@@ -22,15 +22,21 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyGhast extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGhast {
+@ShopInfo
+@DefaultInfo(food = {Material.GUNPOWDER}, leashFlags = {"Impossible"})
+public class MyGhast extends MyPet implements MyPetLavaEntity, MyPetFlyingEntity {
 
     public MyGhast(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
+    @Override
     public double getYSpawnOffset() {
         return 4;
     }

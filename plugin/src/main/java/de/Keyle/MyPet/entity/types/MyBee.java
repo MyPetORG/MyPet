@@ -22,72 +22,34 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.Bee;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyBee extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBee {
-
-    protected boolean hasStung = false;
-    protected boolean hasNectar = false;
-    protected boolean angry = false;
+@ShopInfo
+@DefaultInfo(food = {
+        Material.POPPY,
+        Material.DANDELION,
+        Material.BLUE_ORCHID,
+        Material.ALLIUM,
+        Material.AZURE_BLUET,
+        Material.RED_TULIP,
+        Material.ORANGE_TULIP,
+        Material.WHITE_TULIP,
+        Material.PINK_TULIP,
+        Material.OXEYE_DAISY,
+        Material.CORNFLOWER,
+        Material.LILY_OF_THE_VALLEY,
+        Material.WITHER_ROSE,
+})
+public class MyBee extends MyPet implements MyPetBaby, MyPetFlyingEntity {
 
     public MyBee(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putBoolean("HasNectar", hasNectar())
-                .putBoolean("HasStung", hasStung())
-                .putBoolean("Angry", isAngry());
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("HasNectar")) {
-            setHasNectar(info.getBoolean("HasNectar"));
-        }
-        if (info.keySet().contains("HasStung")) {
-            setHasStung(info.getBoolean("HasStung"));
-        }
-        if (info.keySet().contains("Angry")) {
-            setAngry(info.getBoolean("Angry"));
-        }
-    }
-
-    @Override
-    public boolean hasNectar() {
-        return hasNectar;
-    }
-
-    public void setHasNectar(boolean flag) {
-        this.hasNectar = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public boolean hasStung() {
-        return hasStung;
-    }
-
-    @Override
-    public void setHasStung(boolean flag) {
-        this.hasStung = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public void setAngry(boolean flag) {
-        this.angry = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

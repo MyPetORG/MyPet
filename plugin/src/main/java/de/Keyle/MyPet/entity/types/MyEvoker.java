@@ -22,12 +22,18 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import java.util.Collections;
+import java.util.Set;
+import org.bukkit.Material;
 
-@Getter
-public class MyEvoker extends MyPet implements de.Keyle.MyPet.api.entity.types.MyEvoker {
+@ShopInfo
+@DefaultInfo(food = {Material.APPLE})
+public class MyEvoker extends MyPet implements MyPetEquipment {
 
     public MyEvoker(MyPetPlayer petOwner) {
         super(petOwner);
@@ -39,5 +45,11 @@ public class MyEvoker extends MyPet implements de.Keyle.MyPet.api.entity.types.M
             return;
         }
         super.setEquipment(slot, item);
+    }
+
+
+    @Override
+    public Set<String> getAllowedSlotNames() {
+        return Collections.emptySet();
     }
 }

@@ -23,80 +23,36 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
-import net.kyori.adventure.nbt.BinaryTag;
-import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.kyori.adventure.nbt.ListBinaryTag;
 import org.bukkit.Material;
+import org.bukkit.entity.ZombieHorse;
+import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import java.util.Set;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Getter
-public class MyZombieHorse extends MyPet implements de.Keyle.MyPet.api.entity.types.MyZombieHorse {
-
-    protected ItemStack saddle = null;
+@ShopInfo(displayName = "Zombie Horse")
+@DefaultInfo(food = {Material.ROTTEN_FLESH})
+public class MyZombieHorse extends MyPet implements MyPetBaby, MyPetEquipment {
 
     public MyZombieHorse(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public void setSaddle(ItemStack item) {
-        if (item != null && item.getType() != Material.SADDLE) {
-            return;
-        }
-        this.saddle = item;
-        if (this.saddle != null) {
-            this.saddle.setAmount(1);
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public boolean hasSaddle() {
-        return saddle != null;
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-
-        // Write saddle with string slot name for MC versions before 1.21 (which lack EquipmentSlot.SADDLE)
-        if (hasSaddle() && !MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21")) {
-            CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
-            for (String key : info.keySet()) {
-                builder.put(key, info.get(key));
-            }
-            List<BinaryTag> itemList = new ArrayList<>();
-            if (info.keySet().contains("Equipment")) {
-                ListBinaryTag existingEquip = info.getList("Equipment");
-                for (int i = 0; i < existingEquip.size(); i++) {
-                    itemList.add(existingEquip.getCompound(i));
-                }
-            }
-            CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(getSaddle());
-            item = item.putString("Slot", "SADDLE");
-            itemList.add(item);
-            builder.put("Equipment", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, itemList));
-            return builder.build();
-        }
-        return info;
-    }
-
-    // MyPetEquipment implementation
-
     @Override
     public ItemStack[] getEquipment() {
-        return new ItemStack[]{saddle};
+        if (!(getBukkitEntity() instanceof ZombieHorse horse)) return new ItemStack[]{null};
+        return new ItemStack[]{horse.getInventory().getSaddle()};
     }
 
     @Override
     public ItemStack getEquipment(EquipmentSlot slot) {
-        if (slot.name().equals("SADDLE")) return saddle;
+        if (!(getBukkitEntity() instanceof ZombieHorse horse)) return null;
+        if ("SADDLE".equals(slot.name())) return horse.getInventory().getSaddle();
         return null;
     }
 
@@ -107,8 +63,12 @@ public class MyZombieHorse extends MyPet implements de.Keyle.MyPet.api.entity.ty
 
     @Override
     protected void setEquipmentBySlotName(String slotName, ItemStack item) {
-        if (slotName.equals("SADDLE")) {
-            setSaddle(item);
+        if (!(getBukkitEntity() instanceof ZombieHorse horse)) {
+            super.setEquipmentBySlotName(slotName, item);
+            return;
+        }
+        if ("SADDLE".equals(slotName)) {
+            horse.getInventory().setSaddle(item);
         } else {
             super.setEquipmentBySlotName(slotName, item);
         }
@@ -116,13 +76,17 @@ public class MyZombieHorse extends MyPet implements de.Keyle.MyPet.api.entity.ty
 
     @Override
     public void dropEquipment() {
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> {
-                if (hasSaddle()) {
-                    entity.getWorld().dropItem(entity.getLocation(), getSaddle());
-                }
-            });
-            setSaddle(null);
+        if (status != PetState.Here || !(getBukkitEntity() instanceof ZombieHorse horse)) return;
+        AbstractHorseInventory inv = horse.getInventory();
+        ItemStack saddle = inv.getSaddle();
+        if (saddle != null && saddle.getType() != Material.AIR) {
+            horse.getWorld().dropItem(horse.getLocation(), saddle);
+            inv.setSaddle(null);
         }
+    }
+
+    @Override
+    public Set<String> getAllowedSlotNames() {
+        return Set.of("SADDLE");
     }
 }

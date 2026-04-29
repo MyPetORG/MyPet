@@ -23,80 +23,36 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
-import net.kyori.adventure.nbt.BinaryTag;
-import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.kyori.adventure.nbt.ListBinaryTag;
 import org.bukkit.Material;
+import org.bukkit.entity.Camel;
+import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import java.util.Set;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Getter
-public class MyCamel extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCamel {
-
-    protected ItemStack saddle = null;
+@ShopInfo
+@DefaultInfo(food = {Material.CACTUS})
+public class MyCamel extends MyPet implements MyPetBaby, MyPetEquipment {
 
     public MyCamel(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public void setSaddle(ItemStack item) {
-        if (item != null && item.getType() != Material.SADDLE) {
-            return;
-        }
-        this.saddle = item;
-        if (this.saddle != null) {
-            this.saddle.setAmount(1);
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public boolean hasSaddle() {
-        return saddle != null;
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-
-        // Write saddle with string slot name for MC versions before 1.21 (which lack EquipmentSlot.SADDLE)
-        if (hasSaddle() && !MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21")) {
-            CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
-            for (String key : info.keySet()) {
-                builder.put(key, info.get(key));
-            }
-            List<BinaryTag> itemList = new ArrayList<>();
-            if (info.keySet().contains("Equipment")) {
-                ListBinaryTag existingEquip = info.getList("Equipment");
-                for (int i = 0; i < existingEquip.size(); i++) {
-                    itemList.add(existingEquip.getCompound(i));
-                }
-            }
-            CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(getSaddle());
-            item = item.putString("Slot", "SADDLE");
-            itemList.add(item);
-            builder.put("Equipment", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, itemList));
-            return builder.build();
-        }
-        return info;
-    }
-
-    // MyPetEquipment implementation
-
     @Override
     public ItemStack[] getEquipment() {
-        return new ItemStack[]{saddle};
+        if (!(getBukkitEntity() instanceof Camel camel)) return new ItemStack[]{null};
+        return new ItemStack[]{camel.getInventory().getSaddle()};
     }
 
     @Override
     public ItemStack getEquipment(EquipmentSlot slot) {
-        if (slot.name().equals("SADDLE")) return saddle;
+        if (!(getBukkitEntity() instanceof Camel camel)) return null;
+        if ("SADDLE".equals(slot.name())) return camel.getInventory().getSaddle();
         return null;
     }
 
@@ -107,8 +63,12 @@ public class MyCamel extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     @Override
     protected void setEquipmentBySlotName(String slotName, ItemStack item) {
-        if (slotName.equals("SADDLE")) {
-            setSaddle(item);
+        if (!(getBukkitEntity() instanceof Camel camel)) {
+            super.setEquipmentBySlotName(slotName, item);
+            return;
+        }
+        if ("SADDLE".equals(slotName)) {
+            camel.getInventory().setSaddle(item);
         } else {
             super.setEquipmentBySlotName(slotName, item);
         }
@@ -116,13 +76,17 @@ public class MyCamel extends MyPet implements de.Keyle.MyPet.api.entity.types.My
 
     @Override
     public void dropEquipment() {
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> {
-                if (hasSaddle()) {
-                    entity.getWorld().dropItem(entity.getLocation(), getSaddle());
-                }
-            });
-            setSaddle(null);
+        if (status != PetState.Here || !(getBukkitEntity() instanceof Camel camel)) return;
+        AbstractHorseInventory inv = camel.getInventory();
+        ItemStack saddle = inv.getSaddle();
+        if (saddle != null && saddle.getType() != Material.AIR) {
+            camel.getWorld().dropItem(camel.getLocation(), saddle);
+            inv.setSaddle(null);
         }
+    }
+
+    @Override
+    public Set<String> getAllowedSlotNames() {
+        return Set.of("SADDLE");
     }
 }

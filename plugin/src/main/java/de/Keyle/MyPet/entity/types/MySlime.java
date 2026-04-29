@@ -23,36 +23,17 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import lombok.Getter;
+import org.bukkit.entity.Slime;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MySlime extends MyPet implements de.Keyle.MyPet.api.entity.types.MySlime {
-
-    protected int size = 1;
+@ShopInfo(options = {"size:2"})
+@DefaultInfo(food = {Material.SUGAR})
+public class MySlime extends MyPet {
 
     public MySlime(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putInt("Size", getSize());
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Size")) {
-            setSize(info.getInt("Size"));
-        }
-    }
-
-    public void setSize(int value) {
-        this.size = Math.max(1, value);
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

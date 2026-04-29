@@ -23,70 +23,22 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import org.bukkit.entity.Fox.Type;
+import org.bukkit.entity.Fox;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import java.util.Set;
+import org.bukkit.Material;
 
-public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFox {
-
-    /**
-     * Storage is by enum name (e.g. "RED", "SNOW") rather than ordinal so the
-     * value is drift-safe if Paper reorders or adds {@code Fox.Type} variants.
-     */
-    protected String foxTypeName = Type.RED.name();
+@ShopInfo
+@DefaultInfo(food = {Material.SWEET_BERRIES})
+public class MyFox extends MyPet implements MyPetBaby, MyPetEquipment {
 
     public MyFox(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public Type getFoxType() {
-        try {
-            return Type.valueOf(foxTypeName);
-        } catch (Throwable ignored) {
-            return Type.RED;
-        }
-    }
-
-    public void setFoxType(Type value) {
-        if (value != null) {
-            this.foxTypeName = value.name();
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putString("FoxTypeName", foxTypeName);
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("FoxTypeName")) {
-            String name = info.getString("FoxTypeName");
-            if (name != null && !name.isEmpty()) {
-                try {
-                    Type.valueOf(name); // validate
-                    this.foxTypeName = name;
-                } catch (Throwable ignored) {
-                }
-            }
-        } else if (info.keySet().contains("FoxType")) {
-            // Legacy format: int ordinal. Migrate via current runtime's values().
-            try {
-                int ord = info.getInt("FoxType");
-                Type[] values = Type.values();
-                if (ord >= 0 && ord < values.length) {
-                    this.foxTypeName = values[ord].name();
-                }
-            } catch (Throwable ignored) {
-            }
-        }
     }
 
     @Override
@@ -95,5 +47,10 @@ public class MyFox extends MyPet implements de.Keyle.MyPet.api.entity.types.MyFo
             return;
         }
         super.setEquipment(slot, item);
+    }
+
+    @Override
+    public Set<String> getAllowedSlotNames() {
+        return Set.of("HAND");
     }
 }

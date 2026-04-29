@@ -22,10 +22,14 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import org.bukkit.Material;
 
-@Getter
-public class MyWither extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWither {
+@DefaultInfo(food = {Material.BONE}, leashFlags = {"Impossible"})
+public class MyWither extends MyPet implements MyPetBaby, MyPetLavaEntity, MyPetFlyingEntity {
 
     public MyWither(MyPetPlayer petOwner) {
         super(petOwner);

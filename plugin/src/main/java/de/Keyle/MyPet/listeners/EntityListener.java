@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
-import de.Keyle.MyPet.api.entity.types.MyEnderman;
+import de.Keyle.MyPet.entity.types.MyEnderman;
 import de.Keyle.MyPet.api.event.MyPetCreateEvent;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -46,7 +46,8 @@ import de.Keyle.MyPet.entity.InactiveMyPet;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
-import de.Keyle.MyPet.entity.visual.PetStateSnapshot;
+import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -337,7 +338,8 @@ public class EntityListener implements Listener {
 
                         // Snapshot the wild mob's visual state into the pet's info tag for DB persistence.
                         // The mob itself is kept in-place (not destroyed) — its visual state is already correct.
-                        inactiveMyPet.setInfo(PetStateSnapshot.toTag(leashTarget));
+                        byte[] snapshot = PetEntitySnapshot.capture((Mob) leashTarget);
+                        inactiveMyPet.setInfo(PetEntitySnapshot.envelope(snapshot, CompoundBinaryTag.empty()));
 
                         // Store reference to the original mob so the activation callback can
                         // convert it in-place rather than destroying + re-spawning.
@@ -470,9 +472,11 @@ public class EntityListener implements Listener {
         }
         Entity damagedEntity = event.getEntity();
         // --  fix unwanted screaming of Endermen --
-        if (PetEntityMarker.isMarked(damagedEntity) && getMyPetManager().getMyPetFromEntity(damagedEntity).getPetType().equals(MyPetType.byName("Enderman"))) {
-            ((MyEnderman) getMyPetManager().getMyPetFromEntity(damagedEntity)).setScreaming(true);
-            ((MyEnderman) getMyPetManager().getMyPetFromEntity(damagedEntity)).setScreaming(false);
+        if (damagedEntity instanceof Enderman enderman && PetEntityMarker.isMarked(damagedEntity)) {
+            MyPet pet = getMyPetManager().getMyPetFromEntity(damagedEntity);
+            if (pet instanceof MyEnderman endermanPet) {
+                enderman.setScreaming(endermanPet.isPermaScreaming());
+            }
         }
     }
 

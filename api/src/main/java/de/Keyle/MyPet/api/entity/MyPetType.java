@@ -29,21 +29,24 @@ import java.util.*;
 
 /**
  * Registry of all available pet types. Types are auto-discovered at startup
- * by scanning Bukkit's EntityType enum for matching My* interface classes in
- * {@code de.Keyle.MyPet.api.entity.types}.
+ * by scanning Bukkit's EntityType enum for matching My* implementation classes
+ * in {@code de.Keyle.MyPet.entity.types} (the plugin module). Each impl class
+ * carries its own {@code @ShopInfo} / {@code @DefaultInfo} annotations and
+ * {@code implements} the relevant marker interfaces ({@link MyPetBaby},
+ * {@link MyPetFlyingEntity}, etc.) directly.
  * <p>
  * Third-party plugins can register custom pet types via {@link #register(String, Class)}.
  */
 public final class MyPetType {
 
-    private static final String API_TYPES_PACKAGE = "de.Keyle.MyPet.api.entity.types.My";
+    private static final String IMPL_TYPES_PACKAGE = "de.Keyle.MyPet.entity.types.My";
     private static final Map<String, MyPetType> BY_NAME = new LinkedHashMap<>();
     private static final Map<String, MyPetType> BY_BUKKIT_NAME = new LinkedHashMap<>();
 
     static {
         for (EntityType entityType : EntityType.values()) {
             String camelName = snakeToCamel(entityType.name());
-            String className = API_TYPES_PACKAGE + camelName;
+            String className = IMPL_TYPES_PACKAGE + camelName;
             try {
                 Class<?> clazz = Class.forName(className);
                 if (MyPet.class.isAssignableFrom(clazz)) {

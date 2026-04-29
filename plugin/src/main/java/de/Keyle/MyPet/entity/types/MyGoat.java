@@ -23,69 +23,30 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import lombok.Getter;
+import org.bukkit.entity.Goat;
+import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import java.util.Set;
+import org.bukkit.Material;
 
-@Getter
-public class MyGoat extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGoat {
-
-    protected boolean screaming = false;
-    protected boolean leftHorn = true;
-    protected boolean rightHorn = true;
+@ShopInfo
+@DefaultInfo(food = {Material.WHEAT})
+public class MyGoat extends MyPet implements MyPetBaby, MyPetNaturalDrop {
 
     public MyGoat(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putBoolean("Screaming", isScreaming());
-        info = info.putBoolean("LeftHorn", hasLeftHorn());
-        info = info.putBoolean("RightHorn", hasRightHorn());
-        return info;
+    public Set<Material> naturalDropMaterials() {
+        return Set.of(Material.GOAT_HORN);
     }
 
     @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Screaming")) {
-            setScreaming(info.getBoolean("Screaming"));
-        }
-        if (info.keySet().contains("LeftHorn")) {
-            setLeftHorn(info.getBoolean("LeftHorn"));
-        }
-        if (info.keySet().contains("RightHorn")) {
-            setRightHorn(info.getBoolean("RightHorn"));
-        }
-    }
-
-    // Manual getters needed - Lombok generates isLeftHorn()/isRightHorn() but API requires hasLeftHorn()/hasRightHorn()
-    public boolean hasLeftHorn() {
-        return leftHorn;
-    }
-
-    public boolean hasRightHorn() {
-        return rightHorn;
-    }
-
-    public void setScreaming(boolean flag) {
-        this.screaming = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public void setLeftHorn(boolean leftHorn) {
-        this.leftHorn = leftHorn;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public void setRightHorn(boolean rightHorn) {
-        this.rightHorn = rightHorn;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
+    public boolean isNaturalDropSuppressed() {
+        return !Configuration.MyPet.Goat.CAN_DROP_HORN;
     }
 }

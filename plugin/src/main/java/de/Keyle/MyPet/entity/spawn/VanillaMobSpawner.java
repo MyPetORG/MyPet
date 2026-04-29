@@ -10,6 +10,7 @@ import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
+import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
@@ -50,10 +51,46 @@ public final class VanillaMobSpawner {
             return false;
         }
 
-        Mob spawned = target.getWorld().spawn(target, mobClass, CreatureSpawnEvent.SpawnReason.CUSTOM, mob -> {
-            configureMob(pet, mob);
-        });
+        // Snapshot path: deserialize the vanilla mob from envelope bytes
+        // (every saved pet is in envelope format after the EntitySnapshot
+        // migration runs at startup). Fresh-spawn fallback covers (a) brand
+        // new pets that have never been saved, and (b) defensive recovery
+        // if the snapshot fails to deserialize.
+        byte[] snapshot = pet.consumePendingSnapshot();
+        if (snapshot != null) {
+            try {
+                Mob restored = PetEntitySnapshot.restore(snapshot, target.getWorld());
+                if (!mobClass.isInstance(restored)) {
+                    // Snapshot disagrees with stored pet type (e.g. /petadmin
+                    // changed the type after the snapshot was taken). Discard
+                    // the deserialized object (never entered the world — see
+                    // PetEntitySnapshot.restore) and fall through to fresh-spawn.
+                    MyPetApi.getLogger().warning("Snapshot type mismatch for pet "
+                            + pet.getUUID() + " — expected " + mobClass.getSimpleName()
+                            + " but got " + restored.getClass().getSimpleName()
+                            + ". Falling back to fresh-spawn.");
+                } else if (restored.spawnAt(target, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
+                    // deserializeEntity returns a detached Entity object
+                    // NOT in the world; spawnAt is what actually places it.
+                    // Skipping this call would leave a ghost entity (no errors,
+                    // pet just never appears). spawnAt also fires CreatureSpawnEvent.
+                    configureMob(pet, restored, true);
+                    return true;
+                } else {
+                    // spawnAt returned false — another plugin canceled the
+                    // CreatureSpawnEvent, or the entity was already spawned/despawned.
+                    MyPetApi.getLogger().warning("Snapshot-restored mob refused to spawn for pet "
+                            + pet.getUUID() + " — falling back to fresh-spawn.");
+                }
+            } catch (Throwable t) {
+                MyPetApi.getLogger().warning("Failed to restore EntitySnapshot for pet "
+                        + pet.getUUID() + " — falling back to fresh-spawn. " + t.getMessage());
+            }
+        }
 
+        target.getWorld().spawn(target, mobClass, CreatureSpawnEvent.SpawnReason.CUSTOM, mob -> {
+            configureMob(pet, mob, false);
+        });
         return true;
     }
 
@@ -67,7 +104,9 @@ public final class VanillaMobSpawner {
      * attributes, mark with PDC, wire the mob into the MyPet domain object.
      */
     public void convertInPlace(MyPet pet, Mob mob) {
-        configureMob(pet, mob);
+        // Tame path: the wild mob already exists with its visual state intact;
+        // treat it like a snapshot-restored pet so we don't clobber equipment.
+        configureMob(pet, mob, true);
     }
 
     /**
@@ -181,7 +220,15 @@ public final class VanillaMobSpawner {
         }
     }
 
-    private void configureMob(MyPet pet, Mob mob) {
+    /**
+     * @param mobHasPersistentState {@code true} if {@code mob} carries trustworthy
+     *        prior state — the snapshot-restore path or the
+     *        {@link #convertInPlace} tame path. We then preserve the mob's
+     *        existing equipment instead of re-applying the (possibly empty)
+     *        domain-side equipment cache. {@code false} for fresh world.spawn,
+     *        in which case the domain cache is the only source of truth.
+     */
+    private void configureMob(MyPet pet, Mob mob, boolean mobHasPersistentState) {
         // Wire the mob into the MyPet domain object FIRST, so
         // pet.getPetNavigation() returns a valid PaperNavigation when the goal
         // classes fetch it during construction below. Doing this after goal
@@ -212,18 +259,25 @@ public final class VanillaMobSpawner {
 
         // Initial visual state — applied inside the spawn consumer so the
         // correct colour/variant/profession/etc. lands in the initial spawn
-        // packet (no default-flash). Must happen before goal install so goals
-        // that inspect mob state see the final values.
-        PetVisualSyncer.sync(pet, mob);
+        // packet (no default-flash). Goes through pet.updateVisuals() rather
+        // than PetVisualSyncer.sync() directly so per-type overrides
+        // (e.g. MyEnderman's permaScreaming reassertion) fire on respawn.
+        pet.updateVisuals();
         pet.updateNameTag();
 
         PetGoalInstaller.install(pet, mob);
 
-        // Equipment sync — lifted from plugin/entity/MyPet.java:645-650.
-        if (pet instanceof MyPetEquipment equipmentPet) {
+        // Equipment sync: only when the mob lacks trustworthy persistent
+        // equipment of its own. Snapshot-restored and convert-in-place mobs
+        // carry the canonical equipment in their inventory, and the domain
+        // cache may be empty across server-restart cycles — applying it
+        // unconditionally would clobber the snapshot.
+        if (!mobHasPersistentState && pet instanceof MyPetEquipment equipmentPet) {
             EntityEquipment eq = mob.getEquipment();
-            for (EquipmentSlot slot : EquipmentSlot.values()) {
-                eq.setItem(slot, equipmentPet.getEquipment(slot));
+            if (eq != null) {
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    eq.setItem(slot, equipmentPet.getEquipment(slot));
+                }
             }
         }
 

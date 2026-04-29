@@ -26,90 +26,40 @@ import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Material;
+import org.bukkit.entity.Enderman;
 import org.bukkit.inventory.ItemStack;
-
-import static org.bukkit.Material.AIR;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 
 @Getter
-public class MyEnderman extends MyPet implements de.Keyle.MyPet.api.entity.types.MyEnderman {
+@ShopInfo
+@DefaultInfo(food = {Material.SOUL_SAND})
+public class MyEnderman extends MyPet {
 
-    protected boolean screaming = false;
+    /**
+     * MyPet-only override: vanilla {@link Enderman} screaming is AI-driven and
+     * does not persist to NBT. When this flag is set, the live entity is
+     * force-screamed on each {@code updateVisuals} pass.
+     */
     protected boolean permaScreaming = false;
-    protected ItemStack block = null;
 
     public MyEnderman(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public void setBlock(ItemStack block) {
-        if (block != null) {
-            this.block = block.clone();
-            this.block.setAmount(1);
-
-            if (status == PetState.Here) {
-                updateVisuals();
-            }
-        } else {
-            this.block = null;
-            if (status == PetState.Here) {
-                updateVisuals();
-            }
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        if (block != null && block.getType() != AIR) {
-            info = info.put("Block", MyPetApi.getPlatformHelper().itemStackToCompound(block));
-        }
-        return info.putBoolean("Screaming", permaScreaming);
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("BlockName")) {
-            String id = info.getString("BlockName");
-            Material material = Material.matchMaterial(id);
-            if (material != null) {
-                setBlock(new ItemStack(material, 1));
-            }
-        } else if (info.keySet().contains("Block")) {
-            CompoundBinaryTag itemStackCompund = info.getCompound("Block");
-            try {
-                ItemStack block = MyPetApi.getPlatformHelper().compoundToItemStack(itemStackCompund);
-                setBlock(block);
-            } catch (Exception e) {
-                MyPetApi.getLogger().warning("Could not load Block item from pet data!");
-            }
-        }
-        if (info.keySet().contains("Screaming")) {
-            setPermaScreaming(info.getBoolean("Screaming"));
-        }
-    }
-
-    // Custom logic - Lombok would return field directly but we need to combine both flags
-    public boolean isScreaming() {
-        return screaming || permaScreaming;
-    }
-
-    public void setScreaming(boolean flag) {
-        if (!flag && permaScreaming)
-            return;
-
-        this.screaming = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
     public void setPermaScreaming(boolean flag) {
         this.permaScreaming = flag;
-        this.setScreaming(flag);
+        if (status == PetState.Here && getBukkitEntity() instanceof Enderman enderman) {
+            enderman.setScreaming(flag);
+        }
     }
 
-    public boolean hasBlock() {
-        return block != null;
+    @Override
+    public void updateVisuals() {
+        super.updateVisuals();
+        if (permaScreaming && getBukkitEntity() instanceof Enderman enderman) {
+            enderman.setScreaming(true);
+        }
     }
+
 }

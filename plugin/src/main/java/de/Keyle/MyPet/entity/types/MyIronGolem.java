@@ -20,66 +20,17 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
-@Getter
-public class MyIronGolem extends MyPet implements de.Keyle.MyPet.api.entity.types.MyIronGolem {
-
-    protected ItemStack flower;
+@ShopInfo(displayName = "Iron Golem")
+@DefaultInfo(food = {Material.IRON_INGOT}, leashFlags = {"UserCreated"})
+public class MyIronGolem extends MyPet {
 
     public MyIronGolem(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        if (hasFlower()) {
-            info = info.put("Flower", MyPetApi.getPlatformHelper().itemStackToCompound(getFlower()));
-        }
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Flower")) {
-            try {
-                if (info.get("Flower").type().id() == 10) { // COMPOUND type
-                    CompoundBinaryTag itemTag = info.getCompound("Flower");
-                    try {
-                        ItemStack item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
-                        setFlower(item);
-                    } catch (Exception e) {
-                        MyPetApi.getLogger().warning("Could not load Flower item from pet data!");
-                    }
-                }
-            } catch (Exception e) {
-                // Ignore if can't determine type
-            }
-        }
-    }
-
-    public void setFlower(ItemStack item) {
-        if (item != null && item.getType() != Material.POPPY) {
-            return;
-        }
-        this.flower = item;
-        if (this.flower != null) {
-            this.flower.setAmount(1);
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public boolean hasFlower() {
-        return flower != null;
     }
 }

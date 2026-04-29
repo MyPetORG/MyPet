@@ -22,37 +22,16 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
-import lombok.Setter;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyWarden extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWarden {
-
-    // Using hasHeartAttack() for API - Lombok would generate isHeartAttack()
-    @Setter
-    protected boolean heartAttack = false;
+@ShopInfo
+@DefaultInfo(food = {Material.BONE})
+public class MyWarden extends MyPet implements MyPetLavaEntity {
 
     public MyWarden(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putBoolean("HeartAttack", hasHeartAttack());
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("HeartAttack")) {
-            setHeartAttack(info.getBoolean("HeartAttack"));
-        }
-    }
-
-    @Override
-    public boolean hasHeartAttack() {
-        return heartAttack;
     }
 }

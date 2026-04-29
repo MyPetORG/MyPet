@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
-import de.Keyle.MyPet.api.entity.types.MyCopperGolem;
 import de.Keyle.MyPet.api.event.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -46,8 +45,8 @@ import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
-import de.Keyle.MyPet.entity.visual.PetStateSnapshot;
 import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
+import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.DamageImpl;
@@ -111,6 +110,24 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
     @Getter
     protected boolean isBaby = false;
+
+    /**
+     * Most recent vanilla-NBT snapshot bytes for this pet — captured at
+     * despawn ({@link #removePet}) or supplied by repo-load
+     * ({@link #setInfo}). Serves a dual purpose:
+     *
+     * <ul>
+     *   <li>Save fallback: when {@link #getInfo} runs after the live entity
+     *       has been detached, we replay these bytes so the saved envelope
+     *       still carries the most-recent state.</li>
+     *   <li>Respawn input: {@link #consumePendingSnapshot} hands these bytes
+     *       to {@code VanillaMobSpawner} so the new mob deserializes from
+     *       vanilla NBT, preserving variant/colour/equipment/etc. across
+     *       death-respawn, sendaway-recall, and store-switchback cycles.
+     *       Single-use — cleared on consumption.</li>
+     * </ul>
+     */
+    private byte[] pendingSnapshot;
     private MyPetType petType;
 
     protected MyPet(MyPetPlayer petOwner) {
@@ -386,23 +403,33 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     @Override
     public CompoundBinaryTag getInfo() {
-        CompoundBinaryTag tag = writeExtendedInfo();
-
-        // TODO replace with proper storage
+        // Prefer a fresh capture from the live entity over the cached
+        // pendingSnapshot — the live state may have advanced since the last
+        // despawn (e.g. saved while the pet is alive after respawn).
+        byte[] snapshot = null;
+        final Mob entityRef = bukkitEntity;
+        if (entityRef != null && Bukkit.isOwnedByCurrentRegion(entityRef)) {
+            try {
+                snapshot = PetEntitySnapshot.capture(entityRef);
+            } catch (Throwable t) {
+                MyPetApi.getLogger().warning("Failed to capture live snapshot "
+                        + "for pet " + getUUID() + " — falling back to pending snapshot. "
+                        + t.getMessage());
+            }
+        }
+        if (snapshot == null) snapshot = pendingSnapshot;
         storage = storage.putInt("level", getExperience().getLevel());
-        tag = tag.put("storage", storage);
-
-        return tag;
+        return PetEntitySnapshot.envelope(snapshot, storage);
     }
 
     @Override
     public void setInfo(CompoundBinaryTag info) {
-        readExtendedInfo(info);
+        if (info.keySet().contains("schema_version") && info.keySet().contains("snapshot")) {
+            this.pendingSnapshot = info.getByteArray("snapshot");
+        }
 
-        // TODO replace with proper storage
         if (info.keySet().contains("storage")) {
             CompoundBinaryTag loadedStorage = info.getCompound("storage");
-            // Merge loaded storage into our storage
             CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
             for (String key : this.storage.keySet()) {
                 builder.put(key, this.storage.get(key));
@@ -412,6 +439,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             }
             this.storage = builder.build();
         }
+    }
+
+    @Override
+    public byte[] consumePendingSnapshot() {
+        byte[] s = pendingSnapshot;
+        pendingSnapshot = null;
+        return s;
     }
 
     // getEntity() is provided as a default method on the MyPet api interface (returns
@@ -463,48 +497,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     @Override
     public void setExp(double exp) {
         getExperience().setExp(exp);
-    }
-
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
-
-        List<BinaryTag> itemList = new ArrayList<>();
-        for (EquipmentSlot slot : EquipmentSlot.values()) {
-            ItemStack slotItem = getEquipment(slot);
-            if (slotItem != null && !slotItem.getType().isAir() && slotItem.getAmount() > 0) {
-                CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(slotItem);
-                item = item.putString("Slot", slot.name());
-                itemList.add(item);
-            }
-        }
-        if (!itemList.isEmpty()) {
-            builder.put("Equipment", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, itemList));
-        }
-        if (this instanceof MyPetBaby) {
-            builder.putBoolean("Baby", isBaby);
-        }
-        return builder.build();
-    }
-
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        if (info.keySet().contains("Equipment")) {
-            ListBinaryTag equipmentList = info.getList("Equipment", BinaryTagTypes.COMPOUND);
-            for (int i = 0; i < equipmentList.size(); i++) {
-                CompoundBinaryTag itemTag = equipmentList.getCompound(i);
-                String slotName = itemTag.getString("Slot");
-                if (!slotName.isEmpty()) {
-                    try {
-                        ItemStack itemStack = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
-                        setEquipmentBySlotName(slotName, itemStack);
-                    } catch (Exception e) {
-                        MyPetApi.getLogger().warning("Could not load Equipment item from pet data!");
-                    }
-                }
-            }
-        }
-        if (info.keySet().contains("Baby")) {
-            setBaby(info.getBoolean("Baby"));
-        }
     }
 
     /**
@@ -915,19 +907,16 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 // can't read, fall back to the last cached health/state on this object.
                 if (ownedByCurrentRegion) {
                     health = entityRef.getHealth();
-                    // Copper Golem: capture the vanilla-driven oxidation stage
-                    // and remaining schedule into the model so a /petstore +
-                    // /petswitch (or /petsendaway + /petcall) cycle resumes
-                    // from the same point instead of vanilla rolling a fresh
-                    // schedule on the new mob. Other pet types' state is
-                    // already kept in sync through their own setters or
-                    // PetInteractionListener; copper golem alone has vanilla
-                    // mutating state without any MyPet code path involved.
-                    if (this instanceof MyCopperGolem
-                            && entityRef.getType() == EntityType.COPPER_GOLEM) {
-                        try {
-                            this.readExtendedInfo(PetStateSnapshot.toTag(entityRef, false));
-                        } catch (Throwable ignored) {}
+                    try {
+                        // Stash bytes into pendingSnapshot — covers both
+                        // save-while-detached (consumed by getInfo()) and
+                        // in-memory respawn (consumed by VanillaMobSpawner).
+                        this.pendingSnapshot = PetEntitySnapshot.capture(entityRef);
+                    } catch (Throwable t) {
+                        MyPetApi.getLogger().warning("Failed to capture EntitySnapshot "
+                                + "for pet " + getUUID() + " during removePet — pet "
+                                + "will respawn with default state. " + t.getMessage());
+                        this.pendingSnapshot = null;
                     }
                 }
                 // Drop the pet's entry from the damage tracker before clearing
@@ -940,6 +929,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 PetSitParticleController.stopForPet(this);
                 PetPotionParticleController.stopForPet(this);
                 RideSkillFlightController.stopForPet(this);
+                CreakingActivationSuppressor.stopForPet(this);
                 WitherAutonomousAttackSuppressor.stopForPet(this);
                 PetNoPushSuppressor.stopForPet(this);
                 bukkitEntity = null;
@@ -1095,7 +1085,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         petNBT.putString("WorldGroup", this.worldGroup);
         petNBT.putDouble("Exp", this.getExp());
         petNBT.putLong("LastUsed", this.lastUsed);
-        petNBT.put("Info", writeExtendedInfo());
+        petNBT.put("Info", getInfo());
         petNBT.putString("Owner-UUID", this.petOwner.getUniqueId().toString());
         petNBT.putBoolean("Wants-To-Respawn", wantsToRespawn);
         if (this.skilltree != null) {

@@ -21,96 +21,24 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
+import io.papermc.paper.world.WeatheringCopperState;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.CopperGolem;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCopperGolem {
-
-    protected OxidationState oxidationState = OxidationState.UNAFFECTED;
-    protected boolean waxed = false;
-    protected ItemStack poppy = null;
-    protected long oxidationRemainingTicks = 0;
+@ShopInfo(displayName = "Copper Golem")
+@DefaultInfo(food = {Material.COPPER_INGOT}, leashFlags = {"UserCreated"})
+public class MyCopperGolem extends MyPet {
 
     public MyCopperGolem(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putString("OxidationState", oxidationState.name())
-                   .putBoolean("Waxed", waxed)
-                   .putLong("OxidationRemainingTicks", oxidationRemainingTicks);
-        if (hasPoppy()) {
-            info = info.put("Poppy", MyPetApi.getPlatformHelper().itemStackToCompound(poppy));
-        }
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("OxidationState")) {
-            try {
-                oxidationState = OxidationState.valueOf(info.getString("OxidationState"));
-            } catch (IllegalArgumentException e) {
-                oxidationState = OxidationState.UNAFFECTED;
-            }
-        }
-        if (info.keySet().contains("Waxed")) {
-            waxed = info.getBoolean("Waxed");
-        }
-        if (info.keySet().contains("OxidationRemainingTicks")) {
-            oxidationRemainingTicks = Math.max(0L, info.getLong("OxidationRemainingTicks"));
-        }
-        if (info.keySet().contains("Poppy")) {
-            CompoundBinaryTag poppyCompound = info.getCompound("Poppy");
-            try {
-                poppy = MyPetApi.getPlatformHelper().compoundToItemStack(poppyCompound);
-            } catch (Exception e) {
-                poppy = null;
-            }
-        }
-    }
-
-    @Override
-    public void setOxidationState(OxidationState state) {
-        if (state == null) {
-            state = OxidationState.UNAFFECTED;
-        }
-        this.oxidationState = state;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public void setWaxed(boolean waxed) {
-        this.waxed = waxed;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public void setPoppy(ItemStack item) {
-        this.poppy = item;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public void setOxidationRemainingTicks(long ticks) {
-        this.oxidationRemainingTicks = Math.max(0L, ticks);
-    }
-
-    @Override
-    public boolean hasPoppy() {
-        return poppy != null;
-    }
 }

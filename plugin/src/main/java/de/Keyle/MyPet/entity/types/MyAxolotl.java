@@ -24,65 +24,18 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Axolotl;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-public class MyAxolotl extends MyPet implements de.Keyle.MyPet.api.entity.types.MyAxolotl {
-
-    protected String variantName = "LUCY";
+@ShopInfo
+@DefaultInfo(food = {Material.TROPICAL_FISH})
+public class MyAxolotl extends MyPet implements MyPetBaby, MyPetAquaticEntity {
 
     public MyAxolotl(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putString("VariantName", variantName);
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("VariantName")) {
-            String name = info.getString("VariantName");
-            if (name != null && !name.isEmpty()) {
-                this.variantName = name;
-            }
-        } else if (info.keySet().contains("Variant")) {
-            setVariant(info.getInt("Variant"));
-        }
-    }
-
-    @Override
-    public void setVariant(int variant) {
-        try {
-            Axolotl.Variant[] values = Axolotl.Variant.values();
-            int clamped = Math.min(values.length - 1, Math.max(0, variant));
-            this.variantName = values[clamped].name();
-        } catch (Throwable ignored) {
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public int getVariant() {
-        try {
-            Axolotl.Variant v = resolveBukkitVariant();
-            return v != null ? v.ordinal() : 0;
-        } catch (Throwable ignored) {
-            return 0;
-        }
-    }
-
-    public Axolotl.Variant resolveBukkitVariant() {
-        try {
-            for (Axolotl.Variant v : Axolotl.Variant.values()) {
-                if (v.name().equals(variantName)) return v;
-            }
-            Axolotl.Variant[] values = Axolotl.Variant.values();
-            if (values.length > 0) return values[0];
-        } catch (Throwable ignored) {
-        }
-        return null;
-    }
 }

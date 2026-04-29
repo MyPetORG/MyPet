@@ -22,37 +22,19 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.PufferFish;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyPufferfish extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPufferfish {
-
-    protected int puffState = 0;
+@ShopInfo
+@DefaultInfo(food = {Material.SEAGRASS})
+public class MyPufferfish extends MyPet implements MyPetAquaticEntity {
 
     public MyPufferfish(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public void setPuffState(int state) {
-        this.puffState = Math.max(0, Math.min(2, state));
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putInt("PuffState", puffState);
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("PuffState")) {
-            setPuffState(info.getInt("PuffState"));
-        }
-    }
 }

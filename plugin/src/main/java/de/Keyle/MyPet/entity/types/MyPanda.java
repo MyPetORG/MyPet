@@ -24,106 +24,29 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Panda;
+import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import java.util.Set;
+import org.bukkit.Material;
 
-public class MyPanda extends MyPet implements de.Keyle.MyPet.api.entity.types.MyPanda {
-
-    /**
-     * Gene storage by name (e.g. "NORMAL", "LAZY", "WORRIED") — drift-safe
-     * across Paper updates that reorder or extend {@code Panda.Gene}.
-     */
-    protected String mainGeneName = Panda.Gene.NORMAL.name();
-    protected String hiddenGeneName = Panda.Gene.NORMAL.name();
+@ShopInfo
+@DefaultInfo(food = {Material.BAMBOO})
+public class MyPanda extends MyPet implements MyPetBaby, MyPetNaturalDrop {
 
     public MyPanda(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public Panda.Gene getMainGene() {
-        try {
-            return Panda.Gene.valueOf(mainGeneName);
-        } catch (Throwable ignored) {
-            return Panda.Gene.NORMAL;
-        }
+    public Set<Material> naturalDropMaterials() {
+        return Set.of(Material.SLIME_BALL);
     }
 
     @Override
-    public Panda.Gene getHiddenGene() {
-        try {
-            return Panda.Gene.valueOf(hiddenGeneName);
-        } catch (Throwable ignored) {
-            return Panda.Gene.NORMAL;
-        }
-    }
-
-    @Override
-    public void setMainGene(Panda.Gene gene) {
-        if (gene != null) {
-            this.mainGeneName = gene.name();
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public void setHiddenGene(Panda.Gene gene) {
-        if (gene != null) {
-            this.hiddenGeneName = gene.name();
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putString("MainGeneName", mainGeneName);
-        info = info.putString("HiddenGeneName", hiddenGeneName);
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("MainGeneName")) {
-            String name = info.getString("MainGeneName");
-            if (name != null && !name.isEmpty()) {
-                try {
-                    Panda.Gene.valueOf(name);
-                    this.mainGeneName = name;
-                } catch (Throwable ignored) {
-                }
-            }
-        } else if (info.keySet().contains("MainGene")) {
-            try {
-                int ord = info.getInt("MainGene");
-                Panda.Gene[] values = Panda.Gene.values();
-                if (ord >= 0 && ord < values.length) {
-                    this.mainGeneName = values[ord].name();
-                }
-            } catch (Throwable ignored) {
-            }
-        }
-        if (info.keySet().contains("HiddenGeneName")) {
-            String name = info.getString("HiddenGeneName");
-            if (name != null && !name.isEmpty()) {
-                try {
-                    Panda.Gene.valueOf(name);
-                    this.hiddenGeneName = name;
-                } catch (Throwable ignored) {
-                }
-            }
-        } else if (info.keySet().contains("HiddenGene")) {
-            try {
-                int ord = info.getInt("HiddenGene");
-                Panda.Gene[] values = Panda.Gene.values();
-                if (ord >= 0 && ord < values.length) {
-                    this.hiddenGeneName = values[ord].name();
-                }
-            } catch (Throwable ignored) {
-            }
-        }
+    public boolean isNaturalDropSuppressed() {
+        return !Configuration.MyPet.Panda.CAN_DROP_SLIMEBALL;
     }
 }

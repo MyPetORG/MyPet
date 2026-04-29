@@ -22,14 +22,21 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import org.bukkit.entity.Armadillo;
 import org.bukkit.entity.Mob;
 
 import java.lang.reflect.Method;
+import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import java.util.Set;
+import org.bukkit.Material;
 
-@Getter
-public class MyArmadillo extends MyPet implements de.Keyle.MyPet.api.entity.types.MyArmadillo {
+@ShopInfo
+@DefaultInfo(food = {Material.SPIDER_EYE})
+public class MyArmadillo extends MyPet implements MyPetBaby, MyPetNaturalDrop {
 
     // Paper 1.21.5+ exposes Armadillo#getState() returning an Armadillo.State enum
     // ({IDLE, ROLLING, SCARED, UNROLLING}). v4 compiles against 1.21.4 where the
@@ -83,5 +90,16 @@ public class MyArmadillo extends MyPet implements de.Keyle.MyPet.api.entity.type
             }
         }
         return getStateMethod;
+    }
+
+
+    @Override
+    public Set<Material> naturalDropMaterials() {
+        return Set.of(Material.ARMADILLO_SCUTE);
+    }
+
+    @Override
+    public boolean isNaturalDropSuppressed() {
+        return !Configuration.MyPet.Armadillo.CAN_SHED_SCUTE;
     }
 }

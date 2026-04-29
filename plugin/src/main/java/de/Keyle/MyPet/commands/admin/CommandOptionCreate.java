@@ -304,7 +304,6 @@ public class CommandOptionCreate {
                 .add("baby")
                 .add("color:")
                 .add("sheared")
-                .add("rainbow")
                 .get());
 
         petTypeOptionMap.put("skeleton", new CommandOptionCreator()
@@ -701,8 +700,6 @@ public class CommandOptionCreate {
                 builder.putBoolean("Chest", true);
             } else if (arg.equalsIgnoreCase("glowing")) {
                 builder.putBoolean("Glowing", true);
-            } else if (arg.equalsIgnoreCase("rainbow")) {
-                builder.putBoolean("Rainbow", true);
             } else if (arg.equalsIgnoreCase("has-stung")) {
                 builder.putBoolean("HasStung", true);
             } else if (arg.equalsIgnoreCase("has-nectar")) {

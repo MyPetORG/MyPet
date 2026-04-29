@@ -34,10 +34,6 @@ import de.Keyle.MyPet.api.Configuration;
  */
 public interface MyPetShake extends MyPet {
 
-    boolean isShakeImmune();
-
-    void setShakeImmune(boolean flag);
-
     default boolean willShake() {
         return Configuration.MyPet.willShake(getPetType());
     }

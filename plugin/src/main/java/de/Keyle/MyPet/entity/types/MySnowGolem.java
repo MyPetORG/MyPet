@@ -22,37 +22,18 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import org.bukkit.entity.Snowman;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MySnowGolem extends MyPet implements de.Keyle.MyPet.api.entity.types.MySnowGolem {
-
-    protected boolean sheared = false;
+@ShopInfo
+@DefaultInfo(food = {Material.CARROT, Material.SNOWBALL})
+public class MySnowGolem extends MyPet {
 
     public MySnowGolem(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public void setSheared(boolean flag) {
-        this.sheared = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        return info.putBoolean("Sheared", isSheared());
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Sheared")) {
-            setSheared(info.getBoolean("Sheared"));
-        }
-    }
 }

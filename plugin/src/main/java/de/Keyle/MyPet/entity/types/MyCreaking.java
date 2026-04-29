@@ -22,10 +22,13 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyCreaking extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCreaking {
+@ShopInfo
+@DefaultInfo(food = {Material.RESIN_CLUMP}, leashFlags = {"HeartLinked"})
+public class MyCreaking extends MyPet {
 
     public MyCreaking(MyPetPlayer petOwner) {
         super(petOwner);

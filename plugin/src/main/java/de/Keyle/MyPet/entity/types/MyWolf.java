@@ -22,69 +22,22 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
-import lombok.Setter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.DyeColor;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.entity.Wolf;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyWolf extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWolf {
-
-    protected boolean tamed = false;
-    protected boolean angry = false;
-    protected DyeColor collarColor = DyeColor.RED;
-    @Setter
-    protected String variant = "pale";
+@ShopInfo(options = {"tamed"})
+@DefaultInfo(food = {Material.BEEF, Material.MUTTON}, leashFlags = {"Tamed"})
+public class MyWolf extends MyPet implements MyPetBaby {
 
     public MyWolf(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public void setCollarColor(DyeColor value) {
-        this.collarColor = value;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putBoolean("Tamed", isTamed());
-        info = info.putBoolean("Angry", isAngry());
-        info = info.putByte("CollarColor", (byte) getCollarColor().ordinal());
-        info = info.putString("Variant", getVariant());
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("CollarColor")) {
-            setCollarColor(DyeColor.values()[info.getByte("CollarColor")]);
-        }
-        if (info.keySet().contains("Tamed")) {
-            setTamed(info.getBoolean("Tamed"));
-        }
-        if (info.keySet().contains("Angry")) {
-            setAngry(info.getBoolean("Angry"));
-        }
-        if (info.keySet().contains("Variant")) {
-            setVariant(info.getString("Variant"));
-        }
-    }
-
-    public void setAngry(boolean flag) {
-        this.angry = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public void setTamed(boolean flag) {
-        this.tamed = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

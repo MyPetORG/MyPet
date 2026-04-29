@@ -23,124 +23,40 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.kyori.adventure.nbt.ListBinaryTag;
 import org.bukkit.Material;
+import org.bukkit.entity.Donkey;
+import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import java.util.Set;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Getter
-public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.MyDonkey {
-
-    protected ItemStack chest = null;
-    protected ItemStack saddle = null;
+@ShopInfo
+@DefaultInfo(food = {Material.SUGAR, Material.WHEAT, Material.APPLE}, leashFlags = {"Tamed"})
+public class MyDonkey extends MyPet implements MyPetBaby, MyPetEquipment {
 
     public MyDonkey(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public void setChest(ItemStack item) {
-        if (item != null && item.getType() != Material.CHEST && item.getType() != Material.TRAPPED_CHEST) {
-            return;
-        }
-        this.chest = item;
-        if (this.chest != null) {
-            this.chest.setAmount(1);
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public boolean hasChest() {
-        return chest != null;
-    }
-
-    public void setSaddle(ItemStack item) {
-        if (item != null && item.getType() != Material.SADDLE) {
-            return;
-        }
-        this.saddle = item;
-        if (this.saddle != null) {
-            this.saddle.setAmount(1);
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public boolean hasSaddle() {
-        return saddle != null;
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
-        for (String key : info.keySet()) {
-            builder.put(key, info.get(key));
-        }
-        // Chest is not an equipment slot, write separately
-        if (hasChest()) {
-            builder.put("Chest", MyPetApi.getPlatformHelper().itemStackToCompound(getChest()));
-        }
-        // Write saddle with string slot name for MC versions before 1.21 (which lack EquipmentSlot.SADDLE)
-        if (hasSaddle() && !MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21")) {
-            List<BinaryTag> itemList = new ArrayList<>();
-            if (info.keySet().contains("Equipment")) {
-                ListBinaryTag existingEquip = info.getList("Equipment");
-                for (int i = 0; i < existingEquip.size(); i++) {
-                    itemList.add(existingEquip.getCompound(i));
-                }
-            }
-            CompoundBinaryTag item = MyPetApi.getPlatformHelper().itemStackToCompound(getSaddle());
-            item = item.putString("Slot", "SADDLE");
-            itemList.add(item);
-            builder.put("Equipment", ListBinaryTag.listBinaryTag(BinaryTagTypes.COMPOUND, itemList));
-        }
-        return builder.build();
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        // Chest is not an equipment slot, read separately
-        BinaryTag chestTag = info.get("Chest");
-        if (chestTag != null) {
-            if (chestTag.type() == BinaryTagTypes.BYTE) {
-                boolean chest = info.getBoolean("Chest");
-                if (chest) {
-                    ItemStack item = new ItemStack(Material.CHEST);
-                    setChest(item);
-                }
-            } else if (chestTag.type() == BinaryTagTypes.COMPOUND) {
-                CompoundBinaryTag itemTag = info.getCompound("Chest");
-                try {
-                    ItemStack item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
-                    setChest(item);
-                } catch (Exception e) {
-                    MyPetApi.getLogger().warning("Could not load Chest item from pet data!");
-                }
-            }
-        }
-    }
-
-    // MyPetEquipment implementation
+    // ─── MyPetEquipment ─── routes SADDLE to the donkey's inventory ───
 
     @Override
     public ItemStack[] getEquipment() {
-        return new ItemStack[]{saddle};
+        if (!(getBukkitEntity() instanceof Donkey donkey)) return new ItemStack[]{null};
+        return new ItemStack[]{donkey.getInventory().getSaddle()};
     }
 
     @Override
     public ItemStack getEquipment(EquipmentSlot slot) {
-        if (slot.name().equals("SADDLE")) return saddle;
+        if (!(getBukkitEntity() instanceof Donkey donkey)) return null;
+        if ("SADDLE".equals(slot.name())) return donkey.getInventory().getSaddle();
         return null;
     }
 
@@ -151,8 +67,12 @@ public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     protected void setEquipmentBySlotName(String slotName, ItemStack item) {
-        if (slotName.equals("SADDLE")) {
-            setSaddle(item);
+        if (!(getBukkitEntity() instanceof Donkey donkey)) {
+            super.setEquipmentBySlotName(slotName, item);
+            return;
+        }
+        if ("SADDLE".equals(slotName)) {
+            donkey.getInventory().setSaddle(item);
         } else {
             super.setEquipmentBySlotName(slotName, item);
         }
@@ -160,17 +80,21 @@ public class MyDonkey extends MyPet implements de.Keyle.MyPet.api.entity.types.M
 
     @Override
     public void dropEquipment() {
-        if (status == PetState.Here) {
-            getEntity().ifPresent(entity -> {
-                if (hasSaddle()) {
-                    entity.getWorld().dropItem(entity.getLocation(), getSaddle());
-                }
-                if (hasChest()) {
-                    entity.getWorld().dropItem(entity.getLocation(), getChest());
-                }
-            });
-            setSaddle(null);
-            setChest(null);
+        if (status != PetState.Here || !(getBukkitEntity() instanceof Donkey donkey)) return;
+        AbstractHorseInventory inv = donkey.getInventory();
+        ItemStack saddle = inv.getSaddle();
+        if (saddle != null && saddle.getType() != Material.AIR) {
+            donkey.getWorld().dropItem(donkey.getLocation(), saddle);
+            inv.setSaddle(null);
         }
+        if (donkey.isCarryingChest()) {
+            donkey.getWorld().dropItem(donkey.getLocation(), new ItemStack(Material.CHEST));
+            donkey.setCarryingChest(false);
+        }
+    }
+
+    @Override
+    public Set<String> getAllowedSlotNames() {
+        return Set.of("SADDLE");
     }
 }

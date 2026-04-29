@@ -23,36 +23,19 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import lombok.Getter;
+import org.bukkit.entity.Blaze;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyBlaze extends MyPet implements de.Keyle.MyPet.api.entity.types.MyBlaze {
-
-    protected boolean isOnFire = false;
+@ShopInfo
+@DefaultInfo(food = {Material.GUNPOWDER})
+public class MyBlaze extends MyPet implements MyPetFlyingEntity, MyPetLavaEntity {
 
     public MyBlaze(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putBoolean("Fire", isOnFire());
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Fire")) {
-            setOnFire(info.getBoolean("Fire"));
-        }
-    }
-
-    public void setOnFire(boolean flag) {
-        isOnFire = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

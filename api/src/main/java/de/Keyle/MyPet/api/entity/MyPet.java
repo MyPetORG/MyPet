@@ -114,6 +114,18 @@ public interface MyPet extends StoredMyPet, Scheduler {
 
     void removeEntity();
 
+    /**
+     * Returns and clears any pending vanilla-NBT snapshot bytes loaded from
+     * storage. The byte array, if present, is the result of a prior
+     * {@code Bukkit.getUnsafe().serializeEntity} call. Pet-spawn paths use
+     * this to take a deserialized branch instead of spawning fresh.
+     *
+     * <p>Single-use semantics: later calls return {@code null}.
+     */
+    default byte[] consumePendingSnapshot() {
+        return null;
+    }
+
     default void updateNameTag() {
     }
 

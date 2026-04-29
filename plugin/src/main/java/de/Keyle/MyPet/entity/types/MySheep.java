@@ -22,65 +22,20 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
-import lombok.Setter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.DyeColor;
+import org.bukkit.entity.Sheep;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MySheep extends MyPet implements de.Keyle.MyPet.api.entity.types.MySheep {
-
-    protected DyeColor color = DyeColor.WHITE;
-    protected boolean sheared = false;
-    @Setter
-    protected boolean rainbow = false;
+@ShopInfo
+@DefaultInfo(food = {Material.WHEAT})
+public class MySheep extends MyPet implements MyPetBaby {
 
     public MySheep(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public void setColor(DyeColor color) {
-        this.color = color;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    @Override
-    public void schedule() {
-        super.schedule();
-        if (rainbow) {
-            this.setColor(DyeColor.values()[(getColor().ordinal() + 1) % (DyeColor.values().length - 1)]);
-        }
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putByte("Color", getColor().getDyeData());
-        info = info.putBoolean("Sheared", isSheared());
-        info = info.putBoolean("Rainbow", isRainbow());
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Color")) {
-            setColor(DyeColor.getByDyeData(info.getByte("Color")));
-        }
-        if (info.keySet().contains("Sheared")) {
-            setSheared(info.getBoolean("Sheared"));
-        }
-        if (info.keySet().contains("Rainbow")) {
-            setRainbow(info.getBoolean("Rainbow"));
-        }
-    }
-
-    public void setSheared(boolean flag) {
-        this.sheared = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

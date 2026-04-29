@@ -23,163 +23,36 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import org.bukkit.Material;
 import org.bukkit.entity.Llama;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.LlamaInventory;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyLlama extends MyPet implements de.Keyle.MyPet.api.entity.types.MyLlama {
-
-    protected ItemStack armor = null;
-    protected ItemStack chest = null;
-    protected ItemStack decor = null;
-    protected byte horseType = 0;
-    /**
-     * Stored as {@link Llama.Color} enum name for drift-safety across Paper
-     * versions. Public {@code int} variant API preserved for backward compat.
-     */
-    protected String colorName = "CREAMY";
+@ShopInfo
+@DefaultInfo(food = {Material.WHEAT}, leashFlags = {"Tamed"})
+public class MyLlama extends MyPet implements MyPetBaby {
 
     public MyLlama(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public void setChest(ItemStack item) {
-        if (item != null && item.getType() != Material.CHEST && item.getType() != Material.TRAPPED_CHEST) {
-            return;
-        }
-        this.chest = item;
-        if (this.chest != null) {
-            this.chest.setAmount(1);
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public boolean hasChest() {
-        return chest != null;
-    }
-
-    public void setDecor(ItemStack item) {
-        if (item != null) {
-            switch (item.getType().name()) {
-                case "CARPET":
-                case "RED_CARPET":
-                case "BLACK_CARPET":
-                case "CYAN_CARPET":
-                case "BLUE_CARPET":
-                case "BROWN_CARPET":
-                case "GRAY_CARPET":
-                case "GREEN_CARPET":
-                case "LIME_CARPET":
-                case "PINK_CARPET":
-                case "ORANGE_CARPET":
-                case "MAGENTA_CARPET":
-                case "LIGHT_GRAY_CARPET":
-                case "LIGHT_BLUE_CARPET":
-                case "PURPLE_CARPET":
-                case "WHITE_CARPET":
-                case "YELLOW_CARPET":
-                    break;
-                default:
-                    return;
-            }
-        }
-        this.decor = item;
-        if (this.decor != null) {
-            this.decor.setAmount(1);
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public boolean hasDecor() {
-        return decor != null;
-    }
-
+    // Llama dropEquipment overrides the base behaviour to also drop the
+    // (mostly cosmetic) decor carpet and chest. Chest content drop on
+    // unsaddle/release is vanilla-handled, so we only drop our custom
+    // overrides here.
     @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putString("ColorName", colorName);
-        if (hasChest()) {
-            info = info.put("Chest", MyPetApi.getPlatformHelper().itemStackToCompound(getChest()));
-        }
-        if (hasDecor()) {
-            info = info.put("Decor", MyPetApi.getPlatformHelper().itemStackToCompound(getDecor()));
-        }
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("ColorName")) {
-            String name = info.getString("ColorName");
-            if (name != null && !name.isEmpty()) {
-                this.colorName = name;
-            }
-        } else if (info.keySet().contains("Variant")) {
-            setVariant(info.getInt("Variant"));
-        }
-        if (info.keySet().contains("Chest")) {
-            if (info.get("Chest") instanceof CompoundBinaryTag) {
-                CompoundBinaryTag itemTag = info.getCompound("Chest");
-                try {
-                    ItemStack item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
-                    setChest(item);
-                } catch (Exception e) {
-                    MyPetApi.getLogger().warning("Could not load Chest item from pet data!");
-                }
-            } else {
-                boolean chest = info.getBoolean("Chest");
-                if (chest) {
-                    ItemStack item = new ItemStack(Material.CHEST);
-                    setChest(item);
-                }
-            }
-        }
-        if (info.keySet().contains("Decor")) {
-            CompoundBinaryTag itemTag = info.getCompound("Decor");
-            try {
-                ItemStack item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
-                setDecor(item);
-            } catch (Exception e) {
-                MyPetApi.getLogger().warning("Could not load Decor item from pet data!");
-            }
-        }
-    }
-
-    public int getVariant() {
-        try {
-            Llama.Color color = resolveColor();
-            return color != null ? color.ordinal() : 0;
-        } catch (Throwable ignored) {
-            return 0;
-        }
-    }
-
-    public void setVariant(int variant) {
-        try {
-            Llama.Color[] values = Llama.Color.values();
-            int idx = Math.min(values.length - 1, Math.max(0, variant & 0xFF));
-            this.colorName = values[idx].name();
-        } catch (Throwable ignored) {
-        }
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
-
-    public Llama.Color resolveColor() {
-        try {
-            return Llama.Color.valueOf(colorName);
-        } catch (Throwable ignored) {
-            Llama.Color[] values = Llama.Color.values();
-            return values.length > 0 ? values[0] : null;
+    public void dropEquipment() {
+        super.dropEquipment();
+        if (status != PetState.Here || !(getBukkitEntity() instanceof Llama llama)) return;
+        LlamaInventory inv = llama.getInventory();
+        ItemStack decor = inv.getDecor();
+        if (decor != null) {
+            llama.getWorld().dropItem(llama.getLocation(), decor);
+            inv.setDecor(null);
         }
     }
 }

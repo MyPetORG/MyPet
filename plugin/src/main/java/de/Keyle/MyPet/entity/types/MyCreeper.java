@@ -23,36 +23,17 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import lombok.Getter;
+import org.bukkit.entity.Creeper;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyCreeper extends MyPet implements de.Keyle.MyPet.api.entity.types.MyCreeper {
-
-    protected boolean isPowered = false;
+@ShopInfo
+@DefaultInfo(food = {Material.GUNPOWDER})
+public class MyCreeper extends MyPet {
 
     public MyCreeper(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        info = info.putBoolean("Powered", isPowered());
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("Powered")) {
-            setPowered(info.getBoolean("Powered"));
-        }
-    }
-
-    public void setPowered(boolean flag) {
-        this.isPowered = flag;
-        if (status == PetState.Here) {
-            updateVisuals();
-        }
-    }
 }

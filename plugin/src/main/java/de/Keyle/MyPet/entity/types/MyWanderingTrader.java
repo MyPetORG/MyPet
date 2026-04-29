@@ -22,38 +22,15 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
-import lombok.Setter;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyWanderingTrader extends MyPet implements de.Keyle.MyPet.api.entity.types.MyWanderingTrader {
-
-    @Setter
-    protected CompoundBinaryTag originalData = null;
+@ShopInfo(displayName = "Wandering Trader")
+@DefaultInfo(food = {Material.APPLE})
+public class MyWanderingTrader extends MyPet {
 
     public MyWanderingTrader(MyPetPlayer petOwner) {
         super(petOwner);
-    }
-
-    @Override
-    public CompoundBinaryTag writeExtendedInfo() {
-        CompoundBinaryTag info = super.writeExtendedInfo();
-        if (originalData != null) {
-            info = info.put("OriginalData", originalData);
-        }
-        return info;
-    }
-
-    @Override
-    public void readExtendedInfo(CompoundBinaryTag info) {
-        super.readExtendedInfo(info);
-        if (info.keySet().contains("OriginalData")) {
-            originalData = info.getCompound("OriginalData");
-        }
-    }
-
-    public boolean hasOriginalData() {
-        return this.originalData != null;
     }
 }

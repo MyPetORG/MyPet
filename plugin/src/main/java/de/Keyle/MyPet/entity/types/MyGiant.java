@@ -22,10 +22,14 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import lombok.Getter;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
+import org.bukkit.Material;
 
-@Getter
-public class MyGiant extends MyPet implements de.Keyle.MyPet.api.entity.types.MyGiant {
+@ShopInfo
+@DefaultInfo(food = {Material.ROTTEN_FLESH})
+public class MyGiant extends MyPet implements MyPetEquipment {
 
     public MyGiant(MyPetPlayer petOwner) {
         super(petOwner);
