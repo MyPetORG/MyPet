@@ -63,7 +63,6 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.ListBinaryTag;
 import lombok.Setter;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -594,7 +593,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             final double finalHealth = health;
             final double finalMaxHealth = Math.max(1.0, maxHealth);
             Runnable apply = () -> {
-                AttributeInstance attr = bukkitEntity.getAttribute(Attribute.MAX_HEALTH);
+                AttributeInstance attr = bukkitEntity.getAttribute(PetAttributes.MAX_HEALTH);
                 if (attr != null && attr.getBaseValue() != finalMaxHealth) {
                     // Cap must move before health: vanilla setHealth() throws when value > current attribute max,
                     // which would happen on Life-skill upgrade if we wrote health first.

@@ -4,6 +4,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.util.Timer;
+import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
@@ -14,7 +15,6 @@ import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -199,13 +199,13 @@ public final class VanillaMobSpawner {
         mob.setCanPickupItems(false);
         PetEntityMarker.mark(mob);
 
-        AttributeInstance health = mob.getAttribute(Attribute.MAX_HEALTH);
+        AttributeInstance health = mob.getAttribute(PetAttributes.MAX_HEALTH);
         if (health != null) {
             health.setBaseValue(Math.max(1.0, pet.getMaxHealth()));
             mob.setHealth(Math.max(1.0, Math.min(pet.getHealth(), health.getValue())));
         }
 
-        AttributeInstance speed = mob.getAttribute(Attribute.MOVEMENT_SPEED);
+        AttributeInstance speed = mob.getAttribute(PetAttributes.MOVEMENT_SPEED);
         if (speed != null) {
             speed.setBaseValue(MyPetApi.getMyPetInfo().getSpeed(pet.getPetType()));
         }

@@ -1,8 +1,8 @@
 package de.Keyle.MyPet.entity.ai.navigation;
 
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
+import de.Keyle.MyPet.entity.PetAttributes;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 
@@ -53,7 +53,7 @@ public class PaperNavigation extends AbstractNavigation {
     @Override
     public void applyNavigationParameters() {
         mob.getPathfinder().setCanFloat(!parameters.avoidWater());
-        var speedAttr = mob.getAttribute(Attribute.MOVEMENT_SPEED);
+        var speedAttr = mob.getAttribute(PetAttributes.MOVEMENT_SPEED);
         if (speedAttr != null) {
             speedAttr.setBaseValue(parameters.speed() + parameters.speedModifier());
         }

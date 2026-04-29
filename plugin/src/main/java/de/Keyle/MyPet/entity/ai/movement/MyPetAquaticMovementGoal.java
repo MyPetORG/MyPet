@@ -5,10 +5,10 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.entity.Mob;
+import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -70,7 +70,7 @@ public class MyPetAquaticMovementGoal implements Goal<Mob> {
 
         Location petLoc = mob.getLocation();
         Location ownerLoc = owner.getLocation();
-        float speed = (float) mob.getAttribute(Attribute.MOVEMENT_SPEED).getValue();
+        float speed = (float) mob.getAttribute(PetAttributes.MOVEMENT_SPEED).getValue();
 
         boolean hasPath = mob.getPathfinder().hasPath();
         boolean hasTarget = pet.hasTarget() && pet.getMyPetTarget() != null;

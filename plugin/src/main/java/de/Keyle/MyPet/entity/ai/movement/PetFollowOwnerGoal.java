@@ -28,9 +28,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
+import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -1113,12 +1113,12 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
             walkSpeed += owner.getFlySpeed();
         } else if (owner.isSprinting() || owner.isGliding()) {
             // make the Pet faster when the player is sprinting
-            double movementSpeedValue = owner.getAttribute(Attribute.MOVEMENT_SPEED).getValue();
+            double movementSpeedValue = owner.getAttribute(PetAttributes.MOVEMENT_SPEED).getValue();
             walkSpeed += (float) movementSpeedValue - 0.037f;
         } else if (owner.isInsideVehicle() && owner.getVehicle() instanceof LivingEntity livingVehicle) {
             // adjust the speed to the Pet can catch up with the vehicle the player is in
-            if (livingVehicle.getAttribute(Attribute.MOVEMENT_SPEED) != null) {
-                walkSpeed = (float) livingVehicle.getAttribute(Attribute.MOVEMENT_SPEED).getValue();
+            if (livingVehicle.getAttribute(PetAttributes.MOVEMENT_SPEED) != null) {
+                walkSpeed = (float) livingVehicle.getAttribute(PetAttributes.MOVEMENT_SPEED).getValue();
             }
         }
 

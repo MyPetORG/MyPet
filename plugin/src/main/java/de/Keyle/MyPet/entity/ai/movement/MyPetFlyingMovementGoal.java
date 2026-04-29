@@ -25,10 +25,10 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.entity.Mob;
+import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Mob;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -163,7 +163,7 @@ public class MyPetFlyingMovementGoal implements Goal<Mob> {
             // the MOVEMENT_SPEED attribute is scaled down — direct velocity writing
             // requires a much smaller magnitude than the accumulated-force pipeline
             // the attribute was tuned for.
-            double baseSpeed = mob.getAttribute(Attribute.MOVEMENT_SPEED).getValue();
+            double baseSpeed = mob.getAttribute(PetAttributes.MOVEMENT_SPEED).getValue();
             double perTickSpeed = baseSpeed * speedModifier * DIRECT_VELOCITY_SCALE;
 
             // Clamp to the remaining distance so a single tick cannot overshoot
