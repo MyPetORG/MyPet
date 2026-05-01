@@ -32,7 +32,7 @@ import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -96,7 +96,7 @@ public class CommandOptionClone {
      * Executes the pet cloning logic.
      *
      * <p>Validates that the source player has an active pet and that the target player does not.
-     * Creates a new {@link InactiveMyPet} with all properties copied from the source pet,
+     * Creates a new {@link PersistedMyPet} with all properties copied from the source pet,
      * persists it to the repository, activates it for the target player, and assigns it to
      * the target's current world group.</p>
      *
@@ -132,17 +132,18 @@ public class CommandOptionClone {
         }
 
         MyPet oldPet = oldPetOwner.getMyPet();
-        final InactiveMyPet newPet = new InactiveMyPet(newPetOwner);
-        newPet.setPetName(oldPet.getPetName());
-        newPet.setWorldGroup(oldPet.getWorldGroup());
-        newPet.setExp(oldPet.getExperience().getExp());
-        newPet.setHealth(oldPet.getHealth());
-        newPet.setSaturation(oldPet.getSaturation());
-        newPet.setRespawnTime(oldPet.getRespawnTime());
-        newPet.setInfo(oldPet.getInfo());
-        newPet.setPetType(oldPet.getPetType());
-        newPet.setSkilltree(oldPet.getSkilltree());
-        newPet.setSkills(oldPet.getSkillInfo());
+        final PersistedMyPet newPet = PersistedMyPet.builder(newPetOwner)
+                .petType(oldPet.getPetType())
+                .petName(oldPet.getPetName())
+                .worldGroup(oldPet.getWorldGroup())
+                .exp(oldPet.getExperience().getExp())
+                .health(oldPet.getHealth())
+                .saturation(oldPet.getSaturation())
+                .respawnTime(oldPet.getRespawnTime())
+                .skilltree(oldPet.getSkilltree())
+                .skillInfo(oldPet.getSkillInfo())
+                .info(oldPet.getInfo())
+                .build();
 
         MyPetSaveEvent event = new MyPetSaveEvent(newPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
@@ -155,7 +156,9 @@ public class CommandOptionClone {
                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
                 if (myPet.isPresent()) {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(newPet.getOwner().getPlayer().getWorld().getName());
-                    newPet.setWorldGroup(worldGroup.getName());
+                    // The receiver's world-group binding lives in the player→UUID index,
+                    // not on newPet (which carries the source pet's stored worldGroup
+                    // already persisted by addPet above).
                     newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
                     MyPetApi.getRepository().updateMyPetPlayer(newPetOwner);
 

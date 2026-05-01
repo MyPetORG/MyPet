@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2019 Keyle
+ * Copyright © 2011-2020 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -23,24 +23,34 @@ package de.Keyle.MyPet.util.shop;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.util.NotImplemented;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Shop-template implementation of {@link StoredMyPet}. Mutable (in contrast to
+ * the immutable {@code PersistedMyPet} record) because shop entries carry
+ * mutable presentation state ({@link IconMenuItem}, price, position) and
+ * because several read-side accessors return computed values
+ * (e.g. {@link #getHealth} returns the type's start HP, {@link #getLastUsed}
+ * returns the current time) rather than stored fields. Records cannot model
+ * either of those cleanly, so this class stays a class.
+ *
+ * <p>{@link #setOwner} is the only mutator: it's invoked during shop checkout
+ * so the cloned {@link StoredMyPet} produced by
+ * {@code MyPetManager#getInactiveMyPetFromMyPet(this)} picks up the buyer.
+ */
 public class ShopMyPet implements StoredMyPet {
 
     protected double price = 0;
@@ -55,7 +65,6 @@ public class ShopMyPet implements StoredMyPet {
     protected double exp = 0;
     protected MyPetType petType = MyPetType.byName("Wolf");
     protected Skilltree skilltree = null;
-    protected CompoundBinaryTag NBTSkills = CompoundBinaryTag.empty();
     protected CompoundBinaryTag NBTextendetInfo = CompoundBinaryTag.empty();
 
     public ShopMyPet(String name) {
@@ -92,20 +101,14 @@ public class ShopMyPet implements StoredMyPet {
         this.price = price;
     }
 
+    @Override
     public double getExp() {
         return exp;
     }
 
-    public void setExp(double exp) {
-        this.exp = exp;
-    }
-
+    @Override
     public double getHealth() {
         return MyPetApi.getMyPetInfo().getStartHP(getPetType());
-    }
-
-    @NotImplemented
-    public void setHealth(double health) {
     }
 
     @Override
@@ -113,10 +116,7 @@ public class ShopMyPet implements StoredMyPet {
         return 100;
     }
 
-    @NotImplemented
-    public void setSaturation(double value) {
-    }
-
+    @Override
     public CompoundBinaryTag getInfo() {
         // Shop pets carry no entity snapshot — shop visual config is currently
         // dropped on activation regardless (the legacy curated NBT in
@@ -125,18 +125,22 @@ public class ShopMyPet implements StoredMyPet {
         return CompoundBinaryTag.empty();
     }
 
-    @NotImplemented
-    public void setInfo(CompoundBinaryTag info) {
-    }
-
+    @Override
     public MyPetPlayer getOwner() {
         return petOwner;
     }
 
+    /**
+     * Set during the shop purchase flow ({@code PetShop}) so that the cloned
+     * {@code PersistedMyPet} produced by
+     * {@code MyPetManager#getInactiveMyPetFromMyPet(this)} picks up the buyer
+     * as its owner.
+     */
     public void setOwner(MyPetPlayer owner) {
         petOwner = owner;
     }
 
+    @Override
     public String getPetName() {
         if (petName != null) {
             return petName;
@@ -147,58 +151,37 @@ public class ShopMyPet implements StoredMyPet {
         return "MyPet";
     }
 
-    public void setPetName(String petName) {
-        this.petName = petName;
-    }
-
     @Override
     public Component getDisplayName() {
         return Util.SANITIZED_MINIMESSAGE.deserialize(getPetName());
     }
 
+    @Override
     public MyPetType getPetType() {
         return petType;
     }
 
-    public void setPetType(MyPetType petType) {
-        this.petType = petType;
-    }
-
+    @Override
     public boolean wantsToRespawn() {
         return true;
     }
 
-    @NotImplemented
-    public void setWantsToRespawn(boolean wantsToRespawn) {
-    }
-
+    @Override
     public int getRespawnTime() {
         return 0;
     }
 
-    @NotImplemented
-    public void setRespawnTime(int respawnTime) {
-    }
-
+    @Override
     public Skilltree getSkilltree() {
         return skilltree;
     }
 
-    public boolean setSkilltree(Skilltree skilltree) {
-        this.skilltree = skilltree;
-        MyPetSelectSkilltreeEvent selectEvent = new MyPetSelectSkilltreeEvent(this, skilltree, MyPetSelectSkilltreeEvent.Source.Shop);
-        Bukkit.getServer().getPluginManager().callEvent(selectEvent);
-        return true;
-    }
-
+    @Override
     public CompoundBinaryTag getSkillInfo() {
-        return NBTSkills;
+        return CompoundBinaryTag.empty();
     }
 
-    public void setSkills(CompoundBinaryTag skills) {
-        NBTSkills = skills != null ? skills : CompoundBinaryTag.empty();
-    }
-
+    @Override
     public UUID getUUID() {
         if (uuid == null) {
             uuid = UUID.randomUUID();
@@ -206,28 +189,14 @@ public class ShopMyPet implements StoredMyPet {
         return uuid;
     }
 
-    @NotImplemented
-    public void setUUID(UUID uuid) {
-    }
-
     @Override
     public String getWorldGroup() {
         return worldGroup;
     }
 
-    public void setWorldGroup(String worldGroup) {
-        if (worldGroup != null) {
-            this.worldGroup = worldGroup;
-        }
-    }
-
     @Override
     public long getLastUsed() {
         return System.currentTimeMillis();
-    }
-
-    @NotImplemented
-    public void setLastUsed(long lastUsed) {
     }
 
     public void load(ConfigurationSection config) {

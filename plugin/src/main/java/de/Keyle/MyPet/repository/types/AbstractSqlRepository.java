@@ -13,7 +13,7 @@ import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.NbtUtil;
-import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Player;
@@ -194,20 +194,19 @@ public abstract class AbstractSqlRepository implements Repository {
      * the pet is recovered with an empty compound so the server stays up, but the
      * original bytes are preserved so an admin can salvage them.
      */
-    protected void backupCorruptedData(StoredMyPet pet, String fieldName, byte[] data) {
+    protected void backupCorruptedData(UUID petUuid, MyPetPlayer owner, String fieldName, byte[] data) {
         if (data == null || data.length == 0) {
             return;
         }
         try {
             Path corruptedDir = MyPetApi.getPlugin().getDataFolder().toPath().resolve("corrupted");
             Files.createDirectories(corruptedDir);
-            String safePetName = pet.getPetName().replaceAll("[^a-zA-Z0-9_-]", "_");
-            String filename = pet.getOwner().getUniqueId() + "_" + safePetName + "_" + fieldName + ".dat";
+            String filename = owner.getUniqueId() + "_" + petUuid + "_" + fieldName + ".dat";
             Path backupFile = corruptedDir.resolve(filename);
             Files.write(backupFile, data);
             MyPetApi.getLogger().info("Corrupted data backed up to: " + backupFile);
         } catch (IOException e) {
-            MyPetApi.getLogger().warning("Failed to backup corrupted data for pet " + pet.getUUID() + ": " + e.getMessage());
+            MyPetApi.getLogger().warning("Failed to backup corrupted data for pet " + petUuid + ": " + e.getMessage());
         }
     }
 
@@ -427,58 +426,64 @@ public abstract class AbstractSqlRepository implements Repository {
     // Pets ------------------------------------------------------------------------------------------------------------
 
     /**
-     * Builds one InactiveMyPet from the ResultSet's current row. Caller must have
-     * already advanced the cursor with rs.next(). Returns null if the row's type
-     * is unknown (pet type no longer registered).
+     * Builds one {@link PersistedMyPet} from the ResultSet's current row. Caller
+     * must have already advanced the cursor with rs.next(). Returns null if the
+     * row's type is unknown (pet type no longer registered).
      */
-    protected StoredMyPet petFromRow(MyPetPlayer owner, ResultSet rs) throws SQLException {
-        InactiveMyPet pet = new InactiveMyPet(owner);
-        pet.setUUID(UUID.fromString(rs.getString("uuid")));
-        pet.setWorldGroup(rs.getString("world_group"));
-        pet.setExp(rs.getDouble("exp"));
-        pet.setHealth(rs.getDouble("health"));
-        pet.setRespawnTime(rs.getInt("respawn_time"));
-        pet.setPetName(readPetName(rs, "name"));
+    protected PersistedMyPet petFromRow(MyPetPlayer owner, ResultSet rs) throws SQLException {
         MyPetType type = MyPetType.byNameOrNull(rs.getString("type"));
         if (type == null) return null;
-        pet.setPetType(type);
-        pet.setLastUsed(rs.getLong("last_used"));
-        pet.setSaturation(rs.getDouble("hunger"));
-        pet.wantsToRespawn = rs.getBoolean("wants_to_spawn");
 
+        UUID uuid = UUID.fromString(rs.getString("uuid"));
+        String petName = readPetName(rs, "name");
+
+        Skilltree skilltree = null;
         String skillTreeName = rs.getString("skilltree");
         if (skillTreeName != null) {
-            Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skillTreeName);
-            if (skilltree != null) {
-                pet.setSkilltree(skilltree);
-            }
+            skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skillTreeName);
         }
 
         byte[] skillsData = readBlob(rs, "skills");
+        CompoundBinaryTag skillInfo;
         try {
-            pet.setSkills(NbtUtil.readCompressed(skillsData));
+            skillInfo = NbtUtil.readCompressed(skillsData);
         } catch (IOException e) {
-            MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName()
-                    + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
-            backupCorruptedData(pet, "skills", skillsData);
-            pet.setSkills(CompoundBinaryTag.empty());
+            MyPetApi.getLogger().warning("Failed to load skills for " + owner.getName()
+                    + "'s Pet " + petName + " - the data was likely corrupted.");
+            backupCorruptedData(uuid, owner, "skills", skillsData);
+            skillInfo = CompoundBinaryTag.empty();
         }
 
         byte[] infoData = readBlob(rs, "info");
+        CompoundBinaryTag info;
         if (infoData == null || infoData.length == 0) {
-            pet.setInfo(CompoundBinaryTag.empty());
+            info = CompoundBinaryTag.empty();
         } else {
             try {
-                pet.setInfo(NbtUtil.readCompressed(infoData));
+                info = NbtUtil.readCompressed(infoData);
             } catch (IOException e) {
-                MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName()
-                        + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
-                backupCorruptedData(pet, "info", infoData);
-                pet.setInfo(CompoundBinaryTag.empty());
+                MyPetApi.getLogger().warning("Failed to load info for " + owner.getName()
+                        + "'s Pet " + petName + " - the data was likely corrupted.");
+                backupCorruptedData(uuid, owner, "info", infoData);
+                info = CompoundBinaryTag.empty();
             }
         }
 
-        return pet;
+        return PersistedMyPet.builder(owner)
+                .uuid(uuid)
+                .petType(type)
+                .petName(petName)
+                .worldGroup(rs.getString("world_group"))
+                .exp(rs.getDouble("exp"))
+                .health(rs.getDouble("health"))
+                .saturation(rs.getDouble("hunger"))
+                .respawnTime(rs.getInt("respawn_time"))
+                .wantsToRespawn(rs.getBoolean("wants_to_spawn"))
+                .lastUsed(rs.getLong("last_used"))
+                .skilltree(skilltree)
+                .skillInfo(skillInfo)
+                .info(info)
+                .build();
     }
 
     /**

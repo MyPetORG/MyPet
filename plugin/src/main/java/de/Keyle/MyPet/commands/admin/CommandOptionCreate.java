@@ -40,7 +40,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.commands.arguments.RegistryArgumentType;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -548,7 +548,7 @@ public class CommandOptionCreate {
      * Executes the pet creation logic.
      *
      * <p>Validates the pet type, checks world-group restrictions, resolves or registers the
-     * {@link MyPetPlayer}, builds an {@link InactiveMyPet} with the parsed options, fires
+     * {@link MyPetPlayer}, builds a {@link PersistedMyPet} with the parsed options, fires
      * {@link MyPetCreateEvent} and {@link MyPetSaveEvent}, persists the pet to the repository,
      * and activates it if the owner has no current pet.</p>
      *
@@ -580,15 +580,12 @@ public class CommandOptionCreate {
                     newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
                 }
 
-                final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
-                inactiveMyPet.setPetType(myPetType);
-                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner()));
-
-                updateData(inactiveMyPet, options);
-
+                PersistedMyPet base = PersistedMyPet.builder(newOwner)
+                        .petType(myPetType)
+                        .petName(Translation.getString("Name." + myPetType.name(), newOwner))
+                        .build();
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
-
-                inactiveMyPet.setWorldGroup(wg.getName());
+                final PersistedMyPet inactiveMyPet = updateData(base, options).withWorldGroup(wg.getName());
 
                 MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
                 Bukkit.getServer().getPluginManager().callEvent(createEvent);
@@ -621,35 +618,38 @@ public class CommandOptionCreate {
     }
 
     /**
-     * Applies non-NBT metadata from the options array to an {@link InactiveMyPet}.
+     * Applies non-NBT metadata from the options array to a {@link PersistedMyPet}
+     * and returns the updated record (records being immutable).
      *
      * <p>Currently handles:</p>
      * <ul>
-     *   <li>{@code skilltree:<name>} -- assigns the named skilltree to the pet</li>
-     *   <li>{@code name:<petName>} -- sets the pet's display name</li>
+     *   <li>{@code skilltree:<name>} -- assigns the named skilltree, firing
+     *       {@link MyPetSelectSkilltreeEvent} with source
+     *       {@link MyPetSelectSkilltreeEvent.Source#AdminCreation}.</li>
+     *   <li>{@code name:<petName>} -- sets the pet's display name.</li>
      * </ul>
      *
-     * <p>This is separated from {@link #createInfo} because these properties live on the
-     * {@link InactiveMyPet} object rather than in the NBT info compound.</p>
-     *
-     * @param inactiveMyPet the pet instance to update
-     * @param args          the option strings to parse
+     * <p>This is separated from {@link #createInfo} because these properties live
+     * on the {@link PersistedMyPet} object rather than in the NBT info compound.</p>
      */
-    public static void updateData(InactiveMyPet inactiveMyPet, String[] args) {
+    public static PersistedMyPet updateData(PersistedMyPet pet, String[] args) {
         for (String arg : args) {
             if (arg.startsWith("skilltree:")) {
                 String skilltreeName = arg.replace("skilltree:", "");
                 Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
                 if (skilltree != null) {
-                    inactiveMyPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.AdminCreation);
+                    pet = pet.withSkilltree(skilltree);
+                    Bukkit.getServer().getPluginManager().callEvent(
+                            new MyPetSelectSkilltreeEvent(pet, skilltree, MyPetSelectSkilltreeEvent.Source.AdminCreation));
                 }
             } else if (arg.startsWith("name:")) {
                 String petName = arg.substring("name:".length());
                 if (!petName.isBlank()) {
-                    inactiveMyPet.setPetName(petName);
+                    pet = pet.withPetName(petName);
                 }
             }
         }
+        return pet;
     }
 
     /**

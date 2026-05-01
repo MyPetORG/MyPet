@@ -42,7 +42,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
@@ -321,25 +321,18 @@ public class EntityListener implements Listener {
                             owner = MyPetApi.getPlayerManager().registerMyPetPlayer(player);
                         }
 
-                        final InactiveMyPet inactiveMyPet = new InactiveMyPet(owner);
-                        inactiveMyPet.setPetType(petType);
-                        inactiveMyPet.setPetName(Translation.getString("Name." + petType.name(), inactiveMyPet.getOwner()));
-
                         WorldGroup worldGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                        inactiveMyPet.setWorldGroup(worldGroup.getName());
-                        inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
-
-                        /*
-                        if(leashTarget.getCustomName() != null)
-                        {
-                            inactiveMyPet.setPetName(leashTarget.getCustomName());
-                        }
-                        */
-
                         // Snapshot the wild mob's visual state into the pet's info tag for DB persistence.
                         // The mob itself is kept in-place (not destroyed) — its visual state is already correct.
                         CompoundBinaryTag snapshot = PetEntitySnapshot.capture((Mob) leashTarget);
-                        inactiveMyPet.setInfo(snapshot);
+
+                        final PersistedMyPet inactiveMyPet = PersistedMyPet.builder(owner)
+                                .petType(petType)
+                                .petName(Translation.getString("Name." + petType.name(), owner))
+                                .worldGroup(worldGroup.getName())
+                                .info(snapshot)
+                                .build();
+                        inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
 
                         // Store reference to the original mob so the activation callback can
                         // convert it in-place rather than destroying + re-spawning.

@@ -35,6 +35,7 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.WalletType;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import lombok.Getter;
 import lombok.Setter;
@@ -140,11 +141,10 @@ public class PetShop {
                                     }
 
                                     pet.setOwner(petOwner);
-                                    final StoredMyPet clonedPet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(pet);
-
-                                    clonedPet.setOwner(petOwner);
-                                    clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
-                                    clonedPet.setUUID(null);
+                                    // Cast safe per the contract on MyPetManager#getInactiveMyPetFromMyPet.
+                                    final PersistedMyPet clonedPet = ((PersistedMyPet) MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(pet))
+                                            .withWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName())
+                                            .withUuid(UUID.randomUUID());
 
                                     MyPetApi.getRepository().addPet(clonedPet).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
                                             p.sendMessage(Translation.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));

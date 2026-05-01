@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
 import de.Keyle.MyPet.api.event.MyPetLoadEvent;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
-import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -43,23 +43,23 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
 
     // Inactive -----------------------------------------------------------------
 
-    public StoredMyPet getInactiveMyPetFromMyPet(StoredMyPet myPet) {
-        InactiveMyPet inactiveMyPet = new InactiveMyPet(myPet.getOwner());
-        inactiveMyPet.setUUID(myPet.getUUID());
-        inactiveMyPet.setPetName(myPet.getPetName());
-        inactiveMyPet.setWorldGroup(myPet.getWorldGroup());
-        inactiveMyPet.setExp(myPet.getExp());
-        inactiveMyPet.setHealth(myPet.getHealth());
-        inactiveMyPet.setSaturation(myPet.getSaturation());
-        inactiveMyPet.setRespawnTime(myPet.getRespawnTime());
-        inactiveMyPet.setSkills(myPet.getSkillInfo());
-        inactiveMyPet.setInfo(myPet.getInfo());
-        inactiveMyPet.setPetType(myPet.getPetType());
-        inactiveMyPet.setSkilltree(myPet.getSkilltree());
-        inactiveMyPet.setLastUsed(myPet.getLastUsed());
-        inactiveMyPet.wantsToRespawn = myPet.wantsToRespawn();
-
-        return inactiveMyPet;
+    @Override
+    public PersistedMyPet getInactiveMyPetFromMyPet(StoredMyPet myPet) {
+        return PersistedMyPet.builder(myPet.getOwner())
+                .uuid(myPet.getUUID())
+                .petType(myPet.getPetType())
+                .petName(myPet.getPetName())
+                .worldGroup(myPet.getWorldGroup())
+                .exp(myPet.getExp())
+                .health(myPet.getHealth())
+                .saturation(myPet.getSaturation())
+                .respawnTime(myPet.getRespawnTime())
+                .wantsToRespawn(myPet.wantsToRespawn())
+                .lastUsed(myPet.getLastUsed())
+                .skilltree(myPet.getSkilltree())
+                .skillInfo(myPet.getSkillInfo())
+                .info(myPet.getInfo())
+                .build();
     }
 
     // All ----------------------------------------------------------------------

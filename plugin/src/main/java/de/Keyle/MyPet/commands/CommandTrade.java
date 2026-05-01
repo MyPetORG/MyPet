@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.commands.HelpEntry;
 import de.Keyle.MyPet.api.commands.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -192,11 +193,14 @@ public class CommandTrade {
                 final String worldGroup = offer.pet().getWorldGroup();
 
                 MyPetApi.getMyPetManager().deactivateMyPet(oldOwner, false);
-                final StoredMyPet pet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.pet());
+                // Cast safe per the contract on MyPetManager#getInactiveMyPetFromMyPet — the abstract
+                // method's return is StoredMyPet for module-layering reasons, but every concrete
+                // implementation returns a PersistedMyPet.
+                final PersistedMyPet originalPet = (PersistedMyPet) MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.pet());
 
                 final Repository repo = MyPetApi.getRepository();
-                repo.removePet(pet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
-                        pet.setOwner(newOwner);
+                repo.removePet(originalPet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+                        PersistedMyPet pet = originalPet.withOwner(newOwner);
                         MyPetSaveEvent event = new MyPetSaveEvent(pet);
                         Bukkit.getServer().getPluginManager().callEvent(event);
                         repo.addPet(pet);

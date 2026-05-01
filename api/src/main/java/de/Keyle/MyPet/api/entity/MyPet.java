@@ -37,9 +37,52 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
 import java.util.Optional;
 
+/**
+ * Active, in-world pet. Extends the read-only {@link StoredMyPet} contract
+ * with the mutators the live entity needs as it takes damage, gains XP,
+ * eats, and is renamed. Mutations on the persisted snapshot type
+ * {@code PersistedMyPet} use {@code withX} / {@code Builder} instead — only
+ * the active pet (this interface) is genuinely mutable.
+ */
 public interface MyPet extends StoredMyPet, Scheduler {
+
+    // ─── Mutators (previously inherited from StoredMyPet) ───
+    void setUUID(UUID uuid);
+
+    void setOwner(MyPetPlayer owner);
+
+    void setPetName(String petName);
+
+    void setPetType(MyPetType petType);
+
+    void setWorldGroup(String worldGroup);
+
+    void setHealth(double health);
+
+    void setSaturation(double saturation);
+
+    void setRespawnTime(int respawnTime);
+
+    void setLastUsed(long lastUsed);
+
+    void setWantsToRespawn(boolean wantsToRespawn);
+
+    void setExp(double exp);
+
+    void setInfo(CompoundBinaryTag info);
+
+    void setSkills(CompoundBinaryTag skills);
+
+    /**
+     * Single-arg form that updates the skilltree without firing
+     * {@code MyPetSelectSkilltreeEvent}. Used during pet activation when the
+     * skilltree is being restored from persistence rather than chosen.
+     */
+    boolean setSkilltree(Skilltree skilltree);
+
     MyPetExperience getExperience();
 
     void removePet();

@@ -7,6 +7,7 @@ import de.Keyle.MyPet.api.migration.MigrationException;
 import de.Keyle.MyPet.api.migration.PetDataMigration;
 import de.Keyle.MyPet.api.migration.SqlMigrationContext;
 import de.Keyle.MyPet.api.repository.Repository;
+import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.migration.migrations.entitysnapshot.LegacyPetReader;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -183,8 +184,11 @@ public final class EntitySnapshotMigration implements PetDataMigration {
 
             try {
                 LegacyPetReader.applyToMob(transientMob, pet.getPetType(), pet.getInfo());
-                pet.setInfo(PetEntitySnapshot.capture(transientMob));
-                repository.updatePet(pet).join();
+                // Cast safe: every StoredMyPet produced by the repository is a PersistedMyPet
+                // (the only StoredMyPet impl that lives outside the repo is ShopMyPet, which
+                // is never persisted).
+                PersistedMyPet updated = ((PersistedMyPet) pet).withInfo(PetEntitySnapshot.capture(transientMob));
+                repository.updatePet(updated).join();
                 return true;
             } finally {
                 transientMob.remove();

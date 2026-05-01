@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.entity;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -29,10 +30,45 @@ import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 
+/**
+ * Read-only view of a pet at rest. Two implementations exist:
+ *
+ * <ul>
+ *   <li>{@code PersistedMyPet} — the immutable record that the repository
+ *       loads from disk and that {@code MyPetManager} round-trips between
+ *       active and inactive states. "Mutations" return new instances via
+ *       {@code withX} or {@code Builder}.
+ *   <li>{@code ShopMyPet} — a mutable shop-template class used only by the
+ *       in-game pet shop GUI. Many of its accessors are computed on demand
+ *       (e.g. {@link #getHealth} returns the type's start HP) rather than
+ *       stored, which is why it remains a class rather than a record.
+ * </ul>
+ *
+ * <p>Sealing this interface would be a natural fit but is not done because
+ * {@code ShopMyPet} cannot move into the {@code api} module without dragging
+ * shop-only dependencies with it.
+ */
 public interface StoredMyPet {
-    double getExp();
+    UUID getUUID();
 
-    void setExp(double exp);
+    MyPetPlayer getOwner();
+
+    MyPetType getPetType();
+
+    String getPetName();
+
+    /**
+     * MiniMessage-rendered pet name. Default implementation deserializes
+     * {@link #getPetName} via {@link Util#SANITIZED_MINIMESSAGE}; both
+     * implementations were previously identical.
+     */
+    default Component getDisplayName() {
+        return Util.SANITIZED_MINIMESSAGE.deserialize(getPetName());
+    }
+
+    String getWorldGroup();
+
+    double getExp();
 
     /**
      * Pet's experience level — derived from {@link #getExp()} and the
@@ -49,11 +85,17 @@ public interface StoredMyPet {
 
     double getHealth();
 
-    void setHealth(double health);
-
     double getSaturation();
 
-    void setSaturation(double value);
+    int getRespawnTime();
+
+    boolean wantsToRespawn();
+
+    long getLastUsed();
+
+    Skilltree getSkilltree();
+
+    CompoundBinaryTag getSkillInfo();
 
     /**
      * Vanilla entity NBT for this pet, as parsed from Paper's
@@ -62,48 +104,4 @@ public interface StoredMyPet {
      * (e.g. shop templates).
      */
     CompoundBinaryTag getInfo();
-
-    void setInfo(CompoundBinaryTag info);
-
-    MyPetPlayer getOwner();
-
-    void setOwner(MyPetPlayer owner);
-
-    String getPetName();
-
-    void setPetName(String petName);
-
-    Component getDisplayName();
-
-    MyPetType getPetType();
-
-    void setPetType(MyPetType petType);
-
-    boolean wantsToRespawn();
-
-    void setWantsToRespawn(boolean wantsToRespawn);
-
-    int getRespawnTime();
-
-    void setRespawnTime(int respawnTime);
-
-    Skilltree getSkilltree();
-
-    boolean setSkilltree(Skilltree skilltree);
-
-    CompoundBinaryTag getSkillInfo();
-
-    void setSkills(CompoundBinaryTag skills);
-
-    UUID getUUID();
-
-    void setUUID(UUID uuid);
-
-    String getWorldGroup();
-
-    void setWorldGroup(String worldGroup);
-
-    long getLastUsed();
-
-    void setLastUsed(long lastUsed);
 }

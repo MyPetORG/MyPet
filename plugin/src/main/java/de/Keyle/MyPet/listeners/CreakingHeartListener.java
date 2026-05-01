@@ -35,7 +35,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -192,16 +192,16 @@ public class CreakingHeartListener implements Listener {
             owner = MyPetApi.getPlayerManager().registerMyPetPlayer(player);
         }
 
-        final InactiveMyPet inactiveMyPet = new InactiveMyPet(owner);
-        inactiveMyPet.setPetType(petType);
-        inactiveMyPet.setPetName(Translation.getString("Name." + petType.name(), inactiveMyPet.getOwner()));
-
         WorldGroup worldGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
-        inactiveMyPet.setWorldGroup(worldGroup.getName());
-        inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
-
         CompoundBinaryTag snapshot = PetEntitySnapshot.capture((Mob) linkedCreaking);
-        inactiveMyPet.setInfo(snapshot);
+
+        final PersistedMyPet inactiveMyPet = PersistedMyPet.builder(owner)
+                .petType(petType)
+                .petName(Translation.getString("Name." + petType.name(), owner))
+                .worldGroup(worldGroup.getName())
+                .info(snapshot)
+                .build();
+        inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
 
         // Store the location before removing
         final Location capturedEntityLocation = linkedCreaking.getLocation().clone();

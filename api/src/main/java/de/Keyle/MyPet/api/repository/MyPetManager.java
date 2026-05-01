@@ -98,6 +98,13 @@ public abstract class MyPetManager {
 
     // Inactive -----------------------------------------------------------------
 
+    /**
+     * Snapshot a pet's current state into a fresh {@link StoredMyPet}, suitable
+     * for hand-off across an active/inactive boundary (deactivation, trade,
+     * shop purchase, admin clone). Concrete return is the immutable
+     * {@code PersistedMyPet} record; callers needing to tweak fields after
+     * the fact should use its {@code withX} methods or {@code toBuilder}.
+     */
     public abstract StoredMyPet getInactiveMyPetFromMyPet(StoredMyPet storedMyPet);
 
     // All ----------------------------------------------------------------------

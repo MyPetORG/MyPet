@@ -262,7 +262,10 @@ public class CommandOptionSwitch {
                 sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
                 if (myPet.isPresent()) {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());
-                    newPet.setWorldGroup(worldGroup.getName());
+                    // The active world-group binding lives in the player→UUID index,
+                    // not on the snapshot. activateMyPet does not persist
+                    // StoredMyPet#worldGroup, so updating the snapshot here would
+                    // be a no-op.
                     newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
 
                     owner.sendMessage(Translation.getFormattedComponent("Message.MultiWorld.NowActivePet", owner, myPet.get().getDisplayName()));
