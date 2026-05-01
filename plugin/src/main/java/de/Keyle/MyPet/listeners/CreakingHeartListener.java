@@ -200,8 +200,8 @@ public class CreakingHeartListener implements Listener {
         inactiveMyPet.setWorldGroup(worldGroup.getName());
         inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
 
-        byte[] snapshot = PetEntitySnapshot.capture((Mob) linkedCreaking);
-        inactiveMyPet.setInfo(PetEntitySnapshot.envelope(snapshot, CompoundBinaryTag.empty()));
+        CompoundBinaryTag snapshot = PetEntitySnapshot.capture((Mob) linkedCreaking);
+        inactiveMyPet.setInfo(snapshot);
 
         // Store the location before removing
         final Location capturedEntityLocation = linkedCreaking.getLocation().clone();

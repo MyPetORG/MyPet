@@ -338,8 +338,8 @@ public class EntityListener implements Listener {
 
                         // Snapshot the wild mob's visual state into the pet's info tag for DB persistence.
                         // The mob itself is kept in-place (not destroyed) — its visual state is already correct.
-                        byte[] snapshot = PetEntitySnapshot.capture((Mob) leashTarget);
-                        inactiveMyPet.setInfo(PetEntitySnapshot.envelope(snapshot, CompoundBinaryTag.empty()));
+                        CompoundBinaryTag snapshot = PetEntitySnapshot.capture((Mob) leashTarget);
+                        inactiveMyPet.setInfo(snapshot);
 
                         // Store reference to the original mob so the activation callback can
                         // convert it in-place rather than destroying + re-spawning.

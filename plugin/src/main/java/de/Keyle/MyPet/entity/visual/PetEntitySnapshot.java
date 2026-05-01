@@ -1,11 +1,15 @@
 package de.Keyle.MyPet.entity.visual;
 
+import de.Keyle.MyPet.api.util.NbtUtil;
 import io.papermc.paper.entity.EntitySerializationFlag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
 
 /**
  * Captures and restores a pet's full vanilla state via Paper's
@@ -51,21 +55,30 @@ public final class PetEntitySnapshot {
     }
 
     /**
-     * Serializes the mob's full vanilla state to a byte array suitable for
-     * later replay through {@link #restore}. See class Javadoc for the
+     * Captures the mob's full vanilla state as an Adventure-NBT compound
+     * suitable for later replay through {@link #restore}. Internally calls
+     * Paper's {@code Bukkit.getUnsafe().serializeEntity} (which returns
+     * GZIP'd Mojang NBT) and parses the result. See class Javadoc for the
      * persistence-flag rationale.
      *
      * @throws IllegalArgumentException if Paper refuses to serialize the
      *         entity (see {@code UnsafeValues.serializeEntity})
+     * @throws UncheckedIOException     if the serialized bytes fail to parse
      */
-    public static byte[] capture(Mob mob) {
+    public static CompoundBinaryTag capture(Mob mob) {
+        byte[] bytes;
         try {
-            return captureWithForce(mob);
+            bytes = captureWithForce(mob);
         } catch (LinkageError forceUnavailable) {
             // LinkageError covers NoClassDefFoundError + NoSuchMethodError —
             // either means the EntitySerializationFlag enum or the flagged
             // serializeEntity overload is absent on this Paper version.
-            return captureWithPersistenceToggle(mob);
+            bytes = captureWithPersistenceToggle(mob);
+        }
+        try {
+            return NbtUtil.readCompressed(bytes);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to parse serialized entity NBT", e);
         }
     }
 
@@ -94,10 +107,10 @@ public final class PetEntitySnapshot {
     }
 
     /**
-     * Deserializes snapshot bytes into a {@link Mob} object and pre-applies
-     * MyPet's persistence flags. The returned mob is NOT yet in the world —
-     * Paper's {@code Bukkit.getUnsafe().deserializeEntity} returns a detached
-     * entity object, and the caller must call
+     * Deserializes a snapshot compound into a {@link Mob} object and
+     * pre-applies MyPet's persistence flags. The returned mob is NOT yet
+     * in the world — Paper's {@code Bukkit.getUnsafe().deserializeEntity}
+     * returns a detached entity object, and the caller must call
      * {@link Entity#spawnAt(org.bukkit.Location, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason)}
      * to actually place it. Skipping that step leaves a ghost entity (no
      * errors thrown, but the mob never appears in the world).
@@ -105,18 +118,26 @@ public final class PetEntitySnapshot {
      * <p>Persistence flags are set <em>before</em> spawn so vanilla never
      * sees the mob as persistent and never writes it to chunk save files.
      *
-     * @param snapshot bytes returned by a prior {@link #capture}
+     * @param snapshot compound returned by a prior {@link #capture}
      * @param world    world to deserialize into (does not have to match the
      *                 world the snapshot was taken in)
      * @return a detached {@link Mob} with {@code setPersistent(false)} and
      *         {@code setRemoveWhenFarAway(false)} applied; caller must call
      *         {@code spawnAt} to put it in the world
-     * @throws IllegalArgumentException if the snapshot bytes are invalid
+     * @throws IllegalArgumentException if the snapshot is invalid
      * @throws IllegalStateException    if the snapshot deserialized to a
      *         non-{@link Mob} entity (e.g. a player or projectile)
+     * @throws UncheckedIOException     if re-serializing the compound for
+     *         Paper fails
      */
-    public static Mob restore(byte[] snapshot, World world) {
-        Entity restored = Bukkit.getUnsafe().deserializeEntity(snapshot, world, false);
+    public static Mob restore(CompoundBinaryTag snapshot, World world) {
+        byte[] bytes;
+        try {
+            bytes = NbtUtil.writeCompressed(snapshot);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to serialize snapshot for deserializeEntity", e);
+        }
+        Entity restored = Bukkit.getUnsafe().deserializeEntity(bytes, world, false);
         if (!(restored instanceof Mob mob)) {
             String type = restored == null ? "null" : restored.getClass().getName();
             throw new IllegalStateException(
@@ -127,41 +148,4 @@ public final class PetEntitySnapshot {
         return mob;
     }
 
-    /**
-     * Returns Minecraft's current data version — the integer Mojang stamps on
-     * save files and uses with DataFixerUpper to dispatch forward-fixing rules
-     * across version upgrades. Stamping this on every saved snapshot lets a
-     * future DFU integration migrate the snapshot bytes at read time without
-     * needing a one-time data migration to add the stamp retroactively.
-     *
-     * <p>Available on every supported Paper version (1.20.5+).
-     */
-    public static int currentDataVersion() {
-        return Bukkit.getUnsafe().getDataVersion();
-    }
-
-    /**
-     * Builds an EntitySnapshot envelope compound for storage in a pet's
-     * {@code info} BLOB. Centralizes the envelope shape (schema version,
-     * data-version stamps, snapshot bytes, storage sub-compound) so every
-     * producer — the impl {@code MyPet#getInfo}, the leash/tame listeners,
-     * and the bulk migration — emits the same format.
-     *
-     * @param snapshot vanilla NBT bytes from {@link #capture}, or {@code null}
-     *                 if no snapshot is available (graceful-degradation path:
-     *                 the pet round-trips with default visuals).
-     * @param storage  pet-storage sub-compound (typically containing the
-     *                 experience level). May be empty.
-     */
-    public static CompoundBinaryTag envelope(byte[] snapshot, CompoundBinaryTag storage) {
-        CompoundBinaryTag.Builder b = CompoundBinaryTag.builder()
-                .putInt("schema_version", 1)
-                .putInt("mc_data_version", currentDataVersion())
-                .putString("mc_version", Bukkit.getServer().getMinecraftVersion())
-                .put("storage", storage);
-        if (snapshot != null) {
-            b.putByteArray("snapshot", snapshot);
-        }
-        return b.build();
-    }
 }

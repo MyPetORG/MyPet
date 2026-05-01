@@ -28,7 +28,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -383,15 +382,13 @@ public class Util {
                 .append(Component.text(String.format("%1.2f", mypet.getExp())).color(NamedTextColor.GOLD))
                 .append(Component.newline());
 
-        // Level (if available)
-        if (mypet.getInfo().keySet().contains("storage")) {
-            CompoundBinaryTag storage = mypet.getInfo().getCompound("storage");
-            if (storage.keySet().contains("level")) {
-                builder.append(Translation.getComponent("Name.Level", lang))
-                        .append(Component.text(": "))
-                        .append(Component.text(storage.getInt("level")).color(NamedTextColor.GOLD))
-                        .append(Component.newline());
-            }
+        // Level (if a skilltree XP curve is loaded for this pet's worldgroup/type)
+        int level = mypet.getLevel();
+        if (level > 0) {
+            builder.append(Translation.getComponent("Name.Level", lang))
+                    .append(Component.text(": "))
+                    .append(Component.text(level).color(NamedTextColor.GOLD))
+                    .append(Component.newline());
         }
 
         // Pet Type - use client-side translatable for entity name

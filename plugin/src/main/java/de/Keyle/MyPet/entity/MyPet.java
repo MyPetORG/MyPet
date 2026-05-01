@@ -95,7 +95,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     protected double saturation = 100;
     protected UUID uuid = null;
     protected String worldGroup = "";
-    protected CompoundBinaryTag storage = CompoundBinaryTag.empty();
     protected PetState status = PetState.Despawned;
     @Setter
     protected boolean wantsToRespawn = false;
@@ -112,22 +111,23 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     protected boolean isBaby = false;
 
     /**
-     * Most recent vanilla-NBT snapshot bytes for this pet — captured at
-     * despawn ({@link #removePet}) or supplied by repo-load
-     * ({@link #setInfo}). Serves a dual purpose:
+     * Most recent vanilla-NBT snapshot for this pet — captured at despawn
+     * ({@link #removePet}) or supplied by repo-load ({@link #setInfo}).
+     * Serves a dual purpose:
      *
      * <ul>
      *   <li>Save fallback: when {@link #getInfo} runs after the live entity
-     *       has been detached, we replay these bytes so the saved envelope
+     *       has been detached, we replay this compound so the saved row
      *       still carries the most-recent state.</li>
-     *   <li>Respawn input: {@link #consumePendingSnapshot} hands these bytes
-     *       to {@code VanillaMobSpawner} so the new mob deserializes from
-     *       vanilla NBT, preserving variant/colour/equipment/etc. across
-     *       death-respawn, sendaway-recall, and store-switchback cycles.
-     *       Single-use — cleared on consumption.</li>
+     *   <li>Respawn input: {@link #consumePendingSnapshot} hands the
+     *       compound to {@code VanillaMobSpawner} so the new mob
+     *       deserializes from vanilla NBT, preserving
+     *       variant/color/equipment/etc. across death-respawn,
+     *       sendaway-recall, and store-switchback cycles. Single-use and
+     *       cleared on consumption.</li>
      * </ul>
      */
-    private byte[] pendingSnapshot;
+    private CompoundBinaryTag pendingSnapshot;
     private MyPetType petType;
 
     protected MyPet(MyPetPlayer petOwner) {
@@ -406,7 +406,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         // Prefer a fresh capture from the live entity over the cached
         // pendingSnapshot — the live state may have advanced since the last
         // despawn (e.g. saved while the pet is alive after respawn).
-        byte[] snapshot = null;
+        CompoundBinaryTag snapshot = null;
         final Mob entityRef = bukkitEntity;
         if (entityRef != null && Bukkit.isOwnedByCurrentRegion(entityRef)) {
             try {
@@ -418,32 +418,17 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             }
         }
         if (snapshot == null) snapshot = pendingSnapshot;
-        storage = storage.putInt("level", getExperience().getLevel());
-        return PetEntitySnapshot.envelope(snapshot, storage);
+        return snapshot != null ? snapshot : CompoundBinaryTag.empty();
     }
 
     @Override
     public void setInfo(CompoundBinaryTag info) {
-        if (info.keySet().contains("schema_version") && info.keySet().contains("snapshot")) {
-            this.pendingSnapshot = info.getByteArray("snapshot");
-        }
-
-        if (info.keySet().contains("storage")) {
-            CompoundBinaryTag loadedStorage = info.getCompound("storage");
-            CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
-            for (String key : this.storage.keySet()) {
-                builder.put(key, this.storage.get(key));
-            }
-            for (String key : loadedStorage.keySet()) {
-                builder.put(key, loadedStorage.get(key));
-            }
-            this.storage = builder.build();
-        }
+        this.pendingSnapshot = (info != null && !info.keySet().isEmpty()) ? info : null;
     }
 
     @Override
-    public byte[] consumePendingSnapshot() {
-        byte[] s = pendingSnapshot;
+    public CompoundBinaryTag consumePendingSnapshot() {
+        CompoundBinaryTag s = pendingSnapshot;
         pendingSnapshot = null;
         return s;
     }

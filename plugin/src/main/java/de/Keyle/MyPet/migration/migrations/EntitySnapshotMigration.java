@@ -25,9 +25,11 @@ import java.util.logging.Logger;
 
 /**
  * One-shot startup migration that converts pre-v4 {@code info} BLOBs
- * (legacy curated NBT) into the EntitySnapshot envelope format. Idempotent:
- * re-running skips rows whose info already contains a {@code schema_version}
- * key.
+ * (legacy curated NBT) into raw vanilla entity NBT. Idempotent: legacy
+ * rows are identified by parsing the BLOB content and checking for the
+ * absence of Mojang's standard {@code id} root key — vanilla entity NBT
+ * always has it, legacy curated NBT (per-pet-type keys at root) does
+ * not.
  *
  * <p>Per-pet conversion: spawn a transient mob at a high-altitude hidden
  * location, apply the legacy compound via
@@ -77,7 +79,7 @@ public final class EntitySnapshotMigration implements PetDataMigration {
 
         List<StoredMyPet> all = repository.getAllPets();
         List<StoredMyPet> legacy = all.stream()
-                .filter(p -> !p.getInfo().keySet().contains("schema_version"))
+                .filter(EntitySnapshotMigration::isLegacy)
                 .toList();
 
         if (legacy.isEmpty()) {
@@ -168,15 +170,20 @@ public final class EntitySnapshotMigration implements PetDataMigration {
                         m.setInvulnerable(true);
                         m.setInvisible(true);
                     });
+            if (transientMob == null) {
+                // Another plugin (e.g. WorldGuard) cancelled the CreatureSpawnEvent.
+                // The original legacy compound is left untouched in the DB so a
+                // subsequent migration attempt (after disabling the blocker) can
+                // still convert this pet.
+                logger.warning("EntitySnapshot: pet " + pet.getUUID()
+                        + " (" + pet.getPetType().name() + ") transient spawn was cancelled; "
+                        + "skipping. Disable spawn-blocking plugins for the migration boot.");
+                return false;
+            }
 
             try {
                 LegacyPetReader.applyToMob(transientMob, pet.getPetType(), pet.getInfo());
-                byte[] snapshot = PetEntitySnapshot.capture(transientMob);
-
-                CompoundBinaryTag legacyStorage = pet.getInfo().keySet().contains("storage")
-                        ? pet.getInfo().getCompound("storage")
-                        : CompoundBinaryTag.empty();
-                pet.setInfo(PetEntitySnapshot.envelope(snapshot, legacyStorage));
+                pet.setInfo(PetEntitySnapshot.capture(transientMob));
                 repository.updatePet(pet).join();
                 return true;
             } finally {
@@ -187,5 +194,19 @@ public final class EntitySnapshotMigration implements PetDataMigration {
                     + " (" + pet.getPetType().name() + ") failed: " + t.getMessage());
             return false;
         }
+    }
+
+    /**
+     * True iff {@code pet}'s info compound contains pre-v4 curated NBT —
+     * detected by the absence of Mojang's {@code id} root key (vanilla
+     * entity NBT always carries it). Empty compounds are treated as
+     * already-migrated.
+     */
+    private static boolean isLegacy(StoredMyPet pet) {
+        CompoundBinaryTag info = pet.getInfo();
+        if (info.keySet().isEmpty()) {
+            return false;
+        }
+        return !info.keySet().contains("id");
     }
 }

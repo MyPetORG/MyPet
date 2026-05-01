@@ -133,6 +133,16 @@ public abstract class AbstractSqlRepository implements Repository {
     protected abstract byte[] readBlob(ResultSet rs, String col) throws SQLException;
 
     /**
+     * Serialize a pet's vanilla-NBT entity snapshot for the {@code info}
+     * BLOB column. Empty compounds (graceful-degradation pets, shop
+     * templates) become zero-length byte arrays.
+     */
+    private static byte[] serializeInfo(StoredMyPet pet) throws IOException {
+        CompoundBinaryTag info = pet.getInfo();
+        return info.keySet().isEmpty() ? new byte[0] : NbtUtil.writeCompressed(info);
+    }
+
+    /**
      * Bind a pet name to the {@code name} column, which is {@code VARCHAR} in SQLite
      * but {@code VARBINARY} in MySQL (to be byte-exact with Minecraft's UTF-8
      * display names without charset surprises).
@@ -455,13 +465,17 @@ public abstract class AbstractSqlRepository implements Repository {
         }
 
         byte[] infoData = readBlob(rs, "info");
-        try {
-            pet.setInfo(NbtUtil.readCompressed(infoData));
-        } catch (IOException e) {
-            MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName()
-                    + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
-            backupCorruptedData(pet, "info", infoData);
+        if (infoData == null || infoData.length == 0) {
             pet.setInfo(CompoundBinaryTag.empty());
+        } else {
+            try {
+                pet.setInfo(NbtUtil.readCompressed(infoData));
+            } catch (IOException e) {
+                MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName()
+                        + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                backupCorruptedData(pet, "info", infoData);
+                pet.setInfo(CompoundBinaryTag.empty());
+            }
         }
 
         return pet;
@@ -694,7 +708,7 @@ public abstract class AbstractSqlRepository implements Repository {
             stmt.setBoolean(10, myPet.wantsToRespawn());
             stmt.setString(11, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
             bindBlob(stmt, 12, NbtUtil.writeCompressed(myPet.getSkillInfo()));
-            bindBlob(stmt, 13, NbtUtil.writeCompressed(myPet.getInfo()));
+            bindBlob(stmt, 13, serializeInfo(myPet));
             stmt.setString(14, myPet.getUUID().toString());
             stmt.executeUpdate();
             return true;
@@ -737,14 +751,10 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setBoolean(11, storedMyPet.wantsToRespawn());
                 stmt.setString(12, storedMyPet.getSkilltree() != null
                         ? storedMyPet.getSkilltree().getName() : null);
-                try {
-                    bindBlob(stmt, 13, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
-                    bindBlob(stmt, 14, NbtUtil.writeCompressed(storedMyPet.getInfo()));
-                } catch (IOException e) {
-                    reportError(e);
-                }
+                bindBlob(stmt, 13, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
+                bindBlob(stmt, 14, serializeInfo(storedMyPet));
                 return stmt.executeUpdate() > 0;
-            } catch (SQLException e) {
+            } catch (SQLException | IOException e) {
                 reportError(e);
                 return false;
             }
@@ -785,7 +795,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setString(11, storedMyPet.getSkilltree() != null
                         ? storedMyPet.getSkilltree().getName() : null);
                 bindBlob(stmt, 12, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
-                bindBlob(stmt, 13, NbtUtil.writeCompressed(storedMyPet.getInfo()));
+                bindBlob(stmt, 13, serializeInfo(storedMyPet));
                 stmt.setString(14, storedMyPet.getUUID().toString());
                 int result = stmt.executeUpdate();
                 if (result > 0) {
@@ -872,18 +882,14 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setBoolean(4, player.isCaptureHelperActive());
                 stmt.setBoolean(5, player.isHealthBarActive());
                 stmt.setFloat(6, player.getPetLivingSoundVolume());
-                try {
-                    bindBlob(stmt, 7, NbtUtil.writeCompressed(player.getExtendedInfo()));
-                } catch (IOException e) {
-                    reportError(e);
-                }
+                bindBlob(stmt, 7, NbtUtil.writeCompressed(player.getExtendedInfo()));
                 JsonObject multiWorldObject = new JsonObject();
                 for (String g : player.getMyPetsForWorldGroups().keySet()) {
                     multiWorldObject.addProperty(g, player.getMyPetsForWorldGroups().get(g).toString());
                 }
                 stmt.setString(8, gson.toJson(multiWorldObject));
                 return stmt.executeUpdate() > 0;
-            } catch (SQLException e) {
+            } catch (SQLException | IOException e) {
                 reportError(e);
                 return false;
             }
@@ -972,16 +978,8 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setBoolean(11, storedMyPet.wantsToRespawn());
                 stmt.setString(12, storedMyPet.getSkilltree() != null
                         ? storedMyPet.getSkilltree().getName() : null);
-                try {
-                    bindBlob(stmt, 13, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
-                } catch (IOException e) {
-                    reportError(e);
-                }
-                try {
-                    bindBlob(stmt, 14, NbtUtil.writeCompressed(storedMyPet.getInfo()));
-                } catch (IOException e) {
-                    reportError(e);
-                }
+                bindBlob(stmt, 13, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
+                bindBlob(stmt, 14, serializeInfo(storedMyPet));
                 stmt.addBatch();
                 if (++i % 500 == 0 && i != pets.size()) {
                     stmt.executeBatch();
@@ -989,7 +987,7 @@ public abstract class AbstractSqlRepository implements Repository {
             }
             stmt.executeBatch();
             return true;
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             reportError(e);
         }
         return false;

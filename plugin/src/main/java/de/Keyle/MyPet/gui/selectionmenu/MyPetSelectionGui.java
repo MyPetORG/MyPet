@@ -31,7 +31,6 @@ import de.Keyle.MyPet.api.Util;
 import java.util.function.Consumer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -102,17 +101,12 @@ public class MyPetSelectionGui {
                 icon.addLoreLine(Component.text().append(Translation.getComponent("Name.HP", player)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", currentPet.getHealth())).color(NamedTextColor.GOLD)).build());
             }
 
-            boolean levelFound = false;
-            if (currentPet.getInfo().keySet().contains("storage")) {
-                CompoundBinaryTag storage = currentPet.getInfo().getCompound("storage");
-                if (storage.keySet().contains("level")) {
-                    icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Level", player)).append(Component.text(": ")).append(Component.text(storage.getInt("level")).color(NamedTextColor.GOLD)).build());
-                    levelFound = true;
-                }
-            }
-
-            if (!levelFound)
+            int level = currentPet.getLevel();
+            if (level > 0) {
+                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Level", player)).append(Component.text(": ")).append(Component.text(level).color(NamedTextColor.GOLD)).build());
+            } else {
                 icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Exp", player)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", currentPet.getExp())).color(NamedTextColor.GOLD)).build());
+            }
 
             icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Type", player)).append(Component.text(": ")).append(Translation.getComponent("Name." + currentPet.getPetType().name(), player).color(NamedTextColor.GOLD)).build());
             icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Skilltree", player)).append(Component.text(": ")).append(Util.SANITIZED_MINIMESSAGE.deserialize(currentPet.getSkilltree() != null ? currentPet.getSkilltree().getDisplayName() : "-").color(NamedTextColor.GOLD)).build());

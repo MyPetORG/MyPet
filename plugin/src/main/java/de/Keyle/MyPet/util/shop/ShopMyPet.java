@@ -118,11 +118,15 @@ public class ShopMyPet implements StoredMyPet {
     }
 
     public CompoundBinaryTag getInfo() {
-        return NBTextendetInfo;
+        // Shop pets carry no entity snapshot — shop visual config is currently
+        // dropped on activation regardless (the legacy curated NBT in
+        // NBTextendetInfo isn't a snapshot). Returning an empty compound makes
+        // that explicit; activated pets spawn with their type's default visuals.
+        return CompoundBinaryTag.empty();
     }
 
+    @NotImplemented
     public void setInfo(CompoundBinaryTag info) {
-        NBTextendetInfo = info != null ? info : CompoundBinaryTag.empty();
     }
 
     public MyPetPlayer getOwner() {

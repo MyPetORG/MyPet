@@ -584,9 +584,6 @@ public class CommandOptionCreate {
                 inactiveMyPet.setPetType(myPetType);
                 inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner()));
 
-                CompoundBinaryTag.Builder infoBuilder = CompoundBinaryTag.builder();
-                createInfo(myPetType, options, infoBuilder);
-                inactiveMyPet.setInfo(infoBuilder.build());
                 updateData(inactiveMyPet, options);
 
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());

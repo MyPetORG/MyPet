@@ -219,8 +219,13 @@ public final class LegacyPetReader {
 
     private static void applyChicken(Mob mob, CompoundBinaryTag info) {
         if (!(mob instanceof Chicken chicken)) return;
-        Chicken.Variant variant = registryByKey(info, "Variant", RegistryKey.CHICKEN_VARIANT);
-        if (variant != null) chicken.setVariant(variant);
+        // Chicken.setVariant + RegistryKey.CHICKEN_VARIANT were added in 1.21.5;
+        // calling either on a 1.20.5–1.21.4 runtime fails with LinkageError.
+        try {
+            Chicken.Variant variant = registryByKey(info, "Variant", RegistryKey.CHICKEN_VARIANT);
+            if (variant != null) chicken.setVariant(variant);
+        } catch (LinkageError ignored) {
+        }
     }
 
     private static void applyCopperGolem(Mob mob, CompoundBinaryTag info) {
@@ -256,8 +261,13 @@ public final class LegacyPetReader {
 
     private static void applyCow(Mob mob, CompoundBinaryTag info) {
         if (!(mob instanceof Cow cow)) return;
-        Cow.Variant variant = registryByKey(info, "Variant", RegistryKey.COW_VARIANT);
-        if (variant != null) cow.setVariant(variant);
+        // Cow.setVariant + RegistryKey.COW_VARIANT were added in 1.21.5; calling
+        // either on a 1.20.5–1.21.4 runtime fails with LinkageError.
+        try {
+            Cow.Variant variant = registryByKey(info, "Variant", RegistryKey.COW_VARIANT);
+            if (variant != null) cow.setVariant(variant);
+        } catch (LinkageError ignored) {
+        }
     }
 
     private static void applyCreeper(Mob mob, CompoundBinaryTag info) {
@@ -373,8 +383,14 @@ public final class LegacyPetReader {
 
     private static void applySalmon(Mob mob, CompoundBinaryTag info) {
         if (!(mob instanceof Salmon salmon)) return;
-        Salmon.Variant variant = enumByOrdinal(info, "Variant", Salmon.Variant.values());
-        if (variant != null) salmon.setVariant(variant);
+        // Salmon.setVariant + Salmon.Variant were added in 1.21.2; referencing
+        // Salmon.Variant.values() (or the setter) on a 1.20.5–1.21.1 runtime
+        // fails with LinkageError.
+        try {
+            Salmon.Variant variant = enumByOrdinal(info, "Variant", Salmon.Variant.values());
+            if (variant != null) salmon.setVariant(variant);
+        } catch (LinkageError ignored) {
+        }
     }
 
     private static void applySheep(Mob mob, CompoundBinaryTag info) {

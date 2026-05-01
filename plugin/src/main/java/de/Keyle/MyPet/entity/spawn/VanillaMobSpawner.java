@@ -14,6 +14,7 @@ import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.AttributeInstance;
@@ -51,12 +52,12 @@ public final class VanillaMobSpawner {
             return false;
         }
 
-        // Snapshot path: deserialize the vanilla mob from envelope bytes
-        // (every saved pet is in envelope format after the EntitySnapshot
-        // migration runs at startup). Fresh-spawn fallback covers (a) brand
-        // new pets that have never been saved, and (b) defensive recovery
-        // if the snapshot fails to deserialize.
-        byte[] snapshot = pet.consumePendingSnapshot();
+        // Snapshot path: deserialize the vanilla mob from a captured NBT
+        // compound (every saved pet has one after the EntitySnapshot migration
+        // runs at startup). Fresh-spawn fallback covers (a) brand new pets
+        // that have never been saved, and (b) defensive recovery if the
+        // snapshot fails to deserialize.
+        CompoundBinaryTag snapshot = pet.consumePendingSnapshot();
         if (snapshot != null) {
             try {
                 Mob restored = PetEntitySnapshot.restore(snapshot, target.getWorld());

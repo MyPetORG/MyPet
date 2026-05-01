@@ -20,7 +20,9 @@
 
 package de.Keyle.MyPet.api.entity;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
@@ -32,6 +34,19 @@ public interface StoredMyPet {
 
     void setExp(double exp);
 
+    /**
+     * Pet's experience level — derived from {@link #getExp()} and the
+     * skilltree's XP curve via {@link ExperienceCache}. Returns {@code 0}
+     * if the cache has no curve loaded for this pet's world group / type
+     * (e.g. before skilltrees have finished loading, or for a pet whose
+     * world group has no configured curve).
+     */
+    default int getLevel() {
+        return MyPetApi.getServiceManager().getService(ExperienceCache.class)
+                .map(cache -> cache.getLevel(getWorldGroup(), getPetType(), getExp()))
+                .orElse(0);
+    }
+
     double getHealth();
 
     void setHealth(double health);
@@ -40,6 +55,12 @@ public interface StoredMyPet {
 
     void setSaturation(double value);
 
+    /**
+     * Vanilla entity NBT for this pet, as parsed from Paper's
+     * {@code Bukkit.getUnsafe().serializeEntity} bytes.
+     * Empty for implementations that don't carry a snapshot
+     * (e.g. shop templates).
+     */
     CompoundBinaryTag getInfo();
 
     void setInfo(CompoundBinaryTag info);

@@ -55,7 +55,7 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
     private MyPetType petType = MyPetType.byName("Wolf");
     private Skilltree skilltree = null;
     private CompoundBinaryTag NBTSkills;
-    private CompoundBinaryTag NBTextendetInfo;
+    private CompoundBinaryTag infoCompound;
 
     public InactiveMyPet(MyPetPlayer petOwner) throws IllegalArgumentException {
         if (petOwner == null) {
@@ -99,14 +99,11 @@ public class InactiveMyPet implements StoredMyPet, NBTStorage {
     }
 
     public CompoundBinaryTag getInfo() {
-        if (NBTextendetInfo == null) {
-            NBTextendetInfo = CompoundBinaryTag.empty();
-        }
-        return NBTextendetInfo;
+        return infoCompound != null ? infoCompound : CompoundBinaryTag.empty();
     }
 
     public void setInfo(CompoundBinaryTag info) {
-        NBTextendetInfo = info;
+        this.infoCompound = (info != null && !info.keySet().isEmpty()) ? info : null;
     }
 
     public MyPetPlayer getOwner() {

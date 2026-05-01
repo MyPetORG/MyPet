@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.Scheduler;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -114,18 +115,6 @@ public interface MyPet extends StoredMyPet, Scheduler {
 
     void removeEntity();
 
-    /**
-     * Returns and clears any pending vanilla-NBT snapshot bytes loaded from
-     * storage. The byte array, if present, is the result of a prior
-     * {@code Bukkit.getUnsafe().serializeEntity} call. Pet-spawn paths use
-     * this to take a deserialized branch instead of spawning fresh.
-     *
-     * <p>Single-use semantics: later calls return {@code null}.
-     */
-    default byte[] consumePendingSnapshot() {
-        return null;
-    }
-
     default void updateNameTag() {
     }
 
@@ -172,6 +161,16 @@ public interface MyPet extends StoredMyPet, Scheduler {
                                ItemStack item,
                                EquipmentSlot hand) {
         return false;
+    }
+
+    /**
+     * Single-shot read of the snapshot captured at the pet's last despawn,
+     * used by the spawner to deserialize a vanilla mob with the pet's prior
+     * visual state. Default {@code null} — only the active impl overrides
+     * with real semantics (read-and-clear).
+     */
+    default CompoundBinaryTag consumePendingSnapshot() {
+        return null;
     }
 
     enum PetState {

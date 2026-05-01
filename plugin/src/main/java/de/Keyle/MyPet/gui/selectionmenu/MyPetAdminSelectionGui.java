@@ -30,7 +30,6 @@ import de.Keyle.MyPet.api.Util;
 import java.util.function.Consumer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
@@ -109,15 +108,10 @@ public class MyPetAdminSelectionGui {
                 } else {
                     icon.addLoreLine(Component.text().append(Translation.getComponent("Name.HP", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", mypet.getHealth())).color(NamedTextColor.GOLD)).build());
                 }
-                boolean levelFound = false;
-                if (mypet.getInfo().keySet().contains("storage")) {
-                    CompoundBinaryTag storage = mypet.getInfo().getCompound("storage");
-                    if (storage.keySet().contains("level")) {
-                        icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Level", admin)).append(Component.text(": ")).append(Component.text(storage.getInt("level")).color(NamedTextColor.GOLD)).build());
-                        levelFound = true;
-                    }
-                }
-                if (!levelFound) {
+                int level = mypet.getLevel();
+                if (level > 0) {
+                    icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Level", admin)).append(Component.text(": ")).append(Component.text(level).color(NamedTextColor.GOLD)).build());
+                } else {
                     icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Exp", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", mypet.getExp())).color(NamedTextColor.GOLD)).build());
                 }
                 icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Type", admin)).append(Component.text(": ")).append(Translation.getComponent("Name." + mypet.getPetType().name(), admin).color(NamedTextColor.GOLD)).build());
