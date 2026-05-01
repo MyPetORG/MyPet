@@ -1,7 +1,7 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.commands.HelpRegistry;
+import de.Keyle.MyPet.commands.help.HelpRegistry;
 import io.papermc.paper.command.brigadier.Commands;
 import org.jetbrains.annotations.NotNull;
 

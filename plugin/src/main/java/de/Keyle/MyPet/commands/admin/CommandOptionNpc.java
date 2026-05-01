@@ -22,7 +22,7 @@ package de.Keyle.MyPet.commands.admin;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.commands.HelpRegistry;
+import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.commands.admin.npc.CommandOptionShop;
 import de.Keyle.MyPet.commands.admin.npc.CommandOptionWallet;
 import io.papermc.paper.command.brigadier.CommandSourceStack;

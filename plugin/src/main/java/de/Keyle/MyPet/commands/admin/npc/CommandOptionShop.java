@@ -24,7 +24,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.commands.HelpRegistry;
+import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.util.service.types.ShopService;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.hooks.citizens.ShopTrait;

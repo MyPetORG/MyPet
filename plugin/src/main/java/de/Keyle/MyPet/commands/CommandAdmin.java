@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.api.commands.HelpRegistry;
+import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.commands.admin.*;
 import io.papermc.paper.command.brigadier.Commands;

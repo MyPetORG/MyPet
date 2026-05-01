@@ -20,9 +20,9 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.HelpEntry;
-import de.Keyle.MyPet.api.commands.HelpRegistry;
+import de.Keyle.MyPet.commands.help.CommandCategory;
+import de.Keyle.MyPet.commands.help.HelpEntry;
+import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.commands.settings.CommandSettingHealthbar;
 import de.Keyle.MyPet.commands.settings.CommandSettingsPetLivingSound;
 import io.papermc.paper.command.brigadier.Commands;

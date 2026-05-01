@@ -1,4 +1,4 @@
-package de.Keyle.MyPet.api.commands;
+package de.Keyle.MyPet.commands.help;
 
 import org.bukkit.entity.Player;
 

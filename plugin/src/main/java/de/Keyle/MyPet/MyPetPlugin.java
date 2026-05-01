@@ -30,7 +30,7 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.api.util.Timer;
-import de.Keyle.MyPet.api.commands.HelpRegistry;
+import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.locale.Translation;

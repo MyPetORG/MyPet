@@ -22,13 +22,11 @@ package de.Keyle.MyPet.commands.admin;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.commands.CommandCategory;
-import de.Keyle.MyPet.api.commands.HelpEntry;
-import de.Keyle.MyPet.api.commands.HelpRegistry;
+import de.Keyle.MyPet.commands.help.CommandCategory;
+import de.Keyle.MyPet.commands.help.HelpEntry;
+import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;

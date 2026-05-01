@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.commands;
+package de.Keyle.MyPet.commands.help;
 
 /**
  * Categories used to group commands in the {@code /mypet help} output.
