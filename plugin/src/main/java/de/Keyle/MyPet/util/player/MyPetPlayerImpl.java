@@ -40,6 +40,8 @@ import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.*;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
@@ -228,7 +230,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     public String getLanguage() {
         if (isOnline()) {
-            lastLanguage = MyPetApi.getPlatformHelper().getPlayerLanguage(getPlayer());
+            lastLanguage = Translation.getPlayerLanguage(getPlayer());
         }
         return lastLanguage;
     }
@@ -389,7 +391,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                 if (petLocOpt.isPresent()) {
                     Location petLoc = petLocOpt.get();
                     boolean tooFar = petLoc.getWorld() != p.getLocation().getWorld()
-                            || MyPetApi.getPlatformHelper().distance(petLoc, p.getLocation()) > 40;
+                            || petLoc.distance(p.getLocation()) > 40;
                     if (tooFar) {
                         Mob petMob = myPet.getBukkitEntity();
                         if (petMob != null) {
@@ -405,7 +407,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         Mob petMob = myPet.getBukkitEntity();
                         if (petMob != null) {
                             petMob.getScheduler().run(MyPetApi.getPlugin(), t -> {
-                                Component msg = MyPetApi.getPlatformHelper().buildPetHealthActionBar(myPet, myPet.getHealth(), myPet.getMaxHealth());
+                                Component msg = buildPetHealthActionBar(myPet, myPet.getHealth(), myPet.getMaxHealth());
                                 p.sendActionBar(msg);
                             }, null);
                         }
@@ -579,7 +581,41 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         } else if (obj instanceof MyPetPlayerImpl) {
             return this == obj;
         }
-        return MyPetApi.getPlatformHelper().comparePlayerWithEntity(this, obj);
+        return obj instanceof Player p && p.getUniqueId().equals(getUniqueId());
+    }
+
+    private static Component buildPetHealthActionBar(MyPet myPet, double health, double maxHealth) {
+        if (myPet == null) {
+            return Component.empty();
+        }
+        double deltaHealth = maxHealth - health;
+
+        NamedTextColor healthColor = NamedTextColor.RED;
+        if (health > maxHealth / 3 * 2) {
+            healthColor = NamedTextColor.GREEN;
+        } else if (health > maxHealth / 3) {
+            healthColor = NamedTextColor.YELLOW;
+        }
+        Component parsed = myPet.getDisplayName()
+                .append(MyPetApi.getPlugin().getMiniMessage().deserialize("<reset>: "));
+        if (health > 0) {
+            parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
+                    "<healthcolor><health><white>/<maxhealth> ",
+                    Placeholder.styling("healthcolor", healthColor),
+                    Placeholder.unparsed("health", String.format("%1.2f", health)),
+                    Placeholder.unparsed("maxhealth", String.format("%1.2f", maxHealth))));
+            if (!myPet.getOwner().isHealthBarActive()) {
+                parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
+                        "(<deltahealthcolor><deltahealth><reset>)",
+                        Placeholder.parsed("deltahealthcolor", deltaHealth < 0 ? "<green>+" : "<red>-"),
+                        Placeholder.unparsed("deltahealth", String.format("%1.2f", deltaHealth))));
+            }
+        } else {
+            parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
+                    "<dead>",
+                    Placeholder.unparsed("dead", Translation.getString("Name.Dead", myPet.getOwner()))));
+        }
+        return parsed;
     }
 
     @Override

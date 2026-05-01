@@ -59,12 +59,35 @@ public class Translation {
         instance = new Translation();
     }
 
+    /**
+     * Resolves a player's client locale, falling back to {@code "en_us"} when
+     * Bukkit returns an empty string.
+     */
+    public static String getPlayerLanguage(Player player) {
+        String locale = player.getLocale();
+        if (locale.isEmpty()) {
+            return "en_us";
+        }
+        return locale;
+    }
+
+    /**
+     * Resolves a command sender's locale: the player's client locale for
+     * {@link Player} senders, {@code "en"} for console.
+     */
+    public static String getCommandSenderLanguage(CommandSender sender) {
+        if (sender instanceof Player player) {
+            return getPlayerLanguage(player);
+        }
+        return "en";
+    }
+
     public static String getString(String key, Player player) {
         if (player == null) {
             return key;
         }
 
-        return getString(key, MyPetApi.getPlatformHelper().getPlayerLanguage(player));
+        return getString(key, getPlayerLanguage(player));
     }
 
     public static String getString(String key, CommandSender sender) {
@@ -112,7 +135,7 @@ public class Translation {
             return Component.text(key);
         }
 
-        return getComponent(key, MyPetApi.getPlatformHelper().getPlayerLanguage(player));
+        return getComponent(key, getPlayerLanguage(player));
     }
 
     /**

@@ -105,7 +105,7 @@ public class CommandList {
      *                   or {@code null} to list the sender's own pets
      */
     private void execute(Player sender, String targetName) {
-        final String lang = MyPetApi.getPlatformHelper().getPlayerLanguage(sender);
+        final String lang = Translation.getPlayerLanguage(sender);
 
         final Player petOwner;
         if (targetName == null) {

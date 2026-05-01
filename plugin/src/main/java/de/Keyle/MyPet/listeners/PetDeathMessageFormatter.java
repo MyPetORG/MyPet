@@ -7,6 +7,7 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import net.kyori.adventure.text.Component;
+import org.bukkit.GameRule;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -25,7 +26,7 @@ final class PetDeathMessageFormatter {
 
     static void sendDeathMessage(final EntityDeathEvent event) {
         if (!PetEntityMarker.isMarked(event.getEntity())) return;
-        if (!MyPetApi.getPlatformHelper().gameruleDoDeathMessages(event.getEntity())) return;
+        if (!Boolean.TRUE.equals(event.getEntity().getWorld().getGameRuleValue(GameRule.SHOW_DEATH_MESSAGES))) return;
 
         MyPet myPet = getMyPetManager().getMyPetFromEntity(event.getEntity());
         if (myPet == null) return;

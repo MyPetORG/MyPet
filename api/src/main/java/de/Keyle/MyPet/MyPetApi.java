@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet;
 
-import de.Keyle.MyPet.api.PlatformHelper;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
 import de.Keyle.MyPet.api.plugin.MyPetPlugin;
@@ -71,13 +70,6 @@ public class MyPetApi {
         } else {
             return Logger.getLogger("MyPet");
         }
-    }
-
-    /**
-     * @return instance of the Bukkit plattform helper
-     */
-    public static PlatformHelper getPlatformHelper() {
-        return plugin.getPlatformHelper();
     }
 
     /**

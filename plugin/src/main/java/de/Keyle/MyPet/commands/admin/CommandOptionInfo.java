@@ -120,7 +120,7 @@ public class CommandOptionInfo {
         if (sender instanceof Player player) {
             ItemStack itemStack = player.getInventory().getItemInMainHand();
             String itemString = itemStack.getType() != Material.AIR
-                    ? MyPetApi.getPlatformHelper().itemstackToString(itemStack)
+                    ? itemStack.getType().name()
                     : "air";
 
             Component copyButton = Component.text(" [Copy]").color(NamedTextColor.AQUA)
@@ -153,7 +153,7 @@ public class CommandOptionInfo {
         ItemStack configItemStack = configItem.getItem();
         String itemString = "air";
         if (configItemStack != null) {
-            itemString = MyPetApi.getPlatformHelper().itemstackToString(configItemStack);
+            itemString = configItemStack.getType().isAir() ? "AIR" : configItemStack.getType().name();
         }
 
         Component copyButton = Component.text(" [Copy]").color(NamedTextColor.AQUA)

@@ -127,7 +127,7 @@ public class StompImpl implements Stomp {
 
                     livingEntity.damage(this.damage.getValue().doubleValue(), petEntity);
 
-                    double distancePercent = MyPetApi.getPlatformHelper().distance(livingEntity.getLocation(), new Location(livingEntity.getWorld(), posX, posY, posZ)) / 2.5;
+                    double distancePercent = livingEntity.getLocation().distance(new Location(livingEntity.getWorld(), posX, posY, posZ)) / 2.5;
                     if (distancePercent <= 1.0D) {
                         double distanceX = livingEntity.getLocation().getX() - posX;
                         double distanceY = livingEntity.getLocation().getX() + livingEntity.getEyeHeight() - posY;

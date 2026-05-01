@@ -253,7 +253,7 @@ public final class LegacyPetReader {
         golem.setOxidizing(oxidizing);
         if (info.keySet().contains("Poppy")) {
             try {
-                ItemStack stack = MyPetApi.getPlatformHelper().compoundToItemStack(info.getCompound("Poppy"));
+                ItemStack stack = LegacyNbtItemDecoder.decode(info.getCompound("Poppy"));
                 if (stack != null) golem.getEquipment().setItem(EquipmentSlot.HAND, stack);
             } catch (Exception ignored) {}
         }
@@ -284,7 +284,7 @@ public final class LegacyPetReader {
             }
         } else if (info.keySet().contains("Block")) {
             try {
-                ItemStack stack = MyPetApi.getPlatformHelper().compoundToItemStack(info.getCompound("Block"));
+                ItemStack stack = LegacyNbtItemDecoder.decode(info.getCompound("Block"));
                 if (stack != null && stack.getType() != Material.AIR) {
                     enderman.setCarriedBlock(stack.getType().createBlockData());
                 }
@@ -688,7 +688,7 @@ public final class LegacyPetReader {
         try {
             CompoundBinaryTag itemTag = info.getCompound(key);
             if (itemTag.keySet().isEmpty()) return null;
-            return MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
+            return LegacyNbtItemDecoder.decode(itemTag);
         } catch (Throwable t) {
             MyPetApi.getLogger().warning("Could not load " + key + " item from pet data!");
             return null;

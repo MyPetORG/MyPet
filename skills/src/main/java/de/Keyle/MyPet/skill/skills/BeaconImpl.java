@@ -534,7 +534,7 @@ public class BeaconImpl implements Beacon {
 
             targetLoop:
             for (Player player : myPetLocation.getWorld().getPlayers()) {
-                if (MyPetApi.getPlatformHelper().distanceSquared(player.getLocation(), myPetLocation) > range) {
+                if (player.getLocation().distanceSquared(myPetLocation) > range) {
                     continue;
                 } else if (player.getGameMode().name().equals("SPECTATOR")) {
                     continue;

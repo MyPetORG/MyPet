@@ -296,14 +296,14 @@ public final class VanillaMobSpawner {
      * Pre-spawn position search
      */
     private Location findValidSpawnLocation(Location origin, Class<? extends Mob> mobClass) {
-        if (MyPetApi.getPlatformHelper().canSpawn(origin, mobClass)) {
+        if (origin != null && origin.getWorld() != null && origin.getBlock().isPassable()) {
             return origin;
         }
         Location loc = origin.clone().subtract(1, 0, 1);
         for (double x = 0; x <= 2; x += 0.5) {
             for (double z = 0; z <= 2; z += 0.5) {
                 if (x != 1 && z != 1) {
-                    if (MyPetApi.getPlatformHelper().canSpawn(loc, mobClass)) {
+                    if (loc.getWorld() != null && loc.getBlock().isPassable()) {
                         Block below = loc.getBlock().getRelative(BlockFace.DOWN);
                         if (below.getType().isSolid()) {
                             return loc;

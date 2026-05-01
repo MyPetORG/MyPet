@@ -504,7 +504,7 @@ public class EntityListener implements Listener {
         if (Configuration.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION) {
             Map<UUID, Double> damagePercentMap = MyPetExperience.getDamageToEntityPercent(deadEntity);
             for (UUID entityUUID : damagePercentMap.keySet()) {
-                Entity entity = MyPetApi.getPlatformHelper().getEntityByUUID(entityUUID);
+                Entity entity = Bukkit.getEntity(entityUUID);
                 if (PetEntityMarker.isMarked(entity)) {
                     MyPet myPet = getMyPetManager().getMyPetFromEntity(entity);
                     if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {

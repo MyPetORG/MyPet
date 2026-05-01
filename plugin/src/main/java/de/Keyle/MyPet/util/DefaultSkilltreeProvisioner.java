@@ -1,7 +1,6 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.PlatformHelper;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,19 +41,17 @@ public final class DefaultSkilltreeProvisioner {
      * @param createdFolder   {@code true} if the caller's most recent {@code skilltreeFolder.mkdirs()}
      *                        actually created the folder; {@code false} if it already existed
      * @param plugin          the plugin instance whose JAR contains the bundled resources
-     * @param platformHelper  helper used to extract resources from the plugin JAR
      */
     public static void copyDefaultsIfFolderCreated(@NotNull File skilltreeFolder,
                                                    boolean createdFolder,
-                                                   @NotNull Plugin plugin,
-                                                   @NotNull PlatformHelper platformHelper) {
+                                                   @NotNull Plugin plugin) {
         if (!createdFolder) {
             return;
         }
         for (String fileName : DEFAULT_SKILLTREES) {
             File target = new File(skilltreeFolder, fileName);
             if (!target.exists()) {
-                platformHelper.copyResource(plugin, "skilltrees/" + fileName, target);
+                ResourceUtil.copyResource(plugin, "skilltrees/" + fileName, target);
             }
         }
         MyPetApi.getLogger().info("Default skilltree files created.");

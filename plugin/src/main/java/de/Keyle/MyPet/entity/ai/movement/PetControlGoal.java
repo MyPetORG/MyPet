@@ -73,7 +73,7 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
         if (newLocation != null && !newLocation.equals(moveTo)) {
             return false;
         }
-        if (MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), moveTo) < 1) {
+        if (myPet.getLocation().get().distance(moveTo) < 1) {
             return false;
         }
         if (timeToMove <= 0) {
@@ -95,7 +95,7 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
             return;
         }
         nav.getParameters().addSpeedModifier("Control", speedModifier);
-        timeToMove = (int) MyPetApi.getPlatformHelper().distance(myPet.getLocation().get(), moveTo) / 3;
+        timeToMove = (int) myPet.getLocation().get().distance(moveTo) / 3;
         timeToMove = Math.max(timeToMove, 3);
         if (!isRunning) {
             Timer.addTask(this);

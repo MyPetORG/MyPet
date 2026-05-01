@@ -466,7 +466,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         if ((player.isInsideVehicle() && PetEntityMarker.isMarked(player.getVehicle())) ||
                 (player.isInsideVehicle() && player.getVehicle().isInsideVehicle() && PetEntityMarker.isMarked(player.getVehicle().getVehicle()))) {
-            if (player.getLocation().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(event.getFrom(), event.getTo()) > 10) {
+            if (player.getLocation().getWorld() != event.getTo().getWorld() || event.getFrom().distance(event.getTo()) > 10) {
                 if (Configuration.Skilltree.Skill.Ride.PREVENT_TELEPORTATION) {
                     event.setCancelled(true);
                     player.sendMessage(Translation.getComponent("Message.Skill.Ride.NoTeleport", player));
@@ -480,7 +480,7 @@ public class PlayerListener implements Listener {
             if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == MyPet.PetState.Here) {
-                    if (event.getFrom().getWorld() != event.getTo().getWorld() || MyPetApi.getPlatformHelper().distance(event.getFrom(), event.getTo()) > 10) {
+                    if (event.getFrom().getWorld() != event.getTo().getWorld() || event.getFrom().distance(event.getTo()) > 10) {
                         final boolean sameWorld = event.getFrom().getWorld() == event.getTo().getWorld();
                         myPet.removePet();
                         Bukkit.getConsoleSender().sendMessage("MyPet: Teleporting player " + player.getName() + " (" + event.getFrom().getWorld().getName() + " -> " + event.getTo().getWorld().getName() + "). Respawning pet...");
@@ -518,7 +518,9 @@ public class PlayerListener implements Listener {
         if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
             return;
         }
-        if (!MyPetApi.getPlatformHelper().compareBlockPositions(event.getFrom(), event.getTo())) {
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        if (from.getBlockX() != to.getBlockX() || from.getBlockY() != to.getBlockY() || from.getBlockZ() != to.getBlockZ()) {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
                 MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
                 if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {

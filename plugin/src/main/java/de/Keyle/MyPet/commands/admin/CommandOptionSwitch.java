@@ -161,7 +161,7 @@ public class CommandOptionSwitch {
      * @param player the target player whose stored pets will be listed
      */
     private void executeShowList(CommandSender sender, Player player) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
             return;
@@ -182,7 +182,7 @@ public class CommandOptionSwitch {
      * @param playerName the display name of the player, used in click commands
      */
     private void showPetList(CommandSender sender, MyPetPlayer owner, String playerName) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
         MyPetApi.getRepository().getPets(owner).thenAccept(value -> {
             Runnable listBody = () -> {
                 sender.sendMessage("Select the MyPet you want the player to switch to:");
@@ -231,7 +231,7 @@ public class CommandOptionSwitch {
      * @param petName the name of the pet to switch to (matched after stripping MiniMessage tags)
      */
     private void executeSwitch(CommandSender sender, Player player, String petName) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
             return;

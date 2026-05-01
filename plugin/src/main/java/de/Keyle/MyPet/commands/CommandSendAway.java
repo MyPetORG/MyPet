@@ -75,7 +75,7 @@ public class CommandSendAway {
                         .executes(ctx -> {
                             Player player = (Player) ctx.getSource().getSender();
                             execute(player, player.getName(),
-                                    MyPetApi.getPlatformHelper().getPlayerLanguage(player));
+                                    Translation.getPlayerLanguage(player));
                             return Command.SINGLE_SUCCESS;
                         })
                         .then(Commands.argument("player", StringArgumentType.word())
@@ -91,7 +91,7 @@ public class CommandSendAway {
                                     CommandSender sender = ctx.getSource().getSender();
                                     String targetName = StringArgumentType.getString(ctx, "player");
                                     String lang = sender instanceof Player p
-                                            ? MyPetApi.getPlatformHelper().getPlayerLanguage(p)
+                                            ? Translation.getPlayerLanguage(p)
                                             : "en_en";
                                     execute(sender, targetName, lang);
                                     return Command.SINGLE_SUCCESS;

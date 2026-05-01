@@ -115,7 +115,7 @@ public class CommandOptionName {
      * @param name     the new name for the pet, potentially containing MiniMessage tags
      */
     private void execute(CommandSender sender, Player petOwner, String name) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
 
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));

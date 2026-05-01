@@ -458,7 +458,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     @Override
     public void setLocation(Location loc) {
         if (status == PetState.Here && bukkitEntity != null
-                && MyPetApi.getPlatformHelper().canSpawn(loc, bukkitEntity.getClass().asSubclass(Mob.class))) {
+                && loc != null && loc.getWorld() != null && loc.getBlock().isPassable()) {
             bukkitEntity.teleportAsync(loc);
         }
     }

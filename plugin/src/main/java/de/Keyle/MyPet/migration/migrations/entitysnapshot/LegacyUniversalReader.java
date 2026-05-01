@@ -46,7 +46,7 @@ public final class LegacyUniversalReader {
             if (slotName.isEmpty()) continue;
             ItemStack item;
             try {
-                item = MyPetApi.getPlatformHelper().compoundToItemStack(itemTag);
+                item = LegacyNbtItemDecoder.decode(itemTag);
             } catch (Exception e) {
                 MyPetApi.getLogger().warning("LegacyUniversalReader: bad Equipment item tag");
                 continue;

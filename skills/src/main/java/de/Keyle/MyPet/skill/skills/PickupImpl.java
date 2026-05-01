@@ -152,7 +152,6 @@ public class PickupImpl implements Pickup {
                                 CustomInventory inv = myPet.getSkills().get(BackpackImpl.class).getInventory();
                                 int itemAmount = inv.addItem(itemStack);
                                 if (itemAmount == 0) {
-                                    MyPetApi.getPlatformHelper().doPickupAnimation(petEntity, itemEntity);
                                     petEntity.getWorld().playSound(petEntity.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.2F, 1.0F);
                                     itemStack.setAmount(0);
                                     itemEntity.remove();
@@ -163,7 +162,6 @@ public class PickupImpl implements Pickup {
                             }
                         } else if (expPickup.getValue() && entity instanceof ExperienceOrb expEntity) {
                             myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
-                            MyPetApi.getPlatformHelper().doPickupAnimation(petEntity, expEntity);
                             expEntity.setExperience(0);
                             expEntity.remove();
                         }

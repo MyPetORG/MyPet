@@ -559,7 +559,7 @@ public class CommandOptionCreate {
      * @param options    additional creation options (e.g. {@code "baby"}, {@code "variant:3"}, {@code "skilltree:Combat"})
      */
     private void executeCreate(CommandSender sender, boolean force, Player owner, EntityType entityType, String[] options) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
 
         try {
             MyPetType myPetType = MyPetType.byEntityTypeName(entityType.name());

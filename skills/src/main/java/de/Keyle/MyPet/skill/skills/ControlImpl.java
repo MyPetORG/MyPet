@@ -83,7 +83,7 @@ public class ControlImpl implements Control {
             return;
         }
         if (prevMoveTo != null) {
-            if (MyPetApi.getPlatformHelper().distanceSquared(loc, prevMoveTo) > 1) {
+            if (!loc.getWorld().equals(prevMoveTo.getWorld()) || loc.distanceSquared(prevMoveTo) > 1) {
                 moveTo = loc;
                 prevMoveTo = loc;
             }

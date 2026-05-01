@@ -134,7 +134,7 @@ public class CommandOptionSkilltree {
      * @param skilltreeName the name of the skilltree to assign
      */
     private void execute(CommandSender sender, Player petOwner, String skilltreeName) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
 
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));

@@ -118,7 +118,7 @@ public class CommandOptionRespawn {
      * @param petOwner the player whose pet's respawn time will be shown
      */
     private void executeShow(CommandSender sender, Player petOwner) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
@@ -138,7 +138,7 @@ public class CommandOptionRespawn {
      * @param time     the new respawn time in seconds (0 for instant respawn)
      */
     private void executeSet(CommandSender sender, Player petOwner, int time) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;

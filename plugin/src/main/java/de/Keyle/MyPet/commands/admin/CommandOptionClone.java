@@ -105,7 +105,7 @@ public class CommandOptionClone {
      * @param newOwner the player who will receive the cloned pet
      */
     private void execute(CommandSender sender, Player oldOwner, Player newOwner) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
 
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(oldOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, oldOwner.getName())));

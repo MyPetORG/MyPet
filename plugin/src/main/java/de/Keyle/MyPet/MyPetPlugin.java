@@ -38,6 +38,7 @@ import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
+import de.Keyle.MyPet.util.ResourceUtil;
 import de.Keyle.MyPet.commands.BuiltInCommands;
 import de.Keyle.MyPet.entity.info.MyPetInfoImpl;
 import de.Keyle.MyPet.entity.leashing.BuiltInLeashFlags;
@@ -131,10 +132,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     /** Pet-type metadata provider. Populated in {@link #onLoad()}. */
     @Getter
     private MyPetInfo myPetInfo;
-
-    /** Pure-Bukkit platform utility surface. Populated in {@link #onLoad()}. */
-    @Getter
-    private PlatformHelper platformHelper;
 
     /**
      * Minecraft version-compare utility used for feature gating (e.g. Creaking Heart support
@@ -272,7 +269,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         pluginHookManager = new PluginHookManager();
 
         myPetInfo = new MyPetInfoImpl();
-        platformHelper = new PlatformHelper();
         myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
         hookHelper = new de.Keyle.MyPet.util.HookHelper();
@@ -326,7 +322,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         BuiltInRequirements.register();
 
         if (!new File(getDataFolder(), "exp.js").exists()) {
-            platformHelper.copyResource(this, "exp.js", new File(getDataFolder(), "exp.js"));
+            ResourceUtil.copyResource(this, "exp.js", new File(getDataFolder(), "exp.js"));
         }
         serviceManager.getService(ExperienceCalculatorManager.class).ifPresent(calculatorManager -> {
             calculatorManager.registerCalculator("JS", JavaScriptExperienceCalculator.class);
@@ -351,7 +347,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         boolean createdLocaleFolder = new File(getDataFolder(), "locale").mkdirs();
         new File(getDataFolder(), "logs").mkdirs();
 
-        DefaultSkilltreeProvisioner.copyDefaultsIfFolderCreated(skilltreeFolder, createdSkilltreeFolder, this, platformHelper);
+        DefaultSkilltreeProvisioner.copyDefaultsIfFolderCreated(skilltreeFolder, createdSkilltreeFolder, this);
 
         MyPetApi.getSkilltreeManager().clearSkilltrees();
         SkillTreeLoaderJSON.loadSkilltrees(new File(getDataFolder(), "skilltrees"));
@@ -364,7 +360,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         }
 
         if (createdLocaleFolder) {
-            platformHelper.copyResource(this, "locale-readme.txt", new File(getDataFolder(), "locale" + File.separator + "readme.txt"));
+            ResourceUtil.copyResource(this, "locale-readme.txt", new File(getDataFolder(), "locale" + File.separator + "readme.txt"));
         }
         Translation.init();
 

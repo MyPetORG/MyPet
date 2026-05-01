@@ -136,7 +136,7 @@ public class CommandSkill {
             String skilltreeDisplay = myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName();
             sender.sendMessage(Translation.getFormattedComponent("Message.Command.Skills.Show", sender, myPet.getDisplayName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltreeDisplay)));
 
-            String locale = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+            String locale = Translation.getCommandSenderLanguage(sender);
             for (Skill skill : myPet.getSkills().all()) {
                 if (skill.isActive()) {
                     sender.sendMessage(Component.text()

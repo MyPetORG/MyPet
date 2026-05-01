@@ -168,7 +168,7 @@ public class CommandOptionExp {
      * @param operator the arithmetic operation to perform
      */
     private void executeExp(CommandSender sender, Player petOwner, double amount, Operator operator) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
 
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
@@ -199,7 +199,7 @@ public class CommandOptionExp {
      * @param operator the arithmetic operation to perform
      */
     private void executeLevels(CommandSender sender, Player petOwner, int levels, Operator operator) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
 
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));

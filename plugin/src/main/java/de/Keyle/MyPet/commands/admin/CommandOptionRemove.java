@@ -108,7 +108,7 @@ public class CommandOptionRemove {
      * @param player the target player whose active pet will be removed
      */
     private void execute(CommandSender sender, Player player) {
-        String lang = MyPetApi.getPlatformHelper().getCommandSenderLanguage(sender);
+        String lang = Translation.getCommandSenderLanguage(sender);
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
             return;
