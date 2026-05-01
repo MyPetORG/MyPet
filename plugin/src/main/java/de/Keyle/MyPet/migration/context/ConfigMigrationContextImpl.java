@@ -1,7 +1,7 @@
 package de.Keyle.MyPet.migration.context;
 
-import de.Keyle.MyPet.api.migration.ConfigMigrationContext;
-import de.Keyle.MyPet.api.migration.MigrationException;
+import de.Keyle.MyPet.migration.ConfigMigrationContext;
+import de.Keyle.MyPet.migration.MigrationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;

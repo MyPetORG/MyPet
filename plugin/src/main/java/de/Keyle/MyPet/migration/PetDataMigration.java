@@ -1,5 +1,5 @@
-package de.Keyle.MyPet.api.migration;
+package de.Keyle.MyPet.migration;
 
-public interface PlayerDataMigration {
+public interface PetDataMigration {
     void migrateSql(SqlMigrationContext context) throws MigrationException;
 }

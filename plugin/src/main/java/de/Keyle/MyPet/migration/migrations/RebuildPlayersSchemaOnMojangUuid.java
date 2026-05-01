@@ -1,9 +1,9 @@
 package de.Keyle.MyPet.migration.migrations;
 
-import de.Keyle.MyPet.api.migration.DatabaseMigration;
-import de.Keyle.MyPet.api.migration.Migration;
-import de.Keyle.MyPet.api.migration.MigrationException;
-import de.Keyle.MyPet.api.migration.SqlMigrationContext;
+import de.Keyle.MyPet.migration.DatabaseMigration;
+import de.Keyle.MyPet.migration.Migration;
+import de.Keyle.MyPet.migration.MigrationException;
+import de.Keyle.MyPet.migration.SqlMigrationContext;
 import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 
 import java.sql.Connection;

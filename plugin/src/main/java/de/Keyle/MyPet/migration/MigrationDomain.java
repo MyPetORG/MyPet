@@ -1,4 +1,4 @@
-package de.Keyle.MyPet.api.migration;
+package de.Keyle.MyPet.migration;
 
 public enum MigrationDomain {
     DATABASE(1),

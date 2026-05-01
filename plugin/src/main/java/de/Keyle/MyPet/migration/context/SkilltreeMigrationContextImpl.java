@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import de.Keyle.MyPet.api.migration.MigrationException;
-import de.Keyle.MyPet.api.migration.SkilltreeMigrationContext;
+import de.Keyle.MyPet.migration.MigrationException;
+import de.Keyle.MyPet.migration.SkilltreeMigrationContext;
 
 import java.io.File;
 import java.io.FileInputStream;

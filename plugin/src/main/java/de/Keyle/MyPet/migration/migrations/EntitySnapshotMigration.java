@@ -2,10 +2,10 @@ package de.Keyle.MyPet.migration.migrations;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.migration.Migration;
-import de.Keyle.MyPet.api.migration.MigrationException;
-import de.Keyle.MyPet.api.migration.PetDataMigration;
-import de.Keyle.MyPet.api.migration.SqlMigrationContext;
+import de.Keyle.MyPet.migration.Migration;
+import de.Keyle.MyPet.migration.MigrationException;
+import de.Keyle.MyPet.migration.PetDataMigration;
+import de.Keyle.MyPet.migration.SqlMigrationContext;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;

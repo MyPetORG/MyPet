@@ -1,4 +1,4 @@
-package de.Keyle.MyPet.api.migration;
+package de.Keyle.MyPet.migration;
 
 import com.google.gson.JsonObject;
 

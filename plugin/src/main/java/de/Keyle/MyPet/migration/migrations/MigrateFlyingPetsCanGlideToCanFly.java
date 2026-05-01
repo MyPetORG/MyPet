@@ -3,10 +3,10 @@ package de.Keyle.MyPet.migration.migrations;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.migration.ConfigMigration;
-import de.Keyle.MyPet.api.migration.ConfigMigrationContext;
-import de.Keyle.MyPet.api.migration.Migration;
-import de.Keyle.MyPet.api.migration.MigrationException;
+import de.Keyle.MyPet.migration.ConfigMigration;
+import de.Keyle.MyPet.migration.ConfigMigrationContext;
+import de.Keyle.MyPet.migration.Migration;
+import de.Keyle.MyPet.migration.MigrationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;

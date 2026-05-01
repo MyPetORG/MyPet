@@ -1,9 +1,9 @@
 package de.Keyle.MyPet.migration.migrations;
 
-import de.Keyle.MyPet.api.migration.Migration;
-import de.Keyle.MyPet.api.migration.MigrationException;
-import de.Keyle.MyPet.api.migration.PetDataMigration;
-import de.Keyle.MyPet.api.migration.SqlMigrationContext;
+import de.Keyle.MyPet.migration.Migration;
+import de.Keyle.MyPet.migration.MigrationException;
+import de.Keyle.MyPet.migration.PetDataMigration;
+import de.Keyle.MyPet.migration.SqlMigrationContext;
 import de.Keyle.MyPet.api.util.NbtUtil;
 import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 import net.kyori.adventure.nbt.BinaryTag;

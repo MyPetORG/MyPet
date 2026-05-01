@@ -1,7 +1,5 @@
 package de.Keyle.MyPet.migration;
 
-import de.Keyle.MyPet.api.migration.MigrationDomain;
-
 public class MigrationRecord {
     private final String migrationId;
     private final String version;

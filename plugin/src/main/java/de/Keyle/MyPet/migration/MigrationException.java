@@ -1,4 +1,4 @@
-package de.Keyle.MyPet.api.migration;
+package de.Keyle.MyPet.migration;
 
 public class MigrationException extends Exception {
     public MigrationException(String message) {

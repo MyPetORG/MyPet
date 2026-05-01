@@ -1,4 +1,4 @@
-package de.Keyle.MyPet.api.migration;
+package de.Keyle.MyPet.migration;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

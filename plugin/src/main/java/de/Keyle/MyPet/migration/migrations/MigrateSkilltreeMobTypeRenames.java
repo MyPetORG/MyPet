@@ -3,10 +3,10 @@ package de.Keyle.MyPet.migration.migrations;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.Keyle.MyPet.api.migration.Migration;
-import de.Keyle.MyPet.api.migration.MigrationException;
-import de.Keyle.MyPet.api.migration.SkilltreeMigration;
-import de.Keyle.MyPet.api.migration.SkilltreeMigrationContext;
+import de.Keyle.MyPet.migration.Migration;
+import de.Keyle.MyPet.migration.MigrationException;
+import de.Keyle.MyPet.migration.SkilltreeMigration;
+import de.Keyle.MyPet.migration.SkilltreeMigrationContext;
 
 import java.io.File;
 import java.util.LinkedHashMap;
