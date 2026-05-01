@@ -2,7 +2,7 @@ package de.Keyle.MyPet.migration;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
@@ -623,7 +623,7 @@ public class MigrationService implements ServiceContainer {
     }
 
     private void updateInfoVersion(String prefix) {
-        String version = MyPetVersion.getVersion();
+        String version = VersionUtil.getVersion();
         try (Connection connection = openSqlConnection()) {
             int updated;
             try (var ps = connection.prepareStatement(
@@ -649,7 +649,7 @@ public class MigrationService implements ServiceContainer {
     private boolean performBackups(MigrationBackupService backupService,
                                     List<MigrationGraph.MigrationEntry> ordered,
                                     String prefix) {
-        String version = MyPetVersion.getVersion();
+        String version = VersionUtil.getVersion();
         backupService.initBackupDir(version);
 
         EnumSet<MigrationDomain> pendingDomains = EnumSet.noneOf(MigrationDomain.class);

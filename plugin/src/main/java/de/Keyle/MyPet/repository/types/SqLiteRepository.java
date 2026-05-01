@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.repository.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 
 import java.io.File;
@@ -163,8 +163,8 @@ public class SqLiteRepository extends AbstractSqlRepository {
                     ")");
 
             try (PreparedStatement insert = connection.prepareStatement("INSERT INTO info (mypet_version, mypet_build) VALUES (?,?);")) {
-                insert.setString(1, MyPetVersion.getVersion());
-                insert.setString(2, MyPetVersion.getBuild());
+                insert.setString(1, VersionUtil.getVersion());
+                insert.setString(2, VersionUtil.getBuild());
                 insert.executeUpdate();
             }
         } catch (SQLException e) {

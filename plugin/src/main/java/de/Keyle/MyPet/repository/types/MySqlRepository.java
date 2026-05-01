@@ -23,7 +23,7 @@ package de.Keyle.MyPet.repository.types;
 import com.zaxxer.hikari.HikariDataSource;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.util.NbtUtil;
@@ -192,8 +192,8 @@ public class MySqlRepository extends AbstractSqlRepository {
                     ")");
 
             try (PreparedStatement insert = connection.prepareStatement("INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "info (mypet_version, mypet_build) VALUES (?,?);")) {
-                insert.setString(1, MyPetVersion.getVersion());
-                insert.setString(2, MyPetVersion.getBuild());
+                insert.setString(1, VersionUtil.getVersion());
+                insert.setString(2, VersionUtil.getBuild());
                 insert.executeUpdate();
             }
         } catch (SQLException e) {

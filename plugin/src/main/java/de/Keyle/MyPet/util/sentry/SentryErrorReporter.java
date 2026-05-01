@@ -22,7 +22,7 @@ package de.Keyle.MyPet.util.sentry;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
@@ -63,8 +63,8 @@ public class SentryErrorReporter implements ErrorReporter {
             options.setDebug(false);
 
             // Set release and environment
-            options.setRelease(MyPetVersion.getFormattedVersion());
-            options.setEnvironment(MyPetVersion.isDevBuild() ? "development" : "production");
+            options.setRelease(VersionUtil.getFormattedVersion());
+            options.setEnvironment(VersionUtil.isDevBuild() ? "development" : "production");
 
             // Set server name (appears as server_name in Sentry)
             options.setServerName(Bukkit.getServer().getVersion());
@@ -147,7 +147,7 @@ public class SentryErrorReporter implements ErrorReporter {
             scope.setUser(user);
 
             // Plugin build tag
-            String build = MyPetVersion.getBuild();
+            String build = VersionUtil.getBuild();
             if (build != null && !build.isEmpty()) {
                 scope.setTag("plugin_build", build);
             }

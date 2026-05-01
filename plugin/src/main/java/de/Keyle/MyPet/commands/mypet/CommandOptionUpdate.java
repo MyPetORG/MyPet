@@ -22,7 +22,7 @@ package de.Keyle.MyPet.commands.mypet;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.util.Updater;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -66,7 +66,7 @@ public class CommandOptionUpdate {
                     if (Updater.isUpdateAvailable()) {
                         sender.sendMessage(Component.text("A new version is available: ")
                                 .append(Component.text(Updater.getLatest().toString()).color(NamedTextColor.GOLD)));
-                    } else if (MyPetVersion.isLocalBuild()) {
+                    } else if (VersionUtil.isLocalBuild()) {
                         sender.sendMessage(Component.text("You are running a ")
                                 .append(Component.text("local build").color(NamedTextColor.YELLOW))
                                 .append(Component.text(". Update checks are skipped.")));

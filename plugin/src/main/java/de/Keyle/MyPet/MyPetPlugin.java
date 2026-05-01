@@ -38,7 +38,7 @@ import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
-import de.Keyle.MyPet.util.ResourceUtil;
+import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.commands.BuiltInCommands;
 import de.Keyle.MyPet.entity.info.MyPetInfoImpl;
 import de.Keyle.MyPet.entity.leashing.BuiltInLeashFlags;
@@ -51,11 +51,6 @@ import de.Keyle.MyPet.services.BuiltInServices;
 import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
 import de.Keyle.MyPet.skill.skills.BuiltInSkills;
 import de.Keyle.MyPet.skill.skilltree.requirements.BuiltInRequirements;
-import de.Keyle.MyPet.util.ConfigurationLoader;
-import de.Keyle.MyPet.util.DefaultSkilltreeProvisioner;
-import de.Keyle.MyPet.util.MyPetMetrics;
-import de.Keyle.MyPet.util.SplashScreen;
-import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.hooks.BuiltInHooks;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import de.Keyle.MyPet.util.shop.ShopConfigGenerator;
@@ -245,7 +240,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         MyPetApi.setPlugin(this);
         getDataFolder().mkdirs();
 
-        MyPetVersion.reset();
+        VersionUtil.reset();
 
         if (getConfig().contains("MyPet.Log.Unique-ID")) {
             try {

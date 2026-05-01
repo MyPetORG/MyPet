@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -929,8 +929,8 @@ public abstract class AbstractSqlRepository implements Repository {
         try (ConnectionHolder h = acquireConnection();
              PreparedStatement stmt = h.connection().prepareStatement(
                      "UPDATE " + qualifyTable("info") + " SET mypet_version=?, mypet_build=?;")) {
-            stmt.setString(1, MyPetVersion.getVersion());
-            stmt.setString(2, MyPetVersion.getBuild());
+            stmt.setString(1, VersionUtil.getVersion());
+            stmt.setString(2, VersionUtil.getBuild());
             stmt.executeUpdate();
         } catch (SQLException e) {
             reportError(e);

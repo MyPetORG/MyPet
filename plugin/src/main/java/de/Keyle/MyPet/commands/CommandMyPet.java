@@ -22,7 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.MyPetVersion;
+import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
@@ -144,7 +144,7 @@ public class CommandMyPet {
     private void showSplash(CommandSender sender) {
         String line = dashes(SEPARATOR_WIDTH);
         sender.sendMessage(line);
-        sender.sendMessage(Component.text("MyPet").color(NamedTextColor.GOLD).append(Component.text(" " + MyPetVersion.getFormattedVersion()).color(NamedTextColor.WHITE)));
+        sender.sendMessage(Component.text("MyPet").color(NamedTextColor.GOLD).append(Component.text(" " + VersionUtil.getFormattedVersion()).color(NamedTextColor.WHITE)));
         sender.sendMessage(Component.text("https://github.com/MyPetORG/MyPet").color(NamedTextColor.GRAY));
         sender.sendMessage("");
         sender.sendMessage(Component.text("Use ").append(Component.text("/mypet help").color(NamedTextColor.GOLD)).append(Component.text(" to see available commands.")));

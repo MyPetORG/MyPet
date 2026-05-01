@@ -1,6 +1,5 @@
 package de.Keyle.MyPet.util;
 
-import de.Keyle.MyPet.api.MyPetVersion;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +28,7 @@ public final class SplashScreen {
      *                     {@code "MySQL"}); displayed verbatim in the "Connecting to ..." line
      */
     public static void print(@Nullable String updateStatus, @NotNull String dbType) {
-        String version = MyPetVersion.getFormattedVersion();
+        String version = VersionUtil.getFormattedVersion();
 
         String splash = String.join("\n",
                 "",

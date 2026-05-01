@@ -27,7 +27,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -98,7 +97,7 @@ public class Updater {
             return null;
         }
 
-        if (MyPetVersion.isLocalBuild()) {
+        if (VersionUtil.isLocalBuild()) {
             return "Skipping update check for local build.";
         }
 
@@ -110,7 +109,7 @@ public class Updater {
                 download();
             }
 
-            String msg = "A new " + (MyPetVersion.isDevBuild() ? "build" : "version") + " is available: " + latest;
+            String msg = "A new " + (VersionUtil.isDevBuild() ? "build" : "version") + " is available: " + latest;
             return msg;
         }
         return "No update available.";
@@ -119,7 +118,7 @@ public class Updater {
     protected Optional<Update> check() {
         try {
 
-            String currentPluginVersion = MyPetVersion.getVersion();
+            String currentPluginVersion = VersionUtil.getVersion();
 
             // Use Modrinth API to check for updates
             String url = "https://api.modrinth.com/v2/project/mypet/version?loaders=%5B%22paper%22,%22spigot%22%5D";
@@ -129,7 +128,7 @@ public class Updater {
             Optional<Update> update = Optional.empty();
 
             String currentMcVersion = Bukkit.getVersion();
-            boolean isDevBuild = MyPetVersion.isDevBuild();
+            boolean isDevBuild = VersionUtil.isDevBuild();
 
             for (int i = 0; i < resultArr.size(); i++) {
                 JsonObject version = (JsonObject) resultArr.get(i);

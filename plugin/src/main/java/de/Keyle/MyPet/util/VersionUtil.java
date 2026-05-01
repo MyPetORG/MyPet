@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api;
+package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -26,14 +26,10 @@ import de.Keyle.MyPet.api.util.ErrorUtil;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
-public class MyPetVersion {
+public class VersionUtil {
     private static boolean updated = false;
 
     private static String version = "0.0.0";
@@ -46,7 +42,7 @@ public class MyPetVersion {
             version = MyPetApi.getPlugin().getDescription().getVersion();
 
             // Get other metadata from JAR manifest
-            String path = MyPetVersion.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            String path = VersionUtil.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
             Attributes attr = getManifestAttributes(path);
 
             String val;

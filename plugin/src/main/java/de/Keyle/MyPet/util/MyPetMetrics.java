@@ -2,7 +2,6 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
@@ -21,7 +20,7 @@ import java.util.Map;
  *
  * <p>The bStats client honors the server's {@code plugins/bStats/config.yml} opt-out, so this
  * class submits charts only when {@link Metrics#isEnabled()} returns {@code true} and the
- * running plugin is not a local dev build (see {@link MyPetVersion#isLocalBuild()}). Any
+ * running plugin is not a local dev build (see {@link VersionUtil#isLocalBuild()}). Any
  * failure during setup is captured and forwarded to Sentry rather than propagated, so
  * telemetry hiccups cannot prevent the plugin from finishing enabling.</p>
  *
@@ -53,11 +52,11 @@ public final class MyPetMetrics {
                                 @NotNull SentryErrorReporter errorReporter) {
         try {
             Metrics metrics = new Metrics(plugin, BSTATS_PLUGIN_ID);
-            if (!metrics.isEnabled() || MyPetVersion.isLocalBuild()) {
+            if (!metrics.isEnabled() || VersionUtil.isLocalBuild()) {
                 return;
             }
             metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", myPetManager::countActiveMyPets));
-            metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
+            metrics.addCustomChart(new Metrics.SimplePie("build", VersionUtil::getBuild));
             metrics.addCustomChart(new Metrics.SimplePie("update_mode", MyPetMetrics::updateMode));
             metrics.addCustomChart(new Metrics.AdvancedPie("hooks", MyPetMetrics::activatedHooks));
             metrics.addCustomChart(new Metrics.AdvancedPie("pet_types", () -> petTypes(myPetManager)));
