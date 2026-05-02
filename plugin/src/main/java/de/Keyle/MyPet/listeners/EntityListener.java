@@ -43,7 +43,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.entity.PersistedMyPet;
+import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;

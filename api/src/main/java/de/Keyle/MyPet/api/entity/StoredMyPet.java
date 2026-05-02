@@ -31,24 +31,19 @@ import net.kyori.adventure.text.Component;
 import java.util.UUID;
 
 /**
- * Read-only view of a pet at rest. Two implementations exist:
+ * Read-only view of a pet at rest. Sealed: the only permitted implementations are
  *
  * <ul>
- *   <li>{@code PersistedMyPet} — the immutable record that the repository
+ *   <li>{@link PersistedMyPet} — the immutable record that the repository
  *       loads from disk and that {@code MyPetManager} round-trips between
  *       active and inactive states. "Mutations" return new instances via
  *       {@code withX} or {@code Builder}.
- *   <li>{@code ShopMyPet} — a mutable shop-template class used only by the
- *       in-game pet shop GUI. Many of its accessors are computed on demand
- *       (e.g. {@link #getHealth} returns the type's start HP) rather than
- *       stored, which is why it remains a class rather than a record.
+ *   <li>{@link MyPet} — the active runtime pet. Extends this interface
+ *       {@code non-sealed} so that plugin-side concretes can extend it without
+ *       being named in the seal.
  * </ul>
- *
- * <p>Sealing this interface would be a natural fit but is not done because
- * {@code ShopMyPet} cannot move into the {@code api} module without dragging
- * shop-only dependencies with it.
  */
-public interface StoredMyPet {
+public sealed interface StoredMyPet permits PersistedMyPet, MyPet {
     UUID getUUID();
 
     MyPetPlayer getOwner();

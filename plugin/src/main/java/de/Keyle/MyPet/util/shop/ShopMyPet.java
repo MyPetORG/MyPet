@@ -22,7 +22,7 @@ package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -36,30 +36,28 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
- * Shop-template implementation of {@link StoredMyPet}. Mutable (in contrast to
- * the immutable {@code PersistedMyPet} record) because shop entries carry
- * mutable presentation state ({@link IconMenuItem}, price, position) and
- * because several read-side accessors return computed values
- * (e.g. {@link #getHealth} returns the type's start HP, {@link #getLastUsed}
- * returns the current time) rather than stored fields. Records cannot model
- * either of those cleanly, so this class stays a class.
+ * Mutable shop-template for the pet shop UI. Carries presentation state
+ * ({@link IconMenuItem}, price, position) plus the seed data needed to mint a
+ * {@link PersistedMyPet} when a player checks out.
  *
- * <p>{@link #setOwner} is the only mutator: it's invoked during shop checkout
- * so the cloned {@link StoredMyPet} produced by
- * {@code MyPetManager#getInactiveMyPetFromMyPet(this)} picks up the buyer.
+ * <p>Previously implemented {@code StoredMyPet} so that
+ * {@code MyPetManager.getInactiveMyPetFromMyPet(this)} would reflectively copy
+ * its fields into a {@code PersistedMyPet}. That polymorphism was a hack — the
+ * shop-template's "fields" are partly computed (e.g. health = type's start HP)
+ * and partly mutable (icon, price), neither of which fits the immutable
+ * {@code StoredMyPet} contract. The {@link #toPersisted(MyPetPlayer)} factory
+ * replaces that round-trip with a direct construction of the record, which let
+ * {@code StoredMyPet} become a sealed interface (audit finding #3).</p>
  */
-public class ShopMyPet implements StoredMyPet {
+public class ShopMyPet {
 
     protected double price = 0;
     protected IconMenuItem icon;
     protected String name;
     protected int position = -1;
 
-    protected UUID uuid = null;
-    protected MyPetPlayer petOwner = null;
     protected String petName = "";
     protected String worldGroup = "";
     protected double exp = 0;
@@ -101,102 +99,38 @@ public class ShopMyPet implements StoredMyPet {
         this.price = price;
     }
 
-    @Override
-    public double getExp() {
-        return exp;
-    }
-
-    @Override
-    public double getHealth() {
-        return MyPetApi.getMyPetInfo().getStartHP(getPetType());
-    }
-
-    @Override
-    public double getSaturation() {
-        return 100;
-    }
-
-    @Override
-    public CompoundBinaryTag getInfo() {
-        // Shop pets carry no entity snapshot — shop visual config is currently
-        // dropped on activation regardless (the legacy curated NBT in
-        // NBTextendetInfo isn't a snapshot). Returning an empty compound makes
-        // that explicit; activated pets spawn with their type's default visuals.
-        return CompoundBinaryTag.empty();
-    }
-
-    @Override
-    public MyPetPlayer getOwner() {
-        return petOwner;
-    }
-
-    /**
-     * Set during the shop purchase flow ({@code PetShop}) so that the cloned
-     * {@code PersistedMyPet} produced by
-     * {@code MyPetManager#getInactiveMyPetFromMyPet(this)} picks up the buyer
-     * as its owner.
-     */
-    public void setOwner(MyPetPlayer owner) {
-        petOwner = owner;
-    }
-
-    @Override
-    public String getPetName() {
-        if (petName != null) {
-            return petName;
-        }
-        if (petOwner != null) {
-            return Locale.getString("Name." + petType.name(), petOwner);
-        }
-        return "MyPet";
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return Util.SANITIZED_MINIMESSAGE.deserialize(getPetName());
-    }
-
-    @Override
     public MyPetType getPetType() {
         return petType;
     }
 
-    @Override
-    public boolean wantsToRespawn() {
-        return true;
-    }
-
-    @Override
-    public int getRespawnTime() {
-        return 0;
-    }
-
-    @Override
-    public Skilltree getSkilltree() {
-        return skilltree;
-    }
-
-    @Override
-    public CompoundBinaryTag getSkillInfo() {
-        return CompoundBinaryTag.empty();
-    }
-
-    @Override
-    public UUID getUUID() {
-        if (uuid == null) {
-            uuid = UUID.randomUUID();
+    private String resolvePetName(MyPetPlayer buyer) {
+        if (petName != null && !petName.isEmpty()) {
+            return petName;
         }
-        return uuid;
+        return Locale.getString("Name." + petType.name(), buyer);
     }
 
-    @Override
-    public String getWorldGroup() {
-        return worldGroup;
+    public Component getDisplayName() {
+        if (petName != null && !petName.isEmpty()) {
+            return Util.SANITIZED_MINIMESSAGE.deserialize(petName);
+        }
+        return Component.text("MyPet");
     }
 
-    @Override
-    public long getLastUsed() {
-        return System.currentTimeMillis();
+    /**
+     * Mints a {@link PersistedMyPet} for the given buyer using this template's
+     * seed data. Health is left to the record's compact constructor (which
+     * seeds it from the pet type's start HP via the builder).
+     */
+    public PersistedMyPet toPersisted(MyPetPlayer buyer) {
+        return PersistedMyPet.builder(buyer)
+                .petType(petType)
+                .petName(resolvePetName(buyer))
+                .worldGroup(worldGroup)
+                .exp(exp)
+                .skilltree(skilltree)
+                .info(NBTextendetInfo)
+                .build();
     }
 
     public void load(ConfigurationSection config) {

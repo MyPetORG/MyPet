@@ -1,17 +1,15 @@
-package de.Keyle.MyPet.entity;
+package de.Keyle.MyPet.api.entity;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.NBTStorage;
-import de.Keyle.MyPet.util.StackTraces;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Immutable, value-typed pet record — the canonical "pet at rest"
@@ -54,7 +52,7 @@ public record PersistedMyPet(
         if (petName == null) petName = "";
         if (worldGroup == null) worldGroup = "";
         if (Double.isNaN(saturation) || Double.isInfinite(saturation)) {
-            MyPetApi.getLogger().warning("Saturation was set to an invalid number!\n" + StackTraces.currentThread());
+            MyPetApi.getLogger().log(Level.WARNING, "Saturation was set to an invalid number!", new Throwable());
             saturation = 100;
         } else {
             saturation = Math.max(1, Math.min(100, saturation));
@@ -109,7 +107,7 @@ public record PersistedMyPet(
      */
     public PersistedMyPet withSaturation(double v) {
         if (Double.isNaN(v) || Double.isInfinite(v)) {
-            MyPetApi.getLogger().warning("Saturation was set to an invalid number!\n" + StackTraces.currentThread());
+            MyPetApi.getLogger().log(Level.WARNING, "Saturation was set to an invalid number!", new Throwable());
             return this;
         }
         return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, health, v, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);

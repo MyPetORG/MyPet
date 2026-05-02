@@ -41,7 +41,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.entity.PersistedMyPet;
+import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.commands.arguments.RegistryArgumentType;
 import io.papermc.paper.command.brigadier.CommandSourceStack;

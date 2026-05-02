@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetCreateEvent;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
@@ -36,7 +37,6 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.util.WalletType;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import lombok.Getter;
 import lombok.Setter;
@@ -141,9 +141,7 @@ public class PetShop {
                                         petOwner = owner;
                                     }
 
-                                    pet.setOwner(petOwner);
-                                    // Cast safe per the contract on MyPetManager#getInactiveMyPetFromMyPet.
-                                    final PersistedMyPet clonedPet = ((PersistedMyPet) MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(pet))
+                                    final PersistedMyPet clonedPet = pet.toPersisted(petOwner)
                                             .withWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName())
                                             .withUuid(UUID.randomUUID());
 

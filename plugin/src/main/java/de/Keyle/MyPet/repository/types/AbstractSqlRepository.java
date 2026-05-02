@@ -13,7 +13,7 @@ import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.util.NbtUtil;
-import de.Keyle.MyPet.entity.PersistedMyPet;
+import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Player;

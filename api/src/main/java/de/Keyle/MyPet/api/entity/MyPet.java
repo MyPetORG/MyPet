@@ -47,7 +47,7 @@ import java.util.Optional;
  * {@code PersistedMyPet} use {@code withX} / {@code Builder} instead — only
  * the active pet (this interface) is genuinely mutable.
  */
-public interface MyPet extends StoredMyPet, Scheduler {
+public non-sealed interface MyPet extends StoredMyPet, Scheduler {
 
     // ─── Mutators (previously inherited from StoredMyPet) ───
     void setUUID(UUID uuid);
