@@ -23,7 +23,6 @@ package de.Keyle.MyPet.util.sentry;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.util.VersionUtil;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import io.sentry.Breadcrumb;
@@ -219,7 +218,7 @@ public class SentryErrorReporter implements ErrorReporter {
         // Check the main exception and all causes
         Throwable current = t;
         while (current != null) {
-            if (Util.findStringInThrowable(current, "MyPet")) {
+            if (findStringInThrowable(current, "MyPet")) {
                 return true;
             }
             // For NPEs, require MyPet in top 3 stack frames
@@ -369,6 +368,15 @@ public class SentryErrorReporter implements ErrorReporter {
         Sentry.configureScope(scope -> scope.clearBreadcrumbs());
     }
 
+    private static boolean findStringInThrowable(Throwable throwable, String string) {
+        for (StackTraceElement el : throwable.getStackTrace()) {
+            if (el.getClassName().contains(string)) {
+                return true;
+            }
+        }
+        return throwable.getCause() != null && findStringInThrowable(throwable.getCause(), string);
+    }
+
     protected class MyPetExceptionAppender extends AbstractAppender {
 
         protected MyPetExceptionAppender() {
@@ -391,7 +399,7 @@ public class SentryErrorReporter implements ErrorReporter {
             // The beforeSend hook will do the detailed filtering
             if (event.getThrown() != null) {
                 Throwable thrown = event.getThrown();
-                if (Util.findStringInThrowable(thrown, "MyPet")) {
+                if (findStringInThrowable(thrown, "MyPet")) {
                     return Result.ACCEPT;
                 }
             }

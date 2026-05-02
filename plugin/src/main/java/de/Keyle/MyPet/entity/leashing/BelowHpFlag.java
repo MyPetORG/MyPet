@@ -47,7 +47,7 @@ public class BelowHpFlag implements LeashFlag {
                     return (entity.getHealth() - damage) * 100 / entity.getMaxHealth() <= percent;
                 }
             } else {
-                if (Util.isDouble(valueString)) {
+                if (isDouble(valueString)) {
                     double below = Double.parseDouble(valueString);
                     return entity.getHealth() - damage <= below;
                 }
@@ -74,7 +74,7 @@ public class BelowHpFlag implements LeashFlag {
                     break;
                 }
             } else {
-                if (Util.isDouble(valueString)) {
+                if (isDouble(valueString)) {
                     health = Double.parseDouble(valueString);
                     break;
                 }
@@ -82,5 +82,14 @@ public class BelowHpFlag implements LeashFlag {
 
         }
         return Translation.getFormattedComponent("Message.Command.CaptureHelper.Requirement.BelowHP", player, String.format("%1.2f", health));
+    }
+
+    private static boolean isDouble(String number) {
+        try {
+            Double.parseDouble(number);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

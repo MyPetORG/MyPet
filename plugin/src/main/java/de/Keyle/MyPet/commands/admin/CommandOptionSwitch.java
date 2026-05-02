@@ -36,6 +36,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.MessageUtil;
+import de.Keyle.MyPet.util.PetInfoBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
@@ -197,7 +198,7 @@ public class CommandOptionSwitch {
                         messageBuilder.append(
                                 mypet.getDisplayName()
                                         .clickEvent(ClickEvent.runCommand("/petadmin switch " + playerName + " " + strippedName))
-                                        .hoverEvent(Util.myPetToItemHover(mypet, lang))
+                                        .hoverEvent(PetInfoBuilder.myPetToItemHover(mypet, lang))
                         );
                         first = false;
                     }

@@ -23,7 +23,6 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
@@ -31,6 +30,7 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.util.PetInfoBuilder;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -44,7 +44,7 @@ import java.util.List;
  *
  * <p>Lists all stored pets belonging to the sender, or to another player when an admin
  * provides a target name. Each pet's display name is shown as a comma-separated list
- * with hover tooltips containing pet details (via {@link de.Keyle.MyPet.api.Util#myPetToItemHover}).</p>
+ * with hover tooltips containing pet details (via {@link PetInfoBuilder#myPetToItemHover}).</p>
  *
  * <p>This command is restricted to in-game players only (no console support).</p>
  *
@@ -146,7 +146,7 @@ public class CommandList {
                         }
                         messageBuilder.append(
                                 mypet.getDisplayName()
-                                        .hoverEvent(Util.myPetToItemHover(mypet, lang))
+                                        .hoverEvent(PetInfoBuilder.myPetToItemHover(mypet, lang))
                         );
                         if (!doComma) {
                             doComma = true;

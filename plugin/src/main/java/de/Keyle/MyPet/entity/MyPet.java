@@ -52,6 +52,7 @@ import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.DamageImpl;
 import de.Keyle.MyPet.skill.skills.LifeImpl;
 import de.Keyle.MyPet.skill.skills.RangedImpl;
+import de.Keyle.MyPet.util.StackTraces;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.hooks.WorldGuardHook;
 import lombok.Getter;
@@ -601,7 +602,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             saturation = Math.max(1, Math.min(100, value));
             hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
         } else {
-            MyPetApi.getLogger().warning("Saturation was set to an invalid number!\n" + Util.stackTraceToString());
+            MyPetApi.getLogger().warning("Saturation was set to an invalid number!\n" + StackTraces.currentThread());
         }
     }
 
@@ -609,7 +610,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         if (!Double.isNaN(value) && !Double.isInfinite(value)) {
             saturation = Math.max(1, Math.min(100, saturation - value));
         } else {
-            MyPetApi.getLogger().warning("Saturation was decreased by an invalid number!\n" + Util.stackTraceToString());
+            MyPetApi.getLogger().warning("Saturation was decreased by an invalid number!\n" + StackTraces.currentThread());
         }
     }
 

@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -32,6 +33,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -239,12 +241,12 @@ public class PetInfoBuilder {
                 Component itemComponent;
                 if (meta != null && meta.hasDisplayName()) {
                     itemComponent = Component.text(meta.getDisplayName())
-                            .hoverEvent(Util.myPetToItemHover(myPet, player.getName()));
+                            .hoverEvent(myPetToItemHover(myPet, player.getName()));
                 } else {
                     try {
                         itemComponent = Component.translatable(is.translationKey())
                                 .color(NamedTextColor.GOLD)
-                                .hoverEvent(Util.myPetToItemHover(myPet, player.getName()));
+                                .hoverEvent(myPetToItemHover(myPet, player.getName()));
                     } catch (Exception e) {
                         MyPetApi.getLogger().warning("A food item caused an error. If you think this is a bug please report it to the MyPet developer.");
                         MyPetApi.getLogger().warning("" + is);
@@ -492,5 +494,68 @@ public class PetInfoBuilder {
         }
 
         return hasContent ? builder.build() : Component.empty();
+    }
+
+    /**
+     * Builds a hover event displaying a stored pet's stats: hunger, HP/respawn time,
+     * experience, level, pet type, skill tree, and dead status (if applicable).
+     */
+    public static HoverEvent<Component> myPetToItemHover(StoredMyPet mypet, String lang) {
+        TextComponent.Builder builder = Component.text();
+
+        builder.append(Translation.getComponent("Name.Hunger", lang))
+                .append(Component.text(": "))
+                .append(Component.text(Math.round(mypet.getSaturation())).color(NamedTextColor.GOLD))
+                .append(Component.newline());
+
+        if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+            if (mypet.getRespawnTime() > 0) {
+                builder.append(Translation.getComponent("Name.Respawntime", lang))
+                        .append(Component.text(": "))
+                        .append(Component.text(mypet.getRespawnTime() + "sec").color(NamedTextColor.GOLD))
+                        .append(Component.newline());
+            } else {
+                builder.append(Translation.getComponent("Name.HP", lang))
+                        .append(Component.text(": "))
+                        .append(Component.text(String.format("%1.2f", mypet.getHealth())).color(NamedTextColor.GOLD))
+                        .append(Component.newline());
+            }
+        } else if (mypet.getRespawnTime() <= 0) {
+            builder.append(Translation.getComponent("Name.HP", lang))
+                    .append(Component.text(": "))
+                    .append(Component.text(String.format("%1.2f", mypet.getHealth())).color(NamedTextColor.GOLD))
+                    .append(Component.newline());
+        }
+
+        builder.append(Translation.getComponent("Name.Exp", lang))
+                .append(Component.text(": "))
+                .append(Component.text(String.format("%1.2f", mypet.getExp())).color(NamedTextColor.GOLD))
+                .append(Component.newline());
+
+        int level = mypet.getLevel();
+        if (level > 0) {
+            builder.append(Translation.getComponent("Name.Level", lang))
+                    .append(Component.text(": "))
+                    .append(Component.text(level).color(NamedTextColor.GOLD))
+                    .append(Component.newline());
+        }
+
+        String entityKey = "entity.minecraft." + mypet.getPetType().getBukkitName().toLowerCase();
+        builder.append(Translation.getComponent("Name.Type", lang))
+                .append(Component.text(": "))
+                .append(Component.translatable(entityKey).color(NamedTextColor.GOLD))
+                .append(Component.newline());
+
+        builder.append(Translation.getComponent("Name.Skilltree", lang))
+                .append(Component.text(": "))
+                .append(Util.SANITIZED_MINIMESSAGE.deserialize(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-")
+                        .color(NamedTextColor.GOLD));
+
+        if (Configuration.Respawn.DISABLE_AUTO_RESPAWN && mypet.getRespawnTime() > 0) {
+            builder.append(Component.newline())
+                    .append(Translation.getComponent("Name.Dead", lang).color(NamedTextColor.RED));
+        }
+
+        return HoverEvent.showText(builder.build());
     }
 }

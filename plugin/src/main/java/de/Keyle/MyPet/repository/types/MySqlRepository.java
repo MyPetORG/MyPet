@@ -24,7 +24,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.util.VersionUtil;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.util.NbtUtil;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
@@ -32,6 +31,8 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.UUID;
@@ -95,7 +96,15 @@ public class MySqlRepository extends AbstractSqlRepository {
 
     @Override
     protected String readPetName(ResultSet rs, String col) throws SQLException {
-        return Util.toString(rs.getBinaryStream(col), StandardCharsets.UTF_8);
+        return readStreamAsString(rs.getBinaryStream(col), StandardCharsets.UTF_8);
+    }
+
+    private static String readStreamAsString(InputStream is, Charset charset) {
+        try {
+            return new String(is.readAllBytes(), charset);
+        } catch (Exception ignored) {
+        }
+        return "";
     }
 
     @Override

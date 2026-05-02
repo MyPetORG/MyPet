@@ -757,14 +757,14 @@ public class CommandOptionCreate {
                 }
             } else if (arg.startsWith("color:")) {
                 String colorString = arg.replace("color:", "");
-                if (Util.isByte(colorString)) {
+                if (isByte(colorString)) {
                     byte color = Byte.parseByte(colorString);
                     color = color > 15 ? 15 : color < 0 ? 0 : color;
                     builder.putByte("Color", color);
                 }
             } else if (arg.startsWith("collar:")) {
                 String colorString = arg.replace("collar:", "");
-                if (Util.isByte(colorString)) {
+                if (isByte(colorString)) {
                     byte color = Byte.parseByte(colorString);
                     color = color > 15 ? 15 : color < 0 ? 0 : color;
                     builder.putByte("CollarColor", color);
@@ -862,6 +862,15 @@ public class CommandOptionCreate {
                         break;
                 }
             }
+        }
+    }
+
+    private static boolean isByte(String number) {
+        try {
+            Byte.parseByte(number);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 }

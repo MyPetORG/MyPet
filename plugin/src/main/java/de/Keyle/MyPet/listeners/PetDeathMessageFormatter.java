@@ -1,7 +1,6 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.util.locale.Translation;
@@ -54,7 +53,7 @@ final class PetDeathMessageFormatter {
                     killer = Component.text(e.getDamager().getType().name());
                 }
             } else if (e.getDamager() instanceof Projectile projectile) {
-                Component projectileName = Translation.getComponent("Name." + Util.capitalizeName(projectile.getType().name()), myPet.getOwner());
+                Component projectileName = Translation.getComponent("Name." + capitalizeName(projectile.getType().name()), myPet.getOwner());
                 Component shooterName;
                 if (projectile.getShooter() instanceof Player) {
                     if (projectile.getShooter() == myPet.getOwner().getPlayer()) {
@@ -64,9 +63,9 @@ final class PetDeathMessageFormatter {
                     }
                 } else {
                     if (MyPetApi.getMyPetInfo().isLeashableEntityType(e.getDamager().getType())) {
-                        shooterName = Translation.getComponent("Name." + Util.capitalizeName(MyPetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
+                        shooterName = Translation.getComponent("Name." + capitalizeName(MyPetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
                     } else if (e.getDamager().getType().getName() != null) {
-                        shooterName = Translation.getComponent("Name." + Util.capitalizeName(e.getDamager().getType().getName()), myPet.getOwner());
+                        shooterName = Translation.getComponent("Name." + capitalizeName(e.getDamager().getType().getName()), myPet.getOwner());
                     } else {
                         shooterName = Translation.getComponent("Name.Unknow", myPet.getOwner());
                     }
@@ -74,10 +73,10 @@ final class PetDeathMessageFormatter {
                 killer = projectileName.append(Component.text(" (")).append(shooterName).append(Component.text(")"));
             } else {
                 if (MyPetApi.getMyPetInfo().isLeashableEntityType(e.getDamager().getType())) {
-                    killer = Translation.getComponent("Name." + Util.capitalizeName(MyPetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
+                    killer = Translation.getComponent("Name." + capitalizeName(MyPetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
                 } else {
                     if (e.getDamager().getType().getName() != null) {
-                        killer = Translation.getComponent("Name." + Util.capitalizeName(e.getDamager().getType().getName()), myPet.getOwner());
+                        killer = Translation.getComponent("Name." + capitalizeName(e.getDamager().getType().getName()), myPet.getOwner());
                     } else {
                         killer = Translation.getComponent("Name.Unknow", myPet.getOwner());
                     }
@@ -85,12 +84,32 @@ final class PetDeathMessageFormatter {
             }
         } else {
             if (event.getEntity().getLastDamageCause() != null) {
-                killer = Translation.getComponent("Name." + Util.capitalizeName(event.getEntity().getLastDamageCause().getCause().name()), myPet.getOwner());
+                killer = Translation.getComponent("Name." + capitalizeName(event.getEntity().getLastDamageCause().getCause().name()), myPet.getOwner());
             } else {
                 killer = Translation.getComponent("Name.Unknow", myPet.getOwner());
             }
         }
 
         myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.DeathMessage", myPet.getOwner(), myPet.getDisplayName(), killer));
+    }
+
+    private static String capitalizeName(String name) {
+        if (name == null) {
+            MyPetApi.getLogger().warning("Name is null");
+            return null;
+        }
+        name = name.replace("_", " ");
+        StringBuilder sb = new StringBuilder(name.length());
+        boolean capitalizeNext = true;
+        for (char c : name.toCharArray()) {
+            if (Character.isLetter(c) && capitalizeNext) {
+                sb.append(Character.toTitleCase(c));
+                capitalizeNext = false;
+            } else {
+                sb.append(c);
+                capitalizeNext = !Character.isLetter(c);
+            }
+        }
+        return sb.toString().replace(" ", "");
     }
 }

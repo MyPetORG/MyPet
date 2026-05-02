@@ -25,12 +25,12 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.entity.PersistedMyPet;
+import de.Keyle.MyPet.util.PetInfoBuilder;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -357,7 +357,7 @@ public class CommandTrade {
 
             receiver.sendMessage(
                     Component.text(" »» ").append(myPet.getDisplayName())
-                            .hoverEvent(Util.myPetToItemHover(myPet, Translation.getPlayerLanguage(receiver)))
+                            .hoverEvent(PetInfoBuilder.myPetToItemHover(myPet, Translation.getPlayerLanguage(receiver)))
                             .clickEvent(ClickEvent.runCommand("/pettrade accept"))
             );
         } else {

@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.skill.experience;
 
+import com.google.common.hash.Hashing;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.exceptions.MyPetExperienceCalculatorInitException;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculator;
@@ -30,6 +30,8 @@ import org.mozilla.javascript.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class JavaScriptExperienceCalculator implements ExperienceCalculator {
 
@@ -80,7 +82,12 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
 
     @Override
     public long getVersion() {
-        return Util.getSha256FromFile(scriptFile);
+        try {
+            return com.google.common.io.Files.asByteSource(scriptFile).hash(Hashing.sha256()).asLong();
+        } catch (IOException e) {
+            ErrorUtil.report(e);
+        }
+        return 0;
     }
 
     @Override
@@ -99,7 +106,7 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
             ScriptableObject scriptable = new ImporterTopLevel(cx);
             Scriptable scope = cx.initStandardObjects(scriptable);
             try {
-                String content = Util.readFileAsString(scriptFile.getAbsolutePath());
+                String content = Files.readString(Path.of(scriptFile.getAbsolutePath()));
                 content = "function print(msg) {\n" +
                         "  java.lang.MyPetApi.getLogger().info('[MyPet][JS] ' + msg);\n" +
                         "}\n\n" + content;
