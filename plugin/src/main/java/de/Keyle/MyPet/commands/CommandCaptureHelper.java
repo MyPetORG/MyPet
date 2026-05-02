@@ -28,7 +28,7 @@ import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -94,7 +94,7 @@ public class CommandCaptureHelper {
      */
     private void execute(Player player) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
 
@@ -104,7 +104,7 @@ public class CommandCaptureHelper {
                 myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
                 if (myPetPlayer.hasMyPet()) {
-                    player.sendMessage(Translation.getComponent("Message.Command.CaptureHelper.HasPet", player));
+                    player.sendMessage(Locale.getComponent("Message.Command.CaptureHelper.HasPet", player));
                     return;
                 }
             } else {
@@ -112,10 +112,10 @@ public class CommandCaptureHelper {
             }
 
             myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
-            Component mode = myPetPlayer.isCaptureHelperActive() ? Translation.getComponent("Name.Enabled", player) : Translation.getComponent("Name.Disabled", player);
-            player.sendMessage(Translation.getFormattedComponent("Message.Command.CaptureHelper.Mode", player, mode));
+            Component mode = myPetPlayer.isCaptureHelperActive() ? Locale.getComponent("Name.Enabled", player) : Locale.getComponent("Name.Disabled", player);
+            player.sendMessage(Locale.getFormattedComponent("Message.Command.CaptureHelper.Mode", player, mode));
             return;
         }
-        player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
+        player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
     }
 }

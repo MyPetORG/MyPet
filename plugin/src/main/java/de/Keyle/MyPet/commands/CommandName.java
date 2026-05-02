@@ -32,7 +32,7 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.NameFilter;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.arguments.MiniMessageSuggestions;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
@@ -124,22 +124,22 @@ public class CommandName {
      */
     private void execute(Player petOwner, String name) {
         if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-            petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            petOwner.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
         if (!Permissions.has(petOwner, "MyPet.command.name")) {
-            myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", petOwner));
+            myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
             return;
         }
 
         if (!NameFilter.isClean(name)) {
-            petOwner.sendMessage(Translation.getComponent("Message.Command.Name.Filter", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.Command.Name.Filter", petOwner));
             return;
         }
 
@@ -154,12 +154,12 @@ public class CommandName {
         if (nameWithoutColors.length() <= Configuration.Name.MAX_LENGTH) {
             myPet.setPetName(name);
             if (Permissions.has(petOwner, "MyPet.command.name.color")) {
-                petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Name.New", petOwner, name));
+                petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Name.New", petOwner, name));
             } else {
-                petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Name.New", petOwner, nameWithoutColors));
+                petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Name.New", petOwner, nameWithoutColors));
             }
         } else {
-            petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Name.ToLong", petOwner, name, Configuration.Name.MAX_LENGTH));
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Name.ToLong", petOwner, name, Configuration.Name.MAX_LENGTH));
         }
     }
 }

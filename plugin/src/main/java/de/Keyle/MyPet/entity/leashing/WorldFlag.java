@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -51,7 +51,7 @@ public class WorldFlag implements LeashFlag {
     public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
         for (Setting setting : settings.all()) {
             if (setting.getValue().equals(entity.getWorld().getName())) {
-                return Translation.getComponent("Message.Command.CaptureHelper.Requirement.World.Right", player);
+                return Locale.getComponent("Message.Command.CaptureHelper.Requirement.World.Right", player);
             }
         }
         String worlds = settings.all()
@@ -60,6 +60,6 @@ public class WorldFlag implements LeashFlag {
                 .filter(Objects::nonNull)
                 .map(World::getName)
                 .collect(Collectors.joining(", "));
-        return Translation.getFormattedComponent("Message.Command.CaptureHelper.Requirement.World.Wrong", player, worlds);
+        return Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.World.Wrong", player, worlds);
     }
 }

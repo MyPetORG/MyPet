@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
 import de.Keyle.MyPet.services.EggIconService;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -146,7 +146,7 @@ public class ShopMyPet implements StoredMyPet {
             return petName;
         }
         if (petOwner != null) {
-            return Translation.getString("Name." + petType.name(), petOwner);
+            return Locale.getString("Name." + petType.name(), petOwner);
         }
         return "MyPet";
     }

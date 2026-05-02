@@ -33,7 +33,7 @@ import de.Keyle.MyPet.api.util.Timer;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
@@ -362,7 +362,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         if (createdLocaleFolder) {
             ResourceUtil.copyResource(this, "locale-readme.txt", new File(getDataFolder(), "locale" + File.separator + "readme.txt"));
         }
-        Translation.init();
+        Locale.init();
 
         Optional<Repository> repositoryOpt = RepositoryFactory.initWithFallback();
         if (repositoryOpt.isEmpty()) {

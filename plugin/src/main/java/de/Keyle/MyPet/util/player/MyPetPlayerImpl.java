@@ -33,7 +33,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.services.CreakingService;
 import net.kyori.adventure.nbt.BinaryTag;
@@ -229,7 +229,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     public String getLanguage() {
         if (isOnline()) {
-            lastLanguage = Translation.getPlayerLanguage(getPlayer());
+            lastLanguage = Locale.getPlayerLanguage(getPlayer());
         }
         return lastLanguage;
     }
@@ -397,7 +397,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                             petMob.getScheduler().run(MyPetApi.getPlugin(), t -> {
                                 myPet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
                                 if (!p.isGliding()) {
-                                    myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Despawn", myPet.getOwner(), myPet.getDisplayName()));
+                                    myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Despawn", myPet.getOwner(), myPet.getDisplayName()));
                                 }
                             }, null);
                         }
@@ -436,7 +436,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         }
 
                         if (spawn && myPet.createEntity() == MyPet.SpawnFlags.Success) {
-                            p.sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", p, myPet.getDisplayName()));
+                            p.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", p, myPet.getDisplayName()));
                         }
                     }
                 }
@@ -612,7 +612,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         } else {
             parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
                     "<dead>",
-                    Placeholder.unparsed("dead", Translation.getString("Name.Dead", myPet.getOwner()))));
+                    Placeholder.unparsed("dead", Locale.getString("Name.Dead", myPet.getOwner()))));
         }
         return parsed;
     }

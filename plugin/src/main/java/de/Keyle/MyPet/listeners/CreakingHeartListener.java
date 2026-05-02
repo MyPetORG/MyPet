@@ -35,7 +35,7 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
@@ -198,7 +198,7 @@ public class CreakingHeartListener implements Listener {
 
         final PersistedMyPet inactiveMyPet = PersistedMyPet.builder(owner)
                 .petType(petType)
-                .petName(Translation.getString("Name." + petType.name(), owner))
+                .petName(Locale.getString("Name." + petType.name(), owner))
                 .worldGroup(worldGroup.getName())
                 .info(snapshot)
                 .build();
@@ -246,13 +246,13 @@ public class CreakingHeartListener implements Listener {
                     return;
                 }
 
-                owner.sendMessage(Translation.getComponent("Message.Leash.Add", owner));
+                owner.sendMessage(Locale.getComponent("Message.Leash.Add", owner));
 
                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
                 myPet.ifPresent(pet -> pet.createEntity(capturedEntityLocation));
                 if (owner.isCaptureHelperActive()) {
                     owner.setCaptureHelperActive(false);
-                    owner.sendMessage(Translation.getFormattedComponent("Message.Command.CaptureHelper.Mode", owner, Translation.getComponent("Name.Disabled", owner)));
+                    owner.sendMessage(Locale.getFormattedComponent("Message.Command.CaptureHelper.Mode", owner, Locale.getComponent("Name.Disabled", owner)));
                 }
             }, null);
         }).exceptionally(err -> {
@@ -307,7 +307,7 @@ public class CreakingHeartListener implements Listener {
 
         // Check permission
         if (!Permissions.has(player, "MyPet.leash." + petType.name())) {
-            myPetPlayer.sendMessage(LeashFlag.getComponentPrefix(false).append(Translation.getComponent("Message.No.Allowed", player)), 2000);
+            myPetPlayer.sendMessage(LeashFlag.getComponentPrefix(false).append(Locale.getComponent("Message.No.Allowed", player)), 2000);
             return;
         }
 
@@ -345,7 +345,7 @@ public class CreakingHeartListener implements Listener {
 
         // Player already has an active pet
         if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-            myPetPlayer.sendMessage(LeashFlag.getComponentPrefix(false).append(Translation.getComponent("Message.Command.CaptureHelper.HasPet", player)), 2000);
+            myPetPlayer.sendMessage(LeashFlag.getComponentPrefix(false).append(Locale.getComponent("Message.Command.CaptureHelper.HasPet", player)), 2000);
         }
     }
 

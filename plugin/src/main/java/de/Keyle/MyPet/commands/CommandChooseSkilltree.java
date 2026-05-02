@@ -36,7 +36,7 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -141,11 +141,11 @@ public class CommandChooseSkilltree {
      */
     private void executeGui(Player player) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-            player.sendMessage(Translation.getComponent("Message.No.HasPet", player));
+            player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
             return;
         }
 
@@ -154,7 +154,7 @@ public class CommandChooseSkilltree {
 
         if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
             myPet.autoAssignSkilltree();
-            player.sendMessage(Translation.getComponent("Message.Command.ChooseSkilltree.AutomaticSkilltreeAssignment", myPet.getOwner()));
+            player.sendMessage(Locale.getComponent("Message.Command.ChooseSkilltree.AutomaticSkilltreeAssignment", myPet.getOwner()));
             return;
         }
 
@@ -166,19 +166,19 @@ public class CommandChooseSkilltree {
         }
 
         if (availableSkilltrees.isEmpty()) {
-            player.sendMessage(Translation.getFormattedComponent("Message.Command.ChooseSkilltree.NoneAvailable", player, myPet.getDisplayName()));
+            player.sendMessage(Locale.getFormattedComponent("Message.Command.ChooseSkilltree.NoneAvailable", player, myPet.getDisplayName()));
             return;
         }
 
         final Map<Integer, Skilltree> skilltreeSlotMap = new HashMap<>();
-        IconMenu menu = new IconMenu(Translation.getFormattedComponent("Message.Skilltree.Available", myPetOwner, myPet.getDisplayName()), event -> {
+        IconMenu menu = new IconMenu(Locale.getFormattedComponent("Message.Skilltree.Available", myPetOwner, myPet.getDisplayName()), event -> {
             if (myPet != myPetOwner.getMyPet()) {
                 event.setWillClose(true);
                 event.setWillDestroy(true);
                 return;
             }
             if (myPet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
-                player.sendMessage(Translation.getFormattedComponent("Message.Command.ChooseSkilltree.OnlyOnce", myPet.getOwner(), myPet.getDisplayName()));
+                player.sendMessage(Locale.getFormattedComponent("Message.Command.ChooseSkilltree.OnlyOnce", myPet.getOwner(), myPet.getDisplayName()));
             } else if (skilltreeSlotMap.containsKey(event.getPosition())) {
                 Skilltree selectedSkilltree = skilltreeSlotMap.get(event.getPosition());
                 if (selectedSkilltree != null) {
@@ -216,7 +216,7 @@ public class CommandChooseSkilltree {
                 NamedTextColor levelColor = selectable ? NamedTextColor.GREEN : NamedTextColor.DARK_RED;
                 option.addLoreLine(Component.text()
                         .append(Component.text("▶▶▶  "))
-                        .append(Translation.getFormattedComponent("Message.Skilltree.RequiresLevel.Item", myPetOwner.getLanguage(), requiredLevel).color(levelColor))
+                        .append(Locale.getFormattedComponent("Message.Skilltree.RequiresLevel.Item", myPetOwner.getLanguage(), requiredLevel).color(levelColor))
                         .append(Component.text("  ◀◀◀"))
                         .build());
             }
@@ -241,11 +241,11 @@ public class CommandChooseSkilltree {
      */
     private void executeSkilltree(Player player, String skilltreeName) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-            player.sendMessage(Translation.getComponent("Message.No.HasPet", player));
+            player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
             return;
         }
 
@@ -254,11 +254,11 @@ public class CommandChooseSkilltree {
 
         if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
             myPet.autoAssignSkilltree();
-            player.sendMessage(Translation.getComponent("Message.Command.ChooseSkilltree.AutomaticSkilltreeAssignment", myPet.getOwner()));
+            player.sendMessage(Locale.getComponent("Message.Command.ChooseSkilltree.AutomaticSkilltreeAssignment", myPet.getOwner()));
             return;
         }
         if (myPet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
-            player.sendMessage(Translation.getFormattedComponent("Message.Command.ChooseSkilltree.OnlyOnce", myPet.getOwner(), myPet.getDisplayName()));
+            player.sendMessage(Locale.getFormattedComponent("Message.Command.ChooseSkilltree.OnlyOnce", myPet.getOwner(), myPet.getDisplayName()));
             return;
         }
         if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
@@ -266,10 +266,10 @@ public class CommandChooseSkilltree {
             if (skilltree.getMobTypes().contains(myPet.getPetType()) && skilltree.checkRequirements(myPet)) {
                 applySkilltree(myPet, myPetOwner, skilltree);
             } else {
-                player.sendMessage(Translation.getFormattedComponent("Message.Command.Skilltree.CantFindSkilltree", player, skilltreeName));
+                player.sendMessage(Locale.getFormattedComponent("Message.Command.Skilltree.CantFindSkilltree", player, skilltreeName));
             }
         } else {
-            player.sendMessage(Translation.getFormattedComponent("Message.Command.Skilltree.CantFindSkilltree", player, skilltreeName));
+            player.sendMessage(Locale.getFormattedComponent("Message.Command.Skilltree.CantFindSkilltree", player, skilltreeName));
         }
     }
 
@@ -290,11 +290,11 @@ public class CommandChooseSkilltree {
         int requiredLevel = skilltree.getRequiredLevel();
         int maxLevel = skilltree.getMaxLevel();
         if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
-            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skilltree.RequiresLevel.Message", myPetOwner, myPet.getDisplayName(), requiredLevel));
+            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.RequiresLevel.Message", myPetOwner, myPet.getDisplayName(), requiredLevel));
         } else if (myPet.getExperience().getLevel() > maxLevel) {
-            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skilltree.MaxLevel.Message", myPetOwner, myPet.getDisplayName(), maxLevel));
+            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.MaxLevel.Message", myPetOwner, myPet.getDisplayName(), maxLevel));
         } else if (myPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.PlayerCommand)) {
-            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skilltree.SwitchedTo", myPetOwner, Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName())));
+            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.SwitchedTo", myPetOwner, Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName())));
             if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
                 double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;
                 switchPenalty += myPet.getExperience().getExp() * Configuration.Skilltree.SWITCH_FEE_PERCENT / 100.;
@@ -310,7 +310,7 @@ public class CommandChooseSkilltree {
                 }
             }
         } else {
-            myPet.getOwner().sendMessage(Translation.getComponent("Message.Skilltree.NotSwitched", myPetOwner));
+            myPet.getOwner().sendMessage(Locale.getComponent("Message.Skilltree.NotSwitched", myPetOwner));
         }
     }
 }

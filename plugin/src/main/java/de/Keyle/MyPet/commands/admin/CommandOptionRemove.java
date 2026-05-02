@@ -32,7 +32,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -109,14 +109,14 @@ public class CommandOptionRemove {
      * @param player the target player whose active pet will be removed
      */
     private void execute(CommandSender sender, Player player) {
-        String lang = Translation.getCommandSenderLanguage(sender);
+        String lang = Locale.getCommandSenderLanguage(sender);
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
+            sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
             return;
         }
         MyPetPlayer petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
         if (!petOwner.hasMyPet()) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
+            sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
             return;
         }
         MyPet myPet = petOwner.getMyPet();

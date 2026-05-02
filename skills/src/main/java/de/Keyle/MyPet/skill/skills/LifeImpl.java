@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Life;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -59,7 +59,7 @@ public class LifeImpl implements Life {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent("Message.Skill.Hp.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), myPet.getMaxHealth())
+                Locale.getFormattedComponent("Message.Skill.Hp.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), myPet.getMaxHealth())
         };
     }
 

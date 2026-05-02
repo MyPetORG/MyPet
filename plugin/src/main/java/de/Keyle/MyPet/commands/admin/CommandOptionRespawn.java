@@ -30,7 +30,7 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -118,9 +118,9 @@ public class CommandOptionRespawn {
      * @param petOwner the player whose pet's respawn time will be shown
      */
     private void executeShow(CommandSender sender, Player petOwner) {
-        String lang = Translation.getCommandSenderLanguage(sender);
+        String lang = Locale.getCommandSenderLanguage(sender);
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
+            sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
@@ -138,9 +138,9 @@ public class CommandOptionRespawn {
      * @param time     the new respawn time in seconds (0 for instant respawn)
      */
     private void executeSet(CommandSender sender, Player petOwner, int time) {
-        String lang = Translation.getCommandSenderLanguage(sender);
+        String lang = Locale.getCommandSenderLanguage(sender);
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
+            sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);

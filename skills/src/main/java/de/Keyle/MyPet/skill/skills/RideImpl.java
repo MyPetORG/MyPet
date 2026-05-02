@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Ride;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -57,7 +57,7 @@ public class RideImpl implements Ride {
 
     public Component toPrettyComponent(String locale) {
         return Component.text()
-                .append(Translation.getComponent("Name.Speed", locale))
+                .append(Locale.getComponent("Name.Speed", locale))
                 .append(Component.text(" +"))
                 .append(Component.text(speed.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.text("%"))

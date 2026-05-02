@@ -32,7 +32,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -106,17 +106,17 @@ public class CommandOptionClone {
      * @param newOwner the player who will receive the cloned pet
      */
     private void execute(CommandSender sender, Player oldOwner, Player newOwner) {
-        String lang = Translation.getCommandSenderLanguage(sender);
+        String lang = Locale.getCommandSenderLanguage(sender);
 
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(oldOwner)) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, oldOwner.getName())));
+            sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, oldOwner.getName())));
             return;
         }
 
         MyPetPlayer oldPetOwner = MyPetApi.getPlayerManager().getMyPetPlayer(oldOwner);
 
         if (!oldPetOwner.hasMyPet()) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, oldOwner.getName())));
+            sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, oldOwner.getName())));
             return;
         }
 

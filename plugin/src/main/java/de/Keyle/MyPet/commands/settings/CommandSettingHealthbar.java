@@ -24,7 +24,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
@@ -69,9 +69,9 @@ public class CommandSettingHealthbar {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             myPetPlayer.setHealthBarActive(!myPetPlayer.isHealthBarActive());
-            player.sendMessage(Translation.getComponent("Message.Command.Success", player));
+            player.sendMessage(Locale.getComponent("Message.Command.Success", player));
         } else {
-            player.sendMessage(Translation.getComponent("Message.Command.Fail", player));
+            player.sendMessage(Locale.getComponent("Message.Command.Fail", player));
         }
     }
 }

@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Shield;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -63,13 +63,13 @@ public class ShieldImpl implements Shield {
     }
 
     public Component toPrettyComponent(String locale) {
-        return Translation.getFormattedComponent("Message.Skill.Shield.Format", locale, myPet.getDisplayName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
+        return Locale.getFormattedComponent("Message.Skill.Shield.Format", locale, myPet.getDisplayName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
     }
 
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent("Message.Skill.Shield.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getRedirectedDamage().getValue())
+                Locale.getFormattedComponent("Message.Skill.Shield.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getRedirectedDamage().getValue())
         };
     }
 

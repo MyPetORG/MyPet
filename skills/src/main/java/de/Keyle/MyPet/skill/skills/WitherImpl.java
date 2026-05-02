@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Wither;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.LivingEntity;
@@ -64,14 +64,14 @@ public class WitherImpl implements Wither {
                 .append(Component.text("% -> "))
                 .append(Component.text(duration.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
-                .append(Translation.getComponent("Name.Seconds", locale))
+                .append(Locale.getComponent("Name.Seconds", locale))
                 .build();
     }
 
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent("Message.Skill.Wither.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getDuration().getValue())
+                Locale.getFormattedComponent("Message.Skill.Wither.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getDuration().getValue())
         };
     }
 

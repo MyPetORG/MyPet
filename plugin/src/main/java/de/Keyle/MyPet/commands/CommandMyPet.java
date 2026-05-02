@@ -26,7 +26,7 @@ import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.mypet.CommandOptionReload;
 import de.Keyle.MyPet.commands.mypet.CommandOptionTicket;
 import de.Keyle.MyPet.commands.mypet.CommandOptionUpdate;
@@ -194,8 +194,8 @@ public class CommandMyPet {
      * @param isPlayer {@code true} if the sender is a player (used for permission filtering)
      */
     private void showCategoryListing(CommandSender sender, Player player, boolean isPlayer) {
-        String helpText = Translation.getString("Name.Help", sender);
-        Component titleComponent = Component.text("MyPet - ").append(Translation.getComponent("Name.Help", sender));
+        String helpText = Locale.getString("Name.Help", sender);
+        Component titleComponent = Component.text("MyPet - ").append(Locale.getComponent("Name.Help", sender));
         sender.sendMessage(buildSeparator("MyPet - " + helpText, titleComponent));
         sender.sendMessage(Component.text("Use ").append(Component.text("/mypet help <category>").color(NamedTextColor.GOLD)).append(Component.text(" to see commands.")));
         sender.sendMessage("");
@@ -211,14 +211,14 @@ public class CommandMyPet {
             sender.sendMessage(Component.text("  ")
                     .append(Component.text(category.getDisplayName().toLowerCase()).color(NamedTextColor.GOLD))
                     .append(Component.text(" - "))
-                    .append(Translation.getComponent(descKey, sender)));
+                    .append(Locale.getComponent(descKey, sender)));
         }
 
         sender.sendMessage("");
         sender.sendMessage(Component.text("  ")
                 .append(Component.text("all").color(NamedTextColor.GOLD))
                 .append(Component.text(" - "))
-                .append(Translation.getComponent("Message.Command.Help.Category.All", sender)));
+                .append(Locale.getComponent("Message.Command.Help.Category.All", sender)));
         sender.sendMessage(dashes(SEPARATOR_WIDTH));
     }
 
@@ -251,22 +251,22 @@ public class CommandMyPet {
             if (!first) {
                 sender.sendMessage("");
             }
-            String plainTitle = "MyPet - " + Translation.getString("Name.Help", sender)
+            String plainTitle = "MyPet - " + Locale.getString("Name.Help", sender)
                     + " - " + category.getDisplayName();
             Component titleComp = Component.text("MyPet - ")
-                    .append(Translation.getComponent("Name.Help", sender))
+                    .append(Locale.getComponent("Name.Help", sender))
                     .append(Component.text(" - " + category.getDisplayName()));
             sender.sendMessage(buildSeparator(plainTitle, titleComp));
             for (HelpEntry entry : entries) {
                 sender.sendMessage(Component.text("  ").append(
-                        Translation.getFormattedComponent(entry.translationKey(), sender,
+                        Locale.getFormattedComponent(entry.translationKey(), sender,
                                 entry.command())));
             }
             first = false;
         }
 
         sender.sendMessage("");
-        sender.sendMessage(Translation.getComponent("Message.Command.Help.MoreInfo", sender)
+        sender.sendMessage(Locale.getComponent("Message.Command.Help.MoreInfo", sender)
                 .append(Component.text(" " + Configuration.Misc.WIKI_URL).color(NamedTextColor.GOLD)));
         sender.sendMessage(dashes(SEPARATOR_WIDTH));
     }

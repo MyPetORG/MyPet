@@ -36,7 +36,7 @@ import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.repository.Repository;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -139,7 +139,7 @@ public class CommandTrade {
      */
     private void executeAccept(Player player) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
 
@@ -147,14 +147,14 @@ public class CommandTrade {
             Offer offer = offers.get(player.getUniqueId());
             Player owner = Bukkit.getServer().getPlayer(offer.owner());
             if (owner == null || !owner.isOnline()) {
-                player.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
+                player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                 offers.remove(player.getUniqueId());
                 return;
             }
 
             if (!Permissions.has(player, "MyPet.command.trade.receive." + offer.pet().getPetType().name())) {
-                player.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.NoPermission", player));
-                owner.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.pet().getDisplayName()));
+                player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.NoPermission", player));
+                owner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.pet().getDisplayName()));
                 offers.remove(player.getUniqueId());
                 return;
             }
@@ -162,27 +162,27 @@ public class CommandTrade {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
                 final MyPetPlayer oldOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
                 if (!oldOwner.hasMyPet() || oldOwner.getMyPet() != offer.pet()) {
-                    player.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
+                    player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                     offers.remove(player.getUniqueId());
                     return;
                 }
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                    player.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.HasPet", player));
+                    player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.HasPet", player));
                     return;
                 }
 
                 if (!player.getWorld().equals(owner.getWorld()) || player.getLocation().distanceSquared(owner.getLocation()) > 100) {
-                    player.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Receiver.Distance", player, owner.getName()));
+                    player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Distance", player, owner.getName()));
                     return;
                 }
 
                 if (offer.price() > 0) {
                     if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-                        player.sendMessage(Translation.getComponent("Message.No.Economy", player));
+                        player.sendMessage(Locale.getComponent("Message.No.Economy", player));
                         return;
                     }
                     if (!MyPetApi.getHookHelper().getEconomy().transfer(player, owner, offer.price())) {
-                        player.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Receiver.NotEnoughMoney", player, MyPetApi.getHookHelper().getEconomy().format(offer.price())));
+                        player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.NotEnoughMoney", player, MyPetApi.getHookHelper().getEconomy().format(offer.price())));
                         return;
                     }
                 }
@@ -213,38 +213,38 @@ public class CommandTrade {
 
                         if (myPet.isPresent()) {
 
-                            newOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Receiver.Success", newOwner, oldOwner.getName(), myPet.get().getDisplayName()));
-                            oldOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Success", oldOwner, newOwner.getName(), myPet.get().getDisplayName()));
+                            newOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Success", newOwner, oldOwner.getName(), myPet.get().getDisplayName()));
+                            oldOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Success", oldOwner, newOwner.getName(), myPet.get().getDisplayName()));
 
                             switch (myPet.get().createEntity()) {
                                 case Canceled:
-                                    newOwner.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", newOwner, myPet.get().getDisplayName()));
+                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", newOwner, myPet.get().getDisplayName()));
                                     break;
                                 case NoSpace:
-                                    newOwner.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", newOwner, myPet.get().getDisplayName()));
+                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", newOwner, myPet.get().getDisplayName()));
                                     break;
                                 case NotAllowed:
-                                    newOwner.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", newOwner, myPet.get().getDisplayName()));
+                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", newOwner, myPet.get().getDisplayName()));
                                     break;
                                 case Dead:
                                     if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                        newOwner.sendMessage(Translation.getFormattedComponent("Message.Spawn.Respawn.In", newOwner, myPet.get().getDisplayName(), myPet.get().getRespawnTime()));
+                                        newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", newOwner, myPet.get().getDisplayName(), myPet.get().getRespawnTime()));
                                     }
                                     break;
                                 case Spectator:
-                                    newOwner.sendMessage(Translation.getFormattedComponent("Message.Spawn.Spectator", newOwner, myPet.get().getDisplayName()));
+                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Spectator", newOwner, myPet.get().getDisplayName()));
                                     break;
                             }
                         } else {
-                            newOwner.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.Error", newOwner));
+                            newOwner.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.Error", newOwner));
                         }
                 }, null));
             } else {
-                player.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
+                player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                 offers.remove(player.getUniqueId());
             }
         } else {
-            player.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.NoOffer", player));
+            player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.NoOffer", player));
         }
     }
 
@@ -256,7 +256,7 @@ public class CommandTrade {
      */
     private void executeReject(Player player) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
 
@@ -264,12 +264,12 @@ public class CommandTrade {
             Offer offer = offers.get(player.getUniqueId());
             Player owner = Bukkit.getServer().getPlayer(offer.owner());
             if (owner != null && owner.isOnline()) {
-                owner.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.pet().getDisplayName()));
+                owner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.pet().getDisplayName()));
             }
-            player.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Receiver.Reject", player, offer.ownerName()));
+            player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Reject", player, offer.ownerName()));
             offers.remove(player.getUniqueId());
         } else {
-            player.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.NoOffer", player));
+            player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.NoOffer", player));
         }
     }
 
@@ -281,7 +281,7 @@ public class CommandTrade {
      */
     private void executeCancel(Player player) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
 
@@ -289,15 +289,15 @@ public class CommandTrade {
         for (Offer offer : offers.values()) {
             if (offer.owner().equals(ownerUUID)) {
                 offers.remove(offer.receiver());
-                player.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Cancel", player, offer.receiverName()));
+                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Cancel", player, offer.receiverName()));
                 Player receiver = Bukkit.getPlayer(offer.receiver());
                 if (receiver != null && receiver.isOnline()) {
-                    receiver.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
+                    receiver.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                 }
                 return;
             }
         }
-        player.sendMessage(Translation.getComponent("Message.Command.Trade.Owner.NoOffer", player));
+        player.sendMessage(Locale.getComponent("Message.Command.Trade.Owner.NoOffer", player));
     }
 
     /**
@@ -311,7 +311,7 @@ public class CommandTrade {
      */
     private void executeOffer(Player player, String targetName, double price) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
 
@@ -319,29 +319,29 @@ public class CommandTrade {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
 
             if (!Permissions.has(player, "MyPet.command.trade.offer." + myPet.getPetType().name())) {
-                player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
+                player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
                 return;
             }
 
             Player receiver = Bukkit.getPlayer(targetName);
             if (receiver == null) {
-                player.sendMessage(Translation.getComponent("Message.No.PlayerOnline", player));
+                player.sendMessage(Locale.getComponent("Message.No.PlayerOnline", player));
                 return;
             }
 
             if (offers.containsKey(receiver.getUniqueId())) {
-                player.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.OpenOffer", player, receiver.getName()));
+                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.OpenOffer", player, receiver.getName()));
                 return;
             }
 
             if (receiver.equals(player)) {
-                player.sendMessage(Translation.getComponent("Message.Command.Trade.Owner.Yourself", player));
+                player.sendMessage(Locale.getComponent("Message.Command.Trade.Owner.Yourself", player));
                 return;
             }
 
             if (price > 0) {
                 if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-                    player.sendMessage(Translation.getComponent("Message.No.Economy", player));
+                    player.sendMessage(Locale.getComponent("Message.No.Economy", player));
                     return;
                 }
             }
@@ -349,20 +349,20 @@ public class CommandTrade {
             Offer offer = new Offer(price, myPet, player.getUniqueId(), receiver.getUniqueId(), receiver.getName(), player.getName());
             offers.put(receiver.getUniqueId(), offer);
             if (price > 0) {
-                player.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Offer.Price", player, myPet.getDisplayName(), receiver.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
-                receiver.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Receiver.Offer.Price", receiver, player.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
+                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Offer.Price", player, myPet.getDisplayName(), receiver.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
+                receiver.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Offer.Price", receiver, player.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
             } else {
-                player.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Owner.Offer", player, myPet.getDisplayName(), receiver.getName()));
-                receiver.sendMessage(Translation.getFormattedComponent("Message.Command.Trade.Receiver.Offer", receiver, player.getName()));
+                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Offer", player, myPet.getDisplayName(), receiver.getName()));
+                receiver.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Offer", receiver, player.getName()));
             }
 
             receiver.sendMessage(
                     Component.text(" »» ").append(myPet.getDisplayName())
-                            .hoverEvent(PetInfoBuilder.myPetToItemHover(myPet, Translation.getPlayerLanguage(receiver)))
+                            .hoverEvent(PetInfoBuilder.myPetToItemHover(myPet, Locale.getPlayerLanguage(receiver)))
                             .clickEvent(ClickEvent.runCommand("/pettrade accept"))
             );
         } else {
-            player.sendMessage(Translation.getComponent("Message.No.HasPet", player));
+            player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
         }
     }
 

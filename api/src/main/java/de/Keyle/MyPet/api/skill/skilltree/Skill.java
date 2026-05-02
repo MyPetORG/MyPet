@@ -23,7 +23,7 @@ package de.Keyle.MyPet.api.skill.skilltree;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.SkillName;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 
 public interface Skill {
@@ -42,7 +42,7 @@ public interface Skill {
             if (sn.translationNode().equalsIgnoreCase("")) {
                 return sn.value();
             } else {
-                String translatedName = Translation.getString(sn.translationNode(), locale);
+                String translatedName = Locale.getString(sn.translationNode(), locale);
                 if (translatedName.equals(sn.translationNode())) {
                     return sn.value();
                 } else {

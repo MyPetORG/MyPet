@@ -28,7 +28,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
@@ -112,7 +112,7 @@ public class CommandCall {
      */
     private void execute(Player petOwner) {
         if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-            petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
         if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
@@ -126,7 +126,7 @@ public class CommandCall {
             switch (myPet.createEntity()) {
                 case Success:
                     petOwner.sendMessage(MessageUtil.success(
-                            Translation.getFormattedComponent(
+                            Locale.getFormattedComponent(
                                     "Message.Command.Call.Success",
                                     petOwner,
                                     myPet.getDisplayName()
@@ -135,7 +135,7 @@ public class CommandCall {
                     break;
                 case Canceled:
                     petOwner.sendMessage(MessageUtil.error(
-                            Translation.getFormattedComponent(
+                            Locale.getFormattedComponent(
                                     "Message.Spawn.Prevent",
                                     petOwner,
                                     myPet.getDisplayName()
@@ -144,7 +144,7 @@ public class CommandCall {
                     break;
                 case NoSpace:
                     petOwner.sendMessage(MessageUtil.error(
-                            Translation.getFormattedComponent(
+                            Locale.getFormattedComponent(
                                     "Message.Spawn.NoSpace",
                                     petOwner,
                                     myPet.getDisplayName()
@@ -153,7 +153,7 @@ public class CommandCall {
                     break;
                 case NotAllowed:
                     petOwner.sendMessage(MessageUtil.error(
-                            Translation.getFormattedComponent(
+                            Locale.getFormattedComponent(
                                     "Message.No.AllowedHere",
                                     petOwner,
                                     myPet.getDisplayName()
@@ -163,7 +163,7 @@ public class CommandCall {
                 case Dead:
                     if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
                         petOwner.sendMessage(MessageUtil.info(
-                                Translation.getFormattedComponent(
+                                Locale.getFormattedComponent(
                                         "Message.Call.Dead",
                                         petOwner,
                                         myPet.getDisplayName()
@@ -171,7 +171,7 @@ public class CommandCall {
                         ));
                     } else {
                         petOwner.sendMessage(MessageUtil.info(
-                                Translation.getFormattedComponent(
+                                Locale.getFormattedComponent(
                                         "Message.Call.Dead.Respawn",
                                         petOwner,
                                         myPet.getDisplayName(),
@@ -182,7 +182,7 @@ public class CommandCall {
                     break;
                 case Flying:
                     petOwner.sendMessage(MessageUtil.error(
-                            Translation.getFormattedComponent(
+                            Locale.getFormattedComponent(
                                     "Message.Spawn.Flying",
                                     petOwner,
                                     myPet.getDisplayName()
@@ -191,7 +191,7 @@ public class CommandCall {
                     break;
                 case Spectator:
                     petOwner.sendMessage(MessageUtil.error(
-                            Translation.getFormattedComponent(
+                            Locale.getFormattedComponent(
                                     "Message.Spawn.Spectator",
                                     petOwner,
                                     myPet.getDisplayName()
@@ -200,7 +200,7 @@ public class CommandCall {
                     break;
             }
         } else {
-            petOwner.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
         }
     }
 }

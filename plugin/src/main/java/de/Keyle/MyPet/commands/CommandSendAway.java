@@ -31,7 +31,7 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.event.MyPetSendAwayEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.Bukkit;
@@ -75,7 +75,7 @@ public class CommandSendAway {
                         .executes(ctx -> {
                             Player player = (Player) ctx.getSource().getSender();
                             execute(player, player.getName(),
-                                    Translation.getPlayerLanguage(player));
+                                    Locale.getPlayerLanguage(player));
                             return Command.SINGLE_SUCCESS;
                         })
                         .then(Commands.argument("player", StringArgumentType.word())
@@ -91,7 +91,7 @@ public class CommandSendAway {
                                     CommandSender sender = ctx.getSource().getSender();
                                     String targetName = StringArgumentType.getString(ctx, "player");
                                     String lang = sender instanceof Player p
-                                            ? Translation.getPlayerLanguage(p)
+                                            ? Locale.getPlayerLanguage(p)
                                             : "en_en";
                                     execute(sender, targetName, lang);
                                     return Command.SINGLE_SUCCESS;
@@ -123,12 +123,12 @@ public class CommandSendAway {
      */
     private void execute(CommandSender sender, String playerName, String lang) {
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(playerName)) {
-            sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, playerName));
+            sender.sendMessage(Locale.getFormattedComponent("Message.No.UserHavePet", lang, playerName));
             return;
         }
         MyPetPlayer petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(playerName);
         if (petOwner != null && !petOwner.isOnline()) {
-            sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", lang));
+            sender.sendMessage(Locale.getComponent("Message.No.PlayerOnline", lang));
             return;
         }
         if (petOwner != null && petOwner.hasMyPet()) {
@@ -139,7 +139,7 @@ public class CommandSendAway {
                 if (!event.isCancelled()) {
                     myPet.removePet(false);
                     sender.sendMessage(MessageUtil.success(
-                            Translation.getFormattedComponent(
+                            Locale.getFormattedComponent(
                                     "Message.Command.SendAway.Success",
                                     petOwner,
                                     myPet.getDisplayName()
@@ -148,7 +148,7 @@ public class CommandSendAway {
                 }
             } else if (myPet.getStatus() == PetState.Despawned) {
                 sender.sendMessage(MessageUtil.info(
-                        Translation.getFormattedComponent(
+                        Locale.getFormattedComponent(
                                 "Message.Command.SendAway.AlreadyAway",
                                 petOwner,
                                 myPet.getDisplayName()
@@ -156,7 +156,7 @@ public class CommandSendAway {
                 ));
             } else if (myPet.getStatus() == PetState.Dead) {
                 sender.sendMessage(MessageUtil.info(
-                        Translation.getFormattedComponent(
+                        Locale.getFormattedComponent(
                                 "Message.Action.Dead",
                                 petOwner,
                                 myPet.getDisplayName()
@@ -164,7 +164,7 @@ public class CommandSendAway {
                 ));
             }
         } else {
-            sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, playerName));
+            sender.sendMessage(Locale.getFormattedComponent("Message.No.UserHavePet", lang, playerName));
         }
     }
 }

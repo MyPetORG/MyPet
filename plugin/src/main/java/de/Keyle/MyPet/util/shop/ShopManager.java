@@ -23,7 +23,7 @@ package de.Keyle.MyPet.util.shop;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.exceptions.InvalidSkilltreeException;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.util.hooks.VaultHook;
@@ -90,14 +90,14 @@ public class ShopManager implements ShopService {
 
     public void open(String name, Player player) {
         if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.Economy", player));
+            player.sendMessage(Locale.getComponent("Message.No.Economy", player));
             return;
         }
         PetShop shop = shops.get(name);
         if (shop != null) {
             shop.open(player);
         } else {
-            player.sendMessage(Translation.getComponent("Message.Shop.NotFound", player));
+            player.sendMessage(Locale.getComponent("Message.Shop.NotFound", player));
         }
     }
 
@@ -106,10 +106,10 @@ public class ShopManager implements ShopService {
             open(defaultShop, player);
         } else {
             if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
-                player.sendMessage(Translation.getComponent("Message.No.Economy", player));
+                player.sendMessage(Locale.getComponent("Message.No.Economy", player));
                 return;
             }
-            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
+            player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
         }
     }
 

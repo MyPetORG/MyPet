@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.slipcor.pvparena.api.PVPArenaAPI;
 import net.slipcor.pvparena.events.PAJoinEvent;
 import org.bukkit.Bukkit;
@@ -76,7 +76,7 @@ public class PvPArenaHook implements PlayerVersusPlayerHook, AllowedHook {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet();
-                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player.getPlayer()));
+                player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player.getPlayer()));
             }
         }
     }

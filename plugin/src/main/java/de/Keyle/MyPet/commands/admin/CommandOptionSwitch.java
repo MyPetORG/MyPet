@@ -35,7 +35,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.PetInfoBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -163,9 +163,9 @@ public class CommandOptionSwitch {
      * @param player the target player whose stored pets will be listed
      */
     private void executeShowList(CommandSender sender, Player player) {
-        String lang = Translation.getCommandSenderLanguage(sender);
+        String lang = Locale.getCommandSenderLanguage(sender);
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
+            sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
             return;
         }
         MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
@@ -184,7 +184,7 @@ public class CommandOptionSwitch {
      * @param playerName the display name of the player, used in click commands
      */
     private void showPetList(CommandSender sender, MyPetPlayer owner, String playerName) {
-        String lang = Translation.getCommandSenderLanguage(sender);
+        String lang = Locale.getCommandSenderLanguage(sender);
         MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(value -> {
             Runnable listBody = () -> {
                 sender.sendMessage("Select the MyPet you want the player to switch to:");
@@ -233,9 +233,9 @@ public class CommandOptionSwitch {
      * @param petName the name of the pet to switch to (matched after stripping MiniMessage tags)
      */
     private void executeSwitch(CommandSender sender, Player player, String petName) {
-        String lang = Translation.getCommandSenderLanguage(sender);
+        String lang = Locale.getCommandSenderLanguage(sender);
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
+            sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
             return;
         }
         MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
@@ -261,7 +261,7 @@ public class CommandOptionSwitch {
                 }
 
                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
-                sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
+                sender.sendMessage(Locale.getComponent("Message.Command.Success", sender));
                 if (myPet.isPresent()) {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());
                     // The active world-group binding lives in the player→UUID index,
@@ -270,29 +270,29 @@ public class CommandOptionSwitch {
                     // be a no-op.
                     newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
 
-                    owner.sendMessage(Translation.getFormattedComponent("Message.MultiWorld.NowActivePet", owner, myPet.get().getDisplayName()));
+                    owner.sendMessage(Locale.getFormattedComponent("Message.MultiWorld.NowActivePet", owner, myPet.get().getDisplayName()));
                     switch (myPet.get().createEntity()) {
                         case Success:
-                            sender.sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", owner, myPet.get().getDisplayName()));
+                            sender.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", owner, myPet.get().getDisplayName()));
                             break;
                         case Canceled:
-                            sender.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", owner, myPet.get().getDisplayName()));
+                            sender.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", owner, myPet.get().getDisplayName()));
                             break;
                         case NoSpace:
-                            sender.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", owner, myPet.get().getDisplayName()));
+                            sender.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", owner, myPet.get().getDisplayName()));
                             break;
                         case NotAllowed:
-                            sender.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", owner, myPet.get().getDisplayName()));
+                            sender.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", owner, myPet.get().getDisplayName()));
                             break;
                         case Dead:
                             if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                sender.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", owner, myPet.get().getDisplayName()));
+                                sender.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", owner, myPet.get().getDisplayName()));
                             } else {
-                                sender.sendMessage(Translation.getFormattedComponent("Message.Call.Dead.Respawn", owner, myPet.get().getDisplayName(), myPet.get().getRespawnTime()));
+                                sender.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", owner, myPet.get().getDisplayName(), myPet.get().getRespawnTime()));
                             }
                             break;
                         case Flying:
-                            sender.sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", owner, myPet.get().getDisplayName()));
+                            sender.sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", owner, myPet.get().getDisplayName()));
                             break;
                     }
                 }

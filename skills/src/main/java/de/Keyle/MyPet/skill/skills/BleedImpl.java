@@ -24,7 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Bleed;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -84,20 +84,20 @@ public class BleedImpl implements Bleed {
                 .append(Component.text("% -> "))
                 .append(Component.text(damage.getValue().doubleValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
-                .append(Translation.getComponent("Name.Damage", locale))
+                .append(Locale.getComponent("Name.Damage", locale))
                 .append(Component.text("/"))
                 .append(Component.text(interval.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.text("s for "))
                 .append(Component.text(duration.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
-                .append(Translation.getComponent("Name.Seconds", locale))
+                .append(Locale.getComponent("Name.Seconds", locale))
                 .build();
     }
 
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent(
+                Locale.getFormattedComponent(
                         "Message.Skill.Bleed.Upgrade",
                         myPet.getOwner().getLanguage(),
                         myPet.getDisplayName(),

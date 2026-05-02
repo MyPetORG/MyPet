@@ -8,7 +8,7 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -118,26 +118,26 @@ public final class OnlinePlayerPetLoader {
         MyPetPlayer owner = pet.getOwner();
         switch (result) {
             case Canceled:
-                owner.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", owner, pet.getDisplayName()));
+                owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", owner, pet.getDisplayName()));
                 break;
             case NoSpace:
-                owner.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", owner, pet.getDisplayName()));
+                owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", owner, pet.getDisplayName()));
                 break;
             case NotAllowed:
-                owner.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", owner, pet.getDisplayName()));
+                owner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", owner, pet.getDisplayName()));
                 break;
             case Dead:
                 if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                    owner.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", owner, pet.getDisplayName()));
+                    owner.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", owner, pet.getDisplayName()));
                 } else {
-                    owner.sendMessage(Translation.getFormattedComponent("Message.Spawn.Respawn.In", owner, pet.getDisplayName(), pet.getRespawnTime()));
+                    owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", owner, pet.getDisplayName(), pet.getRespawnTime()));
                 }
                 break;
             case Flying:
-                owner.sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", owner, pet.getDisplayName()));
+                owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", owner, pet.getDisplayName()));
                 break;
             case Success:
-                owner.sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", owner, pet.getDisplayName()));
+                owner.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", owner, pet.getDisplayName()));
                 break;
             default:
                 throw new IllegalStateException("Unhandled SpawnFlags: " + result);

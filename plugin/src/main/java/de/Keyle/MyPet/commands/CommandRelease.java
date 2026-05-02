@@ -35,7 +35,7 @@ import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
@@ -117,11 +117,11 @@ public class CommandRelease {
      */
     private void executeNoArgs(Player petOwner) {
         if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-            petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            petOwner.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
@@ -130,10 +130,10 @@ public class CommandRelease {
             return;
         }
         if (myPet.getStatus() == PetState.Despawned) {
-            petOwner.sendMessage(Translation.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
             return;
         } else if (myPet.getStatus() == PetState.Dead) {
-            petOwner.sendMessage(Translation.getFormattedComponent("Message.Spawn.Respawn.In", petOwner, myPet.getDisplayName(), myPet.getRespawnTime()));
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", petOwner, myPet.getDisplayName(), myPet.getRespawnTime()));
             return;
         }
 
@@ -152,11 +152,11 @@ public class CommandRelease {
      */
     private void executeWithName(Player petOwner, String name) {
         if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-            petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            petOwner.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
@@ -165,10 +165,10 @@ public class CommandRelease {
             return;
         }
         if (myPet.getStatus() == PetState.Despawned) {
-            petOwner.sendMessage(Translation.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
             return;
         } else if (myPet.getStatus() == PetState.Dead) {
-            petOwner.sendMessage(Translation.getFormattedComponent("Message.Spawn.Respawn.In", petOwner, myPet.getDisplayName(), myPet.getRespawnTime()));
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", petOwner, myPet.getDisplayName(), myPet.getRespawnTime()));
             return;
         }
 
@@ -214,7 +214,7 @@ public class CommandRelease {
             myPet.removePet();
             myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()), null);
 
-            petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Release.Success", petOwner, myPet.getDisplayName()));
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Release.Success", petOwner, myPet.getDisplayName()));
             MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
             MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
         } else {
@@ -234,32 +234,32 @@ public class CommandRelease {
         // Build hover item with pet stats
         TextComponent.Builder hoverBuilder = Component.text();
 
-        hoverBuilder.append(Translation.getComponent("Name.Hunger", petOwner))
+        hoverBuilder.append(Locale.getComponent("Name.Hunger", petOwner))
                 .append(Component.text(": "))
                 .append(Component.text(Math.round(myPet.getSaturation())).color(NamedTextColor.GOLD));
 
         if (myPet.getRespawnTime() > 0) {
             hoverBuilder.append(Component.newline())
-                    .append(Translation.getComponent("Name.Respawntime", petOwner))
+                    .append(Locale.getComponent("Name.Respawntime", petOwner))
                     .append(Component.text(": "))
                     .append(Component.text(myPet.getRespawnTime() + "sec").color(NamedTextColor.GOLD));
         } else {
             hoverBuilder.append(Component.newline())
-                    .append(Translation.getComponent("Name.HP", petOwner))
+                    .append(Locale.getComponent("Name.HP", petOwner))
                     .append(Component.text(": "))
                     .append(Component.text(String.format("%1.2f", myPet.getHealth())).color(NamedTextColor.GOLD));
         }
 
         hoverBuilder.append(Component.newline())
-                .append(Translation.getComponent("Name.Exp", petOwner))
+                .append(Locale.getComponent("Name.Exp", petOwner))
                 .append(Component.text(": "))
                 .append(Component.text(String.format("%1.2f", myPet.getExp())).color(NamedTextColor.GOLD))
                 .append(Component.newline())
-                .append(Translation.getComponent("Name.Type", petOwner))
+                .append(Locale.getComponent("Name.Type", petOwner))
                 .append(Component.text(": "))
-                .append(Translation.getComponent("Name." + myPet.getPetType().name(), petOwner).color(NamedTextColor.GOLD))
+                .append(Locale.getComponent("Name." + myPet.getPetType().name(), petOwner).color(NamedTextColor.GOLD))
                 .append(Component.newline())
-                .append(Translation.getComponent("Name.Skilltree", petOwner))
+                .append(Locale.getComponent("Name.Skilltree", petOwner))
                 .append(Component.text(": "))
                 .append(Util.SANITIZED_MINIMESSAGE.deserialize(myPet.getSkilltree() != null ? myPet.getSkilltree().getDisplayName() : "-")
                         .color(NamedTextColor.GOLD));
@@ -267,7 +267,7 @@ public class CommandRelease {
         HoverEvent<Component> hoverEvent = HoverEvent.showText(hoverBuilder.build());
 
         petOwner.sendMessage(
-                Translation.getComponent("Message.Command.Release.Confirm", petOwner).append(Component.text(" "))
+                Locale.getComponent("Message.Command.Release.Confirm", petOwner).append(Component.text(" "))
                         .append(
                                 myPet.getDisplayName()
                                         .clickEvent(ClickEvent.runCommand("/petrelease " + Util.SANITIZED_MINIMESSAGE.stripTags(myPet.getPetName())))

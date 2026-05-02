@@ -32,7 +32,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -134,10 +134,10 @@ public class CommandOptionSkilltree {
      * @param skilltreeName the name of the skilltree to assign
      */
     private void execute(CommandSender sender, Player petOwner, String skilltreeName) {
-        String lang = Translation.getCommandSenderLanguage(sender);
+        String lang = Locale.getCommandSenderLanguage(sender);
 
         if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
+            sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
         MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
@@ -145,12 +145,12 @@ public class CommandOptionSkilltree {
         if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
             Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
             if (skilltree.getMobTypes().contains(myPet.getPetType()) && myPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.AdminCommand)) {
-                sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.Skilltree.SwitchedToFor", lang, petOwner.getName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName()))));
+                sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.Skilltree.SwitchedToFor", lang, petOwner.getName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName()))));
             } else {
-                sender.sendMessage(MessageUtil.prefixed(Translation.getComponent("Message.Skilltree.NotSwitched", lang)));
+                sender.sendMessage(MessageUtil.prefixed(Locale.getComponent("Message.Skilltree.NotSwitched", lang)));
             }
         } else {
-            sender.sendMessage(MessageUtil.prefixed(Translation.getFormattedComponent("Message.Command.Skilltree.CantFindSkilltree", lang, skilltreeName)));
+            sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.Command.Skilltree.CantFindSkilltree", lang, skilltreeName)));
         }
     }
 }

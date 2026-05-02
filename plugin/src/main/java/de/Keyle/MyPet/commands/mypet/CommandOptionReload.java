@@ -30,7 +30,7 @@ import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -113,7 +113,7 @@ public class CommandOptionReload {
                         }))
                 .executes(ctx -> {
                     CommandSender sender = ctx.getSource().getSender();
-                    sender.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", sender));
+                    sender.sendMessage(Locale.getComponent("Message.Command.Help.MissingParameter", sender));
                     sender.sendMessage(Component.text(" -> ")
                             .append(Component.text("/mypet reload ").color(NamedTextColor.DARK_AQUA))
                             .append(Component.text("<all|config|shops|skilltrees>").color(NamedTextColor.RED)));
@@ -147,7 +147,7 @@ public class CommandOptionReload {
 
         DebugLogHandler.updateLogLevel();
 
-        Translation.init();
+        Locale.init();
 
         if (Configuration.Misc.MAX_STORED_PET_COUNT > oldMaxPetCount) {
             for (int i = oldMaxPetCount + 1; i <= Configuration.Misc.MAX_STORED_PET_COUNT; i++) {

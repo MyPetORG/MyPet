@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Beacon;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.ListBinaryTag;
@@ -149,7 +149,7 @@ public class BeaconImpl implements Beacon {
         final Player owner = myPet.getOwner().getPlayer();
 
         final BeaconImpl beacon = this;
-        Component title = Translation.getComponent("Name.Skill.Beacon", myPet.getOwner());
+        Component title = Locale.getComponent("Name.Skill.Beacon", myPet.getOwner());
         IconMenu menu = new IconMenu(title, new IconMenu.OptionClickEventHandler() {
 
             Set<Buff> selectedBuffs = new HashSet<>(beacon.selectedBuffs);
@@ -176,14 +176,14 @@ public class BeaconImpl implements Beacon {
                         if (active) {
                             menu.getOption(4)
                                     .setMaterial(REDSTONE_BLOCK)
-                                    .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage(), Translation.getComponent("Name.Off", myPet.getOwner())).color(NamedTextColor.RED))
-                                    .addLoreLine(Translation.getComponent("Message.Skill.Beacon.ClickOn", myPet.getOwner()));
+                                    .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage(), Locale.getComponent("Name.Off", myPet.getOwner())).color(NamedTextColor.RED))
+                                    .addLoreLine(Locale.getComponent("Message.Skill.Beacon.ClickOn", myPet.getOwner()));
                             active = false;
                         } else {
                             menu.getOption(4)
                                     .setMaterial(EMERALD_BLOCK)
-                                    .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage(), Translation.getComponent("Name.On", myPet.getOwner())).color(NamedTextColor.GREEN))
-                                    .addLoreLine(Translation.getComponent("Message.Skill.Beacon.ClickOff", myPet.getOwner()));
+                                    .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage(), Locale.getComponent("Name.On", myPet.getOwner())).color(NamedTextColor.GREEN))
+                                    .addLoreLine(Locale.getComponent("Message.Skill.Beacon.ClickOff", myPet.getOwner()));
                             active = true;
                         }
                         menu.update();
@@ -237,12 +237,12 @@ public class BeaconImpl implements Beacon {
                                     if (selectableBuffs.getValue() > selectedBuffs.size()) {
                                         menu.setOption(13, new IconMenuItem()
                                                 .setMaterial(POTION)
-                                                .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), selectableBuffs.getValue() - selectedBuffs.size()).color(NamedTextColor.BLUE))
+                                                .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), selectableBuffs.getValue() - selectedBuffs.size()).color(NamedTextColor.BLUE))
                                                 .setAmount(selectableBuffs.getValue() - selectedBuffs.size()));
                                     } else {
                                         menu.setOption(13, new IconMenuItem()
                                                 .setMaterial(GLASS_BOTTLE)
-                                                .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), 0).color(NamedTextColor.GRAY)));
+                                                .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), 0).color(NamedTextColor.GRAY)));
                                     }
                                     menu.update();
                                 } else if (selectableBuffs.getValue() > selectedBuffs.size()) {
@@ -251,12 +251,12 @@ public class BeaconImpl implements Beacon {
                                     if (selectableBuffs.getValue() > selectedBuffs.size()) {
                                         menu.setOption(13, new IconMenuItem()
                                                 .setMaterial(POTION)
-                                                .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), selectableBuffs.getValue() - selectedBuffs.size()).color(NamedTextColor.BLUE))
+                                                .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), selectableBuffs.getValue() - selectedBuffs.size()).color(NamedTextColor.BLUE))
                                                 .setAmount(selectableBuffs.getValue() - selectedBuffs.size()));
                                     } else {
                                         menu.setOption(13, new IconMenuItem()
                                                 .setMaterial(GLASS_BOTTLE)
-                                                .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), 0).color(NamedTextColor.GRAY)));
+                                                .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), 0).color(NamedTextColor.GRAY)));
                                     }
                                     menu.update();
                                 } else {
@@ -266,12 +266,12 @@ public class BeaconImpl implements Beacon {
                                 if (selectableBuffs.getValue() > selectedBuffs.size()) {
                                     menu.setOption(13, new IconMenuItem()
                                             .setMaterial(POTION)
-                                            .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), selectableBuffs.getValue() - selectedBuffs.size()).color(NamedTextColor.BLUE))
+                                            .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), selectableBuffs.getValue() - selectedBuffs.size()).color(NamedTextColor.BLUE))
                                             .setAmount(selectableBuffs.getValue() - selectedBuffs.size()));
                                 } else {
                                     menu.setOption(13, new IconMenuItem()
                                             .setMaterial(GLASS_BOTTLE)
-                                            .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), 0).color(NamedTextColor.GRAY)));
+                                            .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), 0).color(NamedTextColor.GRAY)));
                                 }
                             } else if (!selectedBuffs.contains(selectedBuff)) {
                                 if (!selectedBuffs.isEmpty() && menu.getOption(selectedBuff.getPosition()) != null) {
@@ -295,57 +295,57 @@ public class BeaconImpl implements Beacon {
         if (beacon.active) {
             menu.setOption(4, new IconMenuItem()
                     .setMaterial(EMERALD_BLOCK)
-                    .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage(), Translation.getComponent("Name.On", myPet.getOwner())).color(NamedTextColor.GREEN))
-                    .addLoreLine(Translation.getComponent("Message.Skill.Beacon.ClickOff", myPet.getOwner()))
+                    .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage(), Locale.getComponent("Name.On", myPet.getOwner())).color(NamedTextColor.GREEN))
+                    .addLoreLine(Locale.getComponent("Message.Skill.Beacon.ClickOff", myPet.getOwner()))
             );
         } else {
             menu.setOption(4, new IconMenuItem()
                     .setMaterial(REDSTONE_BLOCK)
-                    .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage(), Translation.getComponent("Name.Off", myPet.getOwner())).color(NamedTextColor.RED))
-                    .addLoreLine(Translation.getComponent("Message.Skill.Beacon.ClickOn", myPet.getOwner()))
+                    .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage(), Locale.getComponent("Name.Off", myPet.getOwner())).color(NamedTextColor.RED))
+                    .addLoreLine(Locale.getComponent("Message.Skill.Beacon.ClickOn", myPet.getOwner()))
             );
         }
 
         menu.setOption(3, new IconMenuItem()
                 .setMaterial(GREEN_STAINED_GLASS_PANE)
-                .setTitle(Translation.getComponent("Name.Done", myPet.getOwner()).color(NamedTextColor.GREEN)));
+                .setTitle(Locale.getComponent("Name.Done", myPet.getOwner()).color(NamedTextColor.GREEN)));
         menu.setOption(5, new IconMenuItem()
                 .setMaterial(RED_STAINED_GLASS_PANE)
-                .setTitle(Translation.getComponent("Name.Cancel", myPet.getOwner()).color(NamedTextColor.RED)));
+                .setTitle(Locale.getComponent("Name.Cancel", myPet.getOwner()).color(NamedTextColor.RED)));
 
         if (receiver == BuffReceiver.Owner) {
             menu.setOption(21, new IconMenuItem()
                     .setMaterial(PLAYER_HEAD)
-                    .setTitle(Translation.getComponent("Name.Owner", myPet.getOwner()).color(NamedTextColor.GOLD))
+                    .setTitle(Locale.getComponent("Name.Owner", myPet.getOwner()).color(NamedTextColor.GOLD))
                     .setMeta(ownerMeta, false, false));
         } else {
             menu.setOption(21, new IconMenuItem()
                     .setMaterial(PLAYER_HEAD)
-                    .setTitle(Translation.getComponent("Name.Owner", myPet.getOwner()).color(NamedTextColor.GOLD))
+                    .setTitle(Locale.getComponent("Name.Owner", myPet.getOwner()).color(NamedTextColor.GOLD))
                     .setMeta(disabledMeta, false, false));
         }
         if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && MyPetApi.getHookHelper().isInParty(getMyPet().getOwner().getPlayer())) {
             if (receiver != BuffReceiver.Party) {
                 menu.setOption(22, new IconMenuItem()
                         .setMaterial(PLAYER_HEAD)
-                        .setTitle(Translation.getComponent("Name.Party", myPet.getOwner()).color(NamedTextColor.GOLD))
+                        .setTitle(Locale.getComponent("Name.Party", myPet.getOwner()).color(NamedTextColor.GOLD))
                         .setMeta(partyMeta, false, false));
             } else {
                 menu.setOption(22, new IconMenuItem()
                         .setMaterial(PLAYER_HEAD)
-                        .setTitle(Translation.getComponent("Name.Party", myPet.getOwner()).color(NamedTextColor.GOLD))
+                        .setTitle(Locale.getComponent("Name.Party", myPet.getOwner()).color(NamedTextColor.GOLD))
                         .setMeta(disabledMeta, false, false));
             }
         }
         if (receiver == BuffReceiver.Everyone) {
             menu.setOption(23, new IconMenuItem()
                     .setMaterial(PLAYER_HEAD)
-                    .setTitle(Translation.getComponent("Name.Everyone", myPet.getOwner()).color(NamedTextColor.GOLD))
+                    .setTitle(Locale.getComponent("Name.Everyone", myPet.getOwner()).color(NamedTextColor.GOLD))
                     .setMeta(everyoneMeta, false, false));
         } else {
             menu.setOption(23, new IconMenuItem()
                     .setMaterial(PLAYER_HEAD)
-                    .setTitle(Translation.getComponent("Name.Everyone", myPet.getOwner()).color(NamedTextColor.GOLD))
+                    .setTitle(Locale.getComponent("Name.Everyone", myPet.getOwner()).color(NamedTextColor.GOLD))
                     .setMeta(disabledMeta, false, false));
         }
 
@@ -353,73 +353,73 @@ public class BeaconImpl implements Beacon {
             menu.setOption(0, new IconMenuItem()
                     .setMaterial(LEATHER_BOOTS)
                     .setAmount(getBuffLevel(Buff.Speed))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Speed.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Speed))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.Speed.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Speed))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.Haste) > 0) {
             menu.setOption(9, new IconMenuItem()
                     .setMaterial(GOLDEN_PICKAXE)
                     .setAmount(getBuffLevel(Buff.Haste))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Haste.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Haste))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.Haste.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Haste))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.Strength) > 0) {
             menu.setOption(18, new IconMenuItem()
                     .setMaterial(DIAMOND_SWORD)
                     .setAmount(getBuffLevel(Buff.Strength))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Strength.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Strength))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.Strength.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Strength))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.JumpBoost) > 0) {
             menu.setOption(1, new IconMenuItem()
                     .setMaterial(FIREWORK_ROCKET)
                     .setAmount(getBuffLevel(Buff.JumpBoost))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.JumpBoost.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.JumpBoost))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.JumpBoost.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.JumpBoost))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.Regeneration) > 0) {
             menu.setOption(10, new IconMenuItem()
                     .setMaterial(APPLE)
                     .setAmount(getBuffLevel(Buff.Regeneration))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Regeneration.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Regeneration))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.Regeneration.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Regeneration))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.Resistance) > 0) {
             menu.setOption(19, new IconMenuItem()
                     .setMaterial(DIAMOND_CHESTPLATE)
                     .setAmount(getBuffLevel(Buff.Resistance))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Resistance.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Resistance))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.Resistance.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Resistance))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.FireResistance) > 0) {
             menu.setOption(7, new IconMenuItem()
                     .setMaterial(LAVA_BUCKET)
                     .setAmount(getBuffLevel(Buff.FireResistance))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.FireResistance.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.FireResistance))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.FireResistance.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.FireResistance))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.WaterBreathing) > 0) {
             menu.setOption(16, new IconMenuItem()
                     .setMaterial(PUFFERFISH)
                     .setAmount(getBuffLevel(Buff.WaterBreathing))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.WaterBreathing.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.WaterBreathing))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.WaterBreathing.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.WaterBreathing))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.Invisibility) > 0) {
             menu.setOption(25, new IconMenuItem()
                     .setMaterial(ENDER_EYE)
                     .setAmount(getBuffLevel(Buff.Invisibility))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Invisibility.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Invisibility))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.Invisibility.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Invisibility))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.NightVision) > 0) {
             menu.setOption(8, new IconMenuItem()
                     .setMaterial(TORCH)
                     .setAmount(getBuffLevel(Buff.NightVision))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.NightVision.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.NightVision))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.NightVision.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.NightVision))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.Luck) > 0) {
             menu.setOption(17, new IconMenuItem()
                     .setMaterial(DIAMOND)
                     .setAmount(getBuffLevel(Buff.Luck))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Luck.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Luck))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.Luck.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Luck))).color(NamedTextColor.GRAY)).build()));
         }
         if (getBuffLevel(Buff.Absorption) > 0) {
             menu.setOption(26, new IconMenuItem()
                     .setMaterial(SPONGE)
                     .setAmount(getBuffLevel(Buff.Absorption))
-                    .setTitle(Component.text().append(Translation.getComponent("Name." + Buff.Absorption.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Absorption))).color(NamedTextColor.GRAY)).build()));
+                    .setTitle(Component.text().append(Locale.getComponent("Name." + Buff.Absorption.getName(), myPet.getOwner()).color(NamedTextColor.GOLD)).append(Component.text(" " + Util.decimal2roman(getBuffLevel(Buff.Absorption))).color(NamedTextColor.GRAY)).build()));
         }
 
         Iterator<Buff> iterator = selectedBuffs.iterator();
@@ -436,12 +436,12 @@ public class BeaconImpl implements Beacon {
             if (selectableBuffs.getValue() > selectedBuffs.size()) {
                 menu.setOption(13, new IconMenuItem()
                         .setMaterial(POTION)
-                        .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), selectableBuffs.getValue() - selectedBuffs.size()).color(NamedTextColor.BLUE))
+                        .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), selectableBuffs.getValue() - selectedBuffs.size()).color(NamedTextColor.BLUE))
                         .setAmount(selectableBuffs.getValue() - selectedBuffs.size()));
             } else {
                 menu.setOption(13, new IconMenuItem()
                         .setMaterial(GLASS_BOTTLE)
-                        .setTitle(Translation.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), 0).color(NamedTextColor.GRAY)));
+                        .setTitle(Locale.getFormattedComponent("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage(), 0).color(NamedTextColor.GRAY)));
             }
         }
 
@@ -459,7 +459,7 @@ public class BeaconImpl implements Beacon {
                     result = result.append(Component.text(", "));
                 }
                 result = result
-                        .append(Translation.getComponent("Name." + buff.getName(), locale).color(net.kyori.adventure.text.format.NamedTextColor.GOLD))
+                        .append(Locale.getComponent("Name." + buff.getName(), locale).color(net.kyori.adventure.text.format.NamedTextColor.GOLD))
                         .append(Component.text(" " + Util.decimal2roman(getBuffLevel(buff))).color(net.kyori.adventure.text.format.NamedTextColor.GRAY));
                 first = false;
             }
@@ -470,7 +470,7 @@ public class BeaconImpl implements Beacon {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent("Message.Skill.Beacon.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), String.format("%1.2f", getRange().getValue().doubleValue()), getDuration().getValue()),
+                Locale.getFormattedComponent("Message.Skill.Beacon.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), String.format("%1.2f", getRange().getValue().doubleValue()), getDuration().getValue()),
                 Component.text(" ").append(toPrettyComponent(myPet.getOwner().getLanguage()))
         };
     }

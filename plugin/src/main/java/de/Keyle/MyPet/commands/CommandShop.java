@@ -31,7 +31,7 @@ import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.shop.PetShop;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import io.papermc.paper.command.brigadier.Commands;
@@ -114,11 +114,11 @@ public class CommandShop {
      */
     private void executeDefault(Player player) {
         if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.Economy", player));
+            player.sendMessage(Locale.getComponent("Message.No.Economy", player));
             return;
         }
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
 
@@ -137,7 +137,7 @@ public class CommandShop {
                     return;
                 }
             }
-            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
+            player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
         }
     }
 
@@ -150,11 +150,11 @@ public class CommandShop {
      */
     private void executeNamed(Player player, String shopName) {
         if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.Economy", player));
+            player.sendMessage(Locale.getComponent("Message.No.Economy", player));
             return;
         }
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
 
@@ -163,7 +163,7 @@ public class CommandShop {
             if (Permissions.has(player, "MyPet.shop.access." + shopName) || Permissions.has(player, "MyPet.admin")) {
                 shopManager.get().open(shopName, player);
             } else {
-                player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
+                player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
             }
         }
     }
@@ -178,7 +178,7 @@ public class CommandShop {
      */
     private void openShopSelectionGui(Player player, ShopManager shopManager, List<String> availableShops) {
         Map<Integer, String> shops = new HashMap<>();
-        IconMenu menu = new IconMenu(Translation.getComponent("Message.Shop.Available", player), event -> {
+        IconMenu menu = new IconMenu(Locale.getComponent("Message.Shop.Available", player), event -> {
             String shopname = shops.get(event.getPosition());
             if (shopname != null) {
                 final String finalShopname = shopname;

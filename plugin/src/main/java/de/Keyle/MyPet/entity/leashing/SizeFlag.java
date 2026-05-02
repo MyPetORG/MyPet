@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -59,15 +59,15 @@ public class SizeFlag implements LeashFlag {
         if (entity instanceof Slime) {
             for (Setting setting : settings.all()) {
                 if (Util.isInt(setting.getKey())) {
-                    return Translation.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Equal", player, setting.getKey());
+                    return Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Equal", player, setting.getKey());
                 }
             }
             Component message = null;
             if (settings.map().containsKey("min") && Util.isInt(settings.map().get("min").getValue())) {
-                message = Translation.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Min", player, settings.map().get("min").getValue());
+                message = Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Min", player, settings.map().get("min").getValue());
             }
             if (settings.map().containsKey("max") && Util.isInt(settings.map().get("max").getValue())) {
-                Component maxComponent = Translation.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Min", player, settings.map().get("max").getValue());
+                Component maxComponent = Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Min", player, settings.map().get("max").getValue());
                 if (message != null) {
                     message = message.append(Component.text(", ")).append(maxComponent);
                 } else {

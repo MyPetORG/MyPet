@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Knockback;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.LivingEntity;
@@ -65,7 +65,7 @@ public class KnockbackImpl implements Knockback {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent("Message.Skill.Knockback.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue())
+                Locale.getFormattedComponent("Message.Skill.Knockback.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue())
         };
     }
 

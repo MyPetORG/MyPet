@@ -25,16 +25,17 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -42,21 +43,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Translation {
-    private static Translation instance = null;
+public class Locale {
+    private static Locale instance = null;
 
     private final Map<String, Language> languages = new HashMap<>();
 
-    private Translation() {
+    private Locale() {
     }
 
     public static void init() {
-        instance = new Translation();
+        instance = new Locale();
     }
 
     /**
@@ -319,14 +321,6 @@ public class Translation {
     /**
      * Normalizes common placeholder / tag mistakes from existing locale files so they
      * work correctly with MiniMessage and the colorizers.
-     * <p>
-     * At the moment this handles:
-     * - &lt;r&gt;  → &lt;reset&gt;
-     * <p>
-     * You can extend this method if you discover more broken patterns in shipped locales.
-     *
-     * @param input Raw translation string from the bundle
-     * @return Normalized string
      */
     private static String normalizePlaceholders(String input) {
         if (input == null || input.isEmpty()) {
@@ -336,11 +330,10 @@ public class Translation {
         String fixed = input;
 
         // Fix legacy/broken reset tag used in older locale files.
-        // Example: "<gold>{0}<r>" → "<gold>{0}<reset>"
         fixed = fixed.replace("<r>", "<reset>");
 
-        // Locale files use camelCase color names (e.g. <darkblue>) but MiniMessage
-        // requires underscore-separated names (e.g. <dark_blue>). Convert them.
+        // Locale files use camelCase color names but MiniMessage requires
+        // underscore-separated names.
         fixed = fixed.replace("<darkblue>", "<dark_blue>");
         fixed = fixed.replace("<darkgreen>", "<dark_green>");
         fixed = fixed.replace("<darkaqua>", "<dark_aqua>");
@@ -354,13 +347,8 @@ public class Translation {
 
     /**
      * Loads a locale bundle from the plugin JAR and the data folder.
-     * After loading, all values are passed through {@link #normalizePlaceholders(String)}
-     * to fix known placeholder/tag mistakes at load time.
-     * <p>
-     * This means downstream users of the bundle (e.g. Language, translators) will
-     * see the corrected values.
      */
-    public static TranslationBundle loadLocale(String localeString) {
+    private static TranslationBundle loadLocale(String localeString) {
 
         JarFile jarFile;
         try {
@@ -389,46 +377,23 @@ public class Translation {
             }
         }
 
-        // Normalize all loaded values so any incorrect placeholders in the
-        // .properties are fixed immediately after load.
         normalizeBundlePlaceholders(newLocale);
 
         return newLocale;
     }
 
-    /**
-     * Applies {@link #normalizePlaceholders(String)} to every entry in the given bundle.
-     * This assumes TranslationBundle is backed by a java.util.Properties-like structure.
-     */
     private static void normalizeBundlePlaceholders(TranslationBundle bundle) {
-        try {
-            for (Map.Entry<String, String> entry : bundle.translations.entrySet()) {
-                String value = entry.getValue();
-                if (value != null) {
-                    String fixed = normalizePlaceholders(value);
-                    if (!fixed.equals(value)) {
-                        entry.setValue(fixed);
-                    }
+        for (Map.Entry<String, String> entry : bundle.translations.entrySet()) {
+            String value = entry.getValue();
+            if (value != null) {
+                String fixed = normalizePlaceholders(value);
+                if (!fixed.equals(value)) {
+                    entry.setValue(fixed);
                 }
             }
-        } catch (UnsupportedOperationException ignored) {
-            // If TranslationBundle does not support entrySet() mutation, we silently skip.
-            // getRawText() still normalizes placeholders on access, so behavior is correct.
         }
     }
 
-    /**
-     * Internal method that retrieves the raw translation text without color processing.
-     * This is used by both legacy getString() and modern getComponent() methods.
-     * <p>
-     * On top of the underlying language lookup, this method also normalizes
-     * known placeholder mistakes from existing locale files, e.g. replacing
-     * &lt;r&gt; with &lt;reset&gt;.
-     *
-     * @param key          Translation key
-     * @param localeString Locale string (e.g., "en", "de_DE")
-     * @return Raw translation text (no color codes processed) with placeholders normalized
-     */
     private String getRawText(String key, String localeString) {
         String[] codes = localeString.toLowerCase().split("_");
 
@@ -451,33 +416,98 @@ public class Translation {
             translatedPhrase = getRawText(key, "en");
         }
 
-        // Normalize any incorrect or legacy placeholders from the locale files.
         return normalizePlaceholders(translatedPhrase);
     }
 
     /**
      * Retrieves translation text with raw {@code <COLOR>} tags preserved.
      * Callers that display to players should use {@link #getComponent} instead.
-     *
-     * @param key          Translation key
-     * @param localeString Locale string (e.g., "en", "de_DE")
-     * @return Translation text with {@code <COLOR>} tags
      */
     public String getText(String key, String localeString) {
         return getRawText(key, localeString);
     }
 
-    // ========== Locale file loading ==========
-
-    /**
-     * Modern method that retrieves translation as an Adventure Component.
-     * Parses MyPet color codes (<red>, &c, etc.) into proper Components.
-     *
-     * @param key          Translation key
-     * @param localeString Locale string (e.g., "en", "de_DE")
-     * @return Translation as Adventure Component with colors applied
-     */
     private Component getComponentText(String key, String localeString) {
         return MiniMessage.miniMessage().deserialize(getRawText(key, localeString));
+    }
+
+    // ========== Locale fallback hierarchy ==========
+
+    /** Per-language root (e.g. "en"), with its own bundle and per-country children. */
+    private static class Language {
+        private final String code;
+        private final Map<String, Country> countries = new HashMap<>();
+        private final TranslationBundle translations;
+
+        Language(String code) {
+            this.code = code;
+            this.translations = loadLocale(code);
+        }
+
+        String translate(String key, String country) {
+            if (!countries.containsKey(country)) {
+                countries.put(country, new Country(this, country));
+            }
+
+            String translated = countries.get(country).translate(key);
+            if (!translated.equals(key)) {
+                return translated;
+            }
+
+            if (translations != null && translations.containsKey(key)) {
+                translated = translations.getString(key);
+            }
+            return translated;
+        }
+
+        String translate(String key) {
+            if (translations != null && translations.containsKey(key)) {
+                return translations.getString(key);
+            }
+            return key;
+        }
+    }
+
+    /** Country-specific bundle (e.g. "en_us") under a parent {@link Language}. */
+    private static class Country {
+        private final String code;
+        private final TranslationBundle translations;
+
+        Country(Language language, String code) {
+            this.code = code;
+            this.translations = loadLocale(language.code + "_" + code);
+        }
+
+        String translate(String key) {
+            if (translations.containsKey(key)) {
+                return translations.getString(key);
+            }
+            return key;
+        }
+    }
+
+    /** A loaded {@code .properties} bundle. */
+    private static class TranslationBundle {
+        final HashMap<String, String> translations = new HashMap<>();
+
+        void load(Reader reader) {
+            Properties properties = new Properties();
+            try {
+                properties.load(reader);
+            } catch (IOException e) {
+                ErrorUtil.report(e);
+            }
+            for (Object o : properties.keySet()) {
+                translations.put(o.toString().toLowerCase(), properties.get(o).toString());
+            }
+        }
+
+        boolean containsKey(String key) {
+            return translations.containsKey(key.toLowerCase());
+        }
+
+        String getString(String key) {
+            return translations.get(key.toLowerCase());
+        }
     }
 }

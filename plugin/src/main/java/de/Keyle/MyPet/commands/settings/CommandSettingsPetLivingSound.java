@@ -25,7 +25,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
@@ -64,7 +64,7 @@ public class CommandSettingsPetLivingSound {
                 .requires(ctx -> ctx.getSender() instanceof Player)
                 .executes(ctx -> {
                     Player player = (Player) ctx.getSource().getSender();
-                    player.sendMessage(Translation.getComponent("Message.Command.Help.MissingParameter", player));
+                    player.sendMessage(Locale.getComponent("Message.Command.Help.MissingParameter", player));
                     player.sendMessage(Component.text(" -> ")
                             .append(Component.text("/petsettings idle-volume ").color(NamedTextColor.DARK_AQUA))
                             .append(Component.text("<amount>").color(NamedTextColor.RED)));
@@ -98,9 +98,9 @@ public class CommandSettingsPetLivingSound {
             float volume = Math.min(Math.max(amount, 0f), 100f) / 100f;
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             myPetPlayer.setPetLivingSoundVolume(volume);
-            player.sendMessage(Translation.getComponent("Message.Command.Success", player));
+            player.sendMessage(Locale.getComponent("Message.Command.Success", player));
         } else {
-            player.sendMessage(Translation.getComponent("Message.Command.Fail", player));
+            player.sendMessage(Locale.getComponent("Message.Command.Fail", player));
         }
     }
 }

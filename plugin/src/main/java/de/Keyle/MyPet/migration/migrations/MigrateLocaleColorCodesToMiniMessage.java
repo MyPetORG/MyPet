@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 /**
  * Converts legacy color-code strings in user locale override files
  * ({@code <dataFolder>/locale/MyPet_<locale>.properties}) to MiniMessage format.
- * The runtime {@code Translation} class parses every locale value through MiniMessage,
+ * The runtime {@code Locale} class parses every locale value through MiniMessage,
  * so any surviving {@code &}/{@code §} codes render as literal text.
  * <p>
  * Only files inside the plugin data folder are touched. Bundled locale files inside the

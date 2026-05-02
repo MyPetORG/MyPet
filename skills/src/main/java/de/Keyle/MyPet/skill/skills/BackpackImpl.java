@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
@@ -109,7 +109,7 @@ public class BackpackImpl implements Backpack {
         return Component.text()
                 .append(Component.text(rows.getValue().toString()).color(NamedTextColor.GOLD))
                 .append(Component.space())
-                .append(Translation.getComponent("Name.Rows", locale))
+                .append(Locale.getComponent("Name.Rows", locale))
                 .build();
     }
 
@@ -122,7 +122,7 @@ public class BackpackImpl implements Backpack {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent("Message.Skill.Inventory.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getRows().getValue().intValue() * 9)
+                Locale.getFormattedComponent("Message.Skill.Inventory.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getRows().getValue().intValue() * 9)
         };
     }
 
@@ -140,17 +140,17 @@ public class BackpackImpl implements Backpack {
     public boolean activate() {
         if (rows.getValue().intValue() > 0) {
             if (myPet.getOwner().getPlayer().isSleeping()) {
-                myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", myPet.getOwner()));
+                myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", myPet.getOwner()));
                 return false;
             }
             if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
-                myPet.getOwner().sendMessage(Translation.getComponent("Message.Skill.Inventory.Creative", myPet.getOwner()));
+                myPet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Inventory.Creative", myPet.getOwner()));
                 return false;
             }
             MyPetInventoryActionEvent event = new MyPetInventoryActionEvent(myPet, MyPetInventoryActionEvent.Action.Open);
             Bukkit.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
-                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
+                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
                 return false;
             }
             if (myPet.getLocation().isPresent()) {
@@ -163,15 +163,15 @@ public class BackpackImpl implements Backpack {
                     openInventory(myPet.getOwner().getPlayer());
                     return true;
                 } else {
-                    myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Inventory.Swimming", myPet.getOwner(), myPet.getDisplayName()));
+                    myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.Swimming", myPet.getOwner(), myPet.getDisplayName()));
                     return false;
                 }
             } else {
-                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Inventory.Swimming", myPet.getOwner(), myPet.getDisplayName()));
+                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.Swimming", myPet.getOwner(), myPet.getDisplayName()));
                 return false;
             }
         } else {
-            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Inventory.NotAvailable", myPet.getOwner(), myPet.getDisplayName()));
+            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.NotAvailable", myPet.getOwner(), myPet.getDisplayName()));
             return false;
         }
     }

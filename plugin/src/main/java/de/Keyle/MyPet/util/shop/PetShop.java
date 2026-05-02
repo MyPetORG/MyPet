@@ -35,7 +35,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.WalletType;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import lombok.Getter;
@@ -81,7 +81,7 @@ public class PetShop {
 
     public void open(final Player player) {
         if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.Economy", player));
+            player.sendMessage(Locale.getComponent("Message.No.Economy", player));
             return;
         }
         VaultHook economyHook = (VaultHook) MyPetApi.getHookHelper().getEconomy();
@@ -101,7 +101,7 @@ public class PetShop {
                         }
 
                         if (owner.hasMyPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
-                            p.sendMessage(Translation.getComponent("Message.Command.Trade.Receiver.HasPet", player));
+                            p.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.HasPet", player));
                             return;
                         }
                     } else {
@@ -109,7 +109,7 @@ public class PetShop {
                     }
 
                     final Runnable confirmRunner = () -> {
-                            IconMenu menu = new IconMenu(Translation.getFormattedComponent("Message.Shop.Confirm.Title", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())), event1 -> {
+                            IconMenu menu = new IconMenu(Locale.getFormattedComponent("Message.Shop.Confirm.Title", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())), event1 -> {
                                 if (event1.getPosition() == 3) {
                                     if (pet.getPrice() > 0) {
                                         if (economyHook.canPay(p.getUniqueId(), pet.getPrice())) {
@@ -125,11 +125,11 @@ public class PetShop {
                                                         break;
                                                 }
                                             } else {
-                                                p.sendMessage(Translation.getComponent("Message.No.Money", player));
+                                                p.sendMessage(Locale.getComponent("Message.No.Money", player));
                                                 return;
                                             }
                                         } else {
-                                            p.sendMessage(Translation.getComponent("Message.Shop.NoMoney", player));
+                                            p.sendMessage(Locale.getComponent("Message.Shop.NoMoney", player));
                                             return;
                                         }
                                     }
@@ -148,11 +148,11 @@ public class PetShop {
                                             .withUuid(UUID.randomUUID());
 
                                     MyPetPlugin.getInstance().getRepository().addPet(clonedPet).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
-                                            p.sendMessage(Translation.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
+                                            p.sendMessage(Locale.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
                                             MyPetCreateEvent createEvent = new MyPetCreateEvent(clonedPet, MyPetCreateEvent.Source.PetShop);
                                             Bukkit.getServer().getPluginManager().callEvent(createEvent);
                                             if (petOwner.hasMyPet()) {
-                                                p.sendMessage(Translation.getFormattedComponent("Message.Shop.SuccessStorage", player, clonedPet.getDisplayName()));
+                                                p.sendMessage(Locale.getFormattedComponent("Message.Shop.SuccessStorage", player, clonedPet.getDisplayName()));
                                             } else {
                                                 petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
                                                 MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(petOwner);
@@ -166,17 +166,17 @@ public class PetShop {
                             IconMenuItem icon = new IconMenuItem()
                                     .setMaterial(Material.LIME_WOOL)
                                     .setData(5)
-                                    .setTitle(Translation.getComponent("Name.Yes", player).color(NamedTextColor.GREEN));
-                            icon.addLoreLine(Translation.getFormattedComponent("Message.Shop.Confirm.Yes", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
+                                    .setTitle(Locale.getComponent("Name.Yes", player).color(NamedTextColor.GREEN));
+                            icon.addLoreLine(Locale.getFormattedComponent("Message.Shop.Confirm.Yes", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
                             if (owner != null && owner.hasMyPet()) {
-                                icon.addLoreLine(Component.empty()).addLoreLine(Translation.getComponent("Message.Shop.Confirm.SendStorage", player));
+                                icon.addLoreLine(Component.empty()).addLoreLine(Locale.getComponent("Message.Shop.Confirm.SendStorage", player));
                             }
                             menu.setOption(3, icon);
                             menu.setOption(5, new IconMenuItem()
                                     .setMaterial(Material.RED_WOOL)
                                     .setData(14)
-                                    .setTitle(Translation.getComponent("Name.No", player).color(NamedTextColor.RED))
-                                    .addLoreLine(Translation.getFormattedComponent("Message.Shop.Confirm.No", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice()))));
+                                    .setTitle(Locale.getComponent("Name.No", player).color(NamedTextColor.RED))
+                                    .addLoreLine(Locale.getFormattedComponent("Message.Shop.Confirm.No", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice()))));
                             menu.open(player);
                     };
 
@@ -185,7 +185,7 @@ public class PetShop {
                                 int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
                                 int limit = getMaxPetCount(p);
                                 if (petCount >= limit) {
-                                    p.sendMessage(Translation.getFormattedComponent("Message.Command.Switch.Limit", player, limit));
+                                    p.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Limit", player, limit));
                                     return;
                                 }
                                 p.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> confirmRunner.run(), null, 5L);
@@ -203,7 +203,7 @@ public class PetShop {
             IconMenuItem icon = pet.getIcon();
             NamedTextColor canPay = balance >= pet.getPrice() ? NamedTextColor.GREEN : NamedTextColor.RED;
             icon.addLoreLine(Component.text()
-                    .append(Translation.getComponent("Name.Price", player).color(NamedTextColor.BLUE))
+                    .append(Locale.getComponent("Name.Price", player).color(NamedTextColor.BLUE))
                     .append(Component.text(": "))
                     .append(Component.text(economyHook.getEconomy().format(pet.getPrice())).color(canPay))
                     .build());

@@ -40,7 +40,7 @@ import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.commands.arguments.RegistryArgumentType;
@@ -560,7 +560,7 @@ public class CommandOptionCreate {
      * @param options    additional creation options (e.g. {@code "baby"}, {@code "variant:3"}, {@code "skilltree:Combat"})
      */
     private void executeCreate(CommandSender sender, boolean force, Player owner, EntityType entityType, String[] options) {
-        String lang = Translation.getCommandSenderLanguage(sender);
+        String lang = Locale.getCommandSenderLanguage(sender);
 
         try {
             MyPetType myPetType = MyPetType.byEntityTypeName(entityType.name());
@@ -583,7 +583,7 @@ public class CommandOptionCreate {
 
                 PersistedMyPet base = PersistedMyPet.builder(newOwner)
                         .petType(myPetType)
-                        .petName(Translation.getString("Name." + myPetType.name(), newOwner))
+                        .petName(Locale.getString("Name." + myPetType.name(), newOwner))
                         .build();
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
                 final PersistedMyPet inactiveMyPet = updateData(base, options).withWorldGroup(wg.getName());
@@ -603,18 +603,18 @@ public class CommandOptionCreate {
                                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
                                 if (myPet.isPresent()) {
                                     myPet.get().createEntity();
-                                    sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
+                                    sender.sendMessage(Locale.getComponent("Message.Command.Success", sender));
                                 } else {
                                     sender.sendMessage(MessageUtil.prefixed(Component.text("Can't create MyPet for " + newOwner.getName() + ". Is this player online?")));
                                 }
                             } else {
-                                sender.sendMessage(Translation.getComponent("Message.Command.Success", sender));
+                                sender.sendMessage(Locale.getComponent("Message.Command.Success", sender));
                             }
                         }
                 }, null));
             }
         } catch (MyPetTypeNotFoundException e) {
-            sender.sendMessage(Translation.getComponent("Message.Command.PetType.Unknown", lang));
+            sender.sendMessage(Locale.getComponent("Message.Command.PetType.Unknown", lang));
         }
     }
 

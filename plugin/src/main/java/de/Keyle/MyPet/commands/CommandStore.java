@@ -31,7 +31,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 
@@ -97,12 +97,12 @@ public class CommandStore {
      */
     private void execute(Player player) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-            player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+            player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
 
         if (!Permissions.has(player, "MyPet.command.store")) {
-            player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
+            player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
             return;
         }
 
@@ -111,7 +111,7 @@ public class CommandStore {
             final int maxPetCount = getMaxPetCount(owner.getPlayer());
 
             if (maxPetCount == 0) {
-                player.sendMessage(Translation.getComponent("Message.No.Allowed", player));
+                player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
                 return;
             }
 
@@ -123,21 +123,21 @@ public class CommandStore {
 
                             int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
                             if (inactivePetCount >= maxPetCount) {
-                                player.sendMessage(Translation.getFormattedComponent("Message.Command.Switch.Limit", player, maxPetCount));
+                                player.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Limit", player, maxPetCount));
                                 return;
                             }
                             if (MyPetApi.getMyPetManager().deactivateMyPet(owner, true)) {
                                 owner.setMyPetForWorldGroup(worldGroup, null);
-                                player.sendMessage(Translation.getFormattedComponent("Message.Command.Switch.Success", player, myPet.getDisplayName()));
+                                player.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Success", player, myPet.getDisplayName()));
                             }
                         } else {
-                            player.sendMessage(Translation.getComponent("Message.Command.Switch.NoPet", player));
+                            player.sendMessage(Locale.getComponent("Message.Command.Switch.NoPet", player));
                         }
                 }, null));
                 return;
             }
         }
-        player.sendMessage(Translation.getComponent("Message.Command.Switch.NoPet", player));
+        player.sendMessage(Locale.getComponent("Message.Command.Switch.NoPet", player));
     }
 
     /**

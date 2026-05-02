@@ -33,7 +33,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -116,7 +116,7 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
                     Setting setting = settings.map().get(skillName.toLowerCase());
                     if (Util.isInt(setting.getValue())) {
                         int requiredLevel = Integer.parseInt(setting.getValue());
-                        skills.add(skillName + ": " + Translation.getString("Name.Level", player) + " " + requiredLevel);
+                        skills.add(skillName + ": " + Locale.getString("Name.Level", player) + " " + requiredLevel);
                     }
                 }
             }

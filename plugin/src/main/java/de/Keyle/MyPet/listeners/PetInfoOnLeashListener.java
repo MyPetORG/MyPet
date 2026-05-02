@@ -3,7 +3,7 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.CommandInfo;
 import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.util.PetInfoBuilder;
@@ -148,12 +148,12 @@ public class PetInfoOnLeashListener implements Listener {
         if (rank != ContributorCheck.ContributorRank.None) {
             infoShown = true;
             String icon = rank.getDefaultIcon();
-            String title = Translation.getString("Name.Title." + rank.name(), damager);
+            String title = Locale.getString("Name.Title." + rank.name(), damager);
             damager.sendMessage(Component.text("   " + icon + " " + title + " " + icon).color(NamedTextColor.GOLD));
         }
 
         if (!infoShown) {
-            damager.sendMessage(Translation.getComponent("Message.No.NothingToSeeHere", myPet.getOwner()));
+            damager.sendMessage(Locale.getComponent("Message.No.NothingToSeeHere", myPet.getOwner()));
         }
 
         event.setCancelled(true);

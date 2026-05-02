@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import lombok.Getter;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
@@ -208,25 +208,25 @@ public class BehaviorImpl implements Behavior {
      */
     public @NotNull Component toPrettyComponent(@NotNull String locale) {
         Component builder = Component.text()
-                .append(Translation.getComponent("Name.Modes", locale))
+                .append(Locale.getComponent("Name.Modes", locale))
                 .append(Component.text(": "))
-                .append(Translation.getComponent("Name.Normal", locale).color(NamedTextColor.GOLD))
+                .append(Locale.getComponent("Name.Normal", locale).color(NamedTextColor.GOLD))
                 .build();
 
         if (activeBehaviors.contains(Friendly)) {
-            builder = builder.append(Component.text(", ")).append(Translation.getComponent("Name.Friendly", locale).color(NamedTextColor.GOLD));
+            builder = builder.append(Component.text(", ")).append(Locale.getComponent("Name.Friendly", locale).color(NamedTextColor.GOLD));
         }
         if (activeBehaviors.contains(Aggressive)) {
-            builder = builder.append(Component.text(", ")).append(Translation.getComponent("Name.Aggressive", locale).color(NamedTextColor.GOLD));
+            builder = builder.append(Component.text(", ")).append(Locale.getComponent("Name.Aggressive", locale).color(NamedTextColor.GOLD));
         }
         if (activeBehaviors.contains(Farm)) {
-            builder = builder.append(Component.text(", ")).append(Translation.getComponent("Name.Farm", locale).color(NamedTextColor.GOLD));
+            builder = builder.append(Component.text(", ")).append(Locale.getComponent("Name.Farm", locale).color(NamedTextColor.GOLD));
         }
         if (activeBehaviors.contains(Raid)) {
-            builder = builder.append(Component.text(", ")).append(Translation.getComponent("Name.Raid", locale).color(NamedTextColor.GOLD));
+            builder = builder.append(Component.text(", ")).append(Locale.getComponent("Name.Raid", locale).color(NamedTextColor.GOLD));
         }
         if (activeBehaviors.contains(Duel)) {
-            builder = builder.append(Component.text(", ")).append(Translation.getComponent("Name.Duel", locale).color(NamedTextColor.GOLD));
+            builder = builder.append(Component.text(", ")).append(Locale.getComponent("Name.Duel", locale).color(NamedTextColor.GOLD));
         }
         return builder;
     }
@@ -240,7 +240,7 @@ public class BehaviorImpl implements Behavior {
     @Override
     public @NotNull Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName()),
+                Locale.getFormattedComponent("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName()),
                 Component.text("  ").append(toPrettyComponent(myPet.getOwner().getLanguage()))
         };
     }
@@ -266,10 +266,10 @@ public class BehaviorImpl implements Behavior {
                     break;
                 }
             }
-            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Skill.Behavior.NewMode", myPet.getOwner(), myPet.getDisplayName(), Translation.getComponent("Name." + selectedBehavior.name(), myPet.getOwner().getPlayer())));
+            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Behavior.NewMode", myPet.getOwner(), myPet.getDisplayName(), Locale.getComponent("Name." + selectedBehavior.name(), myPet.getOwner().getPlayer())));
             return true;
         } else {
-            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.No.Skill", myPet.getOwner(), myPet.getDisplayName(), this.getName(myPet.getOwner().getLanguage())));
+            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.Skill", myPet.getOwner(), myPet.getDisplayName(), this.getName(myPet.getOwner().getLanguage())));
             return false;
         }
     }

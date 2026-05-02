@@ -14,7 +14,7 @@ import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import org.bukkit.Bukkit;
@@ -64,7 +64,7 @@ public class PetDeathListener implements Listener {
             myPet.removePet();
             owner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName()), null);
 
-            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Release.Dead", owner, myPet.getDisplayName()));
+            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Release.Dead", owner, myPet.getDisplayName()));
 
             getMyPetManager().deactivateMyPet(owner, false);
             MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
@@ -134,17 +134,17 @@ public class PetDeathListener implements Listener {
 
         // Death message and respawn notification
         PetDeathMessageFormatter.sendDeathMessage(event);
-        myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Respawn.In", owner.getPlayer(), myPet.getDisplayName(), myPet.getRespawnTime()));
+        myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", owner.getPlayer(), myPet.getDisplayName(), myPet.getRespawnTime()));
 
         // Auto-respawn via economy
         if (MyPetApi.getHookHelper().isEconomyEnabled() && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() <= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.command.respawn")) {
             double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
             if (MyPetApi.getHookHelper().getEconomy().canPay(owner, costs)) {
                 MyPetApi.getHookHelper().getEconomy().pay(owner, costs);
-                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Respawn.Paid", owner.getPlayer(), myPet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Paid", owner.getPlayer(), myPet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
                 myPet.setRespawnTime(1);
             } else {
-                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Respawn.NoMoney", owner.getPlayer(), myPet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.NoMoney", owner.getPlayer(), myPet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
             }
         }
     }

@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
@@ -59,18 +59,18 @@ public class RangedImpl implements Ranged {
 
     public Component toPrettyComponent(String locale) {
         return Component.text()
-                .append(Translation.getFormattedComponent("Message.Skill.Ranged.RoundsPerMinute", locale, String.format("%1.2f", (1. / ((rateOfFire.getValue() * 50.) / 1000.)) * 60.)))
+                .append(Locale.getFormattedComponent("Message.Skill.Ranged.RoundsPerMinute", locale, String.format("%1.2f", (1. / ((rateOfFire.getValue() * 50.) / 1000.)) * 60.)))
                 .append(Component.text(" -> "))
                 .append(Component.text(damage.getValue().doubleValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
-                .append(Translation.getComponent("Name.Damage", locale))
+                .append(Locale.getComponent("Name.Damage", locale))
                 .build();
     }
 
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent("Message.Skill.Ranged.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), Translation.getComponent("Name." + getProjectile().getValue().name(), myPet.getOwner()), damage, String.format("%1.2f", (1. / ((getRateOfFire().getValue() * 50.) / 1000.)) * 60.))
+                Locale.getFormattedComponent("Message.Skill.Ranged.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), Locale.getComponent("Name." + getProjectile().getValue().name(), myPet.getOwner()), damage, String.format("%1.2f", (1. / ((getRateOfFire().getValue() * 50.) / 1000.)) * 60.))
         };
     }
 

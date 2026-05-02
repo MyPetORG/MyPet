@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import mc.alk.arena.events.players.ArenaPlayerEnterEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -62,7 +62,7 @@ public class BattleArenaHook implements AllowedHook {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer().getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet();
-                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player.getPlayer()));
+                player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player.getPlayer()));
             }
         }
     }

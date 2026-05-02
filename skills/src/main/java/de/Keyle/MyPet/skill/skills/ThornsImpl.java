@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Thorns;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Particle;
@@ -66,14 +66,14 @@ public class ThornsImpl implements Thorns {
                 .append(Component.text("% -> "))
                 .append(Component.text(reflectedDamage.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.text("% "))
-                .append(Translation.getComponent("Name.Damage", locale))
+                .append(Locale.getComponent("Name.Damage", locale))
                 .build();
     }
 
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent("Message.Skill.Thorns.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getReflectedDamage().getValue())
+                Locale.getFormattedComponent("Message.Skill.Thorns.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getReflectedDamage().getValue())
         };
     }
 

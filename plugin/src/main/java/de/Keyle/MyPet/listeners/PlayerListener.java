@@ -33,7 +33,7 @@ import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
@@ -132,18 +132,18 @@ public class PlayerListener implements Listener {
                     if (myPet.getSkills().isActive(Behavior.class)) {
                         Behavior behavior = myPet.getSkills().get(Behavior.class);
                         if (behavior.getBehavior() == BehaviorMode.Aggressive || behavior.getBehavior() == BehaviorMode.Farm) {
-                            event.getPlayer().sendMessage(Translation.getFormattedComponent("Message.Skill.Control.AggroFarm", event.getPlayer(), myPet.getDisplayName(), behavior.getBehavior().name()));
+                            event.getPlayer().sendMessage(Locale.getFormattedComponent("Message.Skill.Control.AggroFarm", event.getPlayer(), myPet.getDisplayName(), behavior.getBehavior().name()));
                             return;
                         }
                     }
                     if (myPet.getSkills().isActive(Ride.class)) {
                         if (myPet.hasMyPetRider()) {
-                            event.getPlayer().sendMessage(Translation.getFormattedComponent("Message.Skill.Control.Ride", event.getPlayer(), myPet.getDisplayName()));
+                            event.getPlayer().sendMessage(Locale.getFormattedComponent("Message.Skill.Control.Ride", event.getPlayer(), myPet.getDisplayName()));
                             return;
                         }
                     }
                     if (!Permissions.hasExtended(event.getPlayer(), "MyPet.extended.control")) {
-                        myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", myPet.getOwner()), 10000);
+                        myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", myPet.getOwner()), 10000);
                         return;
                     }
                     Block block = event.getPlayer().getTargetBlock(null, 100);
@@ -178,7 +178,7 @@ public class PlayerListener implements Listener {
                     if (myPet.wantsToRespawn()) {
                         switch (myPet.createEntity()) {
                             case Success:
-                                myPetPlayerDamagee.sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", myPetPlayerDamagee, myPet.getDisplayName()));
+                                myPetPlayerDamagee.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", myPetPlayerDamagee, myPet.getDisplayName()));
                                 break;
                         }
                     }
@@ -241,23 +241,23 @@ public class PlayerListener implements Listener {
                                     if (myPet.wantsToRespawn()) {
                                         switch (myPet.createEntity()) {
                                             case Canceled:
-                                                joinedPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", joinedPlayer, myPet.getDisplayName()));
+                                                joinedPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", joinedPlayer, myPet.getDisplayName()));
                                                 break;
                                             case NotAllowed:
-                                                joinedPlayer.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", joinedPlayer, myPet.getDisplayName()));
+                                                joinedPlayer.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", joinedPlayer, myPet.getDisplayName()));
                                                 break;
                                             case Dead:
                                                 if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                    joinedPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", joinedPlayer, myPet.getDisplayName()));
+                                                    joinedPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", joinedPlayer, myPet.getDisplayName()));
                                                 } else {
-                                                    joinedPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Respawn.In", joinedPlayer, myPet.getDisplayName(), myPet.getRespawnTime()));
+                                                    joinedPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", joinedPlayer, myPet.getDisplayName(), myPet.getRespawnTime()));
                                                 }
                                                 break;
                                             case Flying:
-                                                joinedPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", joinedPlayer, myPet.getDisplayName()));
+                                                joinedPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", joinedPlayer, myPet.getDisplayName()));
                                                 break;
                                             case NoSpace:
-                                                joinedPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", joinedPlayer, myPet.getDisplayName()));
+                                                joinedPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", joinedPlayer, myPet.getDisplayName()));
                                                 break;
                                         }
                                     }
@@ -275,7 +275,7 @@ public class PlayerListener implements Listener {
         if (Configuration.Update.SHOW_OP && event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
             String versionUrl = "https://modrinth.com/plugin/mypet/version/" + Updater.getLatest().getVersion();
             event.getPlayer().sendMessage(Component.text()
-                    .append(Translation.getFormattedComponent("Message.Update.Available", event.getPlayer()))
+                    .append(Locale.getFormattedComponent("Message.Update.Available", event.getPlayer()))
                     .append(Component.text(" [" + Updater.getLatest().getVersion() + "]")
                             .color(NamedTextColor.GREEN)
                             .clickEvent(ClickEvent.openUrl(versionUrl))
@@ -389,29 +389,29 @@ public class PlayerListener implements Listener {
                     MyPet runMyPet = myPetPlayer.getMyPet();
                     switch (runMyPet.createEntity()) {
                         case Canceled:
-                            myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", myPetPlayer, runMyPet.getDisplayName()));
+                            myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", myPetPlayer, runMyPet.getDisplayName()));
                             break;
                         case NoSpace:
-                            myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", myPetPlayer, runMyPet.getDisplayName()));
+                            myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", myPetPlayer, runMyPet.getDisplayName()));
                             break;
                         case NotAllowed:
-                            myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPetPlayer, runMyPet.getDisplayName()));
+                            myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPetPlayer, runMyPet.getDisplayName()));
                             break;
                         case Dead:
                             if (runMyPet != myPet) {
                                 if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                    myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", runMyPet.getOwner(), runMyPet.getDisplayName()));
+                                    myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", runMyPet.getOwner(), runMyPet.getDisplayName()));
                                 } else {
-                                    myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead.Respawn", runMyPet.getOwner(), runMyPet.getDisplayName(), runMyPet.getRespawnTime()));
+                                    myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", runMyPet.getOwner(), runMyPet.getDisplayName(), runMyPet.getRespawnTime()));
                                 }
                             }
                             break;
                         case Flying:
-                            myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", myPetPlayer, runMyPet.getDisplayName()));
+                            myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", myPetPlayer, runMyPet.getDisplayName()));
                             break;
                         case Success:
                             if (runMyPet != myPet) {
-                                myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", myPetPlayer, runMyPet.getDisplayName()));
+                                myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", myPetPlayer, runMyPet.getDisplayName()));
                             }
                             break;
                     }
@@ -445,7 +445,7 @@ public class PlayerListener implements Listener {
                         }, null);
                     });
                 } else if (hadMyPetInFromWorld) {
-                    myPetPlayer.sendMessage(Translation.getComponent("Message.MultiWorld.NoActivePetInThisWorld", myPetPlayer));
+                    myPetPlayer.sendMessage(Locale.getComponent("Message.MultiWorld.NoActivePetInThisWorld", myPetPlayer));
                 }
             } else if (myPet != null) {
                 if (myPet.wantsToRespawn()) {
@@ -470,7 +470,7 @@ public class PlayerListener implements Listener {
             if (player.getLocation().getWorld() != event.getTo().getWorld() || event.getFrom().distance(event.getTo()) > 10) {
                 if (Configuration.Skilltree.Skill.Ride.PREVENT_TELEPORTATION) {
                     event.setCancelled(true);
-                    player.sendMessage(Translation.getComponent("Message.Skill.Ride.NoTeleport", player));
+                    player.sendMessage(Locale.getComponent("Message.Skill.Ride.NoTeleport", player));
                     return;
                 }
                 player.getVehicle().eject();
@@ -490,20 +490,20 @@ public class PlayerListener implements Listener {
                                 MyPet runMyPet = myPetPlayer.getMyPet();
                                 switch (runMyPet.createEntity()) {
                                     case Canceled:
-                                        myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", myPetPlayer, runMyPet.getDisplayName()));
+                                        myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", myPetPlayer, runMyPet.getDisplayName()));
                                         break;
                                     case NoSpace:
                                         if (sameWorld) {
-                                            myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", myPetPlayer, runMyPet.getDisplayName()));
+                                            myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", myPetPlayer, runMyPet.getDisplayName()));
                                         }
                                         break;
                                     case Flying:
                                         if (sameWorld) {
-                                            myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", myPetPlayer, runMyPet.getDisplayName()));
+                                            myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", myPetPlayer, runMyPet.getDisplayName()));
                                         }
                                         break;
                                     case NotAllowed:
-                                        myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPetPlayer, runMyPet.getDisplayName()));
+                                        myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPetPlayer, runMyPet.getDisplayName()));
                                         break;
                                 }
                             }
@@ -527,7 +527,7 @@ public class PlayerListener implements Listener {
                 if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                     if (!MyPetApi.getHookHelper().isPetAllowed(player)) {
                         player.getMyPet().removePet(true);
-                        player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player.getPlayer()));
+                        player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player.getPlayer()));
                     }
                 }
 
@@ -573,45 +573,45 @@ public class PlayerListener implements Listener {
 
             if (!current.hasModifications() && previous.hasModifications()) {
                 // Left all modifications
-                player.sendMessage(Translation.getComponent("Message.Skill.Beacon.Zone.Leave", player));
+                player.sendMessage(Locale.getComponent("Message.Skill.Beacon.Zone.Leave", player));
             } else if (current.hasModifications()) {
                 // Entered or changed zone - build multi-line message
                 List<Component> lines = new ArrayList<>();
-                lines.add(Translation.getComponent("Message.Skill.Beacon.Zone.Enter", player));
+                lines.add(Locale.getComponent("Message.Skill.Beacon.Zone.Enter", player));
 
                 if (current.deny) {
-                    lines.add(Translation.getComponent("Message.Skill.Beacon.Zone.Deny", player));
+                    lines.add(Locale.getComponent("Message.Skill.Beacon.Zone.Deny", player));
                 }
                 if (current.selfDeny) {
-                    lines.add(Translation.getComponent("Message.Skill.Beacon.Zone.SelfDeny", player));
+                    lines.add(Locale.getComponent("Message.Skill.Beacon.Zone.SelfDeny", player));
                 }
                 if (current.shareDeny) {
-                    lines.add(Translation.getComponent("Message.Skill.Beacon.Zone.ShareDeny", player));
+                    lines.add(Locale.getComponent("Message.Skill.Beacon.Zone.ShareDeny", player));
                 }
                 if (current.rangeMult < 1.0) {
-                    lines.add(Translation.getFormattedComponent(
+                    lines.add(Locale.getFormattedComponent(
                         "Message.Skill.Beacon.Zone.RangeReduced", player,
                         (int)(current.rangeMult * 100)));
                 } else if (current.rangeMult > 1.0) {
-                    lines.add(Translation.getFormattedComponent(
+                    lines.add(Locale.getFormattedComponent(
                         "Message.Skill.Beacon.Zone.RangeIncreased", player,
                         (int)(current.rangeMult * 100)));
                 }
                 if (current.durationMult < 1.0) {
-                    lines.add(Translation.getFormattedComponent(
+                    lines.add(Locale.getFormattedComponent(
                         "Message.Skill.Beacon.Zone.DurationReduced", player,
                         (int)(current.durationMult * 100)));
                 } else if (current.durationMult > 1.0) {
-                    lines.add(Translation.getFormattedComponent(
+                    lines.add(Locale.getFormattedComponent(
                         "Message.Skill.Beacon.Zone.DurationIncreased", player,
                         (int)(current.durationMult * 100)));
                 }
                 if (current.amplifierMod < 0) {
-                    lines.add(Translation.getFormattedComponent(
+                    lines.add(Locale.getFormattedComponent(
                         "Message.Skill.Beacon.Zone.AmplifierReduced", player,
                         Math.abs(current.amplifierMod)));
                 } else if (current.amplifierMod > 0) {
-                    lines.add(Translation.getFormattedComponent(
+                    lines.add(Locale.getFormattedComponent(
                         "Message.Skill.Beacon.Zone.AmplifierIncreased", player,
                         current.amplifierMod));
                 }
@@ -658,29 +658,29 @@ public class PlayerListener implements Listener {
                         MyPet runMyPet = respawnedMyPetPlayer.getMyPet();
                         switch (runMyPet.createEntity()) {
                             case Canceled:
-                                respawnedMyPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", respawnedMyPetPlayer, runMyPet.getDisplayName()));
+                                respawnedMyPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", respawnedMyPetPlayer, runMyPet.getDisplayName()));
                                 break;
                             case NoSpace:
-                                respawnedMyPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", respawnedMyPetPlayer, runMyPet.getDisplayName()));
+                                respawnedMyPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", respawnedMyPetPlayer, runMyPet.getDisplayName()));
                                 break;
                             case NotAllowed:
-                                respawnedMyPetPlayer.sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", respawnedMyPetPlayer, runMyPet.getDisplayName()));
+                                respawnedMyPetPlayer.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", respawnedMyPetPlayer, runMyPet.getDisplayName()));
                                 break;
                             case Dead:
                                 if (runMyPet != myPet) {
                                     if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                        respawnedMyPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead", respawnedMyPetPlayer, myPet.getDisplayName()));
+                                        respawnedMyPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", respawnedMyPetPlayer, myPet.getDisplayName()));
                                     } else {
-                                        respawnedMyPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Call.Dead.Respawn", respawnedMyPetPlayer, runMyPet.getDisplayName(), runMyPet.getRespawnTime()));
+                                        respawnedMyPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", respawnedMyPetPlayer, runMyPet.getDisplayName(), runMyPet.getRespawnTime()));
                                     }
                                 }
                                 break;
                             case Flying:
-                                respawnedMyPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", respawnedMyPetPlayer, runMyPet.getDisplayName()));
+                                respawnedMyPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", respawnedMyPetPlayer, runMyPet.getDisplayName()));
                                 break;
                             case Success:
                                 if (runMyPet != myPet) {
-                                    respawnedMyPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", respawnedMyPetPlayer, runMyPet.getDisplayName()));
+                                    respawnedMyPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", respawnedMyPetPlayer, runMyPet.getDisplayName()));
                                 }
                                 break;
                         }

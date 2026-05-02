@@ -31,7 +31,7 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -111,15 +111,15 @@ public class CommandSkill {
             petOwner = Bukkit.getServer().getPlayer(targetName);
 
             if (petOwner == null || !petOwner.isOnline()) {
-                sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", sender));
+                sender.sendMessage(Locale.getComponent("Message.No.PlayerOnline", sender));
                 return;
             } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, petOwner.getName()));
+                sender.sendMessage(Locale.getFormattedComponent("Message.No.UserHavePet", sender, petOwner.getName()));
                 return;
             }
         } else {
             if (sender instanceof Player) {
-                sender.sendMessage(Translation.getComponent("Message.No.AllowedHere", sender));
+                sender.sendMessage(Locale.getComponent("Message.No.AllowedHere", sender));
             } else {
                 sender.sendMessage("You can't use this command from server console!");
             }
@@ -127,16 +127,16 @@ public class CommandSkill {
         }
 
         if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-            sender.sendMessage(Translation.getComponent("Message.No.AllowedHere", sender));
+            sender.sendMessage(Locale.getComponent("Message.No.AllowedHere", sender));
         }
 
         if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
             myPet.autoAssignSkilltree();
             String skilltreeDisplay = myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName();
-            sender.sendMessage(Translation.getFormattedComponent("Message.Command.Skills.Show", sender, myPet.getDisplayName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltreeDisplay)));
+            sender.sendMessage(Locale.getFormattedComponent("Message.Command.Skills.Show", sender, myPet.getDisplayName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltreeDisplay)));
 
-            String locale = Translation.getCommandSenderLanguage(sender);
+            String locale = Locale.getCommandSenderLanguage(sender);
             for (Skill skill : myPet.getSkills().all()) {
                 if (skill.isActive()) {
                     sender.sendMessage(Component.text()
@@ -148,7 +148,7 @@ public class CommandSkill {
                 }
             }
         } else {
-            sender.sendMessage(Translation.getComponent("Message.No.HasPet", sender));
+            sender.sendMessage(Locale.getComponent("Message.No.HasPet", sender));
         }
     }
 }

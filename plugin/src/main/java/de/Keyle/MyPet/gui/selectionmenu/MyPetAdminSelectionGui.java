@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.Util;
 import java.util.function.Consumer;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.services.EggIconService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -103,20 +103,20 @@ public class MyPetAdminSelectionGui {
                 StoredMyPet mypet = pets.get(i + ((page - 1) * 45));
 
                 IconMenuItem icon = new IconMenuItem();
-                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Hunger", admin)).append(Component.text(": ")).append(Component.text(Math.round(mypet.getSaturation())).color(NamedTextColor.GOLD)).build());
+                icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Hunger", admin)).append(Component.text(": ")).append(Component.text(Math.round(mypet.getSaturation())).color(NamedTextColor.GOLD)).build());
                 if (mypet.getRespawnTime() > 0) {
-                    icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Respawntime", admin)).append(Component.text(": ")).append(Component.text(mypet.getRespawnTime() + "sec").color(NamedTextColor.GOLD)).build());
+                    icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Respawntime", admin)).append(Component.text(": ")).append(Component.text(mypet.getRespawnTime() + "sec").color(NamedTextColor.GOLD)).build());
                 } else {
-                    icon.addLoreLine(Component.text().append(Translation.getComponent("Name.HP", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", mypet.getHealth())).color(NamedTextColor.GOLD)).build());
+                    icon.addLoreLine(Component.text().append(Locale.getComponent("Name.HP", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", mypet.getHealth())).color(NamedTextColor.GOLD)).build());
                 }
                 int level = mypet.getLevel();
                 if (level > 0) {
-                    icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Level", admin)).append(Component.text(": ")).append(Component.text(level).color(NamedTextColor.GOLD)).build());
+                    icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Level", admin)).append(Component.text(": ")).append(Component.text(level).color(NamedTextColor.GOLD)).build());
                 } else {
-                    icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Exp", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", mypet.getExp())).color(NamedTextColor.GOLD)).build());
+                    icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Exp", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", mypet.getExp())).color(NamedTextColor.GOLD)).build());
                 }
-                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Type", admin)).append(Component.text(": ")).append(Translation.getComponent("Name." + mypet.getPetType().name(), admin).color(NamedTextColor.GOLD)).build());
-                icon.addLoreLine(Component.text().append(Translation.getComponent("Name.Skilltree", admin)).append(Component.text(": ")).append(Util.SANITIZED_MINIMESSAGE.deserialize(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-").color(NamedTextColor.GOLD)).build());
+                icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Type", admin)).append(Component.text(": ")).append(Locale.getComponent("Name." + mypet.getPetType().name(), admin).color(NamedTextColor.GOLD)).build());
+                icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Skilltree", admin)).append(Component.text(": ")).append(Util.SANITIZED_MINIMESSAGE.deserialize(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-").color(NamedTextColor.GOLD)).build());
 
                 icon.setTitle(mypet.getDisplayName());
                 Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);

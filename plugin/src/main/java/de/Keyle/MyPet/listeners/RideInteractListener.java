@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Ride;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -73,7 +73,7 @@ public class RideInteractListener implements Listener {
             return;
         }
         if (!Permissions.hasExtended(player, "MyPet.extended.ride")) {
-            myPet.getOwner().sendMessage(Translation.getComponent("Message.No.CanUse", myPet.getOwner()), 2000);
+            myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", myPet.getOwner()), 2000);
             return;
         }
 

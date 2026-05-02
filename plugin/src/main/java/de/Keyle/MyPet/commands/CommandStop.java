@@ -28,7 +28,7 @@ import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
 
@@ -87,23 +87,23 @@ public class CommandStop {
      */
     private void execute(Player petOwner) {
         if (WorldGroup.getGroupByWorld(petOwner.getWorld()).isDisabled()) {
-            petOwner.sendMessage(Translation.getComponent("Message.No.AllowedHere", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
         if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
 
             if (myPet.getStatus() == PetState.Despawned) {
-                petOwner.sendMessage(Translation.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
+                petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
                 return;
             } else if (myPet.getStatus() == PetState.Dead) {
-                petOwner.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", petOwner, myPet.getDisplayName()));
+                petOwner.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", petOwner, myPet.getDisplayName()));
                 return;
             }
-            petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Stop.Attack", petOwner, myPet.getDisplayName()));
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Stop.Attack", petOwner, myPet.getDisplayName()));
             myPet.forgetTarget();
         } else {
-            petOwner.sendMessage(Translation.getComponent("Message.No.HasPet", petOwner));
+            petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
         }
     }
 }

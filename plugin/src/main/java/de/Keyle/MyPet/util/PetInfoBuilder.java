@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import de.Keyle.MyPet.util.player.ContributorCheck;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
@@ -76,7 +76,7 @@ public class PetInfoBuilder {
     public static Component ownerLine(MyPet myPet, CommandSender sender) {
         return Component.text()
                 .append(Component.text(INDENT))
-                .append(Translation.getComponent("Name.Owner", sender))
+                .append(Locale.getComponent("Name.Owner", sender))
                 .append(Component.text(": "))
                 .append(Component.text(myPet.getOwner().getName()))
                 .build();
@@ -94,13 +94,13 @@ public class PetInfoBuilder {
     public static Component hpLine(MyPet myPet, CommandSender sender) {
         Component hpLabel = Component.text()
                 .append(Component.text(INDENT))
-                .append(Translation.getComponent("Name.HP", sender))
+                .append(Locale.getComponent("Name.HP", sender))
                 .append(Component.text(": "))
                 .build();
 
         if (myPet.getStatus() == PetState.Dead) {
             return hpLabel.append(
-                    Translation.getComponent("Name.Dead", sender)
+                    Locale.getComponent("Name.Dead", sender)
                             .color(NamedTextColor.RED)
             );
         }
@@ -139,7 +139,7 @@ public class PetInfoBuilder {
 
         return Component.text()
                 .append(Component.text(INDENT))
-                .append(Translation.getComponent("Name.Respawntime", sender))
+                .append(Locale.getComponent("Name.Respawntime", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.valueOf(myPet.getRespawnTime())))
                 .build();
@@ -160,7 +160,7 @@ public class PetInfoBuilder {
 
         return Component.text()
                 .append(Component.text(INDENT))
-                .append(Translation.getComponent("Name.Damage", sender))
+                .append(Locale.getComponent("Name.Damage", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.format("%1.2f", myPet.getDamage())))
                 .build();
@@ -181,7 +181,7 @@ public class PetInfoBuilder {
 
         return Component.text()
                 .append(Component.text(INDENT))
-                .append(Translation.getComponent("Name.RangedDamage", sender))
+                .append(Locale.getComponent("Name.RangedDamage", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.format("%1.2f", myPet.getRangedDamage())))
                 .build();
@@ -202,7 +202,7 @@ public class PetInfoBuilder {
 
         return Component.text()
                 .append(Component.text(INDENT))
-                .append(Translation.getComponent("Name.Hunger", sender))
+                .append(Locale.getComponent("Name.Hunger", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.valueOf(Math.round(myPet.getSaturation()))))
                 .build();
@@ -224,7 +224,7 @@ public class PetInfoBuilder {
         if (sender instanceof Player player) {
             TextComponent.Builder messageBuilder = Component.text()
                     .append(Component.text(INDENT))
-                    .append(Translation.getComponent("Name.Food", player))
+                    .append(Locale.getComponent("Name.Food", player))
                     .append(Component.text(": "));
 
             boolean comma = false;
@@ -269,7 +269,7 @@ public class PetInfoBuilder {
 
             return Component.text()
                     .append(Component.text(INDENT))
-                    .append(Translation.getComponent("Name.Food", sender))
+                    .append(Locale.getComponent("Name.Food", sender))
                     .append(Component.text(": "))
                     .append(Component.text(foodList))
                     .build();
@@ -292,9 +292,9 @@ public class PetInfoBuilder {
         BehaviorImpl behavior = myPet.getSkills().get(BehaviorImpl.class);
         return Component.text()
                 .append(Component.text(INDENT))
-                .append(Translation.getComponent("Name.Skill.Behavior", sender))
+                .append(Locale.getComponent("Name.Skill.Behavior", sender))
                 .append(Component.text(": "))
-                .append(Translation.getComponent("Name." + behavior.getBehavior().name(), sender))
+                .append(Locale.getComponent("Name." + behavior.getBehavior().name(), sender))
                 .build();
     }
 
@@ -313,7 +313,7 @@ public class PetInfoBuilder {
 
         return Component.text()
                 .append(Component.text(INDENT))
-                .append(Translation.getComponent("Name.Skilltree", sender))
+                .append(Locale.getComponent("Name.Skilltree", sender))
                 .append(Component.text(": "))
                 .append(Util.SANITIZED_MINIMESSAGE.deserialize(myPet.getSkilltree().getDisplayName()))
                 .build();
@@ -331,7 +331,7 @@ public class PetInfoBuilder {
         int level = myPet.getExperience().getLevel();
         return Component.text()
                 .append(Component.text(INDENT))
-                .append(Translation.getComponent("Name.Level", sender))
+                .append(Locale.getComponent("Name.Level", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.valueOf(level)))
                 .build();
@@ -359,7 +359,7 @@ public class PetInfoBuilder {
 
         return Component.text()
                 .append(Component.text(INDENT))
-                .append(Translation.getComponent("Name.Exp", sender))
+                .append(Locale.getComponent("Name.Exp", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqExp)))
                 .build();
@@ -384,7 +384,7 @@ public class PetInfoBuilder {
         return Component.text()
                 .append(Component.text(INDENT))
                 .append(Component.text(icon + " ").color(NamedTextColor.GOLD))
-                .append(Translation.getComponent("Name.Title." + rank.name(), sender).color(NamedTextColor.GOLD))
+                .append(Locale.getComponent("Name.Title." + rank.name(), sender).color(NamedTextColor.GOLD))
                 .append(Component.text(" " + icon).color(NamedTextColor.GOLD))
                 .build();
     }
@@ -504,57 +504,57 @@ public class PetInfoBuilder {
     public static HoverEvent<Component> myPetToItemHover(StoredMyPet mypet, String lang) {
         TextComponent.Builder builder = Component.text();
 
-        builder.append(Translation.getComponent("Name.Hunger", lang))
+        builder.append(Locale.getComponent("Name.Hunger", lang))
                 .append(Component.text(": "))
                 .append(Component.text(Math.round(mypet.getSaturation())).color(NamedTextColor.GOLD))
                 .append(Component.newline());
 
         if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
             if (mypet.getRespawnTime() > 0) {
-                builder.append(Translation.getComponent("Name.Respawntime", lang))
+                builder.append(Locale.getComponent("Name.Respawntime", lang))
                         .append(Component.text(": "))
                         .append(Component.text(mypet.getRespawnTime() + "sec").color(NamedTextColor.GOLD))
                         .append(Component.newline());
             } else {
-                builder.append(Translation.getComponent("Name.HP", lang))
+                builder.append(Locale.getComponent("Name.HP", lang))
                         .append(Component.text(": "))
                         .append(Component.text(String.format("%1.2f", mypet.getHealth())).color(NamedTextColor.GOLD))
                         .append(Component.newline());
             }
         } else if (mypet.getRespawnTime() <= 0) {
-            builder.append(Translation.getComponent("Name.HP", lang))
+            builder.append(Locale.getComponent("Name.HP", lang))
                     .append(Component.text(": "))
                     .append(Component.text(String.format("%1.2f", mypet.getHealth())).color(NamedTextColor.GOLD))
                     .append(Component.newline());
         }
 
-        builder.append(Translation.getComponent("Name.Exp", lang))
+        builder.append(Locale.getComponent("Name.Exp", lang))
                 .append(Component.text(": "))
                 .append(Component.text(String.format("%1.2f", mypet.getExp())).color(NamedTextColor.GOLD))
                 .append(Component.newline());
 
         int level = mypet.getLevel();
         if (level > 0) {
-            builder.append(Translation.getComponent("Name.Level", lang))
+            builder.append(Locale.getComponent("Name.Level", lang))
                     .append(Component.text(": "))
                     .append(Component.text(level).color(NamedTextColor.GOLD))
                     .append(Component.newline());
         }
 
         String entityKey = "entity.minecraft." + mypet.getPetType().getBukkitName().toLowerCase();
-        builder.append(Translation.getComponent("Name.Type", lang))
+        builder.append(Locale.getComponent("Name.Type", lang))
                 .append(Component.text(": "))
                 .append(Component.translatable(entityKey).color(NamedTextColor.GOLD))
                 .append(Component.newline());
 
-        builder.append(Translation.getComponent("Name.Skilltree", lang))
+        builder.append(Locale.getComponent("Name.Skilltree", lang))
                 .append(Component.text(": "))
                 .append(Util.SANITIZED_MINIMESSAGE.deserialize(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-")
                         .color(NamedTextColor.GOLD));
 
         if (Configuration.Respawn.DISABLE_AUTO_RESPAWN && mypet.getRespawnTime() > 0) {
             builder.append(Component.newline())
-                    .append(Translation.getComponent("Name.Dead", lang).color(NamedTextColor.RED));
+                    .append(Locale.getComponent("Name.Dead", lang).color(NamedTextColor.RED));
         }
 
         return HoverEvent.showText(builder.build());

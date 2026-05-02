@@ -30,7 +30,7 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.PetInfoBuilder;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
@@ -106,7 +106,7 @@ public class CommandList {
      *                   or {@code null} to list the sender's own pets
      */
     private void execute(Player sender, String targetName) {
-        final String lang = Translation.getPlayerLanguage(sender);
+        final String lang = Locale.getPlayerLanguage(sender);
 
         final Player petOwner;
         if (targetName == null) {
@@ -120,14 +120,14 @@ public class CommandList {
         }
 
         if (petOwner == null || !petOwner.isOnline()) {
-            sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", lang));
+            sender.sendMessage(Locale.getComponent("Message.No.PlayerOnline", lang));
             return;
         }
         final MyPetPlayer owner;
         if (MyPetApi.getPlayerManager().isMyPetPlayer(petOwner)) {
             owner = MyPetApi.getPlayerManager().getMyPetPlayer(petOwner);
         } else {
-            sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName()));
+            sender.sendMessage(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName()));
             return;
         }
 
@@ -135,9 +135,9 @@ public class CommandList {
             MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(value -> {
                 Runnable listBody = () -> {
                     if (petOwner == sender) {
-                        sender.sendMessage(Translation.getFormattedComponent("Message.Command.List.Yours", lang, owner.getName()));
+                        sender.sendMessage(Locale.getFormattedComponent("Message.Command.List.Yours", lang, owner.getName()));
                     } else {
-                        sender.sendMessage(Translation.getFormattedComponent("Message.Command.List.Player", lang, owner.getName()));
+                        sender.sendMessage(Locale.getFormattedComponent("Message.Command.List.Player", lang, owner.getName()));
                     }
                     boolean doComma = false;
                     TextComponent.Builder messageBuilder = Component.text();

@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Heal;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
@@ -59,18 +59,18 @@ public class HealImpl implements Heal {
         return Component.text()
                 .append(Component.text("+"))
                 .append(Component.text(heal.getValue().doubleValue()).color(NamedTextColor.GOLD))
-                .append(Translation.getComponent("Name.HP", locale))
+                .append(Locale.getComponent("Name.HP", locale))
                 .append(Component.text(" -> "))
                 .append(Component.text(timer.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
-                .append(Translation.getComponent("Name.Seconds", locale))
+                .append(Locale.getComponent("Name.Seconds", locale))
                 .build();
     }
 
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Translation.getFormattedComponent("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getHeal().getValue().doubleValue(), getTimer().getValue())
+                Locale.getFormattedComponent("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getHeal().getValue().doubleValue(), getTimer().getValue())
         };
     }
 

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.gui;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
@@ -186,7 +186,7 @@ public class IconMenu implements Listener {
 
     public void open(HumanEntity player) {
         if (player.isSleeping()) {
-            player.sendMessage(Translation.getComponent("Message.No.CanUse", player));
+            player.sendMessage(Locale.getComponent("Message.No.CanUse", player));
             return;
         }
         if (inventory == null) {

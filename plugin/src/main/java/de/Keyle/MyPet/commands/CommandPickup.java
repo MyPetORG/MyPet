@@ -29,7 +29,7 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.skill.skills.PickupImpl;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
@@ -93,27 +93,27 @@ public class CommandPickup {
      */
     private void execute(Player owner) {
         if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
-            owner.sendMessage(Translation.getComponent("Message.No.AllowedHere", owner));
+            owner.sendMessage(Locale.getComponent("Message.No.AllowedHere", owner));
             return;
         }
         if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
 
             if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup")) {
-                owner.sendMessage(Translation.getComponent("Message.No.Allowed", owner));
+                owner.sendMessage(Locale.getComponent("Message.No.Allowed", owner));
                 return;
             } else if (myPet.getStatus() == PetState.Despawned) {
-                owner.sendMessage(Translation.getFormattedComponent("Message.Call.First", owner, myPet.getDisplayName()));
+                owner.sendMessage(Locale.getFormattedComponent("Message.Call.First", owner, myPet.getDisplayName()));
                 return;
             } else if (myPet.getStatus() == PetState.Dead) {
-                owner.sendMessage(Translation.getFormattedComponent("Message.Action.Dead", owner, myPet.getDisplayName()));
+                owner.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", owner, myPet.getDisplayName()));
                 return;
             }
             if (myPet.getSkills().has(PickupImpl.class)) {
                 myPet.getSkills().get(PickupImpl.class).activate();
             }
         } else {
-            owner.sendMessage(Translation.getComponent("Message.No.HasPet", owner));
+            owner.sendMessage(Locale.getComponent("Message.No.HasPet", owner));
         }
     }
 }

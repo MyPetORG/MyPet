@@ -4,7 +4,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,7 +54,7 @@ public class PetSurvivalListener implements Listener {
             final MyPetPlayer myPetPlayer = myPet.getOwner();
 
             myPet.removePet();
-            myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Spawn.Despawn", myPetPlayer.getLanguage(), myPet.getDisplayName()));
+            myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Despawn", myPetPlayer.getLanguage(), myPet.getDisplayName()));
 
             Player ownerPlayer = myPetPlayer.getPlayer();
             if (ownerPlayer == null) return;
@@ -63,20 +63,20 @@ public class PetSurvivalListener implements Listener {
                     MyPet runMyPet = myPetPlayer.getMyPet();
                     switch (runMyPet.createEntity()) {
                         case Canceled:
-                            runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Prevent", myPet.getOwner(), runMyPet.getDisplayName()));
+                            runMyPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", myPet.getOwner(), runMyPet.getDisplayName()));
                             break;
                         case NoSpace:
-                            runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.NoSpace", myPet.getOwner(), runMyPet.getDisplayName()));
+                            runMyPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", myPet.getOwner(), runMyPet.getDisplayName()));
                             break;
                         case NotAllowed:
-                            runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
+                            runMyPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
                             break;
                         case Flying:
-                            runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Spawn.Flying", myPet.getOwner(), myPet.getDisplayName()));
+                            runMyPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", myPet.getOwner(), myPet.getDisplayName()));
                             break;
                         case Success:
                             if (runMyPet != myPet) {
-                                runMyPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Call.Success", myPet.getOwner(), runMyPet.getDisplayName()));
+                                runMyPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", myPet.getOwner(), runMyPet.getDisplayName()));
                             }
                             break;
                     }

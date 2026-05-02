@@ -24,7 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.MyPet;
 import me.maker56.survivalgames.events.UserLobbyJoinedEvent;
 import org.bukkit.Bukkit;
@@ -62,7 +62,7 @@ public class UltimateSurvivalGamesHook implements AllowedHook {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getUser().getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
                 player.getMyPet().removePet();
-                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player.getPlayer()));
+                player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player.getPlayer()));
             }
         }
     }

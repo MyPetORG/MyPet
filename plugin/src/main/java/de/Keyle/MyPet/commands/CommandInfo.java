@@ -30,7 +30,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.PetInfoBuilder;
 import de.Keyle.MyPet.util.player.ContributorCheck;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
@@ -132,30 +132,30 @@ public class CommandInfo {
 
         if (targetName == null && sender instanceof Player player) {
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
-                player.sendMessage(Translation.getComponent("Message.No.AllowedHere", player));
+                player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
                 return;
             }
             if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                 petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             } else {
-                sender.sendMessage(Translation.getComponent("Message.No.HasPet", player));
+                sender.sendMessage(Locale.getComponent("Message.No.HasPet", player));
                 return;
             }
         } else if (targetName != null && (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.command.info.other"))) {
             Player p = Bukkit.getServer().getPlayer(targetName);
             if (p == null || !p.isOnline()) {
-                sender.sendMessage(Translation.getComponent("Message.No.PlayerOnline", sender));
+                sender.sendMessage(Locale.getComponent("Message.No.PlayerOnline", sender));
                 return;
             }
             if (MyPetApi.getPlayerManager().isMyPetPlayer(targetName)) {
                 petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(targetName);
             } else {
-                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, targetName));
+                sender.sendMessage(Locale.getFormattedComponent("Message.No.UserHavePet", sender, targetName));
                 return;
             }
         } else {
             if (sender instanceof Player) {
-                sender.sendMessage(Translation.getComponent("Message.No.AllowedHere", sender));
+                sender.sendMessage(Locale.getComponent("Message.No.AllowedHere", sender));
             } else {
                 sender.sendMessage("You can't use this command from server console!");
             }
@@ -264,19 +264,19 @@ public class CommandInfo {
                 String icon = rank.getDefaultIcon();
                 sender.sendMessage(Component.text()
                         .append(Component.text("   " + icon + " ").color(NamedTextColor.GOLD))
-                        .append(Translation.getComponent("Name.Title." + rank.name(), sender).color(NamedTextColor.GOLD))
+                        .append(Locale.getComponent("Name.Title." + rank.name(), sender).color(NamedTextColor.GOLD))
                         .append(Component.text(" " + icon).color(NamedTextColor.GOLD))
                         .build());
             }
 
             if (!infoShown) {
-                sender.sendMessage(Translation.getComponent("Message.CantViewPetInfo", sender));
+                sender.sendMessage(Locale.getComponent("Message.CantViewPetInfo", sender));
             }
         } else {
             if (targetName != null) {
-                sender.sendMessage(Translation.getFormattedComponent("Message.No.UserHavePet", sender, targetName));
+                sender.sendMessage(Locale.getFormattedComponent("Message.No.UserHavePet", sender, targetName));
             } else {
-                sender.sendMessage(Translation.getComponent("Message.No.HasPet", sender));
+                sender.sendMessage(Locale.getComponent("Message.No.HasPet", sender));
             }
         }
     }

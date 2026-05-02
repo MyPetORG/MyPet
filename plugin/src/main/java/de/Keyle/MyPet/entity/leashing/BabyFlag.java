@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.leashing;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.LivingEntity;
@@ -44,6 +44,6 @@ public class BabyFlag implements LeashFlag {
 
     @Override
     public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
-        return Translation.getComponent("Message.Command.CaptureHelper.Requirement.Baby", player);
+        return Locale.getComponent("Message.Command.CaptureHelper.Requirement.Baby", player);
     }
 }

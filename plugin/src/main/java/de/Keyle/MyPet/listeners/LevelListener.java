@@ -22,7 +22,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.util.locale.Translation;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
@@ -56,9 +56,9 @@ public class LevelListener implements Listener {
         if (!event.isQuiet()) {
             int maxlevel = myPet.getSkilltree() != null ? myPet.getSkilltree().getMaxLevel() : 0;
             if (maxlevel != 0 && lvl >= maxlevel) {
-                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.LevelSystem.ReachedMaxLevel", event.getOwner(), myPet.getDisplayName(), maxlevel));
+                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.LevelSystem.ReachedMaxLevel", event.getOwner(), myPet.getDisplayName(), maxlevel));
             } else {
-                myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.LevelSystem.LevelUp", event.getOwner(), myPet.getDisplayName(), event.getLevel()));
+                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.LevelSystem.LevelUp", event.getOwner(), myPet.getDisplayName(), event.getLevel()));
             }
         }
         Skilltree skilltree = myPet.getSkilltree();
@@ -132,7 +132,7 @@ public class LevelListener implements Listener {
         int fromLvl = event.fromLevel();
 
         if (!event.isQuiet()) {
-            myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.LevelSystem.LevelDown", event.getOwner(), myPet.getDisplayName(), event.getLevel()));
+            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.LevelSystem.LevelDown", event.getOwner(), myPet.getDisplayName(), event.getLevel()));
         }
         Skilltree skilltree = myPet.getSkilltree();
         if (skilltree != null) {
