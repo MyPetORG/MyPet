@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.locale.Locale;

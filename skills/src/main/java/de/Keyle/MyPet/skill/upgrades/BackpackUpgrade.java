@@ -18,37 +18,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.upgrades;
+package de.Keyle.MyPet.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
 import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
-import de.Keyle.MyPet.api.skill.skills.Heal;
+import de.Keyle.MyPet.api.skill.skills.Backpack;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@SkillName("Heal")
-public class HealUpgrade implements Upgrade<Heal> {
+@SkillName("Backpack")
+public class BackpackUpgrade implements Upgrade<Backpack> {
     @Getter
     @Setter
     @Accessors(chain = true)
-    protected UpgradeNumberModifier healModifier = null;
+    protected UpgradeNumberModifier rowsModifier = null;
     @Getter
     @Setter
     @Accessors(chain = true)
-    protected UpgradeIntegerModifier timerModifier = null;
+    protected UpgradeBooleanModifier dropOnDeathModifier = null;
 
     @Override
-    public void apply(Heal skill) {
-        skill.getHeal().addUpgrade(healModifier);
-        skill.getTimer().addUpgrade(timerModifier);
+    public void apply(Backpack skill) {
+        skill.getRows().addUpgrade(rowsModifier);
+        skill.getDropOnDeath().addUpgrade(dropOnDeathModifier);
     }
 
     @Override
-    public void invert(Heal skill) {
-        skill.getHeal().removeUpgrade(healModifier);
-        skill.getTimer().removeUpgrade(timerModifier);
+    public void invert(Backpack skill) {
+        skill.getRows().removeUpgrade(rowsModifier);
+        skill.getDropOnDeath().removeUpgrade(dropOnDeathModifier);
     }
 }

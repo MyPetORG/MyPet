@@ -18,37 +18,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.upgrades;
+package de.Keyle.MyPet.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
-import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
-import de.Keyle.MyPet.api.skill.skills.Pickup;
+import de.Keyle.MyPet.api.skill.skills.Control;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@SkillName("Pickup")
-public class PickupUpgrade implements Upgrade<Pickup> {
+@SkillName("Control")
+public class ControlUpgrade implements Upgrade<Control> {
     @Getter
     @Setter
     @Accessors(chain = true)
-    protected UpgradeNumberModifier rangeModifier = null;
-    @Getter
-    @Setter
-    @Accessors(chain = true)
-    protected UpgradeBooleanModifier pickupExpModifier = null;
+    protected UpgradeBooleanModifier activeModifier = null;
 
     @Override
-    public void apply(Pickup skill) {
-        skill.getRange().addUpgrade(rangeModifier);
-        skill.getExpPickup().addUpgrade(pickupExpModifier);
+    public void apply(Control skill) {
+        skill.getActive().addUpgrade(activeModifier);
     }
 
     @Override
-    public void invert(Pickup skill) {
-        skill.getRange().removeUpgrade(rangeModifier);
-        skill.getExpPickup().removeUpgrade(pickupExpModifier);
+    public void invert(Control skill) {
+        skill.getActive().removeUpgrade(activeModifier);
     }
 }

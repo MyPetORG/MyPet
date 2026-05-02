@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2025 Keyle
+ * Copyright © 2011-2019 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -18,41 +18,44 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.upgrades;
+package de.Keyle.MyPet.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeEnumModifier;
 import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
 import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
-import de.Keyle.MyPet.api.skill.skills.Bleed;
+import de.Keyle.MyPet.api.skill.skills.Ranged;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@SkillName("Bleed")
-public class BleedUpgrade implements Upgrade<Bleed> {
-    @Getter @Setter @Accessors(chain = true)
+@SkillName("Ranged")
+public class RangedUpgrade implements Upgrade<Ranged> {
+    @Getter
+    @Setter
+    @Accessors(chain = true)
     protected UpgradeNumberModifier damageModifier = null;
-    @Getter @Setter @Accessors(chain = true)
-    protected UpgradeIntegerModifier intervalModifier = null;
-    @Getter @Setter @Accessors(chain = true)
-    protected UpgradeIntegerModifier durationModifier = null;
-    @Getter @Setter @Accessors(chain = true)
-    protected UpgradeIntegerModifier chanceModifier = null;
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    protected UpgradeIntegerModifier rateOfFireModifier = null;
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    protected UpgradeEnumModifier<Ranged.Projectile> projectileModifier = null;
 
     @Override
-    public void apply(Bleed skill) {
+    public void apply(Ranged skill) {
         skill.getDamage().addUpgrade(damageModifier);
-        skill.getInterval().addUpgrade(intervalModifier);
-        skill.getDuration().addUpgrade(durationModifier);
-        skill.getChance().addUpgrade(chanceModifier);
+        skill.getRateOfFire().addUpgrade(rateOfFireModifier);
+        skill.getProjectile().addUpgrade(projectileModifier);
     }
 
     @Override
-    public void invert(Bleed skill) {
+    public void invert(Ranged skill) {
         skill.getDamage().removeUpgrade(damageModifier);
-        skill.getInterval().removeUpgrade(intervalModifier);
-        skill.getDuration().removeUpgrade(durationModifier);
-        skill.getChance().removeUpgrade(chanceModifier);
+        skill.getRateOfFire().removeUpgrade(rateOfFireModifier);
+        skill.getProjectile().removeUpgrade(projectileModifier);
     }
 }

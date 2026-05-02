@@ -18,30 +18,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.upgrades;
+package de.Keyle.MyPet.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
-import de.Keyle.MyPet.api.skill.skills.Control;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.skills.Heal;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@SkillName("Control")
-public class ControlUpgrade implements Upgrade<Control> {
+@SkillName("Heal")
+public class HealUpgrade implements Upgrade<Heal> {
     @Getter
     @Setter
     @Accessors(chain = true)
-    protected UpgradeBooleanModifier activeModifier = null;
+    protected UpgradeNumberModifier healModifier = null;
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    protected UpgradeIntegerModifier timerModifier = null;
 
     @Override
-    public void apply(Control skill) {
-        skill.getActive().addUpgrade(activeModifier);
+    public void apply(Heal skill) {
+        skill.getHeal().addUpgrade(healModifier);
+        skill.getTimer().addUpgrade(timerModifier);
     }
 
     @Override
-    public void invert(Control skill) {
-        skill.getActive().removeUpgrade(activeModifier);
+    public void invert(Heal skill) {
+        skill.getHeal().removeUpgrade(healModifier);
+        skill.getTimer().removeUpgrade(timerModifier);
     }
 }

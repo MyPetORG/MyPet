@@ -18,37 +18,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.upgrades;
+package de.Keyle.MyPet.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
 import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
-import de.Keyle.MyPet.api.skill.skills.Backpack;
+import de.Keyle.MyPet.api.skill.skills.Pickup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@SkillName("Backpack")
-public class BackpackUpgrade implements Upgrade<Backpack> {
+@SkillName("Pickup")
+public class PickupUpgrade implements Upgrade<Pickup> {
     @Getter
     @Setter
     @Accessors(chain = true)
-    protected UpgradeNumberModifier rowsModifier = null;
+    protected UpgradeNumberModifier rangeModifier = null;
     @Getter
     @Setter
     @Accessors(chain = true)
-    protected UpgradeBooleanModifier dropOnDeathModifier = null;
+    protected UpgradeBooleanModifier pickupExpModifier = null;
 
     @Override
-    public void apply(Backpack skill) {
-        skill.getRows().addUpgrade(rowsModifier);
-        skill.getDropOnDeath().addUpgrade(dropOnDeathModifier);
+    public void apply(Pickup skill) {
+        skill.getRange().addUpgrade(rangeModifier);
+        skill.getExpPickup().addUpgrade(pickupExpModifier);
     }
 
     @Override
-    public void invert(Backpack skill) {
-        skill.getRows().removeUpgrade(rowsModifier);
-        skill.getDropOnDeath().removeUpgrade(dropOnDeathModifier);
+    public void invert(Pickup skill) {
+        skill.getRange().removeUpgrade(rangeModifier);
+        skill.getExpPickup().removeUpgrade(pickupExpModifier);
     }
 }

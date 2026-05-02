@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.skilltree;
+package de.Keyle.MyPet.skill.skilltree;
 
 import com.google.gson.*;
 import de.Keyle.MyPet.MyPetApi;
@@ -26,28 +26,25 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.exceptions.InvalidSkilltreeException;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
-import de.Keyle.MyPet.api.skill.modifier.UpgradeEnumModifier;
-import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
-import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
-import de.Keyle.MyPet.api.skill.skills.Ranged;
+import de.Keyle.MyPet.api.skill.UpgradeParser;
+import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.DynamicLevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.StaticLevelRule;
-import de.Keyle.MyPet.api.skill.upgrades.*;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static de.Keyle.MyPet.api.skill.UpgradeParsers.get;
 import static de.Keyle.MyPet.api.util.configuration.Try.tryToLoad;
 
 public class SkillTreeLoaderJSON {
@@ -296,93 +293,11 @@ public class SkillTreeLoaderJSON {
     }
 
     private static Upgrade<?> loadUpgrade(String skillName, JsonObject upgradeObject) {
-        return switch (skillName.toLowerCase()) {
-            case "backpack" -> new BackpackUpgrade()
-                    .setRowsModifier(parseNumberModifier(get(upgradeObject, "rows")))
-                    .setDropOnDeathModifier(parseBooleanModifier(get(upgradeObject, "drop")));
-            case "beacon" -> {
-                JsonObject buffsObject = (JsonObject) get(upgradeObject, "buffs");
-                yield new BeaconUpgrade()
-                        .setRangeModifier(parseNumberModifier(get(upgradeObject, "range")))
-                        .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")))
-                        .setNumberOfBuffsModifier(parseIntegerModifier(get(upgradeObject, "count")))
-                        .setAbsorptionModifier(parseIntegerModifier(get(buffsObject, "absorption")))
-                        .setFireResistanceModifier(parseBooleanModifier(get(buffsObject, "fireresistance")))
-                        .setHasteModifier(parseIntegerModifier(get(buffsObject, "haste")))
-                        .setLuckModifier(parseBooleanModifier(get(buffsObject, "luck")))
-                        .setNightVisionModifier(parseBooleanModifier(get(buffsObject, "nightvision")))
-                        .setResistanceModifier(parseIntegerModifier(get(buffsObject, "resistance")))
-                        .setSpeedModifier(parseIntegerModifier(get(buffsObject, "speed")))
-                        .setStrengthModifier(parseIntegerModifier(get(buffsObject, "strength")))
-                        .setWaterBreathingModifier(parseBooleanModifier(get(buffsObject, "waterbreathing")))
-                        .setRegenerationModifier(parseIntegerModifier(get(buffsObject, "regeneration")))
-                        .setInvisibilityModifier(parseBooleanModifier(get(buffsObject, "invisibility")))
-                        .setJumpBoostModifier(parseIntegerModifier(get(buffsObject, "jumpboost")));
-            }
-            case "behavior" -> new BehaviorUpgrade()
-                    .setAggroModifier(parseBooleanModifier(get(upgradeObject, "aggro")))
-                    .setDuelModifier(parseBooleanModifier(get(upgradeObject, "duel")))
-                    .setFarmModifier(parseBooleanModifier(get(upgradeObject, "farm")))
-                    .setFriendlyModifier(parseBooleanModifier(get(upgradeObject, "friend")))
-                    .setRaidModifier(parseBooleanModifier(get(upgradeObject, "raid")));
-            case "bleed" -> new BleedUpgrade()
-                    .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")))
-                    .setIntervalModifier(parseIntegerModifier(get(upgradeObject, "interval")))
-                    .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")))
-                    .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")));
-            case "control" -> new ControlUpgrade()
-                    .setActiveModifier(parseBooleanModifier(get(upgradeObject, "active")));
-            case "damage" -> new DamageUpgrade()
-                    .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")));
-            case "fire" -> new FireUpgrade()
-                    .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
-                    .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")));
-            case "heal" -> new HealUpgrade()
-                    .setHealModifier(parseNumberModifier(get(upgradeObject, "health")))
-                    .setTimerModifier(parseIntegerModifier(get(upgradeObject, "timer")));
-            case "knockback" -> new KnockbackUpgrade()
-                    .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")));
-            case "life" -> new LifeUpgrade()
-                    .setLifeModifier(parseNumberModifier(get(upgradeObject, "health")));
-            case "lightning" -> new LightningUpgrade()
-                    .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
-                    .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")));
-            case "pickup" -> new PickupUpgrade()
-                    .setRangeModifier(parseNumberModifier(get(upgradeObject, "range")))
-                    .setPickupExpModifier(parseBooleanModifier(get(upgradeObject, "exp")));
-            case "poison" -> new PoisonUpgrade()
-                    .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
-                    .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")));
-            case "ranged" -> new RangedUpgrade()
-                    .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")))
-                    .setRateOfFireModifier(parseIntegerModifier(get(upgradeObject, "rate")))
-                    .setProjectileModifier(parseEnumModifier(get(upgradeObject, "projectile"), Ranged.Projectile.class));
-            case "ride" -> new RideUpgrade()
-                    .setActiveModifier(parseBooleanModifier(get(upgradeObject, "active")))
-                    .setSpeedIncreaseModifier(parseIntegerModifier(get(upgradeObject, "speed")))
-                    .setJumpHeightModifier(parseNumberModifier(get(upgradeObject, "jumpheight")))
-                    .setFlyLimitModifier(parseNumberModifier(get(upgradeObject, "flylimit")))
-                    .setFlyRegenRateModifier(parseNumberModifier(get(upgradeObject, "flyregenrate")))
-                    .setCanFlyModifier(parseBooleanModifier(get(upgradeObject, "canfly")));
-            case "shield" -> new ShieldUpgrade()
-                    .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
-                    .setRedirectedDamageModifier(parseIntegerModifier(get(upgradeObject, "redirect")));
-            case "slow" -> new SlowUpgrade()
-                    .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
-                    .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")));
-            case "sprint" -> new SprintUpgrade()
-                    .setActiveModifier(parseBooleanModifier(get(upgradeObject, "active")));
-            case "stomp" -> new StompUpgrade()
-                    .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
-                    .setDamageModifier(parseNumberModifier(get(upgradeObject, "damage")));
-            case "thorns" -> new ThornsUpgrade()
-                    .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
-                    .setReflectedDamageModifier(parseIntegerModifier(get(upgradeObject, "reflection")));
-            case "wither" -> new WitherUpgrade()
-                    .setChanceModifier(parseIntegerModifier(get(upgradeObject, "chance")))
-                    .setDurationModifier(parseIntegerModifier(get(upgradeObject, "duration")));
-            default -> null;
-        };
+        UpgradeParser<?> parser = MyPetApi.getSkillManager().getUpgradeParser(skillName);
+        if (parser == null) {
+            return null;
+        }
+        return parser.parse(upgradeObject);
     }
 
     private static JsonObject loadJsonObject(File jsonFile) throws IOException {
@@ -390,17 +305,6 @@ public class SkillTreeLoaderJSON {
             Gson gson = new Gson();
             return gson.fromJson(reader, JsonObject.class);
         }
-    }
-
-    private static JsonElement get(JsonObject o, String key) {
-        if (o != null) {
-            for (String keyObject : o.keySet()) {
-                if (keyObject.equalsIgnoreCase(key)) {
-                    return o.get(keyObject);
-                }
-            }
-        }
-        return null;
     }
 
     private static boolean containsKey(JsonObject o, String key) {
@@ -414,60 +318,4 @@ public class SkillTreeLoaderJSON {
         return false;
     }
 
-    private static UpgradeNumberModifier parseNumberModifier(JsonElement modifierObject) {
-        if (modifierObject instanceof JsonPrimitive p && p.isString()) {
-            String modifierString = p.getAsString();
-            UpgradeNumberModifier.Type type;
-            if (modifierString.startsWith("+")) {
-                type = UpgradeNumberModifier.Type.Add;
-            } else if (modifierString.startsWith("-")) {
-                type = UpgradeNumberModifier.Type.Subtract;
-            } else {
-                return null;
-            }
-            BigDecimal value = new BigDecimal(modifierString.substring(1));
-            return new UpgradeNumberModifier(value, type);
-        }
-        return null;
-    }
-
-    private static UpgradeIntegerModifier parseIntegerModifier(JsonElement modifierObject) {
-        if (modifierObject instanceof JsonPrimitive p && p.isString()) {
-            String modifierString = p.getAsString();
-            UpgradeNumberModifier.Type type;
-            if (modifierString.startsWith("+")) {
-                type = UpgradeNumberModifier.Type.Add;
-            } else if (modifierString.startsWith("-")) {
-                type = UpgradeNumberModifier.Type.Subtract;
-            } else {
-                return null;
-            }
-            BigDecimal value = new BigDecimal(modifierString.substring(1));
-            return new UpgradeIntegerModifier(value.intValue(), type);
-        }
-        return null;
-    }
-
-    private static UpgradeBooleanModifier parseBooleanModifier(JsonElement modifierObject) {
-        if (modifierObject instanceof JsonPrimitive p && p.isBoolean()) {
-            if (p.getAsBoolean()) {
-                return UpgradeBooleanModifier.True;
-            } else {
-                return UpgradeBooleanModifier.False;
-            }
-        }
-        return null;
-    }
-
-    private static <T extends Enum<T>> UpgradeEnumModifier<T> parseEnumModifier(JsonElement modifierObject, Class<T> e) {
-        if (modifierObject instanceof JsonPrimitive p && p.isString()) {
-            String modifierString = p.getAsString();
-            for (T c : e.getEnumConstants()) {
-                if (c.name().equalsIgnoreCase(modifierString)) {
-                    return new UpgradeEnumModifier<>(c);
-                }
-            }
-        }
-        return null;
-    }
 }

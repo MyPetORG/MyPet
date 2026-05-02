@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.util.player.ContributorCheck;
 import de.Keyle.MyPet.api.repository.*;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
-import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
@@ -50,6 +50,7 @@ import de.Keyle.MyPet.repository.RepositoryFactory;
 import de.Keyle.MyPet.services.BuiltInServices;
 import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
 import de.Keyle.MyPet.skill.skills.BuiltInSkills;
+import de.Keyle.MyPet.skill.upgrades.BuiltInUpgradeParsers;
 import de.Keyle.MyPet.skill.skilltree.requirements.BuiltInRequirements;
 import de.Keyle.MyPet.util.hooks.BuiltInHooks;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
@@ -329,6 +330,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         WorldGroup.loadGroups(new File(getDataFolder().getPath(), "worldgroups.yml"));
 
         BuiltInSkills.register();
+        BuiltInUpgradeParsers.register(MyPetApi.getSkillManager());
 
         // create folders
         File skilltreeFolder = new File(getDataFolder().getPath(), "skilltrees");

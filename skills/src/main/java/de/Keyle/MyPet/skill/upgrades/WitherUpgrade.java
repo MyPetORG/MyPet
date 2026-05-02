@@ -18,30 +18,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.upgrades;
+package de.Keyle.MyPet.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
-import de.Keyle.MyPet.api.skill.skills.Life;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
+import de.Keyle.MyPet.api.skill.skills.Wither;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@SkillName("Life")
-public class LifeUpgrade implements Upgrade<Life> {
+@SkillName("Wither")
+public class WitherUpgrade implements Upgrade<Wither> {
     @Getter
     @Setter
     @Accessors(chain = true)
-    protected UpgradeNumberModifier lifeModifier = null;
+    protected UpgradeIntegerModifier chanceModifier = null;
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    protected UpgradeIntegerModifier durationModifier = null;
 
     @Override
-    public void apply(Life skill) {
-        skill.getLife().addUpgrade(lifeModifier);
+    public void apply(Wither skill) {
+        skill.getChance().addUpgrade(chanceModifier);
+        skill.getDuration().addUpgrade(durationModifier);
     }
 
     @Override
-    public void invert(Life skill) {
-        skill.getLife().removeUpgrade(lifeModifier);
+    public void invert(Wither skill) {
+        skill.getChance().removeUpgrade(chanceModifier);
+        skill.getDuration().removeUpgrade(durationModifier);
     }
 }

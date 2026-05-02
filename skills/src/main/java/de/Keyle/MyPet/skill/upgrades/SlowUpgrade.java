@@ -18,30 +18,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.upgrades;
+package de.Keyle.MyPet.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
-import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
-import de.Keyle.MyPet.api.skill.skills.Sprint;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
+import de.Keyle.MyPet.api.skill.skills.Slow;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@SkillName("Sprint")
-public class SprintUpgrade implements Upgrade<Sprint> {
+@SkillName("Slow")
+public class SlowUpgrade implements Upgrade<Slow> {
     @Getter
     @Setter
     @Accessors(chain = true)
-    protected UpgradeBooleanModifier activeModifier = null;
+    protected UpgradeIntegerModifier chanceModifier = null;
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    protected UpgradeIntegerModifier durationModifier = null;
 
     @Override
-    public void apply(Sprint skill) {
-        skill.getActive().addUpgrade(activeModifier);
+    public void apply(Slow skill) {
+        skill.getChance().addUpgrade(chanceModifier);
+        skill.getDuration().addUpgrade(durationModifier);
     }
 
     @Override
-    public void invert(Sprint skill) {
-        skill.getActive().removeUpgrade(activeModifier);
+    public void invert(Slow skill) {
+        skill.getChance().removeUpgrade(chanceModifier);
+        skill.getDuration().removeUpgrade(durationModifier);
     }
 }

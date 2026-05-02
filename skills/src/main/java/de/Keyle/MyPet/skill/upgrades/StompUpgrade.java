@@ -18,30 +18,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.upgrades;
+package de.Keyle.MyPet.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
-import de.Keyle.MyPet.api.skill.skills.Knockback;
+import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
+import de.Keyle.MyPet.api.skill.skills.Stomp;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@SkillName("Knockback")
-public class KnockbackUpgrade implements Upgrade<Knockback> {
+@SkillName("Stomp")
+public class StompUpgrade implements Upgrade<Stomp> {
     @Getter
     @Setter
     @Accessors(chain = true)
     protected UpgradeIntegerModifier chanceModifier = null;
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    protected UpgradeNumberModifier damageModifier = null;
 
     @Override
-    public void apply(Knockback skill) {
+    public void apply(Stomp skill) {
         skill.getChance().addUpgrade(chanceModifier);
+        skill.getDamage().addUpgrade(damageModifier);
     }
 
     @Override
-    public void invert(Knockback skill) {
+    public void invert(Stomp skill) {
         skill.getChance().removeUpgrade(chanceModifier);
+        skill.getDamage().removeUpgrade(damageModifier);
     }
 }

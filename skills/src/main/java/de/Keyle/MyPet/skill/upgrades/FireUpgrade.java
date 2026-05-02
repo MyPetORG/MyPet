@@ -18,18 +18,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.upgrades;
+package de.Keyle.MyPet.skill.upgrades;
 
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
-import de.Keyle.MyPet.api.skill.skills.Thorns;
+import de.Keyle.MyPet.api.skill.skills.Fire;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@SkillName("Thorns")
-public class ThornsUpgrade implements Upgrade<Thorns> {
+@SkillName("Fire")
+public class FireUpgrade implements Upgrade<Fire> {
     @Getter
     @Setter
     @Accessors(chain = true)
@@ -37,17 +37,17 @@ public class ThornsUpgrade implements Upgrade<Thorns> {
     @Getter
     @Setter
     @Accessors(chain = true)
-    protected UpgradeIntegerModifier reflectedDamageModifier = null;
+    protected UpgradeIntegerModifier durationModifier = null;
 
     @Override
-    public void apply(Thorns skill) {
+    public void apply(Fire skill) {
         skill.getChance().addUpgrade(chanceModifier);
-        skill.getReflectedDamage().addUpgrade(reflectedDamageModifier);
+        skill.getDuration().addUpgrade(durationModifier);
     }
 
     @Override
-    public void invert(Thorns skill) {
+    public void invert(Fire skill) {
         skill.getChance().removeUpgrade(chanceModifier);
-        skill.getReflectedDamage().removeUpgrade(reflectedDamageModifier);
+        skill.getDuration().removeUpgrade(durationModifier);
     }
 }

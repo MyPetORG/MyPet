@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.util.service.ServiceName;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,10 +39,13 @@ import java.util.Set;
 public class SkillManager implements ServiceContainer {
     private Map<Class<? extends Skill>, String> registeredSkillsNames = new HashMap<>();
     private Map<String, Class<? extends Skill>> registeredNamesSkills = new HashMap<>();
+    private Map<String, UpgradeParser<?>> upgradeParsers = new HashMap<>();
 
     @Override
     public void onDisable() {
         registeredSkillsNames.clear();
+        registeredNamesSkills.clear();
+        upgradeParsers.clear();
     }
 
     public void registerSkill(Class<? extends Skill> clazz) {
@@ -128,5 +132,41 @@ public class SkillManager implements ServiceContainer {
             ErrorUtil.report(e);
         }
         return null;
+    }
+
+    /**
+     * Registers a parser that builds an {@link Upgrade} from the JSON object
+     * under {@code Skills.<name>.Upgrades.<levelRule>} in an {@code .st.json}
+     * skilltree file.
+     *
+     * <p>The skill name used as the JSON-lookup key is read from the
+     * {@code @SkillName} annotation on {@code skillClass} (walking superclasses
+     * and interfaces if necessary). Re-registering the same skill silently
+     * overwrites the previous parser; addons should call this exactly once
+     * per skill, after registering the corresponding {@code Skill} class via
+     * {@link #registerSkill}.
+     *
+     * @param skillClass any {@link Skill} type bearing a {@code @SkillName} —
+     *                   typically the same class passed to {@link #registerSkill}
+     * @param parser     the parser to register; must produce upgrades for
+     *                   {@code S}
+     * @throws IllegalArgumentException if {@code skillClass} has no
+     *         {@code @SkillName} annotation in its type hierarchy
+     */
+    public <S extends Skill> void registerUpgradeParser(Class<S> skillClass, UpgradeParser<S> parser) {
+        String skillName = getSkillName(skillClass);
+        if (skillName == null) {
+            throw new IllegalArgumentException(skillClass.getName() + " is not annotated with @SkillName");
+        }
+        upgradeParsers.put(skillName.toLowerCase(Locale.ROOT), parser);
+    }
+
+    /**
+     * Returns the parser registered for the given skill name, or {@code null}
+     * if none is registered. Lookup is case-insensitive. Used by the skilltree
+     * loader to resolve a JSON {@code Skills.<name>} key to its parser.
+     */
+    public UpgradeParser<?> getUpgradeParser(String skillName) {
+        return upgradeParsers.get(skillName.toLowerCase(Locale.ROOT));
     }
 }
