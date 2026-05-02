@@ -20,15 +20,9 @@
 
 package de.Keyle.MyPet.api.exceptions;
 
-import lombok.Getter;
-
-public class InvalidSkilltreeException extends MyPetException {
-
-    @Getter
-    private Exception exception;
+public class InvalidSkilltreeException extends RuntimeException {
 
     public InvalidSkilltreeException(String part, Exception e) {
-        super(part + " :: " + e.getMessage() + " :: " + e.getStackTrace()[0].getLineNumber());
-        exception = e;
+        super(part + " :: " + e.getMessage() + " :: " + e.getStackTrace()[0].getLineNumber(), e);
     }
 }

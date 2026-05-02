@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.exceptions;
 
-public class MyPetTypeNotFoundException extends MyPetException {
+public class MyPetTypeNotFoundException extends RuntimeException {
     public MyPetTypeNotFoundException(String type) {
         super(type + " is not a valid MyPet type");
     }
