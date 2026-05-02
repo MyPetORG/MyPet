@@ -28,38 +28,18 @@ import org.bukkit.entity.Mob;
 import java.util.*;
 
 /**
- * Registry of all available pet types. Types are auto-discovered at startup
- * by scanning Bukkit's EntityType enum for matching My* implementation classes
- * in {@code de.Keyle.MyPet.entity.types} (the plugin module). Each impl class
- * carries its own {@code @ShopInfo} / {@code @DefaultInfo} annotations and
- * {@code implements} the relevant marker interfaces ({@link MyPetBaby},
- * {@link MyPetFlyingEntity}, etc.) directly.
+ * Registry of all available pet types. Built-in types are populated by
+ * {@code MyPetPlugin.onLoad} via {@code BuiltInPetTypes.register()} (plugin module);
+ * third-party plugins register custom types via {@link #register(String, Class)}.
  * <p>
- * Third-party plugins can register custom pet types via {@link #register(String, Class)}.
+ * Each impl class carries its own {@code @ShopInfo} / {@code @DefaultInfo} annotations
+ * and {@code implements} the relevant marker interfaces ({@link MyPetBaby},
+ * {@link MyPetFlyingEntity}, etc.) directly.
  */
 public final class MyPetType {
 
-    private static final String IMPL_TYPES_PACKAGE = "de.Keyle.MyPet.entity.types.My";
     private static final Map<String, MyPetType> BY_NAME = new LinkedHashMap<>();
     private static final Map<String, MyPetType> BY_BUKKIT_NAME = new LinkedHashMap<>();
-
-    static {
-        for (EntityType entityType : EntityType.values()) {
-            String camelName = snakeToCamel(entityType.name());
-            String className = IMPL_TYPES_PACKAGE + camelName;
-            try {
-                Class<?> clazz = Class.forName(className);
-                if (MyPet.class.isAssignableFrom(clazz)) {
-                    @SuppressWarnings("unchecked")
-                    Class<? extends MyPet> petClass = (Class<? extends MyPet>) clazz;
-                    MyPetType type = new MyPetType(camelName, entityType.name(), petClass);
-                    BY_NAME.put(camelName.toUpperCase(), type);
-                    BY_BUKKIT_NAME.put(entityType.name(), type);
-                }
-            } catch (ClassNotFoundException ignored) {
-            }
-        }
-    }
 
     private final String name;
     private final String bukkitName;
@@ -92,28 +72,30 @@ public final class MyPetType {
      * @param name     CamelCase name (e.g. "MyCustomMob")
      * @param petClass interface extending MyPet
      * @return the registered MyPetType
+     * @throws IllegalArgumentException if a type with this name is already registered
      */
     public static MyPetType register(String name, Class<? extends MyPet> petClass) {
+        String key = name.toUpperCase();
+        if (BY_NAME.containsKey(key)) {
+            throw new IllegalArgumentException("MyPetType '" + name + "' is already registered");
+        }
         String bukkitName = camelToSnake(name).toUpperCase();
         MyPetType type = new MyPetType(name, bukkitName, petClass);
-        BY_NAME.put(name.toUpperCase(), type);
+        BY_NAME.put(key, type);
         BY_BUKKIT_NAME.put(bukkitName, type);
         return type;
     }
 
-    private static String snakeToCamel(String snake) {
-        StringBuilder sb = new StringBuilder();
-        boolean capitalize = true;
-        for (int i = 0; i < snake.length(); i++) {
-            char c = snake.charAt(i);
-            if (c == '_') {
-                capitalize = true;
-            } else {
-                sb.append(capitalize ? Character.toUpperCase(c) : Character.toLowerCase(c));
-                capitalize = false;
-            }
+    /**
+     * Removes a previously-registered pet type. Third-party plugins should call this from
+     * their {@code onDisable} to release the {@code Class<? extends MyPet>} reference and
+     * avoid leaking their plugin classloader across reloads. No-op if the name is unknown.
+     */
+    public static void unregister(String name) {
+        MyPetType type = BY_NAME.remove(name.toUpperCase());
+        if (type != null) {
+            BY_BUKKIT_NAME.remove(type.bukkitName);
         }
-        return sb.toString();
     }
 
     private static String camelToSnake(String name) {
@@ -141,10 +123,6 @@ public final class MyPetType {
     }
 
     public static MyPetType byEntityTypeName(String name) {
-        return byEntityTypeName(name, true);
-    }
-
-    public static MyPetType byEntityTypeName(String name, boolean versionCheck) {
         MyPetType type = BY_BUKKIT_NAME.get(name.toUpperCase());
         if (type != null) {
             return type;
@@ -153,10 +131,6 @@ public final class MyPetType {
     }
 
     public static MyPetType byName(String name) {
-        return byName(name, true);
-    }
-
-    public static MyPetType byName(String name, boolean versionCheck) {
         MyPetType type = BY_NAME.get(name.toUpperCase());
         if (type != null) {
             return type;
