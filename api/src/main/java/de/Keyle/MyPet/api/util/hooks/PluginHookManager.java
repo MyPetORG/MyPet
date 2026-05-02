@@ -64,6 +64,12 @@ public class PluginHookManager {
         config.getConfig().options().copyDefaults(true);
     }
 
+    private static String getPluginVersion(String pluginName) {
+        Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
+        if (plugin == null) return "unknown";
+        return plugin.getDescription().getVersion();
+    }
+
     /**
      * checks if a plugin with a specific class name is enabled
      *
@@ -112,7 +118,7 @@ public class PluginHookManager {
             PluginHook hook = hookClass.getDeclaredConstructor().newInstance();
                 registeredHooks.add(hook);
             } catch (Throwable e) {
-                ErrorUtil.report("Error occured while enabling " + pluginName + " (" + Bukkit.getPluginManager().getPlugin(pluginName).getDescription().getVersion() + ") hook.", e);
+                ErrorUtil.report("Error occured while enabling " + pluginName + " (" + getPluginVersion(pluginName) + ") hook.", e);
             }
         }
     }
@@ -163,7 +169,7 @@ public class PluginHookManager {
                 return true;
             }
         } catch (Throwable e) {
-            ErrorUtil.report("Error occured while enabling " + hook.getPluginName() + " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ") hook.", e);
+            ErrorUtil.report("Error occured while enabling " + hook.getPluginName() + " (" + getPluginVersion(hook.getPluginName()) + ") hook.", e);
         }
         return false;
     }
