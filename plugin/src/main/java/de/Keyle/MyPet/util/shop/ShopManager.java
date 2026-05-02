@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceName;
-import de.Keyle.MyPet.api.util.service.types.ShopService;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.services;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.service.types.CreakingService;
 import org.bukkit.Location;
 import org.bukkit.entity.Creaking;
 import org.bukkit.entity.Entity;

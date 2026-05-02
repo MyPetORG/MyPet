@@ -37,7 +37,7 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
-import de.Keyle.MyPet.api.util.service.types.EggIconService;
+import de.Keyle.MyPet.services.EggIconService;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.commands.BuiltInCommands;
 import de.Keyle.MyPet.entity.info.MyPetInfoImpl;

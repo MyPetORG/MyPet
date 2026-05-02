@@ -22,7 +22,7 @@ import java.util.List;
  * {@link de.Keyle.MyPet.api.util.service.Load.State}. Registration here only adds the class
  * to the manager's catalog; activation happens later in plugin enable.</p>
  *
- * <p>{@link de.Keyle.MyPet.api.util.service.types.EggIconService} is intentionally registered
+ * <p>{@link de.Keyle.MyPet.services.EggIconService} is intentionally registered
  * separately from this list because it is owned by {@code api} and is registered inline by
  * {@code MyPetPlugin.onLoad} alongside the {@link Load.State#OnLoad} activation.</p>
  *

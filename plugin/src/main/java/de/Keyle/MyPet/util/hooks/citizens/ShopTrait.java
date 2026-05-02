@@ -23,7 +23,7 @@ package de.Keyle.MyPet.util.hooks.citizens;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import de.Keyle.MyPet.api.util.service.types.ShopService;
+import de.Keyle.MyPet.util.shop.ShopService;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
