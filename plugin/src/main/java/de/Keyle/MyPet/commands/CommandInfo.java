@@ -77,7 +77,7 @@ public class CommandInfo {
      */
     public static boolean canSee(boolean adminOnly, CommandSender sender, StoredMyPet storedMyPet) {
         if (sender instanceof Player player) {
-            return !adminOnly || storedMyPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin", false);
+            return !adminOnly || storedMyPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin");
         } else {
             return true;
         }

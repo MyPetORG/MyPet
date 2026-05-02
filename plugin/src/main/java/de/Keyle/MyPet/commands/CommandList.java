@@ -112,7 +112,7 @@ public class CommandList {
         if (targetName == null) {
             petOwner = sender;
         } else {
-            if (Permissions.has(sender, "MyPet.admin", false)) {
+            if (Permissions.has(sender, "MyPet.admin")) {
                 petOwner = Bukkit.getPlayer(targetName);
             } else {
                 petOwner = sender;

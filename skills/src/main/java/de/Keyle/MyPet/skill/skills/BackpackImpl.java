@@ -143,7 +143,7 @@ public class BackpackImpl implements Backpack {
                 myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", myPet.getOwner()));
                 return false;
             }
-            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
+            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin")) {
                 myPet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Inventory.Creative", myPet.getOwner()));
                 return false;
             }

@@ -78,7 +78,7 @@ public class CommandInventory {
                         .then(Commands.argument("player", StringArgumentType.word())
                                 .suggests((ctx, builder) -> {
                                     if (ctx.getSource().getSender() instanceof Player player
-                                            && Permissions.has(player, "MyPet.admin", false)) {
+                                            && Permissions.has(player, "MyPet.admin")) {
                                         Bukkit.getOnlinePlayers().forEach(p -> builder.suggest(p.getName()));
                                     }
                                     return builder.buildFuture();
@@ -123,7 +123,7 @@ public class CommandInventory {
                 player.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", player, myPet.getDisplayName()));
                 return;
             }
-            if (!Permissions.hasExtended(player, "MyPet.extended.inventory") && !Permissions.has(player, "MyPet.admin", false)) {
+            if (!Permissions.hasExtended(player, "MyPet.extended.inventory") && !Permissions.has(player, "MyPet.admin")) {
                 myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", player));
                 return;
             }
@@ -147,7 +147,7 @@ public class CommandInventory {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
-        if (!Permissions.has(player, "MyPet.admin", false)) {
+        if (!Permissions.has(player, "MyPet.admin")) {
             // Non-admins fall back to own inventory
             executeOwn(player);
             return;

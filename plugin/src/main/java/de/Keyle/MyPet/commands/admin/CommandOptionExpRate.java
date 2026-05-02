@@ -76,7 +76,7 @@ public class CommandOptionExpRate {
                 "/petadmin exp-rate",
                 CommandCategory.ADMIN,
                 28,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         return Commands.literal("exp-rate")

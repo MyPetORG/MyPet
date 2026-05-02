@@ -83,7 +83,7 @@ public class CommandOptionReload {
         return Commands.literal("reload")
                 .requires(ctx -> {
                     var sender = ctx.getSender();
-                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin", false);
+                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin");
                 })
                 .then(Commands.literal("all")
                         .executes(ctx -> {

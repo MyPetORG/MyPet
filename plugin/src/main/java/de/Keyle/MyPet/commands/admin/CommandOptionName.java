@@ -82,7 +82,7 @@ public class CommandOptionName {
                 "/petadmin name",
                 CommandCategory.ADMIN,
                 24,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         return Commands.literal("name")

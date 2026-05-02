@@ -81,7 +81,7 @@ public class CommandOptionRespawn {
                 "/petadmin respawn",
                 CommandCategory.ADMIN,
                 30,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         return Commands.literal("respawn")

@@ -87,7 +87,7 @@ public class CommandOptionInfo {
                 "/petadmin info",
                 CommandCategory.ADMIN,
                 40,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         return Commands.literal("info")

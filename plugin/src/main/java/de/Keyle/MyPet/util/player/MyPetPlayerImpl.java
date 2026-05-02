@@ -236,7 +236,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     }
 
     public boolean isMyPetAdmin() {
-        return isOnline() && Permissions.has(getPlayer(), "MyPet.admin", false);
+        return isOnline() && Permissions.has(getPlayer(), "MyPet.admin");
     }
 
     public boolean hasMyPet() {

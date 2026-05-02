@@ -81,7 +81,7 @@ public class CommandOptionPurge {
                 "/petadmin purge",
                 CommandCategory.ADMIN,
                 38,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         // Build a time-unit node: /petadmin purge <amount> <years|days|hours|minutes>

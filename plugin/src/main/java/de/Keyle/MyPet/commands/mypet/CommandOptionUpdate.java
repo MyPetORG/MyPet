@@ -59,7 +59,7 @@ public class CommandOptionUpdate {
         return Commands.literal("update")
                 .requires(ctx -> {
                     var sender = ctx.getSender();
-                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin", false);
+                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin");
                 })
                 .executes(ctx -> {
                     var sender = ctx.getSource().getSender();

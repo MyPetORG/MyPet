@@ -105,7 +105,7 @@ public class CommandOptionSwitch {
                 "/petadmin switch",
                 CommandCategory.ADMIN,
                 36,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         return Commands.literal("switch")

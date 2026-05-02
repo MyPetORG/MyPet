@@ -84,7 +84,7 @@ public class CommandOptionRemove {
                 "/petadmin remove",
                 CommandCategory.ADMIN,
                 22,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         return Commands.literal("remove")

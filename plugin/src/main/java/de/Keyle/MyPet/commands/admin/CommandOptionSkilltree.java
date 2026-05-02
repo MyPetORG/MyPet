@@ -85,7 +85,7 @@ public class CommandOptionSkilltree {
                 "/petadmin skilltree",
                 CommandCategory.ADMIN,
                 32,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         return Commands.literal("skilltree")

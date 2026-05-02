@@ -75,7 +75,7 @@ public class CommandAdmin {
         commands.register(
                 Commands.literal("mypetadmin")
                         .requires(ctx -> !(ctx.getSender() instanceof Player player)
-                                || Permissions.has(player, "MyPet.admin", false))
+                                || Permissions.has(player, "MyPet.admin"))
                         .then(new CommandOptionName().buildNode(helpRegistry))
                         .then(new CommandOptionExp().buildNode(helpRegistry))
                         .then(new CommandOptionExpRate().buildNode(helpRegistry))

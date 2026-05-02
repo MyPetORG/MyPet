@@ -76,7 +76,7 @@ public class CommandOptionClone {
                 "/petadmin clone",
                 CommandCategory.ADMIN,
                 34,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         return Commands.literal("clone")

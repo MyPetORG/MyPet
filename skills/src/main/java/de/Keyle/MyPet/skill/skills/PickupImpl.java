@@ -118,7 +118,7 @@ public class PickupImpl implements Pickup {
             myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Pickup.StartStop", myPet.getOwner().getPlayer(), myPet.getDisplayName(), Locale.getComponent("Name.Disabled", myPet.getOwner())));
             return;
         }
-        if (pickup && myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
+        if (pickup && myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin")) {
             myPet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Pickup.Creative", myPet.getOwner()));
             pickup = false;
             return;

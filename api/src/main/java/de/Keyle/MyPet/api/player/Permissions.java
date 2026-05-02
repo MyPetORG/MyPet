@@ -36,17 +36,7 @@ public class Permissions {
 
     public static boolean has(Player player, String node) {
         if (player != null) {
-            return !Configuration.Permissions.ENABLED || player.hasPermission(node);
-        }
-        return false;
-    }
-
-    public static boolean has(Player player, String node, boolean defaultValue) {
-        if (player != null) {
-            if (Configuration.Permissions.ENABLED) {
-                return player.isOp() || player.hasPermission(node);
-            }
-            return defaultValue || player.isOp();
+            return player.isOp() || player.hasPermission(node);
         }
         return false;
     }
@@ -64,33 +54,18 @@ public class Permissions {
 
     public static boolean hasExtended(Player player, String node, boolean defaultValue) {
         if (Configuration.Permissions.EXTENDED) {
-            return has(player, node, defaultValue);
+            return has(player, node);
         }
         return defaultValue;
     }
 
     public static boolean has(OfflinePlayer player, String node) {
         if (player != null) {
-            if (!Configuration.Permissions.ENABLED || player.isOp()) {
-                return true;
-            } else {
-                PermissibleBase pb = new PermissibleBase(player);
-                return pb.hasPermission(node);
-            }
-        }
-        return false;
-    }
-
-    public static boolean has(OfflinePlayer player, String node, boolean defaultValue) {
-        if (player != null) {
             if (player.isOp()) {
                 return true;
-            } else if (Configuration.Permissions.ENABLED) {
-                PermissibleBase pb = new PermissibleBase(player);
-                return pb.hasPermission(node);
-            } else {
-                return defaultValue;
             }
+            PermissibleBase pb = new PermissibleBase(player);
+            return pb.hasPermission(node);
         }
         return false;
     }
@@ -101,7 +76,7 @@ public class Permissions {
 
     public static boolean hasExtended(OfflinePlayer player, String node, boolean defaultValue) {
         if (Configuration.Permissions.EXTENDED) {
-            return has(player, node, defaultValue);
+            return has(player, node);
         }
         return defaultValue;
     }

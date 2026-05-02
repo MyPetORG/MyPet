@@ -73,7 +73,7 @@ public class CommandOptionTicket {
         return Commands.literal("ticket")
                 .requires(ctx -> {
                     var sender = ctx.getSender();
-                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin", false);
+                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin");
                 })
                 .executes(ctx -> {
                     CommandSender sender = ctx.getSource().getSender();

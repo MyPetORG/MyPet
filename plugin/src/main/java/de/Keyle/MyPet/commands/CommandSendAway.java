@@ -81,7 +81,7 @@ public class CommandSendAway {
                         .then(Commands.argument("player", StringArgumentType.word())
                                 .requires(ctx -> {
                                     var sender = ctx.getSender();
-                                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin", false);
+                                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin");
                                 })
                                 .suggests((ctx, builder) -> {
                                     Bukkit.getOnlinePlayers().forEach(p -> builder.suggest(p.getName()));

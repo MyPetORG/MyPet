@@ -416,7 +416,7 @@ public class CommandOptionCreate {
                 "/petadmin create",
                 CommandCategory.ADMIN,
                 20,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         return Commands.literal("create")

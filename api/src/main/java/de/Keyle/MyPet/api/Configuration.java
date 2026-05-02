@@ -113,7 +113,6 @@ public class Configuration {
 
     public static class Permissions {
 
-        public static boolean ENABLED = true;
         public static boolean EXTENDED = false;
     }
 

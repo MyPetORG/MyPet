@@ -109,7 +109,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Respawn.EconomyCost.Fixed", Respawn.COSTS_FIXED);
         config.addDefault("MyPet.Respawn.EconomyCost.Factor", Respawn.COSTS_FACTOR);
 
-        config.addDefault("MyPet.Permissions.Enabled", Permissions.ENABLED);
         config.addDefault("MyPet.Permissions.Extended", Permissions.EXTENDED);
 
         config.addDefault("MyPet.LevelSystem.CalculationMode", LevelSystem.CALCULATION_MODE);
@@ -382,7 +381,6 @@ public class ConfigurationLoader {
         Misc.WIKI_URL = config.getString("MyPet.Info.Wiki-URL", Misc.WIKI_URL);
 
         Permissions.EXTENDED = config.getBoolean("MyPet.Permissions.Extended", false);
-        Permissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
 
         LevelSystem.Experience.LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", LevelSystem.Experience.LEVEL_CAP);
         LevelSystem.Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);

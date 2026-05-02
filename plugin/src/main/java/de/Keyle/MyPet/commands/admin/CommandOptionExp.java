@@ -83,7 +83,7 @@ public class CommandOptionExp {
                 "/petadmin exp",
                 CommandCategory.ADMIN,
                 26,
-                player -> Permissions.has(player, "MyPet.admin", false)
+                player -> Permissions.has(player, "MyPet.admin")
         ));
 
         // /petadmin exp <player> <amount> [add|set|remove]
