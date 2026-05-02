@@ -42,8 +42,4 @@ public enum UpgradeBooleanModifier implements UpgradeModifier<Boolean> {
         return this.value;
     }
 
-    @Override
-    public String toString() {
-        return "{" + name() + '}';
-    }
 }

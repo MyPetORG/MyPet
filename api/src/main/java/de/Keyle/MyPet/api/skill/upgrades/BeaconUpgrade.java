@@ -28,11 +28,9 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Beacon;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @SuppressWarnings("ALL")
-@ToString
 @SkillName("Beacon")
 public class BeaconUpgrade implements Upgrade<Beacon> {
 

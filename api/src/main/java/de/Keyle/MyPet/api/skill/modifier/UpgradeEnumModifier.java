@@ -36,8 +36,4 @@ public class UpgradeEnumModifier<T extends Enum<T>> implements UpgradeModifier<T
         return this.value;
     }
 
-    @Override
-    public String toString() {
-        return "{" + value.name() + '}';
-    }
 }

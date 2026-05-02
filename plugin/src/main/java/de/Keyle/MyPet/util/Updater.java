@@ -60,11 +60,6 @@ public class Updater {
         public String getDownloadURL() { return downloadURL; }
 
         public String getSha512Hash() { return sha512Hash; }
-
-        @Override
-        public String toString() {
-            return version;
-        }
     }
 
     protected static Update latest = null;

@@ -26,10 +26,8 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@ToString
 @SkillName("Behavior")
 public class BehaviorUpgrade implements Upgrade<Behavior> {
     @Getter

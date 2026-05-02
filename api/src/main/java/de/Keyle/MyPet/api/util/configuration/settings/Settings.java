@@ -59,11 +59,4 @@ public class Settings {
         return Collections.unmodifiableSet(settings);
     }
 
-    @Override
-    public String toString() {
-        return "Settings{" +
-                "name='" + name + '\'' +
-                ", settings=" + settings +
-                '}';
-    }
 }

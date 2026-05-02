@@ -28,7 +28,6 @@ import net.citizensnpcs.api.trait.trait.Owner;
 import net.citizensnpcs.api.util.DataKey;
 import org.bukkit.Bukkit;
 
-
 public class WalletTrait extends Trait {
 
     private double credit = 0.0D;
@@ -100,8 +99,4 @@ public class WalletTrait extends Trait {
         };
     }
 
-    @Override
-    public String toString() {
-        return "MyPetWalletTrait{type: " + type + ", credit: " + String.format("%1.4f", credit) + ", account: " + account + "}";
-    }
 }

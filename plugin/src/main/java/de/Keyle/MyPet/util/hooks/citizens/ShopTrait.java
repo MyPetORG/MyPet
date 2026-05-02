@@ -71,8 +71,4 @@ public class ShopTrait extends Trait {
         }
     }
 
-    @Override
-    public String toString() {
-        return "MyPetWalletTrait{shop: " + shop + "}";
-    }
 }

@@ -234,15 +234,4 @@ public record PersistedMyPet(
         }
     }
 
-    @Override
-    public String toString() {
-        return "PersistedMyPet{type=" + petType.name()
-                + ", owner=" + owner.getName()
-                + ", name=" + petName
-                + ", exp=" + exp
-                + ", health=" + health
-                + ", worldgroup=" + worldGroup
-                + (skilltree != null ? ", skilltree=" + skilltree.getName() : "")
-                + "}";
-    }
 }

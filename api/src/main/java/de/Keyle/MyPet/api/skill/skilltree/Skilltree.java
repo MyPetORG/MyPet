@@ -217,13 +217,4 @@ public class Skilltree {
         return usable;
     }
 
-    @Override
-    public String toString() {
-        return "Skilltree{" +
-                "skilltreeName='" + skilltreeName + '\'' +
-                ", displayName='" + displayName + '\'' +
-                (maxLevel > 0 ? ", maxLevel=" + maxLevel : "") +
-                (requiredLevel > 0 ? ", requiredLevel=" + requiredLevel : "") +
-                '}';
-    }
 }

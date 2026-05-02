@@ -92,11 +92,4 @@ public class WitherImpl implements Wither {
         target.addPotionEffect(effect);
     }
 
-    @Override
-    public String toString() {
-        return "WitherImpl{" +
-                "chance=" + chance +
-                ", duration=" + duration +
-                '}';
-    }
 }

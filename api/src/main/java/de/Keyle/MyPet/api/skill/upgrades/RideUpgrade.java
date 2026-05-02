@@ -28,10 +28,8 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@ToString
 @SkillName("Ride")
 public class RideUpgrade implements Upgrade<Ride> {
 

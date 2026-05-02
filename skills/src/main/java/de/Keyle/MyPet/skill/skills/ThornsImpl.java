@@ -107,11 +107,4 @@ public class ThornsImpl implements Thorns {
         });
     }
 
-    @Override
-    public String toString() {
-        return "ThornsImpl{" +
-                "chance=" + chance +
-                ", reflectedDamage=" + reflectedDamage +
-                '}';
-    }
 }

@@ -68,12 +68,4 @@ public class DynamicLevelRule implements LevelRule {
         return 0;
     }
 
-    @Override
-    public String toString() {
-        return "DynamicLevelRule{" +
-                "every=" + modulo +
-                (start > 1 ? ", start=" + start : "") +
-                (end > 0 ? ", end=" + end : "") +
-                '}';
-    }
 }

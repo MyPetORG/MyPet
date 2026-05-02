@@ -67,10 +67,4 @@ public class DamageImpl implements Damage {
         return damage;
     }
 
-    @Override
-    public String toString() {
-        return "DamageImpl{" +
-                "damage=" + damage.getValue().doubleValue() +
-                '}';
-    }
 }

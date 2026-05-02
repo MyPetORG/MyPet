@@ -26,10 +26,8 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
 import de.Keyle.MyPet.api.skill.skills.Fire;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@ToString
 @SkillName("Fire")
 public class FireUpgrade implements Upgrade<Fire> {
     @Getter

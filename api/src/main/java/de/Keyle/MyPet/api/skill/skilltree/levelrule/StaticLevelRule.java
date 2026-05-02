@@ -50,8 +50,4 @@ public class StaticLevelRule implements LevelRule {
         return 1;
     }
 
-    @Override
-    public String toString() {
-        return "StaticLevelRule{levels=" + levels + '}';
-    }
 }

@@ -288,17 +288,6 @@ public class BehaviorImpl implements Behavior {
     }
 
     /**
-     * Debug String containing the set of active behaviors and the currently selected mode.
-     */
-    @Override
-    public String toString() {
-        return "BehaviorImpl{" +
-                "activeBehaviors=" + activeBehaviors +
-                ", selectedBehavior=" + selectedBehavior +
-                '}';
-    }
-
-    /**
      * Serializes the current state of this skill to NBT.
      * <p>
      * Currently stores only the name of the selected behavior under the key "selectedBehavior".

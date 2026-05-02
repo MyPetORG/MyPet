@@ -227,8 +227,4 @@ public class MonsterExperience {
         max = (min = exp);
     }
 
-    @Override
-    public String toString() {
-        return identifier + "{min=" + min + ", max=" + max + "}";
-    }
 }

@@ -70,10 +70,4 @@ public class SprintImpl implements Sprint {
         return null;
     }
 
-    @Override
-    public String toString() {
-        return "SprintImpl{" +
-                "active=" + active +
-                '}';
-    }
 }

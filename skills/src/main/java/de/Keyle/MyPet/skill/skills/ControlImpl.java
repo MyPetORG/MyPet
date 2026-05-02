@@ -92,10 +92,4 @@ public class ControlImpl implements Control {
         }
     }
 
-    @Override
-    public String toString() {
-        return "ControlImpl{" +
-                "active=" + active +
-                '}';
-    }
 }

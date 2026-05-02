@@ -28,10 +28,8 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@ToString
 @SkillName("Ranged")
 public class RangedUpgrade implements Upgrade<Ranged> {
     @Getter

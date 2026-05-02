@@ -91,11 +91,4 @@ public class FireImpl implements Fire {
         target.getWorld().spawnParticle(Particle.LARGE_SMOKE, target.getLocation(), 20, .5f, .5f, .5f, 0.02f);
     }
 
-    @Override
-    public String toString() {
-        return "FireImpl{" +
-                "chance=" + chance +
-                ", duration=" + duration +
-                '}';
-    }
 }

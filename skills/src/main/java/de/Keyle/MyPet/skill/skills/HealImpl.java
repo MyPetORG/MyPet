@@ -109,11 +109,4 @@ public class HealImpl implements Heal {
         return timer;
     }
 
-    @Override
-    public String toString() {
-        return "HealImpl{" +
-                "heal=" + heal.getValue().doubleValue() +
-                ", timer=" + timer +
-                '}';
-    }
 }

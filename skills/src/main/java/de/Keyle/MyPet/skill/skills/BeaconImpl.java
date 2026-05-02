@@ -503,7 +503,6 @@ public class BeaconImpl implements Beacon {
                 return;
             }
 
-
             if (selectedBuffs.isEmpty()) {
                 return;
             }
@@ -664,19 +663,6 @@ public class BeaconImpl implements Beacon {
         if (compound.keySet().contains("Receiver")) {
             this.receiver = BuffReceiver.valueOf(compound.getString("Receiver"));
         }
-    }
-
-    @Override
-    public String toString() {
-        return "BeaconImpl{" +
-                "duration=" + duration +
-                ", range=" + range +
-                ", selectableBuffs=" + selectableBuffs +
-                ", active=" + active +
-                ", receiver=" + receiver +
-                ", buffLevel=" + buffLevel +
-                ", selectedBuffs=" + selectedBuffs +
-                '}';
     }
 
     private static SkullMeta createTexturedSkullMeta(Material headMaterial, String textureUrl) {

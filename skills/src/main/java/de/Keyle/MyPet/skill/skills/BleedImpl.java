@@ -154,17 +154,6 @@ public class BleedImpl implements Bleed {
         // Bleed uses per-target scheduled tasks via EntityScheduler — nothing to do here.
     }
 
-    @Override
-    public String toString() {
-        return "BleedImpl{" +
-                "damage=" + damage.getValue().doubleValue() +
-                ", interval=" + interval.getValue() +
-                ", duration=" + duration.getValue() +
-                ", chance=" + chance.getValue() +
-                ", activeEffects=" + activeEffects.size() +
-                '}';
-    }
-
     /**
      * Inner class representing an active bleed effect on a target entity.
      */

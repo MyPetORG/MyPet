@@ -226,8 +226,4 @@ public class ShopMyPet implements StoredMyPet {
         }
     }
 
-    @Override
-    public String toString() {
-        return "ShopMyPet{type=" + getPetType().name() + ", exp=" + getExp() + ", worldgroup=" + worldGroup + (skilltree != null ? ", skilltree=" + skilltree.getName() : "") + "}";
-    }
 }

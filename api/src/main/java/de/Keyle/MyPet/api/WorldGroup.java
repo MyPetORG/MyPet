@@ -41,7 +41,6 @@ public class WorldGroup {
     private boolean disabled;
     private List<String> worlds = new ArrayList<>();
 
-
     public WorldGroup(String groupName, boolean disabled) {
         this.name = groupName.toLowerCase();
         this.disabled = disabled;
@@ -203,11 +202,6 @@ public class WorldGroup {
 
     public List<String> getWorlds() {
         return this.worlds;
-    }
-
-    @Override
-    public String toString() {
-        return "WorldGroup{name=" + name + ", worlds=" + worlds + "}";
     }
 
     /**

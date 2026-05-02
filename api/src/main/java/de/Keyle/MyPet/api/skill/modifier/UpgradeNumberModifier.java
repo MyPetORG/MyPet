@@ -52,11 +52,6 @@ public class UpgradeNumberModifier implements UpgradeModifier<Number> {
         };
     }
 
-    @Override
-    public String toString() {
-        return "{" + type.name() + ": " + value + '}';
-    }
-
     public enum Type {
         Add, Subtract
     }

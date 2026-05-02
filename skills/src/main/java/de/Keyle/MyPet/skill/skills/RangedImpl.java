@@ -86,12 +86,4 @@ public class RangedImpl implements Ranged {
         return projectile;
     }
 
-    @Override
-    public String toString() {
-        return "RangedImpl{" +
-                "projectile=" + projectile +
-                ", damage=" + damage +
-                ", rateOfFire=" + rateOfFire +
-                '}';
-    }
 }

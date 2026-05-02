@@ -26,10 +26,8 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
 import de.Keyle.MyPet.api.skill.skills.Thorns;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@ToString
 @SkillName("Thorns")
 public class ThornsUpgrade implements Upgrade<Thorns> {
     @Getter

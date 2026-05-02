@@ -26,10 +26,8 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeIntegerModifier;
 import de.Keyle.MyPet.api.skill.skills.Slow;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@ToString
 @SkillName("Slow")
 public class SlowUpgrade implements Upgrade<Slow> {
     @Getter

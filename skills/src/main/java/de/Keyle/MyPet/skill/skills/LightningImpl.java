@@ -98,11 +98,4 @@ public class LightningImpl implements Lightning {
         isStriking = false;
     }
 
-    @Override
-    public String toString() {
-        return "LightningImpl{" +
-                "chance=" + chance +
-                ", damage=" + damage.getValue().doubleValue() +
-                '}';
-    }
 }

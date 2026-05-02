@@ -92,11 +92,4 @@ public class SlowImpl implements Slow {
         target.addPotionEffect(effect);
     }
 
-    @Override
-    public String toString() {
-        return "SlowImpl{" +
-                "chance=" + chance +
-                ", duration=" + duration +
-                '}';
-    }
 }

@@ -97,15 +97,4 @@ public class RideImpl implements Ride {
         return canFly;
     }
 
-    @Override
-    public String toString() {
-        return "RideImpl{" +
-                "speed=" + speed +
-                ", jumpHeight=" + jumpHeight.getValue().doubleValue() +
-                ", flyRegenRate=" + flyRegenRate.getValue().doubleValue() +
-                ", flyLimit=" + flyLimit.getValue().doubleValue() +
-                ", getCanFly=" + canFly +
-                ", active=" + active +
-                '}';
-    }
 }

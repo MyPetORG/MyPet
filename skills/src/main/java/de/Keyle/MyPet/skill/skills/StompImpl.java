@@ -153,11 +153,4 @@ public class StompImpl implements Stomp {
         return damage;
     }
 
-    @Override
-    public String toString() {
-        return "StompImpl{" +
-                "chance=" + chance +
-                ", damage=" + damage.getValue().doubleValue() +
-                '}';
-    }
 }

@@ -67,10 +67,4 @@ public class LifeImpl implements Life {
         return life;
     }
 
-    @Override
-    public String toString() {
-        return "LifeImpl{" +
-                "life=" + life.getValue().doubleValue() +
-                '}';
-    }
 }

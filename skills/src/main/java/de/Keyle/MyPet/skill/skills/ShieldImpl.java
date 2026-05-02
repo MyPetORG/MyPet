@@ -102,11 +102,4 @@ public class ShieldImpl implements Shield {
         return redirectedDamage;
     }
 
-    @Override
-    public String toString() {
-        return "ShieldImpl{" +
-                "chance=" + chance +
-                ", redirectedDamage=" + redirectedDamage.getValue() +
-                '}';
-    }
 }

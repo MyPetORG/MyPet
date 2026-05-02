@@ -233,15 +233,4 @@ public class BackpackImpl implements Backpack {
         rows.removeAllUpgrades();
         dropOnDeath.removeAllUpgrades();
     }
-
-    /**
-     * Debug-friendly representation of the current skill state.
-     */
-    @Override
-    public String toString() {
-        return "BackpackImpl{" +
-                "rows=" + rows +
-                ", dropOnDeath=" + dropOnDeath +
-                '}';
-    }
 }

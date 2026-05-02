@@ -49,8 +49,4 @@ public class UpgradeIntegerModifier implements UpgradeModifier<Integer> {
         };
     }
 
-    @Override
-    public String toString() {
-        return "{" + type.name() + ": " + value + '}';
-    }
 }

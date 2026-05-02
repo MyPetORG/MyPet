@@ -27,10 +27,8 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Lightning;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@ToString
 @SkillName("Lightning")
 public class LightningUpgrade implements Upgrade<Lightning> {
     @Getter

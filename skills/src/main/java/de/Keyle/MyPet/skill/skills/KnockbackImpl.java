@@ -86,10 +86,4 @@ public class KnockbackImpl implements Knockback {
         return chance;
     }
 
-    @Override
-    public String toString() {
-        return "KnockbackImpl{" +
-                "chance=" + chance +
-                '}';
-    }
 }

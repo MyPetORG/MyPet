@@ -42,11 +42,4 @@ public class Setting {
         return value != null ? value : key;
     }
 
-    @Override
-    public String toString() {
-        return "Setting{" +
-                getKey() +
-                (value != null ? ("='" + getValue() + "'") : "") +
-                "}";
-    }
 }

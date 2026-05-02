@@ -188,12 +188,4 @@ public class PickupImpl implements Pickup {
         return expPickup;
     }
 
-    @Override
-    public String toString() {
-        return "PickupImpl{" +
-                "range=" + range.getValue().doubleValue() +
-                ", expPickup=" + expPickup +
-                ", pickup=" + pickup +
-                '}';
-    }
 }

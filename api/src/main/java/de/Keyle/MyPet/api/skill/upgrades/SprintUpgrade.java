@@ -26,10 +26,8 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeBooleanModifier;
 import de.Keyle.MyPet.api.skill.skills.Sprint;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@ToString
 @SkillName("Sprint")
 public class SprintUpgrade implements Upgrade<Sprint> {
     @Getter

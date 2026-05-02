@@ -91,11 +91,4 @@ public class PoisonImpl implements Poison {
         target.addPotionEffect(effect);
     }
 
-    @Override
-    public String toString() {
-        return "PoisonImpl{" +
-                "chance=" + chance +
-                ", duration=" + duration +
-                '}';
-    }
 }

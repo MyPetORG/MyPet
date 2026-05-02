@@ -122,11 +122,6 @@ public class ConfigItem {
         return durabilityMode;
     }
 
-    @Override
-    public String toString() {
-        return "ConfigItem{mode: " + durabilityMode.name() + ", item: " + item + "}";
-    }
-
     /**
      * Parses a modern-format item string like {@code "minecraft:wheat[custom_name='...']"}
      * via Paper's {@link org.bukkit.inventory.ItemFactory#createItemStack(String)}.

@@ -27,10 +27,8 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@ToString
 @SkillName("Backpack")
 public class BackpackUpgrade implements Upgrade<Backpack> {
     @Getter

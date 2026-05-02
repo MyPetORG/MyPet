@@ -120,11 +120,6 @@ public class UpgradeComputer<T> {
         this.callbacks.remove(callback);
     }
 
-    @Override
-    public String toString() {
-        return "" + currentValue;
-    }
-
     public enum CallbackReason {
         Add, Remove
     }
