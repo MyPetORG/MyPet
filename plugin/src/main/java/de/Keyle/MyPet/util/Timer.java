@@ -18,11 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.util;
+package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.Scheduler;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;

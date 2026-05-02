@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.services;
 
-import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.util.CompatUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Creaking;
 import org.bukkit.entity.Entity;
@@ -37,7 +37,7 @@ public class DefaultCreakingService extends CreakingService {
 
     public DefaultCreakingService() {
         // Check if we're on 1.21.4+ where Creaking exists
-        this.supported = MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21.4");
+        this.supported = CompatUtil.minecraftVersionEqualsOrAbove("1.21.4");
     }
 
     @Override

@@ -62,7 +62,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
-import de.Keyle.MyPet.api.util.Timer;
+import de.Keyle.MyPet.util.Timer;
+import de.Keyle.MyPet.util.CompatUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,7 +192,7 @@ public class PlayerListener implements Listener {
     public void on(PlayerInteractEntityEvent event) {
         // The un-cancel logic below is only needed on 1.20.x; 1.21+ handles
         // pet right-click interactions correctly without it.
-        if (MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21")) {
+        if (CompatUtil.minecraftVersionEqualsOrAbove("1.21")) {
             return;
         }
         if (event.isCancelled()) {

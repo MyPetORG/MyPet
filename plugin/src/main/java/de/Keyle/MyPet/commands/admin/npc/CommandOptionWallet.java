@@ -25,7 +25,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.util.WalletType;
+import de.Keyle.MyPet.util.WalletType;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.hooks.citizens.WalletTrait;

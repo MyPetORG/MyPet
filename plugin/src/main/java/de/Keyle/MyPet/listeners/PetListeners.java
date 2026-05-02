@@ -1,8 +1,8 @@
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.entity.ai.attack.PetProjectileHitListener;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
+import de.Keyle.MyPet.util.CompatUtil;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -71,7 +71,7 @@ public final class PetListeners {
         // within the same EventPriority; if a new listener handles BlockBreakEvent (HIGH),
         // PlayerInteractEvent (MONITOR), or PlayerJoinEvent (MONITOR), confirm whether it
         // should run before or after CreakingHeartListener and reorder accordingly.
-        if (MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21.4")) {
+        if (CompatUtil.minecraftVersionEqualsOrAbove("1.21.4")) {
             pm.registerEvents(new CreakingHeartListener(), plugin);
         }
     }

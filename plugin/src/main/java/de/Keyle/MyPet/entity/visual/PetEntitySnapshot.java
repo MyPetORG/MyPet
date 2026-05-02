@@ -1,6 +1,6 @@
 package de.Keyle.MyPet.entity.visual;
 
-import de.Keyle.MyPet.api.util.NbtUtil;
+import de.Keyle.MyPet.util.NbtUtil;
 import io.papermc.paper.entity.EntitySerializationFlag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;

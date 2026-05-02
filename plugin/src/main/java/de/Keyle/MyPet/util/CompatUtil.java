@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.util;
+package de.Keyle.MyPet.util;
 
 import org.bukkit.Bukkit;
 
@@ -31,6 +31,9 @@ import org.bukkit.Bukkit;
  * comparator also used by the self-updater for MyPet plugin versions.
  */
 public final class CompatUtil {
+
+    private CompatUtil() {
+    }
 
     /**
      * Checks whether the running server's Minecraft version is numerically
@@ -46,7 +49,7 @@ public final class CompatUtil {
      * @throws IllegalArgumentException if {@code version} is not a valid
      *         dotted-numeric version
      */
-    public boolean minecraftVersionEqualsOrAbove(String version) {
+    public static boolean minecraftVersionEqualsOrAbove(String version) {
         return versionCompare(Bukkit.getMinecraftVersion(), version) >= 0;
     }
 

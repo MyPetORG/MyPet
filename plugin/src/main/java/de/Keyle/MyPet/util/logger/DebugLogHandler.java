@@ -18,11 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.util.logger;
+package de.Keyle.MyPet.util.logger;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.util.LogFormat;
 
 import java.io.File;
 import java.io.IOException;

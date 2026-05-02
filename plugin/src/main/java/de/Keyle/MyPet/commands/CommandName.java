@@ -31,7 +31,7 @@ import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.NameFilter;
+import de.Keyle.MyPet.util.NameFilter;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.arguments.MiniMessageSuggestions;
 import io.papermc.paper.command.brigadier.Commands;

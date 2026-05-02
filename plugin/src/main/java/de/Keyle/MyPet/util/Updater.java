@@ -28,7 +28,6 @@ import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.bukkit.Bukkit;
 

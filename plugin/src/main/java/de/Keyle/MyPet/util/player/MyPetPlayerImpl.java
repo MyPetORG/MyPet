@@ -36,6 +36,7 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.services.CreakingService;
+import de.Keyle.MyPet.util.CompatUtil;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
@@ -486,7 +487,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             }
 
             // Show particles above Creaking Heart blocks for heart-linked Creakings
-            if (MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21.4")) {
+            if (CompatUtil.minecraftVersionEqualsOrAbove("1.21.4")) {
                 // Search in a wider radius since Creakings can wander far from their heart
                 List<Entity> nearbyEntities = p.getNearbyEntities(32, 32, 32);
                 Set<Location> shownHeartLocations = new HashSet<>();

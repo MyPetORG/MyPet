@@ -34,7 +34,7 @@ import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
-import de.Keyle.MyPet.api.util.WalletType;
+import de.Keyle.MyPet.util.WalletType;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.hooks.VaultHook;

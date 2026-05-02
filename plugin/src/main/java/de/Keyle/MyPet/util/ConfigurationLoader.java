@@ -33,7 +33,6 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.NameFilter;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import org.bukkit.Material;

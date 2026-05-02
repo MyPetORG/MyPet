@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.util.hooks.citizens;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.WalletType;
+import de.Keyle.MyPet.util.WalletType;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.trait.Owner;

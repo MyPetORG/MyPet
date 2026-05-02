@@ -8,7 +8,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Scheduler;
-import de.Keyle.MyPet.api.util.Timer;
+import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import org.bukkit.Location;

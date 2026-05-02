@@ -27,14 +27,13 @@ import de.Keyle.MyPet.util.player.ContributorCheck;
 import de.Keyle.MyPet.api.repository.*;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
-import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.Scheduler;
-import de.Keyle.MyPet.api.util.Timer;
+import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
+import de.Keyle.MyPet.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.services.EggIconService;
@@ -133,13 +132,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     @Getter
     private MyPetInfo myPetInfo;
 
-    /**
-     * Minecraft version-compare utility used for feature gating (e.g. Creaking Heart support
-     * on 1.21.4+). Populated in {@link #onLoad()}.
-     */
-    @Getter
-    private CompatUtil compatUtil;
-
     /** Online-player registry. Populated in {@link #onLoad()}. */
     @Getter
     private PlayerManager playerManager;
@@ -230,7 +222,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
      *       so static accessors resolve correctly for the rest of {@code onLoad}</li>
      *   <li>Construct {@link SentryErrorReporter}, optionally enabling its uplink based on
      *       {@code MyPet.Log.Report-Errors} in config</li>
-     *   <li>Detect Minecraft version ({@link CompatUtil}) and load configuration</li>
+     *   <li>Load configuration</li>
      *   <li>Construct {@link ServiceManager} and {@link PluginHookManager}</li>
      *   <li>Populate every cached service-handle field except {@code repository},
      *       {@code miniMessage}, and {@code helpRegistry} (those wait for {@link #onEnable()})</li>
@@ -258,8 +250,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         if (getConfig().getBoolean("MyPet.Log.Report-Errors", true)) {
             this.errorReporter.onEnable();
         }
-
-        compatUtil = new CompatUtil();
 
         ConfigurationLoader.upgradeConfig();
         ConfigurationLoader.setDefault();

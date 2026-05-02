@@ -2,6 +2,7 @@ package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.util.CompatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -54,7 +55,7 @@ public final class CreakingActivationSuppressor {
     private static final AtomicInteger activePetCount = new AtomicInteger(0);
 
     private static final boolean SUPPORTED =
-            MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21.4");
+            CompatUtil.minecraftVersionEqualsOrAbove("1.21.4");
 
     private CreakingActivationSuppressor() {
     }

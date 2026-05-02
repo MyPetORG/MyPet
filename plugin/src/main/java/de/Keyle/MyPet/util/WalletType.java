@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.util;
+package de.Keyle.MyPet.util;
 
 import java.util.Optional;
 

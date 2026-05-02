@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.entity.PersistedMyPet;
+import de.Keyle.MyPet.util.CompatUtil;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -73,7 +74,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
             return Optional.empty();
         }
 
-        if (storedMyPet.getPetType().equals(MyPetType.byName("EnderDragon")) && MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove("1.21.4"))
+        if (storedMyPet.getPetType().equals(MyPetType.byName("EnderDragon")) && CompatUtil.minecraftVersionEqualsOrAbove("1.21.4"))
             return Optional.empty();
 
         if (!storedMyPet.getOwner().isOnline()) {

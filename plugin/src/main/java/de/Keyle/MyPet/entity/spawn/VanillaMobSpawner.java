@@ -3,7 +3,7 @@ package de.Keyle.MyPet.entity.spawn;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
-import de.Keyle.MyPet.api.util.Timer;
+import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;

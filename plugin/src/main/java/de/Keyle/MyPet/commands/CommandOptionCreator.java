@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.util.CompatUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class CommandOptionCreator {
     }
 
     public CommandOptionCreator add(String from, String option) {
-        if (MyPetApi.getCompatUtil().minecraftVersionEqualsOrAbove(from)) {
+        if (CompatUtil.minecraftVersionEqualsOrAbove(from)) {
             options.add(option);
         }
         return this;

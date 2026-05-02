@@ -4,7 +4,7 @@ import de.Keyle.MyPet.migration.Migration;
 import de.Keyle.MyPet.migration.MigrationException;
 import de.Keyle.MyPet.migration.PetDataMigration;
 import de.Keyle.MyPet.migration.SqlMigrationContext;
-import de.Keyle.MyPet.api.util.NbtUtil;
+import de.Keyle.MyPet.util.NbtUtil;
 import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.BinaryTagTypes;

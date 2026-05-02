@@ -31,7 +31,7 @@ import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.api.util.logger.DebugLogHandler;
+import de.Keyle.MyPet.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.shop.ShopManager;

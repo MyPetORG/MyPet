@@ -23,7 +23,6 @@ package de.Keyle.MyPet.api.plugin;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
-import de.Keyle.MyPet.api.util.CompatUtil;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
@@ -37,8 +36,6 @@ public interface MyPetPlugin extends Plugin {
     File getFile();
 
     MyPetInfo getMyPetInfo();
-
-    CompatUtil getCompatUtil();
 
     PlayerManager getPlayerManager();
 
