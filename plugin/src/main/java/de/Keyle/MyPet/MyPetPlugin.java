@@ -46,6 +46,7 @@ import de.Keyle.MyPet.listeners.PetListeners;
 import de.Keyle.MyPet.migration.MigrationService;
 import de.Keyle.MyPet.repository.Converter;
 import de.Keyle.MyPet.repository.OnlinePlayerPetLoader;
+import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.repository.RepositoryFactory;
 import de.Keyle.MyPet.services.BuiltInServices;
 import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
@@ -99,6 +100,10 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.plugin.MyPetPlugin {
+
+    public static MyPetPlugin getInstance() {
+        return JavaPlugin.getPlugin(MyPetPlugin.class);
+    }
 
     /**
      * Becomes {@code true} once {@link #onEnable()} has completed every prerequisite phase

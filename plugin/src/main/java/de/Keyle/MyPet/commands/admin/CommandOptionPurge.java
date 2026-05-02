@@ -24,6 +24,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
@@ -146,7 +147,7 @@ public class CommandOptionPurge {
             sender.sendMessage(MessageUtil.prefixed(Component.text("delete MyPets older than " + formatted + "...")));
         }
 
-        MyPetApi.getRepository().cleanup(timestamp).thenAccept(value -> {
+        MyPetPlugin.getInstance().getRepository().cleanup(timestamp).thenAccept(value -> {
             Runnable reply = () -> sender.sendMessage(MessageUtil.prefixed(Component.text("removed " + value + " MyPets.")));
             if (sender instanceof Player senderPlayer) {
                 senderPlayer.getScheduler().run(MyPetApi.getPlugin(), folaTask -> reply.run(), null);

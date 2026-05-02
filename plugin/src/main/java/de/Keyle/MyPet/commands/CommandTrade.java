@@ -24,6 +24,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.HelpEntry;
@@ -34,7 +35,7 @@ import de.Keyle.MyPet.util.PetInfoBuilder;
 import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.repository.Repository;
+import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
@@ -197,7 +198,7 @@ public class CommandTrade {
                 // implementation returns a PersistedMyPet.
                 final PersistedMyPet originalPet = (PersistedMyPet) MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.pet());
 
-                final Repository repo = MyPetApi.getRepository();
+                final Repository repo = MyPetPlugin.getInstance().getRepository();
                 repo.removePet(originalPet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         PersistedMyPet pet = originalPet.withOwner(newOwner);
                         MyPetSaveEvent event = new MyPetSaveEvent(pet);

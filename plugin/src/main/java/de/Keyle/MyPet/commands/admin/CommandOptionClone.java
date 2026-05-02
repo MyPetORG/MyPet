@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
@@ -148,7 +149,7 @@ public class CommandOptionClone {
         MyPetSaveEvent event = new MyPetSaveEvent(newPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        MyPetApi.getRepository().addPet(newPet).thenAccept(added -> newOwner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+        MyPetPlugin.getInstance().getRepository().addPet(newPet).thenAccept(added -> newOwner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 if (!added) {
                     sender.sendMessage(MessageUtil.prefixed(Component.text("Failed to clone MyPet!")));
                     return;
@@ -160,7 +161,7 @@ public class CommandOptionClone {
                     // not on newPet (which carries the source pet's stored worldGroup
                     // already persisted by addPet above).
                     newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
-                    MyPetApi.getRepository().updateMyPetPlayer(newPetOwner);
+                    MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(newPetOwner);
 
                     sender.sendMessage(MessageUtil.prefixed(Component.text("MyPet successfully cloned to " + newPetOwner.getName() + "!")));
                 }

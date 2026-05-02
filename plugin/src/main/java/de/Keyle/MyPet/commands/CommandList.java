@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
@@ -131,7 +132,7 @@ public class CommandList {
         }
 
         if (owner != null) {
-            MyPetApi.getRepository().getPets(owner).thenAccept(value -> {
+            MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(value -> {
                 Runnable listBody = () -> {
                     if (petOwner == sender) {
                         sender.sendMessage(Translation.getFormattedComponent("Message.Command.List.Yours", lang, owner.getName()));

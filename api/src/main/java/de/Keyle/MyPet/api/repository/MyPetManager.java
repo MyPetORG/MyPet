@@ -25,16 +25,16 @@ import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class MyPetManager {
     protected final BiMap<MyPetPlayer, MyPet> mActivePlayerPets = HashBiMap.create();
@@ -111,22 +111,20 @@ public abstract class MyPetManager {
 
     public abstract Optional<MyPet> activateMyPet(StoredMyPet storedMyPet);
 
-    public boolean deactivateMyPet(MyPetPlayer owner, boolean update) {
-        if (mActivePlayerPets.containsKey(owner)) {
-            final MyPet myPet = owner.getMyPet();
+    public abstract boolean deactivateMyPet(MyPetPlayer owner, boolean update);
 
-            MyPetSaveEvent event = new MyPetSaveEvent(myPet);
-            Bukkit.getServer().getPluginManager().callEvent(event);
-
-            myPet.removePet();
-            if (update) {
-                MyPetApi.getRepository().updatePet(myPet);
-            }
-            mActivePetsPlayer.remove(myPet);
-            return true;
-        }
-        return false;
-    }
+    /**
+     * Lists all pets — active or stored — owned by the given player.
+     *
+     * <p>The returned {@link CompletableFuture} completes on a background thread.
+     * Callers that intend to touch Bukkit API in a continuation must hop to the
+     * appropriate scheduler (e.g.
+     * {@code Bukkit.getServer().getGlobalRegionScheduler().run(plugin, t -> ...)}
+     * or {@code player.getScheduler().run(plugin, t -> ..., null)}) inside the
+     * continuation; touching Bukkit API directly from the continuation is
+     * undefined behavior on Paper and an outright crash on Folia.
+     */
+    public abstract CompletableFuture<List<StoredMyPet>> getStoredPets(MyPetPlayer owner);
 
     public int countActiveMyPets() {
         return mActivePetsPlayer.size();

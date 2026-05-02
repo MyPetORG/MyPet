@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.HelpEntry;
@@ -115,7 +116,7 @@ public class CommandStore {
             }
 
             if (owner.hasMyPet()) {
-                MyPetApi.getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+                MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         if (owner.hasMyPet()) {
                             MyPet myPet = owner.getMyPet();
                             String worldGroup = myPet.getWorldGroup();

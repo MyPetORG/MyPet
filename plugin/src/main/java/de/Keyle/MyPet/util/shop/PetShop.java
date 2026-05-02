@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
@@ -146,7 +147,7 @@ public class PetShop {
                                             .withWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName())
                                             .withUuid(UUID.randomUUID());
 
-                                    MyPetApi.getRepository().addPet(clonedPet).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
+                                    MyPetPlugin.getInstance().getRepository().addPet(clonedPet).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
                                             p.sendMessage(Translation.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
                                             MyPetCreateEvent createEvent = new MyPetCreateEvent(clonedPet, MyPetCreateEvent.Source.PetShop);
                                             Bukkit.getServer().getPluginManager().callEvent(createEvent);
@@ -154,7 +155,7 @@ public class PetShop {
                                                 p.sendMessage(Translation.getFormattedComponent("Message.Shop.SuccessStorage", player, clonedPet.getDisplayName()));
                                             } else {
                                                 petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
-                                                MyPetApi.getRepository().updateMyPetPlayer(petOwner);
+                                                MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(petOwner);
                                                 MyPetApi.getMyPetManager().activateMyPet(clonedPet).ifPresent(MyPet::createEntity);
                                             }
                                     }, null));
@@ -180,7 +181,7 @@ public class PetShop {
                     };
 
                     if (owner != null && owner.hasMyPet()) {
-                        MyPetApi.getRepository().getPets(owner).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), pTask -> {
+                        MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), pTask -> {
                                 int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
                                 int limit = getMaxPetCount(p);
                                 if (petCount >= limit) {

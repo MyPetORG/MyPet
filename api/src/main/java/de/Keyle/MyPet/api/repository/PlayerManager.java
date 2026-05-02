@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.api.repository;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -55,10 +54,7 @@ public abstract class PlayerManager {
         onlinePlayers.put(player.getUniqueId(), player);
     }
 
-    public void setOffline(MyPetPlayer player) {
-        onlinePlayers.remove(player.getUniqueId());
-        MyPetApi.getRepository().updateMyPetPlayer(player);
-    }
+    public abstract void setOffline(MyPetPlayer player);
 
     public abstract MyPetPlayer createMyPetPlayer(Player player);
 
@@ -75,10 +71,5 @@ public abstract class PlayerManager {
         return onlinePlayers.values().toArray(new MyPetPlayer[0]);
     }
 
-    public MyPetPlayer registerMyPetPlayer(Player player) {
-        MyPetPlayer myPetPlayer = createMyPetPlayer(player);
-        MyPetApi.getRepository().addMyPetPlayer(myPetPlayer);
-        setOnline(myPetPlayer);
-        return myPetPlayer;
-    }
+    public abstract MyPetPlayer registerMyPetPlayer(Player player);
 }

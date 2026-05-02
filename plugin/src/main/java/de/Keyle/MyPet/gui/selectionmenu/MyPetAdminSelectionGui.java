@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.gui.selectionmenu;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
@@ -48,7 +49,7 @@ public class MyPetAdminSelectionGui {
     }
 
     public void open(final Consumer<StoredMyPet> callback) {
-        MyPetApi.getRepository().getPets(petOwner).thenAccept(pets -> {
+        MyPetPlugin.getInstance().getRepository().getPets(petOwner).thenAccept(pets -> {
             admin.getScheduler().run(MyPetApi.getPlugin(), folaTask -> open(pets, callback), null);
         });
     }

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -238,7 +239,7 @@ public class CreakingHeartListener implements Listener {
         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
         // Save and activate
-        MyPetApi.getPlugin().getRepository().addPet(inactiveMyPet).thenAccept(value -> {
+        MyPetPlugin.getInstance().getRepository().addPet(inactiveMyPet).thenAccept(value -> {
             player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 if (value == null || !value) {
                     MyPetApi.getLogger().warning("Failed to save captured Creaking pet for " + owner.getName());

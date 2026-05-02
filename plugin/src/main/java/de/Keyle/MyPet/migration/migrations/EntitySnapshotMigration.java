@@ -1,12 +1,13 @@
 package de.Keyle.MyPet.migration.migrations;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.migration.Migration;
 import de.Keyle.MyPet.migration.MigrationException;
 import de.Keyle.MyPet.migration.PetDataMigration;
 import de.Keyle.MyPet.migration.SqlMigrationContext;
-import de.Keyle.MyPet.api.repository.Repository;
+import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.entity.PersistedMyPet;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.migration.migrations.entitysnapshot.LegacyPetReader;
@@ -56,7 +57,7 @@ import java.util.logging.Logger;
  * </ul>
  *
  * <p>The {@link SqlMigrationContext} parameter is unused: pet info reads and
- * writes go through {@code MyPetApi.getRepository()} so the high-level
+ * writes go through {@code MyPetPlugin.getInstance().getRepository()} so the high-level
  * {@code StoredMyPet} model is preserved (ctx exposes a raw connection that
  * would require duplicating the GZIP+NBT codec).
  */
@@ -73,12 +74,12 @@ public final class EntitySnapshotMigration implements PetDataMigration {
     @Override
     public void migrateSql(SqlMigrationContext ctx) throws MigrationException {
         JavaPlugin plugin = (JavaPlugin) MyPetApi.getPlugin();
-        Repository repository = MyPetApi.getRepository();
+        Repository repository = MyPetPlugin.getInstance().getRepository();
         if (repository == null) {
             throw new MigrationException("Repository is null at EntitySnapshot migration time");
         }
 
-        List<StoredMyPet> all = repository.getAllPets();
+        List<StoredMyPet> all = repository.getAllPets().join();
         List<StoredMyPet> legacy = all.stream()
                 .filter(EntitySnapshotMigration::isLegacy)
                 .toList();

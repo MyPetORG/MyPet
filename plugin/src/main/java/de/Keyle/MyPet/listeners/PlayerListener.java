@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -209,11 +210,11 @@ public class PlayerListener implements Listener {
         if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
             return;
         }
-        long delay = MyPetApi.getRepository() instanceof SqLiteRepository ? 1L : Configuration.Repository.EXTERNAL_LOAD_DELAY;
+        long delay = MyPetPlugin.getInstance().getRepository() instanceof SqLiteRepository ? 1L : Configuration.Repository.EXTERNAL_LOAD_DELAY;
 
         final Player joinPlayer = event.getPlayer();
         joinPlayer.getScheduler().runDelayed(MyPetApi.getPlugin(), delayedTask -> {
-            MyPetApi.getRepository().getMyPetPlayer(joinPlayer).thenAccept(p -> {
+            MyPetPlugin.getInstance().getRepository().getMyPetPlayer(joinPlayer).thenAccept(p -> {
                 if (p == null) return;
                 joinPlayer.getScheduler().run(MyPetApi.getPlugin(), joinTask -> {
                     final MyPetPlayerImpl joinedPlayer = (MyPetPlayerImpl) p;
@@ -231,7 +232,7 @@ public class PlayerListener implements Listener {
 
                     if (!joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                         final UUID petUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
-                        MyPetApi.getRepository().getPet(petUUID).thenAccept(storedMyPet -> {
+                        MyPetPlugin.getInstance().getRepository().getPet(petUUID).thenAccept(storedMyPet -> {
                             joinPlayer.getScheduler().run(MyPetApi.getPlugin(), petTask -> {
                                 MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
 
@@ -426,7 +427,7 @@ public class PlayerListener implements Listener {
 
                 if (myPetPlayer.hasMyPetInWorldGroup(toGroup)) {
                     final UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup);
-                    MyPetApi.getRepository().getPets(myPetPlayer).thenAccept(pets -> {
+                    MyPetPlugin.getInstance().getRepository().getPets(myPetPlayer).thenAccept(pets -> {
                         worldChangedPlayer.getScheduler().run(MyPetApi.getPlugin(), runTask -> {
                             for (StoredMyPet storedPet : pets) {
                                 if (storedPet.getUUID().equals(groupMyPetUUID)) {

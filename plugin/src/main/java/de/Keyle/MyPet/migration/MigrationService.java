@@ -1,9 +1,10 @@
 package de.Keyle.MyPet.migration;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.util.VersionUtil;
-import de.Keyle.MyPet.api.repository.Repository;
+import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -392,7 +393,7 @@ public class MigrationService implements ServiceContainer {
     // --- Context creation ---
 
     private SqlMigrationContextImpl createSqlContext() throws SQLException {
-        Repository repo = MyPetApi.getRepository();
+        Repository repo = MyPetPlugin.getInstance().getRepository();
         if (!(repo instanceof AbstractSqlRepository sql)) {
             throw new IllegalStateException("SQL migration requested but active repository is not SQL-backed: "
                     + (repo == null ? "null" : repo.getClass().getSimpleName()));
@@ -465,7 +466,7 @@ public class MigrationService implements ServiceContainer {
      * connection and must close it.
      */
     private Connection openSqlConnection() throws SQLException {
-        Repository repo = MyPetApi.getRepository();
+        Repository repo = MyPetPlugin.getInstance().getRepository();
         if (repo instanceof AbstractSqlRepository sql) {
             return sql.openIsolatedConnection();
         }

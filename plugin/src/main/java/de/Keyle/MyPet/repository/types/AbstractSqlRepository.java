@@ -9,7 +9,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.repository.Repository;
+import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.NbtUtil;
@@ -507,15 +507,19 @@ public abstract class AbstractSqlRepository implements Repository {
     /**
      * Load every pet row whose owner is also loadable (rows with an orphan
      * {@code owner_uuid} are skipped). Used by the data migration and admin
-     * tooling; runs synchronously on the calling thread.
+     * tooling.
      *
-     * <p>The {@link #getAllMyPetPlayers()} call happens before opening the pets
-     * cursor so SQLite's single shared connection is not holding two concurrent
-     * statements — see the note on {@link #acquireConnection()}.
+     * <p>The query for players runs before the pets cursor so SQLite's single
+     * shared connection is not holding two concurrent statements — see the
+     * note on {@link #acquireConnection()}.
      */
     @Override
-    public List<StoredMyPet> getAllPets() {
-        List<MyPetPlayer> playerList = getAllMyPetPlayers();
+    public CompletableFuture<List<StoredMyPet>> getAllPets() {
+        return CompletableFuture.supplyAsync(this::fetchAllPetsBlocking, executor);
+    }
+
+    private List<StoredMyPet> fetchAllPetsBlocking() {
+        List<MyPetPlayer> playerList = fetchAllMyPetPlayersBlocking();
         Map<UUID, MyPetPlayer> owners = new HashMap<>();
         for (MyPetPlayer p : playerList) owners.put(p.getUniqueId(), p);
 
@@ -637,12 +641,15 @@ public abstract class AbstractSqlRepository implements Repository {
     }
 
     /**
-     * Load every player row. Runs synchronously on the calling thread; used
-     * during startup to hydrate the player manager and from {@link #getAllPets}
-     * to resolve pet owners.
+     * Load every player row. Used during startup to hydrate the player manager
+     * and from {@link #getAllPets} to resolve pet owners.
      */
     @Override
-    public List<MyPetPlayer> getAllMyPetPlayers() {
+    public CompletableFuture<List<MyPetPlayer>> getAllMyPetPlayers() {
+        return CompletableFuture.supplyAsync(this::fetchAllMyPetPlayersBlocking, executor);
+    }
+
+    private List<MyPetPlayer> fetchAllMyPetPlayersBlocking() {
         try (ConnectionHolder h = acquireConnection();
              Statement stmt = h.connection().createStatement();
              ResultSet rs = stmt.executeQuery(

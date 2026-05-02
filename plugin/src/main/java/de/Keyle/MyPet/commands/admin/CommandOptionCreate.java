@@ -24,6 +24,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.CommandCategory;
@@ -593,11 +594,11 @@ public class CommandOptionCreate {
                 MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
                 Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
-                MyPetApi.getRepository().addPet(inactiveMyPet).thenAccept(added -> owner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+                MyPetPlugin.getInstance().getRepository().addPet(inactiveMyPet).thenAccept(added -> owner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         if (added) {
                             if (!newOwner.hasMyPet()) {
                                 inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
-                                MyPetApi.getRepository().updateMyPetPlayer(inactiveMyPet.getOwner());
+                                MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(inactiveMyPet.getOwner());
 
                                 Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
                                 if (myPet.isPresent()) {

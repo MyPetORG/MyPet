@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
@@ -125,7 +126,7 @@ public class CommandOptionRemove {
 
         myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), null);
         MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
-        MyPetApi.getRepository().removePet(myPet.getUUID());
+        MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
 
         sender.sendMessage(MessageUtil.prefixed(Component.text("You removed the MyPet of: ").append(Component.text(petOwner.getName()).color(NamedTextColor.YELLOW))));
     }

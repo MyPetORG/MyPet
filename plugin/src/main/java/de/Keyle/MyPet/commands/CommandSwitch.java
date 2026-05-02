@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.HelpEntry;
@@ -110,7 +111,7 @@ public class CommandSwitch {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             final MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-            MyPetApi.getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), schedTask -> {
+            MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), schedTask -> {
                     if (pets.size() - (owner.hasMyPet() ? 1 : 0) == 0) {
                         owner.sendMessage(Translation.getComponent("Message.Command.Switch.NoStoredPets", owner));
                         return;

@@ -2,8 +2,6 @@ package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.repository.Repository;
-import de.Keyle.MyPet.api.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;

@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.repository;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
 public class PlayerManager extends de.Keyle.MyPet.api.repository.PlayerManager {
+    @Override
     public MyPetPlayer createMyPetPlayer(Player player) {
         MyPetPlayer petPlayer = getMyPetPlayer(player);
 
@@ -35,5 +35,19 @@ public class PlayerManager extends de.Keyle.MyPet.api.repository.PlayerManager {
         }
 
         return petPlayer;
+    }
+
+    @Override
+    public void setOffline(MyPetPlayer player) {
+        onlinePlayers.remove(player.getUniqueId());
+        MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(player);
+    }
+
+    @Override
+    public MyPetPlayer registerMyPetPlayer(Player player) {
+        MyPetPlayer myPetPlayer = createMyPetPlayer(player);
+        MyPetPlugin.getInstance().getRepository().addMyPetPlayer(myPetPlayer);
+        setOnline(myPetPlayer);
+        return myPetPlayer;
     }
 }

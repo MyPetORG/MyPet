@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.repository;
+package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
@@ -36,9 +36,9 @@ public interface Repository {
 
     void init() throws RepositoryInitException;
 
-    List<StoredMyPet> getAllPets();
+    CompletableFuture<List<StoredMyPet>> getAllPets();
 
-    List<MyPetPlayer> getAllMyPetPlayers();
+    CompletableFuture<List<MyPetPlayer>> getAllMyPetPlayers();
 
     CompletableFuture<Integer> cleanup(long timestamp);
 

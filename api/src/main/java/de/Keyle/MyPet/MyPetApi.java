@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
 import de.Keyle.MyPet.api.plugin.MyPetPlugin;
 import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
-import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.skill.SkillManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
 import de.Keyle.MyPet.api.util.CompatUtil;
@@ -52,13 +51,6 @@ public class MyPetApi {
             return;
         }
         MyPetApi.plugin = plugin;
-    }
-
-    /**
-     * @return the repository where pets and their owners are stored
-     */
-    public static Repository getRepository() {
-        return plugin.getRepository();
     }
 
     /**

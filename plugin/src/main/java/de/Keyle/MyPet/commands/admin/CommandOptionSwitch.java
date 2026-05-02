@@ -24,6 +24,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
@@ -124,7 +125,7 @@ public class CommandOptionSwitch {
                                                 .resolve(ctx.getSource()).getFirst();
                                         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                                             MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
-                                            MyPetApi.getRepository().getPets(petPlayer).thenAccept(pets -> {
+                                            MyPetPlugin.getInstance().getRepository().getPets(petPlayer).thenAccept(pets -> {
                                                 try {
                                                     for (StoredMyPet pet : pets) {
                                                         String name = Util.SANITIZED_MINIMESSAGE.stripTags(pet.getPetName());
@@ -184,7 +185,7 @@ public class CommandOptionSwitch {
      */
     private void showPetList(CommandSender sender, MyPetPlayer owner, String playerName) {
         String lang = Translation.getCommandSenderLanguage(sender);
-        MyPetApi.getRepository().getPets(owner).thenAccept(value -> {
+        MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(value -> {
             Runnable listBody = () -> {
                 sender.sendMessage("Select the MyPet you want the player to switch to:");
                 if (sender instanceof Player) {
@@ -239,7 +240,7 @@ public class CommandOptionSwitch {
         }
         MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-        MyPetApi.getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+        MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 // Find pet by name (stripped of MiniMessage tags)
                 StoredMyPet newPet = null;
                 for (StoredMyPet pet : pets) {

@@ -41,6 +41,7 @@
 package de.Keyle.MyPet.util.hooks.citizens;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -94,7 +95,7 @@ public class StorageTrait extends Trait {
 
                 final NPC npc = this.npc;
 
-                MyPetApi.getRepository().getPets(myPetPlayer).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+                MyPetPlugin.getInstance().getRepository().getPets(myPetPlayer).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         WorldGroup wg = WorldGroup.getGroupByWorld(myPetPlayer.getPlayer().getWorld().getName());
                         int inactivePetCount = 0;
                         UUID activePetUUID = myPetPlayer.getMyPet().getUUID();
@@ -186,7 +187,7 @@ public class StorageTrait extends Trait {
                                             // remove pet from world groups
                                             String wg1 = myPetPlayer.getWorldGroupForMyPet(storedMyPet.getUUID());
                                             myPetPlayer.setMyPetForWorldGroup(wg1, null);
-                                            MyPetApi.getRepository().updateMyPetPlayer(myPetPlayer);
+                                            MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(myPetPlayer);
 
                                             player.sendMessage(Translation.getFormattedComponent("Message.Npc.HandOver", myPetPlayer, storedMyPet.getDisplayName(), npcEvent.getNPC().getName()));
                                         }
@@ -223,7 +224,7 @@ public class StorageTrait extends Trait {
                         }
                 }, null));
             } else {
-                MyPetApi.getRepository().getPets(myPetPlayer).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+                MyPetPlugin.getInstance().getRepository().getPets(myPetPlayer).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         if (!pets.isEmpty()) {
                             int maxPetCount = 0;
                             if (!Permissions.has(player, "MyPet.admin")) {
@@ -245,7 +246,7 @@ public class StorageTrait extends Trait {
                                         myPetPlayer.sendMessage(Translation.getFormattedComponent("Message.Npc.ChosenPet", myPetPlayer, myPet.get().getDisplayName()));
                                         WorldGroup takeWg = WorldGroup.getGroupByWorld(ownerPlayer.getWorld().getName());
                                         myPetPlayer.setMyPetForWorldGroup(takeWg, myPet.get().getUUID());
-                                        MyPetApi.getRepository().updateMyPetPlayer(myPetPlayer);
+                                        MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(myPetPlayer);
 
                                         switch (myPet.get().createEntity()) {
                                             case Canceled:

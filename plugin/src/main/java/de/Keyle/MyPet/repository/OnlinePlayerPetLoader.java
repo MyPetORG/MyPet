@@ -1,6 +1,6 @@
 package de.Keyle.MyPet.repository;
 
-import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -8,7 +8,6 @@ import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.MyPetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
-import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.Bukkit;
@@ -92,7 +91,7 @@ public final class OnlinePlayerPetLoader {
 
         if (!onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
             UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
-            MyPetApi.getRepository().getPet(petUUID).thenAccept(storedMyPet ->
+            MyPetPlugin.getInstance().getRepository().getPet(petUUID).thenAccept(storedMyPet ->
                     player.getScheduler().run(plugin, petTask ->
                             activateAndMaybeRespawn(myPetManager, onlinePlayer, storedMyPet), null));
         }

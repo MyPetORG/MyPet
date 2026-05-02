@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.repository;
+package de.Keyle.MyPet.repository;
 
 public class RepositoryInitException extends Exception {
 

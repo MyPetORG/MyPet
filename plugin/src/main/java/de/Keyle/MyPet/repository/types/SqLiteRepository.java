@@ -22,7 +22,7 @@ package de.Keyle.MyPet.repository.types;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.util.VersionUtil;
-import de.Keyle.MyPet.api.repository.RepositoryInitException;
+import de.Keyle.MyPet.repository.RepositoryInitException;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;

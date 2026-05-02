@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.CommandCategory;
@@ -215,7 +216,7 @@ public class CommandRelease {
 
             petOwner.sendMessage(Translation.getFormattedComponent("Message.Command.Release.Success", petOwner, myPet.getDisplayName()));
             MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
-            MyPetApi.getRepository().removePet(myPet.getUUID());
+            MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
         } else {
             showReleasePrompt(petOwner, myPet);
         }

@@ -24,7 +24,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.util.VersionUtil;
-import de.Keyle.MyPet.api.repository.RepositoryInitException;
+import de.Keyle.MyPet.repository.RepositoryInitException;
 import de.Keyle.MyPet.api.util.NbtUtil;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import net.kyori.adventure.nbt.CompoundBinaryTag;

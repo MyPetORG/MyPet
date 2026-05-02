@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -362,7 +363,7 @@ public class EntityListener implements Listener {
                         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
                         justLeashed.add(player.getUniqueId());
-                        MyPetApi.getPlugin().getRepository().addPet(inactiveMyPet).thenAccept(value -> {
+                        MyPetPlugin.getInstance().getRepository().addPet(inactiveMyPet).thenAccept(value -> {
                             player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                                 owner.sendMessage(Translation.getComponent("Message.Leash.Add", owner));
 

@@ -21,22 +21,26 @@
 package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
 import de.Keyle.MyPet.api.event.MyPetLoadEvent;
+import de.Keyle.MyPet.api.event.MyPetSaveEvent;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.entity.PersistedMyPet;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.ErrorUtil;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
 
@@ -119,6 +123,29 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         return Optional.of(myPet);
+    }
+
+    @Override
+    public boolean deactivateMyPet(MyPetPlayer owner, boolean update) {
+        if (mActivePlayerPets.containsKey(owner)) {
+            final MyPet myPet = owner.getMyPet();
+
+            MyPetSaveEvent event = new MyPetSaveEvent(myPet);
+            Bukkit.getServer().getPluginManager().callEvent(event);
+
+            myPet.removePet();
+            if (update) {
+                MyPetPlugin.getInstance().getRepository().updatePet(myPet);
+            }
+            mActivePetsPlayer.remove(myPet);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public CompletableFuture<List<StoredMyPet>> getStoredPets(MyPetPlayer owner) {
+        return MyPetPlugin.getInstance().getRepository().getPets(owner);
     }
 
     private static MyPet createMyPetInstance(MyPetType type, MyPetPlayer owner) {

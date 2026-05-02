@@ -1,6 +1,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
@@ -66,7 +67,7 @@ public class PetDeathListener implements Listener {
             myPet.getOwner().sendMessage(Translation.getFormattedComponent("Message.Command.Release.Dead", owner, myPet.getDisplayName()));
 
             getMyPetManager().deactivateMyPet(owner, false);
-            MyPetApi.getRepository().removePet(myPet.getUUID());
+            MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
 
             return;
         }
