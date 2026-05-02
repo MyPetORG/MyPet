@@ -29,9 +29,9 @@ import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.UpgradeParser;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
-import de.Keyle.MyPet.api.skill.skilltree.levelrule.DynamicLevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
-import de.Keyle.MyPet.api.skill.skilltree.levelrule.StaticLevelRule;
+import de.Keyle.MyPet.skill.skilltree.levelrule.DynamicLevelRule;
+import de.Keyle.MyPet.skill.skilltree.levelrule.StaticLevelRule;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 
 import java.io.BufferedReader;

@@ -18,36 +18,56 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.skill.skilltree.levelrule;
+package de.Keyle.MyPet.skill.skilltree.levelrule;
 
-import java.util.Collection;
-import java.util.HashSet;
+import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
 
-public class StaticLevelRule implements LevelRule {
-    HashSet<Integer> levels = new HashSet<>();
+public class DynamicLevelRule implements LevelRule {
 
-    public StaticLevelRule(int... levels) {
-        for (int level : levels) {
-            this.levels.add(level);
-        }
+    int modulo = 1;
+    int start = 1;
+    int end = 0;
+
+    public DynamicLevelRule(int modulo, int start, int end) {
+        this.modulo = Math.max(1, modulo);
+        this.start = Math.max(1, start);
+        this.end = Math.max(0, end);
     }
 
-    public StaticLevelRule(Collection<Integer> levels) {
-        this.levels.addAll(levels);
+    public DynamicLevelRule(int modulo) {
+        this.modulo = modulo;
     }
 
-    public StaticLevelRule(int level) {
-        this.levels.add(level);
+    public DynamicLevelRule() {
+    }
+
+    public int getModulo() {
+        return modulo;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public int getEnd() {
+        return end;
     }
 
     @Override
     public boolean check(int level) {
-        return levels.contains(level);
+        if (start > 1 && level < start) {
+            return false;
+        }
+        if (end > 0 && level > end) {
+            return false;
+        }
+        level -= start;
+        return level % modulo == 0;
     }
 
     @Override
     public int getPriority() {
-        return 1;
+        return 0;
     }
 
 }
