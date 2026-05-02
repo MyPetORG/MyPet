@@ -28,11 +28,12 @@ import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.util.PetInfoBuilder;
+import de.Keyle.MyPet.util.player.ContributorCheck;
+import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -257,12 +258,13 @@ public class CommandInfo {
                     infoShown = true;
                 }
             }
-            if (myPet.getOwner().getContributorRank() != ContributorCheck.ContributorRank.None) {
+            ContributorCheck.ContributorRank rank = ((MyPetPlayerImpl) myPet.getOwner()).getContributorRank();
+            if (rank != ContributorCheck.ContributorRank.None) {
                 infoShown = true;
-                String icon = myPet.getOwner().getContributorRank().getDefaultIcon();
+                String icon = rank.getDefaultIcon();
                 sender.sendMessage(Component.text()
                         .append(Component.text("   " + icon + " ").color(NamedTextColor.GOLD))
-                        .append(Translation.getComponent("Name.Title." + myPet.getOwner().getContributorRank().name(), sender).color(NamedTextColor.GOLD))
+                        .append(Translation.getComponent("Name.Title." + rank.name(), sender).color(NamedTextColor.GOLD))
                         .append(Component.text(" " + icon).color(NamedTextColor.GOLD))
                         .build());
             }

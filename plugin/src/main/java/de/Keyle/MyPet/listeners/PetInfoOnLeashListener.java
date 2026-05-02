@@ -3,11 +3,12 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.commands.CommandInfo;
 import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.util.PetInfoBuilder;
+import de.Keyle.MyPet.util.player.ContributorCheck;
+import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
@@ -143,10 +144,11 @@ public class PetInfoOnLeashListener implements Listener {
                 infoShown = true;
             }
         }
-        if (myPet.getOwner().getContributorRank() != ContributorCheck.ContributorRank.None) {
+        ContributorCheck.ContributorRank rank = ((MyPetPlayerImpl) myPet.getOwner()).getContributorRank();
+        if (rank != ContributorCheck.ContributorRank.None) {
             infoShown = true;
-            String icon = myPet.getOwner().getContributorRank().getDefaultIcon();
-            String title = Translation.getString("Name.Title." + myPet.getOwner().getContributorRank().name(), damager);
+            String icon = rank.getDefaultIcon();
+            String title = Translation.getString("Name.Title." + rank.name(), damager);
             damager.sendMessage(Component.text("   " + icon + " " + title + " " + icon).color(NamedTextColor.GOLD));
         }
 

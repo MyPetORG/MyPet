@@ -1,27 +1,8 @@
-/*
- * This file is part of MyPet
- *
- * Copyright © 2011-2019 Keyle
- * MyPet is licensed under the GNU Lesser General Public License.
- *
- * MyPet is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * MyPet is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
-package de.Keyle.MyPet.api.player;
+package de.Keyle.MyPet.util.player;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.Bukkit;
 
 import java.util.Map;
@@ -88,21 +69,11 @@ public class ContributorCheck {
 
     public static ContributorRank getContributorRank(MyPetPlayer player) {
         try {
-            // Check whether this player has contributed to MyPet
-            // returns
-            //   0 for nothing
-            //   1 for donator
-            //   2 for developer
-            //   3 for translator
-            //   4 for helper
-            //   5 for creator
-            //   6 for premium
-            // no data will be saved on the server
             String check;
             if (player.getUniqueId() != null) {
-                check = player.getName()+","+player.getUniqueId()+",";
+                check = player.getName() + "," + player.getUniqueId() + ",";
             } else {
-                check = player.getName()+",,";
+                check = player.getName() + ",,";
             }
 
             if (!contributorMapLoaded) {

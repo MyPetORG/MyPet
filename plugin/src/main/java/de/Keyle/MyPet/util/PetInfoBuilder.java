@@ -26,11 +26,12 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
+import de.Keyle.MyPet.util.player.ContributorCheck;
+import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -373,11 +374,11 @@ public class PetInfoBuilder {
      * @return Component with donation rank info, or null if no donation rank
      */
     public static Component donationRankLine(MyPet myPet, CommandSender sender) {
-        if (myPet.getOwner().getContributorRank() == ContributorCheck.ContributorRank.None) {
+        ContributorCheck.ContributorRank rank = ((MyPetPlayerImpl) myPet.getOwner()).getContributorRank();
+        if (rank == ContributorCheck.ContributorRank.None) {
             return null;
         }
 
-        ContributorCheck.ContributorRank rank = myPet.getOwner().getContributorRank();
         String icon = rank.getDefaultIcon();
 
         return Component.text()

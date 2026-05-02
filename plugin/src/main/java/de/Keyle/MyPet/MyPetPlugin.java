@@ -23,7 +23,7 @@ package de.Keyle.MyPet;
 import de.Keyle.MyPet.api.*;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetInfo;
-import de.Keyle.MyPet.api.player.ContributorCheck;
+import de.Keyle.MyPet.util.player.ContributorCheck;
 import de.Keyle.MyPet.api.repository.*;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkillTreeLoaderJSON;

@@ -23,11 +23,12 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.player.ContributorCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
+import de.Keyle.MyPet.util.player.ContributorCheck.ContributorRank;
+import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -42,6 +43,10 @@ public class PlaceholderApiHook implements PluginHook {
 
     Map<String, PlaceHolder<?>> placeHolders = new HashMap<>();
     PlaceholderExpansion myPetExpansion;
+
+    private static ContributorRank rankOf(MyPetPlayer player) {
+        return ((MyPetPlayerImpl) player).getContributorRank();
+    }
 
     @Override
     public boolean onEnable() {
@@ -200,49 +205,49 @@ public class PlaceholderApiHook implements PluginHook {
         placeHolders.put("player_is_premium", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
-                return player.getContributorRank() == ContributorCheck.ContributorRank.Premium ? "yes" : "no";
+                return rankOf(player) == ContributorRank.Premium ? "yes" : "no";
             }
         });
 
         placeHolders.put("player_is_donator", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
-                return player.getContributorRank() == ContributorCheck.ContributorRank.Donator ? "yes" : "no";
+                return rankOf(player) == ContributorRank.Donator ? "yes" : "no";
             }
         });
 
         placeHolders.put("player_is_creator", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
-                return player.getContributorRank() == ContributorCheck.ContributorRank.Creator ? "yes" : "no";
+                return rankOf(player) == ContributorRank.Creator ? "yes" : "no";
             }
         });
 
         placeHolders.put("player_is_developer", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
-                return player.getContributorRank() == ContributorCheck.ContributorRank.Developer ? "yes" : "no";
+                return rankOf(player) == ContributorRank.Developer ? "yes" : "no";
             }
         });
 
         placeHolders.put("player_is_translator", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
-                return player.getContributorRank() == ContributorCheck.ContributorRank.Translator ? "yes" : "no";
+                return rankOf(player) == ContributorRank.Translator ? "yes" : "no";
             }
         });
 
         placeHolders.put("player_is_none", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
-                return player.getContributorRank() == ContributorCheck.ContributorRank.None ? "yes" : "no";
+                return rankOf(player) == ContributorRank.None ? "yes" : "no";
             }
         });
 
         placeHolders.put("player_particle_rank", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
-                return player.getContributorRank().name();
+                return rankOf(player).name();
             }
         });
 
