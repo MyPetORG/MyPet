@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 
 import java.util.logging.Logger;
@@ -53,6 +54,29 @@ public class MyPetApi {
     }
 
     /**
+     * @return {@code true} if MyPet has loaded and the API is safe to call
+     */
+    public static boolean isReady() {
+        return plugin != null;
+    }
+
+    private static MyPetPlugin requirePlugin() {
+        if (plugin == null) {
+            throw new IllegalStateException(
+                    "MyPetApi accessed before MyPet has loaded. Call from onEnable (after MyPet's onEnable runs), " +
+                            "not from onLoad or constructors. Add 'softdepend: [MyPet]' to plugin.yml or guard with MyPetApi.isReady().");
+        }
+        return plugin;
+    }
+
+    private static <T extends ServiceContainer> T requireService(Class<T> serviceClass) {
+        return getServiceManager().getService(serviceClass).orElseThrow(() ->
+                new IllegalStateException(
+                        "MyPetApi: " + serviceClass.getSimpleName() + " service not yet registered. " +
+                                "Call from onEnable (after MyPet's onEnable runs) or guard with MyPetApi.isReady()."));
+    }
+
+    /**
      * @return the pluginlogger or a logger instance called MyPet
      */
     public static Logger getLogger() {
@@ -67,69 +91,69 @@ public class MyPetApi {
      * @return instance of the error reporter
      */
     public static ErrorReporter getErrorReporter() {
-        return plugin.getErrorReporter();
+        return requirePlugin().getErrorReporter();
     }
 
     /**
      * @return you can find info about pet types here
      */
     public static MyPetInfo getMyPetInfo() {
-        return plugin.getMyPetInfo();
+        return requirePlugin().getMyPetInfo();
     }
 
     /**
      * @return MyPet player manager
      */
     public static PlayerManager getPlayerManager() {
-        return plugin.getPlayerManager();
+        return requirePlugin().getPlayerManager();
     }
 
     /**
      * @return MyPet manager
      */
     public static MyPetManager getMyPetManager() {
-        return plugin.getMyPetManager();
+        return requirePlugin().getMyPetManager();
     }
 
     /**
      * @return you can find plugin hook helper functions here
      */
     public static HookHelper getHookHelper() {
-        return plugin.getHookHelper();
+        return requirePlugin().getHookHelper();
     }
 
     /**
      * @return instance of the plugin hook manager
      */
     public static PluginHookManager getPluginHookManager() {
-        return plugin.getPluginHookManager();
+        return requirePlugin().getPluginHookManager();
     }
 
     /**
      * @return instance of the plugin hook manager
      */
     public static ServiceManager getServiceManager() {
-        return plugin.getServiceManager();
+        return requirePlugin().getServiceManager();
     }
 
     /**
      * @return instance of the skilltree manager
      */
     public static SkilltreeManager getSkilltreeManager() {
-        return getServiceManager().getService(SkilltreeManager.class).get();
+        return requireService(SkilltreeManager.class);
     }
 
     /**
      * @return instance of the skill manager
      */
     public static SkillManager getSkillManager() {
-        return getServiceManager().getService(SkillManager.class).get();
+        return requireService(SkillManager.class);
     }
 
     /**
      * @return instance of the leashflag manager
      */
     public static LeashFlagManager getLeashFlagManager() {
-        return getServiceManager().getService(LeashFlagManager.class).get();
+        return requireService(LeashFlagManager.class);
     }
 }
