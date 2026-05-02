@@ -30,9 +30,8 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.animation.particle.FixedCircleAnimation;
-import de.Keyle.MyPet.api.util.animation.particle.SpiralAnimation;
-import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
+import de.Keyle.MyPet.util.animation.particle.FixedCircleAnimation;
+import de.Keyle.MyPet.util.animation.particle.SpiralAnimation;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -113,7 +112,7 @@ public class LevelListener implements Listener {
                     myPet.setHealth(myPet.getMaxHealth());
                     myPet.setSaturation(100);
 
-                    new SpiralAnimation(1, entity.getEyeHeight() + 0.5, new EntityLocationHolder(entity)) {
+                    new SpiralAnimation(1, entity.getEyeHeight() + 0.5, () -> entity.isDead() ? null : entity.getLocation()) {
                         @Override
                         protected void playParticleEffect(Location location) {
                             location.getWorld().spawnParticle(Particle.ENCHANTED_HIT, location, 1, 0, 0, 0, 0);
@@ -161,7 +160,7 @@ public class LevelListener implements Listener {
                     myPet.setHealth(myPet.getMaxHealth());
                     myPet.setSaturation(100);
 
-                    new FixedCircleAnimation(1, entity.getEyeHeight() + 0.5, 10, new EntityLocationHolder(entity)) {
+                    new FixedCircleAnimation(1, entity.getEyeHeight() + 0.5, 10, () -> entity.isDead() ? null : entity.getLocation()) {
                         @Override
                         protected void playParticleEffect(Location location) {
                             location.getWorld().spawnParticle(Particle.BLOCK, location, 1, 0, 0, 0, 0, Material.REDSTONE_BLOCK.createBlockData());
