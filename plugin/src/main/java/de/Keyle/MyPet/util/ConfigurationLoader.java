@@ -278,10 +278,12 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Goat.CanDropHorn", MyPet.Goat.CAN_DROP_HORN);
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
         config.addDefault("MyPet.Pets.SnowGolem.FixSnowTrack", MyPet.SnowGolem.FIX_SNOW_TRACK);
+        config.addDefault("MyPet.Pets.MagmaCube.CanHurtPlayersOnContact", MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT);
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
         config.addDefault("MyPet.Pets.Panda.CanDropSlimeball", MyPet.Panda.CAN_DROP_SLIMEBALL);
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
         config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
+        config.addDefault("MyPet.Pets.Slime.CanHurtPlayersOnContact", MyPet.Slime.CAN_HURT_PLAYERS_ON_CONTACT);
         config.addDefault("MyPet.Pets.Sniffer.CanDigSeeds", MyPet.Sniffer.CAN_DIG_SEEDS);
 
         config.options().copyDefaults(true);
@@ -468,8 +470,10 @@ public class ConfigurationLoader {
         MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
         MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanTossUp", true);
         MyPet.SnowGolem.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.SnowGolem.FixSnowTrack", true);
+        MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT = config.getBoolean("MyPet.Pets.MagmaCube.CanHurtPlayersOnContact", false);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
         MyPet.Panda.CAN_DROP_SLIMEBALL = config.getBoolean("MyPet.Pets.Panda.CanDropSlimeball", true);
+        MyPet.Slime.CAN_HURT_PLAYERS_ON_CONTACT = config.getBoolean("MyPet.Pets.Slime.CanHurtPlayersOnContact", false);
         MyPet.Sniffer.CAN_DIG_SEEDS = config.getBoolean("MyPet.Pets.Sniffer.CanDigSeeds", true);
 
         // Dynamic per-type CanFly / CanGlide / CanSwim / WillShake load. Reads

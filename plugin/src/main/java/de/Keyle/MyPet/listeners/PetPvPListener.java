@@ -7,8 +7,10 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
@@ -23,6 +25,7 @@ import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
  *   <li>Owner friendly-fire gate ({@code OWNER_CAN_ATTACK_PET} config)</li>
  *   <li>Hook-plugin {@code canHurt} integration (WorldGuard, MobArena, etc.)</li>
  *   <li>Pet-on-pet projectile self-damage prevention and duel-mode bypass</li>
+ *   <li>Cube-mob (Slime, MagmaCube) passive contact damage: owner-protect always, per-type flag for non-owner players, target-bypass for deliberate attacks</li>
  * </ul>
  */
 public class PetPvPListener implements Listener {
@@ -92,5 +95,54 @@ public class PetPvPListener implements Listener {
                 }
             }
         }
+    }
+
+    /**
+     * Suppresses passive contact damage from cube-mob pets (Slime, MagmaCube) when
+     * configured to. Vanilla {@code Slime#playerTouch(Player)} fires automatically when a
+     * slime is in contact with a Player — without this gate, slime/magma pets damage
+     * their owner and other players just by hopping near them.
+     *
+     * <p>Owner is universally protected: the pet never damages its owner regardless of
+     * config. Non-owner Player damage is gated by {@code CAN_HURT_PLAYERS_ON_CONTACT}.
+     *
+     * <p>Deliberate attacks via {@code PetMeleeAttackGoal} (Aggressive/Farm/Duel/Control
+     * Behavior) on the pet's current target bypass this gate — both vanilla contact
+     * damage and {@code applyPetDamage} fire {@link EntityDamageByEntityEvent} with the
+     * same damager, cause, and damage type, so the only signal that distinguishes
+     * "intentional skill use" from "incidental hop-by" is whether the victim equals the
+     * pet's current target. This is a best-effort discriminator — if the target reference
+     * is cleared between the attack and the event (rare but possible in unusual goal
+     * transitions), a legitimate deliberate hit could fall through to the config gate and
+     * get cancelled.
+     */
+    @EventHandler
+    public void onPetCubeMobContactDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Slime damagerSlime)) return;
+        if (!(event.getEntity() instanceof Player victim)) return;
+        if (!PetEntityMarker.isMarked(damagerSlime)) return;
+        if (WorldGroup.getGroupByWorld(damagerSlime.getWorld()).isDisabled()) return;
+
+        MyPet myPet = getMyPetManager().getMyPetFromEntity(damagerSlime);
+        if (myPet == null) return;
+
+        // Deliberate attacks via PetMeleeAttackGoal target the pet's current target.
+        // Don't gate those — that's the user's intentional Aggressive/Farm/Duel use.
+        if (myPet.getMyPetTarget() == victim) {
+            return;
+        }
+
+        // Owner is universally protected.
+        var owner = myPet.getOwner();
+        Player ownerPlayer = owner != null ? owner.getPlayer() : null;
+        if (ownerPlayer != null && ownerPlayer.equals(victim)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        boolean allowed = damagerSlime instanceof MagmaCube
+                ? Configuration.MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT
+                : Configuration.MyPet.Slime.CAN_HURT_PLAYERS_ON_CONTACT;
+        if (!allowed) event.setCancelled(true);
     }
 }

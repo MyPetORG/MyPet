@@ -280,6 +280,19 @@ public class Configuration {
             public static boolean CAN_TOSS_UP = true;
         }
 
+        public static class MagmaCube {
+
+            /**
+             * If {@code true}, MagmaCube pets damage non-owner players on contact (vanilla
+             * cube-mob contact damage). The owner is universally protected regardless of this
+             * flag — pet-on-owner contact damage is always cancelled.
+             *
+             * <p>Deliberate attacks via {@code PetMeleeAttackGoal} (Aggressive/Farm/Duel
+             * Behavior) on the pet's current target are never gated by this flag.
+             */
+            public static boolean CAN_HURT_PLAYERS_ON_CONTACT = false;
+        }
+
         public static class Mooshroom {
 
             public static boolean CAN_GIVE_SOUP;
@@ -294,6 +307,19 @@ public class Configuration {
 
             public static boolean CAN_BE_SHEARED = true;
             public static boolean CAN_REGROW_WOOL = true;
+        }
+
+        public static class Slime {
+
+            /**
+             * If {@code true}, Slime pets damage non-owner players on contact (vanilla
+             * cube-mob contact damage). The owner is universally protected regardless of this
+             * flag — pet-on-owner contact damage is always cancelled.
+             *
+             * <p>Deliberate attacks via {@code PetMeleeAttackGoal} (Aggressive/Farm/Duel
+             * Behavior) on the pet's current target are never gated by this flag.
+             */
+            public static boolean CAN_HURT_PLAYERS_ON_CONTACT = false;
         }
 
         public static class Sniffer {
