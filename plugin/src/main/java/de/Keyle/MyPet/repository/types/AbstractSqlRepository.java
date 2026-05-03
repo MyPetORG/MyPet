@@ -821,6 +821,22 @@ public abstract class AbstractSqlRepository implements Repository {
         }, executor);
     }
 
+    @Override
+    public CompletableFuture<Boolean> updatePetInfo(final UUID petUuid, final CompoundBinaryTag info) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (ConnectionHolder h = acquireConnection();
+                 PreparedStatement stmt = h.connection().prepareStatement(
+                         "UPDATE " + qualifyTable("pets") + " SET info=? WHERE uuid=?;")) {
+                bindBlob(stmt, 1, info.keySet().isEmpty() ? new byte[0] : NbtUtil.writeCompressed(info));
+                stmt.setString(2, petUuid.toString());
+                return stmt.executeUpdate() > 0;
+            } catch (SQLException | IOException e) {
+                reportError(e);
+                return false;
+            }
+        }, executor);
+    }
+
     // Players (writes) ------------------------------------------------------------------------------------------------
 
     /**

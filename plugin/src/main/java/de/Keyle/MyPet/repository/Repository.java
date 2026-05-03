@@ -23,6 +23,7 @@ package de.Keyle.MyPet.repository;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -61,6 +62,15 @@ public interface Repository {
     CompletableFuture<Boolean> savePet(StoredMyPet storedMyPet);
 
     CompletableFuture<Boolean> updatePet(StoredMyPet storedMyPet);
+
+    /**
+     * Narrow UPDATE of just the {@code info} BLOB. Required for migrations that
+     * run before the {@code SkilltreeManager} has loaded: going through the wide
+     * {@link #updatePet} would null the {@code skilltree} column, because the
+     * row→pet load path silently resolves the stored skilltree name to a null
+     * {@code Skilltree} when the manager is still empty.
+     */
+    CompletableFuture<Boolean> updatePetInfo(UUID petUuid, CompoundBinaryTag info);
 
     CompletableFuture<Boolean> isMyPetPlayer(Player player);
 

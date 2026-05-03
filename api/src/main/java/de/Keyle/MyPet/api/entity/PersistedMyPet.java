@@ -127,9 +127,6 @@ public record PersistedMyPet(
     public PersistedMyPet withSkillInfo(CompoundBinaryTag v) {
         return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, v, info);
     }
-    public PersistedMyPet withInfo(CompoundBinaryTag v) {
-        return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, v);
-    }
 
     /**
      * Merges per-skill NBT into the existing {@link #skillInfo}, preserving any
