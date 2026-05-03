@@ -16,9 +16,11 @@ import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,8 +34,8 @@ import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
 /**
  * Handles the full pet death pipeline: release-on-death, respawn timer
  * calculation (including duel-mode fast respawn), drop suppression,
- * XP loss, backpack drop, death message, auto-respawn economy, and
- * cube-mob split suppression.
+ * XP loss, backpack drop, death message, auto-respawn economy,
+ * cube-mob split suppression, and snapshot capture for respawn.
  */
 public class PetDeathListener implements Listener {
 
@@ -72,6 +74,20 @@ public class PetDeathListener implements Listener {
             MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
 
             return;
+        }
+
+        // Capture an EntitySnapshot for respawn. PetDeathListener owns this for
+        // the death path; MyPet.removePet captures for the despawn/logout path.
+        // Without this, pendingSnapshot is null at respawn time (consumed by the
+        // prior spawn, never refilled), forcing fresh-spawn — which loses
+        // live-only state like slime size, /petadmin variant changes, collar
+        // colour, profession, etc.
+        try {
+            myPet.setInfo(PetEntitySnapshot.capture((Mob) deadEntity));
+        } catch (Throwable t) {
+            MyPetApi.getLogger().warning("Failed to capture EntitySnapshot for pet "
+                    + myPet.getUUID() + " on death — pet will respawn with default "
+                    + "live-entity state. " + t.getMessage());
         }
 
         // Calculate respawn time
