@@ -350,7 +350,7 @@ public class Configuration {
 
         public static class SnowGolem {
 
-            public static boolean FIX_SNOW_TRACK = true;
+            public static boolean DISABLE_SNOW_TRACK = true;
         }
     }
 }

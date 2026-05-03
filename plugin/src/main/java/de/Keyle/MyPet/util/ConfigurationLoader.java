@@ -288,7 +288,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Goat.CanDropHorn", MyPet.Goat.CAN_DROP_HORN);
         config.addDefault("MyPet.Pets.Goat.CanGiveMilk", MyPet.Goat.CAN_GIVE_MILK);
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
-        config.addDefault("MyPet.Pets.SnowGolem.FixSnowTrack", MyPet.SnowGolem.FIX_SNOW_TRACK);
+        config.addDefault("MyPet.Pets.SnowGolem.DisableSnowTrack", MyPet.SnowGolem.DISABLE_SNOW_TRACK);
         config.addDefault("MyPet.Pets.MagmaCube.CanHurtPlayersOnContact", MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT);
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
         config.addDefault("MyPet.Pets.Panda.CanDropSlimeball", MyPet.Panda.CAN_DROP_SLIMEBALL);
@@ -481,7 +481,7 @@ public class ConfigurationLoader {
         MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
         MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
         MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanTossUp", true);
-        MyPet.SnowGolem.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.SnowGolem.FixSnowTrack", true);
+        MyPet.SnowGolem.DISABLE_SNOW_TRACK = config.getBoolean("MyPet.Pets.SnowGolem.DisableSnowTrack", true);
         MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT = config.getBoolean("MyPet.Pets.MagmaCube.CanHurtPlayersOnContact", false);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
         MyPet.Panda.CAN_DROP_SLIMEBALL = config.getBoolean("MyPet.Pets.Panda.CanDropSlimeball", true);

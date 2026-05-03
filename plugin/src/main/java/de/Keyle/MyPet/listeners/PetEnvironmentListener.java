@@ -1,18 +1,20 @@
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 
 /**
  * Vanilla-environment overrides for pet entities: spawn uncancel, portal
- * cancel, and block-interaction cancel (farmland trampling, turtle egg
- * crushing).
+ * cancel, block-interaction cancel (farmland trampling, turtle egg
+ * crushing), and snow-track suppression for SnowGolem pets.
  *
  * <p>These handlers have no dependencies on pet state, hooks, or skills —
  * they only need to know whether the entity is a pet via
@@ -51,6 +53,27 @@ public class PetEnvironmentListener implements Listener {
             } else if ("TURTLE_EGG".equals(event.getBlock().getType().name())) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    /**
+     * Cancels snow-block placement by SnowGolem pets when
+     * {@code MyPet.Pets.SnowGolem.DisableSnowTrack} is on. Vanilla
+     * {@code SnowGolem#aiStep} places top-snow on grass/dirt in cold biomes
+     * via {@code level().setBlockAndUpdate(...)}, which fires this event —
+     * SnowGolem is the only vanilla mob that uses
+     * {@link EntityBlockFormEvent}, so the marker check alone is sufficient.
+     * The block-type guard is defensive in case Mojang ever extends the
+     * event to other entities.
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityBlockForm(EntityBlockFormEvent event) {
+        if (!PetEntityMarker.isMarked(event.getEntity())) {
+            return;
+        }
+        if (event.getNewState().getType() == Material.SNOW
+                && Configuration.MyPet.SnowGolem.DISABLE_SNOW_TRACK) {
+            event.setCancelled(true);
         }
     }
 }
