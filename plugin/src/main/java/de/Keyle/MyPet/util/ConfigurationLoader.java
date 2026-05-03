@@ -285,6 +285,10 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets.CopperGolem.CanOxidize", true);
         }
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
+        config.addDefault("MyPet.Pets.Creeper.AllowFlintAndSteelExplode", MyPet.Creeper.ALLOW_FLINT_AND_STEEL_EXPLODE);
+        config.addDefault("MyPet.Pets.Creeper.AllowNonOwnerFlintAndSteel", MyPet.Creeper.ALLOW_NON_OWNER_FLINT_AND_STEEL);
+        config.addDefault("MyPet.Pets.Creeper.AllowExplosionBlockDamage", MyPet.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE);
+        config.addDefault("MyPet.Pets.Creeper.AllowExplosionEntityDamage", MyPet.Creeper.ALLOW_EXPLOSION_ENTITY_DAMAGE);
         config.addDefault("MyPet.Pets.Goat.CanDropHorn", MyPet.Goat.CAN_DROP_HORN);
         config.addDefault("MyPet.Pets.Goat.CanGiveMilk", MyPet.Goat.CAN_GIVE_MILK);
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
@@ -476,6 +480,10 @@ public class ConfigurationLoader {
         MyPet.Chicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         MyPet.CopperGolem.CAN_OXIDIZE = config.getBoolean("MyPet.Pets.CopperGolem.CanOxidize", true);
         MyPet.Cow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
+        MyPet.Creeper.ALLOW_FLINT_AND_STEEL_EXPLODE = config.getBoolean("MyPet.Pets.Creeper.AllowFlintAndSteelExplode", false);
+        MyPet.Creeper.ALLOW_NON_OWNER_FLINT_AND_STEEL = config.getBoolean("MyPet.Pets.Creeper.AllowNonOwnerFlintAndSteel", false);
+        MyPet.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE = config.getBoolean("MyPet.Pets.Creeper.AllowExplosionBlockDamage", false);
+        MyPet.Creeper.ALLOW_EXPLOSION_ENTITY_DAMAGE = config.getBoolean("MyPet.Pets.Creeper.AllowExplosionEntityDamage", false);
         MyPet.Goat.CAN_DROP_HORN = config.getBoolean("MyPet.Pets.Goat.CanDropHorn", true);
         MyPet.Goat.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Goat.CanGiveMilk", true);
         MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);

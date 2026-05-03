@@ -290,6 +290,44 @@ public class Configuration {
             public static boolean CAN_GIVE_MILK = true;
         }
 
+        public static class Creeper {
+
+            /**
+             * If {@code true}, players can ignite a Creeper pet with flint-and-steel
+             * (which triggers vanilla's fuse). If {@code false}, the
+             * {@code PlayerInteractEntityEvent} is cancelled before vanilla's
+             * {@code Creeper#mobInteract} can run. Default {@code false}.
+             */
+            public static boolean ALLOW_FLINT_AND_STEEL_EXPLODE = false;
+
+            /**
+             * Independent of {@link #ALLOW_FLINT_AND_STEEL_EXPLODE} — when ignition
+             * is allowed, this controls whether non-owner players can perform it.
+             * Default {@code false}: only the owner can ignite. Has no effect when
+             * {@code ALLOW_FLINT_AND_STEEL_EXPLODE = false}.
+             */
+            public static boolean ALLOW_NON_OWNER_FLINT_AND_STEEL = false;
+
+            /**
+             * Independent of the ignition flags — when an explosion does happen,
+             * this controls whether the blast damages blocks (terrain destruction
+             * and item drops). Default {@code false}: explosion plays visually,
+             * the pet routes through normal death, but the terrain is unharmed.
+             */
+            public static boolean ALLOW_EXPLOSION_BLOCK_DAMAGE = false;
+
+            /**
+             * Independent of {@link #ALLOW_EXPLOSION_BLOCK_DAMAGE} — when an
+             * explosion does happen, this controls whether the blast damages
+             * nearby entities (players, mobs, item entities). Default {@code false}.
+             * Modern Paper handles per-victim explosion damage on a separate code
+             * path from block damage, so this flag is enforced via a dedicated
+             * {@code EntityDamageByEntityEvent} handler rather than the
+             * {@code EntityExplodeEvent} cancellation.
+             */
+            public static boolean ALLOW_EXPLOSION_ENTITY_DAMAGE = false;
+        }
+
         public static class Goat {
 
             public static boolean CAN_GIVE_MILK = true;
