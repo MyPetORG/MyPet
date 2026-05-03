@@ -59,6 +59,10 @@ import de.Keyle.MyPet.util.shop.ShopConfigGenerator;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import lombok.Getter;
@@ -343,9 +347,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         DefaultSkilltreeProvisioner.copyDefaultsIfFolderCreated(skilltreeFolder, createdSkilltreeFolder, this);
 
-        MyPetApi.getSkilltreeManager().clearSkilltrees();
-        SkillTreeLoaderJSON.loadSkilltrees(new File(getDataFolder(), "skilltrees"));
-
         for (int i = 0; i <= Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
             try {
                 Bukkit.getPluginManager().addPermission(new Permission("MyPet.petstorage.limit." + i));
@@ -398,7 +399,31 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         serviceManager.activate(Load.State.OnReady);
 
-        OnlinePlayerPetLoader.restoreForOnlinePlayers(this, repository, myPetManager, playerManager);
+        registerDeferredStartup();
+    }
+
+    /**
+     * Defers skilltree loading and online-player pet restoration until {@link ServerLoadEvent}
+     * fires — which Paper guarantees is after every plugin's {@code onEnable} has completed.
+     * Required so that third-party plugins using {@code softdepend: [MyPet]} can register
+     * custom skills and {@code UpgradeParser}s in their own {@code onEnable}, before MyPet
+     * resolves skill names while parsing {@code .st.json} skilltree files.
+     *
+     * <p>Pet restoration is bundled into the same hop because pets reference skilltrees;
+     * deferring skilltrees without deferring restoration would leave restored pets with
+     * unresolved skilltree references on {@code /reload}. Cold-start servers have no
+     * online players, so restoration is a no-op in that path.</p>
+     */
+    private void registerDeferredStartup() {
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onServerLoad(ServerLoadEvent event) {
+                MyPetApi.getSkilltreeManager().clearSkilltrees();
+                SkillTreeLoaderJSON.loadSkilltrees(new File(getDataFolder(), "skilltrees"));
+                OnlinePlayerPetLoader.restoreForOnlinePlayers(MyPetPlugin.this, repository, myPetManager, playerManager);
+                HandlerList.unregisterAll(this);
+            }
+        }, this);
     }
 
     @Override
