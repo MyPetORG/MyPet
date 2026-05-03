@@ -197,18 +197,21 @@ public class Configuration {
         // Dynamic per-type maps populated by ConfigurationLoader after pet types
         // register, all keyed by MyPetType.name(). Adding a new pet only requires
         // implementing the appropriate marker:
-        //   MyPetFlyingEntity   → CanFly + CanGlide rows + CAN_FLY/CAN_GLIDE entries
-        //   MyPetGlidingEntity  → CanGlide row + CAN_GLIDE entry
-        //   MyPetAquaticEntity  → CanSwim row + CAN_SWIM entry
-        //   MyPetShake          → WillShake row + WILL_SHAKE entry
-        //   MyPetSunSensitive   → PreventDaylightBurn row + PREVENT_DAYLIGHT_BURN entry
-        //   MyPetBaby           → GrowUpItem row + GROW_UP_ITEMS entry (default
-        //                          comes from @DefaultInfo#growUpItem())
+        //   MyPetFlyingEntity     → CanFly + CanGlide rows + CAN_FLY/CAN_GLIDE entries
+        //   MyPetGlidingEntity    → CanGlide row + CAN_GLIDE entry
+        //   MyPetSwimmingEntity   → CanSwim row + CAN_SWIM entry (covers both
+        //                            MyPetAquaticEntity + MyPetAmphibiousEntity)
+        //   MyPetAquaticEntity    → adds PreventSuffocation row + PREVENT_SUFFOCATION entry
+        //   MyPetShake            → WillShake row + WILL_SHAKE entry
+        //   MyPetSunSensitive     → PreventDaylightBurn row + PREVENT_DAYLIGHT_BURN entry
+        //   MyPetBaby             → GrowUpItem row + GROW_UP_ITEMS entry (default
+        //                            comes from @DefaultInfo#growUpItem())
         private static final Map<String, Boolean> CAN_FLY = new HashMap<>();
         private static final Map<String, Boolean> CAN_GLIDE = new HashMap<>();
         private static final Map<String, Boolean> CAN_SWIM = new HashMap<>();
         private static final Map<String, Boolean> WILL_SHAKE = new HashMap<>();
         private static final Map<String, Boolean> PREVENT_DAYLIGHT_BURN = new HashMap<>();
+        private static final Map<String, Boolean> PREVENT_SUFFOCATION = new HashMap<>();
         private static final Map<String, ConfigItem> GROW_UP_ITEMS = new HashMap<>();
 
         public static boolean canFly(MyPetType type) {
@@ -249,6 +252,14 @@ public class Configuration {
 
         public static void setPreventDaylightBurn(String typeName, boolean value) {
             PREVENT_DAYLIGHT_BURN.put(typeName, value);
+        }
+
+        public static boolean preventSuffocation(MyPetType type) {
+            return PREVENT_SUFFOCATION.getOrDefault(type.name(), true);
+        }
+
+        public static void setPreventSuffocation(String typeName, boolean value) {
+            PREVENT_SUFFOCATION.put(typeName, value);
         }
 
         public static ConfigItem getGrowUpItem(MyPetType type) {

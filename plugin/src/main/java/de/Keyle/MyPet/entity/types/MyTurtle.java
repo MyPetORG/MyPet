@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import lombok.Getter;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.MyPetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
@@ -32,7 +32,7 @@ import org.bukkit.Material;
 @Getter
 @ShopInfo
 @DefaultInfo(food = {Material.SEAGRASS})
-public class MyTurtle extends MyPet implements MyPetBaby, MyPetAquaticEntity {
+public class MyTurtle extends MyPet implements MyPetBaby, MyPetAmphibiousEntity {
 
     public MyTurtle(MyPetPlayer petOwner) {
         super(petOwner);

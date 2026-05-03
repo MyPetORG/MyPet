@@ -25,13 +25,13 @@ import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Frog;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.MyPetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SLIME_BALL})
-public class MyFrog extends MyPet implements MyPetAquaticEntity {
+public class MyFrog extends MyPet implements MyPetAmphibiousEntity {
 
     public MyFrog(MyPetPlayer petOwner) {
         super(petOwner);

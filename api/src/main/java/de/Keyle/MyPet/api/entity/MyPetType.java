@@ -173,8 +173,8 @@ public final class MyPetType {
         return MyPetFlyingEntity.class.isAssignableFrom(mypetClass);
     }
 
-    public boolean isAquaticPet() {
-        return MyPetAquaticEntity.class.isAssignableFrom(mypetClass);
+    public boolean isSwimmingPet() {
+        return MyPetSwimmingEntity.class.isAssignableFrom(mypetClass);
     }
 
     public boolean floatsInLava() {

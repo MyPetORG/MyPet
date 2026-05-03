@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.MyPetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.MyPetSunSensitive;
@@ -32,7 +32,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
-public class MyDrowned extends MyPet implements MyPetEquipment, MyPetBaby, MyPetAquaticEntity, MyPetSunSensitive {
+public class MyDrowned extends MyPet implements MyPetEquipment, MyPetBaby, MyPetAmphibiousEntity, MyPetSunSensitive {
 
     public MyDrowned(MyPetPlayer petOwner) {
         super(petOwner);

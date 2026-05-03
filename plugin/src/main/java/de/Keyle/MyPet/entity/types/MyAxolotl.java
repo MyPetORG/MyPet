@@ -25,14 +25,14 @@ import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Axolotl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
+import de.Keyle.MyPet.api.entity.MyPetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.TROPICAL_FISH})
-public class MyAxolotl extends MyPet implements MyPetBaby, MyPetAquaticEntity {
+public class MyAxolotl extends MyPet implements MyPetBaby, MyPetAmphibiousEntity {
 
     public MyAxolotl(MyPetPlayer petOwner) {
         super(petOwner);

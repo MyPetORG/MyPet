@@ -2,8 +2,8 @@ package de.Keyle.MyPet.entity.spawn;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.MyPetSwimmingEntity;
 import de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetControlGoal;
@@ -42,7 +42,7 @@ public final class PetGoalInstaller {
         Bukkit.getMobGoals().removeAllGoals(mob);
 
         boolean flying = pet instanceof MyPetFlyingEntity flyer && flyer.canFly();
-        boolean aquatic = pet instanceof MyPetAquaticEntity swimmer && swimmer.canSwim();
+        boolean swimming = pet instanceof MyPetSwimmingEntity swimmer && swimmer.canSwim();
 
         var goals = Bukkit.getMobGoals();
         if (!flying) {
@@ -57,7 +57,7 @@ public final class PetGoalInstaller {
                     Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
         } else {
             goals.addGoal(mob, 6, new PetFollowOwnerGoal(pet, mob,
-                    Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F, flying, aquatic));
+                    Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F, flying, swimming));
         }
 
         if (!flying) {
@@ -67,7 +67,7 @@ public final class PetGoalInstaller {
             controlTargetGoal.setControlGoal(controlGoal);
             goals.addGoal(mob, 12, controlTargetGoal);
         }
-        if (!aquatic && !flying) {
+        if (!swimming && !flying) {
             goals.addGoal(mob, 5, new PetMeleeAttackGoal(pet, mob, 0.1F, mob.getWidth() + 1.3, 20));
             goals.addGoal(mob, 7, new PetRandomStrollGoal(pet, mob));
         }

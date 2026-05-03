@@ -3,6 +3,7 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.MyPetSunSensitive;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -25,6 +26,8 @@ import org.bukkit.potion.PotionEffectType;
  *       next tick to escape solid blocks</li>
  *   <li>Daylight burn suppression for {@link MyPetSunSensitive} pets when
  *       the per-type {@code PreventDaylightBurn} flag is on</li>
+ *   <li>Out-of-water suffocation suppression for {@link MyPetAquaticEntity}
+ *       pets when the per-type {@code PreventSuffocation} flag is on</li>
  * </ul>
  */
 public class PetSurvivalListener implements Listener {
@@ -48,6 +51,17 @@ public class PetSurvivalListener implements Listener {
         LivingEntity bukkitEntity = (LivingEntity) event.getEntity();
 
         if (event.getCause() == DamageCause.FALL && JUMP_EFFECT != null && bukkitEntity.hasPotionEffect(JUMP_EFFECT)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        // Bukkit reuses DROWNING for both directions (land-breather under
+        // water, water-breather in air); for aquatic pets the latter case is
+        // the only one that fires in vanilla — strict water-breathers cannot
+        // enter the land-breather state.
+        if (event.getCause() == DamageCause.DROWNING
+                && myPet instanceof MyPetAquaticEntity aquatic
+                && aquatic.preventSuffocation()) {
             event.setCancelled(true);
             return;
         }
