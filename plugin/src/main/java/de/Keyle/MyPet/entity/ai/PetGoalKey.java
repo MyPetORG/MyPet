@@ -59,6 +59,8 @@ public final class PetGoalKey {
     public static final GoalKey<Mob> HURT_BY_TARGET = GoalKey.of(Mob.class, new NamespacedKey("mypet", "hurt_by_target"));
     /** Moves the pet toward its owner when it falls too far behind. */
     public static final GoalKey<Mob> FOLLOW_OWNER = GoalKey.of(Mob.class, new NamespacedKey("mypet", "follow_owner"));
+    /** Cube-mob (Slime, MagmaCube) follow goal — drives hop cadence and facing because SlimeMoveControl ignores standard navigation. */
+    public static final GoalKey<Mob> FOLLOW_OWNER_CUBE_MOB = GoalKey.of(Mob.class, new NamespacedKey("mypet", "follow_owner_cube_mob"));
     /** Wanders within a small radius of the owner when idle (ground pets). */
     public static final GoalKey<Mob> RANDOM_STROLL = GoalKey.of(Mob.class, new NamespacedKey("mypet", "random_stroll"));
     /** Wanders within a small 3-D radius of the owner when idle (flying pets). */

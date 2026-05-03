@@ -9,6 +9,7 @@ import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetControlGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetFloatGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetFollowOwnerGoal;
+import de.Keyle.MyPet.entity.ai.movement.PetCubeMobFollowOwnerGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetLookAtPlayerGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetRandomLookaroundGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetRandomStrollGoal;
@@ -22,6 +23,7 @@ import de.Keyle.MyPet.entity.ai.target.PetHurtByTargetGoal;
 import de.Keyle.MyPet.entity.ai.target.PetOwnerHurtByTargetGoal;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
+import org.bukkit.entity.Slime;
 
 /**
  * Strips vanilla AI from a Bukkit {@link Mob} and installs MyPet's AI goals.
@@ -50,8 +52,13 @@ public final class PetGoalInstaller {
         goals.addGoal(mob, 1, sitGoal);
         goals.addGoal(mob, 3, new PetSprintGoal(pet, mob, 0.25F));
         goals.addGoal(mob, 4, new PetRangedAttackGoal(pet, mob, -0.1F, 12.0F));
-        goals.addGoal(mob, 6, new PetFollowOwnerGoal(pet, mob,
-                Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F, flying, aquatic));
+        if (mob instanceof Slime) {
+            goals.addGoal(mob, 6, new PetCubeMobFollowOwnerGoal(pet, mob,
+                    Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
+        } else {
+            goals.addGoal(mob, 6, new PetFollowOwnerGoal(pet, mob,
+                    Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F, flying, aquatic));
+        }
 
         if (!flying) {
             PetControlGoal controlGoal = new PetControlGoal(pet, mob, 0.1F);

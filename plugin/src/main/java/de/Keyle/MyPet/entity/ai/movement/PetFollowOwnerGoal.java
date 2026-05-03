@@ -23,13 +23,12 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.entity.ai.movement.PetFollowOwnerSupport;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -476,7 +475,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
      * and a stale reference would point at an offline Player.
      */
     private Player owner;
-    private boolean waitForGround = false;
+    private final PetFollowOwnerSupport.TeleportState teleportState = new PetFollowOwnerSupport.TeleportState();
     private final boolean flyingPet;
     private final boolean aquaticPet;
 
@@ -659,7 +658,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         // Clear the flying-pet landing gate so a goal instance recycled after
         // the pet was despawned mid-glide doesn't come back stuck in
         // "waiting for ground" state.
-        waitForGround = false;
+        teleportState.waitForGround = false;
     }
 
     @Override
@@ -681,26 +680,11 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
             return;
         }
 
-        // Check world match to avoid cross-world distance calculations
-        if (!mob.getWorld().equals(owner.getWorld())) {
+        if (PetFollowOwnerSupport.isCrossWorld(mob, owner)) {
             return;
         }
 
-        // Cross-region snap: if the owner has moved into a different Folia region, snap-teleport
-        // to them instead of inspecting their state (which would trip the thread check). Once in
-        // the same region, the normal follow logic resumes on a subsequent tick.
-        if (!Bukkit.isOwnedByCurrentRegion(owner)) {
-            if (pet.canMove() && !pet.hasTarget()) {
-                Location ownerLocation = owner.getLocation();
-                nav.stop();
-                mob.setVelocity(new Vector(0, 0, 0));
-                // Reset fall distance BEFORE teleportAsync — once the async teleport begins,
-                // the entity is in a transitional state on Folia and may no longer be owned
-                // by the current region, so any further state mutation would fail the thread
-                // check.
-                mob.setFallDistance(0);
-                mob.teleportAsync(new Location(owner.getWorld(), ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ()));
-            }
+        if (PetFollowOwnerSupport.snapAcrossRegionsIfNeeded(pet, mob, owner, nav)) {
             return;
         }
 
@@ -798,39 +782,16 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
             surfaceSwimmingToOwner = false;
         }
 
-        // Teleportation
+        // Teleportation. Helper handles cross-tick waitForGround state for an airborne owner.
+        // The teleport check happens before the canMove guard below because the helper does
+        // its own canMove check internally — so calling it when the pet can't move is safe
+        // (it returns false immediately).
+        boolean controlIsMoving = controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null;
+        if (PetFollowOwnerSupport.teleportIfTooFar(pet, mob, owner, distanceSqr, this.teleportDistance,
+                flyingPet, controlIsMoving, nav, teleportState)) {
+            return;
+        }
         if (this.pet.canMove()) {
-            if ((!owner.isFlying() && !owner.isGliding()) || flyingPet) {
-                if (!waitForGround) {
-                    if (owner.getFallDistance() <= 4 || flyingPet) {
-                        if (distanceSqr >= this.teleportDistance) {
-                            // Flying pets have no PetControlGoal registered,
-                            // so controlPathfinderGoal is always null for them.
-                            // Treat a null reference as "not control-moving".
-                            boolean noControlMove = controlPathfinderGoal == null || controlPathfinderGoal.moveTo == null;
-                            if (noControlMove && !pet.hasTarget()) {
-                                Location ownerLocation = owner.getLocation();
-                                // The canSpawn passability check was previously applied here, but it
-                                // reads blocks at the owner's location — which on Folia may be in a
-                                // different region from the pet. Skip it: the owner is already
-                                // standing at ownerLocation, so the space is passable by definition.
-                                this.nav.stop();
-                                mob.setVelocity(new Vector(0, 0, 0));
-                                // Reset fall distance BEFORE teleportAsync — see the cross-region
-                                // snap branch above for rationale.
-                                mob.setFallDistance(0);
-                                mob.teleportAsync(new Location(owner.getWorld(), ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ()));
-                                return;
-                            }
-                        }
-                    }
-                } else if (owner.isOnGround()) {
-                    waitForGround = false;
-                }
-            } else {
-                waitForGround = true;
-            }
-
             // Pathfind every tick if owner has moved enough
             if (distanceSqr > FULL_STOP_DIST_SQ) {
                 // Velocity control only for flying/swimming Pets
