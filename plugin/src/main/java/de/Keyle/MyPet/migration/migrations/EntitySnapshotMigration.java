@@ -184,11 +184,16 @@ public final class EntitySnapshotMigration implements PetDataMigration {
 
             try {
                 LegacyPetReader.applyToMob(transientMob, pet.getPetType(), pet.getInfo());
-                // Cast safe: every StoredMyPet produced by the repository is a PersistedMyPet
-                // (the only StoredMyPet impl that lives outside the repo is ShopMyPet, which
-                // is never persisted).
-                PersistedMyPet updated = ((PersistedMyPet) pet).withInfo(PetEntitySnapshot.capture(transientMob));
-                repository.updatePet(updated).join();
+                // Strip the migration-only protective flags before capture: Paper's
+                // serializeEntity persists Silent / Invulnerable / Invisible into the
+                // envelope, and configureMob does not reset them on restore — so
+                // leaving them on would produce silent, invulnerable, invisible pets.
+                transientMob.setSilent(false);
+                transientMob.setInvulnerable(false);
+                transientMob.setInvisible(false);
+                // Narrow UPDATE — must not round-trip through the wide updatePet, which
+                // would null the skilltree column (SkilltreeManager loads after migrations).
+                repository.updatePetInfo(pet.getUUID(), PetEntitySnapshot.capture(transientMob)).join();
                 return true;
             } finally {
                 transientMob.remove();
