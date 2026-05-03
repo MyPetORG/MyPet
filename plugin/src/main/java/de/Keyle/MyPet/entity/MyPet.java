@@ -43,6 +43,7 @@ import de.Keyle.MyPet.util.NameFilter;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
+import de.Keyle.MyPet.entity.visual.PetEnderDragonHoverController;
 import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
@@ -220,6 +221,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         RideSkillFlightController.stopForPet(this);
         CreakingActivationSuppressor.stopForPet(this);
         WitherAutonomousAttackSuppressor.stopForPet(this);
+        PetEnderDragonHoverController.stopForPet(this);
         PetNoPushSuppressor.stopForPet(this);
         if (bukkitEntity != null) {
             bukkitEntity.remove();
@@ -914,6 +916,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 RideSkillFlightController.stopForPet(this);
                 CreakingActivationSuppressor.stopForPet(this);
                 WitherAutonomousAttackSuppressor.stopForPet(this);
+                PetEnderDragonHoverController.stopForPet(this);
                 PetNoPushSuppressor.stopForPet(this);
                 bukkitEntity = null;
 

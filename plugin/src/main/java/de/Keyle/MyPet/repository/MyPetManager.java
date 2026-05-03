@@ -37,12 +37,12 @@ import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
+import de.Keyle.MyPet.entity.visual.PetEnderDragonHoverController;
 import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
-import de.Keyle.MyPet.util.CompatUtil;
 import de.Keyle.MyPet.util.Timer;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
@@ -86,9 +86,6 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         if (storedMyPet == null) {
             return Optional.empty();
         }
-
-        if (storedMyPet.getPetType().equals(MyPetType.byName("EnderDragon")) && CompatUtil.minecraftVersionEqualsOrAbove("1.21.4"))
-            return Optional.empty();
 
         if (!storedMyPet.getOwner().isOnline()) {
             return Optional.empty();
@@ -240,6 +237,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         RideSkillFlightController.stopForPet(oldPet);
         CreakingActivationSuppressor.stopForPet(oldPet);
         WitherAutonomousAttackSuppressor.stopForPet(oldPet);
+        PetEnderDragonHoverController.stopForPet(oldPet);
         PetNoPushSuppressor.stopForPet(oldPet);
         Timer.stopPetTicking(oldPet);
         if (oldEntityUuid != null) {
