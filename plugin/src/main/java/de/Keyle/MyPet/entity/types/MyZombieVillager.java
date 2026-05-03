@@ -32,12 +32,13 @@ import java.util.Locale;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.MyPetSunSensitive;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo(displayName = "Zombie Villager")
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
-public class MyZombieVillager extends MyPet implements MyPetEquipment, MyPetBaby {
+public class MyZombieVillager extends MyPet implements MyPetEquipment, MyPetBaby, MyPetSunSensitive {
 
     public MyZombieVillager(MyPetPlayer petOwner) {
         super(petOwner);

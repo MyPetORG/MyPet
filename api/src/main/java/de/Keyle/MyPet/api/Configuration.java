@@ -201,12 +201,14 @@ public class Configuration {
         //   MyPetGlidingEntity  → CanGlide row + CAN_GLIDE entry
         //   MyPetAquaticEntity  → CanSwim row + CAN_SWIM entry
         //   MyPetShake          → WillShake row + WILL_SHAKE entry
+        //   MyPetSunSensitive   → PreventDaylightBurn row + PREVENT_DAYLIGHT_BURN entry
         //   MyPetBaby           → GrowUpItem row + GROW_UP_ITEMS entry (default
         //                          comes from @DefaultInfo#growUpItem())
         private static final Map<String, Boolean> CAN_FLY = new HashMap<>();
         private static final Map<String, Boolean> CAN_GLIDE = new HashMap<>();
         private static final Map<String, Boolean> CAN_SWIM = new HashMap<>();
         private static final Map<String, Boolean> WILL_SHAKE = new HashMap<>();
+        private static final Map<String, Boolean> PREVENT_DAYLIGHT_BURN = new HashMap<>();
         private static final Map<String, ConfigItem> GROW_UP_ITEMS = new HashMap<>();
 
         public static boolean canFly(MyPetType type) {
@@ -239,6 +241,14 @@ public class Configuration {
 
         public static void setWillShake(String typeName, boolean value) {
             WILL_SHAKE.put(typeName, value);
+        }
+
+        public static boolean preventDaylightBurn(MyPetType type) {
+            return PREVENT_DAYLIGHT_BURN.getOrDefault(type.name(), true);
+        }
+
+        public static void setPreventDaylightBurn(String typeName, boolean value) {
+            PREVENT_DAYLIGHT_BURN.put(typeName, value);
         }
 
         public static ConfigItem getGrowUpItem(MyPetType type) {

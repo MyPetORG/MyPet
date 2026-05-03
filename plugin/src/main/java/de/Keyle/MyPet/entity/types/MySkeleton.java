@@ -24,12 +24,13 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.MyPetSunSensitive;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.BONE})
-public class MySkeleton extends MyPet implements MyPetEquipment {
+public class MySkeleton extends MyPet implements MyPetEquipment, MyPetSunSensitive {
 
     public MySkeleton(MyPetPlayer petOwner) {
         super(petOwner);
