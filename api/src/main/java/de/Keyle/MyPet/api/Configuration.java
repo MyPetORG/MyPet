@@ -328,6 +328,20 @@ public class Configuration {
             public static boolean ALLOW_EXPLOSION_ENTITY_DAMAGE = false;
         }
 
+        public static class EnderDragon {
+
+            /**
+             * If {@code true}, killing an EnderDragon pet awards the player the
+             * {@code minecraft:end/kill_dragon} ("Free the End") advancement,
+             * matching vanilla. If {@code false}, a Paper
+             * {@code PlayerAdvancementCriterionGrantEvent} listener cancels
+             * the criterion grant when the kill came from a marked pet
+             * EnderDragon. Default {@code false}: pet kills don't count as
+             * boss kills.
+             */
+            public static boolean GRANT_END_ADVANCEMENT_ON_KILL = false;
+        }
+
         public static class Goat {
 
             public static boolean CAN_GIVE_MILK = true;

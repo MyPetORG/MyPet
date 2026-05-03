@@ -42,6 +42,7 @@ public final class PetListeners {
             PetInteractionGateListener::new,
             PetEnvironmentListener::new,
             PetCreeperListener::new,
+            PetEnderDragonAdvancementListener::new,
             PetZombificationListener::new,
             PetInfoOnLeashListener::new,
             PetSurvivalListener::new,
