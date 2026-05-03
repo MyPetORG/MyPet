@@ -128,14 +128,17 @@ public class RideSkillFlightController {
 
         double worldY = mob.getVelocity().getY();
 
+        boolean unlimitedFuel = flyLimitSeconds <= 0;
         if (input.isJump()) {
             if (mob.isOnGround() || mob.isInWater() || mob.isInLava()) {
                 double jumpHeight = rideSkill.getJumpHeight() != null && rideSkill.getJumpHeight().getValue() != null
                         ? rideSkill.getJumpHeight().getValue().doubleValue() : 0.5;
                 worldY = Math.max(0.42, jumpHeight * 0.2);
-            } else if (canFly && fuelTicks > 0) {
+            } else if (canFly && (unlimitedFuel || fuelTicks > 0)) {
                 worldY = 0.35;
-                fuelTicks = Math.max(0, fuelTicks - 1);
+                if (!unlimitedFuel) {
+                    fuelTicks = Math.max(0, fuelTicks - 1);
+                }
             }
         } else {
             if (input.isSneak() && !mob.isOnGround()) {
