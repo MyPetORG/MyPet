@@ -25,13 +25,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.SlimeSplitEvent;
 
 import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
 
 /**
  * Handles the full pet death pipeline: release-on-death, respawn timer
  * calculation (including duel-mode fast respawn), drop suppression,
- * XP loss, backpack drop, death message, and auto-respawn economy.
+ * XP loss, backpack drop, death message, auto-respawn economy, and
+ * cube-mob split suppression.
  */
 public class PetDeathListener implements Listener {
 
@@ -147,5 +149,33 @@ public class PetDeathListener implements Listener {
                 myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.NoMoney", owner.getPlayer(), myPet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
             }
         }
+    }
+
+    /**
+     * Suppresses vanilla split-on-death for cube-mob pets (Slime, MagmaCube).
+     * Vanilla {@code Slime#remove}/{@code Slime#die} fires {@link SlimeSplitEvent}
+     * when a size-2+ slime dies, spawning 2–4 wild children one tier smaller.
+     * Without this gate, killing a Slime or MagmaCube pet leaks hostile mobs
+     * around the player.
+     *
+     * <p>Cancelling {@link SlimeSplitEvent} aborts the entire split routine
+     * before any child entities are constructed — no post-hoc cleanup needed.
+     *
+     * <p>Covers both pet types via the {@code MagmaCube extends Slime} Bukkit
+     * hierarchy: the event fires for both, and {@link PetEntityMarker#isMarked}
+     * returns true for both pet variants.
+     *
+     * <p>No {@code WorldGroup.isDisabled} guard: the marker is the authoritative
+     * "this is a pet" signal, and disabling MyPet for a world does not make
+     * pet-death-spawns-mobs an acceptable outcome.
+     *
+     * <p>No config flag: the leak is unambiguously wrong (pet death should not
+     * summon hostile mobs); no admin would legitimately want vanilla split
+     * behavior for pets.
+     */
+    @EventHandler
+    public void onPetSlimeSplit(SlimeSplitEvent event) {
+        if (!PetEntityMarker.isMarked(event.getEntity())) return;
+        event.setCancelled(true);
     }
 }
