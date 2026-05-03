@@ -212,9 +212,23 @@ public class SqLiteRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
+                MyPet[] activePets = MyPetApi.getMyPetManager().getAllActiveMyPets();
+                StringBuilder sql = new StringBuilder("DELETE FROM pets WHERE last_used<?");
+                if (activePets.length > 0) {
+                    sql.append(" AND uuid NOT IN (");
+                    for (int i = 0; i < activePets.length; i++) {
+                        if (i > 0) sql.append(',');
+                        sql.append('?');
+                    }
+                    sql.append(')');
+                }
+                sql.append(';');
                 try {
-                    PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE last_used<?;");
+                    PreparedStatement statement = connection.prepareStatement(sql.toString());
                     statement.setLong(1, timestamp);
+                    for (int i = 0; i < activePets.length; i++) {
+                        statement.setString(2 + i, activePets[i].getUUID().toString());
+                    }
 
                     int result = statement.executeUpdate();
 

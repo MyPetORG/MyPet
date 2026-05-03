@@ -203,7 +203,16 @@ public class MongoDbRepository implements Repository {
             @Override
             public void run() {
                 MongoCollection petCollection = db.getCollection(Configuration.Repository.MongoDB.PREFIX + "pets");
-                long result = petCollection.deleteMany(new Document("last_used", new Document("$lt", timestamp))).getDeletedCount();
+                StoredMyPet[] activePets = MyPetApi.getMyPetManager().getAllActiveMyPets();
+                Document filter = new Document("last_used", new Document("$lt", timestamp));
+                if (activePets.length > 0) {
+                    List<String> activeUuids = new ArrayList<>(activePets.length);
+                    for (StoredMyPet pet : activePets) {
+                        activeUuids.add(pet.getUUID().toString());
+                    }
+                    filter.append("uuid", new Document("$nin", activeUuids));
+                }
+                long result = petCollection.deleteMany(filter).getDeletedCount();
                 if (callback != null) {
                     callback.runTask((int) result);
                 }
