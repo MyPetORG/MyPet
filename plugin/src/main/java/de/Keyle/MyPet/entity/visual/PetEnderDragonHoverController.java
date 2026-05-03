@@ -127,7 +127,11 @@ public final class PetEnderDragonHoverController {
 
         Vector toOwner = ownerLoc.toVector().subtract(next.toVector());
         if (toOwner.lengthSquared() > 1.0E-4) {
-            next.setDirection(toOwner);
+            // EnderDragon's vanilla aiStep treats (sin(yaw), _, -cos(yaw)) as
+            // forward — at yaw=0 that's -Z. Standard Bukkit yaw convention is
+            // yaw=0 = +Z. The model's head therefore renders 180° opposite of
+            // Location.setDirection's view vector, so invert before passing.
+            next.setDirection(toOwner.multiply(-1));
         } else {
             next.setYaw(dragonLoc.getYaw());
             next.setPitch(dragonLoc.getPitch());
