@@ -20,21 +20,32 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
-import org.bukkit.entity.MushroomCow;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetInteractionGate;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
+import java.util.Set;
+
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
-public class MyMooshroom extends MyPet implements MyPetBaby {
+public class MyMooshroom extends MyPet implements MyPetBaby, MyPetInteractionGate {
 
     public MyMooshroom(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
+    @Override
+    public Set<Material> gatedInteractionItems() {
+        return Set.of(Material.BOWL);
+    }
+
+    @Override
+    public boolean isInteractionSuppressed() {
+        return !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP;
+    }
 }

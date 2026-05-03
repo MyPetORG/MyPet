@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
-import org.bukkit.entity.Goat;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetInteractionGate;
 import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
@@ -34,7 +34,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
-public class MyGoat extends MyPet implements MyPetBaby, MyPetNaturalDrop {
+public class MyGoat extends MyPet implements MyPetBaby, MyPetNaturalDrop, MyPetInteractionGate {
 
     public MyGoat(MyPetPlayer petOwner) {
         super(petOwner);
@@ -48,5 +48,15 @@ public class MyGoat extends MyPet implements MyPetBaby, MyPetNaturalDrop {
     @Override
     public boolean isNaturalDropSuppressed() {
         return !Configuration.MyPet.Goat.CAN_DROP_HORN;
+    }
+
+    @Override
+    public Set<Material> gatedInteractionItems() {
+        return Set.of(Material.BUCKET);
+    }
+
+    @Override
+    public boolean isInteractionSuppressed() {
+        return !Configuration.MyPet.Goat.CAN_GIVE_MILK;
     }
 }

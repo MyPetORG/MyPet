@@ -20,24 +20,32 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import io.papermc.paper.registry.RegistryAccess;
-import io.papermc.paper.registry.RegistryKey;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
-import org.bukkit.entity.Cow;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetInteractionGate;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
+import java.util.Set;
+
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
-public class MyCow extends MyPet implements MyPetBaby {
+public class MyCow extends MyPet implements MyPetBaby, MyPetInteractionGate {
 
     public MyCow(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
+    @Override
+    public Set<Material> gatedInteractionItems() {
+        return Set.of(Material.BUCKET);
+    }
+
+    @Override
+    public boolean isInteractionSuppressed() {
+        return !Configuration.MyPet.Cow.CAN_GIVE_MILK;
+    }
 }

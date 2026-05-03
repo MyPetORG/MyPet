@@ -1,0 +1,36 @@
+package de.Keyle.MyPet.api.entity;
+
+import org.bukkit.Material;
+
+import java.util.Set;
+
+/**
+ * Marker for pet types whose underlying vanilla mob has a per-tick item-driven
+ * right-click interaction (cow + bucket → milk, sheep + shears → wool, etc.).
+ * In v4 pets are real vanilla mobs, so these interactions happen for free on
+ * every tame pet. Implementers expose two pieces of metadata that
+ * {@code PetInteractionGateListener} uses to decide whether to cancel the
+ * upstream {@code PlayerInteractEntityEvent} (which short-circuits vanilla's
+ * interaction handler before it can run):
+ *
+ * <ol>
+ *   <li>{@link #gatedInteractionItems()} — the set of {@link Material}s in
+ *       the player's hand that trigger this pet's gated interaction. Most
+ *       pets gate one material; some (e.g. mooshroom: bowl + shears) may
+ *       eventually gate two.</li>
+ *   <li>{@link #isInteractionSuppressed()} — reads the implementer's own
+ *       per-pet config flag (e.g. {@code Configuration.MyPet.Cow.CAN_GIVE_MILK}).
+ *       Returns {@code true} when the admin has disabled the interaction.</li>
+ * </ol>
+ *
+ * <p>Per-pet flag names stay semantically rich ({@code CanGiveMilk},
+ * {@code CanBeSheared}, {@code CanGiveStew}) because each implementer reads
+ * its own {@code Configuration.MyPet.<Type>.*} field. The listener never
+ * names them. Mirrors {@link MyPetNaturalDrop} for the drop-event family.
+ */
+public interface MyPetInteractionGate extends MyPet {
+
+    Set<Material> gatedInteractionItems();
+
+    boolean isInteractionSuppressed();
+}

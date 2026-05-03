@@ -286,6 +286,7 @@ public class ConfigurationLoader {
         }
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
         config.addDefault("MyPet.Pets.Goat.CanDropHorn", MyPet.Goat.CAN_DROP_HORN);
+        config.addDefault("MyPet.Pets.Goat.CanGiveMilk", MyPet.Goat.CAN_GIVE_MILK);
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
         config.addDefault("MyPet.Pets.SnowGolem.FixSnowTrack", MyPet.SnowGolem.FIX_SNOW_TRACK);
         config.addDefault("MyPet.Pets.MagmaCube.CanHurtPlayersOnContact", MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT);
@@ -476,6 +477,7 @@ public class ConfigurationLoader {
         MyPet.CopperGolem.CAN_OXIDIZE = config.getBoolean("MyPet.Pets.CopperGolem.CanOxidize", true);
         MyPet.Cow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
         MyPet.Goat.CAN_DROP_HORN = config.getBoolean("MyPet.Pets.Goat.CanDropHorn", true);
+        MyPet.Goat.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Goat.CanGiveMilk", true);
         MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
         MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
         MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanTossUp", true);

@@ -20,22 +20,32 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.MyPet;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
-import org.bukkit.DyeColor;
-import org.bukkit.entity.Sheep;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetInteractionGate;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
+import java.util.Set;
+
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
-public class MySheep extends MyPet implements MyPetBaby {
+public class MySheep extends MyPet implements MyPetBaby, MyPetInteractionGate {
 
     public MySheep(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
+    @Override
+    public Set<Material> gatedInteractionItems() {
+        return Set.of(Material.SHEARS);
+    }
+
+    @Override
+    public boolean isInteractionSuppressed() {
+        return !Configuration.MyPet.Sheep.CAN_BE_SHEARED;
+    }
 }

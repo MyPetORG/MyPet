@@ -39,6 +39,7 @@ public final class PetListeners {
             PetDamageTracker::new,
             PetProjectileHitListener::new,
             PetInteractionListener::new,
+            PetInteractionGateListener::new,
             PetEnvironmentListener::new,
             PetInfoOnLeashListener::new,
             PetSurvivalListener::new,
