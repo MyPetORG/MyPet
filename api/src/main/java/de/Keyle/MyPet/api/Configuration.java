@@ -202,14 +202,14 @@ public class Configuration {
         //   MyPetSwimmingEntity   → CanSwim row + CAN_SWIM entry (covers both
         //                            MyPetAquaticEntity + MyPetAmphibiousEntity)
         //   MyPetAquaticEntity    → adds PreventSuffocation row + PREVENT_SUFFOCATION entry
-        //   MyPetShake            → WillShake row + WILL_SHAKE entry
+        //   MyPetZombifiable      → AllowZombification row + ALLOW_ZOMBIFICATION entry
         //   MyPetSunSensitive     → PreventDaylightBurn row + PREVENT_DAYLIGHT_BURN entry
         //   MyPetBaby             → GrowUpItem row + GROW_UP_ITEMS entry (default
         //                            comes from @DefaultInfo#growUpItem())
         private static final Map<String, Boolean> CAN_FLY = new HashMap<>();
         private static final Map<String, Boolean> CAN_GLIDE = new HashMap<>();
         private static final Map<String, Boolean> CAN_SWIM = new HashMap<>();
-        private static final Map<String, Boolean> WILL_SHAKE = new HashMap<>();
+        private static final Map<String, Boolean> ALLOW_ZOMBIFICATION = new HashMap<>();
         private static final Map<String, Boolean> PREVENT_DAYLIGHT_BURN = new HashMap<>();
         private static final Map<String, Boolean> PREVENT_SUFFOCATION = new HashMap<>();
         private static final Map<String, ConfigItem> GROW_UP_ITEMS = new HashMap<>();
@@ -238,12 +238,12 @@ public class Configuration {
             CAN_SWIM.put(typeName, value);
         }
 
-        public static boolean willShake(MyPetType type) {
-            return WILL_SHAKE.getOrDefault(type.name(), true);
+        public static boolean allowZombification(MyPetType type) {
+            return ALLOW_ZOMBIFICATION.getOrDefault(type.name(), false);
         }
 
-        public static void setWillShake(String typeName, boolean value) {
-            WILL_SHAKE.put(typeName, value);
+        public static void setAllowZombification(String typeName, boolean value) {
+            ALLOW_ZOMBIFICATION.put(typeName, value);
         }
 
         public static boolean preventDaylightBurn(MyPetType type) {

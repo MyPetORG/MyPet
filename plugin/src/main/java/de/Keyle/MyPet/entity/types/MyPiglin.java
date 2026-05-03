@@ -27,13 +27,13 @@ import org.bukkit.entity.PiglinAbstract;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
-import de.Keyle.MyPet.api.entity.MyPetShake;
+import de.Keyle.MyPet.api.entity.MyPetZombifiable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.GOLD_NUGGET})
-public class MyPiglin extends MyPet implements MyPetEquipment, MyPetBaby, MyPetShake {
+public class MyPiglin extends MyPet implements MyPetEquipment, MyPetBaby, MyPetZombifiable {
 
     public MyPiglin(MyPetPlayer petOwner) {
         super(petOwner);

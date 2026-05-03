@@ -26,13 +26,13 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Hoglin;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetShake;
+import de.Keyle.MyPet.api.entity.MyPetZombifiable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.CRIMSON_FUNGUS})
-public class MyHoglin extends MyPet implements MyPetBaby, MyPetShake {
+public class MyHoglin extends MyPet implements MyPetBaby, MyPetZombifiable {
 
     public MyHoglin(MyPetPlayer petOwner) {
         super(petOwner);

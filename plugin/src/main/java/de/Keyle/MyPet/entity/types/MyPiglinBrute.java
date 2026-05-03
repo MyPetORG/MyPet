@@ -26,13 +26,13 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.PiglinAbstract;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
-import de.Keyle.MyPet.api.entity.MyPetShake;
+import de.Keyle.MyPet.api.entity.MyPetZombifiable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo(displayName = "Piglin Brute")
 @DefaultInfo(food = {Material.GOLD_NUGGET})
-public class MyPiglinBrute extends MyPet implements MyPetEquipment, MyPetShake {
+public class MyPiglinBrute extends MyPet implements MyPetEquipment, MyPetZombifiable {
 
     public MyPiglinBrute(MyPetPlayer petOwner) {
         super(petOwner);

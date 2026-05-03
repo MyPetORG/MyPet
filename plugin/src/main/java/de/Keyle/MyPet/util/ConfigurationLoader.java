@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
 import de.Keyle.MyPet.api.entity.MyPetGlidingEntity;
-import de.Keyle.MyPet.api.entity.MyPetShake;
+import de.Keyle.MyPet.api.entity.MyPetZombifiable;
 import de.Keyle.MyPet.api.entity.MyPetSunSensitive;
 import de.Keyle.MyPet.api.entity.MyPetSwimmingEntity;
 import de.Keyle.MyPet.api.entity.MyPetType;
@@ -251,11 +251,11 @@ public class ConfigurationLoader {
         }
 
 
-        // Dynamic per-type CanFly / CanGlide / CanSwim / WillShake /
+        // Dynamic per-type CanFly / CanGlide / CanSwim / AllowZombification /
         // PreventDaylightBurn / PreventSuffocation rows. Adding a new flying,
-        // gliding, swimming, shaking, sun-sensitive, or water-breathing pet
-        // requires no edit here — implement the appropriate marker interface
-        // and the YAML row appears. Migration of pre-4.x configs (single
+        // gliding, swimming, zombifiable, sun-sensitive, or water-breathing
+        // pet requires no edit here — implement the appropriate marker
+        // interface and the YAML row appears. Migration of pre-4.x configs (single
         // CanGlide key on flying pets) is handled by
         // MigrateFlyingPetsCanGlideToCanFly.
         for (MyPetType type : MyPetType.values()) {
@@ -269,8 +269,8 @@ public class ConfigurationLoader {
             if (MyPetSwimmingEntity.class.isAssignableFrom(type.getMyPetClass())) {
                 config.addDefault(base + ".CanSwim", true);
             }
-            if (MyPetShake.class.isAssignableFrom(type.getMyPetClass())) {
-                config.addDefault(base + ".WillShake", true);
+            if (MyPetZombifiable.class.isAssignableFrom(type.getMyPetClass())) {
+                config.addDefault(base + ".AllowZombification", false);
             }
             if (MyPetSunSensitive.class.isAssignableFrom(type.getMyPetClass())) {
                 config.addDefault(base + ".PreventDaylightBurn", true);
@@ -496,9 +496,9 @@ public class ConfigurationLoader {
         MyPet.Slime.CAN_HURT_PLAYERS_ON_CONTACT = config.getBoolean("MyPet.Pets.Slime.CanHurtPlayersOnContact", false);
         MyPet.Sniffer.CAN_DIG_SEEDS = config.getBoolean("MyPet.Pets.Sniffer.CanDigSeeds", true);
 
-        // Dynamic per-type CanFly / CanGlide / CanSwim / WillShake /
+        // Dynamic per-type CanFly / CanGlide / CanSwim / AllowZombification /
         // PreventDaylightBurn / PreventSuffocation load. Reads the
-        // MyPet.Pets.<Type>.{CanFly,CanGlide,CanSwim,WillShake,PreventDaylightBurn,PreventSuffocation}
+        // MyPet.Pets.<Type>.{CanFly,CanGlide,CanSwim,AllowZombification,PreventDaylightBurn,PreventSuffocation}
         // keys populated by setDefault().
         for (MyPetType type : MyPetType.values()) {
             String base = "MyPet.Pets." + type.name();
@@ -511,8 +511,8 @@ public class ConfigurationLoader {
             if (MyPetSwimmingEntity.class.isAssignableFrom(type.getMyPetClass())) {
                 MyPet.setCanSwim(type.name(), config.getBoolean(base + ".CanSwim", true));
             }
-            if (MyPetShake.class.isAssignableFrom(type.getMyPetClass())) {
-                MyPet.setWillShake(type.name(), config.getBoolean(base + ".WillShake", true));
+            if (MyPetZombifiable.class.isAssignableFrom(type.getMyPetClass())) {
+                MyPet.setAllowZombification(type.name(), config.getBoolean(base + ".AllowZombification", false));
             }
             if (MyPetSunSensitive.class.isAssignableFrom(type.getMyPetClass())) {
                 MyPet.setPreventDaylightBurn(type.name(), config.getBoolean(base + ".PreventDaylightBurn", true));

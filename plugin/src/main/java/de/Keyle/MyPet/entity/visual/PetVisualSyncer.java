@@ -2,8 +2,11 @@ package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.MyPetZombifiable;
 import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Hoglin;
 import org.bukkit.entity.Mob;
+import org.bukkit.entity.PiglinAbstract;
 import org.bukkit.entity.Sittable;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Wither;
@@ -72,6 +75,21 @@ public final class PetVisualSyncer {
             try {
                 wither.getBossBar().setVisible(false);
             } catch (Throwable ignored) {}
+        }
+        // Suppress vanilla's Overworld-conversion timer for nether-native pets
+        // (Hoglin → Zoglin, Piglin → ZombifiedPiglin, PiglinBrute →
+        // ZombifiedPiglin). Without this, vanilla discards the original entity
+        // and spawns a wild copy — MyPet would then respawn the original type,
+        // leaving a non-MyPet zombified mob loose in the world. Pushed every
+        // sync so a /reload that flips AllowZombification takes effect on the
+        // next visual update without requiring a despawn/respawn round-trip.
+        if (pet instanceof MyPetZombifiable zombifiable) {
+            boolean immune = !zombifiable.allowZombification();
+            if (mob instanceof Hoglin hoglin) {
+                hoglin.setImmuneToZombification(immune);
+            } else if (mob instanceof PiglinAbstract piglin) {
+                piglin.setImmuneToZombification(immune);
+            }
         }
     }
 }
