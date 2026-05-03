@@ -7,18 +7,18 @@ import de.Keyle.MyPet.migration.SqlMigrationContext;
 import de.Keyle.MyPet.util.NbtUtil;
 import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.BinaryTagIO;
 import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.ByteBinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.IntBinaryTag;
 import net.kyori.adventure.nbt.ListBinaryTag;
-import net.kyori.adventure.nbt.TagStringIO;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,11 +48,15 @@ import java.util.logging.Logger;
  * </ul>
  * <p>
  * Format 2 converts with full fidelity because Bukkit's {@code ConfigurationSerializable}
- * system round-trips {@code ItemStack} across MC versions. Format 1 is best-effort: the
- * compound is stringified and passed to {@link org.bukkit.inventory.ItemFactory#createItemStack(String)},
- * which on Paper runs through Mojang's data fixers to upgrade legacy (pre-1.20.5) NBT to
- * the modern component form. If that parse fails for any item, the migration falls back
- * to a bare {@code ItemStack(material, count)} (losing enchantments / custom names / damage).
+ * system round-trips {@code ItemStack} across MC versions. Format 1 is converted by
+ * seeding the compound with a pre-1.20.5 {@code DataVersion} and feeding it to
+ * {@link ItemStack#deserializeBytes(byte[])}, which routes through Paper's
+ * {@code Bukkit.getUnsafe().deserializeItem(byte[])} and runs Mojang's DataFixerUpper
+ * to translate the legacy {@code Count}/{@code tag} layout into the modern
+ * {@code count}/{@code components} form (enchantments, bundle contents, damage, custom
+ * names, etc. all migrate to proper data components). If that path fails for any item,
+ * the migration falls back to a bare {@code ItemStack(material, count)} (losing
+ * enchantments / custom names / damage).
  */
 @Migration(
         version = "4.0.0",
@@ -274,28 +278,42 @@ public class MigratePetBackpackItems implements PetDataMigration {
 
         int count = extractCount(compound);
 
-        // Best-effort: feed the NBT through Bukkit's ItemFactory, which internally routes to
-        // the /give argument parser + Mojang data fixers. This handles both pre-1.20.5 "tag"
-        // NBT and post-1.20.5 component compounds, upgrading old formats in place.
+        // Preferred path: gzip the legacy compound (with a 1.20.4 DataVersion seed) and
+        // hand it to ItemStack.deserializeBytes, which under Paper runs the bytes through
+        // Mojang's DataFixerUpper from the seeded version up to the running server's data
+        // version. The fixer is what translates pre-1.20.5 "tag" NBT — Enchantments,
+        // BundleContents, display.Name, damage, etc. — into modern data components.
+        // ItemFactory.createItemStack(String) is the wrong tool: its parser only recognises
+        // the modern "id[components]" syntax and silently ignores trailing "{tag}" text,
+        // returning a bare-material stack with no exception.
         try {
-            String input = buildItemFactoryInput(id, compound);
-            ItemStack item = Bukkit.getItemFactory().createItemStack(input);
-            item.setAmount(Math.max(1, count));
-            return new DecodedLegacy(item, true);
-        } catch (Throwable parseFailure) {
-            // Fall back to material + count — loses enchantments / custom names / damage
-            // but preserves item identity.
-            Material mat = Material.matchMaterial(id);
-            if (mat == null) {
-                return null;
+            CompoundBinaryTag seeded = compound.putInt("DataVersion", LEGACY_NBT_DATA_VERSION);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            BinaryTagIO.writer().write(seeded, out, BinaryTagIO.Compression.GZIP);
+            ItemStack item = ItemStack.deserializeBytes(out.toByteArray());
+            if (item != null && !item.isEmpty()) {
+                return new DecodedLegacy(item, true);
             }
-            try {
-                return new DecodedLegacy(new ItemStack(mat, Math.max(1, count)), false);
-            } catch (Throwable e) {
-                return null;
-            }
+        } catch (Throwable ignored) {
+            // Fall through to material + count fallback.
+        }
+
+        // Fallback: material + count — loses enchantments / custom names / damage but
+        // preserves item identity so the slot isn't entirely empty.
+        Material mat = Material.matchMaterial(id);
+        if (mat == null) {
+            return null;
+        }
+        try {
+            return new DecodedLegacy(new ItemStack(mat, Math.max(1, count)), false);
+        } catch (Throwable e) {
+            return null;
         }
     }
+
+    // 1.20.4 — last data version before the 1.20.5 "tag → components" transition.
+    // Seeding pre-1.20.5 data with this value forces the fixer to run that conversion.
+    private static final int LEGACY_NBT_DATA_VERSION = 3700;
 
     private int extractCount(CompoundBinaryTag compound) {
         BinaryTag countTag = compound.get("Count");
@@ -309,20 +327,6 @@ public class MigratePetBackpackItems implements PetDataMigration {
             return i.value();
         }
         return 1;
-    }
-
-    /**
-     * Builds a /give-argument string from the legacy compound. For pre-1.20.5 items with a
-     * {@code tag} subcompound, emits {@code "namespace:id<tag-snbt>"}. For 1.20.5+ items
-     * already on the component form, emits the full compound as the argument so the
-     * ItemFactory can reparse. Bukkit's implementation runs data fixers on both shapes.
-     */
-    private String buildItemFactoryInput(String id, CompoundBinaryTag compound) throws Exception {
-        BinaryTag tag = compound.get("tag");
-        if (tag instanceof CompoundBinaryTag tagCompound && tagCompound.size() > 0) {
-            return id + TagStringIO.get().asString(tagCompound);
-        }
-        return id;
     }
 
     private CompoundBinaryTag buildPaperItemCompound(byte slot, ItemStack item) {
