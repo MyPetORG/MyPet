@@ -26,9 +26,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 import net.kyori.adventure.nbt.BinaryTag;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -77,13 +77,17 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
 
     boolean hasMyPetInWorldGroup(WorldGroup worldGroup);
 
-    void addExtendedInfo(String key, BinaryTag tag);
+    /**
+     * Stores a per-addon NBT value on this player. Keys are namespaced by
+     * {@code owner} so two addons cannot collide on the same key.
+     */
+    void addExtendedInfo(Plugin owner, String key, BinaryTag tag);
 
-    Optional<BinaryTag> getExtendedInfo(String key);
-
-    CompoundBinaryTag getExtendedInfo();
-
-    void setExtendedInfo(CompoundBinaryTag compound);
+    /**
+     * Reads a per-addon NBT value from this player's namespaced bucket.
+     * Returns empty if the addon never wrote {@code key}.
+     */
+    Optional<BinaryTag> getExtendedInfo(Plugin owner, String key);
 
     // -----------------------------------------------------------------------------
 

@@ -401,7 +401,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return false;
     }
 
-    @Override
     public CompoundBinaryTag getInfo() {
         // Prefer a fresh capture from the live entity over the cached
         // pendingSnapshot — the live state may have advanced since the last
@@ -421,7 +420,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return snapshot != null ? snapshot : CompoundBinaryTag.empty();
     }
 
-    @Override
     public void setInfo(CompoundBinaryTag info) {
         this.pendingSnapshot = (info != null && !info.keySet().isEmpty()) ? info : null;
     }
@@ -693,10 +691,6 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             }
         }
         return builder.build();
-    }
-
-    @Override
-    public void setSkills(CompoundBinaryTag skills) {
     }
 
     public PetState getStatus() {

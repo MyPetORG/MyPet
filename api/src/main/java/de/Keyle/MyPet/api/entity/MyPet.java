@@ -72,10 +72,6 @@ public non-sealed interface MyPet extends StoredMyPet, Scheduler {
 
     void setExp(double exp);
 
-    void setInfo(CompoundBinaryTag info);
-
-    void setSkills(CompoundBinaryTag skills);
-
     /**
      * Single-arg form that updates the skilltree without firing
      * {@code MyPetSelectSkilltreeEvent}. Used during pet activation when the

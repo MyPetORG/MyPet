@@ -8,6 +8,7 @@ import de.Keyle.MyPet.migration.MigrationException;
 import de.Keyle.MyPet.migration.PetDataMigration;
 import de.Keyle.MyPet.migration.SqlMigrationContext;
 import de.Keyle.MyPet.repository.Repository;
+import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.migration.migrations.entitysnapshot.LegacyPetReader;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -183,7 +184,7 @@ public final class EntitySnapshotMigration implements PetDataMigration {
             }
 
             try {
-                LegacyPetReader.applyToMob(transientMob, pet.getPetType(), pet.getInfo());
+                LegacyPetReader.applyToMob(transientMob, pet.getPetType(), PetInfoAccess.read(pet));
                 // Strip the migration-only protective flags before capture: Paper's
                 // serializeEntity persists Silent / Invulnerable / Invisible into the
                 // envelope, and configureMob does not reset them on restore — so
@@ -212,7 +213,7 @@ public final class EntitySnapshotMigration implements PetDataMigration {
      * already-migrated.
      */
     private static boolean isLegacy(StoredMyPet pet) {
-        CompoundBinaryTag info = pet.getInfo();
+        CompoundBinaryTag info = PetInfoAccess.read(pet);
         if (info.keySet().isEmpty()) {
             return false;
         }

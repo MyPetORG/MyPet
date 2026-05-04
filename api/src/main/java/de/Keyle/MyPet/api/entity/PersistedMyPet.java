@@ -74,8 +74,6 @@ public record PersistedMyPet(
     @Override public int getRespawnTime() { return respawnTime; }
     @Override public long getLastUsed() { return lastUsed; }
     @Override public Skilltree getSkilltree() { return skilltree; }
-    @Override public CompoundBinaryTag getSkillInfo() { return skillInfo; }
-    @Override public CompoundBinaryTag getInfo() { return info; }
 
     // --- Single-field updaters ---
 

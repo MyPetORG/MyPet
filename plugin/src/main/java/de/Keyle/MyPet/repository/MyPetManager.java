@@ -34,6 +34,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.entity.PersistedMyPet;
+import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
@@ -75,8 +76,8 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
                 .wantsToRespawn(myPet.wantsToRespawn())
                 .lastUsed(myPet.getLastUsed())
                 .skilltree(myPet.getSkilltree())
-                .skillInfo(myPet.getSkillInfo())
-                .info(myPet.getInfo())
+                .skillInfo(PetInfoAccess.readSkillInfo(myPet))
+                .info(PetInfoAccess.read(myPet))
                 .build();
     }
 
@@ -108,14 +109,14 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         myPet.setPetName(storedMyPet.getPetName());
         myPet.setRespawnTime(storedMyPet.getRespawnTime());
         myPet.setWorldGroup(storedMyPet.getWorldGroup());
-        myPet.setInfo(storedMyPet.getInfo());
+        PetInfoAccess.write(myPet, PetInfoAccess.read(storedMyPet));
         myPet.setLastUsed(storedMyPet.getLastUsed());
         myPet.setWantsToRespawn(storedMyPet.wantsToRespawn());
         myPet.getExperience().setExp(storedMyPet.getExp());
         myPet.setSkilltree(storedMyPet.getSkilltree());
         Collection<Skill> skills = myPet.getSkills().all();
         if (!skills.isEmpty()) {
-            CompoundBinaryTag skillInfo = storedMyPet.getSkillInfo();
+            CompoundBinaryTag skillInfo = PetInfoAccess.readSkillInfo(storedMyPet);
             for (Skill skill : skills) {
                 if (skill instanceof NBTStorage storageSkill) {
                     if (skillInfo.keySet().contains(skill.getName())) {
@@ -216,7 +217,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
 
         Collection<Skill> newSkills = newPet.getSkills().all();
         if (!newSkills.isEmpty()) {
-            CompoundBinaryTag skillInfo = oldPet.getSkillInfo();
+            CompoundBinaryTag skillInfo = PetInfoAccess.readSkillInfo(oldPet);
             for (Skill skill : newSkills) {
                 if (skill instanceof NBTStorage storageSkill
                         && skillInfo.keySet().contains(skill.getName())) {

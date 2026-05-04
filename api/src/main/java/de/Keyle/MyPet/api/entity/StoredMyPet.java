@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
@@ -89,14 +88,4 @@ public sealed interface StoredMyPet permits PersistedMyPet, MyPet {
     long getLastUsed();
 
     Skilltree getSkilltree();
-
-    CompoundBinaryTag getSkillInfo();
-
-    /**
-     * Vanilla entity NBT for this pet, as parsed from Paper's
-     * {@code Bukkit.getUnsafe().serializeEntity} bytes.
-     * Empty for implementations that don't carry a snapshot
-     * (e.g. shop templates).
-     */
-    CompoundBinaryTag getInfo();
 }

@@ -48,6 +48,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -196,15 +197,15 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return petWorldUUID.containsKey(worldGroup.getName());
     }
 
-    public void addExtendedInfo(String key, BinaryTag tag) {
-        extendedInfo = extendedInfo.put(key, tag);
+    public void addExtendedInfo(Plugin owner, String key, BinaryTag tag) {
+        String namespace = owner.getName();
+        CompoundBinaryTag bucket = extendedInfo.getCompound(namespace).put(key, tag);
+        extendedInfo = extendedInfo.put(namespace, bucket);
     }
 
-    public Optional<BinaryTag> getExtendedInfo(String key) {
-        if (extendedInfo.keySet().contains(key)) {
-            return Optional.ofNullable(extendedInfo.get(key));
-        }
-        return Optional.empty();
+    public Optional<BinaryTag> getExtendedInfo(Plugin owner, String key) {
+        CompoundBinaryTag bucket = extendedInfo.getCompound(owner.getName());
+        return bucket.keySet().contains(key) ? Optional.ofNullable(bucket.get(key)) : Optional.empty();
     }
 
     public CompoundBinaryTag getExtendedInfo() {

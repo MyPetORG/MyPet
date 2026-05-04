@@ -14,6 +14,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.util.NbtUtil;
 import de.Keyle.MyPet.api.entity.PersistedMyPet;
+import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Player;
@@ -138,7 +139,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * templates) become zero-length byte arrays.
      */
     private static byte[] serializeInfo(StoredMyPet pet) throws IOException {
-        CompoundBinaryTag info = pet.getInfo();
+        CompoundBinaryTag info = PetInfoAccess.read(pet);
         return info.keySet().isEmpty() ? new byte[0] : NbtUtil.writeCompressed(info);
     }
 
@@ -719,7 +720,7 @@ public abstract class AbstractSqlRepository implements Repository {
             stmt.setString(9, myPet.getWorldGroup());
             stmt.setBoolean(10, myPet.wantsToRespawn());
             stmt.setString(11, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
-            bindBlob(stmt, 12, NbtUtil.writeCompressed(myPet.getSkillInfo()));
+            bindBlob(stmt, 12, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(myPet)));
             bindBlob(stmt, 13, serializeInfo(myPet));
             stmt.setString(14, myPet.getUUID().toString());
             stmt.executeUpdate();
@@ -763,7 +764,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setBoolean(11, storedMyPet.wantsToRespawn());
                 stmt.setString(12, storedMyPet.getSkilltree() != null
                         ? storedMyPet.getSkilltree().getName() : null);
-                bindBlob(stmt, 13, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
+                bindBlob(stmt, 13, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(storedMyPet)));
                 bindBlob(stmt, 14, serializeInfo(storedMyPet));
                 return stmt.executeUpdate() > 0;
             } catch (SQLException | IOException e) {
@@ -806,7 +807,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setBoolean(10, storedMyPet.wantsToRespawn());
                 stmt.setString(11, storedMyPet.getSkilltree() != null
                         ? storedMyPet.getSkilltree().getName() : null);
-                bindBlob(stmt, 12, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
+                bindBlob(stmt, 12, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(storedMyPet)));
                 bindBlob(stmt, 13, serializeInfo(storedMyPet));
                 stmt.setString(14, storedMyPet.getUUID().toString());
                 int result = stmt.executeUpdate();
@@ -857,7 +858,7 @@ public abstract class AbstractSqlRepository implements Repository {
             stmt.setBoolean(3, player.isCaptureHelperActive());
             stmt.setBoolean(4, player.isHealthBarActive());
             stmt.setFloat(5, player.getPetLivingSoundVolume());
-            bindBlob(stmt, 6, NbtUtil.writeCompressed(player.getExtendedInfo()));
+            bindBlob(stmt, 6, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
 
             JsonObject multiWorldObject = new JsonObject();
             for (String g : player.getMyPetsForWorldGroups().keySet()) {
@@ -910,7 +911,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setBoolean(4, player.isCaptureHelperActive());
                 stmt.setBoolean(5, player.isHealthBarActive());
                 stmt.setFloat(6, player.getPetLivingSoundVolume());
-                bindBlob(stmt, 7, NbtUtil.writeCompressed(player.getExtendedInfo()));
+                bindBlob(stmt, 7, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
                 JsonObject multiWorldObject = new JsonObject();
                 for (String g : player.getMyPetsForWorldGroups().keySet()) {
                     multiWorldObject.addProperty(g, player.getMyPetsForWorldGroups().get(g).toString());
@@ -1006,7 +1007,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setBoolean(11, storedMyPet.wantsToRespawn());
                 stmt.setString(12, storedMyPet.getSkilltree() != null
                         ? storedMyPet.getSkilltree().getName() : null);
-                bindBlob(stmt, 13, NbtUtil.writeCompressed(storedMyPet.getSkillInfo()));
+                bindBlob(stmt, 13, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(storedMyPet)));
                 bindBlob(stmt, 14, serializeInfo(storedMyPet));
                 stmt.addBatch();
                 if (++i % 500 == 0 && i != pets.size()) {
@@ -1052,7 +1053,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setBoolean(4, player.isCaptureHelperActive());
                 stmt.setBoolean(5, player.isHealthBarActive());
                 stmt.setFloat(6, player.getPetLivingSoundVolume());
-                bindBlob(stmt, 7, NbtUtil.writeCompressed(player.getExtendedInfo()));
+                bindBlob(stmt, 7, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
                 JsonObject multiWorldObject = new JsonObject();
                 for (String g : player.getMyPetsForWorldGroups().keySet()) {
                     multiWorldObject.addProperty(g, player.getMyPetsForWorldGroups().get(g).toString());

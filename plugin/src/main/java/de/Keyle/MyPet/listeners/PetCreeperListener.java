@@ -5,6 +5,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import org.bukkit.Material;
@@ -87,7 +88,7 @@ public class PetCreeperListener implements Listener {
         creeper.setIgnited(false);
         creeper.setFuseTicks(creeper.getMaxFuseTicks());
         try {
-            pet.setInfo(PetEntitySnapshot.capture(creeper));
+            PetInfoAccess.write(pet, PetEntitySnapshot.capture(creeper));
         } catch (Throwable t) {
             MyPetApi.getLogger().warning("Failed to capture EntitySnapshot for Creeper pet "
                     + pet.getUUID() + " on explode — pet will respawn with default "

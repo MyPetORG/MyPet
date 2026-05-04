@@ -15,6 +15,7 @@ import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
@@ -83,7 +84,7 @@ public class PetDeathListener implements Listener {
         // live-only state like slime size, /petadmin variant changes, collar
         // colour, profession, etc.
         try {
-            myPet.setInfo(PetEntitySnapshot.capture((Mob) deadEntity));
+            PetInfoAccess.write(myPet, PetEntitySnapshot.capture((Mob) deadEntity));
         } catch (Throwable t) {
             MyPetApi.getLogger().warning("Failed to capture EntitySnapshot for pet "
                     + myPet.getUUID() + " on death — pet will respawn with default "

@@ -34,6 +34,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.api.entity.PersistedMyPet;
+import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -142,8 +143,8 @@ public class CommandOptionClone {
                 .saturation(oldPet.getSaturation())
                 .respawnTime(oldPet.getRespawnTime())
                 .skilltree(oldPet.getSkilltree())
-                .skillInfo(oldPet.getSkillInfo())
-                .info(oldPet.getInfo())
+                .skillInfo(PetInfoAccess.readSkillInfo(oldPet))
+                .info(PetInfoAccess.read(oldPet))
                 .build();
 
         MyPetSaveEvent event = new MyPetSaveEvent(newPet);
