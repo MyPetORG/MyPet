@@ -41,10 +41,9 @@ import org.bukkit.event.HandlerList;
  *
  * <p><b>Pet state:</b> live pet, owner online.
  *
- * <p><b>Note:</b> the parent {@link PetInteractEvent#PetInteractEvent}
- * receives a {@code null} item from this constructor — sit-toggle goes
- * through a non-item interaction (the configured sit-action item, which is
- * checked by the caller, not stored on the event).
+ * <p><b>Item:</b> {@code getItem()} (inherited from {@link PetInteractEvent})
+ * always returns {@code null} for this event — the sit-toggle item is checked
+ * by the caller, not stored on the event.
  */
 @Getter
 public class PetSitEvent extends PetInteractEvent {

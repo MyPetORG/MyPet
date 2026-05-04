@@ -41,19 +41,22 @@ import org.bukkit.inventory.ItemStack;
  * <p><b>Cancellable:</b> cancellation suppresses the interaction; the concrete
  * subclass defines what that means in detail.
  *
- * <p><b>Constructor caveat:</b> the {@code item} parameter is accepted but
- * neither stored nor exposed — there is no {@code getItem()} accessor on this
- * base or its subclasses. Listeners that need the interaction item must derive
- * it from the player's main hand at event time.
+ * <p><b>Item:</b> {@link #getItem()} is the {@link ItemStack} the player was
+ * holding when the interaction fired. May be {@code null} for interactions
+ * that aren't item-driven — {@link PetSitEvent} (sit-toggle is non-item) is
+ * the built-in example.
  */
 public class PetInteractEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     @Getter
     private final StoredMyPet pet;
+    @Getter
+    private final ItemStack item;
     boolean isCancelled = false;
 
     public PetInteractEvent(MyPet pet, ItemStack item) {
         this.pet = pet;
+        this.item = item;
     }
 
     @Override
