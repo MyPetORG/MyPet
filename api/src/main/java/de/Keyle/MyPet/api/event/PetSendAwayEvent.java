@@ -22,17 +22,40 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.ItemStack;
 
-public class MyPetInteractEvent extends Event implements Cancellable {
+/**
+ * Fired when an owner runs {@code /mypet sendaway} — the symmetric counterpart
+ * of {@link PetCallEvent}. Despawns the world entity but keeps the pet
+ * active in the manager (i.e., the owner can call it back without re-loading
+ * from disk).
+ *
+ * <p>Fires from {@code CommandSendAway}.
+ *
+ * <p><b>Cancellable:</b> cancelling the event leaves the pet entity in the
+ * world. Common addon use-cases: region-locked pets that can't be dismissed
+ * inside arenas, anti-grief gates against dismissal in PvP zones.
+ *
+ * <p><b>Pet state:</b> live pet, owner online (the command requires it).
+ * After successful dispatch, the entity is removed from the world but
+ * {@link #getMyPet()} continues to refer to a live {@link MyPet} until its
+ * owner logs out (the periodic save flushes it back to persisted form).
+ *
+ * <p><b>Pet exposure:</b> {@link #getMyPet()} returns {@link StoredMyPet} but
+ * is always concretely a live {@link MyPet} — the constructor takes
+ * {@code MyPet}. The widened return type is historical.
+ */
+public class PetSendAwayEvent extends Event implements Cancellable {
+
     private static final HandlerList handlers = new HandlerList();
     private final StoredMyPet myPet;
     boolean isCancelled = false;
 
-    public MyPetInteractEvent(MyPet myPet, ItemStack item) {
+    public PetSendAwayEvent(MyPet myPet) {
         this.myPet = myPet;
     }
 
@@ -43,6 +66,14 @@ public class MyPetInteractEvent extends Event implements Cancellable {
 
     public StoredMyPet getMyPet() {
         return myPet;
+    }
+
+    public MyPetPlayer getOwner() {
+        return myPet.getOwner();
+    }
+
+    public Player getPlayer() {
+        return myPet.getOwner().getPlayer();
     }
 
     @Override

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
+import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
@@ -135,7 +135,7 @@ public class BackpackImpl implements Backpack {
      * - The owner must not be sleeping.
      * - Creative mode may be restricted by configuration/permissions.
      * - The current location must allow opening (not inside liquid blocks).
-     * - Other plugins may cancel via MyPetInventoryActionEvent.
+     * - Other plugins may cancel via PetInventoryActionEvent.
      *
      * @return true if the backpack was opened; false otherwise
      */
@@ -149,7 +149,7 @@ public class BackpackImpl implements Backpack {
                 myPet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Inventory.Creative", myPet.getOwner()));
                 return false;
             }
-            MyPetInventoryActionEvent event = new MyPetInventoryActionEvent(myPet, MyPetInventoryActionEvent.Action.Open);
+            PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.Open);
             Bukkit.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
                 myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));

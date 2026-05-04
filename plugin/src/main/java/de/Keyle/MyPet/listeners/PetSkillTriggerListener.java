@@ -4,8 +4,8 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.event.MyPetDamageEvent;
-import de.Keyle.MyPet.api.event.MyPetOnHitSkillEvent;
+import de.Keyle.MyPet.api.event.PetDamageEvent;
+import de.Keyle.MyPet.api.event.PetOnHitSkillEvent;
 import de.Keyle.MyPet.api.skill.OnDamageByEntitySkill;
 import de.Keyle.MyPet.api.skill.OnHitSkill;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
@@ -29,7 +29,7 @@ import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
  * <ul>
  *   <li><b>NORMAL priority</b> — {@link OnDamageByEntitySkill} dispatch: triggers
  *       defensive skills (Thorns, etc.) when a pet takes damage from an entity.</li>
- *   <li><b>MONITOR priority</b> — {@link OnHitSkill} dispatch + {@link MyPetDamageEvent}
+ *   <li><b>MONITOR priority</b> — {@link OnHitSkill} dispatch + {@link PetDamageEvent}
  *       emission: triggers offensive skills (Poison, Bleed, etc.) and emits the
  *       custom damage event when a pet deals damage to something.</li>
  * </ul>
@@ -83,7 +83,7 @@ public class PetSkillTriggerListener implements Listener {
     /**
      * At MONITOR priority, when a marked pet deals damage:
      * <ol>
-     *   <li>Emits {@link MyPetDamageEvent} so other plugins can adjust pet damage</li>
+     *   <li>Emits {@link PetDamageEvent} so other plugins can adjust pet damage</li>
      *   <li>Dispatches {@link OnHitSkill} skills (Poison, Bleed, Fire, etc.)</li>
      * </ol>
      */
@@ -109,8 +109,8 @@ public class PetSkillTriggerListener implements Listener {
         MyPet myPet = getMyPetManager().getMyPetFromEntity(source);
         if (myPet == null || myPet.getStatus() != PetState.Here) return;
 
-        // Emit MyPetDamageEvent so other plugins can adjust pet damage
-        MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
+        // Emit PetDamageEvent so other plugins can adjust pet damage
+        PetDamageEvent petDamageEvent = new PetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
         Bukkit.getPluginManager().callEvent(petDamageEvent);
         if (petDamageEvent.isCancelled()) {
             event.setCancelled(true);
@@ -124,7 +124,7 @@ public class PetSkillTriggerListener implements Listener {
             for (Skill skill : myPet.getSkills().all()) {
                 if (skill instanceof OnHitSkill onHitSkill) {
                     if (onHitSkill.trigger()) {
-                        MyPetOnHitSkillEvent skillEvent = new MyPetOnHitSkillEvent(myPet, onHitSkill, (LivingEntity) target);
+                        PetOnHitSkillEvent skillEvent = new PetOnHitSkillEvent(myPet, onHitSkill, (LivingEntity) target);
                         Bukkit.getPluginManager().callEvent(skillEvent);
                         if (!skillEvent.isCancelled()) {
                             isSkillActive = true;

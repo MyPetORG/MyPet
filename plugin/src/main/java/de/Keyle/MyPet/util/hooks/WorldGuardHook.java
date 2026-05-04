@@ -35,7 +35,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
-import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
+import de.Keyle.MyPet.api.event.PetActivatedEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.experience.modifier.ExperienceModifier;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -327,7 +327,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     }
 
     @EventHandler
-    public void on(MyPetActivatedEvent event) {
+    public void on(PetActivatedEvent event) {
         if (customFlags) {
             event.getMyPet().getExperience().addModifier("WorldGuard-Region", new RegionModifier(event.getMyPet()));
         }

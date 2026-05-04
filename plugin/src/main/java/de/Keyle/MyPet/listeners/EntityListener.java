@@ -29,9 +29,9 @@ import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
+import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.entity.types.MyEnderman;
-import de.Keyle.MyPet.api.event.MyPetCreateEvent;
-import de.Keyle.MyPet.api.event.MyPetSaveEvent;
+import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
@@ -356,10 +356,10 @@ public class EntityListener implements Listener {
                             }
                         }
 
-                        MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.Leash);
+                        PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.Leash);
                         Bukkit.getServer().getPluginManager().callEvent(createEvent);
 
-                        MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
+                        PetSaveEvent saveEvent = new PetSaveEvent(inactiveMyPet);
                         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
                         justLeashed.add(player.getUniqueId());

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.event.MyPetCallEvent;
+import de.Keyle.MyPet.api.event.PetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -59,7 +59,7 @@ public class SuperVanishHook implements PlayerVersusPlayerHook {
     }
 
     @EventHandler
-    public void on(MyPetCallEvent e) {
+    public void on(PetCallEvent e) {
         try {
             if (VanishAPI.isInvisible(e.getOwner().getPlayer())) {
                 e.setCancelled(true);

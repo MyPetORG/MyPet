@@ -27,19 +27,40 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetInventoryActionEvent extends Event implements Cancellable {
-    protected static final HandlerList handlers = new HandlerList();
+/**
+ * Fired when a pet's saturation drops to zero — the pet is hungry and would
+ * otherwise begin losing health. Lets addons award food, suppress the
+ * starvation hit, or surface custom messaging.
+ *
+ * <p>Fires from {@code MyPet#updateSaturation} once per saturation-zero
+ * transition; after firing, if not cancelled, the pet's health begins ticking
+ * down from hunger.
+ *
+ * <p><b>Cancellable:</b> cancelling skips the starvation health-loss for this
+ * tick — but the saturation remains at 0, so the event will fire again next
+ * saturation tick unless something refills it (a food item, an addon, or
+ * {@code /petadmin feed}).
+ *
+ * <p><b>Pet state:</b> live pet; owner online
+ */
+public class PetExhaustionEvent extends Event implements Cancellable {
+
+    private static final HandlerList handlers = new HandlerList();
+
     protected final MyPet myPet;
-    protected boolean isCancelled = false;
-    protected Action action;
-    public MyPetInventoryActionEvent(MyPet myPet, Action action) {
+    protected boolean cancelled;
+
+    public PetExhaustionEvent(MyPet myPet) {
         this.myPet = myPet;
-        this.action = action;
     }
 
     @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    public MyPet getMyPet() {
+        return myPet;
     }
 
     public MyPetPlayer getOwner() {
@@ -50,27 +71,15 @@ public class MyPetInventoryActionEvent extends Event implements Cancellable {
         return myPet.getOwner().getPlayer();
     }
 
-    public MyPet getPet() {
-        return myPet;
-    }
-
-    public Action getAction() {
-        return action;
-    }
-
     public boolean isCancelled() {
-        return isCancelled;
+        return cancelled;
     }
 
-    public void setCancelled(boolean flag) {
-        isCancelled = flag;
+    public void setCancelled(boolean b) {
+        cancelled = b;
     }
 
     public HandlerList getHandlers() {
         return handlers;
-    }
-
-    public enum Action {
-        Open, Pickup, Use
     }
 }

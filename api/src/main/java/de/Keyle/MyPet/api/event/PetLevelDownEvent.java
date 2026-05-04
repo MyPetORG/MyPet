@@ -20,17 +20,27 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import org.bukkit.event.Event;
+import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.event.HandlerList;
 
-public class MyPetPlayerJoinEvent extends Event {
+/**
+ * Fired after an experience change pushes a pet's level down — the symmetric
+ * counterpart of {@link PetLevelUpEvent}. New level via {@link #getLevel()}
+ * (inherited); previous level via {@link #fromLevel()}.
+ *
+ * <p>Fires from {@code MyPetExperience#updateExp} on the down-transition
+ * (e.g., an addon-side {@code removeExp} call, or skilltree-induced exp loss).
+ *
+ * <p><b>Not cancellable:</b> see {@link PetLevelUpEvent} — cancel the
+ * upstream {@link PetExpEvent} to suppress the entire cascade.
+ */
+public class PetLevelDownEvent extends PetLevelEvent {
     private static final HandlerList handlers = new HandlerList();
+    private final int fromLevel;
 
-    private final MyPetPlayer myPetPlayer;
-
-    public MyPetPlayerJoinEvent(MyPetPlayer myPetPlayer) {
-        this.myPetPlayer = myPetPlayer;
+    public PetLevelDownEvent(MyPet myPet, int level, int fromLevel, boolean beQuiet) {
+        super(myPet, level, beQuiet);
+        this.fromLevel = fromLevel;
     }
 
     @SuppressWarnings("unused")
@@ -38,8 +48,8 @@ public class MyPetPlayerJoinEvent extends Event {
         return handlers;
     }
 
-    public MyPetPlayer getPlayer() {
-        return myPetPlayer;
+    public int fromLevel() {
+        return fromLevel;
     }
 
     public HandlerList getHandlers() {

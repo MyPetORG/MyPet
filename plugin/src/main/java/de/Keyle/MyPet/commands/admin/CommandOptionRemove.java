@@ -25,11 +25,11 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.event.PetRemoveEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -51,7 +51,7 @@ import org.bukkit.entity.Player;
  *
  * <p>This command performs the following steps:
  * <ol>
- *   <li>Fires a {@link MyPetRemoveEvent} with source {@link MyPetRemoveEvent.Source#AdminCommand}</li>
+ *   <li>Fires a {@link PetRemoveEvent} with source {@link PetRemoveEvent.Source#AdminCommand}</li>
  *   <li>Clears the pet association for the player's current world group</li>
  *   <li>Deactivates the pet entity in the world</li>
  *   <li>Deletes the pet data from the repository (database)</li>
@@ -121,7 +121,7 @@ public class CommandOptionRemove {
         }
         MyPet myPet = petOwner.getMyPet();
 
-        MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.AdminCommand);
+        PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.AdminCommand);
         Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
         myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), null);

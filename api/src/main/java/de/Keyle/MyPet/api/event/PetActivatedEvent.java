@@ -21,26 +21,40 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetDamageEvent extends Event implements Cancellable {
+/**
+ * Fired after a pet has finished transitioning from at-rest ({@link PersistedMyPet})
+ * to live ({@link MyPet}) — i.e., once the runtime entity exists, all skills are
+ * registered and rebuilt from persisted state, and the pet is in the active-pets map.
+ *
+ * <p>Fires from {@code MyPetManager.activateMyPet(StoredMyPet)} and from the clone
+ * path that follows pet-type transformations.
+ *
+ * <p><b>Not cancellable:</b> activation has already completed before this event
+ * is dispatched. Use {@link PetCallEvent} earlier in the call flow if you need
+ * to veto a pet coming live.
+ *
+ * <p><b>Pet state:</b> {@link #getMyPet()} returns a fully initialized live pet.
+ * The pet entity may not yet be spawned in the world — activation is logical, not
+ * spatial; the world entity is created when the owner uses {@code /mypet call}.
+ *
+ * <p><b>Related events:</b> {@link PetLoadEvent} fires earlier in the same flow
+ * (before any wiring happens, while the pet is still a {@code StoredMyPet}).
+ * {@link PetCallEvent} can fire afterward when the owner spawns the pet entity.
+ */
+public class PetActivatedEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    protected final MyPet myPet;
-    protected final Entity target;
-    protected double damage;
-    protected boolean cancelled;
+    private final MyPet myPet;
 
-    public MyPetDamageEvent(MyPet myPet, Entity target, double damage) {
-        this.myPet = myPet;
-        this.target = target;
-        this.damage = damage;
+    public PetActivatedEvent(MyPet mypet) {
+        this.myPet = mypet;
     }
 
     @SuppressWarnings("unused")
@@ -58,26 +72,6 @@ public class MyPetDamageEvent extends Event implements Cancellable {
 
     public Player getPlayer() {
         return myPet.getOwner().getPlayer();
-    }
-
-    public Entity getTarget() {
-        return target;
-    }
-
-    public double getDamage() {
-        return damage;
-    }
-
-    public void setDamage(double damage) {
-        this.damage = Math.max(0, damage);
-    }
-
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    public void setCancelled(boolean b) {
-        cancelled = b;
     }
 
     public HandlerList getHandlers() {

@@ -293,8 +293,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         if (item == null || item.getType().isAir()) {
             if (player.isSneaking()) {
                 boolean willSit = !isSitting();
-                MyPetSitEvent sitEvent = new MyPetSitEvent(this,
-                        willSit ? MyPetSitEvent.Action.Stay : MyPetSitEvent.Action.Follow);
+                PetSitEvent sitEvent = new PetSitEvent(this,
+                        willSit ? PetSitEvent.Action.Stay : PetSitEvent.Action.Follow);
                 Bukkit.getPluginManager().callEvent(sitEvent);
                 if (sitEvent.isCancelled()) {
                     return true;
@@ -366,8 +366,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         for (ConfigItem food : foods) {
             if (food.compare(item)) {
                 double saturationPerFeed = Configuration.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED;
-                MyPetFeedEvent feedEvent = new MyPetFeedEvent(
-                        this, item, saturationPerFeed, MyPetFeedEvent.Result.Eat);
+                PetFeedEvent feedEvent = new PetFeedEvent(
+                        this, item, saturationPerFeed, PetFeedEvent.Result.Eat);
                 Bukkit.getPluginManager().callEvent(feedEvent);
                 if (feedEvent.isCancelled()) {
                     return false;
@@ -616,7 +616,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             newName = Locale.getString("Name." + getPetType().name(), getOwner().getLanguage());
         }
         if (!this.petName.equals(newName)) {
-            MyPetNameEvent event = new MyPetNameEvent(this, newName);
+            PetNameEvent event = new PetNameEvent(this, newName);
             Bukkit.getPluginManager().callEvent(event);
             newName = event.getNewName();
         }
@@ -661,13 +661,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public boolean autoAssignSkilltree() {
         if (skilltree == null && this.petOwner.isOnline()) {
             if (Configuration.Skilltree.RANDOM_SKILLTREE_ASSIGNMENT) {
-                return setSkilltree(MyPetApi.getSkilltreeManager().getRandomSkilltree(this), MyPetSelectSkilltreeEvent.Source.Auto);
+                return setSkilltree(MyPetApi.getSkilltreeManager().getRandomSkilltree(this), PetSelectSkilltreeEvent.Source.Auto);
             } else if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT) {
                 List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getOrderedSkilltrees());
 
                 for (Skilltree skilltree : skilltrees) {
                     if (skilltree.getMobTypes().contains(getPetType()) && skilltree.checkRequirements(this)) {
-                        return setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.Auto);
+                        return setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.Auto);
                     }
                 }
                 return false;
@@ -737,7 +737,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public void updateStatus(PetState status) {
         if (this.status != status) {
             this.status = status;
-            Bukkit.getPluginManager().callEvent(new MyPetStatusEvent(this, status));
+            Bukkit.getPluginManager().callEvent(new PetStatusEvent(this, status));
         }
     }
 
@@ -818,7 +818,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     }
                 }
 
-                MyPetCallEvent event = new MyPetCallEvent(this);
+                PetCallEvent event = new PetCallEvent(this);
                 Bukkit.getServer().getPluginManager().callEvent(event);
                 if (event.isCancelled()) {
                     return SpawnFlags.NotAllowed;
@@ -1019,7 +1019,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
                     if (saturation > 1 && --hungerTime <= 0) {
                         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
-                        MyPetExhaustionEvent event = new MyPetExhaustionEvent(this);
+                        PetExhaustionEvent event = new PetExhaustionEvent(this);
                         Bukkit.getServer().getPluginManager().callEvent(event);
                         trySelfFeeding();
                         if (!event.isCancelled()) {
@@ -1089,7 +1089,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return petNBT.build();
     }
 
-    public boolean setSkilltree(Skilltree skilltree, MyPetSelectSkilltreeEvent.Source source) {
+    public boolean setSkilltree(Skilltree skilltree, PetSelectSkilltreeEvent.Source source) {
         if (skilltree == null || this.skilltree == skilltree) {
             return false;
         }
@@ -1097,8 +1097,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             return false;
         }
         this.skilltree = skilltree;
-        getServer().getPluginManager().callEvent(new MyPetLevelEvent(this, experience.getLevel()));
-        MyPetSelectSkilltreeEvent selectEvent = new MyPetSelectSkilltreeEvent(this, skilltree, source);
+        getServer().getPluginManager().callEvent(new PetLevelEvent(this, experience.getLevel()));
+        PetSelectSkilltreeEvent selectEvent = new PetSelectSkilltreeEvent(this, skilltree, source);
         Bukkit.getServer().getPluginManager().callEvent(selectEvent);
         return true;
     }
@@ -1111,7 +1111,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             return false;
         }
         this.skilltree = skilltree;
-        getServer().getPluginManager().callEvent(new MyPetLevelEvent(this, experience.getLevel()));
+        getServer().getPluginManager().callEvent(new PetLevelEvent(this, experience.getLevel()));
         return true;
     }
 
@@ -1133,7 +1133,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             if (bukkitInventory.contains(foodItem.getItem().getType())) {
                 ItemStack item = bukkitInventory.getItem(bukkitInventory.first(foodItem.getItem().getType()));
 
-                MyPetFeedEvent feedEvent = new MyPetFeedEvent(this, item, foodSaturation, MyPetFeedEvent.Result.Self_Feed);
+                PetFeedEvent feedEvent = new PetFeedEvent(this, item, foodSaturation, PetFeedEvent.Result.Self_Feed);
                 Bukkit.getPluginManager().callEvent(feedEvent);
                 if (!feedEvent.isCancelled()) {
                     foodSaturation = feedEvent.getSaturation();

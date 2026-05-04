@@ -22,10 +22,10 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.event.PetLevelEvent;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
-import de.Keyle.MyPet.api.event.MyPetLevelEvent;
-import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
+import de.Keyle.MyPet.api.event.PetLevelDownEvent;
+import de.Keyle.MyPet.api.event.PetLevelUpEvent;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
@@ -48,7 +48,7 @@ import java.util.Set;
 public class LevelListener implements Listener {
 
     @EventHandler
-    public void on(MyPetLevelUpEvent event) {
+    public void on(PetLevelUpEvent event) {
         MyPet myPet = event.getPet();
         int lvl = event.getLevel();
         int fromLvl = event.fromLevel();
@@ -126,7 +126,7 @@ public class LevelListener implements Listener {
     }
 
     @EventHandler
-    public void on(MyPetLevelDownEvent event) {
+    public void on(PetLevelDownEvent event) {
         MyPet myPet = event.getPet();
         int lvl = event.getLevel();
         int fromLvl = event.fromLevel();
@@ -174,8 +174,8 @@ public class LevelListener implements Listener {
     }
 
     @EventHandler
-    public void on(MyPetLevelEvent event) {
-        if (event instanceof MyPetLevelUpEvent || event instanceof MyPetLevelDownEvent) {
+    public void on(PetLevelEvent event) {
+        if (event instanceof PetLevelUpEvent || event instanceof PetLevelDownEvent) {
             return;
         }
         MyPet myPet = event.getPet();

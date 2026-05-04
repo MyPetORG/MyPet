@@ -26,20 +26,50 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetLevelEvent extends Event {
+/**
+ * Notification that a pet's level value should be re-read by listeners. The
+ * "level changed" semantic is split across this base and its subclasses, with
+ * non-obvious firing sites:
+ *
+ * <ul>
+ *   <li><b>Base event ({@code PetLevelEvent}):</b> fires from {@code MyPet}
+ *       on every {@code setSkilltree(...)} call, with the pet's
+ *       <i>current</i> (unchanged) level. The dispatch is a side-effect of
+ *       skilltree assignment — primarily a "the level-related context just
+ *       changed, please re-render" hint.</li>
+ *   <li><b>Up- / down-transitions:</b> dispatched as the typed subclasses
+ *       {@link PetLevelUpEvent} / {@link PetLevelDownEvent} from
+ *       {@code MyPetExperience#updateExp}. These carry the previous level via
+ *       {@code fromLevel()}.</li>
+ * </ul>
+ *
+ * <p>Listeners attached to the base type receive the skilltree-change
+ * notification but <i>not</i> the up/down events (subclass dispatch goes
+ * only to listeners registered for the subclass). To observe real level
+ * transitions, listen for {@link PetLevelUpEvent} and
+ * {@link PetLevelDownEvent} directly.
+ *
+ * <p><b>Not cancellable:</b> the underlying state change has already been
+ * applied when this event fires.
+ *
+ * <p><b>Quiet flag:</b> {@link #isQuiet()} mirrors the originating call's
+ * quiet preference — for the skilltree-change firing the constructor passes
+ * {@code beQuiet=true}.
+ */
+public class PetLevelEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private final MyPet myPet;
     private final int level;
     private final boolean beQuiet;
 
-    public MyPetLevelEvent(MyPet myPet, int Level) {
+    public PetLevelEvent(MyPet myPet, int Level) {
         this.myPet = myPet;
         this.level = Level;
         this.beQuiet = true;
     }
 
-    public MyPetLevelEvent(MyPet myPet, int level, boolean beQuiet) {
+    public PetLevelEvent(MyPet myPet, int level, boolean beQuiet) {
         this.myPet = myPet;
         this.level = level;
         this.beQuiet = beQuiet;

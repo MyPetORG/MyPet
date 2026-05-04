@@ -26,13 +26,13 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.event.PetRemoveEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
-import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -143,7 +143,7 @@ public class CommandRelease {
     /**
      * Handles the command when invoked with a pet name argument. If the name matches
      * the active pet's name (case-insensitive, MiniMessage tags stripped), the pet is
-     * released: a {@link MyPetRemoveEvent} is fired, a vanilla entity may be spawned,
+     * released: a {@link PetRemoveEvent} is fired, a vanilla entity may be spawned,
      * Backpack contents and equipment are dropped, and the pet is permanently deleted.
      * If the name does not match, the confirmation prompt is shown again.
      *
@@ -173,7 +173,7 @@ public class CommandRelease {
         }
 
         if (Util.SANITIZED_MINIMESSAGE.stripTags(myPet.getPetName()).trim().equalsIgnoreCase(name.trim())) {
-            MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.Release);
+            PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.Release);
             Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
             // Drop backpack contents BEFORE releaseToWild — that call detaches

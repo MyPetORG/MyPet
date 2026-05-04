@@ -23,11 +23,33 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.inventory.ItemStack;
 
-public class MyPetFeedEvent extends MyPetInteractEvent {
+/**
+ * Fired when an owner right-clicks a pet with a food {@link ItemStack}.
+ * Subclass of {@link PetInteractEvent} — extends the right-click hook with
+ * food-specific fields.
+ *
+ * <p>Fires from {@code MyPet#mobInteract} on player-pet right-click and from
+ * the self-feed branch when the pet auto-eats a held item.
+ *
+ * <p><b>Cancellable</b> (inherited): cancellation suppresses the feed action
+ * entirely — no saturation gain, no item consumption, no heal.
+ *
+ * <p><b>Mutable fields:</b>
+ * <ul>
+ *   <li>{@link #setSaturation(double)} adjusts the saturation gained from this
+ *       feed; default is the food's vanilla saturation.</li>
+ *   <li>{@link #setResult(Result)} chooses the visual / audio reaction:
+ *       {@link Result#Heal} (heart particles + heal animation),
+ *       {@link Result#Eat} (eating particles + munch sound),
+ *       {@link Result#Self_Feed} (no player interaction; pet ate from its own
+ *       backpack or AI behavior).</li>
+ * </ul>
+ */
+public class PetFeedEvent extends PetInteractEvent {
 
     private double saturation;
     private Result result;
-    public MyPetFeedEvent(MyPet myPet, ItemStack item, double saturation, Result result) {
+    public PetFeedEvent(MyPet myPet, ItemStack item, double saturation, Result result) {
         super(myPet, item);
         this.saturation = saturation;
         this.result = result;

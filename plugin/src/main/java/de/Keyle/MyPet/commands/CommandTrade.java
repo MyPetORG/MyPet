@@ -32,7 +32,7 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.PetInfoBuilder;
-import de.Keyle.MyPet.api.event.MyPetSaveEvent;
+import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.repository.Repository;
@@ -198,7 +198,7 @@ public class CommandTrade {
                 final Repository repo = MyPetPlugin.getInstance().getRepository();
                 repo.removePet(originalPet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         PersistedMyPet pet = originalPet.withOwner(newOwner);
-                        MyPetSaveEvent event = new MyPetSaveEvent(pet);
+                        PetSaveEvent event = new PetSaveEvent(pet);
                         Bukkit.getServer().getPluginManager().callEvent(event);
                         repo.addPet(pet);
                         Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(pet);

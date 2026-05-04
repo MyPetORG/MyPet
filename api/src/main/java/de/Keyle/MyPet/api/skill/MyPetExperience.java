@@ -22,9 +22,9 @@ package de.Keyle.MyPet.api.skill;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.event.MyPetExpEvent;
-import de.Keyle.MyPet.api.event.MyPetLevelDownEvent;
-import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
+import de.Keyle.MyPet.api.event.PetExpEvent;
+import de.Keyle.MyPet.api.event.PetLevelDownEvent;
+import de.Keyle.MyPet.api.event.PetLevelUpEvent;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculator;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
@@ -219,7 +219,7 @@ public class MyPetExperience {
     }
 
     protected double updateExp(double exp, boolean quiet) {
-        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, exp, quiet);
+        PetExpEvent expEvent = new PetExpEvent(myPet, exp, quiet);
         Bukkit.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
             return 0;
@@ -237,9 +237,9 @@ public class MyPetExperience {
         }
         if (oldLvl != this.level) {
             if (oldLvl < this.level) {
-                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, this.level, oldLvl, quiet));
+                Bukkit.getServer().getPluginManager().callEvent(new PetLevelUpEvent(myPet, this.level, oldLvl, quiet));
             } else {
-                Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelDownEvent(myPet, this.level, oldLvl, quiet));
+                Bukkit.getServer().getPluginManager().callEvent(new PetLevelDownEvent(myPet, this.level, oldLvl, quiet));
             }
         }
         return this.exp - oldExp;

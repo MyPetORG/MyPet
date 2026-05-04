@@ -22,10 +22,32 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 
-public class MyPetSitEvent extends MyPetInteractEvent {
+/**
+ * Fired when a pet's sit / follow toggle is about to flip. Subclass of
+ * {@link PetInteractEvent}; the {@link Action} discriminates the new state:
+ *
+ * <ul>
+ *   <li>{@link Action#Stay} — pet is being told to sit / stay in place.</li>
+ *   <li>{@link Action#Follow} — pet is being told to stand up and resume
+ *       following its owner.</li>
+ * </ul>
+ *
+ * <p>Fires from {@code MyPet} on the right-click sit-toggle interaction.
+ *
+ * <p><b>Cancellable</b> (inherited): cancellation suppresses the toggle —
+ * the pet stays in its current sit / follow state.
+ *
+ * <p><b>Pet state:</b> live pet, owner online.
+ *
+ * <p><b>Note:</b> the parent {@link PetInteractEvent#PetInteractEvent}
+ * receives a {@code null} item from this constructor — sit-toggle goes
+ * through a non-item interaction (the configured sit-action item, which is
+ * checked by the caller, not stored on the event).
+ */
+public class PetSitEvent extends PetInteractEvent {
     private Action action;
 
-    public MyPetSitEvent(MyPet myPet, Action action) {
+    public PetSitEvent(MyPet myPet, Action action) {
         super(myPet, null);
         this.action = action;
     }

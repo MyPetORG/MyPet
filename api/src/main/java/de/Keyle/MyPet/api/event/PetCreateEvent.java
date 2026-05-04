@@ -26,11 +26,38 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetRemoveEvent extends Event {
+/**
+ * Fired when a brand-new pet is created and assigned to an owner — the moment
+ * a pet first enters the repository. The {@code Source} discriminates the
+ * creation pathway: {@link Source#Leash} (player leashes a wild mob),
+ * {@link Source#AdminCommand} (an admin {@code /petadmin create}-style command),
+ * {@link Source#PetShop} (PetShop integration purchase), {@link Source#Other}
+ * (third-party plugins).
+ *
+ * <p>Fires from {@code EntityListener} (leash path), {@code CreakingHeartListener}
+ * (Creaking-specific leash path), {@code CommandOptionCreate}, and the
+ * {@code PetShop} integration.
+ *
+ * <p><b>Not cancellable:</b> the pet has already been added to the manager when
+ * this event fires. Listeners can use it to award welcome bonuses, log creation,
+ * or trigger UI flows — not to veto creation. Veto must happen earlier in the
+ * Bukkit-event chain ({@code PlayerLeashEntityEvent} for the leash sources, the
+ * command's permission check for admin / shop sources).
+ *
+ * <p><b>Pet state:</b> {@link #getMyPet()} is in the inactive-pets pool — the
+ * pet is persisted but not yet active. Owner is set; {@code getPlayer()} may be
+ * null only if the owner has logged off in the same tick.
+ *
+ * <p><b>Related events:</b> {@link PetLoadEvent} fires whenever a pet is
+ * loaded from disk (creation OR subsequent activations). {@link PetActivatedEvent}
+ * fires after activation completes. {@link PetRemoveEvent} is the symmetric
+ * deletion event.
+ */
+public class PetCreateEvent extends Event {
     protected static final HandlerList handlers = new HandlerList();
     private final StoredMyPet myPet;
     private final Source source;
-    public MyPetRemoveEvent(StoredMyPet myPet, Source source) {
+    public PetCreateEvent(StoredMyPet myPet, Source source) {
         this.myPet = myPet;
         this.source = source;
     }
@@ -61,6 +88,6 @@ public class MyPetRemoveEvent extends Event {
     }
 
     public enum Source {
-        Release, Death, AdminCommand, Other
+        Leash, AdminCommand, PetShop, Other
     }
 }

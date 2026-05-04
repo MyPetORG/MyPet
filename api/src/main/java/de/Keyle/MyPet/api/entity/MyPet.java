@@ -21,7 +21,7 @@ package de.Keyle.MyPet.api.entity;
 
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
-import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
+import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
@@ -74,7 +74,7 @@ public non-sealed interface MyPet extends StoredMyPet, Scheduler {
 
     /**
      * Single-arg form that updates the skilltree without firing
-     * {@code MyPetSelectSkilltreeEvent}. Used during pet activation when the
+     * {@code PetSelectSkilltreeEvent}. Used during pet activation when the
      * skilltree is being restored from persistence rather than chosen.
      */
     boolean setSkilltree(Skilltree skilltree);
@@ -134,7 +134,7 @@ public non-sealed interface MyPet extends StoredMyPet, Scheduler {
 
     void decreaseSaturation(double value);
 
-    boolean setSkilltree(Skilltree skilltree, MyPetSelectSkilltreeEvent.Source source);
+    boolean setSkilltree(Skilltree skilltree, PetSelectSkilltreeEvent.Source source);
 
     boolean isSitting();
 

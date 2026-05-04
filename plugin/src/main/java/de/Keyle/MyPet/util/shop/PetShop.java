@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.event.MyPetCreateEvent;
+import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
@@ -147,7 +147,7 @@ public class PetShop {
 
                                     MyPetPlugin.getInstance().getRepository().addPet(clonedPet).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
                                             p.sendMessage(Locale.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
-                                            MyPetCreateEvent createEvent = new MyPetCreateEvent(clonedPet, MyPetCreateEvent.Source.PetShop);
+                                            PetCreateEvent createEvent = new PetCreateEvent(clonedPet, PetCreateEvent.Source.PetShop);
                                             Bukkit.getServer().getPluginManager().callEvent(createEvent);
                                             if (petOwner.hasMyPet()) {
                                                 p.sendMessage(Locale.getFormattedComponent("Message.Shop.SuccessStorage", player, clonedPet.getDisplayName()));

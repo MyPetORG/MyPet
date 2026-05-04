@@ -27,15 +27,15 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.event.PetSaveEvent;
+import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.CommandOptionCreator;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.event.MyPetCreateEvent;
-import de.Keyle.MyPet.api.event.MyPetSaveEvent;
-import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
+import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -550,7 +550,7 @@ public class CommandOptionCreate {
      *
      * <p>Validates the pet type, checks world-group restrictions, resolves or registers the
      * {@link MyPetPlayer}, builds a {@link PersistedMyPet} with the parsed options, fires
-     * {@link MyPetCreateEvent} and {@link MyPetSaveEvent}, persists the pet to the repository,
+     * {@link PetCreateEvent} and {@link PetSaveEvent}, persists the pet to the repository,
      * and activates it if the owner has no current pet.</p>
      *
      * @param sender     the command sender (for feedback messages)
@@ -588,10 +588,10 @@ public class CommandOptionCreate {
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
                 final PersistedMyPet inactiveMyPet = updateData(base, options).withWorldGroup(wg.getName());
 
-                MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.AdminCommand);
+                PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.AdminCommand);
                 Bukkit.getServer().getPluginManager().callEvent(createEvent);
 
-                MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
+                PetSaveEvent saveEvent = new PetSaveEvent(inactiveMyPet);
                 Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
                 MyPetPlugin.getInstance().getRepository().addPet(inactiveMyPet).thenAccept(added -> owner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
@@ -625,8 +625,8 @@ public class CommandOptionCreate {
      * <p>Currently handles:</p>
      * <ul>
      *   <li>{@code skilltree:<name>} -- assigns the named skilltree, firing
-     *       {@link MyPetSelectSkilltreeEvent} with source
-     *       {@link MyPetSelectSkilltreeEvent.Source#AdminCreation}.</li>
+     *       {@link PetSelectSkilltreeEvent} with source
+     *       {@link PetSelectSkilltreeEvent.Source#AdminCreation}.</li>
      *   <li>{@code name:<petName>} -- sets the pet's display name.</li>
      * </ul>
      *
@@ -641,7 +641,7 @@ public class CommandOptionCreate {
                 if (skilltree != null) {
                     pet = pet.withSkilltree(skilltree);
                     Bukkit.getServer().getPluginManager().callEvent(
-                            new MyPetSelectSkilltreeEvent(pet, skilltree, MyPetSelectSkilltreeEvent.Source.AdminCreation));
+                            new PetSelectSkilltreeEvent(pet, skilltree, PetSelectSkilltreeEvent.Source.AdminCreation));
                 }
             } else if (arg.startsWith("name:")) {
                 String petName = arg.substring("name:".length());

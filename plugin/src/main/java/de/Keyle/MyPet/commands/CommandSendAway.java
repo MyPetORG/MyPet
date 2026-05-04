@@ -28,7 +28,7 @@ import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.event.MyPetSendAwayEvent;
+import de.Keyle.MyPet.api.event.PetSendAwayEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -53,7 +53,7 @@ import java.util.List;
  * <p><b>Permissions:</b> {@code MyPet.admin} — required to send away another player's pet</p>
  * <p><b>Help category:</b> {@link CommandCategory#PET PET} (priority 80)</p>
  *
- * @see MyPetSendAwayEvent
+ * @see PetSendAwayEvent
  */
 @SuppressWarnings("UnstableApiUsage")
 public class CommandSendAway {
@@ -114,7 +114,7 @@ public class CommandSendAway {
      * Executes the send-away logic for the specified player's pet.
      *
      * <p>Validates that the target player is a registered MyPet player, is online, and
-     * has an active pet. Fires a {@link MyPetSendAwayEvent} which may be cancelled by
+     * has an active pet. Fires a {@link PetSendAwayEvent} which may be cancelled by
      * other plugins. Provides feedback for all states: success, already away, or dead.</p>
      *
      * @param sender     the command sender (player or console) to receive feedback messages
@@ -134,7 +134,7 @@ public class CommandSendAway {
         if (petOwner != null && petOwner.hasMyPet()) {
             MyPet myPet = petOwner.getMyPet();
             if (myPet.getStatus() == PetState.Here) {
-                MyPetSendAwayEvent event = new MyPetSendAwayEvent(myPet);
+                PetSendAwayEvent event = new PetSendAwayEvent(myPet);
                 Bukkit.getPluginManager().callEvent(event);
                 if (!event.isCancelled()) {
                     myPet.removePet(false);

@@ -23,8 +23,8 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.event.MyPetInventoryActionEvent;
-import de.Keyle.MyPet.api.event.MyPetPickupItemEvent;
+import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
+import de.Keyle.MyPet.api.event.PetPickupItemEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Pickup;
@@ -92,7 +92,7 @@ public class PickupImpl implements Pickup {
                 if (pickup) {
                     pickup = false;
                 } else {
-                    MyPetInventoryActionEvent event = new MyPetInventoryActionEvent(myPet, MyPetInventoryActionEvent.Action.Pickup);
+                    PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.Pickup);
                     Bukkit.getServer().getPluginManager().callEvent(event);
                     if (!event.isCancelled()) {
                         pickup = true;
@@ -113,7 +113,7 @@ public class PickupImpl implements Pickup {
     }
 
     public void schedule() {
-        MyPetInventoryActionEvent event = new MyPetInventoryActionEvent(myPet, MyPetInventoryActionEvent.Action.Use);
+        PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.Use);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (pickup && (event.isCancelled() || !Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup"))) {
             pickup = false;
@@ -134,7 +134,7 @@ public class PickupImpl implements Pickup {
                             ItemStack itemStack = itemEntity.getItemStack();
 
                             if (itemEntity.getPickupDelay() <= 0 && itemStack.getAmount() > 0) {
-                                MyPetPickupItemEvent petPickupEvent = new MyPetPickupItemEvent(myPet, itemEntity);
+                                PetPickupItemEvent petPickupEvent = new PetPickupItemEvent(myPet, itemEntity);
                                 Bukkit.getServer().getPluginManager().callEvent(petPickupEvent);
 
                                 if (petPickupEvent.isCancelled()) {

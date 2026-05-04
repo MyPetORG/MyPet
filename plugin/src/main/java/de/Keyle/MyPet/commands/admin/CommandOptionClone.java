@@ -25,11 +25,11 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.event.MyPetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -147,7 +147,7 @@ public class CommandOptionClone {
                 .info(PetInfoAccess.read(oldPet))
                 .build();
 
-        MyPetSaveEvent event = new MyPetSaveEvent(newPet);
+        PetSaveEvent event = new PetSaveEvent(newPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         MyPetPlugin.getInstance().getRepository().addPet(newPet).thenAccept(added -> newOwner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {

@@ -26,9 +26,9 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
-import de.Keyle.MyPet.api.event.MyPetLoadEvent;
-import de.Keyle.MyPet.api.event.MyPetSaveEvent;
+import de.Keyle.MyPet.api.event.PetActivatedEvent;
+import de.Keyle.MyPet.api.event.PetLoadEvent;
+import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -98,7 +98,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
             }
         }
 
-        Event event = new MyPetLoadEvent(storedMyPet);
+        Event event = new PetLoadEvent(storedMyPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         MyPet myPet = createMyPetInstance(storedMyPet.getPetType(), storedMyPet.getOwner());
@@ -131,7 +131,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         mActivePetsPlayer.put(myPet, myPet.getOwner());
 
 
-        event = new MyPetActivatedEvent(myPet);
+        event = new PetActivatedEvent(myPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         return Optional.of(myPet);
@@ -142,7 +142,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         if (mActivePlayerPets.containsKey(owner)) {
             final MyPet myPet = owner.getMyPet();
 
-            MyPetSaveEvent event = new MyPetSaveEvent(myPet);
+            PetSaveEvent event = new PetSaveEvent(myPet);
             Bukkit.getServer().getPluginManager().callEvent(event);
 
             myPet.removePet();
@@ -182,9 +182,9 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
      * max via {@link MyPet#setHealth} after the status flips to
      * {@link PetState#Here}.
      *
-     * <p>Does not fire {@code MyPetSaveEvent} or {@code MyPetRemoveEvent}
+     * <p>Does not fire {@code PetSaveEvent} or {@code PetRemoveEvent}
      * for the old pet — this is a transformation, not a removal — but does
-     * fire {@link MyPetActivatedEvent} for the new pet so listeners that
+     * fire {@link PetActivatedEvent} for the new pet so listeners that
      * track active pets see the swap.
      *
      * @return the new {@link MyPet} on success, or empty if the new
@@ -276,7 +276,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         // else stays linked.
         MyPetPlugin.getInstance().getRepository().updatePet(newPet);
 
-        Bukkit.getServer().getPluginManager().callEvent(new MyPetActivatedEvent(newPet));
+        Bukkit.getServer().getPluginManager().callEvent(new PetActivatedEvent(newPet));
 
         return Optional.of(newPet);
     }

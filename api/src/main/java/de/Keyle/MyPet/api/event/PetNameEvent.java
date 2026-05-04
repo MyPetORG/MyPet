@@ -26,7 +26,30 @@ import lombok.Setter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetNameEvent extends Event {
+/**
+ * Fired when a pet's display name is about to change. Listeners can rewrite
+ * the proposed name via {@link #setNewName(String)} — useful for filtering
+ * profanity, enforcing length / character constraints, or applying server-wide
+ * formatting rules (color codes, bracket prefixes, etc.).
+ *
+ * <p>Fires from {@code MyPet#setPetName} for every name change source — owner
+ * rename via {@code /mypet name}, admin rename via {@code /petadmin name}, and
+ * any third-party setter call. The new name is applied with the value of
+ * {@link #getNewName()} at the end of the event dispatch, so listeners that
+ * mutate it later in the chain win over earlier ones.
+ *
+ * <p><b>Not cancellable:</b> there is no {@code Cancellable} on this event.
+ * To suppress a rename, set {@code newName} back to the pet's current name
+ * via {@code event.setNewName(event.getMyPet().getPetName())}.
+ *
+ * <p><b>Pet state:</b> live pet (name changes only happen on active pets).
+ *
+ * <p><b>Format note:</b> the name string is in MiniMessage format —
+ * {@code MyPet#getDisplayName} deserializes it into a {@code Component} via
+ * the sanitized MiniMessage parser. Listeners modifying the name should
+ * preserve MiniMessage syntax.
+ */
+public class PetNameEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -36,7 +59,7 @@ public class MyPetNameEvent extends Event {
     @Setter
     private String newName;
 
-    public MyPetNameEvent(MyPet myPet, String newName) {
+    public PetNameEvent(MyPet myPet, String newName) {
         this.myPet = myPet;
         this.newName = newName;
     }

@@ -26,11 +26,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -71,7 +71,7 @@ import java.util.*;
  * <p><b>Help category:</b> {@link CommandCategory#SKILLS SKILLS} (priority 160)</p>
  *
  * @see Skilltree
- * @see MyPetSelectSkilltreeEvent
+ * @see PetSelectSkilltreeEvent
  */
 @SuppressWarnings("UnstableApiUsage")
 public class CommandChooseSkilltree {
@@ -293,7 +293,7 @@ public class CommandChooseSkilltree {
             myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.RequiresLevel.Message", myPetOwner, myPet.getDisplayName(), requiredLevel));
         } else if (myPet.getExperience().getLevel() > maxLevel) {
             myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.MaxLevel.Message", myPetOwner, myPet.getDisplayName(), maxLevel));
-        } else if (myPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.PlayerCommand)) {
+        } else if (myPet.setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.PlayerCommand)) {
             myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.SwitchedTo", myPetOwner, Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName())));
             if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
                 double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;

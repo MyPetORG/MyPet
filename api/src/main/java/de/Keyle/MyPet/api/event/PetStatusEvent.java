@@ -27,14 +27,40 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetStatusEvent extends Event {
+/**
+ * Fired when a pet's lifecycle {@code PetState} transitions — e.g., from
+ * {@code Here} (entity in the world) to {@code Despawned} (entity removed
+ * but pet still active) or to {@code Dead} (post-death respawn timer).
+ *
+ * <p>Fires from {@code MyPet#updateStatus} once per state transition.
+ *
+ * <p><b>Not cancellable:</b> the status change is already applied when this
+ * event fires.
+ *
+ * <p><b>API gap:</b> the new status is captured in the constructor but not
+ * exposed via a getter — listeners cannot read which state was entered. The
+ * field is package-private (protected) and unused by the api itself. Until
+ * this is remedied (see audit), the only practical use of the event is "some
+ * status changed; I'll re-read it from {@link MyPet#getStatus()}".
+ *
+ * <p><b>Pet state:</b> live pet (status transitions only happen on the live
+ * runtime).
+ *
+ * <p><b>Related events:</b> {@link PetCallEvent} fires before a {@code Here}
+ * transition; {@link PetSendAwayEvent} fires before a {@code Despawned}
+ * transition. Death has no dedicated MyPet-side event — listen to
+ * {@code EntityDeathEvent} on the marked pet entity, or to the
+ * {@link PetRemoveEvent} {@link PetRemoveEvent.Source#Death} source if
+ * the pet is configured to delete on death.
+ */
+public class PetStatusEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
     protected final StoredMyPet myPet;
     protected final MyPet.PetState state;
 
-    public MyPetStatusEvent(MyPet myPet, MyPet.PetState state) {
+    public PetStatusEvent(MyPet myPet, MyPet.PetState state) {
         this.myPet = myPet;
         this.state = state;
     }

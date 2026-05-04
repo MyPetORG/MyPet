@@ -27,7 +27,32 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetExpEvent extends Event implements Cancellable {
+/**
+ * Fired before a pet's experience changes — gain or loss. Dispatched once per
+ * change from the central {@code MyPetExperience#updateExp} flow that backs
+ * {@code addExp}, {@code removeExp}, and the percent-add helpers.
+ *
+ * <p>Fires from {@code MyPetExperience} immediately before the exp delta is
+ * applied and the level is recomputed.
+ *
+ * <p><b>Cancellable:</b> cancellation skips the exp change entirely —
+ * {@code updateExp} returns {@code 0} and the level recomputation does not
+ * happen, so no follow-up {@link PetLevelUpEvent} or {@link PetLevelDownEvent}
+ * is dispatched.
+ *
+ * <p><b>Mutable delta:</b> {@link #setExp(double)} adjusts the value to be
+ * applied — useful for multipliers (XP-boost potions) or caps. The signed
+ * value reflects the direction (positive for gain, negative for loss); the
+ * post-clamp result is also bounded by {@code 0..maxExp} on the pet side.
+ *
+ * <p><b>Quiet flag:</b> {@link #isQuiet()} mirrors the caller's quiet
+ * preference and is propagated forward to {@link PetLevelUpEvent} /
+ * {@link PetLevelDownEvent} if the level changes.
+ *
+ * <p><b>Pet state:</b> live pet (experience changes only happen on the
+ * runtime).
+ */
+public class PetExpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private final MyPet myPet;
@@ -35,13 +60,13 @@ public class MyPetExpEvent extends Event implements Cancellable {
     private double exp;
     private boolean quiet;
 
-    public MyPetExpEvent(MyPet myPet, double exp, boolean quiet) {
+    public PetExpEvent(MyPet myPet, double exp, boolean quiet) {
         this.myPet = myPet;
         this.exp = exp;
         this.quiet = quiet;
     }
 
-    public MyPetExpEvent(MyPet myPet, double exp) {
+    public PetExpEvent(MyPet myPet, double exp) {
         this(myPet, exp, false);
     }
 

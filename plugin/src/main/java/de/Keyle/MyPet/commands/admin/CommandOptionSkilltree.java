@@ -29,7 +29,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.event.MyPetSelectSkilltreeEvent;
+import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -52,8 +52,8 @@ import java.util.List;
  * based on compatibility with the target player's active pet type. Only skilltrees
  * whose {@link Skilltree#getMobTypes()} includes the pet's type are suggested and accepted.
  *
- * <p>Fires a {@link MyPetSelectSkilltreeEvent} with source
- * {@link MyPetSelectSkilltreeEvent.Source#AdminCommand} when the skilltree is changed.
+ * <p>Fires a {@link PetSelectSkilltreeEvent} with source
+ * {@link PetSelectSkilltreeEvent.Source#AdminCommand} when the skilltree is changed.
  *
  * <p>Requires the {@code MyPet.admin} permission.
  */
@@ -144,7 +144,7 @@ public class CommandOptionSkilltree {
 
         if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
             Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
-            if (skilltree.getMobTypes().contains(myPet.getPetType()) && myPet.setSkilltree(skilltree, MyPetSelectSkilltreeEvent.Source.AdminCommand)) {
+            if (skilltree.getMobTypes().contains(myPet.getPetType()) && myPet.setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.AdminCommand)) {
                 sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.Skilltree.SwitchedToFor", lang, petOwner.getName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName()))));
             } else {
                 sender.sendMessage(MessageUtil.prefixed(Locale.getComponent("Message.Skilltree.NotSwitched", lang)));

@@ -7,7 +7,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
 import de.Keyle.MyPet.api.entity.MyPetEquipment;
-import de.Keyle.MyPet.api.event.MyPetRemoveEvent;
+import de.Keyle.MyPet.api.event.PetRemoveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
@@ -55,7 +55,7 @@ public class PetDeathListener implements Listener {
 
         // Release-on-death: permanently remove the pet
         if (MyPetApi.getMyPetInfo().getReleaseOnDeath(myPet.getPetType()) && !owner.isMyPetAdmin()) {
-            MyPetRemoveEvent removeEvent = new MyPetRemoveEvent(myPet, MyPetRemoveEvent.Source.Death);
+            PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.Death);
             Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
             if (myPet.getSkills().isActive(Backpack.class)) {

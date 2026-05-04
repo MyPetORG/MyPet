@@ -20,24 +20,33 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetSelectSkilltreeEvent extends Event {
+/**
+ * Fired after a {@link MyPetPlayer} has finished joining the server — i.e.,
+ * after the vanilla {@code PlayerJoinEvent} fires AND after MyPet has loaded
+ * the player's pet roster from the repository, applied any pet-related
+ * tracking ({@code lastSeen} timestamp, default-pet activation, etc.), and
+ * registered them in the active player map.
+ *
+ * <p>Fires from {@code PlayerListener} on the join handler.
+ *
+ * <p><b>Not cancellable:</b> the player has already finished joining when
+ * this event fires; this is a notification hook.
+ *
+ * <p><b>Related events:</b> for pet-level activation triggered by the join,
+ * listen to {@link PetActivatedEvent} — it fires earlier in the join flow
+ * for each pet that activates.
+ */
+public class PetPlayerJoinEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    protected final StoredMyPet myPet;
-    protected final Skilltree skilltree;
-    private final Source source;
+    private final MyPetPlayer myPetPlayer;
 
-    public MyPetSelectSkilltreeEvent(StoredMyPet myPet, Skilltree skilltree, Source source) {
-        this.myPet = myPet;
-        this.skilltree = skilltree;
-        this.source = source;
+    public PetPlayerJoinEvent(MyPetPlayer myPetPlayer) {
+        this.myPetPlayer = myPetPlayer;
     }
 
     @SuppressWarnings("unused")
@@ -45,31 +54,11 @@ public class MyPetSelectSkilltreeEvent extends Event {
         return handlers;
     }
 
-    public Source getSource() {
-        return source;
-    }
-
-    public StoredMyPet getMyPet() {
-        return myPet;
-    }
-
-    public Skilltree getSkilltree() {
-        return skilltree;
-    }
-
-    public MyPetPlayer getOwner() {
-        return myPet.getOwner();
-    }
-
-    public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
+    public MyPetPlayer getPlayer() {
+        return myPetPlayer;
     }
 
     public HandlerList getHandlers() {
         return handlers;
-    }
-
-    public enum Source {
-        Auto, PlayerCommand, AdminCommand, AdminCreation, BossShopPro, Shop, Other
     }
 }

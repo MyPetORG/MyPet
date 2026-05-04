@@ -23,11 +23,33 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.event.HandlerList;
 
-public class MyPetLevelUpEvent extends MyPetLevelEvent {
+/**
+ * Fired after an experience change pushes a pet's level up. The new level is
+ * available via {@link #getLevel()} (inherited) and the previous level via
+ * {@link #fromLevel()}.
+ *
+ * <p>Fires from {@code MyPetExperience#updateExp} immediately after the level
+ * is recomputed — only on the up-transition. If the change crosses multiple
+ * levels at once, this event fires once with the final level and the
+ * pre-change level as {@code fromLevel}.
+ *
+ * <p><b>Not cancellable:</b> the exp / level change has already been applied.
+ * Cancel {@link PetExpEvent} earlier in the flow to suppress the entire
+ * cascade.
+ *
+ * <p><b>Quiet flag:</b> inherited from {@link PetLevelEvent} — propagated
+ * from the originating {@link PetExpEvent} via the experience updater.
+ *
+ * <p><b>Note:</b> the parent {@link PetLevelEvent} is also fired separately
+ * from the {@code setSkilltree} path with the current (unchanged) level. If
+ * you only care about real level transitions, listen for this subclass and
+ * {@link PetLevelDownEvent} rather than the base event.
+ */
+public class PetLevelUpEvent extends PetLevelEvent {
     private static final HandlerList handlers = new HandlerList();
     private final int fromLevel;
 
-    public MyPetLevelUpEvent(MyPet myPet, int level, int fromLevel, boolean beQuiet) {
+    public PetLevelUpEvent(MyPet myPet, int level, int fromLevel, boolean beQuiet) {
         super(myPet, level, beQuiet);
         this.fromLevel = fromLevel;
     }

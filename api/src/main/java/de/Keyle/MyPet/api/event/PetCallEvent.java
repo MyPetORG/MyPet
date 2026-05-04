@@ -21,25 +21,39 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.skill.OnHitSkill;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetOnHitSkillEvent extends Event implements Cancellable {
+/**
+ * Fired when an owner attempts to spawn the world entity for an already-active
+ * pet — i.e. {@code /mypet call} or any equivalent call to {@code MyPet#createEntity}.
+ * Fires once per call attempt, before the vanilla {@code Mob} is spawned.
+ *
+ * <p>The pet exposed via {@link #getMyPet()} is already active (skills loaded,
+ * NBT applied) — only the world entity is missing. Activation itself is signaled
+ * separately by {@link PetActivatedEvent}, which fires earlier and only once
+ * per session.
+ *
+ * <p><b>Cancellable:</b> cancelling the event blocks the spawn, and the call
+ * attempt fails silently from the caller's perspective. Common addon use-cases:
+ * region-based call restrictions (WorldGuard / Towny integrations) and per-pet
+ * cooldown enforcement.
+ *
+ * <p><b>Pet state:</b> {@link #getMyPet()} returns a {@link StoredMyPet} but is
+ * always concretely a live {@link MyPet} — the constructor takes {@code MyPet}.
+ * The widened return type is historical.
+ */
+public class PetCallEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    protected final MyPet myPet;
-    protected final OnHitSkill skill;
-    protected boolean isCancelled = false;
-    protected LivingEntity target;
+    private final StoredMyPet myPet;
+    boolean isCancelled = false;
 
-    public MyPetOnHitSkillEvent(MyPet myPet, OnHitSkill skill, LivingEntity target) {
+    public PetCallEvent(MyPet myPet) {
         this.myPet = myPet;
-        this.skill = skill;
-        this.target = target;
     }
 
     @SuppressWarnings("unused")
@@ -47,12 +61,8 @@ public class MyPetOnHitSkillEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public MyPet getMyPet() {
+    public StoredMyPet getMyPet() {
         return myPet;
-    }
-
-    public OnHitSkill getSkill() {
-        return skill;
     }
 
     public MyPetPlayer getOwner() {
@@ -61,10 +71,6 @@ public class MyPetOnHitSkillEvent extends Event implements Cancellable {
 
     public Player getPlayer() {
         return myPet.getOwner().getPlayer();
-    }
-
-    public LivingEntity getTarget() {
-        return target;
     }
 
     @Override

@@ -27,8 +27,8 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
-import de.Keyle.MyPet.api.event.MyPetCreateEvent;
-import de.Keyle.MyPet.api.event.MyPetSaveEvent;
+import de.Keyle.MyPet.api.event.PetCreateEvent;
+import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
@@ -232,10 +232,10 @@ public class CreakingHeartListener implements Listener {
         }
 
         // Fire events
-        MyPetCreateEvent createEvent = new MyPetCreateEvent(inactiveMyPet, MyPetCreateEvent.Source.Leash);
+        PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.Leash);
         Bukkit.getServer().getPluginManager().callEvent(createEvent);
 
-        MyPetSaveEvent saveEvent = new MyPetSaveEvent(inactiveMyPet);
+        PetSaveEvent saveEvent = new PetSaveEvent(inactiveMyPet);
         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
         // Save and activate

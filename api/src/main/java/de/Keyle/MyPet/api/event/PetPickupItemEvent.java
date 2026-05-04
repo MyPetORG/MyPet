@@ -28,14 +28,34 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetPickupItemEvent extends Event implements Cancellable {
+/**
+ * Fired when a pet with the Pickup skill is about to grab an {@link Item}
+ * entity off the ground. Listeners receive the live world {@code Item} entity
+ * before it is despawned and inserted into the pet's backpack.
+ *
+ * <p>Fires from {@code PickupImpl} during the proximity scan that runs every
+ * Pickup tick, once per item entity that passes the skill's filter — distance,
+ * cooldown, item-type allow/blocklist.
+ *
+ * <p><b>Cancellable:</b> cancellation leaves the {@link Item} on the ground
+ * and aborts the pickup. The pet won't re-attempt the same item until the
+ * Pickup tick comes back around.
+ *
+ * <p><b>Pet state:</b> live pet, owner online
+ *
+ * <p><b>Related events:</b> {@link PetInventoryActionEvent} fires immediately
+ * after this on the {@link PetInventoryActionEvent.Action#Pickup} branch,
+ * with the same can-cancel semantics. Listen here for per-item filtering and
+ * to that event for per-action veto control.
+ */
+public class PetPickupItemEvent extends Event implements Cancellable {
     protected static final HandlerList handlers = new HandlerList();
 
     protected final MyPet myPet;
     private final Item item;
     protected boolean isCancelled = false;
 
-    public MyPetPickupItemEvent(MyPet myPet, Item item) {
+    public PetPickupItemEvent(MyPet myPet, Item item) {
         this.myPet = myPet;
         this.item = item;
     }

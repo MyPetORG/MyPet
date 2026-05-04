@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
-import de.Keyle.MyPet.api.event.MyPetPlayerJoinEvent;
+import de.Keyle.MyPet.api.event.PetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
@@ -280,7 +280,7 @@ public class PlayerListener implements Listener {
                     }
                     joinedPlayer.checkForContribution();
 
-                    Bukkit.getServer().getPluginManager().callEvent(new MyPetPlayerJoinEvent(joinedPlayer));
+                    Bukkit.getServer().getPluginManager().callEvent(new PetPlayerJoinEvent(joinedPlayer));
                 }, null);
             });
         }, null, Math.max(1L, delay));

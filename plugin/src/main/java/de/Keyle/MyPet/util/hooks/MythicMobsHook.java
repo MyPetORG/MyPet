@@ -23,7 +23,7 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
-import de.Keyle.MyPet.api.event.MyPetDamageEvent;
+import de.Keyle.MyPet.api.event.PetDamageEvent;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
@@ -147,7 +147,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
     }
 
     @EventHandler
-    public void on(MyPetDamageEvent event) {
+    public void on(PetDamageEvent event) {
         try {
             if (MythicBukkit.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(event.getTarget()))) {
                 ActiveMob defender = MythicBukkit.inst().getMobManager().getMythicMobInstance(event.getTarget());
