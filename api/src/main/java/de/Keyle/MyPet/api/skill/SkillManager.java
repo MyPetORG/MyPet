@@ -27,11 +27,13 @@ import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @ServiceName("SkillManager")
@@ -40,12 +42,17 @@ public class SkillManager implements ServiceContainer {
     private Map<Class<? extends Skill>, String> registeredSkillsNames = new HashMap<>();
     private Map<String, Class<? extends Skill>> registeredNamesSkills = new HashMap<>();
     private Map<String, UpgradeParser<?>> upgradeParsers = new HashMap<>();
+    private Map<Class<? extends Skill>, SkillStateBinding<?>> stateParsers = new HashMap<>();
+
+    /** Pairs the registered state class with its parser so {@link #parseState} can do a typed lookup keyed only on the skill class. */
+    private record SkillStateBinding<T extends SkillState>(Class<T> stateClass, SkillStateParser<T> parser) {}
 
     @Override
     public void onDisable() {
         registeredSkillsNames.clear();
         registeredNamesSkills.clear();
         upgradeParsers.clear();
+        stateParsers.clear();
     }
 
     public void registerSkill(Class<? extends Skill> clazz) {
@@ -168,5 +175,47 @@ public class SkillManager implements ServiceContainer {
      */
     public UpgradeParser<?> getUpgradeParser(String skillName) {
         return upgradeParsers.get(skillName.toLowerCase(Locale.ROOT));
+    }
+
+    /**
+     * Registers the typed {@link SkillState} parser for {@code skillClass}.
+     * Each skill may register at most one parser; the parser receives the
+     * per-skill NBT compound (the value stored under the skill's name in the
+     * aggregate {@code skillInfo}, not the aggregate itself) and returns the
+     * skill's typed state record.
+     *
+     * <p>Replaces the pre-4.0.0 raw-NBT escape hatch.
+     * Addons that store custom state on a {@link Skill} subclass register
+     * here once at plugin enable.
+     *
+     * @throws IllegalArgumentException if a parser is already registered for
+     *         {@code skillClass} (re-registration is a programming error,
+     *         not a hot-reload feature)
+     */
+    public <S extends Skill, T extends SkillState> void registerStateParser(
+            Class<S> skillClass, Class<T> stateClass, SkillStateParser<T> parser) {
+        if (stateParsers.containsKey(skillClass)) {
+            throw new IllegalArgumentException("A SkillStateParser is already registered for " + skillClass.getName());
+        }
+        stateParsers.put(skillClass, new SkillStateBinding<>(stateClass, parser));
+    }
+
+    /**
+     * Parses {@code compound} into the typed {@link SkillState} for
+     * {@code skillClass}, or returns {@link Optional#empty()} if no parser
+     * is registered, the registered state class doesn't match
+     * {@code stateClass}, or the parser declines the compound.
+     *
+     * <p>Called from {@code StoredMyPet#skillState} on the persisted-pet
+     * branch; addons should not call this directly.
+     */
+    @SuppressWarnings("unchecked")
+    public <S extends Skill, T extends SkillState> Optional<T> parseState(
+            Class<S> skillClass, Class<T> stateClass, CompoundBinaryTag compound) {
+        SkillStateBinding<?> binding = stateParsers.get(skillClass);
+        if (binding == null || !stateClass.equals(binding.stateClass())) {
+            return Optional.empty();
+        }
+        return ((SkillStateBinding<T>) binding).parser().parse(compound);
     }
 }

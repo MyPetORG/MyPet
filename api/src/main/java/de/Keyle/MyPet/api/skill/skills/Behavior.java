@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
@@ -46,4 +47,7 @@ public interface Behavior extends Skill, Scheduler, ActiveSkill, NBTStorage {
     enum BehaviorMode {
         Normal, Friendly, Aggressive, Raid, Farm, Duel
     }
+
+    /** Snapshot of a Behavior skill's selected mode (persisted or live). */
+    record State(BehaviorMode mode) implements SkillState {}
 }

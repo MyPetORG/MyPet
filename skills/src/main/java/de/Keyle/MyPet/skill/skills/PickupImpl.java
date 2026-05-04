@@ -42,6 +42,8 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Optional;
+
 public class PickupImpl implements Pickup {
 
     protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
@@ -186,6 +188,11 @@ public class PickupImpl implements Pickup {
 
     public UpgradeComputer<Boolean> getExpPickup() {
         return expPickup;
+    }
+
+    @Override
+    public Optional<State> getState() {
+        return Optional.of(new State(pickup));
     }
 
 }

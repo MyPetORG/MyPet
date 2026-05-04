@@ -37,6 +37,8 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 /**
  * Backpack Pet Skill
  * <p>
@@ -232,5 +234,10 @@ public class BackpackImpl implements Backpack {
     public void reset() {
         rows.removeAllUpgrades();
         dropOnDeath.removeAllUpgrades();
+    }
+
+    @Override
+    public Optional<State> getState() {
+        return Optional.of(new State(inventory));
     }
 }

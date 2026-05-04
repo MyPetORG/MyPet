@@ -49,7 +49,7 @@ import java.util.Optional;
  * and partly mutable (icon, price), neither of which fits the immutable
  * {@code StoredMyPet} contract. The {@link #toPersisted(MyPetPlayer)} factory
  * replaces that round-trip with a direct construction of the record, which let
- * {@code StoredMyPet} become a sealed interface (audit finding #3).</p>
+ * {@code StoredMyPet} become a sealed interface.</p>
  */
 public class ShopMyPet {
 

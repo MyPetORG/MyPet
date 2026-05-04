@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
@@ -35,4 +36,13 @@ public interface Backpack extends Skill, NBTStorage, ActiveSkill {
     UpgradeComputer<Boolean> getDropOnDeath();
 
     UpgradeComputer<Number> getRows();
+
+    /**
+     * Snapshot of a Backpack skill's persisted or live contents. The
+     * {@link CustomInventory} is owned by the snapshot — for persisted
+     * pets it's a freshly materialized read-only view; for live pets it's
+     * the same instance the live skill exposes via {@link #getInventory()},
+     * so mutations write through.
+     */
+    record State(CustomInventory inventory) implements SkillState {}
 }

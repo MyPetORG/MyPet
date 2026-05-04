@@ -320,4 +320,9 @@ public class BehaviorImpl implements Behavior {
             setBehavior(mode);
         }
     }
+
+    @Override
+    public Optional<State> getState() {
+        return Optional.of(new State(selectedBehavior));
+    }
 }

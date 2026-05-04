@@ -674,4 +674,9 @@ public class BeaconImpl implements Beacon {
         meta.setPlayerProfile(profile);
         return meta;
     }
+
+    @Override
+    public Optional<State> getState() {
+        return Optional.of(new State(List.copyOf(selectedBuffs), active, receiver));
+    }
 }

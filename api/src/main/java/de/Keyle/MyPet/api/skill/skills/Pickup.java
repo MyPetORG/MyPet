@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.skill.skills;
 
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
@@ -33,4 +34,7 @@ public interface Pickup extends Skill, Scheduler, NBTStorage, ActiveSkill {
     UpgradeComputer<Number> getRange();
 
     UpgradeComputer<Boolean> getExpPickup();
+
+    /** Snapshot of the Pickup auto-toggle (persisted or live). */
+    record State(boolean active) implements SkillState {}
 }

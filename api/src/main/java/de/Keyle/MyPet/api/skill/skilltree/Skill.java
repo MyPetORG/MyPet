@@ -23,8 +23,11 @@ package de.Keyle.MyPet.api.skill.skilltree;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.SkillName;
+import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
+
+import java.util.Optional;
 
 public interface Skill {
 
@@ -62,4 +65,19 @@ public interface Skill {
     Component toPrettyComponent(String locale);
 
     Component[] getUpgradeMessage();
+
+    /**
+     * Returns this skill's current runtime state as a typed {@link SkillState}
+     * record, or {@link Optional#empty()} if the skill has no persisted
+     * state worth exposing (the default — most skills' behavior is fully
+     * driven by skilltree upgrade levels).
+     *
+     * <p>Implementations should construct a fresh, immutable record each
+     * call from their current fields. Used by {@code StoredMyPet#skillState}
+     * on the live-pet branch (the persisted-pet branch consults the
+     * registered {@code SkillStateParser} instead).
+     */
+    default Optional<? extends SkillState> getState() {
+        return Optional.empty();
+    }
 }

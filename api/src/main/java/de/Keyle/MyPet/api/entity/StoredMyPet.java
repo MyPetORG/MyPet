@@ -23,10 +23,15 @@ package de.Keyle.MyPet.api.entity;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.skill.SkillManager;
+import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCache;
+import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -88,4 +93,47 @@ public sealed interface StoredMyPet permits PersistedMyPet, MyPet {
     long getLastUsed();
 
     Skilltree getSkilltree();
+
+    /**
+     * Typed access to a skill's persisted or live state. Replaces the
+     * pre-4.0.0 raw {@code getSkillInfo()} blob
+     *
+     * <p>Dispatches over the sealed permits:
+     * <ul>
+     *   <li>{@link PersistedMyPet}: looks up the {@code SkillStateParser}
+     *       registered for {@code skillClass} and parses the per-skill
+     *       compound from {@code skillInfo}.</li>
+     *   <li>{@link MyPet} (live): asks the live {@link Skill} instance for
+     *       its current state via {@link Skill#getState()}.</li>
+     * </ul>
+     *
+     * <p>Returns {@link Optional#empty()} if the skill isn't registered
+     * with the pet, the skill has no state to expose, or (persisted only)
+     * no parser is registered for {@code skillClass}.
+     *
+     * @param skillClass the skill api type, e.g. {@code Backpack.class}
+     * @param stateClass the skill's nested {@code State} class — must
+     *                   match what the skill's parser / {@code getState}
+     *                   produces, otherwise returns empty
+     */
+    default <S extends Skill, T extends SkillState> Optional<T> skillState(
+            Class<S> skillClass, Class<T> stateClass) {
+        return switch (this) {
+            case PersistedMyPet p -> {
+                SkillManager mgr = MyPetApi.getSkillManager();
+                String skillName = mgr.getSkillName(skillClass);
+                if (skillName == null) yield Optional.empty();
+                CompoundBinaryTag info = p.skillInfo();
+                if (!info.keySet().contains(skillName)) yield Optional.empty();
+                yield mgr.parseState(skillClass, stateClass, info.getCompound(skillName));
+            }
+            case MyPet live -> {
+                Skill skill = live.getSkills().get(skillClass);
+                if (skill == null) yield Optional.empty();
+                yield skill.getState()
+                        .filter(stateClass::isInstance)
+                        .map(stateClass::cast);
+            }
+        };
+    }
 }
