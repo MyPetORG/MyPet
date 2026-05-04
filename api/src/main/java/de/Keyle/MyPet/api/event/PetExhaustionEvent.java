@@ -47,11 +47,11 @@ public class PetExhaustionEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
-    protected final MyPet myPet;
+    protected final MyPet pet;
     protected boolean cancelled;
 
-    public PetExhaustionEvent(MyPet myPet) {
-        this.myPet = myPet;
+    public PetExhaustionEvent(MyPet pet) {
+        this.pet = pet;
     }
 
     @SuppressWarnings("unused")
@@ -60,15 +60,15 @@ public class PetExhaustionEvent extends Event implements Cancellable {
     }
 
     public MyPet getPet() {
-        return myPet;
+        return pet;
     }
 
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
     public boolean isCancelled() {

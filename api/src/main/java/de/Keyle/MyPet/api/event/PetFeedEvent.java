@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -45,26 +46,19 @@ import org.bukkit.inventory.ItemStack;
  *       backpack or AI behavior).</li>
  * </ul>
  */
+@Getter
 public class PetFeedEvent extends PetInteractEvent {
 
     private double saturation;
     private Result result;
-    public PetFeedEvent(MyPet myPet, ItemStack item, double saturation, Result result) {
-        super(myPet, item);
+    public PetFeedEvent(MyPet pet, ItemStack item, double saturation, Result result) {
+        super(pet, item);
         this.saturation = saturation;
         this.result = result;
     }
 
-    public double getSaturation() {
-        return saturation;
-    }
-
     public void setSaturation(double saturation) {
         this.saturation = saturation;
-    }
-
-    public Result getResult() {
-        return result;
     }
 
     public void setResult(Result result) {

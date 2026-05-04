@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -53,12 +54,13 @@ import org.bukkit.event.HandlerList;
  * fires after activation completes. {@link PetRemoveEvent} is the symmetric
  * deletion event.
  */
+@Getter
 public class PetCreateEvent extends Event {
     protected static final HandlerList handlers = new HandlerList();
-    private final StoredMyPet myPet;
+    private final StoredMyPet pet;
     private final Source source;
-    public PetCreateEvent(StoredMyPet myPet, Source source) {
-        this.myPet = myPet;
+    public PetCreateEvent(StoredMyPet pet, Source source) {
+        this.pet = pet;
         this.source = source;
     }
 
@@ -67,20 +69,12 @@ public class PetCreateEvent extends Event {
         return handlers;
     }
 
-    public Source getSource() {
-        return source;
-    }
-
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
-    }
-
-    public StoredMyPet getPet() {
-        return myPet;
+        return pet.getOwner().getPlayer();
     }
 
     public HandlerList getHandlers() {

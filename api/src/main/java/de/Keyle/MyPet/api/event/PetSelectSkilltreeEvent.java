@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -55,15 +56,16 @@ import org.bukkit.event.HandlerList;
  * <p><b>Pet state:</b> may be live or persisted depending on the source —
  * {@code AdminCreation} typically fires while the pet is still inactive.
  */
+@Getter
 public class PetSelectSkilltreeEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    protected final StoredMyPet myPet;
+    protected final StoredMyPet pet;
     protected final Skilltree skilltree;
     private final Source source;
 
-    public PetSelectSkilltreeEvent(StoredMyPet myPet, Skilltree skilltree, Source source) {
-        this.myPet = myPet;
+    public PetSelectSkilltreeEvent(StoredMyPet pet, Skilltree skilltree, Source source) {
+        this.pet = pet;
         this.skilltree = skilltree;
         this.source = source;
     }
@@ -73,24 +75,12 @@ public class PetSelectSkilltreeEvent extends Event {
         return handlers;
     }
 
-    public Source getSource() {
-        return source;
-    }
-
-    public StoredMyPet getPet() {
-        return myPet;
-    }
-
-    public Skilltree getSkilltree() {
-        return skilltree;
-    }
-
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
     public HandlerList getHandlers() {

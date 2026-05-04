@@ -22,6 +22,8 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -48,15 +50,17 @@ import org.bukkit.event.HandlerList;
  * with the same can-cancel semantics. Listen here for per-item filtering and
  * to that event for per-action veto control.
  */
+@Getter
 public class PetPickupItemEvent extends Event implements Cancellable {
     protected static final HandlerList handlers = new HandlerList();
 
-    protected final MyPet myPet;
+    protected final MyPet pet;
     private final Item item;
+    @Setter
     protected boolean isCancelled = false;
 
-    public PetPickupItemEvent(MyPet myPet, Item item) {
-        this.myPet = myPet;
+    public PetPickupItemEvent(MyPet pet, Item item) {
+        this.pet = pet;
         this.item = item;
     }
 
@@ -66,27 +70,11 @@ public class PetPickupItemEvent extends Event implements Cancellable {
     }
 
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
-    }
-
-    public MyPet getPet() {
-        return myPet;
-    }
-
-    public Item getItem() {
-        return this.item;
-    }
-
-    public boolean isCancelled() {
-        return isCancelled;
-    }
-
-    public void setCancelled(boolean flag) {
-        isCancelled = flag;
+        return pet.getOwner().getPlayer();
     }
 
     public HandlerList getHandlers() {

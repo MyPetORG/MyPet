@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
+import lombok.Getter;
 
 /**
  * Fired when a pet's sit / follow toggle is about to flip. Subclass of
@@ -44,16 +45,13 @@ import de.Keyle.MyPet.api.entity.MyPet;
  * through a non-item interaction (the configured sit-action item, which is
  * checked by the caller, not stored on the event).
  */
+@Getter
 public class PetSitEvent extends PetInteractEvent {
     private Action action;
 
-    public PetSitEvent(MyPet myPet, Action action) {
-        super(myPet, null);
+    public PetSitEvent(MyPet pet, Action action) {
+        super(pet, null);
         this.action = action;
-    }
-
-    public Action getAction() {
-        return action;
     }
 
     public enum Action {

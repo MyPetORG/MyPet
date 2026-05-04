@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -49,11 +50,12 @@ import org.bukkit.event.HandlerList;
  */
 public class PetCallEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final StoredMyPet myPet;
+    @Getter
+    private final StoredMyPet pet;
     boolean isCancelled = false;
 
-    public PetCallEvent(MyPet myPet) {
-        this.myPet = myPet;
+    public PetCallEvent(MyPet pet) {
+        this.pet = pet;
     }
 
     @SuppressWarnings("unused")
@@ -61,16 +63,12 @@ public class PetCallEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public StoredMyPet getPet() {
-        return myPet;
-    }
-
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
     @Override

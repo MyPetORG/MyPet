@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -55,13 +56,14 @@ import org.bukkit.event.HandlerList;
  * work should defer it (e.g., enqueue UUID for a delayed batch) rather than
  * blocking the save loop.
  */
+@Getter
 public class PetSaveEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    private final StoredMyPet myPet;
+    private final StoredMyPet pet;
 
     public PetSaveEvent(StoredMyPet mypet) {
-        this.myPet = mypet;
+        this.pet = mypet;
     }
 
     @SuppressWarnings("unused")
@@ -69,16 +71,12 @@ public class PetSaveEvent extends Event {
         return handlers;
     }
 
-    public StoredMyPet getPet() {
-        return myPet;
-    }
-
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
     public HandlerList getHandlers() {

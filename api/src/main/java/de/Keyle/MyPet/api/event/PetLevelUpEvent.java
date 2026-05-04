@@ -49,8 +49,8 @@ public class PetLevelUpEvent extends PetLevelEvent {
     private static final HandlerList handlers = new HandlerList();
     private final int fromLevel;
 
-    public PetLevelUpEvent(MyPet myPet, int level, int fromLevel, boolean beQuiet) {
-        super(myPet, level, beQuiet);
+    public PetLevelUpEvent(MyPet pet, int level, int fromLevel, boolean beQuiet) {
+        super(pet, level, beQuiet);
         this.fromLevel = fromLevel;
     }
 

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.OnHitSkill;
+import lombok.Getter;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -53,13 +54,16 @@ import org.bukkit.event.HandlerList;
  */
 public class PetOnHitSkillEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    protected final MyPet myPet;
+    @Getter
+    protected final MyPet pet;
+    @Getter
     protected final OnHitSkill skill;
     protected boolean isCancelled = false;
+    @Getter
     protected LivingEntity target;
 
-    public PetOnHitSkillEvent(MyPet myPet, OnHitSkill skill, LivingEntity target) {
-        this.myPet = myPet;
+    public PetOnHitSkillEvent(MyPet pet, OnHitSkill skill, LivingEntity target) {
+        this.pet = pet;
         this.skill = skill;
         this.target = target;
     }
@@ -69,24 +73,12 @@ public class PetOnHitSkillEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public MyPet getPet() {
-        return myPet;
-    }
-
-    public OnHitSkill getSkill() {
-        return skill;
-    }
-
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
-    }
-
-    public LivingEntity getTarget() {
-        return target;
+        return pet.getOwner().getPlayer();
     }
 
     @Override

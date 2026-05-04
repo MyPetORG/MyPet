@@ -22,6 +22,8 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -49,17 +51,19 @@ import org.bukkit.event.HandlerList;
  * <p><b>Pet state:</b> live pet, owner online (the firing path requires the
  * owner to be tracking the pet entity).
  */
+@Getter
 public class PetDamageEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
-    protected final MyPet myPet;
+    protected final MyPet pet;
     protected final Entity target;
     protected double damage;
+    @Setter
     protected boolean cancelled;
 
-    public PetDamageEvent(MyPet myPet, Entity target, double damage) {
-        this.myPet = myPet;
+    public PetDamageEvent(MyPet pet, Entity target, double damage) {
+        this.pet = pet;
         this.target = target;
         this.damage = damage;
     }
@@ -69,36 +73,16 @@ public class PetDamageEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public MyPet getPet() {
-        return myPet;
-    }
-
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
-    }
-
-    public Entity getTarget() {
-        return target;
-    }
-
-    public double getDamage() {
-        return damage;
+        return pet.getOwner().getPlayer();
     }
 
     public void setDamage(double damage) {
         this.damage = Math.max(0, damage);
-    }
-
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    public void setCancelled(boolean b) {
-        cancelled = b;
     }
 
     public HandlerList getHandlers() {

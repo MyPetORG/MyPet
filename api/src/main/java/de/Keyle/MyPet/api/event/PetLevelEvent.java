@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -59,18 +60,20 @@ import org.bukkit.event.HandlerList;
 public class PetLevelEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyPet myPet;
+    @Getter
+    private final MyPet pet;
+    @Getter
     private final int level;
     private final boolean beQuiet;
 
-    public PetLevelEvent(MyPet myPet, int Level) {
-        this.myPet = myPet;
+    public PetLevelEvent(MyPet pet, int Level) {
+        this.pet = pet;
         this.level = Level;
         this.beQuiet = true;
     }
 
-    public PetLevelEvent(MyPet myPet, int level, boolean beQuiet) {
-        this.myPet = myPet;
+    public PetLevelEvent(MyPet pet, int level, boolean beQuiet) {
+        this.pet = pet;
         this.level = level;
         this.beQuiet = beQuiet;
     }
@@ -81,23 +84,15 @@ public class PetLevelEvent extends Event {
     }
 
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
     public boolean isQuiet() {
         return beQuiet;
-    }
-
-    public MyPet getPet() {
-        return myPet;
-    }
-
-    public int getLevel() {
-        return level;
     }
 
     public HandlerList getHandlers() {

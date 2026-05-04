@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -57,11 +58,12 @@ public class PetStatusEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    protected final StoredMyPet myPet;
+    @Getter
+    protected final StoredMyPet pet;
     protected final MyPet.PetState state;
 
-    public PetStatusEvent(MyPet myPet, MyPet.PetState state) {
-        this.myPet = myPet;
+    public PetStatusEvent(MyPet pet, MyPet.PetState state) {
+        this.pet = pet;
         this.state = state;
     }
 
@@ -70,16 +72,12 @@ public class PetStatusEvent extends Event {
         return handlers;
     }
 
-    public StoredMyPet getPet() {
-        return myPet;
-    }
-
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
     public HandlerList getHandlers() {

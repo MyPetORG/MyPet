@@ -22,6 +22,8 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -52,22 +54,25 @@ import org.bukkit.event.HandlerList;
  * <p><b>Pet state:</b> live pet (experience changes only happen on the
  * runtime).
  */
+@Getter
 public class PetExpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyPet myPet;
+    private final MyPet pet;
+    @Setter
     private boolean isCancelled = false;
+    @Setter
     private double exp;
     private boolean quiet;
 
-    public PetExpEvent(MyPet myPet, double exp, boolean quiet) {
-        this.myPet = myPet;
+    public PetExpEvent(MyPet pet, double exp, boolean quiet) {
+        this.pet = pet;
         this.exp = exp;
         this.quiet = quiet;
     }
 
-    public PetExpEvent(MyPet myPet, double exp) {
-        this(myPet, exp, false);
+    public PetExpEvent(MyPet pet, double exp) {
+        this(pet, exp, false);
     }
 
     @SuppressWarnings("unused")
@@ -76,35 +81,11 @@ public class PetExpEvent extends Event implements Cancellable {
     }
 
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
-    }
-
-    public MyPet getPet() {
-        return myPet;
-    }
-
-    public double getExp() {
-        return exp;
-    }
-
-    public void setExp(double exp) {
-        this.exp = exp;
-    }
-
-    public boolean isQuiet() {
-        return quiet;
-    }
-
-    public boolean isCancelled() {
-        return isCancelled;
-    }
-
-    public void setCancelled(boolean flag) {
-        isCancelled = flag;
+        return pet.getOwner().getPlayer();
     }
 
     public HandlerList getHandlers() {

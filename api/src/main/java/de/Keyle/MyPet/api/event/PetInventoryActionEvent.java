@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -58,11 +59,12 @@ import org.bukkit.event.HandlerList;
  */
 public class PetInventoryActionEvent extends Event implements Cancellable {
     protected static final HandlerList handlers = new HandlerList();
-    protected final MyPet myPet;
+    protected final MyPet pet;
+    @Setter
     protected boolean isCancelled = false;
     protected Action action;
-    public PetInventoryActionEvent(MyPet myPet, Action action) {
-        this.myPet = myPet;
+    public PetInventoryActionEvent(MyPet pet, Action action) {
+        this.pet = pet;
         this.action = action;
     }
 
@@ -72,15 +74,15 @@ public class PetInventoryActionEvent extends Event implements Cancellable {
     }
 
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
     public MyPet getPet() {
-        return myPet;
+        return pet;
     }
 
     public Action getAction() {
@@ -89,10 +91,6 @@ public class PetInventoryActionEvent extends Event implements Cancellable {
 
     public boolean isCancelled() {
         return isCancelled;
-    }
-
-    public void setCancelled(boolean flag) {
-        isCancelled = flag;
     }
 
     public HandlerList getHandlers() {

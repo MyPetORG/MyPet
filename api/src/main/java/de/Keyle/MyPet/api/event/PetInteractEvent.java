@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
+import lombok.Getter;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -47,20 +48,17 @@ import org.bukkit.inventory.ItemStack;
  */
 public class PetInteractEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final StoredMyPet myPet;
+    @Getter
+    private final StoredMyPet pet;
     boolean isCancelled = false;
 
-    public PetInteractEvent(MyPet myPet, ItemStack item) {
-        this.myPet = myPet;
+    public PetInteractEvent(MyPet pet, ItemStack item) {
+        this.pet = pet;
     }
 
     @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {
         return handlers;
-    }
-
-    public StoredMyPet getPet() {
-        return myPet;
     }
 
     @Override

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -47,14 +48,15 @@ import org.bukkit.event.HandlerList;
  * (before any wiring happens, while the pet is still a {@code StoredMyPet}).
  * {@link PetCallEvent} can fire afterward when the owner spawns the pet entity.
  */
+@Getter
 public class PetActivatedEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyPet myPet;
+    private final MyPet pet;
 
     public PetActivatedEvent(MyPet mypet) {
-        this.myPet = mypet;
+        this.pet = mypet;
     }
 
     @SuppressWarnings("unused")
@@ -62,16 +64,12 @@ public class PetActivatedEvent extends Event {
         return handlers;
     }
 
-    public MyPet getPet() {
-        return myPet;
-    }
-
     public MyPetPlayer getOwner() {
-        return myPet.getOwner();
+        return pet.getOwner();
     }
 
     public Player getPlayer() {
-        return myPet.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
     public HandlerList getHandlers() {
