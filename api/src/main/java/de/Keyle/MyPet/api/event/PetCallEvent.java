@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -44,14 +43,13 @@ import org.bukkit.event.HandlerList;
  * region-based call restrictions (WorldGuard / Towny integrations) and per-pet
  * cooldown enforcement.
  *
- * <p><b>Pet state:</b> {@link #getPet()} returns a {@link StoredMyPet} but is
- * always concretely a live {@link MyPet} — the constructor takes {@code MyPet}.
- * The widened return type is historical.
+ * <p><b>Pet state:</b> always a live {@link MyPet} — the pet is active but
+ * its world entity has not yet been spawned.
  */
 public class PetCallEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    private final StoredMyPet pet;
+    private final MyPet pet;
     boolean isCancelled = false;
 
     public PetCallEvent(MyPet pet) {

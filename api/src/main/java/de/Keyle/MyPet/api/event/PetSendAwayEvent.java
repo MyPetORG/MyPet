@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -46,14 +45,13 @@ import org.bukkit.event.HandlerList;
  * {@link #getPet()} continues to refer to a live {@link MyPet} until its
  * owner logs out (the periodic save flushes it back to persisted form).
  *
- * <p><b>Pet exposure:</b> {@link #getPet()} returns {@link StoredMyPet} but
- * is always concretely a live {@link MyPet} — the constructor takes
- * {@code MyPet}. The widened return type is historical.
+ * <p><b>Pet exposure:</b> always a live {@link MyPet} — the pet is active
+ * and its world entity is about to be despawned.
  */
 public class PetSendAwayEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    private final StoredMyPet pet;
+    private final MyPet pet;
     boolean isCancelled = false;
 
     public PetSendAwayEvent(MyPet pet) {
