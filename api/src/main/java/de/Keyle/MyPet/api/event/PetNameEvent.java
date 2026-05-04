@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.MyPet;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -38,9 +39,8 @@ import org.bukkit.event.HandlerList;
  * {@link #getNewName()} at the end of the event dispatch, so listeners that
  * mutate it later in the chain win over earlier ones.
  *
- * <p><b>Not cancellable:</b> there is no {@code Cancellable} on this event.
- * To suppress a rename, set {@code newName} back to the pet's current name
- * via {@code event.setNewName(event.getPet().getPetName())}.
+ * <p><b>Cancellable:</b> cancellation suppresses the rename entirely — the
+ * pet keeps its current name.
  *
  * <p><b>Pet state:</b> live pet (name changes only happen on active pets).
  *
@@ -49,7 +49,7 @@ import org.bukkit.event.HandlerList;
  * the sanitized MiniMessage parser. Listeners modifying the name should
  * preserve MiniMessage syntax.
  */
-public class PetNameEvent extends Event {
+public class PetNameEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     @Getter
@@ -57,6 +57,9 @@ public class PetNameEvent extends Event {
     @Getter
     @Setter
     private String newName;
+    @Getter
+    @Setter
+    private boolean cancelled;
 
     public PetNameEvent(MyPet pet, String newName) {
         this.pet = pet;

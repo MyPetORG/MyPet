@@ -618,6 +618,9 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         if (!this.petName.equals(newName)) {
             PetNameEvent event = new PetNameEvent(this, newName);
             Bukkit.getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return;
+            }
             newName = event.getNewName();
         }
         this.petName = newName;
