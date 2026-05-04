@@ -52,7 +52,7 @@ import org.bukkit.event.HandlerList;
  */
 @Getter
 public class PetPickupItemEvent extends Event implements Cancellable {
-    protected static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     protected final MyPet pet;
     private final Item item;
@@ -64,11 +64,6 @@ public class PetPickupItemEvent extends Event implements Cancellable {
         this.item = item;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -77,6 +72,11 @@ public class PetPickupItemEvent extends Event implements Cancellable {
         return pet.getOwner().getPlayer();
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

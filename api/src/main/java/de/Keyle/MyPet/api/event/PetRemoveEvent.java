@@ -56,17 +56,12 @@ import org.bukkit.event.HandlerList;
  */
 @Getter
 public class PetRemoveEvent extends Event {
-    protected static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private final StoredMyPet pet;
     private final Source source;
     public PetRemoveEvent(StoredMyPet pet, Source source) {
         this.pet = pet;
         this.source = source;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -77,11 +72,16 @@ public class PetRemoveEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
-    public HandlerList getHandlers() {
+    public enum Source {
+        Release, Death, AdminCommand, Other
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public enum Source {
-        Release, Death, AdminCommand, Other
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 }

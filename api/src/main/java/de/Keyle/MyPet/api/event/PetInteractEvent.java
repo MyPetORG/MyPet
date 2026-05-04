@@ -56,11 +56,6 @@ public class PetInteractEvent extends Event implements Cancellable {
         this.pet = pet;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
     public boolean isCancelled() {
         return isCancelled;
@@ -71,6 +66,11 @@ public class PetInteractEvent extends Event implements Cancellable {
         isCancelled = cancelled;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

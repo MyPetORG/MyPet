@@ -50,7 +50,6 @@ import org.bukkit.event.HandlerList;
  * preserve MiniMessage syntax.
  */
 public class PetNameEvent extends Event {
-
     private static final HandlerList handlers = new HandlerList();
 
     @Getter
@@ -64,11 +63,11 @@ public class PetNameEvent extends Event {
         this.newName = newName;
     }
 
-    @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

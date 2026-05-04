@@ -50,18 +50,12 @@ import org.bukkit.event.HandlerList;
  */
 @Getter
 public class PetActivatedEvent extends Event {
-
     private static final HandlerList handlers = new HandlerList();
 
     private final MyPet pet;
 
     public PetActivatedEvent(MyPet mypet) {
         this.pet = mypet;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -72,6 +66,11 @@ public class PetActivatedEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

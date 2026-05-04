@@ -55,7 +55,6 @@ import org.bukkit.event.HandlerList;
  * the pet is configured to delete on death.
  */
 public class PetStatusEvent extends Event {
-
     private static final HandlerList handlers = new HandlerList();
 
     @Getter
@@ -67,11 +66,6 @@ public class PetStatusEvent extends Event {
         this.state = state;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -80,6 +74,11 @@ public class PetStatusEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

@@ -53,7 +53,6 @@ import org.bukkit.event.HandlerList;
  */
 @Getter
 public class PetDamageEvent extends Event implements Cancellable {
-
     private static final HandlerList handlers = new HandlerList();
 
     protected final MyPet pet;
@@ -68,11 +67,6 @@ public class PetDamageEvent extends Event implements Cancellable {
         this.damage = damage;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -85,6 +79,11 @@ public class PetDamageEvent extends Event implements Cancellable {
         this.damage = Math.max(0, damage);
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

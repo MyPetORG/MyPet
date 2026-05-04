@@ -44,7 +44,6 @@ import org.bukkit.event.HandlerList;
  * <p><b>Pet state:</b> live pet; owner online
  */
 public class PetExhaustionEvent extends Event implements Cancellable {
-
     private static final HandlerList handlers = new HandlerList();
 
     protected final MyPet pet;
@@ -52,11 +51,6 @@ public class PetExhaustionEvent extends Event implements Cancellable {
 
     public PetExhaustionEvent(MyPet pet) {
         this.pet = pet;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public MyPet getPet() {
@@ -79,6 +73,11 @@ public class PetExhaustionEvent extends Event implements Cancellable {
         cancelled = b;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

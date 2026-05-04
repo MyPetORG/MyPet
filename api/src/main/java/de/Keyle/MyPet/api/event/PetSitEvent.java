@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import lombok.Getter;
+import org.bukkit.event.HandlerList;
 
 /**
  * Fired when a pet's sit / follow toggle is about to flip. Subclass of
@@ -47,6 +48,8 @@ import lombok.Getter;
  */
 @Getter
 public class PetSitEvent extends PetInteractEvent {
+    private static final HandlerList handlers = new HandlerList();
+
     private Action action;
 
     public PetSitEvent(MyPet pet, Action action) {
@@ -56,5 +59,14 @@ public class PetSitEvent extends PetInteractEvent {
 
     public enum Action {
         Stay, Follow
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 }

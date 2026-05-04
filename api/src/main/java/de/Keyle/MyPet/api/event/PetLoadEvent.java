@@ -59,11 +59,6 @@ public class PetLoadEvent extends Event {
         this.pet = mypet;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -72,6 +67,11 @@ public class PetLoadEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

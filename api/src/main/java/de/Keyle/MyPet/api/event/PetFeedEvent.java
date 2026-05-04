@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import lombok.Getter;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -48,6 +49,7 @@ import org.bukkit.inventory.ItemStack;
  */
 @Getter
 public class PetFeedEvent extends PetInteractEvent {
+    private static final HandlerList handlers = new HandlerList();
 
     private double saturation;
     private Result result;
@@ -67,5 +69,14 @@ public class PetFeedEvent extends PetInteractEvent {
 
     public enum Result {
         Heal, Eat, Self_Feed
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 }

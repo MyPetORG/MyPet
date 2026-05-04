@@ -58,7 +58,7 @@ import org.bukkit.event.HandlerList;
  * per-item filtering, and to this event for per-action veto control.
  */
 public class PetInventoryActionEvent extends Event implements Cancellable {
-    protected static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     protected final MyPet pet;
     @Setter
     protected boolean isCancelled = false;
@@ -66,11 +66,6 @@ public class PetInventoryActionEvent extends Event implements Cancellable {
     public PetInventoryActionEvent(MyPet pet, Action action) {
         this.pet = pet;
         this.action = action;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -93,11 +88,16 @@ public class PetInventoryActionEvent extends Event implements Cancellable {
         return isCancelled;
     }
 
-    public HandlerList getHandlers() {
+    public enum Action {
+        Open, Pickup, Use
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public enum Action {
-        Open, Pickup, Use
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 }

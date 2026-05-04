@@ -68,11 +68,6 @@ public class PetOnHitSkillEvent extends Event implements Cancellable {
         this.target = target;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -91,6 +86,11 @@ public class PetOnHitSkillEvent extends Event implements Cancellable {
         isCancelled = cancelled;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

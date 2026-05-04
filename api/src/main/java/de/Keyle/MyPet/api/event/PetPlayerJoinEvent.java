@@ -49,15 +49,15 @@ public class PetPlayerJoinEvent extends Event {
         this.myPetPlayer = myPetPlayer;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public MyPetPlayer getPlayer() {
         return myPetPlayer;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

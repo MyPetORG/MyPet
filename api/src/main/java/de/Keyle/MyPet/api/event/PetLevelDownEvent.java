@@ -43,15 +43,15 @@ public class PetLevelDownEvent extends PetLevelEvent {
         this.fromLevel = fromLevel;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public int fromLevel() {
         return fromLevel;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

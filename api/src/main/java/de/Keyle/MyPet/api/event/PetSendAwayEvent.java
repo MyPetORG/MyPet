@@ -51,7 +51,6 @@ import org.bukkit.event.HandlerList;
  * {@code MyPet}. The widened return type is historical.
  */
 public class PetSendAwayEvent extends Event implements Cancellable {
-
     private static final HandlerList handlers = new HandlerList();
     @Getter
     private final StoredMyPet pet;
@@ -59,11 +58,6 @@ public class PetSendAwayEvent extends Event implements Cancellable {
 
     public PetSendAwayEvent(MyPet pet) {
         this.pet = pet;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -84,6 +78,11 @@ public class PetSendAwayEvent extends Event implements Cancellable {
         isCancelled = cancelled;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

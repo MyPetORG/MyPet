@@ -70,11 +70,6 @@ public class PetSelectSkilltreeEvent extends Event {
         this.source = source;
     }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -83,11 +78,16 @@ public class PetSelectSkilltreeEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
-    public HandlerList getHandlers() {
+    public enum Source {
+        Auto, PlayerCommand, AdminCommand, AdminCreation, BossShopPro, Shop, Other
+    }
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public enum Source {
-        Auto, PlayerCommand, AdminCommand, AdminCreation, BossShopPro, Shop, Other
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 }
