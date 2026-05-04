@@ -41,7 +41,6 @@ public final class BuiltInHooks {
             PlaceholderApiHook.class,
             PlotSquaredHook.class,
             PremiumVanishHook.class,
-            ProtocolLibHook.class,
             PvPArenaHook.class,
             PvPManagerHook.class,
             RedProtectHook.class,

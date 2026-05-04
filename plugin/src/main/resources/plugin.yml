@@ -33,7 +33,6 @@ softdepend:
   - PlaceholderAPI
   - PlotSquared
   - PremiumVanish
-  - ProtocolLib
   - pvparena
   - PvPManager
   - RedProtect
