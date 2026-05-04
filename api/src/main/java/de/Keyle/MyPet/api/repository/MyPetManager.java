@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -61,6 +62,15 @@ public abstract class MyPetManager {
      */
     public MyPet getMyPetFromEntity(Entity entity) {
         if (entity == null) return null;
+        // Sub-parts of a ComplexLivingEntity (EnderDragon head/neck/body/tail/
+        // wings) carry their own entity ID and UUID server-side. The PDC marker
+        // and the active-pet UUID match the parent only — resolve so callers
+        // (interaction listeners, AI goals, third-party hooks) work without
+        // ProtocolLib's USE_ENTITY rewrite.
+        if (entity instanceof ComplexEntityPart part) {
+            entity = part.getParent();
+            if (entity == null) return null;
+        }
         NamespacedKey markerKey = new NamespacedKey("mypet", "pet");
         if (!entity.getPersistentDataContainer().has(markerKey,
                 PersistentDataType.BYTE)) {

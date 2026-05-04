@@ -1,6 +1,7 @@
 package de.Keyle.MyPet.entity.spawn;
 
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.persistence.PersistentDataType;
@@ -24,6 +25,14 @@ public final class PetEntityMarker {
     }
 
     public static boolean isMarked(Entity entity) {
+        // Sub-parts of a ComplexLivingEntity (EnderDragon head/neck/body/tail/
+        // wings) carry their own entity ID server-side. PlayerInteractEntityEvent
+        // and friends fire with the part as the clicked entity, but the PDC
+        // marker is set on the parent only — resolve so callers don't need to
+        // know about parts.
+        if (entity instanceof ComplexEntityPart part) {
+            entity = part.getParent();
+        }
         return entity != null && entity.getPersistentDataContainer().has(KEY, PersistentDataType.BYTE);
     }
 }

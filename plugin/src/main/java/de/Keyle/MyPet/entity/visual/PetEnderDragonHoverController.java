@@ -56,8 +56,14 @@ public final class PetEnderDragonHoverController {
 
     private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
 
-    /** Hover this many blocks above the owner so the dragon doesn't crush them. */
-    private static final double HOVER_HEIGHT = 6.0;
+    /**
+     * Vertical offset (in blocks) between the owner's feet and the dragon's
+     * feet. Bukkit positions entities by their bounding-box bottom, so this is
+     * the visible empty-air gap. Capped at 3 so the dragon's nearest sub-part
+     * stays within survival reach (eye height ~1.62 + reach ~3 = 4.62 blocks
+     * above feet) for right-click interactions like the Ride-skill mount.
+     */
+    private static final double HOVER_HEIGHT = 3.75;
 
     /** Squared distance from desired pose below which we stop nudging. */
     private static final double SETTLE_DISTANCE_SQ = 1.0; // 1 block
@@ -105,6 +111,11 @@ public final class PetEnderDragonHoverController {
         if (!owner.getWorld().equals(dragon.getWorld())) return;
         if (!pet.canMove()) return;
         if (pet.getMyPetTarget() != null && !pet.getMyPetTarget().isDead()) return;
+        // Skip while ridden — the rider IS the owner, so owner.getLocation() is
+        // on the dragon. Targeting "HOVER_HEIGHT above owner" each tick would
+        // make the dragon climb forever. RideSkillFlightController takes over
+        // movement once the player mounts.
+        if (!dragon.getPassengers().isEmpty()) return;
 
         Location ownerLoc = owner.getLocation();
         Location dragonLoc = dragon.getLocation();
