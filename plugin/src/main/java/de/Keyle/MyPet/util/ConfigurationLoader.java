@@ -290,6 +290,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Creeper.AllowExplosionBlockDamage", MyPet.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE);
         config.addDefault("MyPet.Pets.Creeper.AllowExplosionEntityDamage", MyPet.Creeper.ALLOW_EXPLOSION_ENTITY_DAMAGE);
         config.addDefault("MyPet.Pets.EnderDragon.GrantEndAdvancementOnKill", MyPet.EnderDragon.GRANT_END_ADVANCEMENT_ON_KILL);
+        config.addDefault("MyPet.Pets.EnderDragon.AllowBlockDamage", MyPet.EnderDragon.ALLOW_BLOCK_DAMAGE);
         config.addDefault("MyPet.Pets.Goat.CanDropHorn", MyPet.Goat.CAN_DROP_HORN);
         config.addDefault("MyPet.Pets.Goat.CanGiveMilk", MyPet.Goat.CAN_GIVE_MILK);
         config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
@@ -486,6 +487,7 @@ public class ConfigurationLoader {
         MyPet.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE = config.getBoolean("MyPet.Pets.Creeper.AllowExplosionBlockDamage", false);
         MyPet.Creeper.ALLOW_EXPLOSION_ENTITY_DAMAGE = config.getBoolean("MyPet.Pets.Creeper.AllowExplosionEntityDamage", false);
         MyPet.EnderDragon.GRANT_END_ADVANCEMENT_ON_KILL = config.getBoolean("MyPet.Pets.EnderDragon.GrantEndAdvancementOnKill", false);
+        MyPet.EnderDragon.ALLOW_BLOCK_DAMAGE = config.getBoolean("MyPet.Pets.EnderDragon.AllowBlockDamage", false);
         MyPet.Goat.CAN_DROP_HORN = config.getBoolean("MyPet.Pets.Goat.CanDropHorn", true);
         MyPet.Goat.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Goat.CanGiveMilk", true);
         MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);

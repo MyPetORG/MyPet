@@ -340,6 +340,16 @@ public class Configuration {
              * boss kills.
              */
             public static boolean GRANT_END_ADVANCEMENT_ON_KILL = false;
+
+            /**
+             * If {@code true}, the pet EnderDragon may destroy non-immune blocks
+             * its body brushes against, matching vanilla. If {@code false},
+             * {@code PetEnderDragonBlockDamageListener} cancels the
+             * {@code EntityExplodeEvent} that Paper's patched
+             * {@code EnderDragon#checkWalls} fires for brush destruction, so
+             * the dragon never removes any block. Default {@code false}.
+             */
+            public static boolean ALLOW_BLOCK_DAMAGE = false;
         }
 
         public static class Goat {
