@@ -5,6 +5,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Input;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -66,6 +67,11 @@ public class RideSkillFlightController {
         Mob mob = pet.getBukkitEntity();
         if (mob == null || mob.isDead()) return;
         if (mob.getPassengers().isEmpty()) return;
+        // EnderDragon's vanilla aiStep applies ~0.8 horizontal friction to
+        // setVelocity calls every tick, so velocity-based control feels
+        // unresponsive. PetEnderDragonHoverController owns dragon ride
+        // movement via teleport, which overrides aiStep cleanly.
+        if (mob instanceof EnderDragon) return;
 
         Entity passenger = mob.getPassengers().get(0);
         if (!(passenger instanceof Player rider)) return;

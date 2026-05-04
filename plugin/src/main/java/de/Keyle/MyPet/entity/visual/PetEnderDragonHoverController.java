@@ -2,9 +2,12 @@ package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.skill.skills.Ride;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import org.bukkit.Input;
 import org.bukkit.Location;
 import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -74,6 +77,12 @@ public final class PetEnderDragonHoverController {
     /** Per-tick lerp step toward the desired pose (blocks/tick). */
     private static final double LERP_STEP = 0.6;
 
+    /** Base per-tick teleport step while ridden, before Ride-skill speed bonus. */
+    private static final double RIDE_BASE_STEP = 0.6;
+
+    /** Vertical step (blocks/tick) when the rider holds jump/sneak while flying. */
+    private static final double RIDE_VERTICAL_STEP = 0.5;
+
     private PetEnderDragonHoverController() {
     }
 
@@ -111,11 +120,15 @@ public final class PetEnderDragonHoverController {
         if (!owner.getWorld().equals(dragon.getWorld())) return;
         if (!pet.canMove()) return;
         if (pet.getMyPetTarget() != null && !pet.getMyPetTarget().isDead()) return;
-        // Skip while ridden — the rider IS the owner, so owner.getLocation() is
-        // on the dragon. Targeting "HOVER_HEIGHT above owner" each tick would
-        // make the dragon climb forever. RideSkillFlightController takes over
-        // movement once the player mounts.
-        if (!dragon.getPassengers().isEmpty()) return;
+
+        // Branch on passenger presence. While ridden, the rider's location is
+        // ON the dragon, so the follow logic ("teleport to HOVER_HEIGHT above
+        // owner") would jet the dragon endlessly skyward. We instead drive
+        // movement from the rider's WASD/jump/sneak input — see tickRide.
+        if (!dragon.getPassengers().isEmpty()) {
+            tickRide(dragon, pet);
+            return;
+        }
 
         Location ownerLoc = owner.getLocation();
         Location dragonLoc = dragon.getLocation();
@@ -147,6 +160,84 @@ public final class PetEnderDragonHoverController {
             next.setYaw(dragonLoc.getYaw());
             next.setPitch(dragonLoc.getPitch());
         }
+
+        dragon.teleportAsync(next);
+    }
+
+    /**
+     * Drives the dragon while ridden. Translates rider WASD/jump/sneak input
+     * into a per-tick teleport. Yaw is set to {@code riderYaw + 180} to match
+     * the EnderDragon model's reversed forward axis (same convention as the
+     * follow path's {@code setDirection(toOwner.multiply(-1))}). Pitch on the
+     * dragon is forced flat — the rider's pitch instead steers vertical
+     * movement of the body so looking up climbs and looking down dives.
+     *
+     * <p>{@code RideSkillFlightController} skips EnderDragons because its
+     * {@code setVelocity} approach is damped by EnderDragon's vanilla aiStep
+     * friction (~0.8/tick). Teleport sidesteps that.
+     */
+    private static void tickRide(EnderDragon dragon, MyPet pet) {
+        Entity passenger = dragon.getPassengers().get(0);
+        if (!(passenger instanceof Player rider)) return;
+
+        Ride rideSkill;
+        try {
+            rideSkill = pet.getSkills().get(Ride.class);
+        } catch (Throwable t) {
+            return;
+        }
+        if (rideSkill == null) return;
+        if (rideSkill.getActive() == null || rideSkill.getActive().getValue() == null
+                || !rideSkill.getActive().getValue()) {
+            return;
+        }
+
+        Input input;
+        try {
+            input = rider.getCurrentInput();
+        } catch (Throwable t) {
+            return;
+        }
+        if (input == null) return;
+
+        int speedIncrease = rideSkill.getSpeedIncrease() != null
+                && rideSkill.getSpeedIncrease().getValue() != null
+                ? rideSkill.getSpeedIncrease().getValue() : 0;
+        double step = RIDE_BASE_STEP * (1.0 + speedIncrease / 100.0);
+
+        float yaw = rider.getLocation().getYaw();
+        float pitch = rider.getLocation().getPitch();
+
+        // Local input axes: fx = forward/back, fz = strafe.
+        double fx = 0;
+        double fz = 0;
+        if (input.isForward()) fx += 1;
+        if (input.isBackward()) fx -= 0.5;
+        if (input.isLeft()) fz -= 0.5;
+        if (input.isRight()) fz += 0.5;
+
+        double radYaw = Math.toRadians(yaw);
+        double radPitch = Math.toRadians(pitch);
+
+        // Forward vector includes pitch so look-up climbs, look-down dives.
+        // Bukkit yaw=0 → +Z, but EnderDragon's "forward" is -Z; we apply the
+        // 180° rotation to the model only (setYaw below), keeping the world
+        // movement aligned with the rider's facing.
+        double cosPitch = Math.cos(radPitch);
+        double horizontalForward = fx * cosPitch;
+        double verticalForward = -fx * Math.sin(radPitch);
+
+        double worldX = -Math.sin(radYaw) * horizontalForward - Math.cos(radYaw) * fz;
+        double worldZ = Math.cos(radYaw) * horizontalForward - Math.sin(radYaw) * fz;
+        double worldY = verticalForward;
+
+        if (input.isJump()) worldY += RIDE_VERTICAL_STEP / step;
+        if (input.isSneak()) worldY -= RIDE_VERTICAL_STEP / step;
+
+        Location next = dragon.getLocation();
+        next.add(worldX * step, worldY * step, worldZ * step);
+        next.setYaw(yaw + 180);
+        next.setPitch(0);
 
         dragon.teleportAsync(next);
     }
