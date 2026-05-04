@@ -36,13 +36,7 @@ import org.bukkit.event.HandlerList;
  * <p>Fires from {@code MyPet#updateStatus} once per state transition.
  *
  * <p><b>Not cancellable:</b> the status change is already applied when this
- * event fires.
- *
- * <p><b>API gap:</b> the new status is captured in the constructor but not
- * exposed via a getter — listeners cannot read which state was entered. The
- * field is package-private (protected) and unused by the api itself. Until
- * this is remedied (see audit), the only practical use of the event is "some
- * status changed; I'll re-read it from {@link MyPet#getStatus()}".
+ * event fires. Read the new state via {@link #getState()}.
  *
  * <p><b>Pet state:</b> live pet (status transitions only happen on the live
  * runtime).
@@ -59,6 +53,7 @@ public class PetStatusEvent extends Event {
 
     @Getter
     protected final StoredMyPet pet;
+    @Getter
     protected final MyPet.PetState state;
 
     public PetStatusEvent(MyPet pet, MyPet.PetState state) {
