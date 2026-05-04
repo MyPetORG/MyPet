@@ -350,6 +350,25 @@ public class Configuration {
              * the dragon never removes any block. Default {@code false}.
              */
             public static boolean ALLOW_BLOCK_DAMAGE = false;
+
+            /**
+             * If {@code true}, the pet EnderDragon may damage non-owner players
+             * via direct body contact (vanilla {@code attackTargets} damage).
+             * The owner is universally protected (handled by other listeners).
+             * Default {@code false}.
+             */
+            public static boolean ALLOW_PLAYER_CONTACT_DAMAGE = false;
+
+            /**
+             * If {@code true}, the pet EnderDragon may damage non-player entities
+             * (mobs, item entities) via direct body contact. Default {@code false}.
+             *
+             * <p>Independent of {@link #ALLOW_PLAYER_CONTACT_DAMAGE} — modern
+             * Paper fires {@link org.bukkit.event.entity.EntityDamageByEntityEvent}
+             * once per victim, so a single listener can split the decision by
+             * inspecting {@code event.getEntity()}.
+             */
+            public static boolean ALLOW_ENTITY_CONTACT_DAMAGE = false;
         }
 
         public static class Goat {
