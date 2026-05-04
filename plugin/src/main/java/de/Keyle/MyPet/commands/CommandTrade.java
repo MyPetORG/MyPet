@@ -193,10 +193,7 @@ public class CommandTrade {
                 final String worldGroup = offer.pet().getWorldGroup();
 
                 MyPetApi.getMyPetManager().deactivateMyPet(oldOwner, false);
-                // Cast safe per the contract on MyPetManager#getInactiveMyPetFromMyPet — the abstract
-                // method's return is StoredMyPet for module-layering reasons, but every concrete
-                // implementation returns a PersistedMyPet.
-                final PersistedMyPet originalPet = (PersistedMyPet) MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(offer.pet());
+                final PersistedMyPet originalPet = MyPetApi.getMyPetManager().snapshot(offer.pet());
 
                 final Repository repo = MyPetPlugin.getInstance().getRepository();
                 repo.removePet(originalPet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {

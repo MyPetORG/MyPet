@@ -62,7 +62,7 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
     // Inactive -----------------------------------------------------------------
 
     @Override
-    public PersistedMyPet getInactiveMyPetFromMyPet(StoredMyPet myPet) {
+    public PersistedMyPet snapshot(MyPet myPet) {
         return PersistedMyPet.builder(myPet.getOwner())
                 .uuid(myPet.getUUID())
                 .petType(myPet.getPetType())

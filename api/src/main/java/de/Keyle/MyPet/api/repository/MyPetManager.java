@@ -24,6 +24,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.NamespacedKey;
@@ -109,13 +110,15 @@ public abstract class MyPetManager {
     // Inactive -----------------------------------------------------------------
 
     /**
-     * Snapshot a pet's current state into a fresh {@link StoredMyPet}, suitable
-     * for hand-off across an active/inactive boundary (deactivation, trade,
-     * shop purchase, admin clone). Concrete return is the immutable
-     * {@code PersistedMyPet} record; callers needing to tweak fields after
-     * the fact should use its {@code withX} methods or {@code toBuilder}.
+     * Returns an immutable point-in-time snapshot of an active pet, suitable for
+     * hand-off across an active/inactive boundary (deactivation, trade, admin
+     * clone). Callers needing to tweak fields after the fact should use the
+     * record's {@code withX} methods or {@code toBuilder}.
+     *
+     * @param activePet the live pet to snapshot
+     * @return an immutable record carrying the pet's persistent fields
      */
-    public abstract StoredMyPet getInactiveMyPetFromMyPet(StoredMyPet storedMyPet);
+    public abstract PersistedMyPet snapshot(MyPet activePet);
 
     // All ----------------------------------------------------------------------
 
