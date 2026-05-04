@@ -22,10 +22,10 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.event.PetLevelEvent;
-import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.api.event.PetLevelDownEvent;
 import de.Keyle.MyPet.api.event.PetLevelUpEvent;
+import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
@@ -174,16 +174,15 @@ public class LevelListener implements Listener {
     }
 
     @EventHandler
-    public void on(PetLevelEvent event) {
-        if (event instanceof PetLevelUpEvent || event instanceof PetLevelDownEvent) {
+    public void on(PetSelectSkilltreeEvent event) {
+        if (!(event.getPet() instanceof MyPet myPet)) {
             return;
         }
-        MyPet myPet = event.getPet();
-        int lvl = event.getLevel();
+        int lvl = myPet.getExperience().getLevel();
 
         myPet.getSkills().all().forEach(Skill::reset);
 
-        Skilltree skilltree = myPet.getSkilltree();
+        Skilltree skilltree = event.getSkilltree();
         if (skilltree != null) {
             for (int i = 1; i <= lvl; i++) {
                 List<Upgrade<?>> upgrades = skilltree.getUpgrades(i);

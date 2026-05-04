@@ -1097,22 +1097,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             return false;
         }
         this.skilltree = skilltree;
-        getServer().getPluginManager().callEvent(new PetLevelEvent(this, experience.getLevel()));
         PetSelectSkilltreeEvent selectEvent = new PetSelectSkilltreeEvent(this, skilltree, source);
         Bukkit.getServer().getPluginManager().callEvent(selectEvent);
         return true;
     }
 
     public boolean setSkilltree(Skilltree skilltree) {
-        if (skilltree == null || this.skilltree == skilltree) {
-            return false;
-        }
-        if (skilltree.getRequiredLevel() > 1 && getExperience().getLevel() < skilltree.getRequiredLevel()) {
-            return false;
-        }
-        this.skilltree = skilltree;
-        getServer().getPluginManager().callEvent(new PetLevelEvent(this, experience.getLevel()));
-        return true;
+        return setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.Other);
     }
 
     public void trySelfFeeding() {

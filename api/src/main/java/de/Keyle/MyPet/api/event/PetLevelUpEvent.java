@@ -39,11 +39,6 @@ import org.bukkit.event.HandlerList;
  *
  * <p><b>Quiet flag:</b> inherited from {@link PetLevelEvent} — propagated
  * from the originating {@link PetExpEvent} via the experience updater.
- *
- * <p><b>Note:</b> the parent {@link PetLevelEvent} is also fired separately
- * from the {@code setSkilltree} path with the current (unchanged) level. If
- * you only care about real level transitions, listen for this subclass and
- * {@link PetLevelDownEvent} rather than the base event.
  */
 public class PetLevelUpEvent extends PetLevelEvent {
     private static final HandlerList handlers = new HandlerList();
