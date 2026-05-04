@@ -30,7 +30,7 @@ import org.bukkit.event.HandlerList;
 /**
  * Fired when the repository hands a stored pet to {@code MyPetManager} for
  * activation — i.e., just before the manager wires it up as a live
- * {@link MyPet}. The pet exposed via {@link #getMyPet()} is still a
+ * {@link MyPet}. The pet exposed via {@link #getPet()} is still a
  * {@link StoredMyPet} (concretely a {@code PersistedMyPet} record); skills
  * have not yet been instantiated.
  *
@@ -62,7 +62,7 @@ public class PetLoadEvent extends Event {
         return handlers;
     }
 
-    public StoredMyPet getMyPet() {
+    public StoredMyPet getPet() {
         return myPet;
     }
 

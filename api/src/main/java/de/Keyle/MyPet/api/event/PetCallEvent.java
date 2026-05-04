@@ -33,7 +33,7 @@ import org.bukkit.event.HandlerList;
  * pet — i.e. {@code /mypet call} or any equivalent call to {@code MyPet#createEntity}.
  * Fires once per call attempt, before the vanilla {@code Mob} is spawned.
  *
- * <p>The pet exposed via {@link #getMyPet()} is already active (skills loaded,
+ * <p>The pet exposed via {@link #getPet()} is already active (skills loaded,
  * NBT applied) — only the world entity is missing. Activation itself is signaled
  * separately by {@link PetActivatedEvent}, which fires earlier and only once
  * per session.
@@ -43,7 +43,7 @@ import org.bukkit.event.HandlerList;
  * region-based call restrictions (WorldGuard / Towny integrations) and per-pet
  * cooldown enforcement.
  *
- * <p><b>Pet state:</b> {@link #getMyPet()} returns a {@link StoredMyPet} but is
+ * <p><b>Pet state:</b> {@link #getPet()} returns a {@link StoredMyPet} but is
  * always concretely a live {@link MyPet} — the constructor takes {@code MyPet}.
  * The widened return type is historical.
  */
@@ -61,7 +61,7 @@ public class PetCallEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public StoredMyPet getMyPet() {
+    public StoredMyPet getPet() {
         return myPet;
     }
 

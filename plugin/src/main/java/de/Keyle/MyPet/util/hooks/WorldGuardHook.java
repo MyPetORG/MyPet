@@ -329,7 +329,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     @EventHandler
     public void on(PetActivatedEvent event) {
         if (customFlags) {
-            event.getMyPet().getExperience().addModifier("WorldGuard-Region", new RegionModifier(event.getMyPet()));
+            event.getPet().getExperience().addModifier("WorldGuard-Region", new RegionModifier(event.getPet()));
         }
     }
 

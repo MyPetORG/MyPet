@@ -79,7 +79,7 @@ public class PetRemoveEvent extends Event {
         return myPet.getOwner().getPlayer();
     }
 
-    public StoredMyPet getMyPet() {
+    public StoredMyPet getPet() {
         return myPet;
     }
 

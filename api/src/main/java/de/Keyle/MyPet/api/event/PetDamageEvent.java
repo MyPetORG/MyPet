@@ -69,7 +69,7 @@ public class PetDamageEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public MyPet getMyPet() {
+    public MyPet getPet() {
         return myPet;
     }
 

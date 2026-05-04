@@ -59,7 +59,7 @@ public class PetInteractEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public StoredMyPet getMyPet() {
+    public StoredMyPet getPet() {
         return myPet;
     }
 

@@ -44,7 +44,7 @@ import org.bukkit.event.HandlerList;
  * Bukkit-event chain ({@code PlayerLeashEntityEvent} for the leash sources, the
  * command's permission check for admin / shop sources).
  *
- * <p><b>Pet state:</b> {@link #getMyPet()} is in the inactive-pets pool — the
+ * <p><b>Pet state:</b> {@link #getPet()} is in the inactive-pets pool — the
  * pet is persisted but not yet active. Owner is set; {@code getPlayer()} may be
  * null only if the owner has logged off in the same tick.
  *
@@ -79,7 +79,7 @@ public class PetCreateEvent extends Event {
         return myPet.getOwner().getPlayer();
     }
 
-    public StoredMyPet getMyPet() {
+    public StoredMyPet getPet() {
         return myPet;
     }
 

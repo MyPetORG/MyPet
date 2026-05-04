@@ -40,7 +40,7 @@ import org.bukkit.event.HandlerList;
  *
  * <p><b>Not cancellable:</b> there is no {@code Cancellable} on this event.
  * To suppress a rename, set {@code newName} back to the pet's current name
- * via {@code event.setNewName(event.getMyPet().getPetName())}.
+ * via {@code event.setNewName(event.getPet().getPetName())}.
  *
  * <p><b>Pet state:</b> live pet (name changes only happen on active pets).
  *
@@ -54,13 +54,13 @@ public class PetNameEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     @Getter
-    private MyPet myPet;
+    private MyPet pet;
     @Getter
     @Setter
     private String newName;
 
-    public PetNameEvent(MyPet myPet, String newName) {
-        this.myPet = myPet;
+    public PetNameEvent(MyPet pet, String newName) {
+        this.pet = pet;
         this.newName = newName;
     }
 

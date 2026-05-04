@@ -77,7 +77,7 @@ public class PetSelectSkilltreeEvent extends Event {
         return source;
     }
 
-    public StoredMyPet getMyPet() {
+    public StoredMyPet getPet() {
         return myPet;
     }
 

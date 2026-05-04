@@ -70,7 +70,7 @@ public class PetStatusEvent extends Event {
         return handlers;
     }
 
-    public StoredMyPet getMyPet() {
+    public StoredMyPet getPet() {
         return myPet;
     }
 

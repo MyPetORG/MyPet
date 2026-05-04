@@ -42,7 +42,7 @@ import org.bukkit.event.HandlerList;
  * </ul>
  *
  * <p><b>Not cancellable:</b> the save will proceed regardless of listeners.
- * The pet exposed via {@link #getMyPet()} is in the state about to be (or
+ * The pet exposed via {@link #getPet()} is in the state about to be (or
  * already being) serialized — listeners may inspect it for backup integrations
  * or last-write metadata.
  *
@@ -69,7 +69,7 @@ public class PetSaveEvent extends Event {
         return handlers;
     }
 
-    public StoredMyPet getMyPet() {
+    public StoredMyPet getPet() {
         return myPet;
     }
 

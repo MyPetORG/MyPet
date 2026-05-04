@@ -42,10 +42,10 @@ import org.bukkit.event.HandlerList;
  *
  * <p><b>Pet state:</b> live pet, owner online (the command requires it).
  * After successful dispatch, the entity is removed from the world but
- * {@link #getMyPet()} continues to refer to a live {@link MyPet} until its
+ * {@link #getPet()} continues to refer to a live {@link MyPet} until its
  * owner logs out (the periodic save flushes it back to persisted form).
  *
- * <p><b>Pet exposure:</b> {@link #getMyPet()} returns {@link StoredMyPet} but
+ * <p><b>Pet exposure:</b> {@link #getPet()} returns {@link StoredMyPet} but
  * is always concretely a live {@link MyPet} — the constructor takes
  * {@code MyPet}. The widened return type is historical.
  */
@@ -64,7 +64,7 @@ public class PetSendAwayEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public StoredMyPet getMyPet() {
+    public StoredMyPet getPet() {
         return myPet;
     }
 

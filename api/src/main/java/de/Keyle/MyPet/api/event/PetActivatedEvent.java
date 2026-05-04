@@ -39,7 +39,7 @@ import org.bukkit.event.HandlerList;
  * is dispatched. Use {@link PetCallEvent} earlier in the call flow if you need
  * to veto a pet coming live.
  *
- * <p><b>Pet state:</b> {@link #getMyPet()} returns a fully initialized live pet.
+ * <p><b>Pet state:</b> {@link #getPet()} returns a fully initialized live pet.
  * The pet entity may not yet be spawned in the world — activation is logical, not
  * spatial; the world entity is created when the owner uses {@code /mypet call}.
  *
@@ -62,7 +62,7 @@ public class PetActivatedEvent extends Event {
         return handlers;
     }
 
-    public MyPet getMyPet() {
+    public MyPet getPet() {
         return myPet;
     }
 
