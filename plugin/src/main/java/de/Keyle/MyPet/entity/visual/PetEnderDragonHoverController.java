@@ -6,6 +6,7 @@ import de.Keyle.MyPet.api.skill.skills.Ride;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Input;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
@@ -82,6 +83,16 @@ public final class PetEnderDragonHoverController {
 
     /** Vertical step (blocks/tick) when the rider holds jump/sneak while flying. */
     private static final double RIDE_VERTICAL_STEP = 0.5;
+
+    /**
+     * Vertical span (in blocks) of the collision check column at the proposed
+     * teleport position. Covers the dragon's body (~3-4 blocks tall around the
+     * position anchor) so the dragon can't phase its body through walls/ceilings/
+     * floors. Wings/tail are intentionally excluded — they extend horizontally
+     * past the body and would make any movement near terrain feel sticky, while
+     * checkWalls suppression already prevents them from destroying blocks.
+     */
+    private static final int COLLISION_CHECK_HEIGHT = 4;
 
     private PetEnderDragonHoverController() {
     }
@@ -161,7 +172,7 @@ public final class PetEnderDragonHoverController {
             next.setPitch(dragonLoc.getPitch());
         }
 
-        dragon.teleportAsync(next);
+        safeTeleport(dragon, next);
     }
 
     /**
@@ -239,7 +250,39 @@ public final class PetEnderDragonHoverController {
         next.setYaw(yaw + 180);
         next.setPitch(0);
 
+        safeTeleport(dragon, next);
+    }
+
+    /**
+     * Teleport guarded by a destination-column collision check. Per-tick
+     * movement is bounded (LERP_STEP / RIDE_BASE_STEP ≈ 0.6-1 blocks), well
+     * below 1, so a destination check is sufficient — there's no path-skipping
+     * to worry about. If the destination column contains a solid block, the
+     * positional component is dropped and only rotation is applied; the dragon
+     * still turns to face where it would have moved, but doesn't phase
+     * through the wall.
+     */
+    private static void safeTeleport(EnderDragon dragon, Location next) {
+        if (wouldCollideAt(dragon.getWorld(), next)) {
+            Location rotationOnly = dragon.getLocation();
+            rotationOnly.setYaw(next.getYaw());
+            rotationOnly.setPitch(next.getPitch());
+            dragon.teleportAsync(rotationOnly);
+            return;
+        }
         dragon.teleportAsync(next);
+    }
+
+    private static boolean wouldCollideAt(World world, Location loc) {
+        int x = loc.getBlockX();
+        int z = loc.getBlockZ();
+        int y0 = loc.getBlockY();
+        for (int dy = 0; dy < COLLISION_CHECK_HEIGHT; dy++) {
+            if (world.getBlockAt(x, y0 + dy, z).getType().isSolid()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void stopForPet(MyPet pet) {

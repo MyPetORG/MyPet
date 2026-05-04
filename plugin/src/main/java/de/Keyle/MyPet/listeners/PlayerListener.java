@@ -52,6 +52,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -139,6 +140,17 @@ public class PlayerListener implements Listener {
                     }
                     if (myPet.getSkills().isActive(Ride.class)) {
                         if (myPet.hasMyPetRider()) {
+                            // Suppress the "can't control while ridden" message when the
+                            // clicker IS the rider — they're using Ride, not Control.
+                            // Default config has CONTROL_ITEM == RIDE_ITEM == lead, so
+                            // a single right-click on the pet fires both paths: the
+                            // PlayerInteractEntityEvent mounts the player, then this
+                            // PlayerInteractEvent (RIGHT_CLICK_AIR) sees the rider and
+                            // misfires the Control-skill error.
+                            Mob mob = myPet.getBukkitEntity();
+                            if (mob != null && mob.getPassengers().contains(event.getPlayer())) {
+                                return;
+                            }
                             event.getPlayer().sendMessage(Locale.getFormattedComponent("Message.Skill.Control.Ride", event.getPlayer(), myPet.getDisplayName()));
                             return;
                         }
