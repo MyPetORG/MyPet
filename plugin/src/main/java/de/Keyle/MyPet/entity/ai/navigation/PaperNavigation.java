@@ -55,7 +55,7 @@ public class PaperNavigation extends AbstractNavigation {
         mob.getPathfinder().setCanFloat(!parameters.avoidWater());
         var speedAttr = mob.getAttribute(PetAttributes.MOVEMENT_SPEED);
         if (speedAttr != null) {
-            speedAttr.setBaseValue(parameters.speed() + parameters.speedModifier());
+            speedAttr.setBaseValue(parameters.getSpeed() + parameters.speedModifier());
         }
     }
 }
