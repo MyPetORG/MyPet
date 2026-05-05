@@ -39,10 +39,10 @@ import java.util.Set;
 @ServiceName("SkillManager")
 @Load(Load.State.OnEnable)
 public class SkillManager implements ServiceContainer {
-    private Map<Class<? extends Skill>, String> registeredSkillsNames = new HashMap<>();
-    private Map<String, Class<? extends Skill>> registeredNamesSkills = new HashMap<>();
-    private Map<String, UpgradeParser<?>> upgradeParsers = new HashMap<>();
-    private Map<Class<? extends Skill>, SkillStateBinding<?>> stateParsers = new HashMap<>();
+    private final Map<Class<? extends Skill>, String> registeredSkillsNames = new HashMap<>();
+    private final Map<String, Class<? extends Skill>> registeredNamesSkills = new HashMap<>();
+    private final Map<String, UpgradeParser<?>> upgradeParsers = new HashMap<>();
+    private final Map<Class<? extends Skill>, SkillStateBinding<?>> stateParsers = new HashMap<>();
 
     /** Pairs the registered state class with its parser so {@link #parseState} can do a typed lookup keyed only on the skill class. */
     private record SkillStateBinding<T extends SkillState>(Class<T> stateClass, SkillStateParser<T> parser) {}

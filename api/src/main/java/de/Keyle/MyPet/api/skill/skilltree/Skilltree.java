@@ -35,22 +35,28 @@ import java.util.*;
 
 public class Skilltree {
 
-    protected String skilltreeName;
+    protected final String skilltreeName;
     @Getter
     @Setter
     protected String inheritedSkilltreeName;
-    protected List<String> description = new ArrayList<>();
+    protected final List<String> description = new ArrayList<>();
+    @Setter
     protected SkilltreeIcon icon = null;
+    @Setter
     protected String displayName = null;
     protected int maxLevel = 0;
+    @Getter
     protected int requiredLevel = 0;
+    @Setter
+    @Getter
     protected int order = 0;
     @Getter
     @Setter
     protected double weight = 1;
-    protected Set<MyPetType> mobTypes = new HashSet<>();
-    protected Map<LevelRule, Upgrade<?>> upgrades = new HashMap<>();
-    protected Map<LevelRule, String> notifications = new HashMap<>();
+    @Getter
+    protected final Set<MyPetType> mobTypes = new HashSet<>();
+    protected final Map<LevelRule, Upgrade<?>> upgrades = new HashMap<>();
+    protected final Map<LevelRule, String> notifications = new HashMap<>();
     protected @Getter List<Settings> requirementSettings = new ArrayList<>();
 
     public Skilltree(String name) {
@@ -90,20 +96,12 @@ public class Skilltree {
         return icon;
     }
 
-    public void setIcon(SkilltreeIcon icon) {
-        this.icon = icon;
-    }
-
     public int getMaxLevel() {
         return maxLevel == 0 ? Configuration.LevelSystem.Experience.LEVEL_CAP : maxLevel;
     }
 
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel < 0 ? 0 : Math.min(maxLevel, Configuration.LevelSystem.Experience.LEVEL_CAP);
-    }
-
-    public int getRequiredLevel() {
-        return requiredLevel;
     }
 
     public void setRequiredLevel(int requiredLevel) {
@@ -117,10 +115,6 @@ public class Skilltree {
         return displayName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
     public boolean hasDisplayName() {
         return displayName != null;
     }
@@ -129,14 +123,6 @@ public class Skilltree {
         return inheritedSkilltreeName != null
                 && !inheritedSkilltreeName.isEmpty()
                 && MyPetApi.getSkilltreeManager().hasSkilltree(inheritedSkilltreeName);
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
     }
 
     public List<Upgrade<?>> getUpgrades(int level) {
@@ -183,10 +169,6 @@ public class Skilltree {
 
     public void addNotification(LevelRule levelRule, String notification) {
         this.notifications.put(levelRule, notification);
-    }
-
-    public Set<MyPetType> getMobTypes() {
-        return mobTypes;
     }
 
     public void setMobTypes(Collection<MyPetType> mobTypes) {

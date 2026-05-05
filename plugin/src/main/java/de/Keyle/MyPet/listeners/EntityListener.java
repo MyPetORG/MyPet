@@ -553,7 +553,7 @@ public class EntityListener implements Listener {
                     }
                 }
             }
-            deadEntity.removeMetadata("MyPetDamageCount", MyPetApi.getPlugin());
+            MyPetExperience.clearDamageMap(deadEntity);
         } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent edbee) {
 
             Entity damager = edbee.getDamager();

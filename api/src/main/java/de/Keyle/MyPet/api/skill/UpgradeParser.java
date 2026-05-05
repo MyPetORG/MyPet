@@ -15,7 +15,7 @@ public interface UpgradeParser<S extends Skill> {
      *
      * <p>Return {@code null} if the JSON cannot be parsed into a valid upgrade —
      * the loader will log and skip the entry. Returning an upgrade with no
-     * modifiers set (e.g. all fields absent from the JSON) is also valid; the
+     * modifiers set (e.g., all fields absent from the JSON) is also valid; the
      * loader will install it as a no-op upgrade for that level.
      */
     Upgrade<S> parse(JsonObject upgradeJson);

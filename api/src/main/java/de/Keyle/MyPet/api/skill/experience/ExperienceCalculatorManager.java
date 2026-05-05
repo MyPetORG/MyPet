@@ -34,7 +34,7 @@ import java.util.Map;
 @Load(Load.State.OnEnable)
 public class ExperienceCalculatorManager implements ServiceContainer {
 
-    protected Map<String, Class<? extends ExperienceCalculator>> calculators = new HashMap<>();
+    protected final Map<String, Class<? extends ExperienceCalculator>> calculators = new HashMap<>();
     @Getter()
     protected ExperienceCalculator defaultCalculator = new DefaultExperienceCalculator();
     @Getter()
@@ -52,9 +52,6 @@ public class ExperienceCalculatorManager implements ServiceContainer {
     }
 
     public void switchCalculator(@NonNull String calculator) {
-        if (calculator == null) {
-            calculator = "Default";
-        }
         calculator = calculator.toLowerCase();
         if (!this.calculator.getIdentifier().toLowerCase().equals(calculator)) {
             if (calculators.containsKey(calculator)) {

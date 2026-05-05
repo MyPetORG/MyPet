@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
+import lombok.Getter;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
@@ -51,41 +52,35 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
         JumpBoost("JumpBoost", 1, PotionEffectType.JUMP_BOOST),
         Regeneration("Regeneration", 10, PotionEffectType.REGENERATION),
         Resistance("Resistance", 19, PotionEffectType.RESISTANCE),
-        FireResistance("FireResistance", 7, PotionEffectType.FIRE_RESISTANCE, false),
-        WaterBreathing("WaterBreathing", 16, PotionEffectType.WATER_BREATHING, false),
-        Invisibility("Invisibility", 25, PotionEffectType.INVISIBILITY, false),
-        NightVision("NightVision", 8, PotionEffectType.NIGHT_VISION, false),
+        FireResistance("FireResistance", 7, PotionEffectType.FIRE_RESISTANCE),
+        WaterBreathing("WaterBreathing", 16, PotionEffectType.WATER_BREATHING),
+        Invisibility("Invisibility", 25, PotionEffectType.INVISIBILITY),
+        NightVision("NightVision", 8, PotionEffectType.NIGHT_VISION),
         Absorption("Absorption", 26, PotionEffectType.ABSORPTION),
-        Luck("Luck", 17, PotionEffectType.LUCK, false),
+        Luck("Luck", 17, PotionEffectType.LUCK),
         HealthBoost("HealthBoost", -1, PotionEffectType.HEALTH_BOOST);
 
         private static final Map<Integer, Buff> buffPositions = new HashMap<>();
+        @Getter
         private final String name;
+        @Getter
         private final int position;
+        @Getter
         private final PotionEffectType potionEffectType;
-        private final boolean moreThanOneLevel;
 
         Buff(String name, int position, PotionEffectType potionEffectType) {
             this.name = name;
             this.position = position;
             this.potionEffectType = potionEffectType;
-            this.moreThanOneLevel = true;
         }
 
-        Buff(String name, int position, PotionEffectType potionEffectType, boolean moreThanOneLevel) {
-            this.name = name;
-            this.position = position;
-            this.potionEffectType = potionEffectType;
-            this.moreThanOneLevel = moreThanOneLevel;
-        }
-
-        public static Buff getBuffAtPosition(int positiion) {
+        public static Buff getBuffAtPosition(int position) {
             if (buffPositions.isEmpty()) {
                 for (Buff buff : values()) {
                     buffPositions.put(buff.position, buff);
                 }
             }
-            return buffPositions.get(positiion);
+            return buffPositions.get(position);
         }
 
         public static Buff getByName(String name) {
@@ -96,22 +91,6 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
             }
             return null;
         }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getPosition() {
-            return position;
-        }
-
-        public PotionEffectType getPotionEffectType() {
-            return potionEffectType;
-        }
-
-        public boolean hasMoreThanOneLevel() {
-            return moreThanOneLevel;
-        }
     }
 
     enum BuffReceiver {
@@ -119,8 +98,7 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
     }
 
     /**
-     * Snapshot of a Beacon skill's persisted or live state — the player-
-     * picked buffs, the toggle, and the receiver scope.
+     * Snapshot of a Beacon skill's persisted or live state — the player-chosen buffs, the toggle, and the receiver scope.
      */
     record State(List<Buff> buffs, boolean active, BuffReceiver receiver) implements SkillState {}
 }

@@ -26,7 +26,7 @@ import org.bukkit.entity.Player;
 
 public class PermissionModifier extends ExperienceModifier {
 
-    MyPet myPet;
+    final MyPet myPet;
 
     public PermissionModifier(MyPet myPet) {
         this.myPet = myPet;

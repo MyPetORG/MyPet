@@ -90,23 +90,13 @@ public class BeaconImpl implements Beacon {
         }
 
         for (Buff buff : Buff.values()) {
-            if (buff.hasMoreThanOneLevel()) {
-                UpgradeComputer<Integer> intComputer = new UpgradeComputer<>(0);
-                intComputer.addCallback((newValue, reason) -> {
-                    if (reason == UpgradeComputer.CallbackReason.Remove && newValue == 0) {
-                        selectedBuffs.remove(buff);
-                    }
-                });
-                buffLevel.put(buff, intComputer);
-            } else {
-                UpgradeComputer<Boolean> boolComputer = new UpgradeComputer<>(false);
-                boolComputer.addCallback((newValue, reason) -> {
-                    if (reason == UpgradeComputer.CallbackReason.Remove && !newValue) {
-                        selectedBuffs.remove(buff);
-                    }
-                });
-                buffLevel.put(buff, boolComputer);
-            }
+            UpgradeComputer<Integer> intComputer = new UpgradeComputer<>(0);
+            intComputer.addCallback((newValue, reason) -> {
+                if (reason == UpgradeComputer.CallbackReason.Remove && newValue == 0) {
+                    selectedBuffs.remove(buff);
+                }
+            });
+            buffLevel.put(buff, intComputer);
         }
     }
 

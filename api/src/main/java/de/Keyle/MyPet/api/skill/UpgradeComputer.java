@@ -28,10 +28,10 @@ import java.util.List;
 
 public class UpgradeComputer<T> {
 
-    List<UpgradeModifier<T>> upgrades = new LinkedList<>();
-    List<UpgradeCallback<T>> callbacks = new LinkedList<>();
+    final List<UpgradeModifier<T>> upgrades = new LinkedList<>();
+    final List<UpgradeCallback<T>> callbacks = new LinkedList<>();
     T currentValue;
-    T baseValue;
+    final T baseValue;
 
     public UpgradeComputer(T baseValue) {
         this.baseValue = baseValue;
@@ -105,10 +105,8 @@ public class UpgradeComputer<T> {
     public void removeAllUpgrades() {
         this.upgrades.clear();
         this.currentValue = this.baseValue;
-        if (this.callbacks != null) {
-            for (UpgradeCallback<T> callback : this.callbacks) {
-                callback.run(this.currentValue, CallbackReason.Remove);
-            }
+        for (UpgradeCallback<T> callback : this.callbacks) {
+            callback.run(this.currentValue, CallbackReason.Remove);
         }
     }
 

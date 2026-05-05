@@ -22,6 +22,9 @@ package de.Keyle.MyPet.api.skill.experience;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.hooks.types.MonsterExperienceHook;
+import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
@@ -30,12 +33,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+@Getter
 public class MonsterExperience {
 
     public static final Map<String, MonsterExperience> mobExp = new HashMap<>();
     public static final Map<String, MonsterExperience> CUSTOM_MOB_EXP = new HashMap<>();
-    public static MonsterExperience UNKNOWN = new MonsterExperience(0., "UNKNOWN");
-    public static Pattern PLUGIN_CONFIG_PATTERN = Pattern.compile("\\[\\w+]=.+");
+    public static final MonsterExperience UNKNOWN = new MonsterExperience(0., "UNKNOWN");
+    public static final Pattern PLUGIN_CONFIG_PATTERN = Pattern.compile("\\[\\w+]=.+");
 
     static {
         mobExp.put("SKELETON", new MonsterExperience(5., "SKELETON"));
@@ -125,13 +129,13 @@ public class MonsterExperience {
 
     private double min;
     private double max;
-    private String identifier;
+    private final String identifier;
 
     public MonsterExperience(double min, double max, String identifier) {
         if (max >= min) {
             this.max = max;
             this.min = min;
-        } else if (max <= min) {
+        } else {
             this.max = min;
             this.min = max;
         }
@@ -152,9 +156,11 @@ public class MonsterExperience {
         return Math.random() * (high - low) + low;
     }
 
-    @SuppressWarnings("RedundantCast")
     public static MonsterExperience getMonsterExperience(Entity entity) {
-        String name = entity.getCustomName();
+        Component customName = entity.customName();
+        String name = customName != null
+                ? PlainTextComponentSerializer.plainText().serialize(customName)
+                : null;
 
         List<MonsterExperienceHook> hooks = MyPetApi.getPluginHookManager().getHooks(MonsterExperienceHook.class);
         for (MonsterExperienceHook hook : hooks) {
@@ -197,10 +203,6 @@ public class MonsterExperience {
         return max == min ? max : ((int) (doubleRandom(min, max) * 100)) / 100.;
     }
 
-    public double getMin() {
-        return min;
-    }
-
     public void setMin(double min) {
         this.min = min;
         if (min > max) {
@@ -208,19 +210,11 @@ public class MonsterExperience {
         }
     }
 
-    public double getMax() {
-        return max;
-    }
-
     public void setMax(double max) {
         this.max = max;
         if (max < min) {
             min = max;
         }
-    }
-
-    public String getIdentifier() {
-        return identifier;
     }
 
     public void setExp(double exp) {

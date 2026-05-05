@@ -22,21 +22,7 @@ package de.Keyle.MyPet.api.skill.modifier;
 
 import java.math.BigDecimal;
 
-public class UpgradeNumberModifier implements UpgradeModifier<Number> {
-    Number value;
-    Type type;
-    public UpgradeNumberModifier(Number value, Type type) {
-        this.value = value;
-        this.type = type;
-    }
-
-    public Number getValue() {
-        return value;
-    }
-
-    public Type getType() {
-        return type;
-    }
+public record UpgradeNumberModifier(Number value, Type type) implements UpgradeModifier<Number> {
 
     public Number modify(Number n) {
         return switch (type) {

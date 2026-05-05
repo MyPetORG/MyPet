@@ -20,20 +20,23 @@
 
 package de.Keyle.MyPet.api.skill.modifier;
 
+import lombok.Getter;
+
 public enum UpgradeBooleanModifier implements UpgradeModifier<Boolean> {
     True(true), False(false);
 
-    private Boolean value;
+    private final Boolean value;
 
     UpgradeBooleanModifier(Boolean b) {
         value = b;
     }
 
-    public boolean getBoolean() {
+    @Override
+    public Boolean value() {
         return value;
     }
 
-    public Boolean getValue() {
+    public boolean getBoolean() {
         return value;
     }
 
@@ -41,5 +44,4 @@ public enum UpgradeBooleanModifier implements UpgradeModifier<Boolean> {
     public Boolean modify(Boolean value) {
         return this.value;
     }
-
 }

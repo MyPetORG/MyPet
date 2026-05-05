@@ -34,8 +34,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class Skills {
-    private BiMap<String, Skill> skills = HashBiMap.create();
-    private Map<Class<? extends Skill>, Skill> skillClasses = new HashMap<>();
+    private final BiMap<String, Skill> skills = HashBiMap.create();
+    private final Map<Class<? extends Skill>, Skill> skillClasses = new HashMap<>();
 
     public Skills(MyPet myPet) {
         for (Class<? extends Skill> clazz : MyPetApi.getSkillManager().getRegisteredSkills()) {

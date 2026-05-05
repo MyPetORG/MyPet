@@ -35,8 +35,8 @@ import java.util.*;
 @ServiceName("SkilltreeManager")
 public class SkilltreeManager implements ServiceContainer {
 
-    Map<String, Skilltree> skilltrees = new HashMap<>();
-    Map<String, Requirement> requirements = new HashMap<>();
+    final Map<String, Skilltree> skilltrees = new HashMap<>();
+    final Map<String, Requirement> requirements = new HashMap<>();
 
     @Override
     public void onDisable() {

@@ -20,16 +20,7 @@
 
 package de.Keyle.MyPet.api.skill.modifier;
 
-public class UpgradeEnumModifier<T extends Enum<T>> implements UpgradeModifier<T> {
-    T value;
-
-    public UpgradeEnumModifier(T value) {
-        this.value = value;
-    }
-
-    public T getValue() {
-        return value;
-    }
+public record UpgradeEnumModifier<T extends Enum<T>>(T value) implements UpgradeModifier<T> {
 
     @Override
     public T modify(T value) {

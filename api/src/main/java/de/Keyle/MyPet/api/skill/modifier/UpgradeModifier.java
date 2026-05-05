@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill.modifier;
 
 public interface UpgradeModifier<T> {
 
-    T getValue();
+    T value();
 
     T modify(T value);
 }

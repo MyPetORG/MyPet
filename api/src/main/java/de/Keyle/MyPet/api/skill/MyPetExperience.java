@@ -36,8 +36,6 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +45,7 @@ import java.util.WeakHashMap;
 public class MyPetExperience {
 
     public static final GlobalModifier GLOBAL_MODIFIER = new GlobalModifier();
+    private static final Map<LivingEntity, Map<UUID, Double>> DAMAGE_MAPS = new WeakHashMap<>();
 
     @Getter
     protected final MyPet myPet;
@@ -56,41 +55,33 @@ public class MyPetExperience {
     protected double exp = 0;
     @Getter
     protected double maxExp = Double.MAX_VALUE;
-    protected ExperienceCache cache;
-    protected ExperienceCalculator expCalculator;
-    protected Map<String, ExperienceModifier> modifier = new HashMap<>();
+    protected final ExperienceCache cache;
+    protected final ExperienceCalculator expCalculator;
+    protected final Map<String, ExperienceModifier> modifier = new HashMap<>();
 
     public MyPetExperience(MyPet pet) {
         this.myPet = pet;
         this.expCalculator = MyPetApi.getServiceManager()
-                .getService(ExperienceCalculatorManager.class).get()
+                .getService(ExperienceCalculatorManager.class).orElseThrow()
                 .getCalculator();
-        cache = MyPetApi.getServiceManager().getService(ExperienceCache.class).get();
+        cache = MyPetApi.getServiceManager().getService(ExperienceCache.class).orElseThrow();
 
         this.modifier.put("Global", GLOBAL_MODIFIER);
         this.modifier.put("Permission", new PermissionModifier(myPet));
     }
 
-    @SuppressWarnings("unchecked")
     private static Map<UUID, Double> getDamageMap(LivingEntity victim) {
-        for (MetadataValue value : victim.getMetadata("MyPetDamageCount")) {
-            if (value.getOwningPlugin().getName().equals("MyPet")) {
-                return (Map<UUID, Double>) value.value();
-            }
-        }
-        return null;
+        return DAMAGE_MAPS.get(victim);
     }
 
     public static void addDamageToEntity(LivingEntity damager, LivingEntity victim, double damage) {
-        Map<UUID, Double> damageMap = getDamageMap(victim);
-        if (damageMap != null) {
-            damageMap.merge(damager.getUniqueId(), Math.min(victim.getHealth(), damage),
-                    (oldDamage, newDamage) -> (victim.getHealth() < damage ? victim.getHealth() : damage) + oldDamage);
-        } else {
-            damageMap = new WeakHashMap<>();
-            damageMap.put(damager.getUniqueId(), Math.min(victim.getHealth(), damage));
-            victim.setMetadata("MyPetDamageCount", new FixedMetadataValue(MyPetApi.getPlugin(), damageMap));
-        }
+        Map<UUID, Double> damageMap = DAMAGE_MAPS.computeIfAbsent(victim, k -> new HashMap<>());
+        damageMap.merge(damager.getUniqueId(), Math.min(victim.getHealth(), damage),
+                (oldDamage, newDamage) -> (Math.min(victim.getHealth(), damage)) + oldDamage);
+    }
+
+    public static void clearDamageMap(LivingEntity victim) {
+        DAMAGE_MAPS.remove(victim);
     }
 
     public static double getDamageToEntity(LivingEntity damager, LivingEntity victim) {
@@ -149,17 +140,16 @@ public class MyPetExperience {
         return this.modifier.remove(id);
     }
 
-    public double setMaxLevel(int level) {
+    public void setMaxLevel(int level) {
         this.maxExp = getExpByLevel(level);
         if (this.exp > this.maxExp) {
-            return setExp(this.maxExp);
+            setExp(this.maxExp);
         }
-        return 0;
     }
 
-    public double setExp(double exp) {
+    public void setExp(double exp) {
         exp = exp - this.exp;
-        return updateExp(exp, true);
+        updateExp(exp, true);
     }
 
     public double addExp(double exp) {

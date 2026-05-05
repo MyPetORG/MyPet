@@ -46,7 +46,7 @@ public class ExperienceCache implements ServiceContainer {
     long version = 0;
     JsonObject expMap = new JsonObject();
 
-    File cacheFile = new File(MyPetApi.getPlugin().getDataFolder(), "exp.cache");
+    final File cacheFile = new File(MyPetApi.getPlugin().getDataFolder(), "exp.cache");
 
     public double getExp(String worldGroup, MyPetType type, int level) throws LevelNotCalculatedException {
         if (this.expMap.has(worldGroup)) {
@@ -154,7 +154,7 @@ public class ExperienceCache implements ServiceContainer {
         }
     }
 
-    public class LevelNotCalculatedException extends Exception {
+    public static class LevelNotCalculatedException extends Exception {
 
         @Getter
         private final MyPetType type;
