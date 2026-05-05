@@ -33,14 +33,6 @@ import de.Keyle.MyPet.api.Configuration;
  *
  * <p>The YAML row is auto-registered for every type that implements this marker
  * — adding a new convertible pet only requires implementing this interface.
- *
- * <p><b>Why "Zombifiable" and not the v3 "Shake" name:</b> the v3-era flag
- * was named {@code WillShake} after the cold-biome shake animation, but
- * vanilla couples the shake animation with the conversion timer through a
- * single {@code isImmuneToZombification} bit — there is no API path that
- * decouples them. The flag's actual consequence is the conversion, so the
- * marker and config row are named for that. The shake animation is
- * suppressed as a side effect when zombification is disallowed.
  */
 public interface MyPetZombifiable extends MyPet {
 

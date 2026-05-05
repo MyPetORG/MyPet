@@ -50,26 +50,35 @@ import java.util.Optional;
 public non-sealed interface MyPet extends StoredMyPet, Scheduler {
 
     // ─── Mutators (previously inherited from StoredMyPet) ───
+
     void setUUID(UUID uuid);
 
     void setOwner(MyPetPlayer owner);
 
+    /** Updates the pet's display name (MiniMessage format). */
     void setPetName(String petName);
 
     void setPetType(MyPetType petType);
 
     void setWorldGroup(String worldGroup);
 
+    /**
+     * Sets the pet's current health, clamped to
+     * {@code [0, getMaxHealth()]}. Setting to 0 triggers death handling.
+     */
     void setHealth(double health);
 
+    /** Sets saturation (1–100). Reaching 1 disables hunger drain. */
     void setSaturation(double saturation);
 
+    /** Sets the respawn countdown in seconds. Zero means alive. */
     void setRespawnTime(int respawnTime);
 
     void setLastUsed(long lastUsed);
 
     void setWantsToRespawn(boolean wantsToRespawn);
 
+    /** Sets raw XP. Triggers level-up/down logic internally. */
     void setExp(double exp);
 
     /**
@@ -77,18 +86,41 @@ public non-sealed interface MyPet extends StoredMyPet, Scheduler {
      * {@code PetSelectSkilltreeEvent}. Used during pet activation when the
      * skilltree is being restored from persistence rather than chosen.
      */
-    boolean setSkilltree(Skilltree skilltree);
+    void setSkilltree(Skilltree skilltree);
 
+    /** Returns the experience tracker managing XP gain and level curves. */
     MyPetExperience getExperience();
 
+    /**
+     * Despawns and deactivates the pet. Equivalent to
+     * {@code removePet(true)} — the pet will attempt to respawn on the
+     * next call/login.
+     */
     void removePet();
 
+    /**
+     * Despawns and deactivates the pet.
+     *
+     * @param wantsToRespawn if {@code true}, the pet will auto-spawn on
+     *                       the owner's next login or call command
+     */
     void removePet(boolean wantsToRespawn);
 
+    /**
+     * Attempts to spawn the pet at the owner's location.
+     *
+     * @return result flag indicating success or the reason for failure
+     */
     SpawnFlags createEntity();
 
+    /**
+     * Attempts to spawn the pet at the specified location.
+     *
+     * @return result flag indicating success or the reason for failure
+     */
     SpawnFlags createEntity(Location spawnLocation);
 
+    /** Returns the current lifecycle state of this pet. */
     PetState getStatus();
 
     /**
@@ -100,18 +132,39 @@ public non-sealed interface MyPet extends StoredMyPet, Scheduler {
 
     void setStatus(PetState status);
 
+    /**
+     * Returns the pet's current world location, or empty if the Bukkit
+     * entity is not spawned.
+     */
     Optional<Location> getLocation();
 
+    /**
+     * Returns the current max health (base and Life skill bonus). May
+     * differ from the starting HP configured in {@link MyPetInfo}.
+     */
     double getMaxHealth();
 
+    /** Returns the skill container holding all active skill instances. */
     Skills getSkills();
 
+    /**
+     * Attempts to auto-assign a skilltree based on permission or config
+     * rules. Called on first activation if no tree is already set.
+     *
+     * @return {@code true} if a tree was assigned
+     */
     boolean autoAssignSkilltree();
 
+    /**
+     * Returns the underlying Bukkit mob, or {@code null} if the pet is
+     * not currently spawned (dead/despawned).
+     */
     Mob getBukkitEntity();
 
+    /** Binds a freshly spawned Bukkit mob to this pet instance. */
     void setBukkitEntity(Mob mob);
 
+    /** Returns the navigation controller for this pet's movement. */
     AbstractNavigation getPetNavigation();
 
     /**
@@ -124,39 +177,74 @@ public non-sealed interface MyPet extends StoredMyPet, Scheduler {
         return Optional.ofNullable(getBukkitEntity());
     }
 
+    /** Returns mêlée damage dealt by this pet (base and Damage skill). */
     double getDamage();
 
+    /** Returns ranged damage for projectile-shooting pets. */
     double getRangedDamage();
 
-    boolean isPassiv();
+    /**
+     * Returns {@code true} if the pet's skilltree has no damage-dealing
+     * skills active — the pet will not attack even if provoked.
+     */
+    boolean isPassive();
 
+    /** Returns {@code true} if the pet has an active combat target. */
     boolean hasTarget();
 
+    /** Reduces saturation by the given amount (hunger tick). */
     void decreaseSaturation(double value);
 
+    /**
+     * Sets the skilltree and fires {@link PetSelectSkilltreeEvent},
+     * allowing cancellation. Use this for player-initiated selections.
+     *
+     * @param source who/what triggered the selection
+     * @return {@code true} if the tree was applied (event not canceled)
+     */
     boolean setSkilltree(Skilltree skilltree, PetSelectSkilltreeEvent.Source source);
 
+    /** Returns {@code true} if the pet is in its sitting/stay pose. */
     boolean isSitting();
 
+    /** Puts the pet into or takes it out of its sitting/stay pose. */
     void setSitting(boolean sitting);
 
+    /** Returns the current combat target, or {@code null} if none. */
     LivingEntity getMyPetTarget();
 
+    /** Sets a combat target with {@link TargetPriority#Overwrite}. */
     void setTarget(LivingEntity target);
 
+    /**
+     * Sets a combat target if the given priority is higher than the
+     * current one. Lower-priority calls are ignored.
+     */
     void setTarget(LivingEntity target, TargetPriority priority);
 
+    /** Clears the current target and resets priority to None. */
     void forgetTarget();
 
+    /** Returns the priority level of whoever set the current target. */
     TargetPriority getTargetPriority();
 
+    /**
+     * Returns {@code true} if the pet is able to move (spawned, not
+     * sitting, not riding, entity is alive).
+     */
     boolean canMove();
 
+    /**
+     * Removes the Bukkit entity from the world without changing pet
+     * state. Used during chunk-unload or teleport transitions.
+     */
     void removeEntity();
 
+    /** Re-renders the pet's name tag from the current state and config. */
     default void updateNameTag() {
     }
 
+    /** Pushes all visual states (variant, baby, collar, etc.) to the mob. */
     default void updateVisuals() {
     }
 
@@ -168,12 +256,18 @@ public non-sealed interface MyPet extends StoredMyPet, Scheduler {
     default void tickRespawnTimer() {
     }
 
+    /** Displays a coloured potion-swirl particle above the pet. */
     default void showPotionParticles(Color color) {
     }
 
+    /** Stops any active potion particle effect. */
     default void hidePotionParticles() {
     }
 
+    /**
+     * Plays a sound at the pet's location. Silently ignores invalid
+     * sound names (e.g., sounds added in newer MC versions).
+     */
     default void makeSound(String sound, float volume, float pitch) {
         Mob mob = getBukkitEntity();
         if (mob != null) {
@@ -185,17 +279,24 @@ public non-sealed interface MyPet extends StoredMyPet, Scheduler {
         }
     }
 
+    /** Async-teleports the pet to the given location. */
     default void setLocation(Location loc) {
         Mob mob = getBukkitEntity();
         if (mob != null) mob.teleportAsync(loc);
     }
 
-    // ─── Passenger state ───
+    /** Returns {@code true} if a player is currently riding this pet. */
     default boolean hasMyPetRider() {
         Mob mob = getBukkitEntity();
         return mob != null && !mob.getPassengers().isEmpty();
     }
 
+    /**
+     * Called when a player right-clicks the pet. Implementations handle
+     * feeding, equipment, and skill interactions.
+     *
+     * @return {@code true} if the interaction was consumed
+     */
     default boolean onInteract(Player player,
                                ItemStack item,
                                EquipmentSlot hand) {
@@ -212,10 +313,19 @@ public non-sealed interface MyPet extends StoredMyPet, Scheduler {
         return null;
     }
 
+    /** Lifecycle state of a pet. */
     enum PetState {
-        Dead, Despawned, PetState, Here
+        /** Killed — waiting on respawn timer. */
+        Dead,
+        /** Removed from the world by owner or system (call/chunk-unload). */
+        Despawned,
+        /** Transitional state during spawn pipeline. */
+        PetState,
+        /** Alive and present in the world. */
+        Here
     }
 
+    /** Result codes returned by {@link #createEntity}. */
     enum SpawnFlags {
         Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, Spectator, WrongWorldGroup, NotAllowed, InvalidPosition
     }

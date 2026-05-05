@@ -25,13 +25,27 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
 
+/**
+ * Marker for pet types that can wear or hold equipment (armor, weapons,
+ * saddles). The equipment is persisted in the pet's NBT info blob and
+ * re-applied by {@code PetVisualSyncer} after each spawn.
+ * <p>
+ * Not all slots are valid for every pet type — horses use BODY/SADDLE,
+ * zombies use the full humanoid set. Implementations override
+ * {@link #getAllowedSlotNames()} to declare which slots are available.
+ */
 public interface MyPetEquipment {
+
+    /** Returns all currently equipped items, indexed by slot ordinal. */
     ItemStack[] getEquipment();
 
+    /** Returns the item in the given slot, or {@code null} if empty. */
     ItemStack getEquipment(EquipmentSlot slot);
 
+    /** Equips an item in the given slot (persisted across despawns). */
     void setEquipment(EquipmentSlot slot, ItemStack item);
 
+    /** Drops all equipment as world items at the pet's location. */
     void dropEquipment();
 
     /**

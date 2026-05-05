@@ -27,17 +27,36 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Declares the out-of-box defaults for a pet type. Applied to
+ * {@code My<Type>} classes in the plugin module alongside
+ * {@link ShopInfo}. Values are read reflectively by
+ * {@code MyPetInfoImpl} at startup and used as fallbacks when no
+ * per-type override exists in {@code pet-config.yml}.
+ * <p>
+ * Admins may override every value via config; this annotation merely
+ * seeds the initial defaults so the plugin is usable without any YAML
+ * customization.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface DefaultInfo {
 
+    /** Items that restore saturation when fed to this pet type. */
     Material[] food() default {};
 
+    /** Starting max health (half-hearts). */
     double hp() default 20D;
 
+    /**
+     * Leash flag names that must pass before a player can tame this mob.
+     * Defaults to {@code "LowHp"} — the mob must be at low health.
+     */
     String[] leashFlags() default {"LowHp"};
 
+    /** Base movement speed (Bukkit MOVEMENT_SPEED attribute value). */
     double walkSpeed() default 0.30D;
 
+    /** Item that forces a baby pet to grow up when right-clicked. */
     Material growUpItem() default Material.EXPERIENCE_BOTTLE;
 }

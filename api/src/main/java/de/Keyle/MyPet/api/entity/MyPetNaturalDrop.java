@@ -15,7 +15,7 @@ import java.util.Set;
  * <ol>
  *   <li>{@link #naturalDropMaterials()} — the set of vanilla {@link Material}s
  *       this pet may periodically drop. Most pets drop a single material;
- *       sniffers drop two (torchflower seed + pitcher pod).</li>
+ *       sniffers drop two (torchflower seed and pitcher pod).</li>
  *   <li>{@link #isNaturalDropSuppressed()} — reads the implementer's own
  *       per-pet config flag (e.g. {@code Configuration.MyPet.Chicken.CAN_LAY_EGGS}).
  *       Returns {@code true} when the admin has disabled the drop.</li>
@@ -28,7 +28,15 @@ import java.util.Set;
  */
 public interface MyPetNaturalDrop extends MyPet {
 
+    /**
+     * The set of materials this pet type may periodically drop (e.g.
+     * {@code EGG} for chicken, {@code ARMADILLO_SCUTE} for armadillo).
+     */
     Set<Material> naturalDropMaterials();
 
+    /**
+     * Returns {@code true} if the admin has disabled this pet type's
+     * natural drop via the per-type config flag.
+     */
     boolean isNaturalDropSuppressed();
 }

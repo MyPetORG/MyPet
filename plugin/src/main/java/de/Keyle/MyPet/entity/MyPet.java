@@ -76,8 +76,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.*;
 
-import static org.bukkit.Bukkit.getServer;
-
 public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorage {
 
     protected final MyPetPlayer petOwner;
@@ -469,7 +467,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return getSkills().has(RangedImpl.class) ? getSkills().get(RangedImpl.class).getDamage().getValue().doubleValue() : 0;
     }
 
-    public boolean isPassiv() {
+    public boolean isPassive() {
         return getDamage() == 0 && getRangedDamage() == 0;
     }
 
@@ -1105,8 +1103,8 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return true;
     }
 
-    public boolean setSkilltree(Skilltree skilltree) {
-        return setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.OTHER);
+    public void setSkilltree(Skilltree skilltree) {
+        setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.OTHER);
     }
 
     public void trySelfFeeding() {

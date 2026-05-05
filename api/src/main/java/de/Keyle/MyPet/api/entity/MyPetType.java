@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.entity;
 
 import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
+import lombok.Getter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
@@ -42,8 +43,10 @@ public final class MyPetType {
     private static final Map<String, MyPetType> BY_BUKKIT_NAME = new LinkedHashMap<>();
 
     private final String name;
+    @Getter
     private final String bukkitName;
     private final Class<? extends MyPet> mypetClass;
+    @Getter
     private final Class<? extends Mob> bukkitEntityClass;
 
     private MyPetType(String name, String bukkitName, Class<? extends MyPet> mypetClass) {
@@ -53,7 +56,6 @@ public final class MyPetType {
         this.bukkitEntityClass = resolveBukkitEntityClass(bukkitName);
     }
 
-    @SuppressWarnings("unchecked")
     private static Class<? extends Mob> resolveBukkitEntityClass(String bukkitName) {
         try {
             EntityType bukkitType = EntityType.valueOf(bukkitName);
@@ -87,7 +89,7 @@ public final class MyPetType {
     }
 
     /**
-     * Removes a previously-registered pet type. Third-party plugins should call this from
+     * Removes a previously registered pet type. Third-party plugins should call this from
      * their {@code onDisable} to release the {@code Class<? extends MyPet>} reference and
      * avoid leaking their plugin classloader across reloads. No-op if the name is unknown.
      */
@@ -110,18 +112,31 @@ public final class MyPetType {
         return sb.toString();
     }
 
+    /** Returns a mutable copy of all registered types in insertion order. */
     public static List<MyPetType> all() {
         return new ArrayList<>(BY_NAME.values());
     }
 
+    /** Returns an unmodifiable view of all registered types. */
     public static Collection<MyPetType> values() {
         return Collections.unmodifiableCollection(BY_NAME.values());
     }
 
+    /**
+     * Looks up a type by its CamelCase name (case-insensitive).
+     *
+     * @throws MyPetTypeNotFoundException if no type is registered
+     */
     public static MyPetType valueOf(String name) {
         return byName(name);
     }
 
+    /**
+     * Looks up a type by its Bukkit {@link EntityType} enum name
+     * (UPPER_SNAKE_CASE, case-insensitive).
+     *
+     * @throws MyPetTypeNotFoundException if no type is registered
+     */
     public static MyPetType byEntityTypeName(String name) {
         MyPetType type = BY_BUKKIT_NAME.get(name.toUpperCase());
         if (type != null) {
@@ -130,6 +145,11 @@ public final class MyPetType {
         throw new MyPetTypeNotFoundException(name);
     }
 
+    /**
+     * Looks up a type by its CamelCase name (case-insensitive).
+     *
+     * @throws MyPetTypeNotFoundException if no type is registered
+     */
     public static MyPetType byName(String name) {
         MyPetType type = BY_NAME.get(name.toUpperCase());
         if (type != null) {
@@ -138,28 +158,27 @@ public final class MyPetType {
         throw new MyPetTypeNotFoundException(name);
     }
 
+    /**
+     * Looks up a type by name, returning {@code null} instead of
+     * throwing if the type is not registered.
+     */
     public static MyPetType byNameOrNull(String name) {
         return BY_NAME.get(name.toUpperCase());
     }
 
+    /** CamelCase display name (e.g. {@code "ZombieVillager"}). */
     public String name() {
         return name;
     }
 
-    public String getBukkitName() {
-        return bukkitName;
-    }
-
+    /** Lowercase type ID used for persistence keys (e.g. {@code "zombie_villager"}). */
     public String getTypeID() {
         return bukkitName.toLowerCase();
     }
 
+    /** Returns the pet implementation class for this type. */
     public Class<? extends MyPet> getMyPetClass() {
         return mypetClass;
-    }
-
-    public Class<? extends Mob> getBukkitEntityClass() {
-        return bukkitEntityClass;
     }
 
     /**
@@ -173,18 +192,25 @@ public final class MyPetType {
         return MyPetFlyingEntity.class.isAssignableFrom(mypetClass);
     }
 
+    /** Type-level check: does this type implement {@link MyPetSwimmingEntity}? */
     public boolean isSwimmingPet() {
         return MyPetSwimmingEntity.class.isAssignableFrom(mypetClass);
     }
 
+    /** Whether this pet type should float on lava (Strider). */
     public boolean floatsInLava() {
         return false;
     }
 
+    /** Whether this type needs custom float logic beyond standard swim. */
     public boolean specialFloat() {
         return false;
     }
 
+    /**
+     * Returns {@code true} if the current Minecraft version supports
+     * this pet type. Overridden for types added in later MC versions.
+     */
     public boolean checkMinecraftVersion() {
         return true;
     }

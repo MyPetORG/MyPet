@@ -20,8 +20,26 @@
 
 package de.Keyle.MyPet.api.entity;
 
+/**
+ * Marker for pet types whose underlying vanilla mob has a baby/adult
+ * lifecycle (animals, zombies, piglins, etc.). Exposes the baby state
+ * so it can be persisted across despawns and restored by
+ * {@code PetVisualSyncer}.
+ * <p>
+ * Also gates UI features: pets implementing this marker appear in the
+ * "babies" section of {@link ShopInfo}-driven shops, and the
+ * {@link DefaultInfo#growUpItem()} interaction is only offered to types
+ * that implement this interface.
+ */
 public interface MyPetBaby {
+
+    /** Returns {@code true} if this pet is currently in its baby form. */
     boolean isBaby();
 
+    /**
+     * Sets the baby/adult state. The visual syncer pushes this to the
+     * Bukkit entity's {@code setAdult()}/{@code setBaby()} on the next
+     * tick.
+     */
     void setBaby(boolean flag);
 }

@@ -67,7 +67,7 @@ public @interface ShopInfo {
 
     /**
      * The material name for the shop icon (e.g., "zombie_head").
-     * If empty, uses default icon based on entity type.
+     * If empty, uses the default icon based on the entity type.
      */
     String iconMaterial() default "";
 

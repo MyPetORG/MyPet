@@ -75,7 +75,10 @@ public record PersistedMyPet(
     @Override public long getLastUsed() { return lastUsed; }
     @Override public Skilltree getSkilltree() { return skilltree; }
 
-    // --- Single-field updaters ---
+    /**
+     * Single-field updaters — each returns a new {@code PersistedMyPet}
+     * with the named field changed and all other fields copied verbatim.
+     */
 
     public PersistedMyPet withUuid(UUID v) {
         return new PersistedMyPet(v, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);

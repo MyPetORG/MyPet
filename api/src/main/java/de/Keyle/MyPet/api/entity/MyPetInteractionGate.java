@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  * Marker for pet types whose underlying vanilla mob has a per-tick item-driven
- * right-click interaction (cow + bucket → milk, sheep + shears → wool, etc.).
+ * right-click interaction (cow + bucket → milk, sheep and shears → wool, etc.).
  * In v4 pets are real vanilla mobs, so these interactions happen for free on
  * every tame pet. Implementers expose two pieces of metadata that
  * {@code PetInteractionGateListener} uses to decide whether to cancel the
@@ -16,7 +16,7 @@ import java.util.Set;
  * <ol>
  *   <li>{@link #gatedInteractionItems()} — the set of {@link Material}s in
  *       the player's hand that trigger this pet's gated interaction. Most
- *       pets gate one material; some (e.g. mooshroom: bowl + shears) may
+ *       pets gate one material; some (e.g., mooshroom: bowl and shears) may
  *       eventually gate two.</li>
  *   <li>{@link #isInteractionSuppressed()} — reads the implementer's own
  *       per-pet config flag (e.g. {@code Configuration.MyPet.Cow.CAN_GIVE_MILK}).
@@ -30,7 +30,16 @@ import java.util.Set;
  */
 public interface MyPetInteractionGate extends MyPet {
 
+    /**
+     * The set of held-item materials that trigger this pet's gated
+     * vanilla interaction (e.g. {@code BUCKET} for cow milking,
+     * {@code SHEARS} for sheep shearing).
+     */
     Set<Material> gatedInteractionItems();
 
+    /**
+     * Returns {@code true} if the admin has disabled this pet type's
+     * vanilla interaction via the per-type config flag.
+     */
     boolean isInteractionSuppressed();
 }

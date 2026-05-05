@@ -48,12 +48,17 @@ import java.util.UUID;
  * </ul>
  */
 public sealed interface StoredMyPet permits PersistedMyPet, MyPet {
+
+    /** Globally unique identifier for this pet instance (persisted). */
     UUID getUUID();
 
+    /** The player who owns this pet. */
     MyPetPlayer getOwner();
 
+    /** The mob type this pet represents (e.g., Wolf, Creeper). */
     MyPetType getPetType();
 
+    /** Raw pet name in MiniMessage format. */
     String getPetName();
 
     /**
@@ -65,15 +70,17 @@ public sealed interface StoredMyPet permits PersistedMyPet, MyPet {
         return Util.SANITIZED_MINIMESSAGE.deserialize(getPetName());
     }
 
+    /** The world-group this pet belongs to (multi-world isolation). */
     String getWorldGroup();
 
+    /** Raw accumulated experience points. */
     double getExp();
 
     /**
      * Pet's experience level — derived from {@link #getExp()} and the
      * skilltree's XP curve via {@link ExperienceCache}. Returns {@code 0}
      * if the cache has no curve loaded for this pet's world group / type
-     * (e.g. before skilltrees have finished loading, or for a pet whose
+     * (e.g., before skilltrees have finished loading, or for a pet whose
      * world group has no configured curve).
      */
     default int getLevel() {
@@ -82,16 +89,22 @@ public sealed interface StoredMyPet permits PersistedMyPet, MyPet {
                 .orElse(0);
     }
 
+    /** Current health (half-hearts). Zero when dead. */
     double getHealth();
 
+    /** Hunger level (1–100). Drains over time; restored by feeding. */
     double getSaturation();
 
+    /** Seconds remaining on the respawn timer. Zero when alive. */
     int getRespawnTime();
 
+    /** If {@code true}, the pet will auto-spawn on the owner's next login. */
     boolean wantsToRespawn();
 
+    /** Epoch millis of the last time this pet was active in the world. */
     long getLastUsed();
 
+    /** The assigned skilltree, or {@code null} if none is set. */
     Skilltree getSkilltree();
 
     /**

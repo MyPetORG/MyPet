@@ -14,9 +14,8 @@ import de.Keyle.MyPet.api.Configuration;
  * implements this marker — adding a new sun-sensitive pet only requires
  * implementing this interface. Wiring lives in {@code PetSurvivalListener}'s
  * {@code EntityCombustEvent} arm: when the flag is {@code true} the natural
- * combust is cancelled before the visible flame appears. Block-caused
- * combust (lava, magma) and entity-caused combust (flame arrows) are not
- * gated by this flag.
+ * combust is canceled before the visible flame appears. This flag does not
+ * gate block-caused combust (lava, magma) and entity-caused combust (flame arrows).
  *
  * <p>Husk, ZombifiedPiglin, and WitherSkeleton are deliberately omitted —
  * vanilla overrides {@code isSunSensitive()} to {@code false} for those
