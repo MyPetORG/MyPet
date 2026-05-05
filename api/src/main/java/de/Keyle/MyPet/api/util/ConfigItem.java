@@ -110,10 +110,7 @@ public class ConfigItem {
         // If the configured item has metadata (custom name, lore, data components),
         // require the compared item to match metadata too. Without this, a plain
         // wheat would match a renamed "Super Wheat" configured as a special food.
-        if (item.hasItemMeta() && !item.isSimilar(compareItem)) {
-            return false;
-        }
-        return true;
+        return !item.hasItemMeta() || item.isSimilar(compareItem);
     }
 
     /**

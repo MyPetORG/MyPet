@@ -27,9 +27,10 @@ import java.util.*;
 public class Settings {
 
     @Getter
+    final
     String name;
-    Map<String, Setting> settingsMap = new HashMap<>();
-    Set<Setting> settings = new HashSet<>();
+    final Map<String, Setting> settingsMap = new HashMap<>();
+    final Set<Setting> settings = new HashSet<>();
 
     public Settings(String flagName) {
         this.name = flagName;

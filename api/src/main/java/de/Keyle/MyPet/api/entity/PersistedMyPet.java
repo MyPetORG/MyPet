@@ -135,10 +135,7 @@ public record PersistedMyPet(
      * a skill from the live tree does not erase its persisted state.
      */
     public PersistedMyPet withSkills(Collection<Skill> skills) {
-        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
-        for (String key : skillInfo.keySet()) {
-            builder.put(key, skillInfo.get(key));
-        }
+        CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder().put(skillInfo);
         for (Skill skill : skills) {
             if (skill instanceof NBTStorage storageSkill) {
                 CompoundBinaryTag s = storageSkill.save();

@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.util.service.ServiceName;
 import lombok.Getter;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -206,7 +207,10 @@ public class ExperienceCache implements ServiceContainer {
             this.version = cacheObject.get("version").getAsLong();
             this.calculator = cacheObject.get("calculator").getAsString();
         } catch (Throwable e) {
-            cacheFile.delete();
+            try {
+                Files.deleteIfExists(cacheFile.toPath());
+            } catch (IOException ignored) {
+            }
             version = 0;
             calculator = null;
             expMap.entrySet().clear();

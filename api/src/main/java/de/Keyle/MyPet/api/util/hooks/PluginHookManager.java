@@ -44,30 +44,28 @@ public class PluginHookManager {
 
     @Getter
     public ConfigurationYAML config;
-    protected ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
-    protected Map<String, PluginHook> hookByName = new HashMap<>();
-    protected Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
-    protected Queue<PluginHook> registeredHooks = new ArrayDeque<>();
+    protected final ArrayListMultimap<Class<? extends PluginHook>, PluginHook> hooks = ArrayListMultimap.create();
+    protected final Map<String, PluginHook> hookByName = new HashMap<>();
+    protected final Map<Class<? extends PluginHook>, PluginHook> hookByClass = new HashMap<>();
+    protected final Queue<PluginHook> registeredHooks = new ArrayDeque<>();
 
     public PluginHookManager() {
         File hookConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "hooks-config.yml");
         config = new ConfigurationYAML(hookConfigFile);
-        config.getConfig().options().header("""
-                \
-                #######################################################################
-                               This is the hook configuration of MyPet                #
-                                 You can find more info on the wiki:                  #
-                  https://wiki.mypet-plugin.de/setup/configurations/hooks-config.yml  #
-                #######################################################################
-                """);
-        config.getConfig().options().copyHeader(true);
+        config.getConfig().options().setHeader(List.of(
+                "#######################################################################",
+                "               This is the hook configuration of MyPet                #",
+                "                 You can find more info on the wiki:                  #",
+                "  https://wiki.mypet-plugin.de/setup/configurations/hooks-config.yml  #",
+                "#######################################################################"
+        ));
         config.getConfig().options().copyDefaults(true);
     }
 
     private static String getPluginVersion(String pluginName) {
         Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
         if (plugin == null) return "unknown";
-        return plugin.getDescription().getVersion();
+        return plugin.getPluginMeta().getVersion();
     }
 
     /**
@@ -130,7 +128,6 @@ public class PluginHookManager {
      * @param hook the hook
      * @return true if the hook was enabled successfully
      */
-    @SuppressWarnings("unchecked")
     public boolean enableHook(PluginHook hook) {
         try {
             PluginHookName hookNameAnnotation = hook.getClass().getAnnotation(PluginHookName.class);
@@ -147,9 +144,11 @@ public class PluginHookManager {
 
             if (enable && hook.onEnable()) {
                 boolean genericHook = true;
-                for (Object o : Util.getAllInterfaces(hook.getClass())) {
-                    if (o != PluginHook.class && PluginHook.class.isAssignableFrom((Class) o)) {
-                        hooks.put((Class) o, hook);
+                for (Class<?> iface : Util.getAllInterfaces(hook.getClass())) {
+                    if (iface != PluginHook.class && PluginHook.class.isAssignableFrom(iface)) {
+                        @SuppressWarnings("unchecked")
+                        Class<? extends PluginHook> hookIface = (Class<? extends PluginHook>) iface;
+                        hooks.put(hookIface, hook);
                         genericHook = false;
                     }
                 }
@@ -160,7 +159,7 @@ public class PluginHookManager {
                 hookByClass.put(hook.getClass(), hook);
 
                 String message = hook.getPluginName();
-                message += " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ")";
+                message += " (" + getPluginVersion(hook.getPluginName()) + ")";
                 if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
                     message += " (" + hookNameAnnotation.classPath() + ")";
                 }
@@ -221,9 +220,9 @@ public class PluginHookManager {
      */
     public void disableHook(PluginHook hook) {
         hook.onDisable();
-        for (Object o : Util.getAllInterfaces(hook.getClass())) {
-            if (o != PluginHook.class && PluginHook.class.isAssignableFrom((Class) o)) {
-                hooks.remove(o, hook);
+        for (Class<?> iface : Util.getAllInterfaces(hook.getClass())) {
+            if (iface != PluginHook.class && PluginHook.class.isAssignableFrom(iface)) {
+                hooks.remove(iface, hook);
             }
         }
         hooks.removeAll(hook.getClass());

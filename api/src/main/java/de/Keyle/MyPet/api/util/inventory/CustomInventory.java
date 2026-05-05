@@ -39,6 +39,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -292,12 +293,14 @@ public class CustomInventory implements InventoryHolder {
 
     /**
      * InventoryHolder contract. Returns the held Bukkit Inventory.
-     * May be null if size has not been set yet.
-     *
-     * @return the held Bukkit inventory or null if size has not been set yet
+     * Lazily creates a default-sized inventory if one has not been set yet.
      */
     @Override
-    public @Nullable Inventory getInventory() {
+    public @NotNull Inventory getInventory() {
+        if (bukkitInventory == null) {
+            this.size = size > 0 ? size : 9;
+            this.bukkitInventory = Bukkit.createInventory(this, this.size, this.name);
+        }
         return bukkitInventory;
     }
 
@@ -401,7 +404,7 @@ public class CustomInventory implements InventoryHolder {
     public void load(CompoundBinaryTag nbtTagCompound) {
         createInventoryIfNeeded();
         ListBinaryTag items = nbtTagCompound.getList("Items", BinaryTagTypes.COMPOUND);
-        if (items.size() == 0) return;
+        if (items.isEmpty()) return;
         if (this.bukkitInventory == null) return;
 
         for (int i = 0; i < items.size(); i++) {

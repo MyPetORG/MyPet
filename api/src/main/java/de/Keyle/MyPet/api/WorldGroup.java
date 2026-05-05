@@ -37,9 +37,9 @@ public class WorldGroup {
     private static final Map<String, WorldGroup> groupWorlds = new HashMap<>();
     public static final WorldGroup DEFAULT_GROUP = new WorldGroup("default", false);
     public static final WorldGroup DISABLED_GROUP = new WorldGroup("---DISABLED---", true);
-    private String name;
-    private boolean disabled;
-    private List<String> worlds = new ArrayList<>();
+    private final String name;
+    private final boolean disabled;
+    private final List<String> worlds = new ArrayList<>();
 
     public WorldGroup(String groupName, boolean disabled) {
         this.name = groupName.toLowerCase();
@@ -121,15 +121,13 @@ public class WorldGroup {
             return;
         }
 
-        config.options().header("""
-                \
-                ######################################################################
-                          This is the world group configuration of MyPet             #
-                                You can find more info on the wiki:                  #
-                  https://wiki.mypet-plugin.de/setup/configurations/worldgroups.yml  #
-                ######################################################################
-                """);
-        config.options().copyHeader(true);
+        config.options().setHeader(List.of(
+                "######################################################################",
+                "          This is the world group configuration of MyPet             #",
+                "                You can find more info on the wiki:                  #",
+                "  https://wiki.mypet-plugin.de/setup/configurations/worldgroups.yml  #",
+                "######################################################################"
+        ));
 
         Set<String> groups;
         Set<String> disabledWorlds = new HashSet<>();

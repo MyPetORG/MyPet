@@ -33,10 +33,10 @@ import java.util.*;
  * other plugins are active.
  */
 public class ServiceManager {
-    Map<Class<? extends ServiceContainer>, ServiceContainer> services = new HashMap<>();
-    Map<String, ServiceContainer> serviceByName = new HashMap<>();
+    final Map<Class<? extends ServiceContainer>, ServiceContainer> services = new HashMap<>();
+    final Map<String, ServiceContainer> serviceByName = new HashMap<>();
 
-    ArrayListMultimap<Load.State, ServiceContainer> registeredServices = ArrayListMultimap.create();
+    final ArrayListMultimap<Load.State, ServiceContainer> registeredServices = ArrayListMultimap.create();
 
     public void listServices() {
         MyPetApi.getLogger().info("Loaded services: " + serviceByName.keySet());
@@ -63,15 +63,15 @@ public class ServiceManager {
     @SuppressWarnings("unchecked")
     private void registerService(ServiceContainer service) {
         boolean genericService = true;
-        for (Object o : Util.getAllInterfaces(service.getClass())) {
-            if (o != ServiceContainer.class && ServiceContainer.class.isAssignableFrom((Class) o)) {
-                services.put((Class) o, service);
+        for (Class<?> iface : Util.getAllInterfaces(service.getClass())) {
+            if (iface != ServiceContainer.class && ServiceContainer.class.isAssignableFrom(iface)) {
+                services.put((Class<? extends ServiceContainer>) iface, service);
                 genericService = false;
             }
         }
-        for (Object o : Util.getAllSuperclasses(service.getClass())) {
-            if (o != ServiceContainer.class && ServiceContainer.class.isAssignableFrom((Class) o)) {
-                services.put((Class) o, service);
+        for (Class<?> superclass : Util.getAllSuperclasses(service.getClass())) {
+            if (superclass != ServiceContainer.class && ServiceContainer.class.isAssignableFrom(superclass)) {
+                services.put((Class<? extends ServiceContainer>) superclass, service);
                 genericService = false;
             }
         }
@@ -111,11 +111,11 @@ public class ServiceManager {
         List<T> list = new ArrayList<>();
 
         for (ServiceContainer service : services.values()) {
-            if (service.getClass().isAssignableFrom(serviceClass) && !list.contains(service)) {
-                list.add((T) service);
-            }
-            if (serviceClass.isAssignableFrom(service.getClass()) && !list.contains(service)) {
-                list.add((T) service);
+            if (serviceClass.isInstance(service)) {
+                T typed = (T) service;
+                if (!list.contains(typed)) {
+                    list.add(typed);
+                }
             }
         }
 

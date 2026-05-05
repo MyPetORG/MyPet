@@ -54,7 +54,7 @@ public class Util {
             ))
             .build();
 
-    static Random rng = new Random();
+    static final Random rng = new Random();
 
     /**
      * Returns the shared {@link Random} instance used throughout the plugin.
@@ -102,15 +102,14 @@ public class Util {
      * @throws IOException if the request fails or is interrupted
      */
     public static String readUrlContent(String address, int timeout) throws IOException {
-        HttpClient client = HttpClient.newBuilder()
+        try (HttpClient client = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofMillis(timeout))
-                .build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(address))
-                .timeout(Duration.ofMillis(timeout))
-                .GET()
-                .build();
-        try {
+                .build()) {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(address))
+                    .timeout(Duration.ofMillis(timeout))
+                    .GET()
+                    .build();
             return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

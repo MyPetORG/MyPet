@@ -36,7 +36,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -66,11 +65,12 @@ public class Locale {
      * Bukkit returns an empty string.
      */
     public static String getPlayerLanguage(Player player) {
-        String locale = player.getLocale();
-        if (locale.isEmpty()) {
+        java.util.Locale locale = player.locale();
+        String tag = locale.toString().toLowerCase();
+        if (tag.isEmpty()) {
             return "en_us";
         }
-        return locale;
+        return tag;
     }
 
     /**
@@ -309,7 +309,7 @@ public class Locale {
             result.add(Component.text(text.substring(lastIndex)).style(style));
         }
 
-        if (result.isEmpty() && !text.isEmpty()) {
+        if (result.isEmpty()) {
             result.add(Component.text(text).style(style));
         }
 
@@ -349,22 +349,13 @@ public class Locale {
      * Loads a locale bundle from the plugin JAR and the data folder.
      */
     private static TranslationBundle loadLocale(String localeString) {
-
-        JarFile jarFile;
-        try {
-            jarFile = new JarFile(MyPetApi.getPlugin().getFile());
-        } catch (IOException ignored) {
-            return new TranslationBundle();
-        }
-
         TranslationBundle newLocale = new TranslationBundle();
-        try {
+
+        try (JarFile jarFile = new JarFile(MyPetApi.getPlugin().getFile())) {
             JarEntry jarEntry = jarFile.getJarEntry("locale/MyPet_" + localeString + ".properties");
             if (jarEntry != null) {
                 newLocale.load(new InputStreamReader(jarFile.getInputStream(jarEntry), StandardCharsets.UTF_8));
             }
-        } catch (UnsupportedEncodingException e) {
-            ErrorUtil.report(e);
         } catch (IOException ignored) {
         }
 
@@ -470,11 +461,9 @@ public class Locale {
 
     /** Country-specific bundle (e.g. "en_us") under a parent {@link Language}. */
     private static class Country {
-        private final String code;
         private final TranslationBundle translations;
 
         Country(Language language, String code) {
-            this.code = code;
             this.translations = loadLocale(language.code + "_" + code);
         }
 

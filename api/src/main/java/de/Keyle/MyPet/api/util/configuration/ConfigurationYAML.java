@@ -30,9 +30,9 @@ import java.io.IOException;
 
 public class ConfigurationYAML {
 
-    public File yamlFile;
+    public final File yamlFile;
     @Getter
-    private FileConfiguration config;
+    private FileConfiguration config = new YamlConfiguration();
 
     public ConfigurationYAML(String path) {
         this(new File(path));
@@ -41,8 +41,6 @@ public class ConfigurationYAML {
     public ConfigurationYAML(File file) {
         yamlFile = file;
         loadConfig();
-        file.setWritable(true);
-        file.setReadable(true);
     }
 
     public boolean saveConfig() {

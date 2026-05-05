@@ -25,6 +25,7 @@ import lombok.Getter;
 public class Setting {
 
     @Getter
+    final
     String key;
     String value = null;
 
