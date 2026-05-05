@@ -20,8 +20,11 @@
 
 package de.Keyle.MyPet.api.util.configuration.settings;
 
+import lombok.Getter;
+
 public class Setting {
 
+    @Getter
     String key;
     String value = null;
 
@@ -32,10 +35,6 @@ public class Setting {
     public Setting(String key, String value) {
         this.key = key;
         this.value = value;
-    }
-
-    public String getKey() {
-        return key;
     }
 
     public String getValue() {

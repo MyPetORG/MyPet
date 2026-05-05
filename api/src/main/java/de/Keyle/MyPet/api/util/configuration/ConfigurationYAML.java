@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.util.configuration;
 
 import de.Keyle.MyPet.api.util.ErrorUtil;
+import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -30,6 +31,7 @@ import java.io.IOException;
 public class ConfigurationYAML {
 
     public File yamlFile;
+    @Getter
     private FileConfiguration config;
 
     public ConfigurationYAML(String path) {
@@ -41,10 +43,6 @@ public class ConfigurationYAML {
         loadConfig();
         file.setWritable(true);
         file.setReadable(true);
-    }
-
-    public FileConfiguration getConfig() {
-        return config;
     }
 
     public boolean saveConfig() {

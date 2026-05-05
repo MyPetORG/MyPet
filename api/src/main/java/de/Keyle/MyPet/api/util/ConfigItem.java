@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.util;
 
 import de.Keyle.MyPet.MyPetApi;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +32,7 @@ import org.bukkit.inventory.meta.Damageable;
  * {@code CONTROL_ITEM}, {@code GROW_UP_ITEM}) and compared against items the
  * player is holding.
  */
+@Getter
 public class ConfigItem {
 
     protected ItemStack item = null;
@@ -112,14 +114,6 @@ public class ConfigItem {
             return false;
         }
         return true;
-    }
-
-    public ItemStack getItem() {
-        return item;
-    }
-
-    public DurabilityMode getDurabilityMode() {
-        return durabilityMode;
     }
 
     /**

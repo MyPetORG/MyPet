@@ -20,10 +20,13 @@
 
 package de.Keyle.MyPet.api.util.configuration.settings;
 
+import lombok.Getter;
+
 import java.util.*;
 
 public class Settings {
 
+    @Getter
     String name;
     Map<String, Setting> settingsMap = new HashMap<>();
     Set<Setting> settings = new HashSet<>();
@@ -45,10 +48,6 @@ public class Settings {
                 settings.add(setting);
             }
         }
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Map<String, Setting> map() {

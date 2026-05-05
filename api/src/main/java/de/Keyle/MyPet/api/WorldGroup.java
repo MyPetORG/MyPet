@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Getter
 public class WorldGroup {
 
     private static final Map<String, WorldGroup> allGroups = new HashMap<>();
@@ -37,7 +38,6 @@ public class WorldGroup {
     public static final WorldGroup DEFAULT_GROUP = new WorldGroup("default", false);
     public static final WorldGroup DISABLED_GROUP = new WorldGroup("---DISABLED---", true);
     private String name;
-    @Getter
     private boolean disabled;
     private List<String> worlds = new ArrayList<>();
 
@@ -194,14 +194,6 @@ public class WorldGroup {
             return true;
         }
         return false;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public List<String> getWorlds() {
-        return this.worlds;
     }
 
     /**
