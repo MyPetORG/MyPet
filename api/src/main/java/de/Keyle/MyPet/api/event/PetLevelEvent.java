@@ -26,6 +26,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Common parent for level-transition events. Not directly fired — listeners
@@ -44,7 +45,6 @@ import org.bukkit.event.HandlerList;
  */
 public class PetLevelEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-
     @Getter
     private final MyPet pet;
     @Getter
@@ -63,6 +63,10 @@ public class PetLevelEvent extends Event {
         this.beQuiet = beQuiet;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -75,12 +79,8 @@ public class PetLevelEvent extends Event {
         return beQuiet;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

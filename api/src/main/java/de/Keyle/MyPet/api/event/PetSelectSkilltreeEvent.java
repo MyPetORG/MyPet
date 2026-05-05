@@ -27,6 +27,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when a pet has a skilltree assigned. {@link Source} discriminates the
@@ -40,8 +41,6 @@ import org.bukkit.event.HandlerList;
  *       {@code /petadmin skilltree}.</li>
  *   <li>{@link Source#ADMIN_CREATION} — admin pet creation flow assigning the
  *       initial tree.</li>
- *   <li>{@link Source#BOSS_SHOP_PRO}, {@link Source#SHOP} — third-party shop
- *       integrations.</li>
  *   <li>{@link Source#OTHER} — fallback for any other path.</li>
  * </ul>
  *
@@ -59,15 +58,18 @@ import org.bukkit.event.HandlerList;
 @Getter
 public class PetSelectSkilltreeEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-
-    protected final StoredMyPet pet;
-    protected final Skilltree skilltree;
+    private final StoredMyPet pet;
+    private final Skilltree skilltree;
     private final Source source;
 
     public PetSelectSkilltreeEvent(StoredMyPet pet, Skilltree skilltree, Source source) {
         this.pet = pet;
         this.skilltree = skilltree;
         this.source = source;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -78,16 +80,12 @@ public class PetSelectSkilltreeEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
+    @Override
+    public @NonNull HandlerList getHandlers() {
+        return handlers;
+    }
+
     public enum Source {
         AUTO, PLAYER_COMMAND, ADMIN_COMMAND, ADMIN_CREATION, SHOP, OTHER
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
     }
 }

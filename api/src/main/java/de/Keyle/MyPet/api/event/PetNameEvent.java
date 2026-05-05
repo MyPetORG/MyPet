@@ -26,6 +26,7 @@ import lombok.Setter;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when a pet's display name is about to change. Listeners can rewrite
@@ -51,9 +52,8 @@ import org.bukkit.event.HandlerList;
  */
 public class PetNameEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-
     @Getter
-    private MyPet pet;
+    private final MyPet pet;
     @Getter
     @Setter
     private String newName;
@@ -71,7 +71,7 @@ public class PetNameEvent extends Event implements Cancellable {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

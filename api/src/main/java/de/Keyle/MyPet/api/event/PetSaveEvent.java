@@ -27,6 +27,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when a pet's persisted state is being written to the repository.
@@ -66,6 +67,10 @@ public class PetSaveEvent extends Event {
         this.pet = mypet;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -74,12 +79,8 @@ public class PetSaveEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

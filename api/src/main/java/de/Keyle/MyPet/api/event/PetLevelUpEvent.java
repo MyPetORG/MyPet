@@ -22,6 +22,7 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired after an experience change pushes a pet's level up. The new level is
@@ -49,16 +50,16 @@ public class PetLevelUpEvent extends PetLevelEvent {
         this.fromLevel = fromLevel;
     }
 
-    public int fromLevel() {
-        return fromLevel;
-    }
-
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
+    public int fromLevel() {
+        return fromLevel;
+    }
+
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

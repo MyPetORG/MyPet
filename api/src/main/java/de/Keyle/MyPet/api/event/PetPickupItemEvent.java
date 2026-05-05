@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when a pet with the Pickup skill is about to grab an {@link Item}
@@ -43,7 +44,7 @@ import org.bukkit.event.HandlerList;
  * and aborts the pickup. The pet won't re-attempt the same item until the
  * Pickup tick comes back around.
  *
- * <p><b>Pet state:</b> live pet, owner online
+ * <p><b>Pet state:</b> live pet, with the owner online
  *
  * <p><b>Related events:</b> {@link PetInventoryActionEvent} fires immediately
  * after this on the {@link PetInventoryActionEvent.Action#PICKUP} branch,
@@ -53,15 +54,18 @@ import org.bukkit.event.HandlerList;
 @Getter
 public class PetPickupItemEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-
-    protected final MyPet pet;
+    private final MyPet pet;
     private final Item item;
     @Setter
-    protected boolean isCancelled = false;
+    private boolean isCancelled = false;
 
     public PetPickupItemEvent(MyPet pet, Item item) {
         this.pet = pet;
         this.item = item;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -72,12 +76,8 @@ public class PetPickupItemEvent extends Event implements Cancellable {
         return pet.getOwner().getPlayer();
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

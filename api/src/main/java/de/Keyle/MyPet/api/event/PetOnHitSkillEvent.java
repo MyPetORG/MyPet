@@ -29,13 +29,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired before a pet's on-hit skill executes against a living target. Dispatched
  * once per on-hit skill per strike — a pet with both Bleed and Fire on a
- * single melee swing fires the event twice in sequence.
+ * single mêlée swing fires the event twice in sequence.
  *
- * <p>Fires from {@code PetSkillTriggerListener} during the melee chain, after
+ * <p>Fires from {@code PetSkillTriggerListener} during the mêlée chain, after
  * {@link PetDamageEvent} (the damage step) and before each
  * {@link OnHitSkill#apply(LivingEntity)} call.
  *
@@ -44,7 +45,7 @@ import org.bukkit.event.HandlerList;
  * cancel {@link PetDamageEvent} instead — that aborts the damage and the
  * full on-hit chain together.
  *
- * <p><b>Pet state:</b> live pet, owner online. Skill is the live
+ * <p><b>Pet state:</b> live pet, with the owner online. Skill is the live
  * {@link OnHitSkill} instance — listeners may call its accessors to read
  * upgrade levels but should not mutate state mid-strike.
  *
@@ -55,17 +56,21 @@ import org.bukkit.event.HandlerList;
 public class PetOnHitSkillEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    protected final MyPet pet;
+    private final MyPet pet;
     @Getter
-    protected final OnHitSkill skill;
-    protected boolean isCancelled = false;
+    private final OnHitSkill skill;
     @Getter
-    protected LivingEntity target;
+    private final LivingEntity target;
+    private boolean isCancelled = false;
 
     public PetOnHitSkillEvent(MyPet pet, OnHitSkill skill, LivingEntity target) {
         this.pet = pet;
         this.skill = skill;
         this.target = target;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -86,12 +91,8 @@ public class PetOnHitSkillEvent extends Event implements Cancellable {
         isCancelled = cancelled;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

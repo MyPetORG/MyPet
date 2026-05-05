@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when an owner attempts to spawn the world entity for an already-active
@@ -56,6 +57,10 @@ public class PetCallEvent extends Event implements Cancellable {
         this.pet = pet;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -74,12 +79,8 @@ public class PetCallEvent extends Event implements Cancellable {
         isCancelled = cancelled;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

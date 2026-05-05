@@ -22,8 +22,10 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when an owner right-clicks a pet with a food {@link ItemStack}.
@@ -47,28 +49,17 @@ import org.bukkit.inventory.ItemStack;
  *       backpack or AI behavior).</li>
  * </ul>
  */
+@Setter
 @Getter
 public class PetFeedEvent extends PetInteractEvent {
     private static final HandlerList handlers = new HandlerList();
-
     private double saturation;
     private Result result;
+
     public PetFeedEvent(MyPet pet, ItemStack item, double saturation, Result result) {
         super(pet, item);
         this.saturation = saturation;
         this.result = result;
-    }
-
-    public void setSaturation(double saturation) {
-        this.saturation = saturation;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
-    }
-
-    public enum Result {
-        HEAL, EAT, SELF_FEED
     }
 
     public static HandlerList getHandlerList() {
@@ -76,7 +67,11 @@ public class PetFeedEvent extends PetInteractEvent {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
+    }
+
+    public enum Result {
+        HEAL, EAT, SELF_FEED
     }
 }

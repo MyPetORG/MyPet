@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when an owner runs {@code /mypet sendaway} — the symmetric counterpart
@@ -40,7 +41,7 @@ import org.bukkit.event.HandlerList;
  * world. Common addon use-cases: region-locked pets that can't be dismissed
  * inside arenas, anti-grief gates against dismissal in PvP zones.
  *
- * <p><b>Pet state:</b> live pet, owner online (the command requires it).
+ * <p><b>Pet state:</b> live pet, with the owner online (the command requires it).
  * After successful dispatch, the entity is removed from the world but
  * {@link #getPet()} continues to refer to a live {@link MyPet} until its
  * owner logs out (the periodic save flushes it back to persisted form).
@@ -56,6 +57,10 @@ public class PetSendAwayEvent extends Event implements Cancellable {
 
     public PetSendAwayEvent(MyPet pet) {
         this.pet = pet;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -76,12 +81,8 @@ public class PetSendAwayEvent extends Event implements Cancellable {
         isCancelled = cancelled;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

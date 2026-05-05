@@ -26,6 +26,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when a pet is being permanently removed from the repository — the
@@ -59,9 +60,14 @@ public class PetRemoveEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final StoredMyPet pet;
     private final Source source;
+
     public PetRemoveEvent(StoredMyPet pet, Source source) {
         this.pet = pet;
         this.source = source;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -72,16 +78,12 @@ public class PetRemoveEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
+    @Override
+    public @NonNull HandlerList getHandlers() {
+        return handlers;
+    }
+
     public enum Source {
         RELEASE, DEATH, ADMIN_COMMAND, OTHER
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
     }
 }

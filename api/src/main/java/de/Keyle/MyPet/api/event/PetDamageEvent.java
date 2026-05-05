@@ -29,9 +29,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
- * Fired before a pet deals melee damage to a target. Listeners may modify the
+ * Fired before a pet deals mêlée damage to a target. Listeners may modify the
  * damage amount or cancel the strike entirely.
  *
  * <p>Fires from {@code PetSkillTriggerListener} after the Damage / Bleed / Fire /
@@ -48,23 +49,26 @@ import org.bukkit.event.HandlerList;
  * {@code 0} does NOT cancel the swing; the entity damage call still runs (which
  * triggers vanilla animation). To skip the strike entirely, cancel.
  *
- * <p><b>Pet state:</b> live pet, owner online (the firing path requires the
+ * <p><b>Pet state:</b> live pet, with the owner online (the firing path requires the
  * owner to be tracking the pet entity).
  */
 @Getter
 public class PetDamageEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-
-    protected final MyPet pet;
-    protected final Entity target;
-    protected double damage;
+    private final MyPet pet;
+    private final Entity target;
+    private double damage;
     @Setter
-    protected boolean cancelled;
+    private boolean cancelled;
 
     public PetDamageEvent(MyPet pet, Entity target, double damage) {
         this.pet = pet;
         this.target = target;
         this.damage = damage;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -79,12 +83,8 @@ public class PetDamageEvent extends Event implements Cancellable {
         this.damage = Math.max(0, damage);
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

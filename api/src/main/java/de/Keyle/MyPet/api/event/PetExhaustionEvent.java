@@ -22,10 +22,13 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when a pet's saturation drops to zero — the pet is hungry and would
@@ -33,7 +36,7 @@ import org.bukkit.event.HandlerList;
  * starvation hit, or surface custom messaging.
  *
  * <p>Fires from {@code MyPet#updateSaturation} once per saturation-zero
- * transition; after firing, if not cancelled, the pet's health begins ticking
+ * transition; after firing, if not canceled, the pet's health begins ticking
  * down from hunger.
  *
  * <p><b>Cancellable:</b> cancelling skips the starvation health-loss for this
@@ -43,18 +46,19 @@ import org.bukkit.event.HandlerList;
  *
  * <p><b>Pet state:</b> live pet; owner online
  */
+@Getter
 public class PetExhaustionEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-
-    protected final MyPet pet;
-    protected boolean cancelled;
+    private final MyPet pet;
+    @Setter
+    private boolean cancelled;
 
     public PetExhaustionEvent(MyPet pet) {
         this.pet = pet;
     }
 
-    public MyPet getPet() {
-        return pet;
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -65,20 +69,8 @@ public class PetExhaustionEvent extends Event implements Cancellable {
         return pet.getOwner().getPlayer();
     }
 
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    public void setCancelled(boolean b) {
-        cancelled = b;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

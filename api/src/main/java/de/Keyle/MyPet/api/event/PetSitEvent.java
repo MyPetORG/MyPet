@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.entity.MyPet;
 import lombok.Getter;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when a pet's sit / follow toggle is about to flip. Subclass of
@@ -39,7 +40,7 @@ import org.bukkit.event.HandlerList;
  * <p><b>Cancellable</b> (inherited): cancellation suppresses the toggle —
  * the pet stays in its current sit / follow state.
  *
- * <p><b>Pet state:</b> live pet, owner online.
+ * <p><b>Pet state:</b> live pet, with the owner online.
  *
  * <p><b>Item:</b> {@code getItem()} (inherited from {@link PetInteractEvent})
  * always returns {@code null} for this event — the sit-toggle item is checked
@@ -48,16 +49,11 @@ import org.bukkit.event.HandlerList;
 @Getter
 public class PetSitEvent extends PetInteractEvent {
     private static final HandlerList handlers = new HandlerList();
-
-    private Action action;
+    private final Action action;
 
     public PetSitEvent(MyPet pet, Action action) {
         super(pet, null);
         this.action = action;
-    }
-
-    public enum Action {
-        STAY, FOLLOW
     }
 
     public static HandlerList getHandlerList() {
@@ -65,7 +61,11 @@ public class PetSitEvent extends PetInteractEvent {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
+    }
+
+    public enum Action {
+        STAY, FOLLOW
     }
 }

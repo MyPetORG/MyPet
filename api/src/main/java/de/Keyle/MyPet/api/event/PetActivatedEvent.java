@@ -27,6 +27,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired after a pet has finished transitioning from at-rest ({@link PersistedMyPet})
@@ -58,6 +59,10 @@ public class PetActivatedEvent extends Event {
         this.pet = mypet;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -66,12 +71,8 @@ public class PetActivatedEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

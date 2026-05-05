@@ -22,11 +22,13 @@ package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when something interacts with a pet's Backpack inventory. The
@@ -39,7 +41,7 @@ import org.bukkit.event.HandlerList;
  *   <li>{@link Action#PICKUP} — fires from {@code PickupImpl} when a Pickup
  *       skill grab is about to deposit an item into the backpack.</li>
  *   <li>{@link Action#USE} — fires from {@code PickupImpl} when the pet would
- *       use a stored item (e.g. equip armor, eat food) instead of dropping
+ *       use a stored item (e.g., equip armor, eat food) instead of dropping
  *       it.</li>
  * </ul>
  *
@@ -51,21 +53,27 @@ import org.bukkit.event.HandlerList;
  *       or consumed.</li>
  * </ul>
  *
- * <p><b>Pet state:</b> live pet, owner online (Open) or near (Pickup / Use).
+ * <p><b>Pet state:</b> live pet, with the owner online (Open) or near (Pickup / Use).
  *
  * <p><b>Related events:</b> {@link PetPickupItemEvent} fires earlier on the
  * Pickup path with the actual {@code Item} entity — listen to that for
  * per-item filtering, and to this event for per-action veto control.
  */
+@Getter
 public class PetInventoryActionEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    protected final MyPet pet;
+    private final MyPet pet;
+    private final Action action;
     @Setter
-    protected boolean isCancelled = false;
-    protected Action action;
+    private boolean isCancelled = false;
+
     public PetInventoryActionEvent(MyPet pet, Action action) {
         this.pet = pet;
         this.action = action;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -76,28 +84,12 @@ public class PetInventoryActionEvent extends Event implements Cancellable {
         return pet.getOwner().getPlayer();
     }
 
-    public MyPet getPet() {
-        return pet;
-    }
-
-    public Action getAction() {
-        return action;
-    }
-
-    public boolean isCancelled() {
-        return isCancelled;
+    @Override
+    public @NonNull HandlerList getHandlers() {
+        return handlers;
     }
 
     public enum Action {
         OPEN, PICKUP, USE
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
     }
 }

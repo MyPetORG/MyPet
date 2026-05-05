@@ -27,6 +27,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when the repository hands a stored pet to {@code MyPetManager} for
@@ -59,6 +60,10 @@ public class PetLoadEvent extends Event {
         this.pet = mypet;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -67,12 +72,8 @@ public class PetLoadEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

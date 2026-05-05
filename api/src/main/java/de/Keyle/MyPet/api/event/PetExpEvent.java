@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired before a pet's experience changes — gain or loss. Dispatched once per
@@ -57,13 +58,12 @@ import org.bukkit.event.HandlerList;
 @Getter
 public class PetExpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-
     private final MyPet pet;
+    private final boolean quiet;
     @Setter
     private boolean isCancelled = false;
     @Setter
     private double exp;
-    private boolean quiet;
 
     public PetExpEvent(MyPet pet, double exp, boolean quiet) {
         this.pet = pet;
@@ -75,6 +75,10 @@ public class PetExpEvent extends Event implements Cancellable {
         this(pet, exp, false);
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public MyPetPlayer getOwner() {
         return pet.getOwner();
     }
@@ -83,12 +87,8 @@ public class PetExpEvent extends Event implements Cancellable {
         return pet.getOwner().getPlayer();
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

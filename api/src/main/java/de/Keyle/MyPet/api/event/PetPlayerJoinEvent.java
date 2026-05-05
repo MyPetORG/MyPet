@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.event;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired after a {@link MyPetPlayer} has finished joining the server — i.e.,
@@ -42,23 +43,22 @@ import org.bukkit.event.HandlerList;
  */
 public class PetPlayerJoinEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-
     private final MyPetPlayer myPetPlayer;
 
     public PetPlayerJoinEvent(MyPetPlayer myPetPlayer) {
         this.myPetPlayer = myPetPlayer;
     }
 
-    public MyPetPlayer getPlayer() {
-        return myPetPlayer;
-    }
-
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
+    public MyPetPlayer getPlayer() {
+        return myPetPlayer;
+    }
+
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

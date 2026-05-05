@@ -27,6 +27,7 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when a pet's lifecycle {@code PetState} transitions — e.g., from
@@ -50,15 +51,18 @@ import org.bukkit.event.HandlerList;
  */
 public class PetStatusEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-
     @Getter
-    protected final StoredMyPet pet;
+    private final StoredMyPet pet;
     @Getter
-    protected final MyPet.PetState state;
+    private final MyPet.PetState state;
 
     public PetStatusEvent(MyPet pet, MyPet.PetState state) {
         this.pet = pet;
         this.state = state;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public MyPetPlayer getOwner() {
@@ -69,12 +73,8 @@ public class PetStatusEvent extends Event {
         return pet.getOwner().getPlayer();
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }

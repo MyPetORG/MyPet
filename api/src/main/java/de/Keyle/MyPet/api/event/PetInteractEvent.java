@@ -27,6 +27,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Base class for pet right-click interaction events. Used directly only as a
@@ -59,6 +60,10 @@ public class PetInteractEvent extends Event implements Cancellable {
         this.item = item;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     @Override
     public boolean isCancelled() {
         return isCancelled;
@@ -69,12 +74,8 @@ public class PetInteractEvent extends Event implements Cancellable {
         isCancelled = cancelled;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
     @Override
-    public HandlerList getHandlers() {
+    public @NonNull HandlerList getHandlers() {
         return handlers;
     }
 }
