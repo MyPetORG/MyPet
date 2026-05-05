@@ -94,10 +94,10 @@ public abstract class HookHelper {
     public abstract List<Player> getPartyMembers(Player player);
 
     /**
-     * Returns wether the player is vanished or not
+     * Returns whether the player is vanished or not
      *
      * @param player the player to be checked
-     * @return wether the player is vanished
+     * @return whether the player is vanished
      */
     public abstract boolean isVanished(Player player);
 

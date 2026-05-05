@@ -96,7 +96,7 @@ public class PluginHookManager {
 
     /**
      * Register new hooks here. A hook needs the {@link PluginHookName} annotation to be accepted.
-     * Registered hooks will not enabled after MyPet has loaded. Use enableHook instead.
+     * Registered hooks will not enable after MyPet has loaded. Use enableHook instead.
      *
      * @param hookClass the hook class
      */

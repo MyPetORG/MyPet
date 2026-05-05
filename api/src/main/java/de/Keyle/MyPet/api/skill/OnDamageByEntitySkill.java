@@ -26,9 +26,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 /**
  * Interface for skills that react when the pet <em>receives</em> damage from another
  * entity. The combat listener calls {@link #trigger()} first to check if the skill
- * should fire (e.g. random chance based on level), and if it returns {@code true},
+ * should fire (e.g., random chance based on level), and if it returns {@code true},
  * invokes {@link #apply(LivingEntity, EntityDamageByEntityEvent)} to execute the
- * reactive effect (e.g. Thorns reflecting damage back to the attacker).
+ * reactive effect (e.g., Thorns reflecting damage back to the attacker).
  *
  * <p>Implementations are called from {@code PetPvPListener} / pet damage handling.
  *
@@ -49,7 +49,7 @@ public interface OnDamageByEntitySkill {
      * Applies this skill's reactive effect.
      *
      * @param damager the entity that dealt damage to the pet
-     * @param event   the original damage event (may be modified, e.g. to reduce damage)
+     * @param event   the original damage event (can be modified, e.g., to reduce damage)
      */
     void apply(LivingEntity damager, EntityDamageByEntityEvent event);
 }

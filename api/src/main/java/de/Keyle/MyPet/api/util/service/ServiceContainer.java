@@ -24,13 +24,13 @@ import de.Keyle.MyPet.api.Util;
 import org.bukkit.event.Listener;
 
 /**
- * Services are a way to register possible functionallity
+ * Services are a way to register possible functionality
  */
 public interface ServiceContainer extends Listener {
     /**
-     * Enables the service and returns if activation was successfull
+     * Enables the service and returns if activation was successful
      *
-     * @return if activation was successfull
+     * @return if activation was successful
      */
     default boolean onEnable() {
         return true;

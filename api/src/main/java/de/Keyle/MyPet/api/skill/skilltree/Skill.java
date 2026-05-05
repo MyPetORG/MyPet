@@ -87,7 +87,7 @@ public interface Skill {
     /** Returns the pet that owns this skill instance. */
     MyPet getMyPet();
 
-    /** Returns {@code true} if this skill has been activated (i.e. at least one upgrade has been applied). */
+    /** Returns {@code true} if this skill has been activated (i.e., at least one upgrade has been applied). */
     boolean isActive();
 
     /** Resets this skill to its initial inactive state, undoing all upgrades. */

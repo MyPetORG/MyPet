@@ -245,7 +245,7 @@ public class CustomInventory implements InventoryHolder {
      * Sets the item for the specified slot.
      *
      * @param i         zero-based slot index
-     * @param itemStack the item to set (may be null to clear)
+     * @param itemStack the item to set (can be null to clear)
      */
     public void setItem(int i, ItemStack itemStack) {
         createInventoryIfNeeded();

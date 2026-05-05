@@ -29,10 +29,10 @@ import org.bukkit.entity.Player;
 public interface VanishedHook extends PluginHook {
 
     /**
-     * Returns wether the player is vanished or not
+     * Returns whether the player is vanished or not
      *
      * @param player the player to be checked
-     * @return wether the player is vanished
+     * @return whether the player is vanished
      */
     boolean isVanished(Player player);
 }

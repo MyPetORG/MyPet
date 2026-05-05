@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
  * Represents the experience value (or range) awarded to a pet when a specific mob type is killed.
  *
  * <p>Each instance defines a minimum and maximum experience amount for a single mob identifier.
- * When a pet earns experience from a kill, {@link #getRandomExp()} returns a uniformly-distributed
+ * When a pet earns experience from a kill, {@link #getRandomExp()} returns a uniformly distributed
  * random value within that range (or the exact value if min equals max).
  *
  * <p>The class maintains two static registries:
