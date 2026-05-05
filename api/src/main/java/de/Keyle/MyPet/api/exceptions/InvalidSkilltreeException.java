@@ -20,8 +20,18 @@
 
 package de.Keyle.MyPet.api.exceptions;
 
+/**
+ * Thrown when a {@code .st.json} skilltree file fails to parse — malformed
+ * JSON, missing required fields, or invalid skill/level references.
+ * The message includes the failing section name and the originating line
+ * number to aid admin-side debugging without requiring a full stack trace.
+ */
 public class InvalidSkilltreeException extends RuntimeException {
 
+    /**
+     * @param part the skilltree section or filename that failed
+     * @param e    the underlying parse/validation error
+     */
     public InvalidSkilltreeException(String part, Exception e) {
         super(part + " :: " + e.getMessage() + " :: " + e.getStackTrace()[0].getLineNumber(), e);
     }

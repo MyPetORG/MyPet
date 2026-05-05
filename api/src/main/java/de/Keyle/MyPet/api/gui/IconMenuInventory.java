@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.gui;
 
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -144,18 +145,17 @@ public class IconMenuInventory {
         if (icon.getComponentTitle() != null) {
             meta.displayName(icon.getComponentTitle());
         } else if (icon.getTitle() != null && !icon.getTitle().isEmpty()) {
-            meta.setDisplayName(icon.getTitle());
+            meta.displayName(Component.text(icon.getTitle()));
         }
 
-        // Lore — prefer Component over legacy String
         if (!icon.getComponentLore().isEmpty()) {
             meta.lore(icon.getComponentLore());
         } else if (!icon.getLore().isEmpty()) {
-            List<String> lore = new ArrayList<>();
+            List<Component> lore = new ArrayList<>();
             for (String line : icon.getLore()) {
-                lore.add((line == null || line.isEmpty()) ? " " : line);
+                lore.add(Component.text((line == null || line.isEmpty()) ? " " : line));
             }
-            meta.setLore(lore);
+            meta.lore(lore);
         }
 
         // Glow: prefer setEnchantmentGlintOverride if present, else dummy enchant hidden

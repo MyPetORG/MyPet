@@ -33,22 +33,41 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class IconMenuItem implements Cloneable {
+/**
+ * Immutable-style model for a single slot in an {@link IconMenu}. Holds
+ * material, title, lore, glow state, and optional NBT tags — everything
+ * needed by {@link IconMenuInventory} to render an {@code ItemStack}.
+ * <p>
+ * Setters return {@code this} for fluent chaining. A dirty flag
+ * ({@code hasChanged}) tracks whether the item needs re-rendering.
+ * <p>
+ * Title and lore support both legacy {@code String} and Adventure
+ * {@link Component} forms. When both are set, the Component variant
+ * takes precedence during rendering. Setting one clears the other.
+ */
+public class IconMenuItem {
 
+    @Getter
     protected Material material = Material.NAME_TAG;
+    @Getter
     protected int data = 0;
+    @Getter
     protected int amount = 1;
+    @Getter
     protected String title = "";
     protected List<String> lore = new ArrayList<>();
     @Getter
     protected Component componentTitle = null;
     protected List<Component> componentLore = new ArrayList<>();
+    @Getter
     protected boolean glowing = false;
+    @Getter
     protected ItemMeta bukkitMeta;
     protected CompoundBinaryTag tag;
 
     protected boolean hasChanged = true;
 
+    /** Creates an {@code IconMenuItem} from an existing Bukkit item. */
     public static IconMenuItem fromItemStack(ItemStack itemStack) {
         IconMenuItem icon = new IconMenuItem();
         icon.setMaterial(itemStack.getType());
@@ -59,17 +78,24 @@ public class IconMenuItem implements Cloneable {
         return icon;
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Applies fields from an existing {@link ItemMeta} onto this item.
+     *
+     * @param meta     the source meta
+     * @param useTitle if {@code true}, copies the display name
+     * @param useLore  if {@code true}, copies the lore lines
+     */
     public IconMenuItem setMeta(ItemMeta meta, boolean useTitle, boolean useLore) {
         if (useTitle && meta.hasDisplayName()) {
-            this.title = meta.getDisplayName();
-            this.componentTitle = null;
+            this.componentTitle = meta.displayName();
+            this.title = "";
             hasChanged = true;
         }
         if (useLore && meta.hasLore()) {
-            this.lore.clear();
-            this.lore.addAll(meta.getLore());
+            List<Component> metaLore = meta.lore();
             this.componentLore.clear();
+            if (metaLore != null) this.componentLore.addAll(metaLore);
+            this.lore.clear();
             hasChanged = true;
         }
         if (this.bukkitMeta != meta) {
@@ -80,6 +106,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
+    /** Appends a legacy lore line (supports embedded {@code \n}). */
     public IconMenuItem addLoreLine(String line) {
         if (line != null) {
             if (!this.componentLore.isEmpty()) this.componentLore.clear();
@@ -93,6 +120,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
+    /** Inserts a legacy lore line at the given index. */
     public IconMenuItem addLoreLine(String line, int position) {
         if (line != null && position >= 0) {
             if (line.contains("\n")) {
@@ -110,6 +138,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
+    /** Appends all lines from the given list to the legacy lore. */
     public IconMenuItem addLore(List<String> lore) {
         if (lore != null && !lore.isEmpty()) {
             this.lore.addAll(lore);
@@ -118,10 +147,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
-    public Material getMaterial() {
-        return material;
-    }
-
+    /** Sets the display material for this menu slot. */
     public IconMenuItem setMaterial(Material material) {
         if (material != null && this.material != material) {
             this.material = material;
@@ -130,10 +156,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
-    public int getData() {
-        return data;
-    }
-
+    /** Sets the legacy data/damage value (unused on modern servers). */
     public IconMenuItem setData(int data) {
         if (this.data != data) {
             this.data = data;
@@ -142,10 +165,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
-    public int getAmount() {
-        return amount;
-    }
-
+    /** Sets the stack size displayed in the slot (min 1). */
     public IconMenuItem setAmount(int amount) {
         amount = Math.max(1, amount);
         if (this.amount != amount) {
@@ -155,10 +175,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
+    /** Sets the display name as a legacy string. Clears any Component title. */
     public IconMenuItem setTitle(String title) {
         if (title != null && !this.title.equals(title)) {
             this.title = title;
@@ -168,6 +185,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
+    /** Sets the display name as an Adventure Component. Clears any legacy title. */
     public IconMenuItem setTitle(Component title) {
         if (title != null) {
             this.componentTitle = title;
@@ -177,14 +195,17 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
+    /** Returns an unmodifiable view of the legacy lore lines. */
     public List<String> getLore() {
         return Collections.unmodifiableList(lore);
     }
 
+    /** Returns an unmodifiable view of the Component lore lines. */
     public List<Component> getComponentLore() {
         return Collections.unmodifiableList(componentLore);
     }
 
+    /** Appends a Component lore line. Clears any legacy lore. */
     public IconMenuItem addLoreLine(Component line) {
         if (line != null) {
             if (!this.lore.isEmpty()) this.lore.clear();
@@ -194,6 +215,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
+    /** Replaces all legacy lore with the given lines. */
     public IconMenuItem setLore(String... lore) {
         if (lore != null) {
             this.lore.clear();
@@ -203,10 +225,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
-    public boolean isGlowing() {
-        return glowing;
-    }
-
+    /** Enables or disables the enchantment glint effect. */
     public IconMenuItem setGlowing(boolean glowing) {
         if (this.glowing != glowing) {
             this.glowing = glowing;
@@ -215,10 +234,7 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
-    public ItemMeta getBukkitMeta() {
-        return bukkitMeta;
-    }
-
+    /** Adds a custom NBT tag entry to this item's tag compound. */
     public IconMenuItem addTag(String key, BinaryTag tag) {
         if (this.tag == null) {
             this.tag = CompoundBinaryTag.builder().put(key, tag).build();
@@ -228,11 +244,13 @@ public class IconMenuItem implements Cloneable {
         return this;
     }
 
+    /** Returns the custom NBT tags, or {@code null} if none set. */
     public CompoundBinaryTag getTags() {
         return tag;
     }
 
-    public IconMenuItem clone() {
+    /** Returns a deep copy of this item with independent lore lists. */
+    public IconMenuItem copy() {
         IconMenuItem newItem = new IconMenuItem();
         newItem.material = this.material;
         newItem.data = this.data;

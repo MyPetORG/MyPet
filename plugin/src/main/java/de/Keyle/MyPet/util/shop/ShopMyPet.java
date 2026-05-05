@@ -79,7 +79,7 @@ public class ShopMyPet {
     }
 
     public IconMenuItem getIcon() {
-        IconMenuItem icon = this.icon.clone();
+        IconMenuItem icon = this.icon.copy();
         Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
         egg.ifPresent(eggIconService -> eggIconService.updateIcon(petType, icon));
         icon.setTitle(getDisplayName());

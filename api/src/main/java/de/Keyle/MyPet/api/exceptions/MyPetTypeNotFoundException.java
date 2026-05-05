@@ -20,7 +20,20 @@
 
 package de.Keyle.MyPet.api.exceptions;
 
+import de.Keyle.MyPet.api.entity.MyPetType;
+
+/**
+ * Thrown by {@link MyPetType#byName(String)} and
+ * {@link MyPetType#byEntityTypeName(String)} when
+ * the requested name does not match any registered pet type. Callers that
+ * need a null-safe lookup should use
+ * {@link MyPetType#byNameOrNull(String)} instead.
+ */
 public class MyPetTypeNotFoundException extends RuntimeException {
+
+    /**
+     * @param type the unrecognized type name that triggered the lookup failure
+     */
     public MyPetTypeNotFoundException(String type) {
         super(type + " is not a valid MyPet type");
     }

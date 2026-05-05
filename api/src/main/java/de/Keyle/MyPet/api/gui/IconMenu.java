@@ -22,6 +22,8 @@ package de.Keyle.MyPet.api.gui;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import lombok.Getter;
+import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
@@ -38,11 +40,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A chest-based GUI menu backed by Bukkit inventories. Supports optional
+ * pagination (config-driven row count, auto-paging, prev/next buttons)
+ * and click handling via {@link OptionClickEventHandler}.
+ * <p>
+ * Lifecycle: construct → {@link #setOption}/{@link #addOption} →
+ * {@link #open(HumanEntity)} → user clicks → handler fires →
+ * auto-close/destroy (or keep open via event flags). Call
+ * {@link #destroy()} explicitly if the menu should close without a click.
+ * <p>
+ * Registers itself as a Bukkit listener on construction and
+ * unregisters on {@link #destroy()}.
+ */
 public class IconMenu implements Listener {
 
     private final Plugin plugin;
     protected Map<Integer, IconMenuItem> options = new HashMap<>(54);
     private IconMenuInventory inventory;
+    @Setter
+    @Getter
     private Component title;
     private @Nullable String paginationBasePath;
     private @Nullable Integer pageSizeInSlots;
@@ -51,6 +68,13 @@ public class IconMenu implements Listener {
     private int maximumOptionPosition;
     private int nextVacantOptionPosition;
 
+    /**
+     * Creates a new menu and registers its event listeners.
+     *
+     * @param title   the inventory title shown to the player
+     * @param handler callback invoked when a player clicks a slot
+     * @param plugin  owning plugin (for event registration)
+     */
     public IconMenu(Component title, OptionClickEventHandler handler, Plugin plugin) {
         this.title = title;
         this.handler = handler;
@@ -59,14 +83,11 @@ public class IconMenu implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public Component getTitle() {
-        return title;
-    }
-
-    public void setTitle(Component title) {
-        this.title = title;
-    }
-
+    /**
+     * Returns the inventory size in slots. When pagination is active,
+     * returns the fixed page size; otherwise auto-sizes to fit all
+     * options (rounded up to the next multiple of 9, clamped 9–54).
+     */
     public int getSize() {
         if (pageSizeInSlots != null)
             return pageSizeInSlots;
@@ -77,6 +98,11 @@ public class IconMenu implements Listener {
         return Math.max(9, Math.min(54, roundedSize));
     }
 
+    /**
+     * Enables pagination by reading row count from the plugin's config
+     * at {@code MyPet.Pagination.<identifier>.TotalRows}. The last row
+     * is reserved for prev/next navigation buttons.
+     */
     public IconMenu setPaginationIdentifier(String identifier) {
         this.paginationBasePath = "MyPet.Pagination." + identifier;
 
@@ -96,6 +122,7 @@ public class IconMenu implements Listener {
         } while (options.containsKey(nextVacantOptionPosition));
     }
 
+    /** Places an item at an explicit slot position. */
     public void setOption(int position, IconMenuItem icon) {
         if (position < 0)
             return;
@@ -109,6 +136,9 @@ public class IconMenu implements Listener {
         options.put(position, icon);
     }
 
+    /**
+     * Appends an item at the next vacant slot and returns its position.
+     */
     public int addOption(IconMenuItem icon) {
         int position = nextVacantOptionPosition;
 
@@ -163,6 +193,11 @@ public class IconMenu implements Listener {
         return result;
     }
 
+    /**
+     * Returns the item at a display-space slot, accounting for
+     * pagination offset and navigation buttons. Returns {@code null}
+     * for empty slots in the navigation row.
+     */
     public IconMenuItem getOption(int position) {
         if (pageSizeInSlots != null) {
             if (position == pageSizeInSlots - 9)
@@ -184,6 +219,7 @@ public class IconMenu implements Listener {
         return options.get(position);
     }
 
+    /** Opens the menu for the given player. No-op if the player is sleeping. */
     public void open(HumanEntity player) {
         if (player.isSleeping()) {
             player.sendMessage(Locale.getComponent("Message.No.CanUse", player));
@@ -195,6 +231,7 @@ public class IconMenu implements Listener {
         inventory.open(this, player);
     }
 
+    /** Re-renders all slots into the open inventory. Resizes if needed. */
     public void update() {
         if (inventory != null) {
             if (getSize() != inventory.getSize()) {
@@ -209,6 +246,7 @@ public class IconMenu implements Listener {
         }
     }
 
+    /** Closes the inventory for all viewers and unregisters event listeners. */
     public void destroy() {
         if (inventory != null) {
             inventory.close();
@@ -252,7 +290,6 @@ public class IconMenu implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     void on(InventoryClickEvent event) {
         if (inventory != null && inventory.isMenuInventory(event.getInventory())) {
-            event.setCursor(null);
             event.setCancelled(true);
             event.setResult(Event.Result.DENY);
             int slot = event.getRawSlot();
@@ -302,17 +339,27 @@ public class IconMenu implements Listener {
         }
     }
 
+    /** Callback interface for handling menu item clicks. */
     public interface OptionClickEventHandler {
         void onOptionClick(OptionClickEvent event);
     }
 
-    public class OptionClickEvent {
-        private Player player;
-        private int position;
-        private IconMenuItem option;
+    /**
+     * Event fired when a player clicks a valid option slot. Handlers
+     * can toggle {@link #setWillClose} and {@link #setWillDestroy} to
+     * control post-click behaviour (defaults: both {@code true}).
+     */
+    public static class OptionClickEvent {
+        @Getter
+        private final Player player;
+        @Getter
+        private final int position;
+        @Getter
+        private final IconMenuItem option;
         private boolean close;
         private boolean destroy;
-        private IconMenu menu;
+        @Getter
+        private final IconMenu menu;
 
         public OptionClickEvent(Player player, int position, IconMenu menu, IconMenuItem option) {
             this.player = player;
@@ -323,34 +370,22 @@ public class IconMenu implements Listener {
             this.option = option;
         }
 
-        public Player getPlayer() {
-            return player;
-        }
-
-        public int getPosition() {
-            return position;
-        }
-
-        public IconMenuItem getOption() {
-            return option;
-        }
-
-        public IconMenu getMenu() {
-            return menu;
-        }
-
+        /** Whether the inventory will be closed after the handler returns. */
         public boolean willClose() {
             return close;
         }
 
+        /** Whether the menu will be destroyed after the handler returns. */
         public boolean willDestroy() {
             return destroy;
         }
 
+        /** Set to {@code false} to keep the inventory open after the click. */
         public void setWillClose(boolean close) {
             this.close = close;
         }
 
+        /** Set to {@code false} to keep the menu alive for re-use after the click. */
         public void setWillDestroy(boolean destroy) {
             this.destroy = destroy;
         }
