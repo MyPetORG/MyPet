@@ -28,7 +28,7 @@ import java.lang.annotation.*;
  * hierarchy if needed) to map between the string names used in skilltree
  * YAML and live flag instances.
  * <p>
- * Marked {@link Inherited} so that subclasses of a flag (e.g.
+ * Marked {@link Inherited} so that subclasses of a flag (e.g.,
  * integration-specific overrides) inherit the parent's name unless they
  * re-declare their own.
  */

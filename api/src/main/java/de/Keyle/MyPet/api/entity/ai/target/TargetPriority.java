@@ -44,7 +44,7 @@ public enum TargetPriority {
     /** External target set by another plugin via the Bukkit API. */
     Bukkit(0),
 
-    /** Target acquired by the Farm (mob-harvesting) behaviour. */
+    /** Target acquired by the Farm (mob-harvesting) behavior. */
     Farm(3),
 
     /** Target forced by the player's Control skill (manual aim). */

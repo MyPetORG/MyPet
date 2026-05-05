@@ -30,6 +30,8 @@ import de.Keyle.MyPet.api.util.Scheduler;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -271,10 +273,9 @@ public non-sealed interface MyPet extends StoredMyPet, Scheduler {
     default void makeSound(String sound, float volume, float pitch) {
         Mob mob = getBukkitEntity();
         if (mob != null) {
-            try {
-                Sound s = Sound.valueOf(sound);
+            Sound s = Registry.SOUNDS.get(NamespacedKey.minecraft(sound));
+            if (s != null) {
                 mob.getWorld().playSound(mob.getLocation(), s, volume, pitch);
-            } catch (IllegalArgumentException ignored) {
             }
         }
     }

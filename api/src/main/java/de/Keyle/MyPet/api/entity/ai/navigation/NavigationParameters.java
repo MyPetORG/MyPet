@@ -47,7 +47,7 @@ public class NavigationParameters {
     private final Map<String, Double> speedModifier = new HashMap<>();
     /**
      * Whether pathfinding should penalize water blocks. When enabled,
-     * the navigation implementation raises the path cost of water nodes so
+     * the navigation implementation raises the path cost of water nodes, so
      * the pet prefers dry routes.
      *
      * @param avoidWater {@code true} to penalize water paths
@@ -71,7 +71,7 @@ public class NavigationParameters {
     /**
      * Optional callback fired whenever a speed modifier is added or removed.
      * PaperNavigation uses this to re-apply parameters to MOVEMENT_SPEED
-     * immediately, so that goals which only call removeSpeedModifier() (e.g.
+     * immediately, so that goals which only call removeSpeedModifier() (e.g.,
      * PetSprintGoal) actually see their speed drop without waiting for the
      * next navigateTo() or nav.stop().
      *
