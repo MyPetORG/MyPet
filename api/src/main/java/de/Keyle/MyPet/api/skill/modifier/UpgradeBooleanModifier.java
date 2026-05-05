@@ -21,6 +21,8 @@
 package de.Keyle.MyPet.api.skill.modifier;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * An {@link UpgradeModifier} for boolean skill parameters.
@@ -31,6 +33,9 @@ import lombok.Getter;
  *
  * <p>Implemented as an enum with exactly two constants: {@link #True} and {@link #False}.
  */
+@Getter
+@Accessors(fluent = true)
+@RequiredArgsConstructor
 public enum UpgradeBooleanModifier implements UpgradeModifier<Boolean> {
     /** Modifier that sets the parameter to {@code true}. */
     True(true),
@@ -38,20 +43,6 @@ public enum UpgradeBooleanModifier implements UpgradeModifier<Boolean> {
     False(false);
 
     private final Boolean value;
-
-    UpgradeBooleanModifier(Boolean b) {
-        value = b;
-    }
-
-    @Override
-    public Boolean value() {
-        return value;
-    }
-
-    /** Returns the primitive boolean value of this modifier. */
-    public boolean getBoolean() {
-        return value;
-    }
 
     /** {@inheritDoc} Unconditionally returns this modifier's boolean value, ignoring the input. */
     @Override

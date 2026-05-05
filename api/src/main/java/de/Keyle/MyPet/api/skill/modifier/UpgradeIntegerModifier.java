@@ -22,13 +22,10 @@ package de.Keyle.MyPet.api.skill.modifier;
 
 import de.Keyle.MyPet.api.skill.modifier.UpgradeNumberModifier.Type;
 
-import java.math.BigDecimal;
-
 /**
  * An {@link UpgradeModifier} for integer-typed skill parameters.
  *
- * <p>Supports addition and subtraction using {@link BigDecimal} arithmetic to avoid any
- * floating-point rounding artifacts. This is the integer-specific counterpart of
+ * <p>Supports addition and subtraction. This is the integer-specific counterpart of
  * {@link UpgradeNumberModifier} and is preferred when the skill parameter is known to be
  * a whole number (e.g., beacon range in blocks, backpack row count).
  *
@@ -45,9 +42,8 @@ public record UpgradeIntegerModifier(Integer value, Type type) implements Upgrad
      */
     public Integer modify(Integer n) {
         return switch (type) {
-            case Add -> new BigDecimal(n.toString()).add(new BigDecimal(value.toString())).intValue();
-            case Subtract -> new BigDecimal(n.toString()).subtract(new BigDecimal(value.toString())).intValue();
+            case Add -> n + value;
+            case Subtract -> n - value;
         };
     }
-
 }
