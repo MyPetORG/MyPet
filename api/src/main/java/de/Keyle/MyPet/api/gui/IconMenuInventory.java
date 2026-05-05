@@ -172,7 +172,7 @@ public class IconMenuInventory {
                     ItemFlag.HIDE_PLACED_ON
             );
         } catch (Throwable ignored) {
-            // Some flags not present on older APIs; safe to ignore
+            // Some flags are not present on older APIs; safe to ignore
         }
 
         // Clear attribute modifiers where supported

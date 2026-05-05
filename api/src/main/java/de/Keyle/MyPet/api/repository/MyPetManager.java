@@ -38,20 +38,32 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Manages the lifecycle of active (in-world) pets and provides access to
+ * stored (inactive) pet records. Maintains a bidirectional mapping
+ * between players and their active pet — at most one active pet per
+ * player at any time.
+ * <p>
+ * The concrete implementation in the plugin module handles spawning,
+ * despawning, repository I/O, and the active/inactive state transitions.
+ */
 public abstract class MyPetManager {
     protected final BiMap<MyPetPlayer, MyPet> mActivePlayerPets = HashBiMap.create();
     protected final BiMap<MyPet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
 
-    // Active -------------------------------------------------------------------
+    // ─── Active Pets ────────────────────────────────────────────────────────────
 
+    /** Returns the active pet for the given player, or {@code null} if none. */
     public MyPet getMyPet(MyPetPlayer owner) {
         return mActivePlayerPets.get(owner);
     }
 
+    /** Returns the active pet for the given Bukkit player, or {@code null}. */
     public MyPet getMyPet(Player owner) {
         return mActivePlayerPets.get(MyPetApi.getPlayerManager().getMyPetPlayer(owner));
     }
 
+    /** Returns a snapshot array of all currently active pets across all players. */
     public MyPet[] getAllActiveMyPets() {
         return mActivePetsPlayer.keySet().toArray(new MyPet[0]);
     }
@@ -63,14 +75,13 @@ public abstract class MyPetManager {
      */
     public MyPet getMyPetFromEntity(Entity entity) {
         if (entity == null) return null;
-        // Sub-parts of a ComplexLivingEntity (EnderDragon head/neck/body/tail/
+        // Subparts of a ComplexLivingEntity (EnderDragon head/neck/body/tail/
         // wings) carry their own entity ID and UUID server-side. The PDC marker
-        // and the active-pet UUID match the parent only — resolve so callers
+        // and the active-pet UUID match the parent only — resolve, so callers
         // (interaction listeners, AI goals, third-party hooks) work without
         // ProtocolLib's USE_ENTITY rewrite.
         if (entity instanceof ComplexEntityPart part) {
             entity = part.getParent();
-            if (entity == null) return null;
         }
         NamespacedKey markerKey = new NamespacedKey("mypet", "pet");
         if (!entity.getPersistentDataContainer().has(markerKey,
@@ -87,10 +98,12 @@ public abstract class MyPetManager {
         return null;
     }
 
+    /** Returns {@code true} if the given player has an active pet. */
     public boolean hasActiveMyPet(MyPetPlayer player) {
         return mActivePlayerPets.containsKey(player);
     }
 
+    /** Returns {@code true} if the given Bukkit player has an active pet. */
     public boolean hasActiveMyPet(Player player) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
@@ -99,6 +112,7 @@ public abstract class MyPetManager {
         return false;
     }
 
+    /** Returns {@code true} if the player with this name has an active pet. */
     public boolean hasActiveMyPet(String name) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(name)) {
             MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(name);
@@ -107,7 +121,7 @@ public abstract class MyPetManager {
         return false;
     }
 
-    // Inactive -----------------------------------------------------------------
+    // ─── Inactive / Stored ──────────────────────────────────────────────────────
 
     /**
      * Returns an immutable point-in-time snapshot of an active pet, suitable for
@@ -120,10 +134,25 @@ public abstract class MyPetManager {
      */
     public abstract PersistedMyPet snapshot(MyPet activePet);
 
-    // All ----------------------------------------------------------------------
+    // ─── Activation / Deactivation ──────────────────────────────────────────────
 
+    /**
+     * Activates a stored pet — creates the live {@link MyPet} instance,
+     * registers it in the active map, and spawns the entity if possible.
+     *
+     * @return the activated pet, or empty if activation failed (e.g.,
+     *         player already has an active pet, or spawn conditions not met)
+     */
     public abstract Optional<MyPet> activateMyPet(StoredMyPet storedMyPet);
 
+    /**
+     * Deactivates the owner's active pet — despawns the entity and moves
+     * the pet back to a stored / inactive state.
+     *
+     * @param update if {@code true}, persists the pet's current state to
+     *               the repository before deactivation
+     * @return {@code true} if a pet was deactivated
+     */
     public abstract boolean deactivateMyPet(MyPetPlayer owner, boolean update);
 
     /**
@@ -139,6 +168,7 @@ public abstract class MyPetManager {
      */
     public abstract CompletableFuture<List<StoredMyPet>> getStoredPets(MyPetPlayer owner);
 
+    /** Returns the total number of currently active pets across all players. */
     public int countActiveMyPets() {
         return mActivePetsPlayer.size();
     }

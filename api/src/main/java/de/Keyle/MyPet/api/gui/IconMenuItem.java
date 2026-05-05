@@ -55,10 +55,10 @@ public class IconMenuItem {
     protected int amount = 1;
     @Getter
     protected String title = "";
-    protected List<String> lore = new ArrayList<>();
+    protected final List<String> lore = new ArrayList<>();
     @Getter
     protected Component componentTitle = null;
-    protected List<Component> componentLore = new ArrayList<>();
+    protected final List<Component> componentLore = new ArrayList<>();
     @Getter
     protected boolean glowing = false;
     @Getter

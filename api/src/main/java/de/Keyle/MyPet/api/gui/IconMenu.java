@@ -56,7 +56,7 @@ import java.util.Map;
 public class IconMenu implements Listener {
 
     private final Plugin plugin;
-    protected Map<Integer, IconMenuItem> options = new HashMap<>(54);
+    protected final Map<Integer, IconMenuItem> options = new HashMap<>(54);
     private IconMenuInventory inventory;
     @Setter
     @Getter
@@ -206,7 +206,7 @@ public class IconMenu implements Listener {
             if (position == pageSizeInSlots - 1)
                 return makeConfigurableItem("NextPage");
 
-            // Last row is always empty, besides the navigation-buttons
+            // The last row is always empty, besides the navigation-buttons
             if (position > pageSizeInSlots - 9 && position < pageSizeInSlots - 1)
                 return null;
 
@@ -347,7 +347,7 @@ public class IconMenu implements Listener {
     /**
      * Event fired when a player clicks a valid option slot. Handlers
      * can toggle {@link #setWillClose} and {@link #setWillDestroy} to
-     * control post-click behaviour (defaults: both {@code true}).
+     * control post-click behavior (defaults: both {@code true}).
      */
     public static class OptionClickEvent {
         @Getter
