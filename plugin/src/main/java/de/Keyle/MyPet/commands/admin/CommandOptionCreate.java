@@ -588,7 +588,7 @@ public class CommandOptionCreate {
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
                 final PersistedMyPet inactiveMyPet = updateData(base, options).withWorldGroup(wg.getName());
 
-                PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.AdminCommand);
+                PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.ADMIN_COMMAND);
                 Bukkit.getServer().getPluginManager().callEvent(createEvent);
 
                 PetSaveEvent saveEvent = new PetSaveEvent(inactiveMyPet);
@@ -626,7 +626,7 @@ public class CommandOptionCreate {
      * <ul>
      *   <li>{@code skilltree:<name>} -- assigns the named skilltree, firing
      *       {@link PetSelectSkilltreeEvent} with source
-     *       {@link PetSelectSkilltreeEvent.Source#AdminCreation}.</li>
+     *       {@link PetSelectSkilltreeEvent.Source#ADMIN_CREATION}.</li>
      *   <li>{@code name:<petName>} -- sets the pet's display name.</li>
      * </ul>
      *
@@ -641,7 +641,7 @@ public class CommandOptionCreate {
                 if (skilltree != null) {
                     pet = pet.withSkilltree(skilltree);
                     Bukkit.getServer().getPluginManager().callEvent(
-                            new PetSelectSkilltreeEvent(pet, skilltree, PetSelectSkilltreeEvent.Source.AdminCreation));
+                            new PetSelectSkilltreeEvent(pet, skilltree, PetSelectSkilltreeEvent.Source.ADMIN_CREATION));
                 }
             } else if (arg.startsWith("name:")) {
                 String petName = arg.substring("name:".length());

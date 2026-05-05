@@ -232,7 +232,7 @@ public class CreakingHeartListener implements Listener {
         }
 
         // Fire events
-        PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.Leash);
+        PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.LEASH);
         Bukkit.getServer().getPluginManager().callEvent(createEvent);
 
         PetSaveEvent saveEvent = new PetSaveEvent(inactiveMyPet);

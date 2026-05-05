@@ -92,7 +92,7 @@ public class PickupImpl implements Pickup {
                 if (pickup) {
                     pickup = false;
                 } else {
-                    PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.Pickup);
+                    PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.PICKUP);
                     Bukkit.getServer().getPluginManager().callEvent(event);
                     if (!event.isCancelled()) {
                         pickup = true;
@@ -113,7 +113,7 @@ public class PickupImpl implements Pickup {
     }
 
     public void schedule() {
-        PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.Use);
+        PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.USE);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (pickup && (event.isCancelled() || !Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup"))) {
             pickup = false;

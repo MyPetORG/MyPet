@@ -41,9 +41,9 @@ import org.bukkit.inventory.ItemStack;
  *   <li>{@link #setSaturation(double)} adjusts the saturation gained from this
  *       feed; default is the food's vanilla saturation.</li>
  *   <li>{@link #setResult(Result)} chooses the visual / audio reaction:
- *       {@link Result#Heal} (heart particles + heal animation),
- *       {@link Result#Eat} (eating particles + munch sound),
- *       {@link Result#Self_Feed} (no player interaction; pet ate from its own
+ *       {@link Result#HEAL} (heart particles + heal animation),
+ *       {@link Result#EAT} (eating particles + munch sound),
+ *       {@link Result#SELF_FEED} (no player interaction; pet ate from its own
  *       backpack or AI behavior).</li>
  * </ul>
  */
@@ -68,7 +68,7 @@ public class PetFeedEvent extends PetInteractEvent {
     }
 
     public enum Result {
-        Heal, Eat, Self_Feed
+        HEAL, EAT, SELF_FEED
     }
 
     public static HandlerList getHandlerList() {

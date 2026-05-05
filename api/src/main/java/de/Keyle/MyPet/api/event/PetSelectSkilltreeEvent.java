@@ -33,16 +33,16 @@ import org.bukkit.event.HandlerList;
  * origin of the assignment:
  *
  * <ul>
- *   <li>{@link Source#Auto} — automatic assignment (e.g., only one tree
+ *   <li>{@link Source#AUTO} — automatic assignment (e.g., only one tree
  *       configured for the world group, or default-tree fallback).</li>
- *   <li>{@link Source#PlayerCommand} — owner ran {@code /mypet skilltree}.</li>
- *   <li>{@link Source#AdminCommand} — admin-initiated assignment via
+ *   <li>{@link Source#PLAYER_COMMAND} — owner ran {@code /mypet skilltree}.</li>
+ *   <li>{@link Source#ADMIN_COMMAND} — admin-initiated assignment via
  *       {@code /petadmin skilltree}.</li>
- *   <li>{@link Source#AdminCreation} — admin pet creation flow assigning the
+ *   <li>{@link Source#ADMIN_CREATION} — admin pet creation flow assigning the
  *       initial tree.</li>
- *   <li>{@link Source#BossShopPro}, {@link Source#Shop} — third-party shop
+ *   <li>{@link Source#BOSS_SHOP_PRO}, {@link Source#SHOP} — third-party shop
  *       integrations.</li>
- *   <li>{@link Source#Other} — fallback for any other path.</li>
+ *   <li>{@link Source#OTHER} — fallback for any other path.</li>
  * </ul>
  *
  * <p>Fires from {@code MyPet} on every skilltree assignment and from
@@ -79,7 +79,7 @@ public class PetSelectSkilltreeEvent extends Event {
     }
 
     public enum Source {
-        Auto, PlayerCommand, AdminCommand, AdminCreation, BossShopPro, Shop, Other
+        AUTO, PLAYER_COMMAND, ADMIN_COMMAND, ADMIN_CREATION, SHOP, OTHER
     }
 
     public static HandlerList getHandlerList() {

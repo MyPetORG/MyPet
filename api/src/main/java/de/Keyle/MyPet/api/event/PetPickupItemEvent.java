@@ -46,7 +46,7 @@ import org.bukkit.event.HandlerList;
  * <p><b>Pet state:</b> live pet, owner online
  *
  * <p><b>Related events:</b> {@link PetInventoryActionEvent} fires immediately
- * after this on the {@link PetInventoryActionEvent.Action#Pickup} branch,
+ * after this on the {@link PetInventoryActionEvent.Action#PICKUP} branch,
  * with the same can-cancel semantics. Listen here for per-item filtering and
  * to that event for per-action veto control.
  */

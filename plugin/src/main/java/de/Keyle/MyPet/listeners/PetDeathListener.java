@@ -55,7 +55,7 @@ public class PetDeathListener implements Listener {
 
         // Release-on-death: permanently remove the pet
         if (MyPetApi.getMyPetInfo().getReleaseOnDeath(myPet.getPetType()) && !owner.isMyPetAdmin()) {
-            PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.Death);
+            PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.DEATH);
             Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
             if (myPet.getSkills().isActive(Backpack.class)) {

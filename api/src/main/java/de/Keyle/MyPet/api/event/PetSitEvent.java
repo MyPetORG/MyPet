@@ -29,8 +29,8 @@ import org.bukkit.event.HandlerList;
  * {@link PetInteractEvent}; the {@link Action} discriminates the new state:
  *
  * <ul>
- *   <li>{@link Action#Stay} — pet is being told to sit / stay in place.</li>
- *   <li>{@link Action#Follow} — pet is being told to stand up and resume
+ *   <li>{@link Action#STAY} — pet is being told to sit / stay in place.</li>
+ *   <li>{@link Action#FOLLOW} — pet is being told to stand up and resume
  *       following its owner.</li>
  * </ul>
  *
@@ -57,7 +57,7 @@ public class PetSitEvent extends PetInteractEvent {
     }
 
     public enum Action {
-        Stay, Follow
+        STAY, FOLLOW
     }
 
     public static HandlerList getHandlerList() {

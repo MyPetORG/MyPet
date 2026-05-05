@@ -33,12 +33,12 @@ import org.bukkit.event.HandlerList;
  * discriminates the removal pathway:
  *
  * <ul>
- *   <li>{@link Source#Release} — owner ran {@code /mypet release}.</li>
- *   <li>{@link Source#Death} — pet died and was configured (or required by
+ *   <li>{@link Source#RELEASE} — owner ran {@code /mypet release}.</li>
+ *   <li>{@link Source#DEATH} — pet died and was configured (or required by
  *       respawn-time = -1) to be deleted on death.</li>
- *   <li>{@link Source#AdminCommand} — admin removal via
+ *   <li>{@link Source#ADMIN_COMMAND} — admin removal via
  *       {@code /petadmin remove}.</li>
- *   <li>{@link Source#Other} — third-party plugin path.</li>
+ *   <li>{@link Source#OTHER} — third-party plugin path.</li>
  * </ul>
  *
  * <p>Fires from {@code CommandRelease}, {@code CommandOptionRemove}, and
@@ -73,7 +73,7 @@ public class PetRemoveEvent extends Event {
     }
 
     public enum Source {
-        Release, Death, AdminCommand, Other
+        RELEASE, DEATH, ADMIN_COMMAND, OTHER
     }
 
     public static HandlerList getHandlerList() {

@@ -149,7 +149,7 @@ public class BackpackImpl implements Backpack {
                 myPet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Inventory.Creative", myPet.getOwner()));
                 return false;
             }
-            PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.Open);
+            PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.OPEN);
             Bukkit.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
                 myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));

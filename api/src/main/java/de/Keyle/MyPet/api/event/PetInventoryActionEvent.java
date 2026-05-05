@@ -33,12 +33,12 @@ import org.bukkit.event.HandlerList;
  * {@link Action} discriminates the firing site:
  *
  * <ul>
- *   <li>{@link Action#Open} — fires from {@code BackpackImpl} when an owner
+ *   <li>{@link Action#OPEN} — fires from {@code BackpackImpl} when an owner
  *       opens the backpack UI ({@code /mypet inventory} or right-click with
  *       the open-backpack item).</li>
- *   <li>{@link Action#Pickup} — fires from {@code PickupImpl} when a Pickup
+ *   <li>{@link Action#PICKUP} — fires from {@code PickupImpl} when a Pickup
  *       skill grab is about to deposit an item into the backpack.</li>
- *   <li>{@link Action#Use} — fires from {@code PickupImpl} when the pet would
+ *   <li>{@link Action#USE} — fires from {@code PickupImpl} when the pet would
  *       use a stored item (e.g. equip armor, eat food) instead of dropping
  *       it.</li>
  * </ul>
@@ -89,7 +89,7 @@ public class PetInventoryActionEvent extends Event implements Cancellable {
     }
 
     public enum Action {
-        Open, Pickup, Use
+        OPEN, PICKUP, USE
     }
 
     public static HandlerList getHandlerList() {

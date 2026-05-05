@@ -294,7 +294,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             if (player.isSneaking()) {
                 boolean willSit = !isSitting();
                 PetSitEvent sitEvent = new PetSitEvent(this,
-                        willSit ? PetSitEvent.Action.Stay : PetSitEvent.Action.Follow);
+                        willSit ? PetSitEvent.Action.STAY : PetSitEvent.Action.FOLLOW);
                 Bukkit.getPluginManager().callEvent(sitEvent);
                 if (sitEvent.isCancelled()) {
                     return true;
@@ -367,7 +367,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             if (food.compare(item)) {
                 double saturationPerFeed = Configuration.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED;
                 PetFeedEvent feedEvent = new PetFeedEvent(
-                        this, item, saturationPerFeed, PetFeedEvent.Result.Eat);
+                        this, item, saturationPerFeed, PetFeedEvent.Result.EAT);
                 Bukkit.getPluginManager().callEvent(feedEvent);
                 if (feedEvent.isCancelled()) {
                     return false;
@@ -664,13 +664,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public boolean autoAssignSkilltree() {
         if (skilltree == null && this.petOwner.isOnline()) {
             if (Configuration.Skilltree.RANDOM_SKILLTREE_ASSIGNMENT) {
-                return setSkilltree(MyPetApi.getSkilltreeManager().getRandomSkilltree(this), PetSelectSkilltreeEvent.Source.Auto);
+                return setSkilltree(MyPetApi.getSkilltreeManager().getRandomSkilltree(this), PetSelectSkilltreeEvent.Source.AUTO);
             } else if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT) {
                 List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getOrderedSkilltrees());
 
                 for (Skilltree skilltree : skilltrees) {
                     if (skilltree.getMobTypes().contains(getPetType()) && skilltree.checkRequirements(this)) {
-                        return setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.Auto);
+                        return setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.AUTO);
                     }
                 }
                 return false;
@@ -1106,7 +1106,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public boolean setSkilltree(Skilltree skilltree) {
-        return setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.Other);
+        return setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.OTHER);
     }
 
     public void trySelfFeeding() {
@@ -1127,7 +1127,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
             if (bukkitInventory.contains(foodItem.getItem().getType())) {
                 ItemStack item = bukkitInventory.getItem(bukkitInventory.first(foodItem.getItem().getType()));
 
-                PetFeedEvent feedEvent = new PetFeedEvent(this, item, foodSaturation, PetFeedEvent.Result.Self_Feed);
+                PetFeedEvent feedEvent = new PetFeedEvent(this, item, foodSaturation, PetFeedEvent.Result.SELF_FEED);
                 Bukkit.getPluginManager().callEvent(feedEvent);
                 if (!feedEvent.isCancelled()) {
                     foodSaturation = feedEvent.getSaturation();

@@ -51,7 +51,7 @@ import org.bukkit.entity.Player;
  *
  * <p>This command performs the following steps:
  * <ol>
- *   <li>Fires a {@link PetRemoveEvent} with source {@link PetRemoveEvent.Source#AdminCommand}</li>
+ *   <li>Fires a {@link PetRemoveEvent} with source {@link PetRemoveEvent.Source#ADMIN_COMMAND}</li>
  *   <li>Clears the pet association for the player's current world group</li>
  *   <li>Deactivates the pet entity in the world</li>
  *   <li>Deletes the pet data from the repository (database)</li>
@@ -121,7 +121,7 @@ public class CommandOptionRemove {
         }
         MyPet myPet = petOwner.getMyPet();
 
-        PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.AdminCommand);
+        PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.ADMIN_COMMAND);
         Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
         myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), null);

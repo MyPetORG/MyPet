@@ -293,7 +293,7 @@ public class CommandChooseSkilltree {
             myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.RequiresLevel.Message", myPetOwner, myPet.getDisplayName(), requiredLevel));
         } else if (myPet.getExperience().getLevel() > maxLevel) {
             myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.MaxLevel.Message", myPetOwner, myPet.getDisplayName(), maxLevel));
-        } else if (myPet.setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.PlayerCommand)) {
+        } else if (myPet.setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.PLAYER_COMMAND)) {
             myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.SwitchedTo", myPetOwner, Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName())));
             if (!myPet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
                 double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;

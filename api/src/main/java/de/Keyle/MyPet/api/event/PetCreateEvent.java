@@ -30,9 +30,9 @@ import org.bukkit.event.HandlerList;
 /**
  * Fired when a brand-new pet is created and assigned to an owner — the moment
  * a pet first enters the repository. The {@code Source} discriminates the
- * creation pathway: {@link Source#Leash} (player leashes a wild mob),
- * {@link Source#AdminCommand} (an admin {@code /petadmin create}-style command),
- * {@link Source#PetShop} (PetShop integration purchase), {@link Source#Other}
+ * creation pathway: {@link Source#LEASH} (player leashes a wild mob),
+ * {@link Source#ADMIN_COMMAND} (an admin {@code /petadmin create}-style command),
+ * {@link Source#PET_SHOP} (PetShop integration purchase), {@link Source#OTHER}
  * (third-party plugins).
  *
  * <p>Fires from {@code EntityListener} (leash path), {@code CreakingHeartListener}
@@ -73,7 +73,7 @@ public class PetCreateEvent extends Event {
     }
 
     public enum Source {
-        Leash, AdminCommand, PetShop, Other
+        LEASH, ADMIN_COMMAND, PET_SHOP, OTHER
     }
 
     public static HandlerList getHandlerList() {

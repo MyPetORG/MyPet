@@ -173,7 +173,7 @@ public class CommandRelease {
         }
 
         if (Util.SANITIZED_MINIMESSAGE.stripTags(myPet.getPetName()).trim().equalsIgnoreCase(name.trim())) {
-            PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.Release);
+            PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.RELEASE);
             Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
             // Drop backpack contents BEFORE releaseToWild — that call detaches

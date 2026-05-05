@@ -45,7 +45,7 @@ import org.bukkit.event.HandlerList;
  * transition; {@link PetSendAwayEvent} fires before a {@code Despawned}
  * transition. Death has no dedicated MyPet-side event — listen to
  * {@code EntityDeathEvent} on the marked pet entity, or to the
- * {@link PetRemoveEvent} {@link PetRemoveEvent.Source#Death} source if
+ * {@link PetRemoveEvent} {@link PetRemoveEvent.Source#DEATH} source if
  * the pet is configured to delete on death.
  */
 public class PetStatusEvent extends Event {

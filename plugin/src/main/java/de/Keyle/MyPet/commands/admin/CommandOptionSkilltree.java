@@ -53,7 +53,7 @@ import java.util.List;
  * whose {@link Skilltree#getMobTypes()} includes the pet's type are suggested and accepted.
  *
  * <p>Fires a {@link PetSelectSkilltreeEvent} with source
- * {@link PetSelectSkilltreeEvent.Source#AdminCommand} when the skilltree is changed.
+ * {@link PetSelectSkilltreeEvent.Source#ADMIN_COMMAND} when the skilltree is changed.
  *
  * <p>Requires the {@code MyPet.admin} permission.
  */
@@ -144,7 +144,7 @@ public class CommandOptionSkilltree {
 
         if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
             Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
-            if (skilltree.getMobTypes().contains(myPet.getPetType()) && myPet.setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.AdminCommand)) {
+            if (skilltree.getMobTypes().contains(myPet.getPetType()) && myPet.setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.ADMIN_COMMAND)) {
                 sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.Skilltree.SwitchedToFor", lang, petOwner.getName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName()))));
             } else {
                 sender.sendMessage(MessageUtil.prefixed(Locale.getComponent("Message.Skilltree.NotSwitched", lang)));

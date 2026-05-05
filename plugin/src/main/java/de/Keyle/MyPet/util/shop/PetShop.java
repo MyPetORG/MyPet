@@ -147,7 +147,7 @@ public class PetShop {
 
                                     MyPetPlugin.getInstance().getRepository().addPet(clonedPet).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
                                             p.sendMessage(Locale.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
-                                            PetCreateEvent createEvent = new PetCreateEvent(clonedPet, PetCreateEvent.Source.PetShop);
+                                            PetCreateEvent createEvent = new PetCreateEvent(clonedPet, PetCreateEvent.Source.PET_SHOP);
                                             Bukkit.getServer().getPluginManager().callEvent(createEvent);
                                             if (petOwner.hasMyPet()) {
                                                 p.sendMessage(Locale.getFormattedComponent("Message.Shop.SuccessStorage", player, clonedPet.getDisplayName()));
