@@ -25,10 +25,20 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that gives the pet a chance to reflect a portion of incoming melee damage back
+ * to the attacker. When triggered, the entity that hit the pet receives damage equal to
+ * the configured percentage of the original hit. Both the reflection percentage and
+ * trigger chance scale with the pet's skilltree level.
+ *
+ * @see OnDamageByEntitySkill
+ */
 @SkillName(value = "Thorns", translationNode = "Name.Skill.Thorns")
 public interface Thorns extends Skill, OnDamageByEntitySkill {
 
+    /** Returns the upgrade computer controlling the percentage of damage reflected back to the attacker. */
     UpgradeComputer<Integer> getReflectedDamage();
 
+    /** Returns the upgrade computer controlling the percent chance to reflect damage when hit. */
     UpgradeComputer<Integer> getChance();
 }

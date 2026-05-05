@@ -25,8 +25,15 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that gives the pet a chance to knock back targets on hit, pushing them away
+ * from the pet. The trigger chance scales with the pet's skilltree level.
+ *
+ * @see OnHitSkill
+ */
 @SkillName(value = "Knockback", translationNode = "Name.Skill.Knockback")
 public interface Knockback extends Skill, OnHitSkill {
 
+    /** Returns the upgrade computer controlling the percent chance to knock back on hit. */
     UpgradeComputer<Integer> getChance();
 }

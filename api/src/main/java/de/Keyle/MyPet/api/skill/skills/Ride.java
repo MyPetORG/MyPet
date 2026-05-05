@@ -24,18 +24,35 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that allows the pet's owner to mount and ride the pet as a controllable mount.
+ * Movement speed, jump height, and optional flight capabilities all scale with the pet's
+ * skilltree level.
+ *
+ * <p>When flight is enabled, the pet can ascend while ridden, consuming a flight energy
+ * resource that regenerates over time. The flight limit and regeneration rate are
+ * configurable per upgrade level.
+ *
+ * @see de.Keyle.MyPet.api.skill.UpgradeComputer
+ */
 @SkillName(value = "Ride", translationNode = "Name.Skill.Ride")
 public interface Ride extends Skill {
 
+    /** Returns the upgrade computer controlling whether the Ride skill is unlocked. */
     UpgradeComputer<Boolean> getActive();
 
+    /** Returns the upgrade computer controlling the bonus movement speed percentage while ridden. */
     UpgradeComputer<Integer> getSpeedIncrease();
 
+    /** Returns the upgrade computer controlling the maximum jump height when ridden. */
     UpgradeComputer<Number> getJumpHeight();
 
+    /** Returns the upgrade computer controlling the maximum flight energy (distance/duration limit). */
     UpgradeComputer<Number> getFlyLimit();
 
+    /** Returns the upgrade computer controlling the rate at which flight energy regenerates. */
     UpgradeComputer<Number> getFlyRegenRate();
 
+    /** Returns the upgrade computer controlling whether the pet can fly while ridden. */
     UpgradeComputer<Boolean> getCanFly();
 }

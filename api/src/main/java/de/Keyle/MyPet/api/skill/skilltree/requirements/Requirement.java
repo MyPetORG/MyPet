@@ -24,7 +24,29 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 
+/**
+ * A condition that must be satisfied before a pet can use a particular {@link Skilltree}.
+ *
+ * <p>Requirements are registered with the {@link de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager}
+ * and referenced by name in {@code .st.json} skilltree files. At runtime, when a player
+ * attempts to select or is assigned a skilltree, each configured requirement is evaluated
+ * via {@link #check(Skilltree, MyPet, Settings)}.
+ *
+ * <p>Implementations must be annotated with {@link RequirementName} so they can be discovered
+ * and looked up by name.
+ *
+ * <p>Common implementations include permission checks, economy balance checks, and
+ * pet-level thresholds.
+ */
 public interface Requirement {
 
+    /**
+     * Evaluates whether the given pet meets this requirement for the specified skilltree.
+     *
+     * @param skilltree the skilltree the pet wants to use
+     * @param pet       the pet being evaluated
+     * @param settings  the requirement-specific configuration from the skilltree definition
+     * @return {@code true} if the requirement is satisfied
+     */
     boolean check(Skilltree skilltree, MyPet pet, Settings settings);
 }

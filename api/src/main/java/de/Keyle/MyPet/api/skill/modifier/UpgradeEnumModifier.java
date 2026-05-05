@@ -20,8 +20,20 @@
 
 package de.Keyle.MyPet.api.skill.modifier;
 
+/**
+ * An {@link UpgradeModifier} for enum-typed skill parameters.
+ *
+ * <p>Like {@link UpgradeBooleanModifier}, this is a replacement modifier: it unconditionally
+ * sets the parameter to the enum constant carried by this record, ignoring the previous value.
+ * Useful for skills that switch behavior modes at specific upgrade levels (e.g., selecting an
+ * attack type or targeting strategy).
+ *
+ * @param value the enum constant to set when this modifier is applied
+ * @param <T>   the enum type of the skill parameter
+ */
 public record UpgradeEnumModifier<T extends Enum<T>>(T value) implements UpgradeModifier<T> {
 
+    /** {@inheritDoc} Unconditionally returns this modifier's enum constant, ignoring the input. */
     @Override
     public T modify(T value) {
         return this.value;

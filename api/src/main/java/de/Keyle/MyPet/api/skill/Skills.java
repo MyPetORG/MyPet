@@ -33,10 +33,29 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Container holding all {@link Skill} instances for a single {@link MyPet}. Created
+ * once per pet (typically when the pet is loaded or spawned), this class instantiates
+ * every skill registered with the {@link SkillManager} and indexes them by both
+ * name and class hierarchy for fast lookup.
+ *
+ * <p>Callers retrieve skills via {@link #get(String)} (by {@code @SkillName} value)
+ * or {@link #get(Class)} (by skill class or parent interface), and can check
+ * activation state with {@link #isActive(String)} / {@link #isActive(Class)}.
+ *
+ * @see SkillManager
+ * @see Skill
+ */
 public class Skills {
     private final BiMap<String, Skill> skills = HashBiMap.create();
     private final Map<Class<? extends Skill>, Skill> skillClasses = new HashMap<>();
 
+    /**
+     * Creates a new skill container for the given pet, instantiating all
+     * registered skills and indexing them by name and class hierarchy.
+     *
+     * @param myPet the pet that owns these skill instances
+     */
     public Skills(MyPet myPet) {
         for (Class<? extends Skill> clazz : MyPetApi.getSkillManager().getRegisteredSkills()) {
             try {
@@ -55,36 +74,61 @@ public class Skills {
         }
     }
 
+    /**
+     * Looks up a skill by its {@link SkillName} value.
+     *
+     * @return the skill instance, or {@code null} if no skill with that name exists
+     */
     public Skill get(String skillName) {
         return skills.get(skillName);
     }
 
+    /**
+     * Looks up a skill by class or parent interface. This allows retrieving a skill
+     * via any type in its class hierarchy (e.g. requesting the abstract base class
+     * or a marker interface).
+     *
+     * @param clazz the skill class or interface to look up
+     * @return the matching skill instance, or {@code null} if not found
+     */
     @SuppressWarnings("unchecked")
     public <T extends Skill> T get(Class<T> clazz) {
         return (T) skillClasses.get(clazz);
     }
 
+    /** Returns all skill instances in this container. */
     public Set<Skill> all() {
         return skills.values();
     }
 
+    /** Returns the set of all skill names (from {@code @SkillName} annotations). */
     public Set<String> getNames() {
         return skills.keySet();
     }
 
+    /** Returns {@code true} if a skill with the given name is registered. */
     public boolean has(String skillName) {
         return skills.containsKey(skillName);
     }
 
+    /** Returns {@code true} if a skill matching the given class is registered. */
     public boolean has(Class<? extends Skill> clazz) {
         return skillClasses.containsKey(clazz);
     }
 
+    /**
+     * Returns {@code true} if the named skill exists and is currently active
+     * (i.e. has been upgraded at least once and its conditions are met).
+     */
     public boolean isActive(String skillName) {
         Skill skill = get(skillName);
         return skill != null && skill.isActive();
     }
 
+    /**
+     * Returns {@code true} if the skill matching the given class exists and is
+     * currently active.
+     */
     public boolean isActive(Class<? extends Skill> clazz) {
         Skill skill = get(clazz);
         return skill != null && skill.isActive();

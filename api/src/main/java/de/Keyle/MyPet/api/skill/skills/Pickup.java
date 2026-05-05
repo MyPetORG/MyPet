@@ -28,11 +28,24 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 
+/**
+ * Skill that allows the pet to automatically pick up nearby dropped items and experience
+ * orbs on behalf of its owner. The pickup radius scales with the pet's skilltree level.
+ * The owner can toggle automatic pickup on or off via {@link ActiveSkill#activate()}.
+ *
+ * <p>The skill ticks via {@link Scheduler} to scan for nearby collectibles and persists
+ * its active/inactive toggle via {@link NBTStorage}.
+ *
+ * @see ActiveSkill#activate()
+ * @see Scheduler
+ */
 @SkillName(value = "Pickup", translationNode = "Name.Skill.Pickup")
 public interface Pickup extends Skill, Scheduler, NBTStorage, ActiveSkill {
 
+    /** Returns the upgrade computer controlling the pickup radius in blocks. */
     UpgradeComputer<Number> getRange();
 
+    /** Returns the upgrade computer controlling whether experience orb pickup is enabled. */
     UpgradeComputer<Boolean> getExpPickup();
 
     /** Snapshot of the Pickup auto-toggle (persisted or live). */

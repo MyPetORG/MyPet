@@ -25,10 +25,19 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that gives the pet a chance to apply the Wither potion effect to targets on hit,
+ * dealing damage over time and turning hearts black. Both the wither duration and trigger
+ * chance scale with the pet's skilltree level.
+ *
+ * @see OnHitSkill
+ */
 @SkillName(value = "Wither", translationNode = "Name.Skill.Wither")
 public interface Wither extends Skill, OnHitSkill {
 
+    /** Returns the upgrade computer controlling the wither effect duration in ticks. */
     UpgradeComputer<Integer> getDuration();
 
+    /** Returns the upgrade computer controlling the percent chance to wither on hit. */
     UpgradeComputer<Integer> getChance();
 }

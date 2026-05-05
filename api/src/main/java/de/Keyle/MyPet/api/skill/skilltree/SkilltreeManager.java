@@ -31,6 +31,19 @@ import de.Keyle.MyPet.api.util.service.ServiceName;
 
 import java.util.*;
 
+/**
+ * Central service for managing all registered {@link Skilltree}s and {@link Requirement}s.
+ *
+ * <p>Skilltrees are loaded from {@code .st.json} files during plugin startup and registered
+ * here by name. The manager provides lookup, ordering, weighted random selection, and
+ * requirement evaluation for the pet skilltree selection UI.
+ *
+ * <p>Requirements are registered by their {@link RequirementName} annotation and evaluated
+ * at runtime to determine if a pet qualifies for a given skilltree.
+ *
+ * <p>Loaded during {@link Load.State#OnLoad} so that skilltrees are available before pet
+ * data is restored from the repository.
+ */
 @Load(Load.State.OnLoad)
 @ServiceName("SkilltreeManager")
 public class SkilltreeManager implements ServiceContainer {
@@ -43,34 +56,50 @@ public class SkilltreeManager implements ServiceContainer {
         clearSkilltrees();
     }
 
+    /** Registers a skilltree, keyed by its name. Overwrites any existing tree with the same name. */
     public void registerSkilltree(Skilltree skilltree) {
         this.skilltrees.put(skilltree.getName(), skilltree);
     }
 
+    /** Returns the skilltree with the given name, or {@code null} if none is registered. */
     public Skilltree getSkilltree(String name) {
         return this.skilltrees.get(name);
     }
 
+    /** Returns the set of all registered skilltree names. */
     public Set<String> getSkilltreeNames() {
         return this.skilltrees.keySet();
     }
 
+    /** Returns skilltree names sorted by their {@link Skilltree#getOrder()} value. */
     public List<String> getOrderedSkilltreeNames() {
         List<String> names = new LinkedList<>(this.skilltrees.keySet());
         names.sort(Comparator.comparingInt(o -> this.skilltrees.get(o).getOrder()));
         return names;
     }
 
+    /** Returns all registered skilltree instances (unordered). */
     public Collection<Skilltree> getSkilltrees() {
         return this.skilltrees.values();
     }
 
+    /** Returns all registered skilltrees sorted by their {@link Skilltree#getOrder()} value. */
     public List<Skilltree> getOrderedSkilltrees() {
         List<Skilltree> skilltrees = new LinkedList<>(this.skilltrees.values());
         skilltrees.sort(Comparator.comparingInt(Skilltree::getOrder));
         return skilltrees;
     }
 
+    /**
+     * Selects a random skilltree for the given pet using weighted probability.
+     *
+     * <p>Only skilltrees that match the pet's type, pass all requirements, and have a
+     * positive weight are candidates. The selection uses a cumulative-weight random
+     * algorithm so that trees with higher weights are proportionally more likely.
+     *
+     * @param pet the pet to select a skilltree for
+     * @return a randomly selected skilltree, or {@code null} if no candidates qualify
+     */
     public Skilltree getRandomSkilltree(MyPet pet) {
         TreeMap<Double, Skilltree> skilltreeMap = new TreeMap<>();
         List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getSkilltrees());
@@ -94,23 +123,47 @@ public class SkilltreeManager implements ServiceContainer {
         return skilltreeMap.get(key);
     }
 
+    /** Returns {@code true} if a skilltree with the given name is registered. */
     public boolean hasSkilltree(String name) {
         return this.skilltrees.containsKey(name);
     }
 
+    /** Removes all registered skilltrees. Typically called during reload or shutdown. */
     public void clearSkilltrees() {
         this.skilltrees.clear();
     }
 
+    /**
+     * Registers a requirement implementation, keyed by the name from its {@link RequirementName}
+     * annotation (case-insensitive).
+     *
+     * @param Requirement the requirement instance to register
+     */
     public void registerRequirement(Requirement Requirement) {
         String requirementName = getRequirementName(Requirement.getClass());
         requirements.put(requirementName.toLowerCase(), Requirement);
     }
 
+    /**
+     * Looks up a requirement by name (case-insensitive).
+     *
+     * @param requirementName the requirement name to look up
+     * @return the requirement instance, or {@code null} if not registered
+     */
     public Requirement getRequirement(String requirementName) {
         return requirements.get(requirementName.toLowerCase());
     }
 
+    /**
+     * Resolves the requirement name for a class by searching its type hierarchy for a
+     * {@link RequirementName} annotation.
+     *
+     * <p>Searches the class itself, then its superclass chain, then all implemented interfaces
+     * recursively.
+     *
+     * @param clazz the class to inspect
+     * @return the annotated requirement name, or {@code null} if not found
+     */
     public String getRequirementName(Class<?> clazz) {
         if (clazz == Object.class) {
             return null;
@@ -134,10 +187,12 @@ public class SkilltreeManager implements ServiceContainer {
         return null;
     }
 
+    /** Unregisters a requirement by name. */
     public void removeRequirement(String requirementName) {
         requirements.remove(requirementName);
     }
 
+    /** Unregisters a requirement by resolving the name from its class annotation. */
     public void removeRequirement(Requirement requirement) {
         String requirementName = getRequirementName(requirement.getClass());
         removeRequirement(requirementName);

@@ -24,8 +24,17 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that enables the owner to direct their pet to move to a specific location by
+ * left-clicking on a block with a configured control item. When active, the pet pathfinds
+ * to the clicked position rather than following the owner.
+ *
+ * <p>The skill is either unlocked or not, controlled by a single boolean
+ * {@link UpgradeComputer}.
+ */
 @SkillName(value = "Control", translationNode = "Name.Skill.Control")
 public interface Control extends Skill {
 
+    /** Returns the upgrade computer controlling whether the Control skill is unlocked. */
     UpgradeComputer<Boolean> getActive();
 }

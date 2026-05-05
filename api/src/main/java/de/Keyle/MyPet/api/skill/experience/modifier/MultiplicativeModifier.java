@@ -23,19 +23,35 @@ package de.Keyle.MyPet.api.skill.experience.modifier;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * An experience modifier that multiplies the incoming experience by a configurable factor.
+ *
+ * <p>The modifier value defaults to {@code 1.0} (no change). Values above {@code 1.0}
+ * increase experience; values between {@code 0.0} and {@code 1.0} decrease it.
+ *
+ * <p>Unlike {@link GlobalModifier}, this modifier carries its own per-instance multiplier
+ * rather than reading from global configuration.
+ */
 public class MultiplicativeModifier extends ExperienceModifier {
 
     @Setter
     @Getter
     private double modifier = 1;
 
+    /**
+     * Creates a multiplicative modifier with the specified factor.
+     *
+     * @param modifier the multiplication factor (e.g. {@code 1.5} for +50%)
+     */
     public MultiplicativeModifier(double modifier) {
         this.modifier = modifier;
     }
 
+    /** Creates a multiplicative modifier with a factor of {@code 1.0} (no-op). */
     public MultiplicativeModifier() {
     }
 
+    /** {@inheritDoc} Multiplies the experience by the configured factor. */
     public double modify(double experience, double baseExperience) {
         return experience * modifier;
     }

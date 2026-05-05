@@ -30,6 +30,21 @@ import lombok.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Service responsible for managing available {@link ExperienceCalculator} implementations
+ * and switching between them at runtime.
+ *
+ * <p>Calculator classes are registered by identifier (case-insensitive), and the active
+ * calculator can be switched via {@link #switchCalculator(String)}. When a switch occurs
+ * the {@link ExperienceCache} is checked for version compatibility, triggering a cache
+ * invalidation if needed.
+ *
+ * <p>If the requested calculator cannot be instantiated or is not usable, the manager
+ * falls back to the {@link DefaultExperienceCalculator}.
+ *
+ * <p>Loaded during {@link Load.State#OnEnable} because it depends on the
+ * {@link ExperienceCache} service which loads earlier.
+ */
 @ServiceName("ExperienceCalculatorManager")
 @Load(Load.State.OnEnable)
 public class ExperienceCalculatorManager implements ServiceContainer {
@@ -51,6 +66,17 @@ public class ExperienceCalculatorManager implements ServiceContainer {
                 .orElse(false);
     }
 
+    /**
+     * Switches the active experience calculator to the one registered under the given identifier.
+     *
+     * <p>If the identifier does not match the current calculator, the manager attempts to
+     * instantiate the registered class. On failure (instantiation error or
+     * {@link ExperienceCalculator#isUsable()} returning {@code false}), the default calculator
+     * is activated instead. After switching, the {@link ExperienceCache} is notified so it can
+     * invalidate stale entries if necessary.
+     *
+     * @param calculator the case-insensitive identifier of the desired calculator
+     */
     public void switchCalculator(@NonNull String calculator) {
         calculator = calculator.toLowerCase();
         if (!this.calculator.getIdentifier().toLowerCase().equals(calculator)) {
@@ -81,6 +107,15 @@ public class ExperienceCalculatorManager implements ServiceContainer {
         cache = null;
     }
 
+    /**
+     * Registers an experience calculator class under the given identifier.
+     *
+     * <p>The identifier is stored in lower-case for case-insensitive lookups. Registering
+     * with an existing identifier silently replaces the previous registration.
+     *
+     * @param id              the unique identifier for the calculator (case-insensitive)
+     * @param calculatorClass the class to instantiate when this calculator is activated
+     */
     public void registerCalculator(@NonNull String id, @NonNull Class<? extends ExperienceCalculator> calculatorClass) {
         this.calculators.put(id.toLowerCase(), calculatorClass);
     }

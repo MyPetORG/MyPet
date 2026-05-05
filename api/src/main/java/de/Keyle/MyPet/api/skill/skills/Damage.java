@@ -24,8 +24,16 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that determines the pet's base melee attack damage. The damage value scales
+ * with the pet's skilltree level, replacing the mob's default attack damage attribute.
+ *
+ * <p>This is a fundamental combat skill -- without it (or at level zero) the pet deals
+ * no melee damage.
+ */
 @SkillName(value = "Damage", translationNode = "Name.Skill.Damage")
 public interface Damage extends Skill {
 
+    /** Returns the upgrade computer controlling the pet's melee attack damage value. */
     UpgradeComputer<Number> getDamage();
 }

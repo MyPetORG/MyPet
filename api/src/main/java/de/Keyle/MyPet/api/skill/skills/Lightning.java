@@ -25,10 +25,19 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that gives the pet a chance to strike the target with a lightning bolt on hit.
+ * The lightning deals configurable bonus damage in addition to the visual/sound effect.
+ * Both the trigger chance and damage scale with the pet's skilltree level.
+ *
+ * @see OnHitSkill
+ */
 @SkillName(value = "Lightning", translationNode = "Name.Skill.Lightning")
 public interface Lightning extends Skill, OnHitSkill {
 
+    /** Returns the upgrade computer controlling the percent chance to strike lightning on hit. */
     UpgradeComputer<Integer> getChance();
 
+    /** Returns the upgrade computer controlling the bonus damage dealt by the lightning strike. */
     UpgradeComputer<Number> getDamage();
 }

@@ -36,6 +36,14 @@ public final class UpgradeParsers {
         return null;
     }
 
+    /**
+     * Parses a JSON string element into a numeric upgrade modifier. Expects a string
+     * prefixed with {@code "+"} (add) or {@code "-"} (subtract) followed by a decimal
+     * number (e.g. {@code "+5"}, {@code "-2.5"}).
+     *
+     * @param modifier the JSON element to parse
+     * @return the modifier, or {@code null} if the element is not a prefixed numeric string
+     */
     public static UpgradeNumberModifier parseNumber(JsonElement modifier) {
         if (modifier instanceof JsonPrimitive p && p.isString()) {
             String s = p.getAsString();
@@ -53,6 +61,13 @@ public final class UpgradeParsers {
         return null;
     }
 
+    /**
+     * Parses a JSON string element into an integer upgrade modifier. Same format as
+     * {@link #parseNumber(JsonElement)} but truncates the parsed value to an {@code int}.
+     *
+     * @param modifier the JSON element to parse
+     * @return the modifier, or {@code null} if the element is not a prefixed numeric string
+     */
     public static UpgradeIntegerModifier parseInteger(JsonElement modifier) {
         if (modifier instanceof JsonPrimitive p && p.isString()) {
             String s = p.getAsString();
@@ -70,6 +85,13 @@ public final class UpgradeParsers {
         return null;
     }
 
+    /**
+     * Parses a JSON boolean primitive into a boolean upgrade modifier.
+     *
+     * @param modifier the JSON element to parse
+     * @return {@link UpgradeBooleanModifier#True} or {@link UpgradeBooleanModifier#False},
+     *         or {@code null} if the element is not a boolean primitive
+     */
     public static UpgradeBooleanModifier parseBoolean(JsonElement modifier) {
         if (modifier instanceof JsonPrimitive p && p.isBoolean()) {
             return p.getAsBoolean() ? UpgradeBooleanModifier.True : UpgradeBooleanModifier.False;
@@ -77,6 +99,16 @@ public final class UpgradeParsers {
         return null;
     }
 
+    /**
+     * Parses a JSON string into an enum upgrade modifier by matching the string
+     * (case-insensitive) against the constants of the given enum class.
+     *
+     * @param modifier  the JSON element to parse
+     * @param enumClass the enum type to match against
+     * @param <T>       the enum type
+     * @return the matching modifier, or {@code null} if no constant matches or the
+     *         element is not a string
+     */
     public static <T extends Enum<T>> UpgradeEnumModifier<T> parseEnum(JsonElement modifier, Class<T> enumClass) {
         if (modifier instanceof JsonPrimitive p && p.isString()) {
             String s = p.getAsString();

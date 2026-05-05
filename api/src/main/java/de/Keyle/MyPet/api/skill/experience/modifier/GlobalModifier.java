@@ -22,8 +22,18 @@ package de.Keyle.MyPet.api.skill.experience.modifier;
 
 import de.Keyle.MyPet.api.Configuration.LevelSystem.Experience.Modifier;
 
+/**
+ * An experience modifier that multiplies incoming experience by the server-wide global factor.
+ *
+ * <p>The multiplier is read from {@link Modifier#GLOBAL} at each invocation, so changes to
+ * the configuration value take effect immediately without re-registering this modifier.
+ *
+ * <p>A global factor of {@code 1.0} means no change; {@code 2.0} doubles all experience;
+ * {@code 0.5} halves it.
+ */
 public class GlobalModifier extends ExperienceModifier {
 
+    /** {@inheritDoc} Scales the experience by the global multiplier from configuration. */
     public double modify(double experience, double baseExperience) {
         return experience * Modifier.GLOBAL;
     }

@@ -38,6 +38,21 @@ import java.nio.file.Files;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * Disk-backed cache for pre-computed experience-per-level values.
+ *
+ * <p>Computing the experience required for every level on every pet type can be expensive
+ * when using custom (e.g. JavaScript) calculators. This service persists the computed
+ * mapping to a GZIP-compressed JSON file ({@code exp.cache}) in the plugin data folder,
+ * avoiding redundant recalculation across server restarts.
+ *
+ * <p>The cache is keyed by world-group, pet type, and level. It is automatically
+ * invalidated when the active {@link ExperienceCalculator} changes its identifier or
+ * version (see {@link #checkVersion(ExperienceCalculator)}).
+ *
+ * <p>Loaded during {@link Load.State#OnLoad} so that the cache is available before
+ * the experience calculator manager activates.
+ */
 @ServiceName("ExperienceCache")
 @Load(Load.State.OnLoad)
 public class ExperienceCache implements ServiceContainer {
@@ -48,6 +63,15 @@ public class ExperienceCache implements ServiceContainer {
 
     final File cacheFile = new File(MyPetApi.getPlugin().getDataFolder(), "exp.cache");
 
+    /**
+     * Retrieves the cached cumulative experience for the given world-group, pet type, and level.
+     *
+     * @param worldGroup the world-group name
+     * @param type       the pet type
+     * @param level      the target level
+     * @return the cached experience value
+     * @throws LevelNotCalculatedException if no cached value exists for the given combination
+     */
     public double getExp(String worldGroup, MyPetType type, int level) throws LevelNotCalculatedException {
         if (this.expMap.has(worldGroup)) {
             JsonObject typeMap = this.expMap.getAsJsonObject(worldGroup);
@@ -61,6 +85,15 @@ public class ExperienceCache implements ServiceContainer {
         throw new LevelNotCalculatedException(type, level);
     }
 
+    /**
+     * Determines the highest level whose cached experience threshold is at or below the given
+     * experience amount, effectively performing a reverse lookup from experience to level.
+     *
+     * @param worldGroup the world-group name
+     * @param type       the pet type
+     * @param exp        the current experience total
+     * @return the highest level the pet qualifies for, or {@code 0} if no cache entries exist
+     */
     public int getLevel(String worldGroup, MyPetType type, double exp) {
         if (!this.expMap.has(worldGroup)) return 0;
         JsonObject typeMap = this.expMap.getAsJsonObject(worldGroup);
@@ -80,6 +113,16 @@ public class ExperienceCache implements ServiceContainer {
         return found;
     }
 
+    /**
+     * Inserts a computed experience value into the in-memory cache.
+     *
+     * <p>Values with {@code level < 1} or an empty world-group are silently ignored.
+     *
+     * @param worldGroup the world-group name
+     * @param type       the pet type
+     * @param level      the level (must be >= 1)
+     * @param exp        the cumulative experience required to reach this level
+     */
     public void insertExp(String worldGroup, MyPetType type, int level, double exp) {
         if (level < 1) {
             return;
@@ -114,6 +157,15 @@ public class ExperienceCache implements ServiceContainer {
         expMap.entrySet().clear();
     }
 
+    /**
+     * Validates the cache against the current calculator's identifier and version.
+     *
+     * <p>If either has changed since the cache was last built, all cached entries are
+     * cleared, a new version/identifier is recorded, and the cache file is saved. The
+     * next time experience values are needed they will be recalculated on demand.
+     *
+     * @param calculator the currently active experience calculator
+     */
     public void checkVersion(ExperienceCalculator calculator) {
         long version = calculator.getVersion();
         String identifier = calculator.getIdentifier();
@@ -126,6 +178,7 @@ public class ExperienceCache implements ServiceContainer {
         }
     }
 
+    /** Persists the in-memory cache to the GZIP-compressed {@code exp.cache} file. */
     protected void save() {
         try (OutputStreamWriter oos = new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(cacheFile.toPath())))) {
             JsonObject cacheObject = new JsonObject();
@@ -139,6 +192,12 @@ public class ExperienceCache implements ServiceContainer {
         }
     }
 
+    /**
+     * Loads the cache from the {@code exp.cache} file.
+     *
+     * <p>If the file is corrupt or unreadable, the cache is silently reset to empty and the
+     * file is deleted so it will be rebuilt on the next save.
+     */
     protected void load() {
         try (InputStreamReader reader = new InputStreamReader(new GZIPInputStream(Files.newInputStream(cacheFile.toPath())), StandardCharsets.UTF_8)) {
             Gson gson = new Gson();
@@ -154,6 +213,12 @@ public class ExperienceCache implements ServiceContainer {
         }
     }
 
+    /**
+     * Thrown when a requested level has not yet been computed and cached.
+     *
+     * <p>Callers should catch this and compute the value on demand via the active
+     * {@link ExperienceCalculator}, then insert the result into the cache.
+     */
     public static class LevelNotCalculatedException extends Exception {
 
         @Getter

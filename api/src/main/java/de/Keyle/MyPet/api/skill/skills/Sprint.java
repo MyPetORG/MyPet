@@ -24,8 +24,16 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that enables the pet to sprint (move at increased speed) when its owner is
+ * sprinting. Once unlocked, the pet automatically matches the owner's sprint state.
+ *
+ * <p>The skill is either unlocked or not, controlled by a single boolean
+ * {@link UpgradeComputer}.
+ */
 @SkillName(value = "Sprint", translationNode = "Name.Skill.Sprint")
 public interface Sprint extends Skill {
 
+    /** Returns the upgrade computer controlling whether the Sprint skill is unlocked. */
     UpgradeComputer<Boolean> getActive();
 }

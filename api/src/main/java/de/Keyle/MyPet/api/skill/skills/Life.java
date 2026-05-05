@@ -24,8 +24,16 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that increases the pet's maximum health (hit points). The bonus health value
+ * scales with the pet's skilltree level and is added on top of the mob's base health
+ * attribute.
+ *
+ * <p>This is a core survivability skill -- higher levels make the pet harder to kill.
+ */
 @SkillName(value = "Life", translationNode = "Name.Skill.Hitpoints")
 public interface Life extends Skill {
 
+    /** Returns the upgrade computer controlling the bonus maximum health added to the pet. */
     UpgradeComputer<Number> getLife();
 }

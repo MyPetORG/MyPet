@@ -25,10 +25,19 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that gives the pet a chance to apply the Slowness potion effect to targets on
+ * hit, reducing their movement speed. Both the slowness duration and trigger chance
+ * scale with the pet's skilltree level.
+ *
+ * @see OnHitSkill
+ */
 @SkillName(value = "Slow", translationNode = "Name.Skill.Slow")
 public interface Slow extends Skill, OnHitSkill {
 
+    /** Returns the upgrade computer controlling the slowness duration in ticks. */
     UpgradeComputer<Integer> getDuration();
 
+    /** Returns the upgrade computer controlling the percent chance to slow on hit. */
     UpgradeComputer<Integer> getChance();
 }

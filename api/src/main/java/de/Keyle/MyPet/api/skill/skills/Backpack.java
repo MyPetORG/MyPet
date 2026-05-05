@@ -28,13 +28,28 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 
+/**
+ * Skill that grants the pet a portable inventory (backpack) which the owner can open
+ * to store and retrieve items. The number of available inventory rows scales with
+ * the pet's skilltree level. Activating the skill opens the backpack GUI for the owner.
+ *
+ * <p>This skill persists its inventory contents via {@link NBTStorage} and supports
+ * an optional "drop on death" mechanic where all stored items are dropped when the
+ * pet dies.
+ *
+ * @see ActiveSkill#activate()
+ * @see CustomInventory
+ */
 @SkillName(value = "Backpack", translationNode = "Name.Skill.Inventory")
 public interface Backpack extends Skill, NBTStorage, ActiveSkill {
 
+    /** Returns the pet's backpack inventory instance. */
     CustomInventory getInventory();
 
+    /** Returns the upgrade computer controlling whether items drop when the pet dies. */
     UpgradeComputer<Boolean> getDropOnDeath();
 
+    /** Returns the upgrade computer controlling the number of inventory rows available. */
     UpgradeComputer<Number> getRows();
 
     /**

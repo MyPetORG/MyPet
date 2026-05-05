@@ -22,8 +22,25 @@ package de.Keyle.MyPet.api.skill.experience;
 
 import de.Keyle.MyPet.api.entity.MyPet;
 
+/**
+ * The built-in experience calculator that ships with MyPet.
+ *
+ * <p>Uses a progressive formula where each level requires {@code 7 + floor((level - 1) * 3.5)}
+ * more experience than the previous one, producing a smoothly accelerating curve similar to
+ * vanilla Minecraft's XP requirements.
+ *
+ * <p>This calculator is always usable and serves as the fallback when no custom calculator
+ * is configured or when a custom calculator fails to load.
+ */
 public class DefaultExperienceCalculator implements ExperienceCalculator {
 
+    /**
+     * Calculates the cumulative experience required to reach the given level.
+     *
+     * <p>For level 1 or below, returns {@code 0}. For higher levels, sums the per-level
+     * increments from level 1 up to {@code level - 1}, where each increment is
+     * {@code 7 + floor((currentLevel - 1) * 3.5)}.
+     */
     public double getExpByLevel(MyPet myPet, int level) {
         if (level <= 1) {
             return 0;
@@ -38,16 +55,19 @@ public class DefaultExperienceCalculator implements ExperienceCalculator {
         return tmpExp;
     }
 
+    /** {@inheritDoc} Returns {@code 1} -- the formula has never changed. */
     @Override
     public long getVersion() {
         return 1;
     }
 
+    /** {@inheritDoc} Always returns {@code true}; the default calculator has no external dependencies. */
     @Override
     public boolean isUsable() {
         return true;
     }
 
+    /** {@inheritDoc} Returns {@code "MyPet"}, identifying this as the built-in calculator. */
     @Override
     public String getIdentifier() {
         return "MyPet";

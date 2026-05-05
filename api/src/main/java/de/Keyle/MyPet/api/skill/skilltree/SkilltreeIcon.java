@@ -26,6 +26,14 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
 
+/**
+ * Represents the visual icon displayed for a {@link Skilltree} in inventory-based selection GUIs.
+ *
+ * <p>The icon is defined by a Bukkit {@link Material} name and an optional glowing enchantment
+ * effect. Both properties support Lombok's fluent chaining (via {@code @Accessors(chain = true)}).
+ *
+ * <p>Defaults to an oak sapling ({@link Material#OAK_SAPLING}) with no glow.
+ */
 public class SkilltreeIcon {
     @Getter
     @Setter

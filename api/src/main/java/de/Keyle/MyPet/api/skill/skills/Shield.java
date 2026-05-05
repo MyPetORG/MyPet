@@ -24,10 +24,20 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that gives the pet a chance to intercept damage aimed at its owner, redirecting
+ * a percentage of the incoming damage to itself instead. Both the trigger chance and the
+ * fraction of damage redirected scale with the pet's skilltree level.
+ *
+ * <p>When triggered, the owner takes reduced damage and the pet absorbs the redirected
+ * portion.
+ */
 @SkillName(value = "Shield", translationNode = "Name.Skill.Shield")
 public interface Shield extends Skill {
 
+    /** Returns the upgrade computer controlling the percent chance to intercept damage for the owner. */
     UpgradeComputer<Integer> getChance();
 
+    /** Returns the upgrade computer controlling the percentage of damage redirected from owner to pet. */
     UpgradeComputer<Integer> getRedirectedDamage();
 }

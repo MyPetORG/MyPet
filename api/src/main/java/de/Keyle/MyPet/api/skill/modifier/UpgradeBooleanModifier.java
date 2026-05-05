@@ -22,8 +22,20 @@ package de.Keyle.MyPet.api.skill.modifier;
 
 import lombok.Getter;
 
+/**
+ * An {@link UpgradeModifier} for boolean skill parameters.
+ *
+ * <p>Unlike numeric modifiers that add/subtract, boolean modifiers unconditionally replace
+ * the current value with their own. This is typically used to enable or disable a skill
+ * feature at a specific level (e.g., enabling fire aspect on the Damage skill).
+ *
+ * <p>Implemented as an enum with exactly two constants: {@link #True} and {@link #False}.
+ */
 public enum UpgradeBooleanModifier implements UpgradeModifier<Boolean> {
-    True(true), False(false);
+    /** Modifier that sets the parameter to {@code true}. */
+    True(true),
+    /** Modifier that sets the parameter to {@code false}. */
+    False(false);
 
     private final Boolean value;
 
@@ -36,10 +48,12 @@ public enum UpgradeBooleanModifier implements UpgradeModifier<Boolean> {
         return value;
     }
 
+    /** Returns the primitive boolean value of this modifier. */
     public boolean getBoolean() {
         return value;
     }
 
+    /** {@inheritDoc} Unconditionally returns this modifier's boolean value, ignoring the input. */
     @Override
     public Boolean modify(Boolean value) {
         return this.value;

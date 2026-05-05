@@ -34,17 +34,45 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Skill that allows the pet to act as a mobile beacon, periodically applying configurable
+ * potion-effect buffs to nearby players. The owner can select which buffs are active,
+ * choose the receiver scope (owner only, party, or everyone), and toggle the beacon on/off.
+ *
+ * <p>The number of simultaneously active buffs, effect duration, and range all scale with
+ * the pet's skilltree level via {@link UpgradeComputer} values. The skill ticks via
+ * {@link Scheduler} to reapply effects and persists selected buffs via {@link NBTStorage}.
+ *
+ * @see ActiveSkill#activate()
+ * @see Buff
+ * @see BuffReceiver
+ */
 @SkillName(value = "Beacon", translationNode = "Name.Skill.Beacon")
 public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
 
+    /** Returns the upgrade computer controlling the potion-effect duration in ticks. */
     UpgradeComputer<Integer> getDuration();
 
+    /** Returns the upgrade computer controlling the maximum number of buffs the owner can select. */
     UpgradeComputer<Integer> getNumberOfBuffs();
 
+    /** Returns the upgrade computer controlling the beacon's effect radius in blocks. */
     UpgradeComputer<Number> getRange();
 
+    /**
+     * Returns the upgrade computer for a specific buff's amplifier level.
+     *
+     * @param <T>  the value type of the buff's upgrade computer
+     * @param buff the buff to query
+     * @return the upgrade computer for the given buff
+     */
     <T> UpgradeComputer<T> getBuff(Buff buff);
 
+    /**
+     * Enumerates the potion-effect buffs that the Beacon skill can apply. Each entry
+     * maps a human-readable name and a GUI slot position to the corresponding
+     * {@link PotionEffectType}.
+     */
     enum Buff {
         Speed("Speed", 0, PotionEffectType.SPEED),
         Haste("Haste", 9, PotionEffectType.HASTE),
@@ -74,6 +102,13 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
             this.potionEffectType = potionEffectType;
         }
 
+        /**
+         * Returns the buff occupying the given GUI slot position, or {@code null} if
+         * no buff is assigned to that position.
+         *
+         * @param position the GUI slot index
+         * @return the matching {@code Buff}, or {@code null}
+         */
         public static Buff getBuffAtPosition(int position) {
             if (buffPositions.isEmpty()) {
                 for (Buff buff : values()) {
@@ -83,6 +118,12 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
             return buffPositions.get(position);
         }
 
+        /**
+         * Looks up a buff by its canonical name (case-sensitive).
+         *
+         * @param name the buff name (e.g. {@code "Speed"}, {@code "Regeneration"})
+         * @return the matching {@code Buff}, or {@code null} if not found
+         */
         public static Buff getByName(String name) {
             for (Buff buff : values()) {
                 if (buff.name.equals(name)) {
@@ -93,8 +134,16 @@ public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
         }
     }
 
+    /**
+     * Determines which players receive the beacon's potion-effect buffs.
+     */
     enum BuffReceiver {
-        Owner, Party, Everyone
+        /** Only the pet's owner receives buffs. */
+        Owner,
+        /** All members of the owner's party receive buffs. */
+        Party,
+        /** All players within range receive buffs. */
+        Everyone
     }
 
     /**

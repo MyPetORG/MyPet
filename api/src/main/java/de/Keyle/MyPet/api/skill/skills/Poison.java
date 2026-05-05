@@ -25,10 +25,18 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that gives the pet a chance to apply the Poison potion effect to targets on hit.
+ * Both the poison duration and trigger chance scale with the pet's skilltree level.
+ *
+ * @see OnHitSkill
+ */
 @SkillName(value = "Poison", translationNode = "Name.Skill.Poison")
 public interface Poison extends Skill, OnHitSkill {
 
+    /** Returns the upgrade computer controlling the poison duration in ticks. */
     UpgradeComputer<Integer> getDuration();
 
+    /** Returns the upgrade computer controlling the percent chance to poison on hit. */
     UpgradeComputer<Integer> getChance();
 }

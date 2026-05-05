@@ -25,10 +25,19 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that gives the pet a chance to perform a ground-stomp area-of-effect attack on
+ * hit, dealing bonus damage to all nearby entities around the target. Both the trigger
+ * chance and AoE damage scale with the pet's skilltree level.
+ *
+ * @see OnHitSkill
+ */
 @SkillName(value = "Stomp", translationNode = "Name.Skill.Stomp")
 public interface Stomp extends Skill, OnHitSkill {
 
+    /** Returns the upgrade computer controlling the percent chance to stomp on hit. */
     UpgradeComputer<Integer> getChance();
 
+    /** Returns the upgrade computer controlling the AoE damage dealt by the stomp. */
     UpgradeComputer<Number> getDamage();
 }

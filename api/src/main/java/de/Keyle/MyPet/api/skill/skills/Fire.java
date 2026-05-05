@@ -25,10 +25,19 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Skill that gives the pet a chance to ignite targets on hit, setting them on fire for
+ * a configurable duration. Both the fire duration and trigger chance scale with the
+ * pet's skilltree level.
+ *
+ * @see OnHitSkill
+ */
 @SkillName(value = "Fire", translationNode = "Name.Skill.Fire")
 public interface Fire extends Skill, OnHitSkill {
 
+    /** Returns the upgrade computer controlling the fire duration in ticks. */
     UpgradeComputer<Integer> getDuration();
 
+    /** Returns the upgrade computer controlling the percent chance to ignite on hit. */
     UpgradeComputer<Integer> getChance();
 }

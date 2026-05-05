@@ -36,6 +36,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Central registry for all {@link Skill} classes, their {@link UpgradeParser}s, and
+ * {@link SkillStateParser}s. Registered as a {@link ServiceContainer} that loads at
+ * {@link Load.State#OnEnable}.
+ *
+ * <p>Skills are registered by class via {@link #registerSkill(Class)} during plugin
+ * startup. Each skill class must carry (directly or via inheritance) a
+ * {@link SkillName} annotation that provides the canonical name used as the JSON key
+ * in {@code .st.json} skilltree files and in the {@link Skills} name-based lookup.
+ *
+ * <p>Upgrade parsers (registered via {@link #registerUpgradeParser}) convert skilltree
+ * JSON nodes into {@link Upgrade} objects; state parsers (registered via
+ * {@link #registerStateParser}) convert persisted NBT into typed {@link SkillState}
+ * records.
+ *
+ * @see Skills
+ * @see SkillName
+ */
 @ServiceName("SkillManager")
 @Load(Load.State.OnEnable)
 public class SkillManager implements ServiceContainer {
@@ -55,6 +73,13 @@ public class SkillManager implements ServiceContainer {
         stateParsers.clear();
     }
 
+    /**
+     * Registers a skill class with the manager. The class must implement {@link Skill}
+     * and carry (directly or inherited) a {@link SkillName} annotation. Duplicate
+     * registrations (by name or class) are logged and ignored.
+     *
+     * @param clazz the skill implementation class to register
+     */
     public void registerSkill(Class<? extends Skill> clazz) {
         if (!Skill.class.isAssignableFrom(clazz)) {
             MyPetApi.getLogger().warning(clazz.getName() + " doesn't implements Skill!");
@@ -77,10 +102,19 @@ public class SkillManager implements ServiceContainer {
         }
     }
 
+    /** Returns the set of all registered skill implementation classes. */
     public Set<Class<? extends Skill>> getRegisteredSkills() {
         return registeredSkillsNames.keySet();
     }
 
+    /**
+     * Recursively checks whether the given class is (or extends/implements) a valid
+     * skill — i.e. it is assignable to {@link Skill} and carries a {@link SkillName}
+     * annotation somewhere in its type hierarchy.
+     *
+     * @param clazz the class to inspect
+     * @return {@code true} if it qualifies as a valid skill class
+     */
     public boolean isValidSkill(Class<?> clazz) {
         if (clazz == Object.class) {
             return false;
@@ -99,6 +133,13 @@ public class SkillManager implements ServiceContainer {
         return false;
     }
 
+    /**
+     * Resolves the {@link SkillName#value()} for the given class by walking its
+     * superclass chain and interfaces. Returns {@code null} if no annotation is found.
+     *
+     * @param clazz the class to inspect
+     * @return the skill name, or {@code null} if not annotated
+     */
     public String getSkillName(Class<?> clazz) {
         if (clazz == Object.class) {
             return null;
@@ -122,10 +163,24 @@ public class SkillManager implements ServiceContainer {
         return null;
     }
 
+    /**
+     * Returns the skill implementation class registered under the given name.
+     *
+     * @param name the canonical skill name (from {@code @SkillName})
+     * @return the class, or {@code null} if no skill is registered with that name
+     */
     public Class<? extends Skill> getSkillClass(String name) {
         return registeredNamesSkills.get(name);
     }
 
+    /**
+     * Creates a new instance of the given skill class for the specified pet. The skill
+     * class must have a public constructor accepting a single {@link MyPet} parameter.
+     *
+     * @param clazz the skill implementation class
+     * @param myPet the pet that will own the skill instance
+     * @return the new skill instance, or {@code null} if instantiation fails
+     */
     public Skill getNewSkillInstance(Class<? extends Skill> clazz, MyPet myPet) {
         if (clazz == null) {
             return null;

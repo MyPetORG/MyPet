@@ -22,9 +22,35 @@ package de.Keyle.MyPet.api.skill;
 
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+/**
+ * Represents a single level-up upgrade for a skill. Upgrades are produced by an
+ * {@link UpgradeParser} from {@code .st.json} skilltree data and are applied to the
+ * owning {@link Skill} when the pet reaches the corresponding level.
+ *
+ * <p>Upgrades must be <em>invertible</em>: when a skilltree is reset or changed,
+ * previously applied upgrades are rolled back via {@link #invert(Skill)} so the
+ * skill's state returns to its pre-upgrade baseline.
+ *
+ * @param <T> the specific skill type this upgrade targets
+ * @see UpgradeParser
+ * @see UpgradeComputer
+ */
 public interface Upgrade<T extends Skill> {
 
+    /**
+     * Applies this upgrade's modifiers to the given skill (e.g. adds damage,
+     * increases chance, enables a boolean flag).
+     *
+     * @param skill the skill instance to upgrade
+     */
     void apply(T skill);
 
+    /**
+     * Reverts this upgrade's modifiers from the given skill, restoring the skill
+     * to its state before this upgrade was applied. Must be the exact inverse of
+     * {@link #apply(Skill)}.
+     *
+     * @param skill the skill instance to roll back
+     */
     void invert(T skill);
 }

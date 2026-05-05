@@ -28,22 +28,58 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 
+/**
+ * Skill that controls the pet's combat behavior mode. The owner can cycle through
+ * available modes to change how the pet reacts to nearby entities:
+ * <ul>
+ *   <li><b>Normal</b> -- follows the owner, only attacks targets the owner hits</li>
+ *   <li><b>Friendly</b> -- never attacks, ignores all hostiles</li>
+ *   <li><b>Aggressive</b> -- attacks all nearby hostile mobs autonomously</li>
+ *   <li><b>Raid</b> -- attacks only mobs, never players (useful in group PvE)</li>
+ *   <li><b>Farm</b> -- attacks hostile mobs but stays within a set range</li>
+ *   <li><b>Duel</b> -- attacks other players' pets only</li>
+ * </ul>
+ *
+ * <p>Which modes are available depends on the pet's skilltree level; each mode is
+ * individually unlocked via its own {@link UpgradeComputer}{@code <Boolean>}. The
+ * selected mode is persisted via {@link NBTStorage} and ticks via {@link Scheduler}
+ * to reset mode if needed.
+ *
+ * @see BehaviorMode
+ * @see ActiveSkill#activate()
+ */
 @SkillName(value = "Behavior", translationNode = "Name.Skill.Behavior")
 public interface Behavior extends Skill, Scheduler, ActiveSkill, NBTStorage {
+
+    /** Returns the pet's currently active behavior mode. */
     BehaviorMode getBehavior();
 
+    /**
+     * Sets the pet's behavior mode.
+     *
+     * @param mode the new behavior mode to apply
+     */
     void setBehavior(BehaviorMode mode);
 
+    /** Returns the upgrade computer controlling whether Farm mode is unlocked. */
     UpgradeComputer<Boolean> getFarmBehavior();
 
+    /** Returns the upgrade computer controlling whether Raid mode is unlocked. */
     UpgradeComputer<Boolean> getRaidBehavior();
 
+    /** Returns the upgrade computer controlling whether Duel mode is unlocked. */
     UpgradeComputer<Boolean> getDuelBehavior();
 
+    /** Returns the upgrade computer controlling whether Aggressive mode is unlocked. */
     UpgradeComputer<Boolean> getAggressiveBehavior();
 
+    /** Returns the upgrade computer controlling whether Friendly mode is unlocked. */
     UpgradeComputer<Boolean> getFriendlyBehavior();
 
+    /**
+     * Enumerates the possible pet behavior modes. Each mode changes the pet's
+     * AI target selection logic.
+     */
     enum BehaviorMode {
         Normal, Friendly, Aggressive, Raid, Farm, Duel
     }

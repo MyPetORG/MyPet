@@ -25,10 +25,22 @@ import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.Scheduler;
 
+/**
+ * Skill that passively regenerates the pet's health over time. The pet is healed at a
+ * fixed interval determined by the timer value, with the amount of health restored per
+ * tick scaling with the pet's skilltree level.
+ *
+ * <p>Healing is applied via the {@link Scheduler} tick cycle -- no player interaction
+ * is required.
+ *
+ * @see Scheduler
+ */
 @SkillName(value = "Heal", translationNode = "Name.Skill.Heal")
 public interface Heal extends Skill, Scheduler {
 
+    /** Returns the upgrade computer controlling the amount of health restored per heal tick. */
     UpgradeComputer<Number> getHeal();
 
+    /** Returns the upgrade computer controlling the interval (in ticks) between heal applications. */
     UpgradeComputer<Integer> getTimer();
 }
