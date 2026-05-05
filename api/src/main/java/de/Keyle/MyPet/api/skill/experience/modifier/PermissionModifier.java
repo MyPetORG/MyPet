@@ -23,28 +23,30 @@ package de.Keyle.MyPet.api.skill.experience.modifier;
 import de.Keyle.MyPet.api.Configuration.LevelSystem.Experience.Modifier;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 /**
  * An experience modifier that grants bonus experience based on the pet owner's permissions.
  *
  * <p>When the permission-based modifier feature is enabled in configuration
- * ({@link Modifier#PERMISSION}), this modifier checks the pet owner's permissions for
- * tiered multiplier nodes of the form {@code MyPet.experience.multiplier.<percent>}.
- * The highest matching tier is applied (checked from 250 down to 125):
+ * ({@link Modifier#PERMISSION}), this modifier scans the pet owner's effective
+ * permissions for nodes of the form {@code MyPet.experience.multiplier.<percent>}
+ * where {@code <percent>} is any positive integer. The highest matching value is
+ * applied as {@code percent / 100.0}:
  *
  * <ul>
- *   <li>{@code MyPet.experience.multiplier.250} -- 2.5x</li>
- *   <li>{@code MyPet.experience.multiplier.225} -- 2.25x</li>
- *   <li>{@code MyPet.experience.multiplier.200} -- 2.0x</li>
- *   <li>{@code MyPet.experience.multiplier.175} -- 1.75x</li>
- *   <li>{@code MyPet.experience.multiplier.150} -- 1.5x</li>
- *   <li>{@code MyPet.experience.multiplier.125} -- 1.25x</li>
+ *   <li>{@code MyPet.experience.multiplier.125} → 1.25x</li>
+ *   <li>{@code MyPet.experience.multiplier.183} → 1.83x</li>
+ *   <li>{@code MyPet.experience.multiplier.250} → 2.5x</li>
+ *   <li>{@code MyPet.experience.multiplier.50} → 0.5x (halved)</li>
  * </ul>
  *
- * <p>If the feature is disabled, or the owner is offline, or no permission node matches,
+ * <p>If the feature is disabled, the owner is offline, or no permission node matches,
  * the experience passes through unchanged.
  */
 public class PermissionModifier extends ExperienceModifier {
+
+    private static final String PREFIX = "mypet.experience.multiplier.";
 
     final MyPet myPet;
 
@@ -59,23 +61,26 @@ public class PermissionModifier extends ExperienceModifier {
 
     /** {@inheritDoc} Applies the highest applicable permission-based multiplier. */
     public double modify(double experience, double baseExperience) {
-        if (Modifier.PERMISSION) {
-            Player owner = myPet.getOwner().getPlayer();
-            if (owner != null) {
-                if (owner.hasPermission("MyPet.experience.multiplier.250")) {
-                    experience *= 2.5;
-                } else if (owner.hasPermission("MyPet.experience.multiplier.225")) {
-                    experience *= 2.25;
-                } else if (owner.hasPermission("MyPet.experience.multiplier.200")) {
-                    experience *= 2;
-                } else if (owner.hasPermission("MyPet.experience.multiplier.175")) {
-                    experience *= 1.75;
-                } else if (owner.hasPermission("MyPet.experience.multiplier.150")) {
-                    experience *= 1.5;
-                } else if (owner.hasPermission("MyPet.experience.multiplier.125")) {
-                    experience *= 1.25;
-                }
+        if (!Modifier.PERMISSION) return experience;
+
+        Player owner = myPet.getOwner().getPlayer();
+        if (owner == null) return experience;
+
+        int highest = 0;
+        for (PermissionAttachmentInfo pai : owner.getEffectivePermissions()) {
+            if (!pai.getValue()) continue;
+            String perm = pai.getPermission().toLowerCase();
+            if (!perm.startsWith(PREFIX)) continue;
+
+            try {
+                int value = Integer.parseInt(perm.substring(PREFIX.length()));
+                if (value > highest) highest = value;
+            } catch (NumberFormatException ignored) {
             }
+        }
+
+        if (highest > 0) {
+            experience *= highest / 100.0;
         }
         return experience;
     }
