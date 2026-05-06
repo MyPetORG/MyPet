@@ -124,7 +124,7 @@ public class CommandTrade {
                 "/pettrade",
                 null,
                 140,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
                         && (Permissions.has(player, "MyPet.command.trade.offer")
                         || Permissions.has(player, "MyPet.command.trade.receive"))
         ));
@@ -166,7 +166,7 @@ public class CommandTrade {
                     offers.remove(player.getUniqueId());
                     return;
                 }
-                if (MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+                if (MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getPetManager().hasActiveMyPet(player)) {
                     player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.HasPet", player));
                     return;
                 }
@@ -192,8 +192,8 @@ public class CommandTrade {
                 final MyPetPlayer newOwner = MyPetApi.getPlayerManager().isMyPetPlayer(player) ? MyPetApi.getPlayerManager().getMyPetPlayer(player) : MyPetApi.getPlayerManager().registerMyPetPlayer(player);
                 final String worldGroup = offer.pet().getWorldGroup();
 
-                MyPetApi.getMyPetManager().deactivateMyPet(oldOwner, false);
-                final PersistedMyPet originalPet = MyPetApi.getMyPetManager().snapshot(offer.pet());
+                MyPetApi.getPetManager().deactivateMyPet(oldOwner, false);
+                final PersistedMyPet originalPet = MyPetApi.getPetManager().snapshot(offer.pet());
 
                 final Repository repo = MyPetPlugin.getInstance().getRepository();
                 repo.removePet(originalPet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
@@ -201,7 +201,7 @@ public class CommandTrade {
                         PetSaveEvent event = new PetSaveEvent(pet);
                         Bukkit.getServer().getPluginManager().callEvent(event);
                         repo.addPet(pet);
-                        Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(pet);
+                        Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(pet);
 
                         oldOwner.setMyPetForWorldGroup(worldGroup, null);
                         newOwner.setMyPetForWorldGroup(worldGroup, pet.getUUID());
@@ -312,8 +312,8 @@ public class CommandTrade {
             return;
         }
 
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
+        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
 
             if (!Permissions.has(player, "MyPet.command.trade.offer." + myPet.getPetType().name())) {
                 player.sendMessage(Locale.getComponent("Message.No.Allowed", player));

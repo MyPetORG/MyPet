@@ -87,7 +87,7 @@ public class CommandCall {
                 "/petcall",
                 CommandCategory.PET,
                 60,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
         ));
     }
 
@@ -115,8 +115,8 @@ public class CommandCall {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
 
             if (myPet.getEntity().isPresent()) {
                 //Only let it respawn if it actually was there before

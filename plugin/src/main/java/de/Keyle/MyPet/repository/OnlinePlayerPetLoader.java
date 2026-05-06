@@ -6,7 +6,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.repository.MyPetManager;
+import de.Keyle.MyPet.api.repository.PetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
@@ -49,14 +49,14 @@ public final class OnlinePlayerPetLoader {
      *
      * @param plugin         the plugin instance used for scheduler ownership
      * @param repository     the active repository, queried for the per-player record
-     * @param myPetManager   used to activate the loaded {@link StoredMyPet} into a live
+     * @param petManager   used to activate the loaded {@link StoredMyPet} into a live
      *                       {@link MyPet} and to deactivate stale per-world-group pets
      * @param playerManager  receives each restored {@link de.Keyle.MyPet.api.player.MyPetPlayer}
      *                       via {@link PlayerManager#setOnline}
      */
     public static void restoreForOnlinePlayers(@NotNull JavaPlugin plugin,
                                                @NotNull Repository repository,
-                                               @NotNull MyPetManager myPetManager,
+                                               @NotNull PetManager petManager,
                                                @NotNull PlayerManager playerManager) {
         Bukkit.getServer().getGlobalRegionScheduler().run(plugin, deferredTask -> {
             for (Player player : plugin.getServer().getOnlinePlayers()) {
@@ -64,7 +64,7 @@ public final class OnlinePlayerPetLoader {
                     if (loadedPlayer == null) return;
                     player.getScheduler().run(plugin, playerTask ->
                             handlePlayer(plugin, player, (MyPetPlayerImpl) loadedPlayer,
-                                    myPetManager, playerManager), null);
+                                    petManager, playerManager), null);
                 });
             }
         });
@@ -73,7 +73,7 @@ public final class OnlinePlayerPetLoader {
     private static void handlePlayer(JavaPlugin plugin,
                                      Player player,
                                      MyPetPlayerImpl onlinePlayer,
-                                     MyPetManager myPetManager,
+                                     PetManager petManager,
                                      PlayerManager playerManager) {
         playerManager.setOnline(onlinePlayer);
 
@@ -85,7 +85,7 @@ public final class OnlinePlayerPetLoader {
         if (onlinePlayer.hasMyPet()) {
             MyPet myPet = onlinePlayer.getMyPet();
             if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
-                myPetManager.deactivateMyPet(onlinePlayer, true);
+                petManager.deactivateMyPet(onlinePlayer, true);
             }
         }
 
@@ -93,15 +93,15 @@ public final class OnlinePlayerPetLoader {
             UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
             MyPetPlugin.getInstance().getRepository().getPet(petUUID).thenAccept(storedMyPet ->
                     player.getScheduler().run(plugin, petTask ->
-                            activateAndMaybeRespawn(myPetManager, onlinePlayer, storedMyPet), null));
+                            activateAndMaybeRespawn(petManager, onlinePlayer, storedMyPet), null));
         }
         onlinePlayer.checkForContribution();
     }
 
-    private static void activateAndMaybeRespawn(MyPetManager myPetManager,
+    private static void activateAndMaybeRespawn(PetManager petManager,
                                                 MyPetPlayerImpl onlinePlayer,
                                                 StoredMyPet storedMyPet) {
-        myPetManager.activateMyPet(storedMyPet);
+        petManager.activateMyPet(storedMyPet);
         if (!onlinePlayer.hasMyPet()) {
             return;
         }

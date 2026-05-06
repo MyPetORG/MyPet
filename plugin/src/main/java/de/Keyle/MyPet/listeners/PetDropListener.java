@@ -35,7 +35,7 @@ public class PetDropListener implements Listener {
         if (!PetEntityMarker.isMarked(event.getEntity())) {
             return;
         }
-        MyPet pet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getEntity());
+        MyPet pet = MyPetApi.getPetManager().getMyPetFromEntity(event.getEntity());
         if (!(pet instanceof MyPetNaturalDrop dropper)) {
             return;
         }

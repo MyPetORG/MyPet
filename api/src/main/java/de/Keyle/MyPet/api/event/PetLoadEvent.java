@@ -30,13 +30,13 @@ import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Fired when the repository hands a stored pet to {@code MyPetManager} for
+ * Fired when the repository hands a stored pet to {@code PetManager} for
  * activation — i.e., just before the manager wires it up as a live
  * {@link MyPet}. The pet exposed via {@link #getPet()} is still a
  * {@link StoredMyPet} (concretely a {@code PersistedMyPet} record); skills
  * have not yet been instantiated.
  *
- * <p>Fires from {@code MyPetManager.activateMyPet} before any setup runs.
+ * <p>Fires from {@code PetManager.activateMyPet} before any setup runs.
  *
  * <p><b>Not cancellable:</b> activation always proceeds. Listeners use this
  * for read-only auditing, attaching addon-side state to the about-to-be-live

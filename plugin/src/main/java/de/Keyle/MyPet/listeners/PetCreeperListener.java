@@ -54,7 +54,7 @@ public class PetCreeperListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        MyPet pet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getRightClicked());
+        MyPet pet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
         if (pet != null
                 && !Configuration.MyPet.Creeper.ALLOW_NON_OWNER_FLINT_AND_STEEL
                 && !isOwner(event.getPlayer(), pet)) {

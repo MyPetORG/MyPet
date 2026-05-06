@@ -127,8 +127,8 @@ public class PlayerListener implements Listener {
         if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
             return;
         }
-        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getInventory().getItemInMainHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(event.getPlayer());
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getInventory().getItemInMainHand()) && MyPetApi.getPetManager().hasActiveMyPet(event.getPlayer())) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(event.getPlayer());
             if (myPet.getStatus() == MyPet.PetState.Here && myPet.getEntity().isPresent() && myPet.canMove()) {
                 if (myPet.getSkills().isActive(ControlImpl.class)) {
                     if (myPet.getSkills().isActive(Behavior.class)) {
@@ -209,7 +209,7 @@ public class PlayerListener implements Listener {
         }
         if (event.isCancelled()) {
             if (PetEntityMarker.isMarked(event.getRightClicked())) {
-                MyPet clickedPet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getRightClicked());
+                MyPet clickedPet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
                 if (clickedPet != null && clickedPet.getOwner() != null
                         && clickedPet.getOwner().equals(event.getPlayer())) {
                     event.setCancelled(false);
@@ -239,7 +239,7 @@ public class PlayerListener implements Listener {
                     if (joinedPlayer.hasMyPet()) {
                         MyPet myPet = joinedPlayer.getMyPet();
                         if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
-                            MyPetApi.getMyPetManager().deactivateMyPet(joinedPlayer, true);
+                            MyPetApi.getPetManager().deactivateMyPet(joinedPlayer, true);
                         }
                     }
 
@@ -247,7 +247,7 @@ public class PlayerListener implements Listener {
                         final UUID petUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
                         MyPetPlugin.getInstance().getRepository().getPet(petUUID).thenAccept(storedMyPet -> {
                             joinPlayer.getScheduler().run(MyPetApi.getPlugin(), petTask -> {
-                                MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
+                                MyPetApi.getPetManager().activateMyPet(storedMyPet);
 
                                 if (joinedPlayer.hasMyPet()) {
                                     final MyPet myPet = joinedPlayer.getMyPet();
@@ -374,7 +374,7 @@ public class PlayerListener implements Listener {
                     myPet.removePet(true);
                 }
 
-                MyPetApi.getMyPetManager().deactivateMyPet(player, true);
+                MyPetApi.getPetManager().deactivateMyPet(player, true);
             }
 
             Timer.stopPlayerTicking(player);
@@ -432,7 +432,7 @@ public class PlayerListener implements Listener {
             };
 
             if (fromGroup != toGroup) {
-                final boolean hadMyPetInFromWorld = MyPetApi.getMyPetManager().deactivateMyPet(myPetPlayer, true);
+                final boolean hadMyPetInFromWorld = MyPetApi.getPetManager().deactivateMyPet(myPetPlayer, true);
 
                 if (toGroup.isDisabled()) {
                     return;
@@ -444,7 +444,7 @@ public class PlayerListener implements Listener {
                         worldChangedPlayer.getScheduler().run(MyPetApi.getPlugin(), runTask -> {
                             for (StoredMyPet storedPet : pets) {
                                 if (storedPet.getUUID().equals(groupMyPetUUID)) {
-                                    MyPetApi.getMyPetManager().activateMyPet(storedPet);
+                                    MyPetApi.getPetManager().activateMyPet(storedPet);
                                     break;
                                 }
                             }

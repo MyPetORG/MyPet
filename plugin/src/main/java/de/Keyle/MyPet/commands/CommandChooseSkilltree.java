@@ -97,8 +97,8 @@ public class CommandChooseSkilltree {
                         .then(Commands.argument("skilltree", StringArgumentType.greedyString())
                                 .suggests((ctx, builder) -> {
                                     if (ctx.getSource().getSender() instanceof Player player) {
-                                        if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                                            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
+                                        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
+                                            MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
                                             for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getOrderedSkilltrees()) {
                                                 if (skilltree.getMobTypes().contains(myPet.getPetType()) && skilltree.checkRequirements(myPet)) {
                                                     builder.suggest(skilltree.getName());
@@ -122,7 +122,7 @@ public class CommandChooseSkilltree {
                 "/petchooseskilltree",
                 CommandCategory.SKILLS,
                 160,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
         ));
     }
 
@@ -144,12 +144,12 @@ public class CommandChooseSkilltree {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(player)) {
             player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
             return;
         }
 
-        final MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
+        final MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
         final MyPetPlayer myPetOwner = myPet.getOwner();
 
         if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
@@ -244,12 +244,12 @@ public class CommandChooseSkilltree {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(player)) {
             player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
             return;
         }
 
-        final MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
+        final MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
         final MyPetPlayer myPetOwner = myPet.getOwner();
 
         if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {

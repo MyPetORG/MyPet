@@ -129,8 +129,8 @@ public class StorageTrait extends Trait {
 
                             final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Component.text(stats + " ").append(Locale.getComponent("Message.Npc.SwitchTitle", player)));
                             gui.open(pets, storedMyPet -> {
-                                    MyPetApi.getMyPetManager().deactivateMyPet(myPetPlayer, true);
-                                    Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
+                                    MyPetApi.getPetManager().deactivateMyPet(myPetPlayer, true);
+                                    Optional<MyPet> activePet = MyPetApi.getPetManager().activateMyPet(storedMyPet);
                                     if (activePet.isPresent() && myPetPlayer.isOnline()) {
                                         Player p = myPetPlayer.getPlayer();
                                         myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", player, activePet.get().getDisplayName()));
@@ -183,7 +183,7 @@ public class StorageTrait extends Trait {
 
                                     if (store) {
                                         StoredMyPet storedMyPet = myPetPlayer.getMyPet();
-                                        if (MyPetApi.getMyPetManager().deactivateMyPet(myPetPlayer, true)) {
+                                        if (MyPetApi.getPetManager().deactivateMyPet(myPetPlayer, true)) {
                                             // remove pet from world groups
                                             String wg1 = myPetPlayer.getWorldGroupForMyPet(storedMyPet.getUUID());
                                             myPetPlayer.setMyPetForWorldGroup(wg1, null);
@@ -240,7 +240,7 @@ public class StorageTrait extends Trait {
                             String stats = "(" + pets.size() + "/" + maxPetCount + ")";
                             MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Locale.getComponent("Message.Npc.TakeTitle", myPetPlayer).append(Component.text(" " + stats)));
                             gui.open(pets, storedMyPet -> {
-                                    Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
+                                    Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(storedMyPet);
                                     if (myPet.isPresent()) {
                                         Player ownerPlayer = myPetPlayer.getPlayer();
                                         myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", myPetPlayer, myPet.get().getDisplayName()));

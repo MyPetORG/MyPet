@@ -575,7 +575,7 @@ public class CommandOptionCreate {
                     newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
 
                     if (newOwner.hasMyPet() && force) {
-                        MyPetApi.getMyPetManager().deactivateMyPet(newOwner, true);
+                        MyPetApi.getPetManager().deactivateMyPet(newOwner, true);
                     }
                 } else {
                     newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
@@ -600,7 +600,7 @@ public class CommandOptionCreate {
                                 inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
                                 MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(inactiveMyPet.getOwner());
 
-                                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
+                                Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(inactiveMyPet);
                                 if (myPet.isPresent()) {
                                     myPet.get().createEntity();
                                     sender.sendMessage(Locale.getComponent("Message.Command.Success", sender));

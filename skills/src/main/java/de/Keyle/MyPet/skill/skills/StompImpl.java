@@ -115,7 +115,7 @@ public class StompImpl implements Stomp {
                             }
                         }
                     } else {
-                        MyPet targetMyPet = MyPetApi.getMyPetManager().getMyPetFromEntity(livingEntity);
+                        MyPet targetMyPet = MyPetApi.getPetManager().getMyPetFromEntity(livingEntity);
                         if (targetMyPet != null && targetMyPet.getOwner() != null
                                 && !MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                             continue;

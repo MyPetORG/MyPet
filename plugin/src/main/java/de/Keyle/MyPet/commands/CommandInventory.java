@@ -97,8 +97,8 @@ public class CommandInventory {
                 "/petinventory",
                 CommandCategory.SKILLS,
                 170,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
-                        && MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(BackpackImpl.class)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                        && MyPetApi.getPetManager().getMyPet(player).getSkills().isActive(BackpackImpl.class)
         ));
     }
 
@@ -113,8 +113,8 @@ public class CommandInventory {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
+        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
             if (myPet.getStatus() == PetState.Despawned) {
                 player.sendMessage(Locale.getFormattedComponent("Message.Call.First", player, myPet.getDisplayName()));
                 return;
@@ -155,8 +155,8 @@ public class CommandInventory {
         Player petOwner = Bukkit.getServer().getOfflinePlayer(targetName).getPlayer();
         if (petOwner == null) {
             player.sendMessage(Locale.getComponent("Message.No.PlayerOnline", player));
-        } else if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        } else if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
             if (myPet.getSkills().isActive(BackpackImpl.class)) {
                 myPet.getSkills().get(BackpackImpl.class).openInventory(player);
             }

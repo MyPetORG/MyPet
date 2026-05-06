@@ -145,7 +145,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
     /** Active and stored pet registry. Populated in {@link #onLoad()}. */
     @Getter
-    private MyPetManager myPetManager;
+    private PetManager petManager;
 
     /** Helper API for third-party plugin hooks. Populated in {@link #onLoad()}. */
     @Getter
@@ -196,7 +196,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         isDisabling = true;
 
         if (isReady) {
-            for (MyPet myPet : myPetManager.getAllActiveMyPets()) {
+            for (MyPet myPet : petManager.getAllActiveMyPets()) {
                 if (myPet.getStatus() == MyPet.PetState.Here) {
                     myPet.removePet(true);
                 }
@@ -267,7 +267,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         pluginHookManager = new PluginHookManager();
 
         myPetInfo = new MyPetInfoImpl();
-        myPetManager = new de.Keyle.MyPet.repository.MyPetManager();
+        petManager = new de.Keyle.MyPet.repository.PetManager();
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
         hookHelper = new de.Keyle.MyPet.util.HookHelper();
 
@@ -393,7 +393,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         pluginHookManager.enableHooks();
         serviceManager.activate(Load.State.AfterHooks);
 
-        MyPetMetrics.register(this, myPetManager, errorReporter);
+        MyPetMetrics.register(this, petManager, errorReporter);
 
         this.isReady = true;
 
@@ -422,7 +422,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             public void onServerLoad(ServerLoadEvent event) {
                 MyPetApi.getSkilltreeManager().clearSkilltrees();
                 SkillTreeLoaderJSON.loadSkilltrees(new File(getDataFolder(), "skilltrees"));
-                OnlinePlayerPetLoader.restoreForOnlinePlayers(MyPetPlugin.this, repository, myPetManager, playerManager);
+                OnlinePlayerPetLoader.restoreForOnlinePlayers(MyPetPlugin.this, repository, petManager, playerManager);
                 HandlerList.unregisterAll(this);
             }
         }, this);

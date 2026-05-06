@@ -77,8 +77,8 @@ public class CommandPickup {
                 "/petpickup",
                 CommandCategory.SKILLS,
                 150,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
-                        && MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(PickupImpl.class)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                        && MyPetApi.getPetManager().getMyPet(player).getSkills().isActive(PickupImpl.class)
         ));
     }
 
@@ -96,8 +96,8 @@ public class CommandPickup {
             owner.sendMessage(Locale.getComponent("Message.No.AllowedHere", owner));
             return;
         }
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(owner)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(owner);
+        if (MyPetApi.getPetManager().hasActiveMyPet(owner)) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(owner);
 
             if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup")) {
                 owner.sendMessage(Locale.getComponent("Message.No.Allowed", owner));

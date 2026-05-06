@@ -134,7 +134,7 @@ public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntity
                 blockTypeName.equals("GOLD_PLATE")) {
 
                 try {
-                    Player owner = MyPetApi.getMyPetManager().getMyPetFromEntity(ent).getOwner().getPlayer();
+                    Player owner = MyPetApi.getPetManager().getMyPetFromEntity(ent).getOwner().getPlayer();
                     FlagPermissions flagPermissions = residence.getPermsByLoc(block.getLocation());
 
                     // Check "use" flag for the player (pressure plates fall under "use" permission)

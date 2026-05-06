@@ -117,7 +117,7 @@ public class PetAggressiveTargetGoal implements Goal<Mob> {
                     continue;
                 }
             } else if (PetEntityMarker.isMarked(entity)) {
-                MyPet otherPet = MyPetApi.getMyPetManager().getMyPetFromEntity(entity);
+                MyPet otherPet = MyPetApi.getPetManager().getMyPetFromEntity(entity);
                 if (otherPet != null && otherPet.getOwner() != null
                         && !MyPetApi.getHookHelper().canHurt(owner, otherPet.getOwner().getPlayer(), true)) {
                     continue;

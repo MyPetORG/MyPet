@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.EnumSet;
 
-import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
+import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 /**
  * Paper {@link Goal} that pairs up two MyPets whose owners have both set
@@ -113,7 +113,7 @@ public class PetDuelTargetGoal implements Goal<Mob> {
             if (!(entity instanceof Mob otherMob) || otherMob.isDead()) {
                 continue;
             }
-            MyPet targetMyPet = getMyPetManager().getMyPetFromEntity(otherMob);
+            MyPet targetMyPet = getPetManager().getMyPetFromEntity(otherMob);
             if (targetMyPet == null) {
                 continue;
             }

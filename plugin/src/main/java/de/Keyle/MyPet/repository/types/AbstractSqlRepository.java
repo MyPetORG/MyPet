@@ -268,7 +268,7 @@ public abstract class AbstractSqlRepository implements Repository {
     @Override
     public CompletableFuture<Integer> cleanup(final long timestamp) {
         return CompletableFuture.supplyAsync(() -> {
-            MyPet[] activePets = MyPetApi.getMyPetManager().getAllActiveMyPets();
+            MyPet[] activePets = MyPetApi.getPetManager().getAllActiveMyPets();
             StringBuilder sql = new StringBuilder("DELETE FROM ")
                     .append(qualifyTable("pets"))
                     .append(" WHERE last_used<?");
@@ -962,7 +962,7 @@ public abstract class AbstractSqlRepository implements Repository {
     }
 
     private void savePets() {
-        for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
+        for (MyPet myPet : MyPetApi.getPetManager().getAllActiveMyPets()) {
             savePetSync(myPet);
         }
         for (StoredMyPet myPet : petsToBeSaved.values()) {

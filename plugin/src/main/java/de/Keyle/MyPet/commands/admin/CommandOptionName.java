@@ -117,11 +117,11 @@ public class CommandOptionName {
     private void execute(CommandSender sender, Player petOwner, String name) {
         String lang = Locale.getCommandSenderLanguage(sender);
 
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
 
         StringBuilder nameBuilder = new StringBuilder(name);
         Pattern regex = Pattern.compile("<[a-zA-Z_]+>");

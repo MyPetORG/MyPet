@@ -41,7 +41,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import static com.SirBlobman.combatlogx.event.PlayerTagEvent.TagReason;
 import static com.SirBlobman.combatlogx.event.PlayerTagEvent.TagType;
-import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
+import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 @PluginHookName("CombatLogX")
 public class CombatLogXHook implements PluginHook {
@@ -90,7 +90,7 @@ public class CombatLogXHook implements PluginHook {
         }
 
         if ((PetEntityMarker.isMarked(damager)) && (ConfigOptions.OPTION_LINK_PETS || IGNORE_PLUGIN_SETTINGS)) {
-            damager = getMyPetManager().getMyPetFromEntity(damager).getOwner().getPlayer();
+            damager = getPetManager().getMyPetFromEntity(damager).getOwner().getPlayer();
         } else {
             return;
         }

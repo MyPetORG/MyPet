@@ -97,8 +97,8 @@ public class CommandOptionSkilltree {
                                                 .resolve(ctx.getSource());
                                         if (!resolved.isEmpty()) {
                                             Player player = resolved.getFirst();
-                                            if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-                                                MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
+                                            if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
+                                                MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
                                                 for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
                                                     if (skilltree.getMobTypes().contains(myPet.getPetType())) {
                                                         builder.suggest(skilltree.getName());
@@ -136,11 +136,11 @@ public class CommandOptionSkilltree {
     private void execute(CommandSender sender, Player petOwner, String skilltreeName) {
         String lang = Locale.getCommandSenderLanguage(sender);
 
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
 
         if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
             Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);

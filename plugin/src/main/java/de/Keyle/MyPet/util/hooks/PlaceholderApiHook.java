@@ -261,7 +261,7 @@ public class PlaceholderApiHook implements PluginHook {
         placeHolders.put("has_pet", new PlaceHolder<>(Player.class) {
             @Override
             public String getValue(Player player) {
-                return MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getMyPetManager().hasActiveMyPet(player) ? "yes" : "no";
+                return MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getPetManager().hasActiveMyPet(player) ? "yes" : "no";
             }
         });
 

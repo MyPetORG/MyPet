@@ -16,7 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
+import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 /**
  * PvP policy engine for pet entities: determines who can damage whom.
@@ -49,7 +49,7 @@ public class PetPvPListener implements Listener {
             damager = (Player) event.getCombuster();
         }
 
-        MyPet myPet = getMyPetManager().getMyPetFromEntity(event.getEntity());
+        MyPet myPet = getPetManager().getMyPetFromEntity(event.getEntity());
         if (myPet == null) return;
 
         if (myPet.getOwner().equals(damager) && !Configuration.Misc.OWNER_CAN_ATTACK_PET) {
@@ -123,7 +123,7 @@ public class PetPvPListener implements Listener {
         if (!PetEntityMarker.isMarked(damagerSlime)) return;
         if (WorldGroup.getGroupByWorld(damagerSlime.getWorld()).isDisabled()) return;
 
-        MyPet myPet = getMyPetManager().getMyPetFromEntity(damagerSlime);
+        MyPet myPet = getPetManager().getMyPetFromEntity(damagerSlime);
         if (myPet == null) return;
 
         // Deliberate attacks via PetMeleeAttackGoal target the pet's current target.

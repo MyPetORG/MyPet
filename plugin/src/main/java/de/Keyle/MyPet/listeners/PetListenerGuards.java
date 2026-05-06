@@ -6,7 +6,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.Optional;
 
-import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
+import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 /**
  * Shared guard helpers for pet-related event listeners.
@@ -29,6 +29,6 @@ public final class PetListenerGuards {
     public static Optional<MyPet> markedPet(Entity entity) {
         if (entity == null) return Optional.empty();
         if (!PetEntityMarker.isMarked(entity)) return Optional.empty();
-        return Optional.ofNullable(getMyPetManager().getMyPetFromEntity(entity));
+        return Optional.ofNullable(getPetManager().getMyPetFromEntity(entity));
     }
 }

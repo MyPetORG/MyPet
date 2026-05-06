@@ -124,8 +124,8 @@ public class SentryErrorReporter implements ErrorReporter {
                 // Add runtime context (viewable on issue page)
                 Map<String, Object> runtimeContext = new HashMap<>();
                 try {
-                    if (MyPetApi.getMyPetManager() != null) {
-                        runtimeContext.put("active_pets", MyPetApi.getMyPetManager().countActiveMyPets());
+                    if (MyPetApi.getPetManager() != null) {
+                        runtimeContext.put("active_pets", MyPetApi.getPetManager().countActiveMyPets());
                     }
                 } catch (Exception ignored) {
                     // Manager may not be initialized yet

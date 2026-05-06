@@ -113,7 +113,7 @@ public class CreakingHeartListener implements Listener {
         }
 
         // Player already has an active pet
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
             return;
         }
 
@@ -248,7 +248,7 @@ public class CreakingHeartListener implements Listener {
 
                 owner.sendMessage(Locale.getComponent("Message.Leash.Add", owner));
 
-                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(inactiveMyPet);
+                Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(inactiveMyPet);
                 myPet.ifPresent(pet -> pet.createEntity(capturedEntityLocation));
                 if (owner.isCaptureHelperActive()) {
                     owner.setCaptureHelperActive(false);
@@ -344,7 +344,7 @@ public class CreakingHeartListener implements Listener {
         }
 
         // Player already has an active pet
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
+        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
             myPetPlayer.sendMessage(LeashFlag.getComponentPrefix(false).append(Locale.getComponent("Message.Command.CaptureHelper.HasPet", player)), 2000);
         }
     }

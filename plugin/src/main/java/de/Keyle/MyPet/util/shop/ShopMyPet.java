@@ -43,7 +43,7 @@ import java.util.Optional;
  * {@link PersistedMyPet} when a player checks out.
  *
  * <p>Previously implemented {@code StoredMyPet} so that the manager's
- * {@code StoredMyPet → PersistedMyPet} converter (now {@code MyPetManager.snapshot})
+ * {@code StoredMyPet → PersistedMyPet} converter (now {@code PetManager.snapshot})
  * would reflectively copy its fields into a {@code PersistedMyPet}. That polymorphism was a hack — the
  * shop-template's "fields" are partly computed (e.g. health = type's start HP)
  * and partly mutable (icon, price), neither of which fits the immutable

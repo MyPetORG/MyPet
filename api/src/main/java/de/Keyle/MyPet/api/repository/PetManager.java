@@ -47,7 +47,7 @@ import java.util.concurrent.CompletableFuture;
  * The concrete implementation in the plugin module handles spawning,
  * despawning, repository I/O, and the active/inactive state transitions.
  */
-public abstract class MyPetManager {
+public abstract class PetManager {
     protected final BiMap<MyPetPlayer, MyPet> mActivePlayerPets = HashBiMap.create();
     protected final BiMap<MyPet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
 

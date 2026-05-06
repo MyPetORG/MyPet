@@ -34,7 +34,7 @@ import org.jspecify.annotations.NonNull;
  * to live ({@link MyPet}) — i.e., once the runtime entity exists, all skills are
  * registered and rebuilt from persisted state, and the pet is in the active-pets map.
  *
- * <p>Fires from {@code MyPetManager.activateMyPet(StoredMyPet)} and from the clone
+ * <p>Fires from {@code PetManager.activateMyPet(StoredMyPet)} and from the clone
  * path that follows pet-type transformations.
  *
  * <p><b>Not cancellable:</b> activation has already completed before this event

@@ -61,7 +61,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
+import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 @PluginHookName("WorldGuard")
 public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, AllowedHook, MountInsideHook, BeaconHook {
@@ -341,7 +341,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             String blockTypeName = block.getType().name();
 
             if (blockTypeName.contains("PRESSURE_PLATE")) {
-                Player p = getMyPetManager().getMyPetFromEntity(ent).getOwner().getPlayer();
+                Player p = getPetManager().getMyPetFromEntity(ent).getOwner().getPlayer();
                 StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
                 if (s == null || s == StateFlag.State.DENY) {
                     event.setCancelled(true);

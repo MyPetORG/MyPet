@@ -6,7 +6,7 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.MyPetZombifiable;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
-import de.Keyle.MyPet.repository.MyPetManager;
+import de.Keyle.MyPet.repository.PetManager;
 import org.bukkit.entity.Hoglin;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.PiglinAbstract;
@@ -23,7 +23,7 @@ import org.bukkit.event.entity.EntityTransformEvent;
  * <ul>
  *   <li><b>{@code true} (admin opted in):</b> let vanilla complete the
  *       conversion and re-type the MyPet domain object via
- *       {@link MyPetManager#convertPetType}. The original instance is
+ *       {@link PetManager#convertPetType}. The original instance is
  *       discarded; a fresh instance of the new type takes its place with
  *       the same UUID, name, XP, skill state, and owner. If the re-type
  *       fails (no MyPetType registered for the target Bukkit type, or the
@@ -51,7 +51,7 @@ public class PetZombificationListener implements Listener {
     public void onPetTransform(EntityTransformEvent event) {
         if (!PetEntityMarker.isMarked(event.getEntity())) return;
 
-        MyPet pet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getEntity());
+        MyPet pet = MyPetApi.getPetManager().getMyPetFromEntity(event.getEntity());
         if (!(pet instanceof MyPetZombifiable zombifiable)) return;
 
         if (zombifiable.allowZombification() && tryRetype(event, pet)) {
@@ -91,7 +91,7 @@ public class PetZombificationListener implements Listener {
         if (newType == null) return false;
 
         // Cast is safe: the active concrete manager is always plugin-side.
-        MyPetManager manager = (MyPetManager) MyPetApi.getMyPetManager();
+        PetManager manager = (PetManager) MyPetApi.getPetManager();
         return manager.convertPetType(oldPet, newType, newEntity).isPresent();
     }
 }

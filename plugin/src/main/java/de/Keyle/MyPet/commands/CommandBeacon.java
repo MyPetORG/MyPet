@@ -78,8 +78,8 @@ public class CommandBeacon {
                 "/petbeacon",
                 CommandCategory.SKILLS,
                 200,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
-                        && MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(BeaconImpl.class)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                        && MyPetApi.getPetManager().getMyPet(player).getSkills().isActive(BeaconImpl.class)
         ));
     }
 
@@ -97,8 +97,8 @@ public class CommandBeacon {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(player)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(player);
+        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
             if (!Permissions.hasExtended(player, "MyPet.extended.beacon")) {
                 myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", player));
                 return;

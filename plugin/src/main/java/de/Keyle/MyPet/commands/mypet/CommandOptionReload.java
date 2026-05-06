@@ -197,7 +197,7 @@ public class CommandOptionReload {
 
         SkillTreeLoaderJSON.loadSkilltrees(new File(MyPetApi.getPlugin().getDataFolder(), "skilltrees"));
 
-        for (MyPet myPet : MyPetApi.getMyPetManager().getAllActiveMyPets()) {
+        for (MyPet myPet : MyPetApi.getPetManager().getAllActiveMyPets()) {
             Skilltree skilltree = myPet.getSkilltree();
             if (skilltree != null) {
                 String skilltreeName = skilltree.getName();

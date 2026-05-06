@@ -58,7 +58,7 @@ public class RideInteractListener implements Listener {
         }
 
         final Player player = event.getPlayer();
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getRightClicked());
+        MyPet myPet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
         if (myPet == null) return;
 
         if (!isOwner(player, myPet)) {
@@ -95,7 +95,7 @@ public class RideInteractListener implements Listener {
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getRightClicked());
+        MyPet myPet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
         if (myPet == null) return;
         final Player player = event.getPlayer();
         if (!isOwner(player, myPet)) {

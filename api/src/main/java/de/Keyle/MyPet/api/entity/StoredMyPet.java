@@ -39,7 +39,7 @@ import java.util.UUID;
  *
  * <ul>
  *   <li>{@link PersistedMyPet} — the immutable record that the repository
- *       loads from disk and that {@code MyPetManager} round-trips between
+ *       loads from disk and that {@code PetManager} round-trips between
  *       active and inactive states. "Mutations" return new instances via
  *       {@code withX} or {@code Builder}.
  *   <li>{@link MyPet} — the active runtime pet. Extends this interface

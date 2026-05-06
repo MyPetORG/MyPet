@@ -22,7 +22,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
-import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
+import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 /**
  * Skill dispatch pipeline for pet damage events:
@@ -106,7 +106,7 @@ public class PetSkillTriggerListener implements Listener {
         }
 
         if (!PetEntityMarker.isMarked(source)) return;
-        MyPet myPet = getMyPetManager().getMyPetFromEntity(source);
+        MyPet myPet = getPetManager().getMyPetFromEntity(source);
         if (myPet == null || myPet.getStatus() != PetState.Here) return;
 
         // Emit PetDamageEvent so other plugins can adjust pet damage

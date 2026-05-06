@@ -11,7 +11,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
+import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 /**
  * Formats and sends the death message when a pet dies. Handles all
@@ -27,7 +27,7 @@ final class PetDeathMessageFormatter {
         if (!PetEntityMarker.isMarked(event.getEntity())) return;
         if (!Boolean.TRUE.equals(event.getEntity().getWorld().getGameRuleValue(GameRule.SHOW_DEATH_MESSAGES))) return;
 
-        MyPet myPet = getMyPetManager().getMyPetFromEntity(event.getEntity());
+        MyPet myPet = getPetManager().getMyPetFromEntity(event.getEntity());
         if (myPet == null) return;
 
         Component killer;
@@ -46,7 +46,7 @@ final class PetDeathMessageFormatter {
                     killer = killer.append(Component.text(" (" + w.getOwner().getName() + ")"));
                 }
             } else if (PetEntityMarker.isMarked(e.getDamager())) {
-                MyPet damagerPet = getMyPetManager().getMyPetFromEntity(e.getDamager());
+                MyPet damagerPet = getPetManager().getMyPetFromEntity(e.getDamager());
                 if (damagerPet != null) {
                     killer = damagerPet.getDisplayName().append(Component.text(" (" + damagerPet.getOwner().getName() + ")"));
                 } else {

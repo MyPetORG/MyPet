@@ -31,8 +31,8 @@ public class PetDespawnListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
-            MyPet pet = MyPetApi.getMyPetManager().getMyPet(event.getPlayer());
+        if (MyPetApi.getPetManager().hasActiveMyPet(event.getPlayer())) {
+            MyPet pet = MyPetApi.getPetManager().getMyPet(event.getPlayer());
             if (pet != null) {
                 pet.removePet(false);
             }

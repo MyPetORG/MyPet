@@ -83,7 +83,7 @@ public class CommandStore {
                 "/petstore",
                 null,
                 130,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
                         && Permissions.has(player, "MyPet.command.switch")
         ));
     }
@@ -126,7 +126,7 @@ public class CommandStore {
                                 player.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Limit", player, maxPetCount));
                                 return;
                             }
-                            if (MyPetApi.getMyPetManager().deactivateMyPet(owner, true)) {
+                            if (MyPetApi.getPetManager().deactivateMyPet(owner, true)) {
                                 owner.setMyPetForWorldGroup(worldGroup, null);
                                 player.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Success", player, myPet.getDisplayName()));
                             }

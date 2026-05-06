@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.plugin;
 
 import de.Keyle.MyPet.api.entity.MyPetInfo;
-import de.Keyle.MyPet.api.repository.MyPetManager;
+import de.Keyle.MyPet.api.repository.PetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
@@ -52,7 +52,7 @@ public interface MyPetPlugin extends Plugin {
     PlayerManager getPlayerManager();
 
     /** Returns the manager for active and inactive pet instances. */
-    MyPetManager getMyPetManager();
+    PetManager getPetManager();
 
     /** Returns the utility for querying third-party hook state. */
     HookHelper getHookHelper();

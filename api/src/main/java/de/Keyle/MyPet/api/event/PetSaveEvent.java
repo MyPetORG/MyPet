@@ -34,7 +34,7 @@ import org.jspecify.annotations.NonNull;
  *
  * <p>Fires from numerous code paths that flush state to disk:
  * <ul>
- *   <li>{@code MyPetManager} — periodic global save and the deactivation save
+ *   <li>{@code PetManager} — periodic global save and the deactivation save
  *       on owner-quit.</li>
  *   <li>{@code CommandTrade} — pet ownership transfer.</li>
  *   <li>{@code CommandOptionClone} — admin pet clone.</li>

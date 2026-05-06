@@ -86,7 +86,7 @@ public class CommandSwitch {
                 "/petswitch",
                 null,
                 120,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
                         && Permissions.has(player, "MyPet.command.switch")
         ));
     }
@@ -133,7 +133,7 @@ public class CommandSwitch {
 
                         final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title.append(stats), 1);
                         gui.open(pets, storedMyPet -> {
-                                Optional<MyPet> activePet = MyPetApi.getMyPetManager().activateMyPet(storedMyPet);
+                                Optional<MyPet> activePet = MyPetApi.getPetManager().activateMyPet(storedMyPet);
                                 if (activePet.isPresent() && owner.isOnline()) {
                                     Player ownerPlayer = owner.getPlayer();
                                     activePet.get().getOwner().sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", owner, activePet.get().getDisplayName()));

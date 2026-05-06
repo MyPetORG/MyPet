@@ -130,7 +130,7 @@ public class PetControlTargetGoal implements Goal<Mob> {
                     continue;
                 }
             } else if (PetEntityMarker.isMarked(entity)) {
-                MyPet targetMyPet = MyPetApi.getMyPetManager().getMyPetFromEntity(entity);
+                MyPet targetMyPet = MyPetApi.getPetManager().getMyPetFromEntity(entity);
                 if (targetMyPet != null && targetMyPet.getOwner() != null
                         && !MyPetApi.getHookHelper().canHurt(owner, targetMyPet.getOwner().getPlayer(), true)) {
                     continue;

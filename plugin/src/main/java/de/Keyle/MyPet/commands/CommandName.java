@@ -106,7 +106,7 @@ public class CommandName {
                 "/petname",
                 CommandCategory.PET,
                 90,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
                         && Permissions.has(player, "MyPet.command.name")
         ));
     }
@@ -127,12 +127,12 @@ public class CommandName {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
         if (!Permissions.has(petOwner, "MyPet.command.name")) {
             myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
             return;

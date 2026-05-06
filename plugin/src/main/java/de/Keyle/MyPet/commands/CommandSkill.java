@@ -90,7 +90,7 @@ public class CommandSkill {
                 "/petskill",
                 CommandCategory.SKILLS,
                 150,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
         ));
     }
 
@@ -113,7 +113,7 @@ public class CommandSkill {
             if (petOwner == null || !petOwner.isOnline()) {
                 sender.sendMessage(Locale.getComponent("Message.No.PlayerOnline", sender));
                 return;
-            } else if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+            } else if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
                 sender.sendMessage(Locale.getFormattedComponent("Message.No.UserHavePet", sender, petOwner.getName()));
                 return;
             }
@@ -130,8 +130,8 @@ public class CommandSkill {
             sender.sendMessage(Locale.getComponent("Message.No.AllowedHere", sender));
         }
 
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
             myPet.autoAssignSkilltree();
             String skilltreeDisplay = myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName();
             sender.sendMessage(Locale.getFormattedComponent("Message.Command.Skills.Show", sender, myPet.getDisplayName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltreeDisplay)));

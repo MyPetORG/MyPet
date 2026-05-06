@@ -111,8 +111,8 @@ public class CommandBehavior {
                 "/petbehavior",
                 CommandCategory.SKILLS,
                 190,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
-                        && MyPetApi.getMyPetManager().getMyPet(player).getSkills().isActive(BehaviorImpl.class)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                        && MyPetApi.getPetManager().getMyPet(player).getSkills().isActive(BehaviorImpl.class)
         ));
     }
 
@@ -130,8 +130,8 @@ public class CommandBehavior {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
             if (myPet.getStatus() == PetState.Despawned) {
                 petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
                 return;
@@ -168,8 +168,8 @@ public class CommandBehavior {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
             if (myPet.getStatus() == PetState.Despawned) {
                 petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
                 return;

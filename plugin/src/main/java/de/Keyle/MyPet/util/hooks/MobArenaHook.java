@@ -40,7 +40,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
+import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 @PluginHookName(value = "MobArena", classPath = "com.garbagemule.MobArena.MobArena")
 public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
@@ -123,7 +123,7 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
         if (!PetEntityMarker.isMarked(damagerEntity)) {
             return;
         }
-        MyPet pet = getMyPetManager().getMyPetFromEntity(damagerEntity);
+        MyPet pet = getPetManager().getMyPetFromEntity(damagerEntity);
         if (pet == null) return;
         if (!isPetAllowed(pet.getOwner())) {
             event.setCancelled(false);

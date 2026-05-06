@@ -155,7 +155,7 @@ public class CommandOptionClone {
                     sender.sendMessage(MessageUtil.prefixed(Component.text("Failed to clone MyPet!")));
                     return;
                 }
-                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
+                Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(newPet);
                 if (myPet.isPresent()) {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(newPet.getOwner().getPlayer().getWorld().getName());
                     // The receiver's world-group binding lives in the player→UUID index,

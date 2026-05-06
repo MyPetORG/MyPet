@@ -44,7 +44,7 @@ public class PetInteractionGateListener implements Listener {
         if (!PetEntityMarker.isMarked(event.getRightClicked())) {
             return;
         }
-        MyPet pet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getRightClicked());
+        MyPet pet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
         if (!(pet instanceof MyPetInteractionGate gate)) {
             return;
         }

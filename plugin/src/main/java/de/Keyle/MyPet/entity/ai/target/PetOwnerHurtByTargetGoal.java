@@ -92,7 +92,7 @@ public class PetOwnerHurtByTargetGoal implements Goal<Mob> {
                 return false;
             }
         } else if (PetEntityMarker.isMarked(lastDamager)) {
-            MyPet otherPet = MyPetApi.getMyPetManager().getMyPetFromEntity(lastDamager);
+            MyPet otherPet = MyPetApi.getPetManager().getMyPetFromEntity(lastDamager);
             if (otherPet != null && otherPet.getOwner() != null
                     && !MyPetApi.getHookHelper().canHurt(owner, otherPet.getOwner().getPlayer(), true)) {
                 return false;

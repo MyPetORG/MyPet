@@ -241,11 +241,11 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     }
 
     public boolean hasMyPet() {
-        return MyPetApi.getMyPetManager().hasActiveMyPet(this);
+        return MyPetApi.getPetManager().hasActiveMyPet(this);
     }
 
     public MyPet getMyPet() {
-        return MyPetApi.getMyPetManager().getMyPet(this);
+        return MyPetApi.getPetManager().getMyPet(this);
     }
 
     public Player getPlayer() {

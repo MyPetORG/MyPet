@@ -3,7 +3,7 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.repository.MyPetManager;
+import de.Keyle.MyPet.api.repository.PetManager;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
@@ -44,24 +44,24 @@ public final class MyPetMetrics {
      * exception to Sentry on any failure (including bStats network/IO errors at construction).
      *
      * @param plugin         the plugin instance bStats associates the metrics with
-     * @param myPetManager   used by the active-pets and pet-types charts to enumerate live pets
+     * @param petManager   used by the active-pets and pet-types charts to enumerate live pets
      * @param errorReporter  destination for any uncaught initialization error
      */
     public static void register(@NotNull JavaPlugin plugin,
-                                @NotNull MyPetManager myPetManager,
+                                @NotNull PetManager petManager,
                                 @NotNull SentryErrorReporter errorReporter) {
         try {
             Metrics metrics = new Metrics(plugin, BSTATS_PLUGIN_ID);
             if (!metrics.isEnabled() || VersionUtil.isLocalBuild()) {
                 return;
             }
-            metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", myPetManager::countActiveMyPets));
+            metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", petManager::countActiveMyPets));
             metrics.addCustomChart(new Metrics.SimplePie("build", VersionUtil::getBuild));
             metrics.addCustomChart(new Metrics.SimplePie("update_mode", MyPetMetrics::updateMode));
             metrics.addCustomChart(new Metrics.AdvancedPie("hooks", MyPetMetrics::activatedHooks));
-            metrics.addCustomChart(new Metrics.AdvancedPie("pet_types", () -> petTypes(myPetManager)));
+            metrics.addCustomChart(new Metrics.AdvancedPie("pet_types", () -> petTypes(petManager)));
             metrics.addCustomChart(new Metrics.SimplePie("database_type", MyPetMetrics::databaseType));
-            metrics.addCustomChart(new Metrics.AdvancedPie("active_skills", () -> activeSkills(myPetManager)));
+            metrics.addCustomChart(new Metrics.AdvancedPie("active_skills", () -> activeSkills(petManager)));
         } catch (Throwable e) {
             errorReporter.sendError(e, "Init Metrics failed");
         }
@@ -82,9 +82,9 @@ public final class MyPetMetrics {
         return hooks;
     }
 
-    private static Map<String, Integer> petTypes(MyPetManager myPetManager) {
+    private static Map<String, Integer> petTypes(PetManager petManager) {
         Map<String, Integer> types = new HashMap<>();
-        for (MyPet pet : myPetManager.getAllActiveMyPets()) {
+        for (MyPet pet : petManager.getAllActiveMyPets()) {
             types.merge(pet.getPetType().name(), 1, Integer::sum);
         }
         return types;
@@ -100,9 +100,9 @@ public final class MyPetMetrics {
         return null;
     }
 
-    private static Map<String, Integer> activeSkills(MyPetManager myPetManager) {
+    private static Map<String, Integer> activeSkills(PetManager petManager) {
         Map<String, Integer> counts = new HashMap<>();
-        for (MyPet pet : myPetManager.getAllActiveMyPets()) {
+        for (MyPet pet : petManager.getAllActiveMyPets()) {
             for (Skill skill : pet.getSkills().all()) {
                 if (skill.isActive()) {
                     counts.merge(skill.getName(), 1, Integer::sum);

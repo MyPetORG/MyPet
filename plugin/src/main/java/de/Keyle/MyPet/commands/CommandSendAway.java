@@ -106,7 +106,7 @@ public class CommandSendAway {
                 "/petsendaway",
                 CommandCategory.PET,
                 80,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
         ));
     }
 

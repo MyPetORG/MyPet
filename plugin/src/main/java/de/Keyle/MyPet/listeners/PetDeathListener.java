@@ -30,7 +30,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.SlimeSplitEvent;
 
-import static de.Keyle.MyPet.MyPetApi.getMyPetManager;
+import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 /**
  * Handles the full pet death pipeline: release-on-death, respawn timer
@@ -71,7 +71,7 @@ public class PetDeathListener implements Listener {
 
             myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Release.Dead", owner, myPet.getDisplayName()));
 
-            getMyPetManager().deactivateMyPet(owner, false);
+            getPetManager().deactivateMyPet(owner, false);
             MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
 
             return;
@@ -99,12 +99,12 @@ public class PetDeathListener implements Listener {
             if (e.getDamager() instanceof Player) {
                 myPet.setRespawnTime((Configuration.Respawn.TIME_PLAYER_FIXED + MyPetApi.getMyPetInfo().getCustomRespawnTimeFixed(myPet.getPetType())) + (myPet.getExperience().getLevel() * (Configuration.Respawn.TIME_PLAYER_FACTOR + MyPetApi.getMyPetInfo().getCustomRespawnTimeFactor(myPet.getPetType()))));
             } else if (PetEntityMarker.isMarked(e.getDamager())) {
-                MyPet killerMyPet = getMyPetManager().getMyPetFromEntity(e.getDamager());
+                MyPet killerMyPet = getPetManager().getMyPetFromEntity(e.getDamager());
                 if (myPet.getSkills().isActive(Behavior.class) && killerMyPet.getSkills().isActive(Behavior.class)) {
                     Behavior killerBehaviorSkill = killerMyPet.getSkills().get(Behavior.class);
                     Behavior deadBehaviorSkill = myPet.getSkills().get(Behavior.class);
                     if (deadBehaviorSkill.getBehavior() == BehaviorMode.Duel && killerBehaviorSkill.getBehavior() == BehaviorMode.Duel) {
-                        MyPet myPetForEntity = getMyPetManager().getMyPetFromEntity(deadEntity);
+                        MyPet myPetForEntity = getPetManager().getMyPetFromEntity(deadEntity);
                         if (myPetForEntity != null && e.getDamager().equals(myPetForEntity.getMyPetTarget())) {
                             myPet.setRespawnTime(10);
                             killerMyPet.setHealth(Double.MAX_VALUE);

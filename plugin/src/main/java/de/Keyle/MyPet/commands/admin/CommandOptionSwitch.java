@@ -257,10 +257,10 @@ public class CommandOptionSwitch {
                 }
 
                 if (owner.hasMyPet()) {
-                    MyPetApi.getMyPetManager().deactivateMyPet(owner, true);
+                    MyPetApi.getPetManager().deactivateMyPet(owner, true);
                 }
 
-                Optional<MyPet> myPet = MyPetApi.getMyPetManager().activateMyPet(newPet);
+                Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(newPet);
                 sender.sendMessage(Locale.getComponent("Message.Command.Success", sender));
                 if (myPet.isPresent()) {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());

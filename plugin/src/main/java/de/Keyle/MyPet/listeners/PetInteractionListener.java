@@ -35,7 +35,7 @@ public class PetInteractionListener implements Listener {
         if (!PetEntityMarker.isMarked(event.getRightClicked())) {
             return;
         }
-        MyPet pet = MyPetApi.getMyPetManager().getMyPetFromEntity(event.getRightClicked());
+        MyPet pet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
         if (pet == null) {
             return;
         }

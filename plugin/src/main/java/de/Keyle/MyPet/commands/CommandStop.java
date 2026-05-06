@@ -72,7 +72,7 @@ public class CommandStop {
                 "/petstop",
                 CommandCategory.PET,
                 70,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
         ));
     }
 
@@ -90,8 +90,8 @@ public class CommandStop {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
 
             if (myPet.getStatus() == PetState.Despawned) {
                 petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));

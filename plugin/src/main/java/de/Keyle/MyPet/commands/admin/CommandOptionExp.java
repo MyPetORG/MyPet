@@ -170,11 +170,11 @@ public class CommandOptionExp {
     private void executeExp(CommandSender sender, Player petOwner, double amount, Operator operator) {
         String lang = Locale.getCommandSenderLanguage(sender);
 
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
         double exp = switch (operator) {
             case SET -> Math.min(amount, myPet.getExperience().getMaxExp());
             case ADD -> Math.min(myPet.getExp() + amount, myPet.getExperience().getMaxExp());
@@ -201,11 +201,11 @@ public class CommandOptionExp {
     private void executeLevels(CommandSender sender, Player petOwner, int levels, Operator operator) {
         String lang = Locale.getCommandSenderLanguage(sender);
 
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
         int targetLevel = switch (operator) {
             case SET -> Math.min(levels, Configuration.LevelSystem.Experience.LEVEL_CAP);
             case ADD -> Math.min(myPet.getExperience().getLevel() + levels, Configuration.LevelSystem.Experience.LEVEL_CAP);

@@ -57,7 +57,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
+public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
 
 
     // Inactive -----------------------------------------------------------------

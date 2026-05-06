@@ -119,11 +119,11 @@ public class CommandOptionRespawn {
      */
     private void executeShow(CommandSender sender, Player petOwner) {
         String lang = Locale.getCommandSenderLanguage(sender);
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
         sender.sendMessage(MessageUtil.prefixed(Component.text("respawn time: " + myPet.getRespawnTime() + "sec.")));
     }
 
@@ -139,11 +139,11 @@ public class CommandOptionRespawn {
      */
     private void executeSet(CommandSender sender, Player petOwner, int time) {
         String lang = Locale.getCommandSenderLanguage(sender);
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
         if (myPet.getStatus() == PetState.Dead) {
             myPet.setRespawnTime(time);
             sender.sendMessage(MessageUtil.prefixed(Component.text("set respawn time to: " + myPet.getRespawnTime() + "sec.")));

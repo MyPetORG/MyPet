@@ -104,7 +104,7 @@ public class CommandRelease {
                 "/petrelease",
                 CommandCategory.PET,
                 100,
-                player -> MyPetApi.getMyPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
                         && Permissions.has(player, "MyPet.command.release")
         ));
     }
@@ -120,12 +120,12 @@ public class CommandRelease {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
         if (!Permissions.has(petOwner, "MyPet.command.release")) {
             return;
         }
@@ -155,12 +155,12 @@ public class CommandRelease {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (!MyPetApi.getMyPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
-        MyPet myPet = MyPetApi.getMyPetManager().getMyPet(petOwner);
+        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
         if (!Permissions.has(petOwner, "MyPet.command.release")) {
             return;
         }
@@ -215,7 +215,7 @@ public class CommandRelease {
             myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()), null);
 
             petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Release.Success", petOwner, myPet.getDisplayName()));
-            MyPetApi.getMyPetManager().deactivateMyPet(myPet.getOwner(), false);
+            MyPetApi.getPetManager().deactivateMyPet(myPet.getOwner(), false);
             MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
         } else {
             showReleasePrompt(petOwner, myPet);
