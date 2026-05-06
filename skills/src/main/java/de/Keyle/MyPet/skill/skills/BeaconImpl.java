@@ -54,6 +54,9 @@ import static org.bukkit.Material.*;
 
 public class BeaconImpl implements Beacon {
 
+    private static final Set<Buff> BOOLEAN_BUFFS = EnumSet.of(
+            Buff.FireResistance, Buff.WaterBreathing, Buff.Invisibility, Buff.NightVision, Buff.Luck);
+
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
     protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> selectableBuffs = new UpgradeComputer<>(0);
@@ -90,13 +93,23 @@ public class BeaconImpl implements Beacon {
         }
 
         for (Buff buff : Buff.values()) {
-            UpgradeComputer<Integer> intComputer = new UpgradeComputer<>(0);
-            intComputer.addCallback((newValue, reason) -> {
-                if (reason == UpgradeComputer.CallbackReason.Remove && newValue == 0) {
-                    selectedBuffs.remove(buff);
-                }
-            });
-            buffLevel.put(buff, intComputer);
+            if (BOOLEAN_BUFFS.contains(buff)) {
+                UpgradeComputer<Boolean> boolComputer = new UpgradeComputer<>(false);
+                boolComputer.addCallback((newValue, reason) -> {
+                    if (reason == UpgradeComputer.CallbackReason.Remove && !newValue) {
+                        selectedBuffs.remove(buff);
+                    }
+                });
+                buffLevel.put(buff, boolComputer);
+            } else {
+                UpgradeComputer<Integer> intComputer = new UpgradeComputer<>(0);
+                intComputer.addCallback((newValue, reason) -> {
+                    if (reason == UpgradeComputer.CallbackReason.Remove && newValue == 0) {
+                        selectedBuffs.remove(buff);
+                    }
+                });
+                buffLevel.put(buff, intComputer);
+            }
         }
     }
 
