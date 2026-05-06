@@ -39,6 +39,7 @@ import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.ai.navigation.PaperNavigation;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
+import de.Keyle.MyPet.entity.types.MyHappyGhast;
 import de.Keyle.MyPet.util.NameFilter;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
@@ -65,6 +66,7 @@ import org.bukkit.*;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -290,6 +292,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         // Empty hand: sneak-toggle sit
         if (item == null || item.getType().isAir()) {
             if (player.isSneaking()) {
+                // Vanilla shift-right-click on a Happy Ghast attaches the
+                // player's leashed mob to it. Defer to vanilla so the
+                // leash-transfer can happen instead of consuming the gesture
+                // for sit-toggle.
+                if (this instanceof MyHappyGhast && hasLeashedEntity(player)) {
+                    return false;
+                }
                 boolean willSit = !isSitting();
                 PetSitEvent sitEvent = new PetSitEvent(this,
                         willSit ? PetSitEvent.Action.STAY : PetSitEvent.Action.FOLLOW);
@@ -1135,5 +1144,16 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 return;
             }
         }
+    }
+
+    private static boolean hasLeashedEntity(Player player) {
+        for (Entity nearby : player.getWorld().getNearbyEntities(player.getLocation(), 16, 16, 16)) {
+            if (nearby instanceof LivingEntity living
+                    && living.isLeashed()
+                    && player.equals(living.getLeashHolder())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
