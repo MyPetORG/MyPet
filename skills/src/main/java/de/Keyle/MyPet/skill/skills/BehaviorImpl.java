@@ -31,6 +31,7 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Particle;
+import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -283,7 +284,10 @@ public class BehaviorImpl implements Behavior {
     @Override
     public void schedule() {
         if (selectedBehavior == Aggressive && random.nextBoolean() && pet.getStatus() == Pet.PetState.Here) {
-            pet.getEntity().ifPresent(entity -> entity.getWorld().spawnParticle(Particle.ANGRY_VILLAGER, entity.getLocation().add(0, entity.getEyeHeight(), 0), 1, 0.2F, 0.2F, 0.2F, 0.5F));
+            Mob entity = pet.getBukkitEntity();
+            if (entity != null) {
+                entity.getWorld().spawnParticle(Particle.ANGRY_VILLAGER, entity.getLocation().add(0, entity.getEyeHeight(), 0), 1, 0.2F, 0.2F, 0.2F, 0.5F);
+            }
         }
     }
 

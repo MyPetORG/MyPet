@@ -133,7 +133,7 @@ public class BleedImpl implements Bleed {
             activeEffects.put(targetId, effect);
 
             // Apply first bleed damage immediately on hit
-            LivingEntity petEntity = pet.getEntity().map(e -> (LivingEntity) e).orElse(null);
+            LivingEntity petEntity = pet.getBukkitEntity();
             effect.applyDamage(petEntity);
 
             // Schedule per-target tick on the target's entity scheduler — this
@@ -184,7 +184,7 @@ public class BleedImpl implements Bleed {
                     owner.onEffectExpired(target.getUniqueId());
                     return;
                 }
-                LivingEntity petEntity = owner.pet.getEntity().map(e -> (LivingEntity) e).orElse(null);
+                LivingEntity petEntity = owner.pet.getBukkitEntity();
                 tick(petEntity);
             }, () -> owner.onEffectExpired(target.getUniqueId()), 20L, 20L);
         }

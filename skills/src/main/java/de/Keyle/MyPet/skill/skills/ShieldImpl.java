@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.entity.Mob;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.Random;
@@ -84,13 +85,14 @@ public class ShieldImpl implements Shield {
     public void apply(EntityDamageEvent event) {
         double redirectedDamage = calculateRedirectedDamage(event.getFinalDamage());
         if (pet.getStatus() == PetState.Here && pet.getHealth() - redirectedDamage > 0) {
-            pet.getEntity().ifPresent(pet -> {
-                pet.damage(redirectedDamage);
+            Mob entity = pet.getBukkitEntity();
+            if (entity != null) {
+                entity.damage(redirectedDamage);
                 event.setDamage(event.getDamage() - redirectedDamage);
-                pet.getWorld().playSound(pet.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.2F, 1.0F);
-                this.pet.getOwner().getPlayer().getWorld().spawnParticle(Particle.ENCHANTED_HIT, this.pet.getOwner().getPlayer().getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
-                this.pet.getLocation().get().getWorld().spawnParticle(Particle.CRIT, this.pet.getLocation().get().add(0, 1, 0), 10, 0.5F, 0.5F, 0.5F, 0.1F);
-            });
+                entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.2F, 1.0F);
+                pet.getOwner().getPlayer().getWorld().spawnParticle(Particle.ENCHANTED_HIT, pet.getOwner().getPlayer().getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
+                pet.getLocation().get().getWorld().spawnParticle(Particle.CRIT, pet.getLocation().get().add(0, 1, 0), 10, 0.5F, 0.5F, 0.5F, 0.1F);
+            }
         }
     }
 

@@ -30,6 +30,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.Random;
@@ -99,12 +100,13 @@ public class ThornsImpl implements Thorns {
         if (damager instanceof Creeper) {
             return;
         }
-        pet.getEntity().ifPresent(entity -> {
+        Mob entity = pet.getBukkitEntity();
+        if (entity != null) {
             damager.damage(calculateReflectedDamage(event.getDamage()), entity);
             entity.getWorld().playSound(entity.getLocation(), Sound.ENCHANT_THORNS_HIT, 0.2F, 1.0F);
             entity.getWorld().spawnParticle(Particle.ENCHANTED_HIT, entity.getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
             entity.getWorld().spawnParticle(Particle.CRIT, entity.getLocation().add(0, 1, 0), 10, 0.5F, 0.5F, 0.5F, 0.1F);
-        });
+        }
     }
 
 }

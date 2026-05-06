@@ -32,6 +32,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -84,8 +85,11 @@ public class CombatLogXHook implements PluginHook {
         // PetRangedAttackGoal writes at launch time.
         if (damager instanceof Projectile projectile && (ConfigOptions.OPTION_LINK_PROJECTILES || IGNORE_PLUGIN_SETTINGS)) {
             Pet sourcePet = PetRangedAttackGoal.getSourcePet(projectile);
-            if (sourcePet != null && sourcePet.getEntity().isPresent()) {
-                damager = (Entity) sourcePet.getEntity().get();
+            if (sourcePet != null) {
+                Mob shooterEntity = sourcePet.getBukkitEntity();
+                if (shooterEntity != null) {
+                    damager = shooterEntity;
+                }
             }
         }
 

@@ -170,16 +170,6 @@ public non-sealed interface Pet extends StoredPet, Scheduler {
     /** Returns the navigation controller for this pet's movement. */
     AbstractNavigation getPetNavigation();
 
-    /**
-     * @deprecated Returns an Optional wrapping the Bukkit Mob. Skills should switch to
-     * {@link #getBukkitEntity()} with null-checks. Default impl provided so existing skill
-     * code that calls {@code .ifPresent(...)} keeps working through stages B/C.
-     */
-    @Deprecated
-    default Optional<Mob> getEntity() {
-        return Optional.ofNullable(getBukkitEntity());
-    }
-
     /** Returns mêlée damage dealt by this pet (base and Damage skill). */
     double getDamage();
 

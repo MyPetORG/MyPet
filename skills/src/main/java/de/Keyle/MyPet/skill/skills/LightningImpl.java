@@ -30,6 +30,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 
 import java.util.Random;
@@ -82,7 +83,8 @@ public class LightningImpl implements Lightning {
 
     public void apply(LivingEntity target) {
         isStriking = true;
-        pet.getEntity().ifPresent(petEntity -> {
+        Mob petEntity = pet.getBukkitEntity();
+        if (petEntity != null) {
             Player owner = pet.getOwner().getPlayer();
             World world = target.getLocation().getWorld();
             if (world != null) {
@@ -94,7 +96,7 @@ public class LightningImpl implements Lightning {
                     living.damage(damage.getValue().doubleValue(), petEntity);
                 }
             }
-        });
+        }
         isStriking = false;
     }
 

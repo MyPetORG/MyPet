@@ -525,8 +525,10 @@ public abstract class PetImpl implements Pet, NBTStorage {
             equipment.put(slot, finalItem);
         }
         if (status == PetState.Here) {
-            ItemStack itemToSet = finalItem;
-            getEntity().ifPresent(entity -> entity.getEquipment().setItem(slot, itemToSet));
+            Mob entity = getBukkitEntity();
+            if (entity != null) {
+                entity.getEquipment().setItem(slot, finalItem);
+            }
         }
     }
 

@@ -444,13 +444,12 @@ public class EntityListener implements Listener {
                     if (getPetManager().hasActivePet(player)) {
                         Pet pet = getPetManager().getPet(player);
                         if (pet.getStatus() == PetState.Here) {
-                            pet.getEntity().ifPresent(entity -> {
-                                if (target != entity) {
-                                    if (pet.getDamage() > 0 || pet.getRangedDamage() > 0) {
-                                        pet.setTarget((LivingEntity) target, TargetPriority.OwnerHurts);
-                                    }
+                            Mob entity = pet.getBukkitEntity();
+                            if (entity != null && target != entity) {
+                                if (pet.getDamage() > 0 || pet.getRangedDamage() > 0) {
+                                    pet.setTarget((LivingEntity) target, TargetPriority.OwnerHurts);
                                 }
-                            });
+                            }
                         }
                     }
                 }

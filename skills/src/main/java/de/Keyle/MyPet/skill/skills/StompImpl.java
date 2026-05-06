@@ -93,7 +93,8 @@ public class StompImpl implements Stomp {
         double posY = location.getY();
         double posZ = location.getZ();
 
-        pet.getEntity().ifPresent(petEntity -> {
+        Mob petEntity = pet.getBukkitEntity();
+        if (petEntity != null) {
             for (Entity e : petEntity.getNearbyEntities(2.5, 2.5, 2.5)) {
                 if (e instanceof LivingEntity livingEntity) {
 
@@ -142,7 +143,7 @@ public class StompImpl implements Stomp {
                     }
                 }
             }
-        });
+        }
     }
 
     public UpgradeComputer<Integer> getChance() {

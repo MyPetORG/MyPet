@@ -129,7 +129,7 @@ public class PlayerListener implements Listener {
         }
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getInventory().getItemInMainHand()) && MyPetApi.getPetManager().hasActivePet(event.getPlayer())) {
             Pet pet = MyPetApi.getPetManager().getPet(event.getPlayer());
-            if (pet.getStatus() == Pet.PetState.Here && pet.getEntity().isPresent() && pet.canMove()) {
+            if (pet.getStatus() == Pet.PetState.Here && pet.getBukkitEntity() != null && pet.canMove()) {
                 if (pet.getSkills().isActive(ControlImpl.class)) {
                     if (pet.getSkills().isActive(Behavior.class)) {
                         Behavior behavior = pet.getSkills().get(Behavior.class);

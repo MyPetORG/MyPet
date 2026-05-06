@@ -103,7 +103,7 @@ public class PetPvPListener implements Listener {
         // Pet-on-pet projectile: self-damage prevention + duel bypass
         if (event.getDamager() instanceof Projectile projectile) {
             Pet shooterPet = PetRangedAttackGoal.getSourcePet(projectile);
-            if (shooterPet != null && shooterPet.getEntity().isPresent()) {
+            if (shooterPet != null && shooterPet.getBukkitEntity() != null) {
                 if (pet == shooterPet) {
                     event.setCancelled(true);
                 }

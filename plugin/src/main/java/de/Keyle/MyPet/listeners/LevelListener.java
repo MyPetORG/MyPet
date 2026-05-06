@@ -37,6 +37,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.entity.Mob;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -106,7 +107,8 @@ public class LevelListener implements Listener {
         }
 
         if (pet.getStatus() == Pet.PetState.Here) {
-            pet.getEntity().ifPresent(entity -> {
+            Mob entity = pet.getBukkitEntity();
+            if (entity != null) {
                 pet.updateNameTag();
                 if (!event.isQuiet()) {
                     pet.setHealth(pet.getMaxHealth());
@@ -121,7 +123,7 @@ public class LevelListener implements Listener {
 
                     entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1F, 0.7F);
                 }
-            });
+            }
         }
     }
 
@@ -154,7 +156,8 @@ public class LevelListener implements Listener {
         }
 
         if (pet.getStatus() == Pet.PetState.Here) {
-            pet.getEntity().ifPresent(entity -> {
+            Mob entity = pet.getBukkitEntity();
+            if (entity != null) {
                 pet.updateNameTag();
                 if (!event.isQuiet()) {
                     pet.setHealth(pet.getMaxHealth());
@@ -169,7 +172,7 @@ public class LevelListener implements Listener {
 
                     entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK, 1F, 0.7F);
                 }
-            });
+            }
         }
     }
 

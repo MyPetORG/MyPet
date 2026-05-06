@@ -76,7 +76,7 @@ public class HealImpl implements Heal {
 
     public void schedule() {
         if (pet.getStatus() == PetState.Here) {
-            pet.getEntity().ifPresent(entity -> {
+            if (pet.getBukkitEntity() != null) {
                 if (heal.getValue().doubleValue() > 0) {
                     if (timeCounter-- <= 0) {
                         if (pet.getHealth() < pet.getMaxHealth() - 0.01f) {
@@ -95,7 +95,7 @@ public class HealImpl implements Heal {
                     particles = false;
                     pet.hidePotionParticles();
                 }
-            });
+            }
         } else if (particles) {
             particles = false;
         }

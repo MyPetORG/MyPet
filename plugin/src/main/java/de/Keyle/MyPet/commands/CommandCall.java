@@ -118,7 +118,7 @@ public class CommandCall {
         if (MyPetApi.getPetManager().hasActivePet(petOwner)) {
             Pet pet = MyPetApi.getPetManager().getPet(petOwner);
 
-            if (pet.getEntity().isPresent()) {
+            if (pet.getBukkitEntity() != null) {
                 //Only let it respawn if it actually was there before
                 pet.removePet(true);
             }

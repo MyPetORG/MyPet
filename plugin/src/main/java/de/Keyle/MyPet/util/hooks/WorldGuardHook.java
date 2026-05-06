@@ -52,6 +52,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -366,9 +367,10 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
         @Override
         public double modify(double experience, double baseExperience) {
-            if (pet.getEntity().isPresent()) {
+            Mob entity = pet.getBukkitEntity();
+            if (entity != null) {
                 try {
-                    Location location = pet.getEntity().get().getLocation();
+                    Location location = entity.getLocation();
                     Collection<Double> values = getDoubleValue(location, pet.getOwner().getPlayer(), EXP_ADD_FLAG);
                     for (double d : values) {
                         experience += d;

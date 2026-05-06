@@ -39,6 +39,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Mob;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -126,7 +127,8 @@ public class PickupImpl implements Pickup {
             return;
         }
         if (isActive() && pickup && pet.getStatus() == PetState.Here && pet.getSkills().isActive(BackpackImpl.class)) {
-            pet.getEntity().ifPresent(petEntity -> {
+            Mob petEntity = pet.getBukkitEntity();
+            if (petEntity != null) {
                 double range = this.range.getValue().doubleValue();
                 for (Entity entity : petEntity.getNearbyEntities(range, range, range)) {
                     if (!entity.isDead()) {
@@ -168,7 +170,7 @@ public class PickupImpl implements Pickup {
                         }
                     }
                 }
-            });
+            }
         }
     }
 
