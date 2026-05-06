@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,7 +35,7 @@ import org.jspecify.annotations.NonNull;
  * otherwise begin losing health. Lets addons award food, suppress the
  * starvation hit, or surface custom messaging.
  *
- * <p>Fires from {@code MyPet#updateSaturation} once per saturation-zero
+ * <p>Fires from {@code Pet#updateSaturation} once per saturation-zero
  * transition; after firing, if not canceled, the pet's health begins ticking
  * down from hunger.
  *
@@ -49,11 +49,11 @@ import org.jspecify.annotations.NonNull;
 @Getter
 public class PetExhaustionEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final MyPet pet;
+    private final Pet pet;
     @Setter
     private boolean cancelled;
 
-    public PetExhaustionEvent(MyPet pet) {
+    public PetExhaustionEvent(Pet pet) {
         this.pet = pet;
     }
 

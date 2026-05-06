@@ -22,7 +22,7 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.repository.PetManager;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
@@ -75,7 +75,7 @@ public final class MyPetMetrics {
             if (!metrics.isEnabled() || VersionUtil.isLocalBuild()) {
                 return;
             }
-            metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", petManager::countActiveMyPets));
+            metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", petManager::countActivePets));
             metrics.addCustomChart(new Metrics.SimplePie("build", VersionUtil::getBuild));
             metrics.addCustomChart(new Metrics.SimplePie("update_mode", MyPetMetrics::updateMode));
             metrics.addCustomChart(new Metrics.AdvancedPie("hooks", MyPetMetrics::activatedHooks));
@@ -104,7 +104,7 @@ public final class MyPetMetrics {
 
     private static Map<String, Integer> petTypes(PetManager petManager) {
         Map<String, Integer> types = new HashMap<>();
-        for (MyPet pet : petManager.getAllActiveMyPets()) {
+        for (Pet pet : petManager.getAllActivePets()) {
             types.merge(pet.getPetType().name(), 1, Integer::sum);
         }
         return types;
@@ -122,7 +122,7 @@ public final class MyPetMetrics {
 
     private static Map<String, Integer> activeSkills(PetManager petManager) {
         Map<String, Integer> counts = new HashMap<>();
-        for (MyPet pet : petManager.getAllActiveMyPets()) {
+        for (Pet pet : petManager.getAllActivePets()) {
             for (Skill skill : pet.getSkills().all()) {
                 if (skill.isActive()) {
                     counts.merge(skill.getName(), 1, Integer::sum);

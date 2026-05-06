@@ -26,10 +26,10 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.util.NameFilter;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -106,7 +106,7 @@ public class CommandName {
                 "/petname",
                 CommandCategory.PET,
                 90,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
                         && Permissions.has(player, "MyPet.command.name")
         ));
     }
@@ -127,14 +127,14 @@ public class CommandName {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
         if (!Permissions.has(petOwner, "MyPet.command.name")) {
-            myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
+            pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
             return;
         }
 
@@ -152,7 +152,7 @@ public class CommandName {
         String nameWithoutColors = Util.SANITIZED_MINIMESSAGE.stripTags(name);
 
         if (nameWithoutColors.length() <= Configuration.Name.MAX_LENGTH) {
-            myPet.setPetName(name);
+            pet.setPetName(name);
             if (Permissions.has(petOwner, "MyPet.command.name.color")) {
                 petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Name.New", petOwner, name));
             } else {

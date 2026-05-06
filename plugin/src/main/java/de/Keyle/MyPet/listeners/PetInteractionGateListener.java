@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetInteractionGate;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetInteractionGate;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,9 +42,9 @@ import org.bukkit.inventory.ItemStack;
  * vanilla path when set to {@code false}.
  *
  * <p>The listener is pet-agnostic: it dispatches via the
- * {@link MyPetInteractionGate} marker interface. Adding a new gated
- * interaction is one {@code extends MyPetInteractionGate} clause plus the two
- * abstract methods on the relevant {@code My<Type>} class — no listener
+ * {@link PetInteractionGate} marker interface. Adding a new gated
+ * interaction is one {@code extends PetInteractionGate} clause plus the two
+ * abstract methods on the relevant {@code Pet<Type>} class — no listener
  * changes required.
  *
  * <p>Cancelling {@link PlayerInteractEntityEvent} short-circuits vanilla's
@@ -64,8 +64,8 @@ public class PetInteractionGateListener implements Listener {
         if (!PetEntityMarker.isMarked(event.getRightClicked())) {
             return;
         }
-        MyPet pet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
-        if (!(pet instanceof MyPetInteractionGate gate)) {
+        Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getRightClicked());
+        if (!(pet instanceof PetInteractionGate gate)) {
             return;
         }
         ItemStack handItem = event.getPlayer().getInventory().getItem(event.getHand());

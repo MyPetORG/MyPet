@@ -24,9 +24,9 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
+import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.event.PetRemoveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -62,72 +62,72 @@ public class PetDeathListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPetDeath(final EntityDeathEvent event) {
-        MyPet myPet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
-        if (myPet == null) return;
+        Pet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
+        if (pet == null) return;
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) return;
 
         LivingEntity deadEntity = event.getEntity();
 
         // check health for death events where the pet isn't really dead (/killall)
-        if (myPet.getHealth() > 0) return;
+        if (pet.getHealth() > 0) return;
 
-        final MyPetPlayer owner = myPet.getOwner();
+        final MyPetPlayer owner = pet.getOwner();
 
         // Release-on-death: permanently remove the pet
-        if (MyPetApi.getMyPetInfo().getReleaseOnDeath(myPet.getPetType()) && !owner.isMyPetAdmin()) {
-            PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.DEATH);
+        if (MyPetApi.getPetInfo().getReleaseOnDeath(pet.getPetType()) && !owner.isMyPetAdmin()) {
+            PetRemoveEvent removeEvent = new PetRemoveEvent(pet, PetRemoveEvent.Source.DEATH);
             Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
-            if (myPet.getSkills().isActive(Backpack.class)) {
-                CustomInventory inv = myPet.getSkills().get(Backpack.class).getInventory();
-                inv.dropContentAt(myPet.getLocation().get());
+            if (pet.getSkills().isActive(Backpack.class)) {
+                CustomInventory inv = pet.getSkills().get(Backpack.class).getInventory();
+                inv.dropContentAt(pet.getLocation().get());
             }
-            if (myPet instanceof MyPetEquipment) {
-                ((MyPetEquipment) myPet).dropEquipment();
+            if (pet instanceof PetEquipment) {
+                ((PetEquipment) pet).dropEquipment();
             }
 
-            myPet.removePet();
-            owner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName()), null);
+            pet.removePet();
+            owner.setPetForWorldGroup(WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName()), null);
 
-            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Release.Dead", owner, myPet.getDisplayName()));
+            pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Release.Dead", owner, pet.getDisplayName()));
 
-            getPetManager().deactivateMyPet(owner, false);
-            MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
+            getPetManager().deactivatePet(owner, false);
+            MyPetPlugin.getInstance().getRepository().removePet(pet.getUUID());
 
             return;
         }
 
         // Capture an EntitySnapshot for respawn. PetDeathListener owns this for
-        // the death path; MyPet.removePet captures for the despawn/logout path.
+        // the death path; Pet.removePet captures for the despawn/logout path.
         // Without this, pendingSnapshot is null at respawn time (consumed by the
         // prior spawn, never refilled), forcing fresh-spawn — which loses
         // live-only state like slime size, /petadmin variant changes, collar
         // colour, profession, etc.
         try {
-            PetInfoAccess.write(myPet, PetEntitySnapshot.capture((Mob) deadEntity));
+            PetInfoAccess.write(pet, PetEntitySnapshot.capture((Mob) deadEntity));
         } catch (Throwable t) {
             MyPetApi.getLogger().warning("Failed to capture EntitySnapshot for pet "
-                    + myPet.getUUID() + " on death — pet will respawn with default "
+                    + pet.getUUID() + " on death — pet will respawn with default "
                     + "live-entity state. " + t.getMessage());
         }
 
         // Calculate respawn time
-        myPet.setRespawnTime((Configuration.Respawn.TIME_FIXED + MyPetApi.getMyPetInfo().getCustomRespawnTimeFixed(myPet.getPetType())) + (myPet.getExperience().getLevel() * (Configuration.Respawn.TIME_FACTOR + MyPetApi.getMyPetInfo().getCustomRespawnTimeFactor(myPet.getPetType()))));
-        myPet.setStatus(PetState.Dead);
+        pet.setRespawnTime((Configuration.Respawn.TIME_FIXED + MyPetApi.getPetInfo().getCustomRespawnTimeFixed(pet.getPetType())) + (pet.getExperience().getLevel() * (Configuration.Respawn.TIME_FACTOR + MyPetApi.getPetInfo().getCustomRespawnTimeFactor(pet.getPetType()))));
+        pet.setStatus(PetState.Dead);
 
         if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent e) {
             if (e.getDamager() instanceof Player) {
-                myPet.setRespawnTime((Configuration.Respawn.TIME_PLAYER_FIXED + MyPetApi.getMyPetInfo().getCustomRespawnTimeFixed(myPet.getPetType())) + (myPet.getExperience().getLevel() * (Configuration.Respawn.TIME_PLAYER_FACTOR + MyPetApi.getMyPetInfo().getCustomRespawnTimeFactor(myPet.getPetType()))));
+                pet.setRespawnTime((Configuration.Respawn.TIME_PLAYER_FIXED + MyPetApi.getPetInfo().getCustomRespawnTimeFixed(pet.getPetType())) + (pet.getExperience().getLevel() * (Configuration.Respawn.TIME_PLAYER_FACTOR + MyPetApi.getPetInfo().getCustomRespawnTimeFactor(pet.getPetType()))));
             } else if (PetEntityMarker.isMarked(e.getDamager())) {
-                MyPet killerMyPet = getPetManager().getMyPetFromEntity(e.getDamager());
-                if (myPet.getSkills().isActive(Behavior.class) && killerMyPet.getSkills().isActive(Behavior.class)) {
-                    Behavior killerBehaviorSkill = killerMyPet.getSkills().get(Behavior.class);
-                    Behavior deadBehaviorSkill = myPet.getSkills().get(Behavior.class);
+                Pet killerPet = getPetManager().getPetFromEntity(e.getDamager());
+                if (pet.getSkills().isActive(Behavior.class) && killerPet.getSkills().isActive(Behavior.class)) {
+                    Behavior killerBehaviorSkill = killerPet.getSkills().get(Behavior.class);
+                    Behavior deadBehaviorSkill = pet.getSkills().get(Behavior.class);
                     if (deadBehaviorSkill.getBehavior() == BehaviorMode.Duel && killerBehaviorSkill.getBehavior() == BehaviorMode.Duel) {
-                        MyPet myPetForEntity = getPetManager().getMyPetFromEntity(deadEntity);
-                        if (myPetForEntity != null && e.getDamager().equals(myPetForEntity.getMyPetTarget())) {
-                            myPet.setRespawnTime(10);
-                            killerMyPet.setHealth(Double.MAX_VALUE);
+                        Pet petForEntity = getPetManager().getPetFromEntity(deadEntity);
+                        if (petForEntity != null && e.getDamager().equals(petForEntity.getPetTarget())) {
+                            pet.setRespawnTime(10);
+                            killerPet.setHealth(Double.MAX_VALUE);
                         }
                     }
                 }
@@ -141,21 +141,21 @@ public class PetDeathListener implements Listener {
         // XP loss on death
         if (Configuration.LevelSystem.Experience.LOSS_FIXED > 0 || Configuration.LevelSystem.Experience.LOSS_PERCENT > 0) {
             double lostExpirience = Configuration.LevelSystem.Experience.LOSS_FIXED;
-            lostExpirience += myPet.getExperience().getRequiredExp() * Configuration.LevelSystem.Experience.LOSS_PERCENT / 100;
-            if (lostExpirience > myPet.getExp()) {
-                lostExpirience = myPet.getExp();
+            lostExpirience += pet.getExperience().getRequiredExp() * Configuration.LevelSystem.Experience.LOSS_PERCENT / 100;
+            if (lostExpirience > pet.getExp()) {
+                lostExpirience = pet.getExp();
             }
-            if (myPet.getSkilltree() != null) {
-                int requiredLevel = myPet.getSkilltree().getRequiredLevel();
+            if (pet.getSkilltree() != null) {
+                int requiredLevel = pet.getSkilltree().getRequiredLevel();
                 if (requiredLevel > 1) {
-                    double minExp = myPet.getExperience().getExpByLevel(requiredLevel);
-                    lostExpirience = myPet.getExp() - lostExpirience < minExp ? myPet.getExp() - minExp : lostExpirience;
+                    double minExp = pet.getExperience().getExpByLevel(requiredLevel);
+                    lostExpirience = pet.getExp() - lostExpirience < minExp ? pet.getExp() - minExp : lostExpirience;
                 }
             }
             if (Configuration.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE) {
-                lostExpirience = myPet.getExperience().removeExp(lostExpirience);
+                lostExpirience = pet.getExperience().removeExp(lostExpirience);
             } else {
-                lostExpirience = myPet.getExperience().removeCurrentExp(lostExpirience);
+                lostExpirience = pet.getExperience().removeCurrentExp(lostExpirience);
             }
             if (Configuration.LevelSystem.Experience.DROP_LOST_EXP && lostExpirience < 0) {
                 event.setDroppedExp((int) (Math.abs(lostExpirience)));
@@ -163,27 +163,27 @@ public class PetDeathListener implements Listener {
         }
 
         // Backpack drop on death
-        if (myPet.getSkills().isActive(Backpack.class)) {
-            BackpackImpl inventorySkill = myPet.getSkills().get(BackpackImpl.class);
+        if (pet.getSkills().isActive(Backpack.class)) {
+            BackpackImpl inventorySkill = pet.getSkills().get(BackpackImpl.class);
             inventorySkill.closeInventory();
             if (inventorySkill.getDropOnDeath().getValue() && !owner.isMyPetAdmin()) {
-                inventorySkill.getInventory().dropContentAt(myPet.getLocation().get());
+                inventorySkill.getInventory().dropContentAt(pet.getLocation().get());
             }
         }
 
         // Death message and respawn notification
         PetDeathMessageFormatter.sendDeathMessage(event);
-        myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", owner.getPlayer(), myPet.getDisplayName(), myPet.getRespawnTime()));
+        pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", owner.getPlayer(), pet.getDisplayName(), pet.getRespawnTime()));
 
         // Auto-respawn via economy
-        if (MyPetApi.getHookHelper().isEconomyEnabled() && owner.hasAutoRespawnEnabled() && myPet.getRespawnTime() <= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.command.respawn")) {
-            double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
+        if (MyPetApi.getHookHelper().isEconomyEnabled() && owner.hasAutoRespawnEnabled() && pet.getRespawnTime() <= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.command.respawn")) {
+            double costs = pet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
             if (MyPetApi.getHookHelper().getEconomy().canPay(owner, costs)) {
                 MyPetApi.getHookHelper().getEconomy().pay(owner, costs);
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Paid", owner.getPlayer(), myPet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
-                myPet.setRespawnTime(1);
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Paid", owner.getPlayer(), pet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                pet.setRespawnTime(1);
             } else {
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.NoMoney", owner.getPlayer(), myPet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.NoMoney", owner.getPlayer(), pet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
             }
         }
     }

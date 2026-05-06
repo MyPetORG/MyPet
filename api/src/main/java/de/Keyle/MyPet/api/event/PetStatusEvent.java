@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
@@ -34,7 +34,7 @@ import org.jspecify.annotations.NonNull;
  * {@code Here} (entity in the world) to {@code Despawned} (entity removed
  * but pet still active) or to {@code Dead} (post-death respawn timer).
  *
- * <p>Fires from {@code MyPet#updateStatus} once per state transition.
+ * <p>Fires from {@code Pet#updateStatus} once per state transition.
  *
  * <p><b>Not cancellable:</b> the status change is already applied when this
  * event fires. Read the new state via {@link #getState()}.
@@ -44,7 +44,7 @@ import org.jspecify.annotations.NonNull;
  *
  * <p><b>Related events:</b> {@link PetCallEvent} fires before a {@code Here}
  * transition; {@link PetSendAwayEvent} fires before a {@code Despawned}
- * transition. Death has no dedicated MyPet-side event — listen to
+ * transition. Death has no dedicated Pet-side event — listen to
  * {@code EntityDeathEvent} on the marked pet entity, or to the
  * {@link PetRemoveEvent} {@link PetRemoveEvent.Source#DEATH} source if
  * the pet is configured to delete on death.
@@ -54,9 +54,9 @@ public class PetStatusEvent extends Event {
     @Getter
     private final StoredPet pet;
     @Getter
-    private final MyPet.PetState state;
+    private final Pet.PetState state;
 
-    public PetStatusEvent(MyPet pet, MyPet.PetState state) {
+    public PetStatusEvent(Pet pet, Pet.PetState state) {
         this.pet = pet;
         this.state = state;
     }

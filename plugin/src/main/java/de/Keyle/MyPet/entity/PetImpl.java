@@ -30,7 +30,7 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.event.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.skill.MyPetExperience;
+import de.Keyle.MyPet.api.skill.PetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -78,7 +78,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.*;
 
-public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStorage {
+public abstract class PetImpl implements Pet, NBTStorage {
 
     protected final MyPetPlayer petOwner;
     protected Mob bukkitEntity;
@@ -102,7 +102,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     @Getter
     protected Skills skills;
     @Getter
-    protected MyPetExperience experience;
+    protected PetExperience experience;
     @Setter
     protected long lastUsed = -1;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
@@ -129,13 +129,13 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     private CompoundBinaryTag pendingSnapshot;
     private PetType petType;
 
-    protected MyPet(MyPetPlayer petOwner) {
+    protected PetImpl(MyPetPlayer petOwner) {
         if (petOwner == null) {
             throw new IllegalArgumentException("Owner must not be null.");
         }
         this.petOwner = petOwner;
         skills = new Skills(this);
-        experience = new MyPetExperience(this);
+        experience = new PetExperience(this);
         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
         petName = Locale.getString("Name." + getPetType().name(), petOwner);
     }
@@ -151,7 +151,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public void setBukkitEntity(Mob mob) {
         this.bukkitEntity = mob;
         if (mob != null) {
-            double walkSpeed = MyPetApi.getMyPetInfo().getSpeed(getPetType());
+            double walkSpeed = MyPetApi.getPetInfo().getSpeed(getPetType());
             this.petNavigation = new PaperNavigation(mob, walkSpeed);
         } else {
             this.petNavigation = null;
@@ -182,7 +182,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     @Override
-    public LivingEntity getMyPetTarget() {
+    public LivingEntity getPetTarget() {
         return targetEntity;
     }
 
@@ -342,10 +342,10 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
 
         // Grow up: a baby pet right-clicked with its configured grow-up item
-        // becomes an adult. Gated on MyPetBaby so the branch only fires for
+        // becomes an adult. Gated on PetBaby so the branch only fires for
         // types that actually have an Ageable Bukkit counterpart — matches the
         // ConfigurationLoader gate that writes the GrowUpItem row.
-        if (this instanceof MyPetBaby baby && baby.isBaby()) {
+        if (this instanceof PetBaby baby && baby.isBaby()) {
             ConfigItem growUpItem = Configuration.MyPet.getGrowUpItem(getPetType());
             if (growUpItem != null && growUpItem.compare(item)) {
                 if (player.getGameMode() != GameMode.CREATIVE) {
@@ -369,7 +369,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         }
 
         // Feed: check if the item matches any configured food
-        java.util.List<ConfigItem> foods = MyPetApi.getMyPetInfo().getFood(getPetType());
+        java.util.List<ConfigItem> foods = MyPetApi.getPetInfo().getFood(getPetType());
         for (ConfigItem food : foods) {
             if (food.compare(item)) {
                 double saturationPerFeed = Configuration.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED;
@@ -438,7 +438,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return s;
     }
 
-    // getEntity() is provided as a default method on the MyPet api interface (returns
+    // getEntity() is provided as a default method on the Pet api interface (returns
     // Optional.ofNullable(getBukkitEntity())). No override needed here.
 
     public double getYSpawnOffset() {
@@ -549,7 +549,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     public double getMaxHealth() {
-        return MyPetApi.getMyPetInfo().getStartHP(getPetType()) + (skills.isActive(LifeImpl.class) ? skills.get(LifeImpl.class).getLife().getValue().doubleValue() : 0);
+        return MyPetApi.getPetInfo().getStartHP(getPetType()) + (skills.isActive(LifeImpl.class) ? skills.get(LifeImpl.class).getLife().getValue().doubleValue() : 0);
     }
 
     public double getHealth() {
@@ -646,7 +646,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     public PetType getPetType() {
         if (petType == null) {
             for (PetType type : PetType.values()) {
-                if (type.getMyPetClass().isAssignableFrom(this.getClass())) {
+                if (type.getPetClass().isAssignableFrom(this.getClass())) {
                     petType = type;
                     break;
                 }
@@ -657,7 +657,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     @Override
     public void setPetType(PetType petType) {
-        throw new UnsupportedOperationException("You can't change the type for an active MyPet!");
+        throw new UnsupportedOperationException("You can't change the type for an active Pet!");
     }
 
     public void setRespawnTime(int time) {
@@ -812,7 +812,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                     return SpawnFlags.InvalidPosition;
                 }
 
-                if (owner.isFlying() && !(this instanceof MyPetFlyingEntity)) {
+                if (owner.isFlying() && !(this instanceof PetFlyingEntity)) {
                     boolean groundFound = false;
                     for (int i = 10; i >= 0; i--) {
                         Block b = loc.getBlock();
@@ -989,7 +989,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     @Override
     public void setOwner(MyPetPlayer owner) {
-        throw new UnsupportedOperationException("You can't change the owner for an active MyPet!");
+        throw new UnsupportedOperationException("You can't change the owner for an active Pet!");
     }
 
     public boolean wantsToRespawn() {
@@ -1059,7 +1059,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     @Override
-    public void load(CompoundBinaryTag myPetNBT) {
+    public void load(CompoundBinaryTag petNBT) {
     }
 
     @Override
@@ -1129,7 +1129,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         if (bukkitInventory == null)
             return;
         //Check Inventory for food first, then get that food
-        List<ConfigItem> foodList = MyPetApi.getMyPetInfo().getFood(getPetType());
+        List<ConfigItem> foodList = MyPetApi.getPetInfo().getFood(getPetType());
         for (ConfigItem foodItem : foodList) {
             if (bukkitInventory.contains(foodItem.getItem().getType())) {
                 ItemStack item = bukkitInventory.getItem(bukkitInventory.first(foodItem.getItem().getType()));

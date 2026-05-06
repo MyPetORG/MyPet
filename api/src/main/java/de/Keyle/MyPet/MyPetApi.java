@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet;
 
-import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.entity.PetInfo;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
 import de.Keyle.MyPet.api.plugin.MyPetPlugin;
 import de.Keyle.MyPet.api.repository.PetManager;
@@ -97,8 +97,8 @@ public class MyPetApi {
     /**
      * @return you can find info about pet types here
      */
-    public static MyPetInfo getMyPetInfo() {
-        return requirePlugin().getMyPetInfo();
+    public static PetInfo getPetInfo() {
+        return requirePlugin().getPetInfo();
     }
 
     /**
@@ -109,7 +109,7 @@ public class MyPetApi {
     }
 
     /**
-     * @return MyPet manager
+     * @return Pet manager
      */
     public static PetManager getPetManager() {
         return requirePlugin().getPetManager();

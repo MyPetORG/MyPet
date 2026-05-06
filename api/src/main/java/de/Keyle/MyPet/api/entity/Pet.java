@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.skill.MyPetExperience;
+import de.Keyle.MyPet.api.skill.PetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.Scheduler;
@@ -50,7 +50,7 @@ import java.util.Optional;
  * {@code PersistedPet} use {@code withX} / {@code Builder} instead — only
  * the active pet (this interface) is genuinely mutable.
  */
-public non-sealed interface MyPet extends StoredPet, Scheduler {
+public non-sealed interface Pet extends StoredPet, Scheduler {
 
     // ─── Mutators (previously inherited from StoredPet) ───
 
@@ -92,7 +92,7 @@ public non-sealed interface MyPet extends StoredPet, Scheduler {
     void setSkilltree(Skilltree skilltree);
 
     /** Returns the experience tracker managing XP gain and level curves. */
-    MyPetExperience getExperience();
+    PetExperience getExperience();
 
     /**
      * Despawns and deactivates the pet. Equivalent to
@@ -143,7 +143,7 @@ public non-sealed interface MyPet extends StoredPet, Scheduler {
 
     /**
      * Returns the current max health (base and Life skill bonus). May
-     * differ from the starting HP configured in {@link MyPetInfo}.
+     * differ from the starting HP configured in {@link PetInfo}.
      */
     double getMaxHealth();
 
@@ -214,7 +214,7 @@ public non-sealed interface MyPet extends StoredPet, Scheduler {
     void setSitting(boolean sitting);
 
     /** Returns the current combat target, or {@code null} if none. */
-    LivingEntity getMyPetTarget();
+    LivingEntity getPetTarget();
 
     /** Sets a combat target with {@link TargetPriority#Overwrite}. */
     void setTarget(LivingEntity target);
@@ -288,7 +288,7 @@ public non-sealed interface MyPet extends StoredPet, Scheduler {
     }
 
     /** Returns {@code true} if a player is currently riding this pet. */
-    default boolean hasMyPetRider() {
+    default boolean hasPetRider() {
         Mob mob = getBukkitEntity();
         return mob != null && !mob.getPassengers().isEmpty();
     }

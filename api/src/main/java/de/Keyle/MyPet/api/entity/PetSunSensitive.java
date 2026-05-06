@@ -41,7 +41,7 @@ import de.Keyle.MyPet.api.Configuration;
  * vanilla overrides {@code isSunSensitive()} to {@code false} for those
  * types, so the event never fires and the knob would be misleading.
  */
-public interface MyPetSunSensitive extends MyPet {
+public interface PetSunSensitive extends Pet {
 
     default boolean preventDaylightBurn() {
         return Configuration.MyPet.preventDaylightBurn(getPetType());

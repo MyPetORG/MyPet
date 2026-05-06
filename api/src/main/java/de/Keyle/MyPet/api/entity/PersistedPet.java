@@ -192,7 +192,7 @@ public record PersistedPet(
 
     /**
      * Fluent builder. Exists because most construction sites (DB row → record,
-     * MyPet → record, clone, listener-driven taming) populate 8–12 fields at
+     * Pet → record, clone, listener-driven taming) populate 8–12 fields at
      * once; chained {@code with} calls would allocate a record per step.
      *
      * <p>{@link #petType} also seeds {@code health} from the type's
@@ -225,7 +225,7 @@ public record PersistedPet(
         public Builder petType(PetType v) {
             this.petType = v;
             if (this.respawnTime <= 0 && this.health == -1) {
-                this.health = MyPetApi.getMyPetInfo().getStartHP(v);
+                this.health = MyPetApi.getPetInfo().getStartHP(v);
             }
             return this;
         }

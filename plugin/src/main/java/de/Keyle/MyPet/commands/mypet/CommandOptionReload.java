@@ -24,7 +24,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeLoaderJSON;
@@ -197,20 +197,20 @@ public class CommandOptionReload {
 
         SkillTreeLoaderJSON.loadSkilltrees(new File(MyPetApi.getPlugin().getDataFolder(), "skilltrees"));
 
-        for (MyPet myPet : MyPetApi.getPetManager().getAllActiveMyPets()) {
-            Skilltree skilltree = myPet.getSkilltree();
+        for (Pet pet : MyPetApi.getPetManager().getAllActivePets()) {
+            Skilltree skilltree = pet.getSkilltree();
             if (skilltree != null) {
                 String skilltreeName = skilltree.getName();
                 if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
                     skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
-                    if (!skilltree.getMobTypes().contains(myPet.getPetType())) {
+                    if (!skilltree.getMobTypes().contains(pet.getPetType())) {
                         skilltree = null;
                     }
                 } else {
                     skilltree = null;
                 }
             }
-            myPet.setSkilltree(skilltree);
+            pet.setSkilltree(skilltree);
         }
         sender.sendMessage(MessageUtil.prefixed(Component.text("skilltrees reloaded!")));
         MyPetApi.getLogger().info("Skilltrees reloaded!");

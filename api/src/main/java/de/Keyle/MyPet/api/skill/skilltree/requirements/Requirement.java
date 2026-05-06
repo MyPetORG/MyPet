@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.skill.skilltree.requirements;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 
@@ -30,7 +30,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
  * <p>Requirements are registered with the {@link de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager}
  * and referenced by name in {@code .st.json} skilltree files. At runtime, when a player
  * attempts to select or is assigned a skilltree, each configured requirement is evaluated
- * via {@link #check(Skilltree, MyPet, Settings)}.
+ * via {@link #check(Skilltree, Pet, Settings)}.
  *
  * <p>Implementations must be annotated with {@link RequirementName} so they can be discovered
  * and looked up by name.
@@ -48,5 +48,5 @@ public interface Requirement {
      * @param settings  the requirement-specific configuration from the skilltree definition
      * @return {@code true} if the requirement is satisfied
      */
-    boolean check(Skilltree skilltree, MyPet pet, Settings settings);
+    boolean check(Skilltree skilltree, Pet pet, Settings settings);
 }

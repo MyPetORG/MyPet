@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetType;
 import org.bukkit.entity.EntityType;
 
@@ -55,9 +55,9 @@ public final class BuiltInPetTypes {
             String className = IMPL_TYPES_PACKAGE + camelName;
             try {
                 Class<?> clazz = Class.forName(className);
-                if (MyPet.class.isAssignableFrom(clazz)) {
+                if (Pet.class.isAssignableFrom(clazz)) {
                     @SuppressWarnings("unchecked")
-                    Class<? extends MyPet> petClass = (Class<? extends MyPet>) clazz;
+                    Class<? extends Pet> petClass = (Class<? extends Pet>) clazz;
                     PetType.register(camelName, petClass);
                 }
             } catch (ClassNotFoundException ignored) {

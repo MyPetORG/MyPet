@@ -28,9 +28,9 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.PersistedPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.util.PetInfoBuilder;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -124,7 +124,7 @@ public class CommandTrade {
                 "/pettrade",
                 null,
                 140,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
                         && (Permissions.has(player, "MyPet.command.trade.offer")
                         || Permissions.has(player, "MyPet.command.trade.receive"))
         ));
@@ -161,12 +161,12 @@ public class CommandTrade {
 
             if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
                 final MyPetPlayer oldOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
-                if (!oldOwner.hasMyPet() || oldOwner.getMyPet() != offer.pet()) {
+                if (!oldOwner.hasPet() || oldOwner.getPet() != offer.pet()) {
                     player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                     offers.remove(player.getUniqueId());
                     return;
                 }
-                if (MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getPetManager().hasActiveMyPet(player)) {
+                if (MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getPetManager().hasActivePet(player)) {
                     player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.HasPet", player));
                     return;
                 }
@@ -192,44 +192,44 @@ public class CommandTrade {
                 final MyPetPlayer newOwner = MyPetApi.getPlayerManager().isMyPetPlayer(player) ? MyPetApi.getPlayerManager().getMyPetPlayer(player) : MyPetApi.getPlayerManager().registerMyPetPlayer(player);
                 final String worldGroup = offer.pet().getWorldGroup();
 
-                MyPetApi.getPetManager().deactivateMyPet(oldOwner, false);
+                MyPetApi.getPetManager().deactivatePet(oldOwner, false);
                 final PersistedPet originalPet = MyPetApi.getPetManager().snapshot(offer.pet());
 
                 final Repository repo = MyPetPlugin.getInstance().getRepository();
                 repo.removePet(originalPet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
-                        PersistedPet pet = originalPet.withOwner(newOwner);
-                        PetSaveEvent event = new PetSaveEvent(pet);
+                        PersistedPet persistedPet = originalPet.withOwner(newOwner);
+                        PetSaveEvent event = new PetSaveEvent(persistedPet);
                         Bukkit.getServer().getPluginManager().callEvent(event);
-                        repo.addPet(pet);
-                        Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(pet);
+                        repo.addPet(persistedPet);
+                        Optional<Pet> pet = MyPetApi.getPetManager().activatePet(persistedPet);
 
-                        oldOwner.setMyPetForWorldGroup(worldGroup, null);
-                        newOwner.setMyPetForWorldGroup(worldGroup, pet.getUUID());
+                        oldOwner.setPetForWorldGroup(worldGroup, null);
+                        newOwner.setPetForWorldGroup(worldGroup, persistedPet.getUUID());
                         repo.updateMyPetPlayer(oldOwner);
                         repo.updateMyPetPlayer(newOwner);
 
-                        if (myPet.isPresent()) {
+                        if (pet.isPresent()) {
 
-                            newOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Success", newOwner, oldOwner.getName(), myPet.get().getDisplayName()));
-                            oldOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Success", oldOwner, newOwner.getName(), myPet.get().getDisplayName()));
+                            newOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Success", newOwner, oldOwner.getName(), pet.get().getDisplayName()));
+                            oldOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Success", oldOwner, newOwner.getName(), pet.get().getDisplayName()));
 
-                            switch (myPet.get().createEntity()) {
+                            switch (pet.get().createEntity()) {
                                 case Canceled:
-                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", newOwner, myPet.get().getDisplayName()));
+                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", newOwner, pet.get().getDisplayName()));
                                     break;
                                 case NoSpace:
-                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", newOwner, myPet.get().getDisplayName()));
+                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", newOwner, pet.get().getDisplayName()));
                                     break;
                                 case NotAllowed:
-                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", newOwner, myPet.get().getDisplayName()));
+                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", newOwner, pet.get().getDisplayName()));
                                     break;
                                 case Dead:
                                     if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                        newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", newOwner, myPet.get().getDisplayName(), myPet.get().getRespawnTime()));
+                                        newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", newOwner, pet.get().getDisplayName(), pet.get().getRespawnTime()));
                                     }
                                     break;
                                 case Spectator:
-                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Spectator", newOwner, myPet.get().getDisplayName()));
+                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Spectator", newOwner, pet.get().getDisplayName()));
                                     break;
                             }
                         } else {
@@ -312,10 +312,10 @@ public class CommandTrade {
             return;
         }
 
-        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
-            MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
+        if (MyPetApi.getPetManager().hasActivePet(player)) {
+            Pet pet = MyPetApi.getPetManager().getPet(player);
 
-            if (!Permissions.has(player, "MyPet.command.trade.offer." + myPet.getPetType().name())) {
+            if (!Permissions.has(player, "MyPet.command.trade.offer." + pet.getPetType().name())) {
                 player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
                 return;
             }
@@ -343,19 +343,19 @@ public class CommandTrade {
                 }
             }
 
-            Offer offer = new Offer(price, myPet, player.getUniqueId(), receiver.getUniqueId(), receiver.getName(), player.getName());
+            Offer offer = new Offer(price, pet, player.getUniqueId(), receiver.getUniqueId(), receiver.getName(), player.getName());
             offers.put(receiver.getUniqueId(), offer);
             if (price > 0) {
-                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Offer.Price", player, myPet.getDisplayName(), receiver.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
+                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Offer.Price", player, pet.getDisplayName(), receiver.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
                 receiver.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Offer.Price", receiver, player.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
             } else {
-                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Offer", player, myPet.getDisplayName(), receiver.getName()));
+                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Offer", player, pet.getDisplayName(), receiver.getName()));
                 receiver.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Offer", receiver, player.getName()));
             }
 
             receiver.sendMessage(
-                    Component.text(" »» ").append(myPet.getDisplayName())
-                            .hoverEvent(PetInfoBuilder.myPetToItemHover(myPet, Locale.getPlayerLanguage(receiver)))
+                    Component.text(" »» ").append(pet.getDisplayName())
+                            .hoverEvent(PetInfoBuilder.petToItemHover(pet, Locale.getPlayerLanguage(receiver)))
                             .clickEvent(ClickEvent.runCommand("/pettrade accept"))
             );
         } else {
@@ -363,6 +363,6 @@ public class CommandTrade {
         }
     }
 
-    private record Offer(double price, MyPet pet, UUID owner, UUID receiver, String receiverName, String ownerName) {
+    private record Offer(double price, Pet pet, UUID owner, UUID receiver, String receiverName, String ownerName) {
     }
 }

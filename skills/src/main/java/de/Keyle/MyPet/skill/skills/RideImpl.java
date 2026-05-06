@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -35,14 +35,14 @@ public class RideImpl implements Ride {
     protected UpgradeComputer<Number> flyLimit = new UpgradeComputer<>(0);
     protected UpgradeComputer<Boolean> canFly = new UpgradeComputer<>(false);
     protected UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);
-    private MyPet myPet;
+    private Pet pet;
 
-    public RideImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public RideImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
     @Override

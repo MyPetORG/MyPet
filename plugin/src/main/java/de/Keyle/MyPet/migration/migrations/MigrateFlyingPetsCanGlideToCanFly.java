@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.migration.migrations;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.migration.ConfigMigration;
 import de.Keyle.MyPet.migration.ConfigMigrationContext;
@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  * <p>Old configs used one boolean per flying pet — labelled {@code CanGlide}
  * — to mean "can fly". v4 separates the two capabilities because a rider on a
  * flight-disabled pet still needs the pet to slow-fall, otherwise both pet
- * and rider plummet. For each pet that now implements {@link MyPetFlyingEntity},
+ * and rider plummet. For each pet that now implements {@link PetFlyingEntity},
  * this migration:
  *
  * <ol>
@@ -77,7 +77,7 @@ public class MigrateFlyingPetsCanGlideToCanFly implements ConfigMigration {
         boolean changed = false;
         int converted = 0;
         for (PetType type : PetType.values()) {
-            if (!MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+            if (!PetFlyingEntity.class.isAssignableFrom(type.getPetClass())) {
                 continue;
             }
             String base = "MyPet.Pets." + type.name();

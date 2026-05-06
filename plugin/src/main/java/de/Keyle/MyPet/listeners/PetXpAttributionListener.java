@@ -22,7 +22,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.skill.MyPetExperience;
+import de.Keyle.MyPet.api.skill.PetExperience;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -66,7 +66,7 @@ public class PetXpAttributionListener implements Listener {
             livingSource = (LivingEntity) source;
         }
         if (livingSource != null) {
-            MyPetExperience.addDamageToEntity(livingSource, (LivingEntity) target, event.getDamage());
+            PetExperience.addDamageToEntity(livingSource, (LivingEntity) target, event.getDamage());
         }
     }
 }

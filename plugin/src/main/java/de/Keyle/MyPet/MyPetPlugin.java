@@ -21,8 +21,8 @@
 package de.Keyle.MyPet;
 
 import de.Keyle.MyPet.api.*;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetInfo;
 import de.Keyle.MyPet.util.player.ContributorCheck;
 import de.Keyle.MyPet.api.repository.*;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
@@ -39,7 +39,7 @@ import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.services.EggIconService;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.commands.BuiltInCommands;
-import de.Keyle.MyPet.entity.info.MyPetInfoImpl;
+import de.Keyle.MyPet.entity.info.PetInfoImpl;
 import de.Keyle.MyPet.entity.leashing.BuiltInLeashFlags;
 import de.Keyle.MyPet.listeners.PetListeners;
 import de.Keyle.MyPet.migration.MigrationService;
@@ -137,7 +137,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
     /** Pet-type metadata provider. Populated in {@link #onLoad()}. */
     @Getter
-    private MyPetInfo myPetInfo;
+    private PetInfo petInfo;
 
     /** Online-player registry. Populated in {@link #onLoad()}. */
     @Getter
@@ -196,9 +196,9 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         isDisabling = true;
 
         if (isReady) {
-            for (MyPet myPet : petManager.getAllActiveMyPets()) {
-                if (myPet.getStatus() == MyPet.PetState.Here) {
-                    myPet.removePet(true);
+            for (Pet pet : petManager.getAllActivePets()) {
+                if (pet.getStatus() == Pet.PetState.Here) {
+                    pet.removePet(true);
                 }
             }
             repository.disable();
@@ -266,7 +266,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager = new ServiceManager();
         pluginHookManager = new PluginHookManager();
 
-        myPetInfo = new MyPetInfoImpl();
+        petInfo = new PetInfoImpl();
         petManager = new de.Keyle.MyPet.repository.PetManager();
         playerManager = new de.Keyle.MyPet.repository.PlayerManager();
         hookHelper = new de.Keyle.MyPet.util.HookHelper();

@@ -23,11 +23,11 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.skill.skills.PickupImpl;
@@ -77,8 +77,8 @@ public class CommandPickup {
                 "/petpickup",
                 CommandCategory.SKILLS,
                 150,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
-                        && MyPetApi.getPetManager().getMyPet(player).getSkills().isActive(PickupImpl.class)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
+                        && MyPetApi.getPetManager().getPet(player).getSkills().isActive(PickupImpl.class)
         ));
     }
 
@@ -96,21 +96,21 @@ public class CommandPickup {
             owner.sendMessage(Locale.getComponent("Message.No.AllowedHere", owner));
             return;
         }
-        if (MyPetApi.getPetManager().hasActiveMyPet(owner)) {
-            MyPet myPet = MyPetApi.getPetManager().getMyPet(owner);
+        if (MyPetApi.getPetManager().hasActivePet(owner)) {
+            Pet pet = MyPetApi.getPetManager().getPet(owner);
 
-            if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup")) {
+            if (!Permissions.hasExtended(pet.getOwner().getPlayer(), "MyPet.extended.pickup")) {
                 owner.sendMessage(Locale.getComponent("Message.No.Allowed", owner));
                 return;
-            } else if (myPet.getStatus() == PetState.Despawned) {
-                owner.sendMessage(Locale.getFormattedComponent("Message.Call.First", owner, myPet.getDisplayName()));
+            } else if (pet.getStatus() == PetState.Despawned) {
+                owner.sendMessage(Locale.getFormattedComponent("Message.Call.First", owner, pet.getDisplayName()));
                 return;
-            } else if (myPet.getStatus() == PetState.Dead) {
-                owner.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", owner, myPet.getDisplayName()));
+            } else if (pet.getStatus() == PetState.Dead) {
+                owner.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", owner, pet.getDisplayName()));
                 return;
             }
-            if (myPet.getSkills().has(PickupImpl.class)) {
-                myPet.getSkills().get(PickupImpl.class).activate();
+            if (pet.getSkills().has(PickupImpl.class)) {
+                pet.getSkills().get(PickupImpl.class).activate();
             }
         } else {
             owner.sendMessage(Locale.getComponent("Message.No.HasPet", owner));

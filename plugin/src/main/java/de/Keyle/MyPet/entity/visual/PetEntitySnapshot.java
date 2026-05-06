@@ -38,9 +38,9 @@ import java.io.UncheckedIOException;
  * persistent-data field automatically, so new mob types and new variants on
  * existing types do not require MyPet code changes.
  *
- * <p><b>Persistence-flag handling.</b> MyPet pets are spawned with
+ * <p><b>Persistence-flag handling.</b> Pet pets are spawned with
  * {@code setPersistent(false)} in {@link de.Keyle.MyPet.entity.spawn.VanillaMobSpawner}
- * so vanilla doesn't write them to chunk save files (MyPet's repository owns
+ * so vanilla doesn't write them to chunk save files (Pet's repository owns
  * canonical state). Paper's {@code serializeEntity} refuses non-persistent
  * entities by default — on 1.21.4+ the {@link EntitySerializationFlag#FORCE}
  * flag overrides this. {@link #capture} prefers the FORCE flag and falls
@@ -62,7 +62,7 @@ import java.io.UncheckedIOException;
  *   <li>Strip vanilla AI via {@code Bukkit.getMobGoals().removeAllGoals(mob)}.
  *       The snapshot restores a vanilla mob complete with its registered goals;
  *       MyPet replaces them with its own.</li>
- *   <li>Install MyPet goals via {@code PetGoalInstaller.install(pet, mob)}.</li>
+ *   <li>Install Pet goals via {@code PetGoalInstaller.install(pet, mob)}.</li>
  * </ol>
  *
  * <p>Keeping these steps caller-side avoids coupling this utility to the

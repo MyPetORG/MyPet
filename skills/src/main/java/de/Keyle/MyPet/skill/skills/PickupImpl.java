@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
 import de.Keyle.MyPet.api.event.PetPickupItemEvent;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -49,14 +49,14 @@ public class PickupImpl implements Pickup {
     protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
     protected UpgradeComputer<Boolean> expPickup = new UpgradeComputer<>(false);
     private boolean pickup = false;
-    private MyPet myPet;
+    private Pet pet;
 
-    public PickupImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public PickupImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
     public boolean isActive() {
@@ -82,51 +82,51 @@ public class PickupImpl implements Pickup {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Pickup.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), String.format("%1.2f", getRange().getValue().doubleValue()))
+                Locale.getFormattedComponent("Message.Skill.Pickup.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), String.format("%1.2f", getRange().getValue().doubleValue()))
         };
     }
 
     public boolean activate() {
         if (isActive()) {
-            if (myPet.getSkills().isActive(BackpackImpl.class)) {
+            if (pet.getSkills().isActive(BackpackImpl.class)) {
                 if (pickup) {
                     pickup = false;
                 } else {
-                    PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.PICKUP);
+                    PetInventoryActionEvent event = new PetInventoryActionEvent(pet, PetInventoryActionEvent.Action.PICKUP);
                     Bukkit.getServer().getPluginManager().callEvent(event);
                     if (!event.isCancelled()) {
                         pickup = true;
                     }
                 }
 
-                Component mode = pickup ? Locale.getComponent("Name.Enabled", myPet.getOwner()) : Locale.getComponent("Name.Disabled", myPet.getOwner());
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Pickup.StartStop", myPet.getOwner(), myPet.getDisplayName(), mode));
+                Component mode = pickup ? Locale.getComponent("Name.Enabled", pet.getOwner()) : Locale.getComponent("Name.Disabled", pet.getOwner());
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Pickup.StartStop", pet.getOwner(), pet.getDisplayName(), mode));
                 return true;
             } else {
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Pickup.NoInventory", myPet.getOwner(), myPet.getDisplayName()));
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Pickup.NoInventory", pet.getOwner(), pet.getDisplayName()));
                 return false;
             }
         } else {
-            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.Skill", myPet.getOwner(), myPet.getDisplayName(), this.getName(myPet.getOwner().getLanguage())));
+            pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.Skill", pet.getOwner(), pet.getDisplayName(), this.getName(pet.getOwner().getLanguage())));
             return false;
         }
     }
 
     public void schedule() {
-        PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.USE);
+        PetInventoryActionEvent event = new PetInventoryActionEvent(pet, PetInventoryActionEvent.Action.USE);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if (pickup && (event.isCancelled() || !Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.extended.pickup"))) {
+        if (pickup && (event.isCancelled() || !Permissions.hasExtended(pet.getOwner().getPlayer(), "MyPet.extended.pickup"))) {
             pickup = false;
-            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Pickup.StartStop", myPet.getOwner().getPlayer(), myPet.getDisplayName(), Locale.getComponent("Name.Disabled", myPet.getOwner())));
+            pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Pickup.StartStop", pet.getOwner().getPlayer(), pet.getDisplayName(), Locale.getComponent("Name.Disabled", pet.getOwner())));
             return;
         }
-        if (pickup && myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin")) {
-            myPet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Pickup.Creative", myPet.getOwner()));
+        if (pickup && pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(pet.getOwner().getPlayer(), "MyPet.admin")) {
+            pet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Pickup.Creative", pet.getOwner()));
             pickup = false;
             return;
         }
-        if (isActive() && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isActive(BackpackImpl.class)) {
-            myPet.getEntity().ifPresent(petEntity -> {
+        if (isActive() && pickup && pet.getStatus() == PetState.Here && pet.getSkills().isActive(BackpackImpl.class)) {
+            pet.getEntity().ifPresent(petEntity -> {
                 double range = this.range.getValue().doubleValue();
                 for (Entity entity : petEntity.getNearbyEntities(range, range, range)) {
                     if (!entity.isDead()) {
@@ -134,14 +134,14 @@ public class PickupImpl implements Pickup {
                             ItemStack itemStack = itemEntity.getItemStack();
 
                             if (itemEntity.getPickupDelay() <= 0 && itemStack.getAmount() > 0) {
-                                PetPickupItemEvent petPickupEvent = new PetPickupItemEvent(myPet, itemEntity);
+                                PetPickupItemEvent petPickupEvent = new PetPickupItemEvent(pet, itemEntity);
                                 Bukkit.getServer().getPluginManager().callEvent(petPickupEvent);
 
                                 if (petPickupEvent.isCancelled()) {
                                     continue;
                                 }
 
-                                EntityPickupItemEvent entityPickupEvent = new EntityPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, 0);
+                                EntityPickupItemEvent entityPickupEvent = new EntityPickupItemEvent(pet.getOwner().getPlayer(), itemEntity, 0);
                                 Bukkit.getServer().getPluginManager().callEvent(entityPickupEvent);
 
                                 if (entityPickupEvent.isCancelled()) {
@@ -150,7 +150,7 @@ public class PickupImpl implements Pickup {
 
                                 itemStack = itemEntity.getItemStack();
 
-                                CustomInventory inv = myPet.getSkills().get(BackpackImpl.class).getInventory();
+                                CustomInventory inv = pet.getSkills().get(BackpackImpl.class).getInventory();
                                 int itemAmount = inv.addItem(itemStack);
                                 if (itemAmount == 0) {
                                     petEntity.getWorld().playSound(petEntity.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.2F, 1.0F);
@@ -162,7 +162,7 @@ public class PickupImpl implements Pickup {
                                 }
                             }
                         } else if (expPickup.getValue() && entity instanceof ExperienceOrb expEntity) {
-                            myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
+                            pet.getOwner().getPlayer().giveExp(expEntity.getExperience());
                             expEntity.setExperience(0);
                             expEntity.remove();
                         }

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
 
@@ -29,7 +29,7 @@ import org.jspecify.annotations.NonNull;
  * available via {@link #getLevel()} (inherited) and the previous level via
  * {@link #fromLevel()}.
  *
- * <p>Fires from {@code MyPetExperience#updateExp} immediately after the level
+ * <p>Fires from {@code PetExperience#updateExp} immediately after the level
  * is recomputed — only on the up-transition. If the change crosses multiple
  * levels at once, this event fires once with the final level and the
  * pre-change level as {@code fromLevel}.
@@ -45,7 +45,7 @@ public class PetLevelUpEvent extends PetLevelEvent {
     private static final HandlerList handlers = new HandlerList();
     private final int fromLevel;
 
-    public PetLevelUpEvent(MyPet pet, int level, int fromLevel, boolean beQuiet) {
+    public PetLevelUpEvent(Pet pet, int level, int fromLevel, boolean beQuiet) {
         super(pet, level, beQuiet);
         this.fromLevel = fromLevel;
     }

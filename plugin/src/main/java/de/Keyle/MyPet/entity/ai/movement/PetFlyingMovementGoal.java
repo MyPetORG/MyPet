@@ -23,13 +23,12 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Mob;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +50,7 @@ import java.util.EnumSet;
  * That entity layer is gone; the equivalent suppression now happens via
  * the goal-strip in {@code PetGoalInstaller}.
  */
-public class MyPetFlyingMovementGoal implements Goal<Mob> {
+public class PetFlyingMovementGoal implements Goal<Mob> {
 
     private static final double RAD_TO_DEG = 57.2957763671875D;
     private static final double EPSILON_TOTAL_SQ = 2.500000277905201E-7D;
@@ -79,7 +78,7 @@ public class MyPetFlyingMovementGoal implements Goal<Mob> {
      */
     private static final double DIRECT_VELOCITY_SCALE = 0.25D;
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
     private final float maxTurn;
 
@@ -88,7 +87,7 @@ public class MyPetFlyingMovementGoal implements Goal<Mob> {
     private double wantedX, wantedY, wantedZ;
     private double speedModifier = 1.0D;
 
-    public MyPetFlyingMovementGoal(MyPet pet, Mob mob, float maxTurn) {
+    public PetFlyingMovementGoal(Pet pet, Mob mob, float maxTurn) {
         this.pet = pet;
         this.mob = mob;
         this.maxTurn = maxTurn;

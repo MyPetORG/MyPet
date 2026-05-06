@@ -46,9 +46,9 @@ import java.util.Set;
  * <p>Per-pet flag names stay semantically rich ({@code CanGiveMilk},
  * {@code CanBeSheared}, {@code CanGiveStew}) because each implementer reads
  * its own {@code Configuration.MyPet.<Type>.*} field. The listener never
- * names them. Mirrors {@link MyPetNaturalDrop} for the drop-event family.
+ * names them. Mirrors {@link PetNaturalDrop} for the drop-event family.
  */
-public interface MyPetInteractionGate extends MyPet {
+public interface PetInteractionGate extends Pet {
 
     /**
      * The set of held-item materials that trigger this pet's gated

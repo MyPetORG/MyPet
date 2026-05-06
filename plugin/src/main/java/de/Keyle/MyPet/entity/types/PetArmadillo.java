@@ -21,22 +21,22 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.entity.Armadillo;
 import org.bukkit.entity.Mob;
 
 import java.lang.reflect.Method;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
+import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetNaturalDrop;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SPIDER_EYE})
-public class PetArmadillo extends MyPet implements MyPetBaby, MyPetNaturalDrop {
+public class PetArmadillo extends PetImpl implements PetBaby, PetNaturalDrop {
 
     // Paper 1.21.5+ exposes Armadillo#getState() returning an Armadillo.State enum
     // ({IDLE, ROLLING, SCARED, UNROLLING}). v4 compiles against 1.21.4 where the

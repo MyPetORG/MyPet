@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
@@ -32,11 +32,11 @@ import org.jspecify.annotations.NonNull;
 /**
  * Fired when the repository hands a stored pet to {@code PetManager} for
  * activation — i.e., just before the manager wires it up as a live
- * {@link MyPet}. The pet exposed via {@link #getPet()} is still a
+ * {@link Pet}. The pet exposed via {@link #getPet()} is still a
  * {@link StoredPet} (concretely a {@code PersistedPet} record); skills
  * have not yet been instantiated.
  *
- * <p>Fires from {@code PetManager.activateMyPet} before any setup runs.
+ * <p>Fires from {@code PetManager.activatePet} before any setup runs.
  *
  * <p><b>Not cancellable:</b> activation always proceeds. Listeners use this
  * for read-only auditing, attaching addon-side state to the about-to-be-live
@@ -56,8 +56,8 @@ public class PetLoadEvent extends Event {
 
     private final StoredPet pet;
 
-    public PetLoadEvent(StoredPet mypet) {
-        this.pet = mypet;
+    public PetLoadEvent(StoredPet pet) {
+        this.pet = pet;
     }
 
     public static HandlerList getHandlerList() {

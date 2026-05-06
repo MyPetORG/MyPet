@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -140,7 +140,7 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
 
     // ==================== INSTANCE FIELDS ====================
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
     private final Slime slime;
     private final double startDistance;
@@ -167,7 +167,7 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
     private double ownerMovementSpeed = 0;
     private int lastTrackingTick = -1;
 
-    public PetCubeMobFollowOwnerGoal(MyPet pet, Mob mob,
+    public PetCubeMobFollowOwnerGoal(Pet pet, Mob mob,
                                      double startDistance, float stopDistance, float teleportDistance) {
         this.pet = pet;
         this.mob = mob;
@@ -181,7 +181,7 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
         this.teleportDistance = teleportDistance * teleportDistance;
     }
 
-    /** Refreshes {@link #owner} from the {@link MyPet}; returns true if the owner is online. */
+    /** Refreshes {@link #owner} from the {@link Pet}; returns true if the owner is online. */
     private boolean refreshOwner() {
         if (pet.getOwner() == null) {
             this.owner = null;
@@ -206,7 +206,7 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
         if (!this.pet.canMove()) {
             return false;
         }
-        if (this.pet.getMyPetTarget() != null && !this.pet.getMyPetTarget().isDead()) {
+        if (this.pet.getPetTarget() != null && !this.pet.getPetTarget().isDead()) {
             return false;
         }
         if (!refreshOwner()) {
@@ -245,7 +245,7 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
         if (!this.pet.canMove()) {
             return false;
         }
-        if (this.pet.getMyPetTarget() != null && !this.pet.getMyPetTarget().isDead()) {
+        if (this.pet.getPetTarget() != null && !this.pet.getPetTarget().isDead()) {
             return false;
         }
         return true;

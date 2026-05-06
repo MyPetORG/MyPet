@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
@@ -52,22 +52,22 @@ import java.util.Set;
  * {@link GoalType#JUMP JUMP}) so while sitting the pet is locked out of
  * every other motion goal — no strolling, no head-turning, no jumping.
  *
- * <p>This goal is a pure <em>view</em> over {@link MyPet#isSitting()} —
+ * <p>This goal is a pure <em>view</em> over {@link Pet#isSitting()} —
  * it owns no sitting state of its own. The interact handler in
- * {@code MyPet#onInteract} flips {@code MyPet.sitting} and the goal
+ * {@code Pet#onInteract} flips {@code Pet.sitting} and the goal
  * selector picks the change up on its next tick.
  */
 public class PetSitGoal implements Goal<Mob> {
 
     private static final Set<String> SITTABLE_TYPES = Set.of("Wolf", "Cat", "Camel", "Panda", "Fox");
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
 
     /**
      * @param petEntity the pet that will be commanded to sit
      */
-    public PetSitGoal(MyPet pet, Mob mob) {
+    public PetSitGoal(Pet pet, Mob mob) {
         this.pet = pet;
         this.mob = mob;
     }

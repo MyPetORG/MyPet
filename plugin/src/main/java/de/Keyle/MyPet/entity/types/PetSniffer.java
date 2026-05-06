@@ -20,19 +20,20 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
+import de.Keyle.MyPet.api.entity.PetNaturalDrop;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
+
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.TORCHFLOWER_SEEDS}, leashFlags = {"Tamed"})
-public class PetSniffer extends MyPet implements MyPetBaby, MyPetNaturalDrop {
+public class PetSniffer extends PetImpl implements PetBaby, PetNaturalDrop {
 
     public PetSniffer(MyPetPlayer petOwner) {
         super(petOwner);

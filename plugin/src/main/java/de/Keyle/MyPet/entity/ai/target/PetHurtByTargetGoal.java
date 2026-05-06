@@ -24,7 +24,7 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -68,18 +68,16 @@ import java.util.EnumSet;
  */
 public class PetHurtByTargetGoal implements Goal<Mob> {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
-    private final MyPet myPet;
     private LivingEntity target = null;
 
     /**
      * @param petEntity the pet that will retaliate when struck
      */
-    public PetHurtByTargetGoal(MyPet pet, Mob mob) {
+    public PetHurtByTargetGoal(Pet pet, Mob mob) {
         this.pet = pet;
         this.mob = mob;
-        this.myPet = pet;
     }
 
     @Override
@@ -87,14 +85,14 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+        if (pet.getDamage() <= 0 && pet.getRangedDamage() <= 0) {
             return false;
         }
-        // The subsequent canHurt() calls pass myPet.getOwner().getPlayer() as
+        // The subsequent canHurt() calls pass pet.getOwner().getPlayer() as
         // the attacker side of the hook check; that returns null when the
         // owner is offline. Bail before those derefs. Mirrors the equivalent
         // guard in PetOwnerHurtByTargetGoal.
-        Player ownerPlayer = myPet.getOwner().getPlayer();
+        Player ownerPlayer = pet.getOwner().getPlayer();
         if (ownerPlayer == null) {
             return false;
         }
@@ -121,7 +119,7 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
                 return false;
             }
         } else if (PetEntityMarker.isMarked(target)) {
-            MyPet otherPet = MyPetApi.getPetManager().getMyPetFromEntity(target);
+            Pet otherPet = MyPetApi.getPetManager().getPetFromEntity(target);
             if (otherPet != null && otherPet.getOwner() != null
                     && !MyPetApi.getHookHelper().canHurt(ownerPlayer, otherPet.getOwner().getPlayer(), true)) {
                 return false;
@@ -129,7 +127,7 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
         } else if (target instanceof Tameable tameable) {
             if (tameable.isTamed() && tameable.getOwner() != null) {
                 Player tameableOwner = (Player) tameable.getOwner();
-                if (myPet.getOwner().equals(tameableOwner)) {
+                if (pet.getOwner().equals(tameableOwner)) {
                     return false;
                 }
             }
@@ -140,7 +138,7 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
         // Behavior mode enforcement — must mirror PetOwnerHurtByTargetGoal so
         // Friendly pets never retaliate and Raid pets only retaliate against
         // wild mobs (not players, tamed animals, or other MyPet pets).
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (behaviorSkill != null && behaviorSkill.isActive()) {
             if (behaviorSkill.getBehavior() == BehaviorMode.Friendly) {
                 return false;
@@ -169,7 +167,7 @@ public class PetHurtByTargetGoal implements Goal<Mob> {
         if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity currentTarget = pet.getMyPetTarget();
+        LivingEntity currentTarget = pet.getPetTarget();
         if (currentTarget == null || currentTarget.isDead()) {
             return false;
         }

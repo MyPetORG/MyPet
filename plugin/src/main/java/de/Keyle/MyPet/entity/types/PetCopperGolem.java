@@ -21,14 +21,14 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo(displayName = "Copper Golem")
 @DefaultInfo(food = {Material.COPPER_INGOT}, leashFlags = {"UserCreated"})
-public class PetCopperGolem extends MyPet {
+public class PetCopperGolem extends PetImpl {
 
     public PetCopperGolem(MyPetPlayer petOwner) {
         super(petOwner);

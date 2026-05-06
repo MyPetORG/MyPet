@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
@@ -454,7 +454,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
     // ==================== INSTANCE FIELDS ====================
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
     private final AbstractNavigation nav;
     private final float stopDistance;
@@ -468,7 +468,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
      * skip subsequent calls and avoid per-tick goal-list iteration.
      */
     private boolean controlGoalLookupDone = false;
-    private MyPetFlyingMovementGoal flyingMovementGoal;
+    private PetFlyingMovementGoal flyingMovementGoal;
     private boolean flyingGoalLookupDone = false;
     /**
      * The owner Player. This is refreshed each tick because {@link
@@ -503,7 +503,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
      * @param flyingPet        whether this Pet uses flying movement
      * @param aquaticPet       whether this Pet has aquatic navigation capabilities
      */
-    public PetFollowOwnerGoal(MyPet pet, Mob mob, double startDistance, float stopDistance, float teleportDistance, boolean flyingPet, boolean aquaticPet) {
+    public PetFollowOwnerGoal(Pet pet, Mob mob, double startDistance, float stopDistance, float teleportDistance, boolean flyingPet, boolean aquaticPet) {
         this.pet = pet;
         this.mob = mob;
         this.nav = pet.getPetNavigation();
@@ -588,14 +588,14 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         if (flyingPet && flyingMovementGoal == null && !flyingGoalLookupDone) {
             Goal<Mob> goal =
                     Bukkit.getMobGoals().getGoal(pet.getBukkitEntity(), PetGoalKey.FLYING_MOVEMENT);
-            if (goal instanceof MyPetFlyingMovementGoal fmg) {
+            if (goal instanceof PetFlyingMovementGoal fmg) {
                 flyingMovementGoal = fmg;
             }
             flyingGoalLookupDone = true;
         }
         if (!this.pet.canMove()) {
             return false;
-        } else if (this.pet.getMyPetTarget() != null && !this.pet.getMyPetTarget().isDead()) {
+        } else if (this.pet.getPetTarget() != null && !this.pet.getPetTarget().isDead()) {
             return false;
         } else if (!refreshOwner()) {
             return false;
@@ -641,7 +641,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
             return false;
         } else if (!this.pet.canMove()) {
             return false;
-        } else if (this.pet.getMyPetTarget() != null && !this.pet.getMyPetTarget().isDead()) {
+        } else if (this.pet.getPetTarget() != null && !this.pet.getPetTarget().isDead()) {
             return false;
         }
         return true;

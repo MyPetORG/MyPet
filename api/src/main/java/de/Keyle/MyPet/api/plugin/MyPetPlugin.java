@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.plugin;
 
-import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.entity.PetInfo;
 import de.Keyle.MyPet.api.repository.PetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.util.ErrorReporter;
@@ -46,7 +46,7 @@ public interface MyPetPlugin extends Plugin {
     File getFile();
 
     /** Returns the per-type metadata registry (HP, speed, food, leash flags). */
-    MyPetInfo getMyPetInfo();
+    PetInfo getPetInfo();
 
     /** Returns the manager for {@link de.Keyle.MyPet.api.player.MyPetPlayer} instances. */
     PlayerManager getPlayerManager();

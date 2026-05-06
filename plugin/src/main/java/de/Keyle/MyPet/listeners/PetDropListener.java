@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetNaturalDrop;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetNaturalDrop;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -40,9 +40,9 @@ import org.bukkit.event.entity.EntityDropItemEvent;
  * vanilla path when set to {@code false}.
  *
  * <p>The listener is pet-agnostic: it dispatches via the
- * {@link MyPetNaturalDrop} marker interface. Adding a new periodic drop to
- * suppress is one {@code extends MyPetNaturalDrop} clause plus two default
- * methods on the relevant {@code My<Type>} api interface — no listener
+ * {@link PetNaturalDrop} marker interface. Adding a new periodic drop to
+ * suppress is one {@code extends PetNaturalDrop} clause plus two default
+ * methods on the relevant {@code Pet<Type>} api interface — no listener
  * changes required.
  *
  * <p>Wild mobs are unaffected — the {@link PetEntityMarker} check ensures
@@ -55,8 +55,8 @@ public class PetDropListener implements Listener {
         if (!PetEntityMarker.isMarked(event.getEntity())) {
             return;
         }
-        MyPet pet = MyPetApi.getPetManager().getMyPetFromEntity(event.getEntity());
-        if (!(pet instanceof MyPetNaturalDrop dropper)) {
+        Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getEntity());
+        if (!(pet instanceof PetNaturalDrop dropper)) {
             return;
         }
         if (!dropper.naturalDropMaterials().contains(event.getItemDrop().getItemStack().getType())) {

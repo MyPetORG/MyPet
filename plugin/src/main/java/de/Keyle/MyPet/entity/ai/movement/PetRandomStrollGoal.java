@@ -23,14 +23,13 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -82,7 +81,7 @@ public class PetRandomStrollGoal implements Goal<Mob> {
     private static final int MAX_ATTEMPTS = 5;
     private static final double DESTINATION_REACHED = 0.75;
 
-    protected final MyPet pet;
+    protected final Pet pet;
     protected final Mob mob;
     protected Location moveTo = null;
     protected int timeToMove = 0;
@@ -103,7 +102,7 @@ public class PetRandomStrollGoal implements Goal<Mob> {
     /**
      * @param petEntity the pet that will wander when its owner stands still
      */
-    public PetRandomStrollGoal(MyPet pet, Mob mob) {
+    public PetRandomStrollGoal(Pet pet, Mob mob) {
         this.pet = pet;
         this.mob = mob;
     }
@@ -143,7 +142,7 @@ public class PetRandomStrollGoal implements Goal<Mob> {
             controlGoalLookupDone = true;
         }
         if (!pet.canMove()) return false;
-        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) return false;
+        if (pet.hasTarget() && !pet.getPetTarget().isDead()) return false;
 
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
@@ -170,7 +169,7 @@ public class PetRandomStrollGoal implements Goal<Mob> {
         if (moveTo == null) return false;
         if (mob.getLocation().distance(moveTo) < DESTINATION_REACHED) return false;
         if (timeToMove <= 0) return false;
-        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) return false;
+        if (pet.hasTarget() && !pet.getPetTarget().isDead()) return false;
         return true;
     }
 

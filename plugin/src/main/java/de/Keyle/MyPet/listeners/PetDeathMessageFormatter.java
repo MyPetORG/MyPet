@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -47,70 +47,70 @@ final class PetDeathMessageFormatter {
         if (!PetEntityMarker.isMarked(event.getEntity())) return;
         if (!Boolean.TRUE.equals(event.getEntity().getWorld().getGameRuleValue(GameRule.SHOW_DEATH_MESSAGES))) return;
 
-        MyPet myPet = getPetManager().getMyPetFromEntity(event.getEntity());
-        if (myPet == null) return;
+        Pet pet = getPetManager().getPetFromEntity(event.getEntity());
+        if (pet == null) return;
 
         Component killer;
         if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent e) {
 
             if (e.getDamager().getType() == EntityType.PLAYER) {
-                if (e.getDamager() == myPet.getOwner().getPlayer()) {
-                    killer = Locale.getComponent("Name.You", myPet.getOwner());
+                if (e.getDamager() == pet.getOwner().getPlayer()) {
+                    killer = Locale.getComponent("Name.You", pet.getOwner());
                 } else {
                     killer = Component.text(((Player) e.getDamager()).getName());
                 }
             } else if (e.getDamager().getType() == EntityType.WOLF) {
                 Wolf w = (Wolf) e.getDamager();
-                killer = Locale.getComponent("Name.Wolf", myPet.getOwner());
+                killer = Locale.getComponent("Name.Wolf", pet.getOwner());
                 if (w.isTamed()) {
                     killer = killer.append(Component.text(" (" + w.getOwner().getName() + ")"));
                 }
             } else if (PetEntityMarker.isMarked(e.getDamager())) {
-                MyPet damagerPet = getPetManager().getMyPetFromEntity(e.getDamager());
+                Pet damagerPet = getPetManager().getPetFromEntity(e.getDamager());
                 if (damagerPet != null) {
                     killer = damagerPet.getDisplayName().append(Component.text(" (" + damagerPet.getOwner().getName() + ")"));
                 } else {
                     killer = Component.text(e.getDamager().getType().name());
                 }
             } else if (e.getDamager() instanceof Projectile projectile) {
-                Component projectileName = Locale.getComponent("Name." + capitalizeName(projectile.getType().name()), myPet.getOwner());
+                Component projectileName = Locale.getComponent("Name." + capitalizeName(projectile.getType().name()), pet.getOwner());
                 Component shooterName;
                 if (projectile.getShooter() instanceof Player) {
-                    if (projectile.getShooter() == myPet.getOwner().getPlayer()) {
-                        shooterName = Locale.getComponent("Name.You", myPet.getOwner());
+                    if (projectile.getShooter() == pet.getOwner().getPlayer()) {
+                        shooterName = Locale.getComponent("Name.You", pet.getOwner());
                     } else {
                         shooterName = Component.text(((Player) projectile.getShooter()).getName());
                     }
                 } else {
-                    if (MyPetApi.getMyPetInfo().isLeashableEntityType(e.getDamager().getType())) {
-                        shooterName = Locale.getComponent("Name." + capitalizeName(PetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
+                    if (MyPetApi.getPetInfo().isLeashableEntityType(e.getDamager().getType())) {
+                        shooterName = Locale.getComponent("Name." + capitalizeName(PetType.byEntityTypeName(e.getDamager().getType().name()).name()), pet.getOwner());
                     } else if (e.getDamager().getType().getName() != null) {
-                        shooterName = Locale.getComponent("Name." + capitalizeName(e.getDamager().getType().getName()), myPet.getOwner());
+                        shooterName = Locale.getComponent("Name." + capitalizeName(e.getDamager().getType().getName()), pet.getOwner());
                     } else {
-                        shooterName = Locale.getComponent("Name.Unknow", myPet.getOwner());
+                        shooterName = Locale.getComponent("Name.Unknow", pet.getOwner());
                     }
                 }
                 killer = projectileName.append(Component.text(" (")).append(shooterName).append(Component.text(")"));
             } else {
-                if (MyPetApi.getMyPetInfo().isLeashableEntityType(e.getDamager().getType())) {
-                    killer = Locale.getComponent("Name." + capitalizeName(PetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
+                if (MyPetApi.getPetInfo().isLeashableEntityType(e.getDamager().getType())) {
+                    killer = Locale.getComponent("Name." + capitalizeName(PetType.byEntityTypeName(e.getDamager().getType().name()).name()), pet.getOwner());
                 } else {
                     if (e.getDamager().getType().getName() != null) {
-                        killer = Locale.getComponent("Name." + capitalizeName(e.getDamager().getType().getName()), myPet.getOwner());
+                        killer = Locale.getComponent("Name." + capitalizeName(e.getDamager().getType().getName()), pet.getOwner());
                     } else {
-                        killer = Locale.getComponent("Name.Unknow", myPet.getOwner());
+                        killer = Locale.getComponent("Name.Unknow", pet.getOwner());
                     }
                 }
             }
         } else {
             if (event.getEntity().getLastDamageCause() != null) {
-                killer = Locale.getComponent("Name." + capitalizeName(event.getEntity().getLastDamageCause().getCause().name()), myPet.getOwner());
+                killer = Locale.getComponent("Name." + capitalizeName(event.getEntity().getLastDamageCause().getCause().name()), pet.getOwner());
             } else {
-                killer = Locale.getComponent("Name.Unknow", myPet.getOwner());
+                killer = Locale.getComponent("Name.Unknow", pet.getOwner());
             }
         }
 
-        myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.DeathMessage", myPet.getOwner(), myPet.getDisplayName(), killer));
+        pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.DeathMessage", pet.getOwner(), pet.getDisplayName(), killer));
     }
 
     private static String capitalizeName(String name) {

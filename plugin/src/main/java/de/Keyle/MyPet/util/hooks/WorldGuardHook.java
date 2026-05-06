@@ -32,7 +32,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.event.PetActivatedEvent;
@@ -341,7 +341,7 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             String blockTypeName = block.getType().name();
 
             if (blockTypeName.contains("PRESSURE_PLATE")) {
-                Player p = getPetManager().getMyPetFromEntity(ent).getOwner().getPlayer();
+                Player p = getPetManager().getPetFromEntity(ent).getOwner().getPlayer();
                 StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
                 if (s == null || s == StateFlag.State.DENY) {
                     event.setCancelled(true);
@@ -358,22 +358,22 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     public class RegionModifier extends ExperienceModifier {
 
-        MyPet myPet;
+        Pet pet;
 
-        public RegionModifier(MyPet myPet) {
-            this.myPet = myPet;
+        public RegionModifier(Pet pet) {
+            this.pet = pet;
         }
 
         @Override
         public double modify(double experience, double baseExperience) {
-            if (myPet.getEntity().isPresent()) {
+            if (pet.getEntity().isPresent()) {
                 try {
-                    Location location = myPet.getEntity().get().getLocation();
-                    Collection<Double> values = getDoubleValue(location, myPet.getOwner().getPlayer(), EXP_ADD_FLAG);
+                    Location location = pet.getEntity().get().getLocation();
+                    Collection<Double> values = getDoubleValue(location, pet.getOwner().getPlayer(), EXP_ADD_FLAG);
                     for (double d : values) {
                         experience += d;
                     }
-                    values = getDoubleValue(location, myPet.getOwner().getPlayer(), EXP_MULT_FLAG);
+                    values = getDoubleValue(location, pet.getOwner().getPlayer(), EXP_MULT_FLAG);
                     for (double d : values) {
                         experience *= d;
                     }

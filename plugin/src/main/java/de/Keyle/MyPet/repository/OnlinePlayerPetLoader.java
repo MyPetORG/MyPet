@@ -23,7 +23,7 @@ package de.Keyle.MyPet.repository;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.repository.PetManager;
@@ -70,7 +70,7 @@ public final class OnlinePlayerPetLoader {
      * @param plugin         the plugin instance used for scheduler ownership
      * @param repository     the active repository, queried for the per-player record
      * @param petManager   used to activate the loaded {@link StoredPet} into a live
-     *                       {@link MyPet} and to deactivate stale per-world-group pets
+     *                       {@link Pet} and to deactivate stale per-world-group pets
      * @param playerManager  receives each restored {@link de.Keyle.MyPet.api.player.MyPetPlayer}
      *                       via {@link PlayerManager#setOnline}
      */
@@ -102,15 +102,15 @@ public final class OnlinePlayerPetLoader {
             return;
         }
 
-        if (onlinePlayer.hasMyPet()) {
-            MyPet myPet = onlinePlayer.getMyPet();
-            if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
-                petManager.deactivateMyPet(onlinePlayer, true);
+        if (onlinePlayer.hasPet()) {
+            Pet pet = onlinePlayer.getPet();
+            if (!pet.getWorldGroup().equals(joinGroup.getName())) {
+                petManager.deactivatePet(onlinePlayer, true);
             }
         }
 
-        if (!onlinePlayer.hasMyPet() && onlinePlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
-            UUID petUUID = onlinePlayer.getMyPetForWorldGroup(joinGroup.getName());
+        if (!onlinePlayer.hasPet() && onlinePlayer.hasPetInWorldGroup(joinGroup.getName())) {
+            UUID petUUID = onlinePlayer.getPetForWorldGroup(joinGroup.getName());
             MyPetPlugin.getInstance().getRepository().getPet(petUUID).thenAccept(storedPet ->
                     player.getScheduler().run(plugin, petTask ->
                             activateAndMaybeRespawn(petManager, onlinePlayer, storedPet), null));
@@ -121,20 +121,20 @@ public final class OnlinePlayerPetLoader {
     private static void activateAndMaybeRespawn(PetManager petManager,
                                                 MyPetPlayerImpl onlinePlayer,
                                                 StoredPet storedPet) {
-        petManager.activateMyPet(storedPet);
-        if (!onlinePlayer.hasMyPet()) {
+        petManager.activatePet(storedPet);
+        if (!onlinePlayer.hasPet()) {
             return;
         }
-        MyPet myPet = onlinePlayer.getMyPet();
-        MyPetPlayer myPetPlayer = myPet.getOwner();
-        if (!myPet.wantsToRespawn() || !myPetPlayer.hasMyPet()) {
+        Pet pet = onlinePlayer.getPet();
+        MyPetPlayer myPetPlayer = pet.getOwner();
+        if (!pet.wantsToRespawn() || !myPetPlayer.hasPet()) {
             return;
         }
-        MyPet runMyPet = myPetPlayer.getMyPet();
-        sendSpawnMessage(runMyPet, runMyPet.createEntity());
+        Pet runPet = myPetPlayer.getPet();
+        sendSpawnMessage(runPet, runPet.createEntity());
     }
 
-    private static void sendSpawnMessage(MyPet pet, MyPet.SpawnFlags result) {
+    private static void sendSpawnMessage(Pet pet, Pet.SpawnFlags result) {
         MyPetPlayer owner = pet.getOwner();
         switch (result) {
             case Canceled:

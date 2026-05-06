@@ -24,14 +24,14 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
+import de.Keyle.MyPet.gui.selectionmenu.PetSelectionGui;
 import de.Keyle.MyPet.util.hooks.CitizensHook;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -71,17 +71,17 @@ public class StorageTrait extends Trait {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             final MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             assert myPetPlayer != null;
-            if (myPetPlayer.hasMyPet()) {
+            if (myPetPlayer.hasPet()) {
 
                 final NPC npc = this.npc;
 
                 MyPetPlugin.getInstance().getRepository().getPets(myPetPlayer).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         WorldGroup wg = WorldGroup.getGroupByWorld(myPetPlayer.getPlayer().getWorld().getName());
                         int inactivePetCount = 0;
-                        UUID activePetUUID = myPetPlayer.getMyPet().getUUID();
+                        UUID activePetUUID = myPetPlayer.getPet().getUUID();
 
-                        for (StoredPet mypet : pets) {
-                            if (activePetUUID.equals(mypet.getUUID()) || (!mypet.getWorldGroup().isEmpty() && !mypet.getWorldGroup().equals(wg.getName()))) {
+                        for (StoredPet storedPet : pets) {
+                            if (activePetUUID.equals(storedPet.getUUID()) || (!storedPet.getWorldGroup().isEmpty() && !storedPet.getWorldGroup().equals(wg.getName()))) {
                                 continue;
                             }
                             inactivePetCount++;
@@ -107,15 +107,15 @@ public class StorageTrait extends Trait {
                         if (inactivePetCount >= maxPetCount) {
                             String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
-                            final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Component.text(stats + " ").append(Locale.getComponent("Message.Npc.SwitchTitle", player)));
+                            final PetSelectionGui gui = new PetSelectionGui(myPetPlayer, Component.text(stats + " ").append(Locale.getComponent("Message.Npc.SwitchTitle", player)));
                             gui.open(pets, storedPet -> {
-                                    MyPetApi.getPetManager().deactivateMyPet(myPetPlayer, true);
-                                    Optional<MyPet> activePet = MyPetApi.getPetManager().activateMyPet(storedPet);
+                                    MyPetApi.getPetManager().deactivatePet(myPetPlayer, true);
+                                    Optional<Pet> activePet = MyPetApi.getPetManager().activatePet(storedPet);
                                     if (activePet.isPresent() && myPetPlayer.isOnline()) {
                                         Player p = myPetPlayer.getPlayer();
                                         myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", player, activePet.get().getDisplayName()));
                                         WorldGroup activeWg = WorldGroup.getGroupByWorld(p.getWorld().getName());
-                                        myPetPlayer.setMyPetForWorldGroup(activeWg, activePet.get().getUUID());
+                                        myPetPlayer.setPetForWorldGroup(activeWg, activePet.get().getUUID());
 
                                         switch (activePet.get().createEntity()) {
                                             case Canceled:
@@ -142,16 +142,16 @@ public class StorageTrait extends Trait {
                             });
                         } else {
                             IconMenu menu = new IconMenu(Locale.getComponent("Message.Npc.HandOverTitle", myPetPlayer), event -> {
-                                if (!myPetPlayer.hasMyPet()) {
+                                if (!myPetPlayer.hasPet()) {
                                     return;
                                 }
                                 if (event.getPosition() == 3) {
                                     boolean store = true;
-                                    double costs = calculateStorageCosts(myPetPlayer.getMyPet());
+                                    double costs = calculateStorageCosts(myPetPlayer.getPet());
                                     if (MyPetApi.getHookHelper().isEconomyEnabled() && costs > 0 && npc.hasTrait(WalletTrait.class)) {
                                         WalletTrait walletTrait = npc.getTrait(WalletTrait.class);
                                         if (!MyPetApi.getHookHelper().getEconomy().canPay(myPetPlayer, costs)) {
-                                            player.sendMessage(Locale.getFormattedComponent("Message.No.Money", myPetPlayer, myPetPlayer.getMyPet().getDisplayName(), npcEvent.getNPC().getName()));
+                                            player.sendMessage(Locale.getFormattedComponent("Message.No.Money", myPetPlayer, myPetPlayer.getPet().getDisplayName(), npcEvent.getNPC().getName()));
                                             store = false;
                                         }
                                         if (MyPetApi.getHookHelper().getEconomy().pay(myPetPlayer, costs)) {
@@ -162,11 +162,11 @@ public class StorageTrait extends Trait {
                                     }
 
                                     if (store) {
-                                        StoredPet storedPet = myPetPlayer.getMyPet();
-                                        if (MyPetApi.getPetManager().deactivateMyPet(myPetPlayer, true)) {
+                                        StoredPet storedPet = myPetPlayer.getPet();
+                                        if (MyPetApi.getPetManager().deactivatePet(myPetPlayer, true)) {
                                             // remove pet from world groups
-                                            String wg1 = myPetPlayer.getWorldGroupForMyPet(storedPet.getUUID());
-                                            myPetPlayer.setMyPetForWorldGroup(wg1, null);
+                                            String wg1 = myPetPlayer.getWorldGroupForPet(storedPet.getUUID());
+                                            myPetPlayer.setPetForWorldGroup(wg1, null);
                                             MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(myPetPlayer);
 
                                             player.sendMessage(Locale.getFormattedComponent("Message.Npc.HandOver", myPetPlayer, storedPet.getDisplayName(), npcEvent.getNPC().getName()));
@@ -176,12 +176,12 @@ public class StorageTrait extends Trait {
                                 event.setWillClose(true);
                                 event.setWillDestroy(true);
                             }, MyPetApi.getPlugin());
-                            double storageCosts = calculateStorageCosts(myPetPlayer.getMyPet());
+                            double storageCosts = calculateStorageCosts(myPetPlayer.getPet());
                             IconMenuItem yesIcon = new IconMenuItem()
                                     .setMaterial(Material.GREEN_WOOL)
                                     .setData(5)
                                     .setTitle(Locale.getComponent("Name.Yes", myPetPlayer).color(NamedTextColor.GREEN));
-                            yesIcon.addLoreLine(Locale.getFormattedComponent("Message.Npc.YesHandOver", myPetPlayer, myPetPlayer.getMyPet().getDisplayName()));
+                            yesIcon.addLoreLine(Locale.getFormattedComponent("Message.Npc.YesHandOver", myPetPlayer, myPetPlayer.getPet().getDisplayName()));
                             if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && npc.hasTrait(WalletTrait.class) && storageCosts > 0) {
                                 NamedTextColor canPay = MyPetApi.getHookHelper().getEconomy().canPay(myPetPlayer, storageCosts) ? NamedTextColor.GREEN : NamedTextColor.RED;
                                 yesIcon.addLoreLine(Component.empty());
@@ -198,7 +198,7 @@ public class StorageTrait extends Trait {
                                     .setMaterial(Material.RED_WOOL)
                                     .setData(14)
                                     .setTitle(Locale.getComponent("Name.No", myPetPlayer).color(NamedTextColor.RED));
-                            noIcon.addLoreLine(Locale.getFormattedComponent("Message.Npc.NoHandOver", myPetPlayer, myPetPlayer.getMyPet().getDisplayName()));
+                            noIcon.addLoreLine(Locale.getFormattedComponent("Message.Npc.NoHandOver", myPetPlayer, myPetPlayer.getPet().getDisplayName()));
                             menu.setOption(5, noIcon);
                             menu.open(player);
                         }
@@ -218,31 +218,31 @@ public class StorageTrait extends Trait {
                                 maxPetCount = Misc.MAX_STORED_PET_COUNT;
                             }
                             String stats = "(" + pets.size() + "/" + maxPetCount + ")";
-                            MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Locale.getComponent("Message.Npc.TakeTitle", myPetPlayer).append(Component.text(" " + stats)));
+                            PetSelectionGui gui = new PetSelectionGui(myPetPlayer, Locale.getComponent("Message.Npc.TakeTitle", myPetPlayer).append(Component.text(" " + stats)));
                             gui.open(pets, storedPet -> {
-                                    Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(storedPet);
-                                    if (myPet.isPresent()) {
+                                    Optional<Pet> pet = MyPetApi.getPetManager().activatePet(storedPet);
+                                    if (pet.isPresent()) {
                                         Player ownerPlayer = myPetPlayer.getPlayer();
-                                        myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", myPetPlayer, myPet.get().getDisplayName()));
+                                        myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", myPetPlayer, pet.get().getDisplayName()));
                                         WorldGroup takeWg = WorldGroup.getGroupByWorld(ownerPlayer.getWorld().getName());
-                                        myPetPlayer.setMyPetForWorldGroup(takeWg, myPet.get().getUUID());
+                                        myPetPlayer.setPetForWorldGroup(takeWg, pet.get().getUUID());
                                         MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(myPetPlayer);
 
-                                        switch (myPet.get().createEntity()) {
+                                        switch (pet.get().createEntity()) {
                                             case Canceled:
-                                                myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", myPetPlayer, myPet.get().getDisplayName()));
+                                                myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", myPetPlayer, pet.get().getDisplayName()));
                                                 break;
                                             case NoSpace:
-                                                myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", myPetPlayer, myPet.get().getDisplayName()));
+                                                myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", myPetPlayer, pet.get().getDisplayName()));
                                                 break;
                                             case NotAllowed:
-                                                myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPetPlayer, myPet.get().getDisplayName()));
+                                                myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPetPlayer, pet.get().getDisplayName()));
                                                 break;
                                             case Dead:
                                                 if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                    myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", myPetPlayer, myPet.get().getDisplayName()));
+                                                    myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", myPetPlayer, pet.get().getDisplayName()));
                                                 } else {
-                                                    myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", myPetPlayer, myPet.get().getDisplayName(), myPet.get().getRespawnTime()));
+                                                    myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", myPetPlayer, pet.get().getDisplayName(), pet.get().getRespawnTime()));
                                                 }
                                                 break;
                                         }
@@ -258,7 +258,7 @@ public class StorageTrait extends Trait {
         player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
     }
 
-    public double calculateStorageCosts(MyPet myPet) {
-        return CitizensHook.NPC_STORAGE_COSTS_FIXED + (myPet.getExperience().getLevel() * CitizensHook.NPC_STORAGE_COSTS_FACTOR);
+    public double calculateStorageCosts(Pet pet) {
+        return CitizensHook.NPC_STORAGE_COSTS_FIXED + (pet.getExperience().getLevel() * CitizensHook.NPC_STORAGE_COSTS_FACTOR);
     }
 }

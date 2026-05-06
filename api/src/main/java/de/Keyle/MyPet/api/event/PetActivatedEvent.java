@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
@@ -31,10 +31,10 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Fired after a pet has finished transitioning from at-rest ({@link PersistedPet})
- * to live ({@link MyPet}) — i.e., once the runtime entity exists, all skills are
+ * to live ({@link Pet}) — i.e., once the runtime entity exists, all skills are
  * registered and rebuilt from persisted state, and the pet is in the active-pets map.
  *
- * <p>Fires from {@code PetManager.activateMyPet(StoredPet)} and from the clone
+ * <p>Fires from {@code PetManager.activatePet(StoredPet)} and from the clone
  * path that follows pet-type transformations.
  *
  * <p><b>Not cancellable:</b> activation has already completed before this event
@@ -53,10 +53,10 @@ import org.jspecify.annotations.NonNull;
 public class PetActivatedEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyPet pet;
+    private final Pet pet;
 
-    public PetActivatedEvent(MyPet mypet) {
-        this.pet = mypet;
+    public PetActivatedEvent(Pet pet) {
+        this.pet = pet;
     }
 
     public static HandlerList getHandlerList() {

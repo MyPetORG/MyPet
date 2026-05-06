@@ -21,12 +21,12 @@
 package de.Keyle.MyPet.entity.spawn;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
-import de.Keyle.MyPet.api.entity.MyPetSwimmingEntity;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetFlyingEntity;
+import de.Keyle.MyPet.api.entity.PetSwimmingEntity;
 import de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
-import de.Keyle.MyPet.entity.ai.movement.MyPetFlyingMovementGoal;
+import de.Keyle.MyPet.entity.ai.movement.PetFlyingMovementGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetControlGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetFloatGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetFollowOwnerGoal;
@@ -53,25 +53,25 @@ import org.bukkit.entity.Slime;
  * consumer and from {@code VanillaMobSpawner#convertInPlace} for leash-based
  * tames.
  *
- * <p>All goal constructors take {@code (MyPet pet, Mob mob)} directly,
+ * <p>All goal constructors take {@code (Pet pet, Mob mob)} directly,
  */
 public final class PetGoalInstaller {
 
     private PetGoalInstaller() {
     }
 
-    public static void install(MyPet pet, Mob mob) {
+    public static void install(Pet pet, Mob mob) {
         Bukkit.getMobGoals().removeAllGoals(mob);
 
-        boolean flying = pet instanceof MyPetFlyingEntity flyer && flyer.canFly();
-        boolean swimming = pet instanceof MyPetSwimmingEntity swimmer && swimmer.canSwim();
+        boolean flying = pet instanceof PetFlyingEntity flyer && flyer.canFly();
+        boolean swimming = pet instanceof PetSwimmingEntity swimmer && swimmer.canSwim();
 
         var goals = Bukkit.getMobGoals();
-        MyPetFlyingMovementGoal flyingMovementGoal = null;
+        PetFlyingMovementGoal flyingMovementGoal = null;
         if (!flying) {
             goals.addGoal(mob, 0, new PetFloatGoal(pet, mob));
         } else {
-            flyingMovementGoal = new MyPetFlyingMovementGoal(pet, mob, 90.0f);
+            flyingMovementGoal = new PetFlyingMovementGoal(pet, mob, 90.0f);
             goals.addGoal(mob, 0, flyingMovementGoal);
         }
         PetSitGoal sitGoal = new PetSitGoal(pet, mob);

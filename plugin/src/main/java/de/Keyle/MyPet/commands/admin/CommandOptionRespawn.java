@@ -24,11 +24,11 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -119,12 +119,12 @@ public class CommandOptionRespawn {
      */
     private void executeShow(CommandSender sender, Player petOwner) {
         String lang = Locale.getCommandSenderLanguage(sender);
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
-        sender.sendMessage(MessageUtil.prefixed(Component.text("respawn time: " + myPet.getRespawnTime() + "sec.")));
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
+        sender.sendMessage(MessageUtil.prefixed(Component.text("respawn time: " + pet.getRespawnTime() + "sec.")));
     }
 
     /**
@@ -139,14 +139,14 @@ public class CommandOptionRespawn {
      */
     private void executeSet(CommandSender sender, Player petOwner, int time) {
         String lang = Locale.getCommandSenderLanguage(sender);
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
-        if (myPet.getStatus() == PetState.Dead) {
-            myPet.setRespawnTime(time);
-            sender.sendMessage(MessageUtil.prefixed(Component.text("set respawn time to: " + myPet.getRespawnTime() + "sec.")));
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
+        if (pet.getStatus() == PetState.Dead) {
+            pet.setRespawnTime(time);
+            sender.sendMessage(MessageUtil.prefixed(Component.text("set respawn time to: " + pet.getRespawnTime() + "sec.")));
         } else {
             sender.sendMessage(MessageUtil.prefixed(Component.text("pet is not dead!")));
         }

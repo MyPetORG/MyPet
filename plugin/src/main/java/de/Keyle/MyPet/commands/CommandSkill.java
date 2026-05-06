@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -90,7 +90,7 @@ public class CommandSkill {
                 "/petskill",
                 CommandCategory.SKILLS,
                 150,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
         ));
     }
 
@@ -113,7 +113,7 @@ public class CommandSkill {
             if (petOwner == null || !petOwner.isOnline()) {
                 sender.sendMessage(Locale.getComponent("Message.No.PlayerOnline", sender));
                 return;
-            } else if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+            } else if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
                 sender.sendMessage(Locale.getFormattedComponent("Message.No.UserHavePet", sender, petOwner.getName()));
                 return;
             }
@@ -130,14 +130,14 @@ public class CommandSkill {
             sender.sendMessage(Locale.getComponent("Message.No.AllowedHere", sender));
         }
 
-        if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
-            myPet.autoAssignSkilltree();
-            String skilltreeDisplay = myPet.getSkilltree() == null ? "-" : myPet.getSkilltree().getDisplayName();
-            sender.sendMessage(Locale.getFormattedComponent("Message.Command.Skills.Show", sender, myPet.getDisplayName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltreeDisplay)));
+        if (MyPetApi.getPetManager().hasActivePet(petOwner)) {
+            Pet pet = MyPetApi.getPetManager().getPet(petOwner);
+            pet.autoAssignSkilltree();
+            String skilltreeDisplay = pet.getSkilltree() == null ? "-" : pet.getSkilltree().getDisplayName();
+            sender.sendMessage(Locale.getFormattedComponent("Message.Command.Skills.Show", sender, pet.getDisplayName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltreeDisplay)));
 
             String locale = Locale.getCommandSenderLanguage(sender);
-            for (Skill skill : myPet.getSkills().all()) {
+            for (Skill skill : pet.getSkills().all()) {
                 if (skill.isActive()) {
                     sender.sendMessage(Component.text()
                             .append(Component.text("  "))

@@ -25,14 +25,14 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.gui.selectionmenu.MyPetSelectionGui;
+import de.Keyle.MyPet.gui.selectionmenu.PetSelectionGui;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -86,14 +86,14 @@ public class CommandSwitch {
                 "/petswitch",
                 null,
                 120,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
                         && Permissions.has(player, "MyPet.command.switch")
         ));
     }
 
     /**
      * Executes the petswitch command logic. Fetches all stored pets from the repository,
-     * opens the {@link MyPetSelectionGui}, and handles the pet activation callback
+     * opens the {@link PetSelectionGui}, and handles the pet activation callback
      * including spawning the selected pet and reporting any spawn failures.
      *
      * @param player the player executing the command
@@ -112,7 +112,7 @@ public class CommandSwitch {
             final MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
             MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), schedTask -> {
-                    if (pets.size() - (owner.hasMyPet() ? 1 : 0) == 0) {
+                    if (pets.size() - (owner.hasPet() ? 1 : 0) == 0) {
                         owner.sendMessage(Locale.getComponent("Message.Command.Switch.NoStoredPets", owner));
                         return;
                     }
@@ -122,7 +122,7 @@ public class CommandSwitch {
                         int maxPetCount = getMaxPetCount(owner.getPlayer());
 
                         Component title;
-                        if (owner.hasMyPet()) {
+                        if (owner.hasPet()) {
                             inactivePetCount--;
                             title = Locale.getComponent("Message.Npc.SwitchTitle", owner);
                         } else {
@@ -131,14 +131,14 @@ public class CommandSwitch {
 
                         Component stats = Component.text(" (" + inactivePetCount + "/" + maxPetCount + ")");
 
-                        final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title.append(stats), 1);
+                        final PetSelectionGui gui = new PetSelectionGui(owner, title.append(stats), 1);
                         gui.open(pets, storedPet -> {
-                                Optional<MyPet> activePet = MyPetApi.getPetManager().activateMyPet(storedPet);
+                                Optional<Pet> activePet = MyPetApi.getPetManager().activatePet(storedPet);
                                 if (activePet.isPresent() && owner.isOnline()) {
                                     Player ownerPlayer = owner.getPlayer();
                                     activePet.get().getOwner().sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", owner, activePet.get().getDisplayName()));
                                     WorldGroup wg = WorldGroup.getGroupByWorld(ownerPlayer.getWorld().getName());
-                                    owner.setMyPetForWorldGroup(wg, activePet.get().getUUID());
+                                    owner.setPetForWorldGroup(wg, activePet.get().getUUID());
 
                                     switch (activePet.get().createEntity()) {
                                         case Canceled:

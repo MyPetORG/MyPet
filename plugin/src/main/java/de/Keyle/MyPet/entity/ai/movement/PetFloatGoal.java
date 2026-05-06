@@ -23,11 +23,10 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +61,7 @@ import java.util.EnumSet;
  */
 public class PetFloatGoal implements Goal<Mob> {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
     private int lavaCounter = 10;
     private boolean inLava = false;
@@ -70,7 +69,7 @@ public class PetFloatGoal implements Goal<Mob> {
     /**
      * @param petEntity the pet that should float on water (and possibly lava)
      */
-    public PetFloatGoal(MyPet pet, Mob mob) {
+    public PetFloatGoal(Pet pet, Mob mob) {
         this.pet = pet;
         this.mob = mob;
         mob.getPathfinder().setCanFloat(true);

@@ -23,11 +23,11 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
@@ -72,7 +72,7 @@ public class CommandStop {
                 "/petstop",
                 CommandCategory.PET,
                 70,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
         ));
     }
 
@@ -90,18 +90,18 @@ public class CommandStop {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        if (MyPetApi.getPetManager().hasActivePet(petOwner)) {
+            Pet pet = MyPetApi.getPetManager().getPet(petOwner);
 
-            if (myPet.getStatus() == PetState.Despawned) {
-                petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
+            if (pet.getStatus() == PetState.Despawned) {
+                petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, pet.getDisplayName()));
                 return;
-            } else if (myPet.getStatus() == PetState.Dead) {
-                petOwner.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", petOwner, myPet.getDisplayName()));
+            } else if (pet.getStatus() == PetState.Dead) {
+                petOwner.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", petOwner, pet.getDisplayName()));
                 return;
             }
-            petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Stop.Attack", petOwner, myPet.getDisplayName()));
-            myPet.forgetTarget();
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Stop.Attack", petOwner, pet.getDisplayName()));
+            pet.forgetTarget();
         } else {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
         }

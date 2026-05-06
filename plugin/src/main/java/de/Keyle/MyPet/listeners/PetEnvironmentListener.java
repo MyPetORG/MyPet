@@ -48,8 +48,7 @@ public class PetEnvironmentListener implements Listener {
      * <p><b>Note:</b> mutating event state at {@link EventPriority#MONITOR}
      * violates the Bukkit convention that MONITOR handlers are observe-only.
      * This is intentional — without it, protection plugins that blanket-cancel
-     * mob spawns would prevent pets from appearing. Preserved verbatim from
-     * the original {@code MyPetEntityListener}.
+     * mob spawns would prevent pets from appearing.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onCreatureSpawn(CreatureSpawnEvent event) {

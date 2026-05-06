@@ -25,8 +25,8 @@ import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -145,55 +145,55 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         }
     }
 
-    public void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID) {
+    public void setPetForWorldGroup(String worldGroup, UUID petUUID) {
         if (worldGroup == null || worldGroup.isEmpty()) {
             return;
         }
-        if (myPetUUID == null) {
+        if (petUUID == null) {
             petWorldUUID.remove(worldGroup);
         } else {
             try {
-                petWorldUUID.put(worldGroup, myPetUUID);
+                petWorldUUID.put(worldGroup, petUUID);
             } catch (IllegalArgumentException ignored) {
             }
         }
     }
 
-    public void setMyPetForWorldGroup(WorldGroup worldGroup, UUID myPetUUID) {
+    public void setPetForWorldGroup(WorldGroup worldGroup, UUID petUUID) {
         if (worldGroup == null) {
             return;
         }
-        if (myPetUUID == null) {
+        if (petUUID == null) {
             petWorldUUID.remove(worldGroup.getName());
         } else {
             try {
-                petWorldUUID.put(worldGroup.getName(), myPetUUID);
+                petWorldUUID.put(worldGroup.getName(), petUUID);
             } catch (IllegalArgumentException ignored) {
             }
         }
     }
 
-    public UUID getMyPetForWorldGroup(String worldGroup) {
+    public UUID getPetForWorldGroup(String worldGroup) {
         return petWorldUUID.get(worldGroup);
     }
 
-    public UUID getMyPetForWorldGroup(WorldGroup worldGroup) {
+    public UUID getPetForWorldGroup(WorldGroup worldGroup) {
         return petWorldUUID.get(worldGroup.getName());
     }
 
-    public BiMap<String, UUID> getMyPetsForWorldGroups() {
+    public BiMap<String, UUID> getPetsForWorldGroups() {
         return petWorldUUID;
     }
 
-    public String getWorldGroupForMyPet(UUID petUUID) {
+    public String getWorldGroupForPet(UUID petUUID) {
         return petUUIDWorld.get(petUUID);
     }
 
-    public boolean hasMyPetInWorldGroup(String worldGroup) {
+    public boolean hasPetInWorldGroup(String worldGroup) {
         return petWorldUUID.containsKey(worldGroup);
     }
 
-    public boolean hasMyPetInWorldGroup(WorldGroup worldGroup) {
+    public boolean hasPetInWorldGroup(WorldGroup worldGroup) {
         return petWorldUUID.containsKey(worldGroup.getName());
     }
 
@@ -240,12 +240,12 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return isOnline() && Permissions.has(getPlayer(), "MyPet.admin");
     }
 
-    public boolean hasMyPet() {
-        return MyPetApi.getPetManager().hasActiveMyPet(this);
+    public boolean hasPet() {
+        return MyPetApi.getPetManager().hasActivePet(this);
     }
 
-    public MyPet getMyPet() {
-        return MyPetApi.getPetManager().getMyPet(this);
+    public Pet getPet() {
+        return MyPetApi.getPetManager().getPet(this);
     }
 
     public Player getPlayer() {
@@ -370,7 +370,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             CompoundBinaryTag worldGroups = myplayerNBT.getCompound("MultiWorld");
             for (String worldGroupName : worldGroups.keySet()) {
                 String petUUID = worldGroups.getString(worldGroupName);
-                setMyPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
+                setPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
             }
         }
     }
@@ -381,43 +381,43 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         }
         long currentTime = System.currentTimeMillis();
         sentMessages.keySet().removeIf(message -> currentTime >= sentMessages.get(message));
-        if (hasMyPet()) {
-            MyPet myPet = getMyPet();
+        if (hasPet()) {
+            Pet pet = getPet();
             Player p = this.getPlayer();
             // Use cached status: the pet entity may be in a different Folia region, so touching
             // it (including health checks inside getStatus()) from the player's tick is unsafe.
-            PetState cachedStatus = myPet.getCachedStatus();
+            PetState cachedStatus = pet.getCachedStatus();
             if (cachedStatus == PetState.Here) {
-                Optional<Location> petLocOpt = myPet.getLocation();
+                Optional<Location> petLocOpt = pet.getLocation();
                 if (petLocOpt.isPresent()) {
                     Location petLoc = petLocOpt.get();
                     boolean tooFar = petLoc.getWorld() != p.getLocation().getWorld()
                             || petLoc.distance(p.getLocation()) > 40;
                     if (tooFar) {
-                        Mob petMob = myPet.getBukkitEntity();
+                        Mob petMob = pet.getBukkitEntity();
                         if (petMob != null) {
                             petMob.getScheduler().run(MyPetApi.getPlugin(), t -> {
-                                myPet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
+                                pet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
                                 if (!p.isGliding()) {
-                                    myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Despawn", myPet.getOwner(), myPet.getDisplayName()));
+                                    pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Despawn", pet.getOwner(), pet.getDisplayName()));
                                 }
                             }, null);
                         }
                     } else if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES && showHealthBar) {
                         // Dispatch to the pet's scheduler to safely read health; sendActionBar is thread-safe.
-                        Mob petMob = myPet.getBukkitEntity();
+                        Mob petMob = pet.getBukkitEntity();
                         if (petMob != null) {
                             petMob.getScheduler().run(MyPetApi.getPlugin(), t -> {
-                                Component msg = buildPetHealthActionBar(myPet, myPet.getHealth(), myPet.getMaxHealth());
+                                Component msg = buildPetHealthActionBar(pet, pet.getHealth(), pet.getMaxHealth());
                                 p.sendActionBar(msg);
                             }, null);
                         }
                     }
                 }
             } else if (cachedStatus == PetState.Dead) {
-                myPet.tickRespawnTimer();
+                pet.tickRespawnTimer();
             } else if (cachedStatus == PetState.Despawned) {
-                if (myPet.wantsToRespawn() && !p.isFlying()) {
+                if (pet.wantsToRespawn() && !p.isFlying()) {
                     boolean velocity = p.getVelocity().getY() >= 0;
                     boolean fall = p.getFallDistance() == 0;
 
@@ -437,8 +437,8 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                             };
                         }
 
-                        if (spawn && myPet.createEntity() == MyPet.SpawnFlags.Success) {
-                            p.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", p, myPet.getDisplayName()));
+                        if (spawn && pet.createEntity() == Pet.SpawnFlags.Success) {
+                            p.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", p, pet.getDisplayName()));
                         }
                     }
                 }
@@ -461,7 +461,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                     if ("CREAKING".equals(entity.getType().name())) {
                         continue;
                     }
-                    if (MyPetApi.getMyPetInfo().isLeashableEntityType(entity.getType())) {
+                    if (MyPetApi.getPetInfo().isLeashableEntityType(entity.getType())) {
                         for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
                             if (!hook.canLeash(p, entity)) {
                                 continue entityLoop;
@@ -549,7 +549,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     }
 
     protected boolean checkTamable(LivingEntity leashTarget, Player p) {
-        for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(PetType.byEntityTypeName(leashTarget.getType().name()))) {
+        for (Settings flagSettings : MyPetApi.getPetInfo().getLeashFlagSettings(PetType.byEntityTypeName(leashTarget.getType().name()))) {
             String flagName = flagSettings.getName();
             LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
             if (flag != null && (flag.ignoredByHelper() || !flag.check(p, leashTarget, 0, flagSettings))) {
@@ -585,8 +585,8 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return obj instanceof Player p && p.getUniqueId().equals(getUniqueId());
     }
 
-    private static Component buildPetHealthActionBar(MyPet myPet, double health, double maxHealth) {
-        if (myPet == null) {
+    private static Component buildPetHealthActionBar(Pet pet, double health, double maxHealth) {
+        if (pet == null) {
             return Component.empty();
         }
         double deltaHealth = maxHealth - health;
@@ -597,7 +597,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         } else if (health > maxHealth / 3) {
             healthColor = NamedTextColor.YELLOW;
         }
-        Component parsed = myPet.getDisplayName()
+        Component parsed = pet.getDisplayName()
                 .append(MyPetApi.getPlugin().getMiniMessage().deserialize("<reset>: "));
         if (health > 0) {
             parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
@@ -605,7 +605,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                     Placeholder.styling("healthcolor", healthColor),
                     Placeholder.unparsed("health", String.format("%1.2f", health)),
                     Placeholder.unparsed("maxhealth", String.format("%1.2f", maxHealth))));
-            if (!myPet.getOwner().isHealthBarActive()) {
+            if (!pet.getOwner().isHealthBarActive()) {
                 parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
                         "(<deltahealthcolor><deltahealth><reset>)",
                         Placeholder.parsed("deltahealthcolor", deltaHealth < 0 ? "<green>+" : "<red>-"),
@@ -614,7 +614,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         } else {
             parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
                     "<dead>",
-                    Placeholder.unparsed("dead", Locale.getString("Name.Dead", myPet.getOwner()))));
+                    Placeholder.unparsed("dead", Locale.getString("Name.Dead", pet.getOwner()))));
         }
         return parsed;
     }

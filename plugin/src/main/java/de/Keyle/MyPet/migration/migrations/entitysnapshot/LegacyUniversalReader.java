@@ -42,7 +42,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Universal legacy-NBT keys shared across every pet type: the {@code Equipment}
  * list and the {@code Baby} flag. Previously implemented in the base
- * {@code MyPet#readExtendedInfo}; relocated here so the production class is
+ * {@code Pet#readExtendedInfo}; relocated here so the production class is
  * legacy-free.
  *
  * <p>Owned by the EntitySnapshot migration; will be deleted at v5.

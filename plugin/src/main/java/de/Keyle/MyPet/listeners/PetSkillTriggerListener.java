@@ -22,8 +22,8 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.event.PetDamageEvent;
 import de.Keyle.MyPet.api.event.PetOnHitSkillEvent;
 import de.Keyle.MyPet.api.skill.OnDamageByEntitySkill;
@@ -71,21 +71,21 @@ public class PetSkillTriggerListener implements Listener {
      */
     @EventHandler
     public void onPetTakesDamage(final EntityDamageByEntityEvent event) {
-        MyPet myPet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
-        if (myPet == null) return;
+        Pet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
+        if (pet == null) return;
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) return;
 
         if (event.isCancelled()) return;
         if (!(event.getDamager() instanceof LivingEntity damager)) return;
 
         if (damager instanceof Player) {
-            if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), (Player) damager, true)) {
+            if (!MyPetApi.getHookHelper().canHurt(pet.getOwner().getPlayer(), (Player) damager, true)) {
                 return;
             }
         }
 
         if (!isSkillActive) {
-            for (Skill skill : myPet.getSkills().all()) {
+            for (Skill skill : pet.getSkills().all()) {
                 if (skill instanceof OnDamageByEntitySkill damageByEntitySkill) {
                     if (damageByEntitySkill.trigger()) {
                         isSkillActive = true;
@@ -126,11 +126,11 @@ public class PetSkillTriggerListener implements Listener {
         }
 
         if (!PetEntityMarker.isMarked(source)) return;
-        MyPet myPet = getPetManager().getMyPetFromEntity(source);
-        if (myPet == null || myPet.getStatus() != PetState.Here) return;
+        Pet pet = getPetManager().getPetFromEntity(source);
+        if (pet == null || pet.getStatus() != PetState.Here) return;
 
         // Emit PetDamageEvent so other plugins can adjust pet damage
-        PetDamageEvent petDamageEvent = new PetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
+        PetDamageEvent petDamageEvent = new PetDamageEvent(pet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
         Bukkit.getPluginManager().callEvent(petDamageEvent);
         if (petDamageEvent.isCancelled()) {
             event.setCancelled(true);
@@ -141,10 +141,10 @@ public class PetSkillTriggerListener implements Listener {
 
         // Dispatch OnHitSkill skills
         if (!isSkillActive) {
-            for (Skill skill : myPet.getSkills().all()) {
+            for (Skill skill : pet.getSkills().all()) {
                 if (skill instanceof OnHitSkill onHitSkill) {
                     if (onHitSkill.trigger()) {
-                        PetOnHitSkillEvent skillEvent = new PetOnHitSkillEvent(myPet, onHitSkill, (LivingEntity) target);
+                        PetOnHitSkillEvent skillEvent = new PetOnHitSkillEvent(pet, onHitSkill, (LivingEntity) target);
                         Bukkit.getPluginManager().callEvent(skillEvent);
                         if (!skillEvent.isCancelled()) {
                             isSkillActive = true;

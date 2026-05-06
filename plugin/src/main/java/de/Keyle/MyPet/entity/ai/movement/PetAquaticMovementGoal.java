@@ -23,13 +23,12 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -51,17 +50,17 @@ import java.util.EnumSet;
  * <p>On land, this goal does nothing — the default MoveControl handles everything.
  * Uses {@code GoalType.UNKNOWN_BEHAVIOR} so it doesn't conflict with MOVE goals.
  */
-public class MyPetAquaticMovementGoal implements Goal<Mob> {
+public class PetAquaticMovementGoal implements Goal<Mob> {
 
     private static final double IDLE_SINK_VELOCITY = -0.005D;
     private static final double Y_FORCE_MULTIPLIER = 0.15D;
     private static final double MIN_Y_FORCE = 0.03D;
     private static final double RAD_TO_DEG = 57.2957763671875D;
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
 
-    public MyPetAquaticMovementGoal(MyPet pet, Mob mob) {
+    public PetAquaticMovementGoal(Pet pet, Mob mob) {
         this.pet = pet;
         this.mob = mob;
     }
@@ -93,11 +92,11 @@ public class MyPetAquaticMovementGoal implements Goal<Mob> {
         float speed = (float) mob.getAttribute(PetAttributes.MOVEMENT_SPEED).getValue();
 
         boolean hasPath = mob.getPathfinder().hasPath();
-        boolean hasTarget = pet.hasTarget() && pet.getMyPetTarget() != null;
+        boolean hasTarget = pet.hasTarget() && pet.getPetTarget() != null;
 
         if (hasPath || hasTarget) {
             // Active swimming: apply Y velocity toward target
-            Location targetLoc = hasTarget ? pet.getMyPetTarget().getLocation() : ownerLoc;
+            Location targetLoc = hasTarget ? pet.getPetTarget().getLocation() : ownerLoc;
             double dy = targetLoc.getY() - petLoc.getY();
             double dx = targetLoc.getX() - petLoc.getX();
             double dz = targetLoc.getZ() - petLoc.getZ();

@@ -20,8 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Control;
 import net.kyori.adventure.text.Component;
@@ -31,14 +30,14 @@ public class ControlImpl implements Control {
     private Location moveTo;
     private Location prevMoveTo;
     private UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);
-    private MyPet myPet;
+    private Pet pet;
 
-    public ControlImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public ControlImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
     @Override

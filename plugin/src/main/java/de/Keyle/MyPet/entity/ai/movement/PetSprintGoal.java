@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import de.Keyle.MyPet.skill.skills.SprintImpl;
@@ -61,9 +61,8 @@ import java.util.EnumSet;
  */
 public class PetSprintGoal implements Goal<Mob> {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
-    private final MyPet myPet;
     private final float walkSpeedModifier;
     private LivingEntity lastTarget = null;
 
@@ -71,10 +70,9 @@ public class PetSprintGoal implements Goal<Mob> {
      * @param petEntity         the pet whose chase should get the sprint boost
      * @param walkSpeedModifier multiplicative navigation speed modifier applied while sprinting
      */
-    public PetSprintGoal(MyPet pet, Mob mob, float walkSpeedModifier) {
+    public PetSprintGoal(Pet pet, Mob mob, float walkSpeedModifier) {
         this.pet = pet;
         this.mob = mob;
-        this.myPet = pet;
         this.walkSpeedModifier = walkSpeedModifier;
     }
 
@@ -83,23 +81,23 @@ public class PetSprintGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        if (!myPet.getSkills().isActive(SprintImpl.class)) {
+        if (!pet.getSkills().isActive(SprintImpl.class)) {
             return false;
         }
-        if (myPet.getDamage() <= 0) {
+        if (pet.getDamage() <= 0) {
             return false;
         }
         if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity target = pet.getMyPetTarget();
+        LivingEntity target = pet.getPetTarget();
         if (target == null || target.isDead()) {
             return false;
         }
         if (target.equals(lastTarget)) {
             return false;
         }
-        if (myPet.getRangedDamage() > 0 && mob.getLocation().distanceSquared(target.getLocation()) >= 16) {
+        if (pet.getRangedDamage() > 0 && mob.getLocation().distanceSquared(target.getLocation()) >= 16) {
             return false;
         }
         this.lastTarget = target;

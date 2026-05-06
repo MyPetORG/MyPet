@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -42,7 +42,7 @@ import java.util.List;
  * annotation and creates a default shop configuration with two shops:
  * <ul>
  *   <li><b>all</b> - Contains all annotated pet types</li>
- *   <li><b>babies</b> - Contains baby variants for pets implementing {@link MyPetBaby}</li>
+ *   <li><b>babies</b> - Contains baby variants for pets implementing {@link PetBaby}</li>
  * </ul>
  * <p>
  * The generated file is only created if it doesn't already exist, allowing server
@@ -100,7 +100,7 @@ public class ShopConfigGenerator {
                 continue;
             }
 
-            Class<?> petClass = petType.getMyPetClass();
+            Class<?> petClass = petType.getPetClass();
             if (petClass == null) {
                 continue;
             }
@@ -127,7 +127,7 @@ public class ShopConfigGenerator {
             }
 
             // Add baby variant if pet supports it
-            if (MyPetBaby.class.isAssignableFrom(petClass)) {
+            if (PetBaby.class.isAssignableFrom(petClass)) {
                 String babyKey = "baby_" + key;
                 double babyPrice = shopInfo.babyPrice() < 0 ? shopInfo.price() * 2 : shopInfo.babyPrice();
                 String babyDescription = getBabyDescription(shopInfo, petType);

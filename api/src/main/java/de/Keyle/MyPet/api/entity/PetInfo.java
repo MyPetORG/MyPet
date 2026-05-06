@@ -36,11 +36,11 @@ import java.util.Map;
  * {@link DefaultInfo} annotations (hardcoded defaults) then overwritten
  * by values loaded from {@code pet-config.yml}.
  * <p>
- * Accessed globally via {@code MyPetApi.getMyPetInfo()}. The concrete
- * implementation ({@code MyPetInfoImpl} in the plugin module) adds
+ * Accessed globally via {@code MyPetApi.getPetInfo()}. The concrete
+ * implementation ({@code PetInfoImpl} in the plugin module) adds
  * leashability checks and any version-gated type filtering.
  */
-public abstract class MyPetInfo {
+public abstract class PetInfo {
 
     private final Map<PetType, Double> startHP = new HashMap<>();
     private final Map<PetType, Double> startSpeed = new HashMap<>();

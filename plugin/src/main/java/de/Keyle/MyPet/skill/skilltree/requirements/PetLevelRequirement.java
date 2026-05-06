@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skilltree.requirements;
 
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.Requirement;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.RequirementName;
@@ -32,7 +32,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 public class PetLevelRequirement implements Requirement {
 
     @Override
-    public boolean check(Skilltree skilltree, MyPet pet, Settings settings) {
+    public boolean check(Skilltree skilltree, Pet pet, Settings settings) {
         int level = pet.getExperience().getLevel();
 
         if (settings.map().containsKey("min") || settings.map().containsKey("max")) {

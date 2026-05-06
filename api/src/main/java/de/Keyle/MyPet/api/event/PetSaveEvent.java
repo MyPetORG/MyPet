@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
@@ -48,7 +48,7 @@ import org.jspecify.annotations.NonNull;
  * already being) serialized — listeners may inspect it for backup integrations
  * or last-write metadata.
  *
- * <p><b>Pet state:</b> may be live ({@link MyPet}) or persisted
+ * <p><b>Pet state:</b> may be live ({@link Pet}) or persisted
  * ({@code PersistedPet}); the manager-side periodic save flushes both
  * categories and dispatches one event per pet.
  *
@@ -63,8 +63,8 @@ public class PetSaveEvent extends Event {
 
     private final StoredPet pet;
 
-    public PetSaveEvent(StoredPet mypet) {
-        this.pet = mypet;
+    public PetSaveEvent(StoredPet pet) {
+        this.pet = pet;
     }
 
     public static HandlerList getHandlerList() {

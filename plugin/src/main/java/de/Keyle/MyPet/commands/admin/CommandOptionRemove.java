@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.event.PetRemoveEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -115,19 +115,19 @@ public class CommandOptionRemove {
             return;
         }
         MyPetPlayer petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
-        if (!petOwner.hasMyPet()) {
+        if (!petOwner.hasPet()) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
             return;
         }
-        MyPet myPet = petOwner.getMyPet();
+        Pet pet = petOwner.getPet();
 
-        PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.ADMIN_COMMAND);
+        PetRemoveEvent removeEvent = new PetRemoveEvent(pet, PetRemoveEvent.Source.ADMIN_COMMAND);
         Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
-        myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), null);
-        MyPetApi.getPetManager().deactivateMyPet(myPet.getOwner(), false);
-        MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
+        pet.getOwner().setPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), null);
+        MyPetApi.getPetManager().deactivatePet(pet.getOwner(), false);
+        MyPetPlugin.getInstance().getRepository().removePet(pet.getUUID());
 
-        sender.sendMessage(MessageUtil.prefixed(Component.text("You removed the MyPet of: ").append(Component.text(petOwner.getName()).color(NamedTextColor.YELLOW))));
+        sender.sendMessage(MessageUtil.prefixed(Component.text("You removed the Pet of: ").append(Component.text(petOwner.getName()).color(NamedTextColor.YELLOW))));
     }
 }

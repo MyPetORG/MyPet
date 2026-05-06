@@ -21,16 +21,16 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WARPED_FUNGUS})
-public class PetStrider extends MyPet implements MyPetBaby, MyPetLavaEntity {
+public class PetStrider extends PetImpl implements PetBaby, PetLavaEntity {
 
     public PetStrider(MyPetPlayer petOwner) {
         super(petOwner);

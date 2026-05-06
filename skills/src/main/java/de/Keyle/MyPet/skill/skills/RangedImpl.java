@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -32,18 +32,18 @@ public class RangedImpl implements Ranged {
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> rateOfFire = new UpgradeComputer<>(1);
     protected UpgradeComputer<Projectile> projectile = new UpgradeComputer<>(Projectile.Arrow);
-    private MyPet myPet;
+    private Pet pet;
 
-    public RangedImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public RangedImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
-    public void setMyPet(MyPet myPet) {
-        this.myPet = myPet;
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
     public boolean isActive() {
@@ -70,7 +70,7 @@ public class RangedImpl implements Ranged {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Ranged.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), Locale.getComponent("Name." + getProjectile().getValue().name(), myPet.getOwner()), damage, String.format("%1.2f", (1. / ((getRateOfFire().getValue() * 50.) / 1000.)) * 60.))
+                Locale.getFormattedComponent("Message.Skill.Ranged.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), Locale.getComponent("Name." + getProjectile().getValue().name(), pet.getOwner()), damage, String.format("%1.2f", (1. / ((getRateOfFire().getValue() * 50.) / 1000.)) * 60.))
         };
     }
 

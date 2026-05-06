@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Knockback;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -36,14 +36,14 @@ public class KnockbackImpl implements Knockback {
     private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
-    private MyPet myPet;
+    private Pet pet;
 
-    public KnockbackImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public KnockbackImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
     public boolean isActive() {
@@ -65,7 +65,7 @@ public class KnockbackImpl implements Knockback {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Knockback.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue())
+                Locale.getFormattedComponent("Message.Skill.Knockback.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue())
         };
     }
 
@@ -74,7 +74,7 @@ public class KnockbackImpl implements Knockback {
     }
 
     public void apply(LivingEntity target) {
-        double yaw = myPet.getLocation().get().getYaw() % 360;
+        double yaw = pet.getLocation().get().getYaw() % 360;
         target.setVelocity(new Vector(
                 -Math.sin(yaw * Math.PI / 180.0F) * 2 * 0.5F,
                 0.1D,

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,10 +32,10 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Fired before a pet's experience changes — gain or loss. Dispatched once per
- * change from the central {@code MyPetExperience#updateExp} flow that backs
+ * change from the central {@code PetExperience#updateExp} flow that backs
  * {@code addExp}, {@code removeExp}, and the percent-add helpers.
  *
- * <p>Fires from {@code MyPetExperience} immediately before the exp delta is
+ * <p>Fires from {@code PetExperience} immediately before the exp delta is
  * applied and the level is recomputed.
  *
  * <p><b>Cancellable:</b> cancellation skips the exp change entirely —
@@ -58,20 +58,20 @@ import org.jspecify.annotations.NonNull;
 @Getter
 public class PetExpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final MyPet pet;
+    private final Pet pet;
     private final boolean quiet;
     @Setter
     private boolean isCancelled = false;
     @Setter
     private double exp;
 
-    public PetExpEvent(MyPet pet, double exp, boolean quiet) {
+    public PetExpEvent(Pet pet, double exp, boolean quiet) {
         this.pet = pet;
         this.exp = exp;
         this.quiet = quiet;
     }
 
-    public PetExpEvent(MyPet pet, double exp) {
+    public PetExpEvent(Pet pet, double exp) {
         this(pet, exp, false);
     }
 

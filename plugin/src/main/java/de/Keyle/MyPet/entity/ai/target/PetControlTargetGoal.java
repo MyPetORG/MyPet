@@ -24,7 +24,7 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -72,9 +72,8 @@ import java.util.EnumSet;
  */
 public class PetControlTargetGoal implements Goal<Mob> {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
-    private final MyPet myPet;
     private final double range;
     private LivingEntity target;
     private PetControlGoal controlGoal;
@@ -83,10 +82,9 @@ public class PetControlTargetGoal implements Goal<Mob> {
      * @param petEntity the pet that will acquire targets while under owner control
      * @param range     horizontal radius of the "near pet" search box
      */
-    public PetControlTargetGoal(MyPet pet, Mob mob, float range) {
+    public PetControlTargetGoal(Pet pet, Mob mob, float range) {
         this.pet = pet;
         this.mob = mob;
-        this.myPet = pet;
         this.range = range;
     }
 
@@ -107,7 +105,7 @@ public class PetControlTargetGoal implements Goal<Mob> {
         if (controlGoal == null) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+        if (pet.getDamage() <= 0 && pet.getRangedDamage() <= 0) {
             return false;
         }
         if (controlGoal.moveTo == null || !pet.canMove()) {
@@ -117,11 +115,11 @@ public class PetControlTargetGoal implements Goal<Mob> {
         // offline — every hook check below passes the owner to canHurt(),
         // which would NPE if left unguarded. With no active online owner
         // there is no meaningful "source" for the hook's PvP check anyway.
-        Player owner = myPet.getOwner().getPlayer();
+        Player owner = pet.getOwner().getPlayer();
         if (owner == null) {
             return false;
         }
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (behaviorSkill != null && behaviorSkill.isActive() && behaviorSkill.getBehavior() == BehaviorMode.Friendly) {
             return false;
         }
@@ -135,7 +133,7 @@ public class PetControlTargetGoal implements Goal<Mob> {
                 continue;
             }
             if (entity instanceof Player targetPlayer) {
-                if (myPet.getOwner().equals(targetPlayer)) {
+                if (pet.getOwner().equals(targetPlayer)) {
                     continue;
                 }
                 if (!MyPetApi.getHookHelper().canHurt(owner, targetPlayer, true)) {
@@ -143,16 +141,16 @@ public class PetControlTargetGoal implements Goal<Mob> {
                 }
             } else if (entity instanceof Tameable tameable && tameable.isTamed() && tameable.getOwner() != null) {
                 Player tameableOwner = (Player) tameable.getOwner();
-                if (myPet.getOwner().equals(tameableOwner)) {
+                if (pet.getOwner().equals(tameableOwner)) {
                     continue;
                 }
                 if (!MyPetApi.getHookHelper().canHurt(owner, tameableOwner, true)) {
                     continue;
                 }
             } else if (PetEntityMarker.isMarked(entity)) {
-                MyPet targetMyPet = MyPetApi.getPetManager().getMyPetFromEntity(entity);
-                if (targetMyPet != null && targetMyPet.getOwner() != null
-                        && !MyPetApi.getHookHelper().canHurt(owner, targetMyPet.getOwner().getPlayer(), true)) {
+                Pet targetPet = MyPetApi.getPetManager().getPetFromEntity(entity);
+                if (targetPet != null && targetPet.getOwner() != null
+                        && !MyPetApi.getHookHelper().canHurt(owner, targetPet.getOwner().getPlayer(), true)) {
                     continue;
                 }
             }
@@ -182,7 +180,7 @@ public class PetControlTargetGoal implements Goal<Mob> {
         if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity currentTarget = pet.getMyPetTarget();
+        LivingEntity currentTarget = pet.getPetTarget();
         if (currentTarget == null || currentTarget.isDead()) {
             return false;
         }

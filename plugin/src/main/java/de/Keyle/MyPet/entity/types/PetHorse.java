@@ -21,27 +21,27 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 import org.bukkit.entity.Horse;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SUGAR, Material.WHEAT, Material.APPLE}, leashFlags = {"Tamed"}, growUpItem = Material.BREAD)
-public class PetHorse extends MyPet implements MyPetBaby, MyPetEquipment {
+public class PetHorse extends PetImpl implements PetBaby, PetEquipment {
 
     public PetHorse(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    // ─── MyPetEquipment ─── routes BODY/SADDLE to the horse's inventory ───
+    // ─── PetEquipment ─── routes BODY/SADDLE to the horse's inventory ───
 
     @Override
     public ItemStack[] getEquipment() {

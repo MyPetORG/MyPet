@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Thorns;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -40,14 +40,14 @@ public class ThornsImpl implements Thorns {
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> reflectedDamage = new UpgradeComputer<>(0);
-    private MyPet myPet;
+    private Pet pet;
 
-    public ThornsImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public ThornsImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
     public boolean isActive() {
@@ -73,7 +73,7 @@ public class ThornsImpl implements Thorns {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Thorns.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getReflectedDamage().getValue())
+                Locale.getFormattedComponent("Message.Skill.Thorns.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getReflectedDamage().getValue())
         };
     }
 
@@ -99,7 +99,7 @@ public class ThornsImpl implements Thorns {
         if (damager instanceof Creeper) {
             return;
         }
-        myPet.getEntity().ifPresent(entity -> {
+        pet.getEntity().ifPresent(entity -> {
             damager.damage(calculateReflectedDamage(event.getDamage()), entity);
             entity.getWorld().playSound(entity.getLocation(), Sound.ENCHANT_THORNS_HIT, 0.2F, 1.0F);
             entity.getWorld().spawnParticle(Particle.ENCHANTED_HIT, entity.getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);

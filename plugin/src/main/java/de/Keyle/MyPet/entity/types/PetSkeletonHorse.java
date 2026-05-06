@@ -20,22 +20,22 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
 
 @ShopInfo(displayName = "Skeleton Horse")
 @DefaultInfo(food = {Material.BONE})
-public class PetSkeletonHorse extends MyPet implements MyPetBaby, MyPetEquipment {
+public class PetSkeletonHorse extends PetImpl implements PetBaby, PetEquipment {
 
     public PetSkeletonHorse(MyPetPlayer petOwner) {
         super(petOwner);

@@ -36,19 +36,19 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.*;
 
-public class MyPetSelectionGui {
+public class PetSelectionGui {
 
     private final MyPetPlayer player;
     private final Component title;
     private final int page;
 
-    public MyPetSelectionGui(MyPetPlayer player, Component title) {
+    public PetSelectionGui(MyPetPlayer player, Component title) {
         this.player = player;
         this.title = title;
         this.page = 1;
     }
 
-    public MyPetSelectionGui(MyPetPlayer player, Component title, int page) {
+    public PetSelectionGui(MyPetPlayer player, Component title, int page) {
         this.player = player;
         this.title = title;
         this.page = page;
@@ -87,7 +87,7 @@ public class MyPetSelectionGui {
             if (currentPet.getWorldGroup().isEmpty() || !currentPet.getWorldGroup().equals(wg.getName()))
                 continue;
 
-            if (player.hasMyPet() && player.getMyPet().getUUID().equals(currentPet.getUUID()))
+            if (player.hasPet() && player.getPet().getUUID().equals(currentPet.getUUID()))
                 continue;
 
             IconMenuItem icon = new IconMenuItem();

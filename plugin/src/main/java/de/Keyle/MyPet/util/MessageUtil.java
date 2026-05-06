@@ -181,7 +181,7 @@ public class MessageUtil {
 
     /**
      * Creates a value component in GOLD color
-     * This is the standard color for values/numbers in MyPet displays
+     * This is the standard color for values/numbers in Pet displays
      *
      * @param value Value to display
      * @return Component with value in GOLD

@@ -26,8 +26,8 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.skill.skills.BeaconImpl;
@@ -78,8 +78,8 @@ public class CommandBeacon {
                 "/petbeacon",
                 CommandCategory.SKILLS,
                 200,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
-                        && MyPetApi.getPetManager().getMyPet(player).getSkills().isActive(BeaconImpl.class)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
+                        && MyPetApi.getPetManager().getPet(player).getSkills().isActive(BeaconImpl.class)
         ));
     }
 
@@ -97,24 +97,24 @@ public class CommandBeacon {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
-        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
-            MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
+        if (MyPetApi.getPetManager().hasActivePet(player)) {
+            Pet pet = MyPetApi.getPetManager().getPet(player);
             if (!Permissions.hasExtended(player, "MyPet.extended.beacon")) {
-                myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", player));
+                pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", player));
                 return;
             }
-            if (myPet.getStatus() == PetState.Despawned) {
-                player.sendMessage(Locale.getFormattedComponent("Message.Call.First", player, myPet.getDisplayName()));
+            if (pet.getStatus() == PetState.Despawned) {
+                player.sendMessage(Locale.getFormattedComponent("Message.Call.First", player, pet.getDisplayName()));
                 return;
             }
-            if (myPet.getStatus() == PetState.Dead) {
-                player.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", player, myPet.getDisplayName()));
+            if (pet.getStatus() == PetState.Dead) {
+                player.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", player, pet.getDisplayName()));
                 return;
             }
-            if (myPet.getSkills().isActive(BeaconImpl.class)) {
-                myPet.getSkills().get(BeaconImpl.class).activate();
+            if (pet.getSkills().isActive(BeaconImpl.class)) {
+                pet.getSkills().get(BeaconImpl.class).activate();
             } else {
-                player.sendMessage(Locale.getFormattedComponent("Message.No.Skill", player, myPet.getDisplayName(), Locale.getComponent("Name.Skill.Beacon", player)));
+                player.sendMessage(Locale.getFormattedComponent("Message.No.Skill", player, pet.getDisplayName(), Locale.getComponent("Name.Skill.Beacon", player)));
             }
         } else {
             player.sendMessage(Locale.getComponent("Message.No.HasPet", player));

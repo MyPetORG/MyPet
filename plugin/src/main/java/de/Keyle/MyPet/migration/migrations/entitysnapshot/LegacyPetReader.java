@@ -96,7 +96,7 @@ import java.util.Locale;
  *
  * <p>Holds every per-type legacy reader plus the universal {@code Equipment}
  * list and {@code Baby} flag handler that used to live in
- * {@code MyPet#readExtendedInfo}. Production code is legacy-free; this class
+ * {@code Pet#readExtendedInfo}. Production code is legacy-free; this class
  * (and the rest of {@code plugin/migration/migrations/entitysnapshot/}) is
  * scheduled for deletion at v5 once every server has had at least one boot to
  * complete the bulk migration.
@@ -488,7 +488,7 @@ public final class LegacyPetReader {
         if (prof != null) zv.setVillagerProfession(prof);
         Villager.Type type = readVillagerType(info);
         if (type != null) zv.setVillagerType(type);
-        // TradingLevel was a MyPet-only concept; vanilla zombie villagers
+        // TradingLevel was a Pet-only concept; vanilla zombie villagers
         // don't expose a trade level.
     }
 

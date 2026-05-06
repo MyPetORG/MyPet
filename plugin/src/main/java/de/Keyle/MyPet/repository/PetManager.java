@@ -23,7 +23,7 @@ package de.Keyle.MyPet.repository;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.entity.*;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.event.PetActivatedEvent;
 import de.Keyle.MyPet.api.event.PetLoadEvent;
@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.entity.PersistedPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
@@ -62,27 +63,27 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
     // Inactive -----------------------------------------------------------------
 
     @Override
-    public PersistedPet snapshot(MyPet myPet) {
-        return PersistedPet.builder(myPet.getOwner())
-                .uuid(myPet.getUUID())
-                .petType(myPet.getPetType())
-                .petName(myPet.getPetName())
-                .worldGroup(myPet.getWorldGroup())
-                .exp(myPet.getExp())
-                .health(myPet.getHealth())
-                .saturation(myPet.getSaturation())
-                .respawnTime(myPet.getRespawnTime())
-                .wantsToRespawn(myPet.wantsToRespawn())
-                .lastUsed(myPet.getLastUsed())
-                .skilltree(myPet.getSkilltree())
-                .skillInfo(PetInfoAccess.readSkillInfo(myPet))
-                .info(PetInfoAccess.read(myPet))
+    public PersistedPet snapshot(Pet pet) {
+        return PersistedPet.builder(pet.getOwner())
+                .uuid(pet.getUUID())
+                .petType(pet.getPetType())
+                .petName(pet.getPetName())
+                .worldGroup(pet.getWorldGroup())
+                .exp(pet.getExp())
+                .health(pet.getHealth())
+                .saturation(pet.getSaturation())
+                .respawnTime(pet.getRespawnTime())
+                .wantsToRespawn(pet.wantsToRespawn())
+                .lastUsed(pet.getLastUsed())
+                .skilltree(pet.getSkilltree())
+                .skillInfo(PetInfoAccess.readSkillInfo(pet))
+                .info(PetInfoAccess.read(pet))
                 .build();
     }
 
     // All ----------------------------------------------------------------------
 
-    public Optional<MyPet> activateMyPet(StoredPet storedPet) {
+    public Optional<Pet> activatePet(StoredPet storedPet) {
         if (storedPet == null) {
             return Optional.empty();
         }
@@ -91,8 +92,8 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
             return Optional.empty();
         }
 
-        if (storedPet.getOwner().hasMyPet()) {
-            if (!deactivateMyPet(storedPet.getOwner(), true)) {
+        if (storedPet.getOwner().hasPet()) {
+            if (!deactivatePet(storedPet.getOwner(), true)) {
                 return Optional.empty();
             }
         }
@@ -100,20 +101,20 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
         Event event = new PetLoadEvent(storedPet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        MyPet myPet = createMyPetInstance(storedPet.getPetType(), storedPet.getOwner());
-        if (myPet == null) {
+        Pet pet = createMyPetInstance(storedPet.getPetType(), storedPet.getOwner());
+        if (pet == null) {
             return Optional.empty();
         }
-        myPet.setUUID(storedPet.getUUID());
-        myPet.setPetName(storedPet.getPetName());
-        myPet.setRespawnTime(storedPet.getRespawnTime());
-        myPet.setWorldGroup(storedPet.getWorldGroup());
-        PetInfoAccess.write(myPet, PetInfoAccess.read(storedPet));
-        myPet.setLastUsed(storedPet.getLastUsed());
-        myPet.setWantsToRespawn(storedPet.wantsToRespawn());
-        myPet.getExperience().setExp(storedPet.getExp());
-        myPet.setSkilltree(storedPet.getSkilltree());
-        Collection<Skill> skills = myPet.getSkills().all();
+        pet.setUUID(storedPet.getUUID());
+        pet.setPetName(storedPet.getPetName());
+        pet.setRespawnTime(storedPet.getRespawnTime());
+        pet.setWorldGroup(storedPet.getWorldGroup());
+        PetInfoAccess.write(pet, PetInfoAccess.read(storedPet));
+        pet.setLastUsed(storedPet.getLastUsed());
+        pet.setWantsToRespawn(storedPet.wantsToRespawn());
+        pet.getExperience().setExp(storedPet.getExp());
+        pet.setSkilltree(storedPet.getSkilltree());
+        Collection<Skill> skills = pet.getSkills().all();
         if (!skills.isEmpty()) {
             CompoundBinaryTag skillInfo = PetInfoAccess.readSkillInfo(storedPet);
             for (Skill skill : skills) {
@@ -124,31 +125,31 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
                 }
             }
         }
-        myPet.setHealth(storedPet.getHealth());
-        myPet.setSaturation(storedPet.getSaturation());
+        pet.setHealth(storedPet.getHealth());
+        pet.setSaturation(storedPet.getSaturation());
 
-        mActivePetsPlayer.put(myPet, myPet.getOwner());
+        mActivePetsPlayer.put(pet, pet.getOwner());
 
 
-        event = new PetActivatedEvent(myPet);
+        event = new PetActivatedEvent(pet);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        return Optional.of(myPet);
+        return Optional.of(pet);
     }
 
     @Override
-    public boolean deactivateMyPet(MyPetPlayer owner, boolean update) {
+    public boolean deactivatePet(MyPetPlayer owner, boolean update) {
         if (mActivePlayerPets.containsKey(owner)) {
-            final MyPet myPet = owner.getMyPet();
+            final Pet pet = owner.getPet();
 
-            PetSaveEvent event = new PetSaveEvent(myPet);
+            PetSaveEvent event = new PetSaveEvent(pet);
             Bukkit.getServer().getPluginManager().callEvent(event);
 
-            myPet.removePet();
+            pet.removePet();
             if (update) {
-                MyPetPlugin.getInstance().getRepository().updatePet(myPet);
+                MyPetPlugin.getInstance().getRepository().updatePet(pet);
             }
-            mActivePetsPlayer.remove(myPet);
+            mActivePetsPlayer.remove(pet);
             return true;
         }
         return false;
@@ -160,9 +161,9 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
     }
 
     /**
-     * Re-types a live, active MyPet to a new {@link PetType} by binding it
+     * Re-types a live, active Pet to a new {@link PetType} by binding it
      * to the entity vanilla just produced from a transformation (Hoglin →
-     * Zoglin, Piglin/PiglinBrute → ZombifiedPiglin). The old {@link MyPet}
+     * Zoglin, Piglin/PiglinBrute → ZombifiedPiglin). The old {@link Pet}
      * domain object is discarded; a fresh instance of the new type takes
      * its place in the active-pets map with the same UUID, name, XP, skill
      * state, owner, and persisted database row.
@@ -175,10 +176,10 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
      * and entity setters operate on the entity object directly, so the
      * configuration applies before the spawn packet is sent.
      *
-     * <p>State copy is parallel to {@link #activateMyPet}'s
-     * {@link StoredPet} → {@link MyPet} hydration, minus the snapshot
+     * <p>State copy is parallel to {@link #activatePet}'s
+     * {@link StoredPet} → {@link Pet} hydration, minus the snapshot
      * (the new entity replaces it). Health is clamped to the new type's
-     * max via {@link MyPet#setHealth} after the status flips to
+     * max via {@link Pet#setHealth} after the status flips to
      * {@link PetState#Here}.
      *
      * <p>Does not fire {@code PetSaveEvent} or {@code PetRemoveEvent}
@@ -186,10 +187,10 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
      * fire {@link PetActivatedEvent} for the new pet so listeners that
      * track active pets see the swap.
      *
-     * @return the new {@link MyPet} on success, or empty if the new
+     * @return the new {@link Pet} on success, or empty if the new
      *         instance could not be created or the types are equal
      */
-    public Optional<MyPet> convertPetType(MyPet oldPet, PetType newType, Mob newEntity) {
+    public Optional<Pet> convertPetType(Pet oldPet, PetType newType, Mob newEntity) {
         if (oldPet == null || newType == null || newEntity == null) {
             return Optional.empty();
         }
@@ -197,7 +198,7 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
             return Optional.empty();
         }
 
-        MyPet newPet = createMyPetInstance(newType, oldPet.getOwner());
+        Pet newPet = createMyPetInstance(newType, oldPet.getOwner());
         if (newPet == null) {
             return Optional.empty();
         }
@@ -250,21 +251,21 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
         mActivePetsPlayer.remove(oldPet);
         mActivePetsPlayer.put(newPet, newPet.getOwner());
 
-        // Apply the MyPet pipeline to the new entity: marks the entity,
-        // strips vanilla AI, installs MyPet goals, configures attributes
+        // Apply the Pet pipeline to the new entity: marks the entity,
+        // strips vanilla AI, installs Pet goals, configures attributes
         // and persistence flags, starts the per-pet tickers.
         new VanillaMobSpawner().convertInPlace(newPet, newEntity);
 
         // Promote status without going through createEntity (the entity is
         // already bound by convertInPlace). Mirrors the post-spawn block in
-        // MyPet#respawnPet so plugin hooks see the same metadata. The
+        // Pet#respawnPet so plugin hooks see the same metadata. The
         // updateStatus cast is the same shape as EntityListener:378 — the
-        // method lives on the plugin's concrete MyPet, not the api facet.
-        ((de.Keyle.MyPet.entity.MyPet) newPet).updateStatus(PetState.Here);
+        // method lives on the plugin's concrete PetImpl, not the api facet.
+        ((PetImpl) newPet).updateStatus(PetState.Here);
         newEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), true));
 
         // Carry health/saturation across — must happen AFTER status flips
-        // because MyPet#setHealth only writes through to the live entity
+        // because Pet#setHealth only writes through to the live entity
         // when status == Here. Health is clamped against the new type's
         // max inside setHealth.
         newPet.setHealth(oldPet.getHealth());
@@ -280,13 +281,13 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
         return Optional.of(newPet);
     }
 
-    private static MyPet createMyPetInstance(PetType type, MyPetPlayer owner) {
-        String className = "de.Keyle.MyPet.entity.types.My" + type.name();
+    private static Pet createMyPetInstance(PetType type, MyPetPlayer owner) {
+        String className = "de.Keyle.MyPet.entity.types.Pet" + type.name();
         try {
             Class<?> clazz = Class.forName(className);
-            return (MyPet) clazz.getConstructor(MyPetPlayer.class).newInstance(owner);
+            return (Pet) clazz.getConstructor(MyPetPlayer.class).newInstance(owner);
         } catch (Exception e) {
-            ErrorUtil.reportError("Failed to create MyPet instance for " + type.name(), e);
+            ErrorUtil.reportError("Failed to create PetImpl instance for " + type.name(), e);
             return null;
         }
     }

@@ -75,7 +75,7 @@ public abstract class HookHelper {
      * @param location checked location
      * @return if a player can fly the pet
      */
-    public abstract boolean canMyPetFlyAt(Location location);
+    public abstract boolean canPetFlyAt(Location location);
 
     /**
      * Returns if a player is in a party (Ancient, mcMMO, Heroes)

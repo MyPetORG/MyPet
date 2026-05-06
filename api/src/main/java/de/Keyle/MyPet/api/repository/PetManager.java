@@ -23,7 +23,7 @@ package de.Keyle.MyPet.api.repository;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -48,32 +48,32 @@ import java.util.concurrent.CompletableFuture;
  * despawning, repository I/O, and the active/inactive state transitions.
  */
 public abstract class PetManager {
-    protected final BiMap<MyPetPlayer, MyPet> mActivePlayerPets = HashBiMap.create();
-    protected final BiMap<MyPet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
+    protected final BiMap<MyPetPlayer, Pet> mActivePlayerPets = HashBiMap.create();
+    protected final BiMap<Pet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
 
     // ─── Active Pets ────────────────────────────────────────────────────────────
 
     /** Returns the active pet for the given player, or {@code null} if none. */
-    public MyPet getMyPet(MyPetPlayer owner) {
+    public Pet getPet(MyPetPlayer owner) {
         return mActivePlayerPets.get(owner);
     }
 
     /** Returns the active pet for the given Bukkit player, or {@code null}. */
-    public MyPet getMyPet(Player owner) {
+    public Pet getPet(Player owner) {
         return mActivePlayerPets.get(MyPetApi.getPlayerManager().getMyPetPlayer(owner));
     }
 
     /** Returns a snapshot array of all currently active pets across all players. */
-    public MyPet[] getAllActiveMyPets() {
-        return mActivePetsPlayer.keySet().toArray(new MyPet[0]);
+    public Pet[] getAllActivePets() {
+        return mActivePetsPlayer.keySet().toArray(new Pet[0]);
     }
 
     /**
-     * Resolves a Bukkit entity to its owning {@link MyPet} by checking the
+     * Resolves a Bukkit entity to its owning {@link Pet} by checking the
      * {@code mypet:pet} PDC marker and scanning active pets by UUID. Returns
-     * {@code null} if the entity is not a MyPet or the pet is no longer tracked.
+     * {@code null} if the entity is not a Pet or the pet is no longer tracked.
      */
-    public MyPet getMyPetFromEntity(Entity entity) {
+    public Pet getPetFromEntity(Entity entity) {
         if (entity == null) return null;
         // Subparts of a ComplexLivingEntity (EnderDragon head/neck/body/tail/
         // wings) carry their own entity ID and UUID server-side. The PDC marker
@@ -89,7 +89,7 @@ public abstract class PetManager {
             return null;
         }
         java.util.UUID uuid = entity.getUniqueId();
-        for (MyPet pet : getAllActiveMyPets()) {
+        for (Pet pet : getAllActivePets()) {
             Mob mob = pet.getBukkitEntity();
             if (mob != null && uuid.equals(mob.getUniqueId())) {
                 return pet;
@@ -99,24 +99,24 @@ public abstract class PetManager {
     }
 
     /** Returns {@code true} if the given player has an active pet. */
-    public boolean hasActiveMyPet(MyPetPlayer player) {
+    public boolean hasActivePet(MyPetPlayer player) {
         return mActivePlayerPets.containsKey(player);
     }
 
     /** Returns {@code true} if the given Bukkit player has an active pet. */
-    public boolean hasActiveMyPet(Player player) {
+    public boolean hasActivePet(Player player) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
-            return hasActiveMyPet(petPlayer);
+            return hasActivePet(petPlayer);
         }
         return false;
     }
 
     /** Returns {@code true} if the player with this name has an active pet. */
-    public boolean hasActiveMyPet(String name) {
+    public boolean hasActivePet(String name) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(name)) {
             MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(name);
-            return hasActiveMyPet(petPlayer);
+            return hasActivePet(petPlayer);
         }
         return false;
     }
@@ -132,18 +132,18 @@ public abstract class PetManager {
      * @param activePet the live pet to snapshot
      * @return an immutable record carrying the pet's persistent fields
      */
-    public abstract PersistedPet snapshot(MyPet activePet);
+    public abstract PersistedPet snapshot(Pet activePet);
 
     // ─── Activation / Deactivation ──────────────────────────────────────────────
 
     /**
-     * Activates a stored pet — creates the live {@link MyPet} instance,
+     * Activates a stored pet — creates the live {@link Pet} instance,
      * registers it in the active map, and spawns the entity if possible.
      *
      * @return the activated pet, or empty if activation failed (e.g.,
      *         player already has an active pet, or spawn conditions not met)
      */
-    public abstract Optional<MyPet> activateMyPet(StoredPet storedPet);
+    public abstract Optional<Pet> activatePet(StoredPet storedPet);
 
     /**
      * Deactivates the owner's active pet — despawns the entity and moves
@@ -153,7 +153,7 @@ public abstract class PetManager {
      *               the repository before deactivation
      * @return {@code true} if a pet was deactivated
      */
-    public abstract boolean deactivateMyPet(MyPetPlayer owner, boolean update);
+    public abstract boolean deactivatePet(MyPetPlayer owner, boolean update);
 
     /**
      * Lists all pets — active or stored — owned by the given player.
@@ -169,7 +169,7 @@ public abstract class PetManager {
     public abstract CompletableFuture<List<StoredPet>> getStoredPets(MyPetPlayer owner);
 
     /** Returns the total number of currently active pets across all players. */
-    public int countActiveMyPets() {
+    public int countActivePets() {
         return mActivePetsPlayer.size();
     }
 }

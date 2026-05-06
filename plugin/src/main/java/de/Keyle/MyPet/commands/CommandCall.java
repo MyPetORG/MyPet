@@ -24,10 +24,10 @@ import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.Commands;
@@ -87,7 +87,7 @@ public class CommandCall {
                 "/petcall",
                 CommandCategory.PET,
                 60,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
         ));
     }
 
@@ -97,7 +97,7 @@ public class CommandCall {
      * <p>If the player has an active pet whose entity is already present in the world, the
      * existing entity is removed first (allowing re-teleport to the player). The method
      * then attempts to create the pet entity and sends an appropriate feedback message
-     * based on the {@link MyPet.SpawnFlags} result:</p>
+     * based on the {@link Pet.SpawnFlags} result:</p>
      * <ul>
      *   <li>{@code Success} -- pet spawned successfully</li>
      *   <li>{@code Canceled} -- spawn was prevented by another plugin</li>
@@ -115,21 +115,21 @@ public class CommandCall {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        if (MyPetApi.getPetManager().hasActivePet(petOwner)) {
+            Pet pet = MyPetApi.getPetManager().getPet(petOwner);
 
-            if (myPet.getEntity().isPresent()) {
+            if (pet.getEntity().isPresent()) {
                 //Only let it respawn if it actually was there before
-                myPet.removePet(true);
+                pet.removePet(true);
             }
 
-            switch (myPet.createEntity()) {
+            switch (pet.createEntity()) {
                 case Success:
                     petOwner.sendMessage(MessageUtil.success(
                             Locale.getFormattedComponent(
                                     "Message.Command.Call.Success",
                                     petOwner,
-                                    myPet.getDisplayName()
+                                    pet.getDisplayName()
                             ), false
                     ));
                     break;
@@ -138,7 +138,7 @@ public class CommandCall {
                             Locale.getFormattedComponent(
                                     "Message.Spawn.Prevent",
                                     petOwner,
-                                    myPet.getDisplayName()
+                                    pet.getDisplayName()
                             ), false
                     ));
                     break;
@@ -147,7 +147,7 @@ public class CommandCall {
                             Locale.getFormattedComponent(
                                     "Message.Spawn.NoSpace",
                                     petOwner,
-                                    myPet.getDisplayName()
+                                    pet.getDisplayName()
                             ), false
                     ));
                     break;
@@ -156,7 +156,7 @@ public class CommandCall {
                             Locale.getFormattedComponent(
                                     "Message.No.AllowedHere",
                                     petOwner,
-                                    myPet.getDisplayName()
+                                    pet.getDisplayName()
                             ), false
                     ));
                     break;
@@ -166,7 +166,7 @@ public class CommandCall {
                                 Locale.getFormattedComponent(
                                         "Message.Call.Dead",
                                         petOwner,
-                                        myPet.getDisplayName()
+                                        pet.getDisplayName()
                                 ), false
                         ));
                     } else {
@@ -174,8 +174,8 @@ public class CommandCall {
                                 Locale.getFormattedComponent(
                                         "Message.Call.Dead.Respawn",
                                         petOwner,
-                                        myPet.getDisplayName(),
-                                        myPet.getRespawnTime()
+                                        pet.getDisplayName(),
+                                        pet.getRespawnTime()
                                 ), false
                         ));
                     }
@@ -185,7 +185,7 @@ public class CommandCall {
                             Locale.getFormattedComponent(
                                     "Message.Spawn.Flying",
                                     petOwner,
-                                    myPet.getDisplayName()
+                                    pet.getDisplayName()
                             ), false
                     ));
                     break;
@@ -194,7 +194,7 @@ public class CommandCall {
                             Locale.getFormattedComponent(
                                     "Message.Spawn.Spectator",
                                     petOwner,
-                                    myPet.getDisplayName()
+                                    pet.getDisplayName()
                             ), false
                     ));
                     break;

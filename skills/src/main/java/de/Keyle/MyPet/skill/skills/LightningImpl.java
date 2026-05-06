@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Lightning;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -42,11 +42,11 @@ public class LightningImpl implements Lightning {
     @Getter
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
     @Getter
-    private MyPet myPet;
+    private Pet pet;
     private boolean isStriking = false;
 
-    public LightningImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public LightningImpl(Pet pet) {
+        this.pet = pet;
     }
 
     public boolean isActive() {
@@ -72,7 +72,7 @@ public class LightningImpl implements Lightning {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Lightning.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getDamage().getValue().doubleValue())
+                Locale.getFormattedComponent("Message.Skill.Lightning.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getDamage().getValue().doubleValue())
         };
     }
 
@@ -82,8 +82,8 @@ public class LightningImpl implements Lightning {
 
     public void apply(LivingEntity target) {
         isStriking = true;
-        myPet.getEntity().ifPresent(petEntity -> {
-            Player owner = myPet.getOwner().getPlayer();
+        pet.getEntity().ifPresent(petEntity -> {
+            Player owner = pet.getOwner().getPlayer();
             World world = target.getLocation().getWorld();
             if (world != null) {
                 world.strikeLightningEffect(target.getLocation());

@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Heal;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -35,14 +35,14 @@ public class HealImpl implements Heal {
     protected UpgradeComputer<Integer> timer = new UpgradeComputer<>(0);
     protected boolean particles = false;
     private int timeCounter = 0;
-    private MyPet myPet;
+    private Pet pet;
 
-    public HealImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public HealImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
     public boolean isActive() {
@@ -70,21 +70,21 @@ public class HealImpl implements Heal {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getHeal().getValue().doubleValue(), getTimer().getValue())
+                Locale.getFormattedComponent("Message.Skill.HpRegeneration.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getHeal().getValue().doubleValue(), getTimer().getValue())
         };
     }
 
     public void schedule() {
-        if (myPet.getStatus() == PetState.Here) {
-            myPet.getEntity().ifPresent(entity -> {
+        if (pet.getStatus() == PetState.Here) {
+            pet.getEntity().ifPresent(entity -> {
                 if (heal.getValue().doubleValue() > 0) {
                     if (timeCounter-- <= 0) {
-                        if (myPet.getHealth() < myPet.getMaxHealth() - 0.01f) {
+                        if (pet.getHealth() < pet.getMaxHealth() - 0.01f) {
                             if (!particles) {
                                 particles = true;
-                                myPet.showPotionParticles(Color.LIME);
+                                pet.showPotionParticles(Color.LIME);
                             }
-                            myPet.setHealth(myPet.getHealth() + heal.getValue().doubleValue());
+                            pet.setHealth(pet.getHealth() + heal.getValue().doubleValue());
                         }
                         timeCounter = timer.getValue();
                     } else {
@@ -93,7 +93,7 @@ public class HealImpl implements Heal {
                 }
                 if (particles) {
                     particles = false;
-                    myPet.hidePotionParticles();
+                    pet.hidePotionParticles();
                 }
             });
         } else if (particles) {

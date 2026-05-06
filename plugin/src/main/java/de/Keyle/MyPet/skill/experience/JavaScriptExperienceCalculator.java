@@ -22,7 +22,7 @@ package de.Keyle.MyPet.skill.experience;
 
 import com.google.common.hash.Hashing;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculator;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.mozilla.javascript.*;
@@ -51,12 +51,12 @@ public class JavaScriptExperienceCalculator implements ExperienceCalculator {
         return isUsable;
     }
 
-    public double getExpByLevel(MyPet myPet, int level) {
+    public double getExpByLevel(Pet pet, int level) {
         if (level <= 1) {
             return 0;
         }
         try {
-            return jsExp.getExpByLevel(level, myPet.getPetType().name(), myPet.getWorldGroup());
+            return jsExp.getExpByLevel(level, pet.getPetType().name(), pet.getWorldGroup());
         } catch (Exception e) {
             MyPetApi.getLogger().warning("This error appeared because your Levelscript (exp.js) caused an error.");
             MyPetApi.getLogger().warning("   " + e.getLocalizedMessage());

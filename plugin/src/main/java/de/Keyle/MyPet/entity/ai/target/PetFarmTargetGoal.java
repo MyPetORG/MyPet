@@ -24,7 +24,7 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
@@ -57,9 +57,8 @@ import java.util.EnumSet;
  */
 public class PetFarmTargetGoal implements Goal<Mob> {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
-    private final MyPet myPet;
     private final double range;
     private LivingEntity target;
 
@@ -67,10 +66,9 @@ public class PetFarmTargetGoal implements Goal<Mob> {
      * @param petEntity the pet that will acquire monster targets while in Farm mode
      * @param range     radius (in blocks) of the "near owner" search box
      */
-    public PetFarmTargetGoal(MyPet pet, Mob mob, float range) {
+    public PetFarmTargetGoal(Pet pet, Mob mob, float range) {
         this.pet = pet;
         this.mob = mob;
-        this.myPet = pet;
         this.range = range;
     }
 
@@ -79,11 +77,11 @@ public class PetFarmTargetGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (!behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorMode.Farm) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+        if (pet.getDamage() <= 0 && pet.getRangedDamage() <= 0) {
             return false;
         }
         if (!pet.canMove()) {
@@ -132,15 +130,15 @@ public class PetFarmTargetGoal implements Goal<Mob> {
         if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity currentTarget = pet.getMyPetTarget();
+        LivingEntity currentTarget = pet.getPetTarget();
         if (currentTarget == null || currentTarget.isDead()) {
             return false;
         }
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (behaviorSkill.getBehavior() != BehaviorMode.Farm) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+        if (pet.getDamage() <= 0 && pet.getRangedDamage() <= 0) {
             return false;
         }
         if (!currentTarget.getWorld().equals(mob.getWorld())) {

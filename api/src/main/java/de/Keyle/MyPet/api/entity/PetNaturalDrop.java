@@ -46,7 +46,7 @@ import java.util.Set;
  * its own {@code Configuration.MyPet.<Type>.*} field. The listener never
  * names them.
  */
-public interface MyPetNaturalDrop extends MyPet {
+public interface PetNaturalDrop extends Pet {
 
     /**
      * The set of materials this pet type may periodically drop (e.g.

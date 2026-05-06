@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -46,7 +46,7 @@ public class PetSitParticleController {
 
     private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
 
-    public static void startForPet(MyPet pet) {
+    public static void startForPet(Pet pet) {
         Mob mob = pet.getBukkitEntity();
         if (mob == null) return;
         Plugin plugin = MyPetApi.getPlugin();
@@ -58,7 +58,7 @@ public class PetSitParticleController {
         }
     }
 
-    public static void stopForPet(MyPet pet) {
+    public static void stopForPet(Pet pet) {
         UUID key = pet.getUUID();
         ScheduledTask task = tasks.remove(key);
         if (task != null) {
@@ -69,7 +69,7 @@ public class PetSitParticleController {
         }
     }
 
-    private static void tickPet(MyPet pet) {
+    private static void tickPet(Pet pet) {
         if (!pet.isSitting()) return;
         Mob mob = pet.getBukkitEntity();
         if (mob == null || mob.isDead()) return;

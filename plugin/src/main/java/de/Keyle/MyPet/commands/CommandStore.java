@@ -25,9 +25,9 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -83,7 +83,7 @@ public class CommandStore {
                 "/petstore",
                 null,
                 130,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
                         && Permissions.has(player, "MyPet.command.switch")
         ));
     }
@@ -115,20 +115,20 @@ public class CommandStore {
                 return;
             }
 
-            if (owner.hasMyPet()) {
+            if (owner.hasPet()) {
                 MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
-                        if (owner.hasMyPet()) {
-                            MyPet myPet = owner.getMyPet();
-                            String worldGroup = myPet.getWorldGroup();
+                        if (owner.hasPet()) {
+                            Pet pet = owner.getPet();
+                            String worldGroup = pet.getWorldGroup();
 
                             int inactivePetCount = getInactivePetCount(pets, worldGroup) - 1; // -1 for active pet
                             if (inactivePetCount >= maxPetCount) {
                                 player.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Limit", player, maxPetCount));
                                 return;
                             }
-                            if (MyPetApi.getPetManager().deactivateMyPet(owner, true)) {
-                                owner.setMyPetForWorldGroup(worldGroup, null);
-                                player.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Success", player, myPet.getDisplayName()));
+                            if (MyPetApi.getPetManager().deactivatePet(owner, true)) {
+                                owner.setPetForWorldGroup(worldGroup, null);
+                                player.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Success", player, pet.getDisplayName()));
                             }
                         } else {
                             player.sendMessage(Locale.getComponent("Message.Command.Switch.NoPet", player));

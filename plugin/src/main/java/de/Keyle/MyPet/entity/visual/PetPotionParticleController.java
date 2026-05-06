@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -36,8 +36,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Renders custom-coloured potion particles around MyPet pets via per-pet
  * {@code Particle.DUST} scheduler tasks.
  *
- * <p>Pets register themselves via {@link #show(MyPet, Color)} and deregister
- * via {@link #hide(MyPet)}. Each pet also registers a tick task on spawn
+ * <p>Pets register themselves via {@link #show(Pet, Color)} and deregister
+ * via {@link #hide(Pet)}. Each pet also registers a tick task on spawn
  * (see {@link #startForPet}) that emits particles when the pet is in the
  * "showing" map.
  */
@@ -46,7 +46,7 @@ public class PetPotionParticleController {
     private static final Map<UUID, Color> activeByPet = new ConcurrentHashMap<>();
     private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
 
-    public static void startForPet(MyPet pet) {
+    public static void startForPet(Pet pet) {
         Mob mob = pet.getBukkitEntity();
         if (mob == null) return;
         Plugin plugin = MyPetApi.getPlugin();
@@ -58,7 +58,7 @@ public class PetPotionParticleController {
         }
     }
 
-    public static void stopForPet(MyPet pet) {
+    public static void stopForPet(Pet pet) {
         UUID key = pet.getUUID();
         ScheduledTask task = tasks.remove(key);
         if (task != null) {
@@ -70,17 +70,17 @@ public class PetPotionParticleController {
         activeByPet.remove(key);
     }
 
-    public static void show(MyPet pet, Color color) {
+    public static void show(Pet pet, Color color) {
         if (pet == null || color == null) return;
         activeByPet.put(pet.getUUID(), color);
     }
 
-    public static void hide(MyPet pet) {
+    public static void hide(Pet pet) {
         if (pet == null) return;
         activeByPet.remove(pet.getUUID());
     }
 
-    private static void tickPet(MyPet pet) {
+    private static void tickPet(Pet pet) {
         Color color = activeByPet.get(pet.getUUID());
         if (color == null) return;
         Mob mob = pet.getBukkitEntity();

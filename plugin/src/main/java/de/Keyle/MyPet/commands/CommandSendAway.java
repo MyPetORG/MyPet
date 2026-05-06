@@ -26,8 +26,8 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.event.PetSendAwayEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -106,7 +106,7 @@ public class CommandSendAway {
                 "/petsendaway",
                 CommandCategory.PET,
                 80,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
         ));
     }
 
@@ -131,35 +131,35 @@ public class CommandSendAway {
             sender.sendMessage(Locale.getComponent("Message.No.PlayerOnline", lang));
             return;
         }
-        if (petOwner != null && petOwner.hasMyPet()) {
-            MyPet myPet = petOwner.getMyPet();
-            if (myPet.getStatus() == PetState.Here) {
-                PetSendAwayEvent event = new PetSendAwayEvent(myPet);
+        if (petOwner != null && petOwner.hasPet()) {
+            Pet pet = petOwner.getPet();
+            if (pet.getStatus() == PetState.Here) {
+                PetSendAwayEvent event = new PetSendAwayEvent(pet);
                 Bukkit.getPluginManager().callEvent(event);
                 if (!event.isCancelled()) {
-                    myPet.removePet(false);
+                    pet.removePet(false);
                     sender.sendMessage(MessageUtil.success(
                             Locale.getFormattedComponent(
                                     "Message.Command.SendAway.Success",
                                     petOwner,
-                                    myPet.getDisplayName()
+                                    pet.getDisplayName()
                             ), false
                     ));
                 }
-            } else if (myPet.getStatus() == PetState.Despawned) {
+            } else if (pet.getStatus() == PetState.Despawned) {
                 sender.sendMessage(MessageUtil.info(
                         Locale.getFormattedComponent(
                                 "Message.Command.SendAway.AlreadyAway",
                                 petOwner,
-                                myPet.getDisplayName()
+                                pet.getDisplayName()
                         ), false
                 ));
-            } else if (myPet.getStatus() == PetState.Dead) {
+            } else if (pet.getStatus() == PetState.Dead) {
                 sender.sendMessage(MessageUtil.info(
                         Locale.getFormattedComponent(
                                 "Message.Action.Dead",
                                 petOwner,
-                                myPet.getDisplayName()
+                                pet.getDisplayName()
                         ), false
                 ));
             }

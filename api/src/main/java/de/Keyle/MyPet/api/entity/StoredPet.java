@@ -42,12 +42,12 @@ import java.util.UUID;
  *       loads from disk and that {@code PetManager} round-trips between
  *       active and inactive states. "Mutations" return new instances via
  *       {@code withX} or {@code Builder}.
- *   <li>{@link MyPet} — the active runtime pet. Extends this interface
+ *   <li>{@link Pet} — the active runtime pet. Extends this interface
  *       {@code non-sealed} so that plugin-side concretes can extend it without
  *       being named in the seal.
  * </ul>
  */
-public sealed interface StoredPet permits PersistedPet, MyPet {
+public sealed interface StoredPet permits PersistedPet, Pet {
 
     /** Globally unique identifier for this pet instance (persisted). */
     UUID getUUID();
@@ -116,7 +116,7 @@ public sealed interface StoredPet permits PersistedPet, MyPet {
      *   <li>{@link PersistedPet}: looks up the {@code SkillStateParser}
      *       registered for {@code skillClass} and parses the per-skill
      *       compound from {@code skillInfo}.</li>
-     *   <li>{@link MyPet} (live): asks the live {@link Skill} instance for
+     *   <li>{@link Pet} (live): asks the live {@link Skill} instance for
      *       its current state via {@link Skill#getState()}.</li>
      * </ul>
      *
@@ -140,7 +140,7 @@ public sealed interface StoredPet permits PersistedPet, MyPet {
                 if (!info.keySet().contains(skillName)) yield Optional.empty();
                 yield mgr.parseState(skillClass, stateClass, info.getCompound(skillName));
             }
-            case MyPet live -> {
+            case Pet live -> {
                 Skill skill = live.getSkills().get(skillClass);
                 if (skill == null) yield Optional.empty();
                 yield skill.getState()

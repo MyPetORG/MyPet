@@ -30,8 +30,8 @@ import org.bukkit.persistence.PersistentDataType;
  * Manages the PDC marker used to tag real Bukkit mobs as MyPet pets.
  * <p>
  * The marker is a single byte under {@code mypet:pet}. Listeners and hook integrations
- * use this marker as a fast predicate instead of an instanceof check on the (now deleted)
- * {@code MyPetBukkitEntity} interface.
+ * use this marker as a fast predicate instead of an instanceof check on a wrapper
+ * type — pets are real vanilla mobs in v4, with no dedicated entity class.
  */
 public final class PetEntityMarker {
 

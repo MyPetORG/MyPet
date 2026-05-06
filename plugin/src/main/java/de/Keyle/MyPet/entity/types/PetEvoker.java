@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Collections;
 import java.util.Set;
@@ -33,7 +33,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.APPLE})
-public class PetEvoker extends MyPet implements MyPetEquipment {
+public class PetEvoker extends PetImpl implements PetEquipment {
 
     public PetEvoker(MyPetPlayer petOwner) {
         super(petOwner);

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity;
 
 import de.Keyle.MyPet.api.entity.PersistedPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 
@@ -29,8 +30,8 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
  * {@link StoredPet}: the vanilla entity snapshot ({@code info}) and the
  * aggregate per-skill compound ({@code skillInfo}). Both blobs were removed
  * from the public api in 4.0.0 ({@code StoredPet.getInfo} /
- * {@code StoredPet.getSkillInfo} / {@code MyPet.setInfo} /
- * {@code MyPet.setSkills}) so addons cannot manipulate raw vendor NBT —
+ * {@code StoredPet.getSkillInfo} / {@code Pet.setInfo} /
+ * {@code Pet.setSkills}) so addons cannot manipulate raw vendor NBT —
  * repository, migration, and listener serialization paths route through
  * here instead.
  */
@@ -42,20 +43,20 @@ public final class PetInfoAccess {
     public static CompoundBinaryTag read(StoredPet pet) {
         return switch (pet) {
             case PersistedPet p -> p.info();
-            case de.Keyle.MyPet.api.entity.MyPet live -> ((MyPet) live).getInfo();
+            case Pet live -> ((PetImpl) live).getInfo();
         };
     }
 
     /** Write the entity-NBT blob to a live pet. */
-    public static void write(de.Keyle.MyPet.api.entity.MyPet live, CompoundBinaryTag info) {
-        ((MyPet) live).setInfo(info);
+    public static void write(Pet live, CompoundBinaryTag info) {
+        ((PetImpl) live).setInfo(info);
     }
 
     /** Read the aggregate per-skill NBT compound from any stored form. */
     public static CompoundBinaryTag readSkillInfo(StoredPet pet) {
         return switch (pet) {
             case PersistedPet p -> p.skillInfo();
-            case de.Keyle.MyPet.api.entity.MyPet live -> ((MyPet) live).getSkillInfo();
+            case Pet live -> ((PetImpl) live).getSkillInfo();
         };
     }
 }

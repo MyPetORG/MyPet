@@ -29,8 +29,8 @@ import de.Keyle.MyPet.api.Configuration;
  * guardians, dolphin) plus Tadpole (which uses the same out-of-water
  * suffocation tick).
  *
- * <p>Sibling to {@link MyPetAmphibiousEntity} under the shared
- * {@link MyPetSwimmingEntity} base. The swim physics gate (`canSwim()`) is
+ * <p>Sibling to {@link PetAmphibiousEntity} under the shared
+ * {@link PetSwimmingEntity} base. The swim physics gate (`canSwim()`) is
  * inherited from the base; this marker adds the suffocation gate.
  *
  * <p>The {@link #preventSuffocation()} default consults the per-pet
@@ -42,7 +42,7 @@ import de.Keyle.MyPet.api.Configuration;
  * {@code DROWNING} for both "land-breather underwater" and "water-breather
  * in air"; only the latter case applies to these mobs).
  */
-public interface MyPetAquaticEntity extends MyPetSwimmingEntity {
+public interface PetAquaticEntity extends PetSwimmingEntity {
 
     default boolean preventSuffocation() {
         return Configuration.MyPet.preventSuffocation(getPetType());

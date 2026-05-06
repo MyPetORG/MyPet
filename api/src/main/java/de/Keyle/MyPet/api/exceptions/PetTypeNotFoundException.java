@@ -35,6 +35,6 @@ public class PetTypeNotFoundException extends RuntimeException {
      * @param type the unrecognized type name that triggered the lookup failure
      */
     public PetTypeNotFoundException(String type) {
-        super(type + " is not a valid MyPet type");
+        super(type + " is not a valid Pet type");
     }
 }

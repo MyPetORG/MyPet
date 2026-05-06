@@ -22,8 +22,8 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -74,7 +74,7 @@ public class PetCreeperListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        MyPet pet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
+        Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getRightClicked());
         if (pet != null
                 && !Configuration.MyPet.Creeper.ALLOW_NON_OWNER_FLINT_AND_STEEL
                 && !isOwner(event.getPlayer(), pet)) {
@@ -91,9 +91,9 @@ public class PetCreeperListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPetExplode(EntityExplodeEvent event) {
         if (!(event.getEntity() instanceof Creeper creeper)) return;
-        Optional<MyPet> petOpt = PetListenerGuards.markedPet(creeper);
+        Optional<Pet> petOpt = PetListenerGuards.markedPet(creeper);
         if (petOpt.isEmpty()) return;
-        MyPet pet = petOpt.get();
+        Pet pet = petOpt.get();
 
         if (!Configuration.MyPet.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE) {
             event.blockList().clear();
@@ -116,10 +116,10 @@ public class PetCreeperListener implements Listener {
         }
         pet.setRespawnTime(
                 (Configuration.Respawn.TIME_FIXED
-                        + MyPetApi.getMyPetInfo().getCustomRespawnTimeFixed(pet.getPetType()))
+                        + MyPetApi.getPetInfo().getCustomRespawnTimeFixed(pet.getPetType()))
                         + (pet.getExperience().getLevel()
                             * (Configuration.Respawn.TIME_FACTOR
-                                + MyPetApi.getMyPetInfo().getCustomRespawnTimeFactor(pet.getPetType())))
+                                + MyPetApi.getPetInfo().getCustomRespawnTimeFactor(pet.getPetType())))
         );
         pet.setStatus(PetState.Dead);
         if (pet.getOwner() != null && pet.getOwner().getPlayer() != null) {
@@ -147,7 +147,7 @@ public class PetCreeperListener implements Listener {
         event.setCancelled(true);
     }
 
-    private static boolean isOwner(Player player, MyPet pet) {
+    private static boolean isOwner(Player player, Pet pet) {
         return pet.getOwner() != null && pet.getOwner().getPlayer() != null
                 && pet.getOwner().getPlayer().getUniqueId().equals(player.getUniqueId());
     }

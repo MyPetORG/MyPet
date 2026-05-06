@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import com.google.common.collect.Iterables;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
@@ -38,7 +38,7 @@ import java.util.*;
 import static de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode.*;
 
 /**
- * Implementation of the Behavior skill for a MyPet entity.
+ * Implementation of the Behavior skill for a Pet entity.
  * <p>
  * This component manages a set of currently usable behavior modes (activeBehaviors),
  * the currently selected mode (selectedBehavior), and a cyclic iterator (behaviorCycler)
@@ -54,7 +54,7 @@ public class BehaviorImpl implements Behavior {
 
     protected static Random random = new Random();
     @Getter
-    protected MyPet myPet;
+    protected Pet pet;
     protected Set<BehaviorMode> activeBehaviors = new HashSet<>();
     protected BehaviorMode selectedBehavior = BehaviorMode.Normal;
     Iterator<BehaviorMode> behaviorCycler;
@@ -73,10 +73,10 @@ public class BehaviorImpl implements Behavior {
     /**
      * Creates a new Behavior skill instance for the given pet.
      *
-     * @param myPet the owning pet (must not be null)
+     * @param pet the owning pet (must not be null)
      */
-    public BehaviorImpl(@NotNull MyPet myPet) {
-        this.myPet = myPet;
+    public BehaviorImpl(@NotNull Pet pet) {
+        this.pet = pet;
         activeBehaviors.add(BehaviorMode.Normal);
         updateCycler();
 
@@ -240,8 +240,8 @@ public class BehaviorImpl implements Behavior {
     @Override
     public @NotNull Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName()),
-                Component.text("  ").append(toPrettyComponent(myPet.getOwner().getLanguage()))
+                Locale.getFormattedComponent("Message.Skill.Behavior.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName()),
+                Component.text("  ").append(toPrettyComponent(pet.getOwner().getLanguage()))
         };
     }
 
@@ -259,17 +259,17 @@ public class BehaviorImpl implements Behavior {
             while (true) {
                 selectedBehavior = behaviorCycler.next();
                 if (selectedBehavior != Normal) {
-                    if (Permissions.has(myPet.getOwner().getPlayer(), "MyPet.extended.behavior." + selectedBehavior.name().toLowerCase())) {
+                    if (Permissions.has(pet.getOwner().getPlayer(), "MyPet.extended.behavior." + selectedBehavior.name().toLowerCase())) {
                         break;
                     }
                 } else {
                     break;
                 }
             }
-            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Behavior.NewMode", myPet.getOwner(), myPet.getDisplayName(), Locale.getComponent("Name." + selectedBehavior.name(), myPet.getOwner().getPlayer())));
+            pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Behavior.NewMode", pet.getOwner(), pet.getDisplayName(), Locale.getComponent("Name." + selectedBehavior.name(), pet.getOwner().getPlayer())));
             return true;
         } else {
-            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.Skill", myPet.getOwner(), myPet.getDisplayName(), this.getName(myPet.getOwner().getLanguage())));
+            pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.Skill", pet.getOwner(), pet.getDisplayName(), this.getName(pet.getOwner().getLanguage())));
             return false;
         }
     }
@@ -282,8 +282,8 @@ public class BehaviorImpl implements Behavior {
      */
     @Override
     public void schedule() {
-        if (selectedBehavior == Aggressive && random.nextBoolean() && myPet.getStatus() == MyPet.PetState.Here) {
-            myPet.getEntity().ifPresent(entity -> entity.getWorld().spawnParticle(Particle.ANGRY_VILLAGER, entity.getLocation().add(0, entity.getEyeHeight(), 0), 1, 0.2F, 0.2F, 0.2F, 0.5F));
+        if (selectedBehavior == Aggressive && random.nextBoolean() && pet.getStatus() == Pet.PetState.Here) {
+            pet.getEntity().ifPresent(entity -> entity.getWorld().spawnParticle(Particle.ANGRY_VILLAGER, entity.getLocation().add(0, entity.getEyeHeight(), 0), 1, 0.2F, 0.2F, 0.2F, 0.5F));
         }
     }
 

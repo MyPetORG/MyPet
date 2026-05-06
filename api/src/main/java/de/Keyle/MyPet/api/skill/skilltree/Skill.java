@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.skill.skilltree;
 
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -85,7 +85,7 @@ public interface Skill {
     }
 
     /** Returns the pet that owns this skill instance. */
-    MyPet getMyPet();
+    Pet getPet();
 
     /** Returns {@code true} if this skill has been activated (i.e., at least one upgrade has been applied). */
     boolean isActive();

@@ -26,11 +26,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.PersistedPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -116,7 +116,7 @@ public class CommandOptionClone {
 
         MyPetPlayer oldPetOwner = MyPetApi.getPlayerManager().getMyPetPlayer(oldOwner);
 
-        if (!oldPetOwner.hasMyPet()) {
+        if (!oldPetOwner.hasPet()) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, oldOwner.getName())));
             return;
         }
@@ -128,12 +128,12 @@ public class CommandOptionClone {
             newPetOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(newOwner);
         }
 
-        if (newPetOwner.hasMyPet()) {
-            sender.sendMessage(MessageUtil.prefixed(Component.text(newOwner.getName() + " has already an active MyPet!")));
+        if (newPetOwner.hasPet()) {
+            sender.sendMessage(MessageUtil.prefixed(Component.text(newOwner.getName() + " has already an active Pet!")));
             return;
         }
 
-        MyPet oldPet = oldPetOwner.getMyPet();
+        Pet oldPet = oldPetOwner.getPet();
         final PersistedPet newPet = PersistedPet.builder(newPetOwner)
                 .petType(oldPet.getPetType())
                 .petName(oldPet.getPetName())
@@ -152,19 +152,19 @@ public class CommandOptionClone {
 
         MyPetPlugin.getInstance().getRepository().addPet(newPet).thenAccept(added -> newOwner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 if (!added) {
-                    sender.sendMessage(MessageUtil.prefixed(Component.text("Failed to clone MyPet!")));
+                    sender.sendMessage(MessageUtil.prefixed(Component.text("Failed to clone Pet!")));
                     return;
                 }
-                Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(newPet);
-                if (myPet.isPresent()) {
+                Optional<Pet> pet = MyPetApi.getPetManager().activatePet(newPet);
+                if (pet.isPresent()) {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(newPet.getOwner().getPlayer().getWorld().getName());
                     // The receiver's world-group binding lives in the player→UUID index,
                     // not on newPet (which carries the source pet's stored worldGroup
                     // already persisted by addPet above).
-                    newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
+                    newPet.getOwner().setPetForWorldGroup(worldGroup, newPet.getUUID());
                     MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(newPetOwner);
 
-                    sender.sendMessage(MessageUtil.prefixed(Component.text("MyPet successfully cloned to " + newPetOwner.getName() + "!")));
+                    sender.sendMessage(MessageUtil.prefixed(Component.text("Pet successfully cloned to " + newPetOwner.getName() + "!")));
                 }
         }, null));
     }

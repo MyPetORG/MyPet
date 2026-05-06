@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Life;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -30,14 +30,14 @@ import net.kyori.adventure.text.format.NamedTextColor;
 public class LifeImpl implements Life {
 
     protected UpgradeComputer<Number> life = new UpgradeComputer<>(0);
-    private MyPet myPet;
+    private Pet pet;
 
-    public LifeImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public LifeImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
     public boolean isActive() {
@@ -59,7 +59,7 @@ public class LifeImpl implements Life {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Hp.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), myPet.getMaxHealth())
+                Locale.getFormattedComponent("Message.Skill.Hp.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), pet.getMaxHealth())
         };
     }
 

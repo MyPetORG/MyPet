@@ -21,15 +21,15 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetLavaEntity;
+import de.Keyle.MyPet.api.entity.PetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo(displayName = "Magma Cube", options = {"size:2"})
 @DefaultInfo(food = {Material.REDSTONE})
-public class PetMagmaCube extends MyPet implements MyPetLavaEntity {
+public class PetMagmaCube extends PetImpl implements PetLavaEntity {
 
     public PetMagmaCube(MyPetPlayer petOwner) {
         super(petOwner);

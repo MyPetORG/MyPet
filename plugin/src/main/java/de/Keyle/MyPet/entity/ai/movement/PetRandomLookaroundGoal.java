@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
@@ -49,7 +49,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PetRandomLookaroundGoal implements Goal<Mob> {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
     private double directionX;
     private double directionZ;
@@ -58,7 +58,7 @@ public class PetRandomLookaroundGoal implements Goal<Mob> {
     /**
      * @param petEntity the pet whose head will glance around
      */
-    public PetRandomLookaroundGoal(MyPet pet, Mob mob) {
+    public PetRandomLookaroundGoal(Pet pet, Mob mob) {
         this.pet = pet;
         this.mob = mob;
     }
@@ -68,7 +68,7 @@ public class PetRandomLookaroundGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) {
+        if (pet.hasTarget() && !pet.getPetTarget().isDead()) {
             return false;
         }
         if (!mob.getPassengers().isEmpty()) {

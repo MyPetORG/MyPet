@@ -25,11 +25,11 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import io.papermc.paper.command.brigadier.Commands;
@@ -113,7 +113,7 @@ public class CommandRespawn {
                 "/petrespawn",
                 CommandCategory.PET,
                 110,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
                         && Permissions.has(player, "MyPet.command.respawn")
         ));
     }
@@ -129,26 +129,26 @@ public class CommandRespawn {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
         if (!MyPetApi.getHookHelper().isEconomyEnabled() || !Permissions.has(petOwner, "MyPet.command.respawn")) {
-            myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
+            pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
             return;
         }
 
-        double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
+        double costs = pet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
         String costsString;
-        if (myPet.getStatus() != PetState.Dead) {
+        if (pet.getStatus() != PetState.Dead) {
             costsString = "-";
         } else {
             costsString = costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular();
         }
-        myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Show", petOwner, myPet.getDisplayName(), costsString, Component.text("auto").color(myPet.getOwner().hasAutoRespawnEnabled() ? NamedTextColor.GREEN : NamedTextColor.RED)));
-        myPet.getOwner().sendMessage(Locale.getComponent("Message.Command.Respawn.Show.Pay", petOwner));
+        pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Show", petOwner, pet.getDisplayName(), costsString, Component.text("auto").color(pet.getOwner().hasAutoRespawnEnabled() ? NamedTextColor.GREEN : NamedTextColor.RED)));
+        pet.getOwner().sendMessage(Locale.getComponent("Message.Command.Respawn.Show.Pay", petOwner));
     }
 
     /**
@@ -163,28 +163,28 @@ public class CommandRespawn {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
         if (!MyPetApi.getHookHelper().isEconomyEnabled() || !Permissions.has(petOwner, "MyPet.command.respawn")) {
-            myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
+            pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
             return;
         }
 
-        double costs = myPet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
-        if (myPet.getStatus() == PetState.Dead) {
-            if (MyPetApi.getHookHelper().getEconomy().canPay(myPet.getOwner(), costs)) {
-                MyPetApi.getHookHelper().getEconomy().pay(myPet.getOwner(), costs);
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Paid", petOwner, myPet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
-                myPet.setRespawnTime(0);
+        double costs = pet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
+        if (pet.getStatus() == PetState.Dead) {
+            if (MyPetApi.getHookHelper().getEconomy().canPay(pet.getOwner(), costs)) {
+                MyPetApi.getHookHelper().getEconomy().pay(pet.getOwner(), costs);
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Paid", petOwner, pet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                pet.setRespawnTime(0);
             } else {
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.NoMoney", petOwner, myPet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.NoMoney", petOwner, pet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));
             }
         } else {
-            myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
+            pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
         }
     }
 
@@ -200,19 +200,19 @@ public class CommandRespawn {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
         if (!MyPetApi.getHookHelper().isEconomyEnabled() || !Permissions.has(petOwner, "MyPet.command.respawn")) {
-            myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
+            pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
             return;
         }
 
-        myPet.getOwner().setAutoRespawnEnabled(!myPet.getOwner().hasAutoRespawnEnabled());
-        myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Auto", petOwner, Locale.getComponent("Name." + (myPet.getOwner().hasAutoRespawnEnabled() ? "Enabled" : "Disabled"), petOwner)));
+        pet.getOwner().setAutoRespawnEnabled(!pet.getOwner().hasAutoRespawnEnabled());
+        pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Auto", petOwner, Locale.getComponent("Name." + (pet.getOwner().hasAutoRespawnEnabled() ? "Enabled" : "Disabled"), petOwner)));
     }
 
     /**
@@ -228,18 +228,18 @@ public class CommandRespawn {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
         if (!MyPetApi.getHookHelper().isEconomyEnabled() || !Permissions.has(petOwner, "MyPet.command.respawn")) {
-            myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
+            pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", petOwner));
             return;
         }
 
-        myPet.getOwner().setAutoRespawnMin(min);
-        myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.AutoMin", petOwner, String.valueOf(min)));
+        pet.getOwner().setAutoRespawnMin(min);
+        pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.AutoMin", petOwner, String.valueOf(min)));
     }
 }

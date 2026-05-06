@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skilltree.requirements;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.Requirement;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.RequirementName;
@@ -34,7 +34,7 @@ import java.util.Set;
 public class SkilltreeRequirement implements Requirement {
 
     @Override
-    public boolean check(Skilltree skilltree, MyPet pet, Settings settings) {
+    public boolean check(Skilltree skilltree, Pet pet, Settings settings) {
         if (pet.getSkilltree() == null) {
             return false;
         }

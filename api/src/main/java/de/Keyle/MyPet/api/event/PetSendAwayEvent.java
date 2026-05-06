@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -43,19 +43,19 @@ import org.jspecify.annotations.NonNull;
  *
  * <p><b>Pet state:</b> live pet, with the owner online (the command requires it).
  * After successful dispatch, the entity is removed from the world but
- * {@link #getPet()} continues to refer to a live {@link MyPet} until its
+ * {@link #getPet()} continues to refer to a live {@link Pet} until its
  * owner logs out (the periodic save flushes it back to persisted form).
  *
- * <p><b>Pet exposure:</b> always a live {@link MyPet} — the pet is active
+ * <p><b>Pet exposure:</b> always a live {@link Pet} — the pet is active
  * and its world entity is about to be despawned.
  */
 public class PetSendAwayEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    private final MyPet pet;
+    private final Pet pet;
     boolean isCancelled = false;
 
-    public PetSendAwayEvent(MyPet pet) {
+    public PetSendAwayEvent(Pet pet) {
         this.pet = pet;
     }
 

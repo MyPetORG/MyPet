@@ -51,7 +51,7 @@ import java.util.Optional;
  * replaces that round-trip with a direct construction of the record, which let
  * {@code StoredPet} become a sealed interface.</p>
  */
-public class ShopMyPet {
+public class ShopPet {
 
     protected double price = 0;
     protected IconMenuItem icon;
@@ -65,7 +65,7 @@ public class ShopMyPet {
     protected Skilltree skilltree = null;
     protected CompoundBinaryTag NBTextendetInfo = CompoundBinaryTag.empty();
 
-    public ShopMyPet(String name) {
+    public ShopPet(String name) {
         this.name = name;
         this.icon = new IconMenuItem();
     }

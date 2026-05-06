@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Input;
@@ -117,7 +117,7 @@ public final class PetEnderDragonHoverController {
     private PetEnderDragonHoverController() {
     }
 
-    public static void startForPet(MyPet pet) {
+    public static void startForPet(Pet pet) {
         Mob mob = pet.getBukkitEntity();
         if (!(mob instanceof EnderDragon dragon)) return;
 
@@ -136,7 +136,7 @@ public final class PetEnderDragonHoverController {
         }
     }
 
-    private static void tick(EnderDragon dragon, MyPet pet) {
+    private static void tick(EnderDragon dragon, Pet pet) {
         if (dragon.isDead()) return;
 
         // Phase suppression — keep HOVER active so the phase manager
@@ -150,7 +150,7 @@ public final class PetEnderDragonHoverController {
         if (owner == null || !owner.isOnline()) return;
         if (!owner.getWorld().equals(dragon.getWorld())) return;
         if (!pet.canMove()) return;
-        if (pet.getMyPetTarget() != null && !pet.getMyPetTarget().isDead()) return;
+        if (pet.getPetTarget() != null && !pet.getPetTarget().isDead()) return;
 
         // Branch on passenger presence. While ridden, the rider's location is
         // ON the dragon, so the follow logic ("teleport to HOVER_HEIGHT above
@@ -207,7 +207,7 @@ public final class PetEnderDragonHoverController {
      * {@code setVelocity} approach is damped by EnderDragon's vanilla aiStep
      * friction (~0.8/tick). Teleport sidesteps that.
      */
-    private static void tickRide(EnderDragon dragon, MyPet pet) {
+    private static void tickRide(EnderDragon dragon, Pet pet) {
         Entity passenger = dragon.getPassengers().get(0);
         if (!(passenger instanceof Player rider)) return;
 
@@ -305,7 +305,7 @@ public final class PetEnderDragonHoverController {
         return false;
     }
 
-    public static void stopForPet(MyPet pet) {
+    public static void stopForPet(Pet pet) {
         ScheduledTask task = tasks.remove(pet.getUUID());
         if (task != null) {
             try {

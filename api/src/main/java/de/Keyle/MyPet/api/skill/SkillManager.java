@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.skill;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.service.Load;
@@ -175,19 +175,19 @@ public class SkillManager implements ServiceContainer {
 
     /**
      * Creates a new instance of the given skill class for the specified pet. The skill
-     * class must have a public constructor accepting a single {@link MyPet} parameter.
+     * class must have a public constructor accepting a single {@link Pet} parameter.
      *
      * @param clazz the skill implementation class
-     * @param myPet the pet that will own the skill instance
+     * @param pet the pet that will own the skill instance
      * @return the new skill instance, or {@code null} if instantiation fails
      */
-    public Skill getNewSkillInstance(Class<? extends Skill> clazz, MyPet myPet) {
+    public Skill getNewSkillInstance(Class<? extends Skill> clazz, Pet pet) {
         if (clazz == null) {
             return null;
         }
         try {
-            Constructor<?> ctor = clazz.getConstructor(MyPet.class);
-            Object obj = ctor.newInstance(myPet);
+            Constructor<?> ctor = clazz.getConstructor(Pet.class);
+            Object obj = ctor.newInstance(pet);
             return (Skill) obj;
         } catch (Exception e) {
             MyPetApi.getLogger().warning(clazz.getName() + " is not a valid skill)!");

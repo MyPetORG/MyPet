@@ -31,9 +31,9 @@ import de.Keyle.MyPet.api.Configuration;
  * <p>This is the swim-physics base; concrete pets implement one of the two
  * sub-markers depending on their out-of-water survival semantics:
  * <ul>
- *   <li>{@link MyPetAquaticEntity} — water-breathers that suffocate on land
+ *   <li>{@link PetAquaticEntity} — water-breathers that suffocate on land
  *       (fish, squids, guardians, dolphin, tadpole)</li>
- *   <li>{@link MyPetAmphibiousEntity} — pets that swim but also survive on
+ *   <li>{@link PetAmphibiousEntity} — pets that swim but also survive on
  *       land indefinitely (axolotl, drowned, frog, turtle)</li>
  * </ul>
  *
@@ -42,11 +42,11 @@ import de.Keyle.MyPet.api.Configuration;
  * row is auto-registered for every type that implements this marker — adding
  * a new swimming pet only requires implementing one of the sub-markers.
  *
- * <p>Mirrors the {@link MyPetGlidingEntity} / {@link MyPetFlyingEntity}
+ * <p>Mirrors the {@link PetGlidingEntity} / {@link PetFlyingEntity}
  * split for airborne pets: a swim-base (this) plus a stricter sub-marker
  * for the survival-affecting variant.
  */
-public interface MyPetSwimmingEntity extends MyPet {
+public interface PetSwimmingEntity extends Pet {
 
     default boolean canSwim() {
         return Configuration.MyPet.canSwim(getPetType());

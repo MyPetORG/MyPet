@@ -44,7 +44,7 @@ import org.jspecify.annotations.NonNull;
  *   <li>{@link Source#OTHER} — fallback for any other path.</li>
  * </ul>
  *
- * <p>Fires from {@code MyPet} on every skilltree assignment and from
+ * <p>Fires from {@code Pet} on every skilltree assignment and from
  * {@code CommandOptionCreate} during admin pet creation.
  *
  * <p><b>Not cancellable:</b> the assignment has already been written when this

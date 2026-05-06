@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -31,7 +31,7 @@ import org.jspecify.annotations.NonNull;
 /**
  * Common parent for level-transition events. Not directly fired — listeners
  * should subscribe to the concrete subclasses {@link PetLevelUpEvent} and
- * {@link PetLevelDownEvent}, which fire from {@code MyPetExperience#updateExp}
+ * {@link PetLevelDownEvent}, which fire from {@code PetExperience#updateExp}
  * on real level transitions and carry the previous level via
  * {@code fromLevel()}.
  *
@@ -46,18 +46,18 @@ import org.jspecify.annotations.NonNull;
 public class PetLevelEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    private final MyPet pet;
+    private final Pet pet;
     @Getter
     private final int level;
     private final boolean beQuiet;
 
-    public PetLevelEvent(MyPet pet, int Level) {
+    public PetLevelEvent(Pet pet, int Level) {
         this.pet = pet;
         this.level = Level;
         this.beQuiet = true;
     }
 
-    public PetLevelEvent(MyPet pet, int level, boolean beQuiet) {
+    public PetLevelEvent(Pet pet, int level, boolean beQuiet) {
         this.pet = pet;
         this.level = level;
         this.beQuiet = beQuiet;

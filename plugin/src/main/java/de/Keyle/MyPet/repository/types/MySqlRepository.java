@@ -223,7 +223,7 @@ public class MySqlRepository extends AbstractSqlRepository {
                             rs.getBlob(column).getBinaryStream());
                     for (String worldGroupName : worldGroups.keySet()) {
                         String petUUID = worldGroups.getString(worldGroupName);
-                        player.setMyPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
+                        player.setPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
                     }
                 } catch (IOException e) {
                     MyPetApi.getLogger().warning("Multiworld info of player (" + player.getUniqueId()

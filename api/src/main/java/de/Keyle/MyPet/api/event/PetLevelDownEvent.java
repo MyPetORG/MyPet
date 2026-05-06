@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
 
@@ -29,7 +29,7 @@ import org.jspecify.annotations.NonNull;
  * counterpart of {@link PetLevelUpEvent}. New level via {@link #getLevel()}
  * (inherited); previous level via {@link #fromLevel()}.
  *
- * <p>Fires from {@code MyPetExperience#updateExp} on the down-transition
+ * <p>Fires from {@code PetExperience#updateExp} on the down-transition
  * (e.g., an addon-side {@code removeExp} call, or skilltree-induced exp loss).
  *
  * <p><b>Not cancellable:</b> see {@link PetLevelUpEvent} — cancel the
@@ -39,7 +39,7 @@ public class PetLevelDownEvent extends PetLevelEvent {
     private static final HandlerList handlers = new HandlerList();
     private final int fromLevel;
 
-    public PetLevelDownEvent(MyPet pet, int level, int fromLevel, boolean beQuiet) {
+    public PetLevelDownEvent(Pet pet, int level, int fromLevel, boolean beQuiet) {
         super(pet, level, beQuiet);
         this.fromLevel = fromLevel;
     }

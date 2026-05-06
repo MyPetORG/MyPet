@@ -139,16 +139,16 @@ public class CommandOptionPurge {
         sender.sendMessage(MessageUtil.prefixed(Component.text("cleaning up MyPet database...")));
 
         if (timestamp == -1) {
-            sender.sendMessage(MessageUtil.prefixed(Component.text("delete unused MyPets...")));
+            sender.sendMessage(MessageUtil.prefixed(Component.text("delete unused Pets...")));
         } else {
             String formatted = ZonedDateTime.ofInstant(
                     Instant.ofEpochMilli(timestamp), ZoneId.systemDefault()
             ).format(DateTimeFormatter.RFC_1123_DATE_TIME);
-            sender.sendMessage(MessageUtil.prefixed(Component.text("delete MyPets older than " + formatted + "...")));
+            sender.sendMessage(MessageUtil.prefixed(Component.text("delete Pets older than " + formatted + "...")));
         }
 
         MyPetPlugin.getInstance().getRepository().cleanup(timestamp).thenAccept(value -> {
-            Runnable reply = () -> sender.sendMessage(MessageUtil.prefixed(Component.text("removed " + value + " MyPets.")));
+            Runnable reply = () -> sender.sendMessage(MessageUtil.prefixed(Component.text("removed " + value + " Pets.")));
             if (sender instanceof Player senderPlayer) {
                 senderPlayer.getScheduler().run(MyPetApi.getPlugin(), folaTask -> reply.run(), null);
             } else {

@@ -23,13 +23,12 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +62,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PetLookAtPlayerGoal implements Goal<Mob> {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
     private final double range;
     private final float lookAtPlayerChance;
@@ -77,7 +76,7 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
      * @param petEntity the pet whose head will rotate
      * @param range     maximum look distance in blocks
      */
-    public PetLookAtPlayerGoal(MyPet pet, Mob mob, float range) {
+    public PetLookAtPlayerGoal(Pet pet, Mob mob, float range) {
         this(pet, mob, range, 0.02F);
     }
 
@@ -87,7 +86,7 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
      * @param lookAtPlayerChance per-tick probability of activation ({@code 0}..{@code 1});
      *                           only rolled when an eligible player is in range
      */
-    public PetLookAtPlayerGoal(MyPet pet, Mob mob, float range, float lookAtPlayerChance) {
+    public PetLookAtPlayerGoal(Pet pet, Mob mob, float range, float lookAtPlayerChance) {
         this.pet = pet;
         this.mob = mob;
         this.range = range;
@@ -102,7 +101,7 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
         if (ThreadLocalRandom.current().nextFloat() >= this.lookAtPlayerChance) {
             return false;
         }
-        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) {
+        if (pet.hasTarget() && !pet.getPetTarget().isDead()) {
             return false;
         }
         if (!mob.getPassengers().isEmpty()) {

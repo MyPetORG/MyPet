@@ -23,8 +23,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Scheduler;
@@ -38,9 +37,8 @@ import java.util.EnumSet;
 
 public class PetControlGoal implements Goal<Mob>, Scheduler {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
-    private final MyPet myPet;
     private final float speedModifier;
     private final AbstractNavigation nav;
     public Location moveTo = null;
@@ -48,10 +46,9 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
     private boolean stopControl = false;
     private boolean isRunning = false;
 
-    public PetControlGoal(MyPet pet, Mob mob, float speedModifier) {
+    public PetControlGoal(Pet pet, Mob mob, float speedModifier) {
         this.pet = pet;
         this.mob = mob;
-        this.myPet = pet;
         this.speedModifier = speedModifier;
         this.nav = pet.getPetNavigation();
     }
@@ -61,7 +58,7 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
         if (!pet.canMove()) {
             return false;
         }
-        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
+        ControlImpl controlSkill = pet.getSkills().get(ControlImpl.class);
         if (controlSkill == null || !controlSkill.getActive().getValue()) {
             return false;
         }
@@ -73,7 +70,7 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
         if (!pet.canMove()) {
             return false;
         }
-        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
+        ControlImpl controlSkill = pet.getSkills().get(ControlImpl.class);
         // Mirror the null guard in shouldActivate(): the Control skill can be
         // removed from the pet's skilltree between activation and the next
         // stay-active check (reload, skill reset, etc.), so do not assume
@@ -93,7 +90,7 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
         if (newLocation != null && !newLocation.equals(moveTo)) {
             return false;
         }
-        if (myPet.getLocation().get().distance(moveTo) < 1) {
+        if (pet.getLocation().get().distance(moveTo) < 1) {
             return false;
         }
         if (timeToMove <= 0) {
@@ -104,18 +101,18 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
 
     @Override
     public void start() {
-        ControlImpl controlSkill = myPet.getSkills().get(ControlImpl.class);
+        ControlImpl controlSkill = pet.getSkills().get(ControlImpl.class);
         moveTo = controlSkill.getLocation();
         // Bail before touching navigation state if the target is in another
         // world — avoids leaking a "Control" speed modifier that stop() would
         // otherwise need to clean up on a separate tick.
-        if (moveTo.getWorld() != myPet.getLocation().get().getWorld()) {
+        if (moveTo.getWorld() != pet.getLocation().get().getWorld()) {
             stopControl = true;
             moveTo = null;
             return;
         }
         nav.getParameters().addSpeedModifier("Control", speedModifier);
-        timeToMove = (int) myPet.getLocation().get().distance(moveTo) / 3;
+        timeToMove = (int) pet.getLocation().get().distance(moveTo) / 3;
         timeToMove = Math.max(timeToMove, 3);
         if (!isRunning) {
             Timer.addTask(this);
@@ -147,7 +144,7 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
     public void schedule() {
         // Intentionally minimal: the Paper goal selector is the sole
         // authority on start()/stop() for this goal. schedule() is called
-        // by the MyPet Timer independently of the goal selector, and
+        // by the Pet Timer independently of the goal selector, and
         // calling start() from here races with the selector's own
         // activation pass — two start() calls in one tick would do a
         // second destructive read of ControlImpl.getLocation() (returning

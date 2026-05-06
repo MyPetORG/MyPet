@@ -20,15 +20,15 @@
 
 package de.Keyle.MyPet.entity.info;
 
-import de.Keyle.MyPet.api.entity.MyPetInfo;
+import de.Keyle.MyPet.api.entity.PetInfo;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import org.bukkit.entity.EntityType;
 
 /**
- * Concrete plugin-side implementation of {@link MyPetInfo}.
+ * Concrete plugin-side implementation of {@link PetInfo}.
  */
-public class MyPetInfoImpl extends MyPetInfo {
+public class PetInfoImpl extends PetInfo {
 
     @Override
     public boolean isLeashableEntityType(EntityType bukkitType) {

@@ -24,7 +24,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Container holding all {@link Skill} instances for a single {@link MyPet}. Created
+ * Container holding all {@link Skill} instances for a single {@link Pet}. Created
  * once per pet (typically when the pet is loaded or spawned), this class instantiates
  * every skill registered with the {@link SkillManager} and indexes them by both
  * name and class hierarchy for fast lookup.
@@ -54,12 +54,12 @@ public class Skills {
      * Creates a new skill container for the given pet, instantiating all
      * registered skills and indexing them by name and class hierarchy.
      *
-     * @param myPet the pet that owns these skill instances
+     * @param pet the pet that owns these skill instances
      */
-    public Skills(MyPet myPet) {
+    public Skills(Pet pet) {
         for (Class<? extends Skill> clazz : MyPetApi.getSkillManager().getRegisteredSkills()) {
             try {
-                Skill skill = MyPetApi.getSkillManager().getNewSkillInstance(clazz, myPet);
+                Skill skill = MyPetApi.getSkillManager().getNewSkillInstance(clazz, pet);
                 skills.put(skill.getName(), skill);
 
                 Set<Class<? extends Skill>> result = new HashSet<>();

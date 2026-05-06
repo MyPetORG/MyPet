@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
  * ({@code &4}, {@code §c}, hex {@code &x&A&B&C&D&E&F}) to the MiniMessage format
  * that the v4 runtime expects.
  * <p>
- * The v4 {@code MyPet#updateName} path deserializes the pet name through
+ * The v4 {@code Pet#updateName} path deserializes the pet name through
  * {@link MiniMessage}. Legacy-formatted names there lose all colors and render as
  * literal {@code &4Fluffy} text. This migration rewrites those values in-place so
  * existing named pets render correctly.

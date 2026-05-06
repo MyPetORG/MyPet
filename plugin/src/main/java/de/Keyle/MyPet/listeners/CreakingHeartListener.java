@@ -24,7 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
@@ -74,7 +74,7 @@ import java.util.Optional;
  *       Creaking are invulnerable to damage and can only be killed by
  *       destroying their linked Creaking Heart block. This listener
  *       intercepts {@link BlockBreakEvent} on a Creaking Heart and converts
- *       the linked Creaking into a MyPet instead of letting vanilla kill it.</li>
+ *       the linked Creaking into a Pet instead of letting vanilla kill it.</li>
  *   <li><b>Capture-helper interaction hint</b> — when a player with the
  *       capture helper active right-clicks a Creaking Heart, report whether
  *       they meet all leash requirements for the heart-based capture.</li>
@@ -113,7 +113,7 @@ public class CreakingHeartListener implements Listener {
         }
 
         // Player already has an active pet
-        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
+        if (MyPetApi.getPetManager().hasActivePet(player)) {
             return;
         }
 
@@ -124,7 +124,7 @@ public class CreakingHeartListener implements Listener {
             return;
         }
 
-        ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(petType);
+        ConfigItem neededLeashItem = MyPetApi.getPetInfo().getLeashItem(petType);
 
         // Check permission
         if (!Permissions.has(player, "MyPet.leash." + petType.name())) {
@@ -151,7 +151,7 @@ public class CreakingHeartListener implements Listener {
             myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
         }
 
-        for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(petType)) {
+        for (Settings flagSettings : MyPetApi.getPetInfo().getLeashFlagSettings(petType)) {
             String flagName = flagSettings.getName();
             LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
             if (flag == null) {
@@ -196,13 +196,13 @@ public class CreakingHeartListener implements Listener {
         WorldGroup worldGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
         CompoundBinaryTag snapshot = PetEntitySnapshot.capture((Mob) linkedCreaking);
 
-        final PersistedPet inactiveMyPet = PersistedPet.builder(owner)
+        final PersistedPet inactivePet = PersistedPet.builder(owner)
                 .petType(petType)
                 .petName(Locale.getString("Name." + petType.name(), owner))
                 .worldGroup(worldGroup.getName())
                 .info(snapshot)
                 .build();
-        inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
+        inactivePet.getOwner().setPetForWorldGroup(worldGroup, inactivePet.getUUID());
 
         // Store the location before removing
         final Location capturedEntityLocation = linkedCreaking.getLocation().clone();
@@ -232,14 +232,14 @@ public class CreakingHeartListener implements Listener {
         }
 
         // Fire events
-        PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.LEASH);
+        PetCreateEvent createEvent = new PetCreateEvent(inactivePet, PetCreateEvent.Source.LEASH);
         Bukkit.getServer().getPluginManager().callEvent(createEvent);
 
-        PetSaveEvent saveEvent = new PetSaveEvent(inactiveMyPet);
+        PetSaveEvent saveEvent = new PetSaveEvent(inactivePet);
         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
         // Save and activate
-        MyPetPlugin.getInstance().getRepository().addPet(inactiveMyPet).thenAccept(value -> {
+        MyPetPlugin.getInstance().getRepository().addPet(inactivePet).thenAccept(value -> {
             player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 if (value == null || !value) {
                     MyPetApi.getLogger().warning("Failed to save captured Creaking pet for " + owner.getName());
@@ -248,8 +248,8 @@ public class CreakingHeartListener implements Listener {
 
                 owner.sendMessage(Locale.getComponent("Message.Leash.Add", owner));
 
-                Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(inactiveMyPet);
-                myPet.ifPresent(pet -> pet.createEntity(capturedEntityLocation));
+                Optional<Pet> activePet = MyPetApi.getPetManager().activatePet(inactivePet);
+                activePet.ifPresent(pet -> pet.createEntity(capturedEntityLocation));
                 if (owner.isCaptureHelperActive()) {
                     owner.setCaptureHelperActive(false);
                     owner.sendMessage(Locale.getFormattedComponent("Message.Command.CaptureHelper.Mode", owner, Locale.getComponent("Name.Disabled", owner)));
@@ -312,7 +312,7 @@ public class CreakingHeartListener implements Listener {
         }
 
         // Check leash item
-        ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(petType);
+        ConfigItem neededLeashItem = MyPetApi.getPetInfo().getLeashItem(petType);
         ItemStack leashItem = player.getInventory().getItemInMainHand();
         String itemName = neededLeashItem.getItem().getType().name().toLowerCase().replace("_", " ");
         if (!neededLeashItem.compare(leashItem)) {
@@ -329,7 +329,7 @@ public class CreakingHeartListener implements Listener {
         }
 
         // Show LeashFlag status
-        for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(petType)) {
+        for (Settings flagSettings : MyPetApi.getPetInfo().getLeashFlagSettings(petType)) {
             String flagName = flagSettings.getName();
             LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
             if (flag == null) {
@@ -344,7 +344,7 @@ public class CreakingHeartListener implements Listener {
         }
 
         // Player already has an active pet
-        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
+        if (MyPetApi.getPetManager().hasActivePet(player)) {
             myPetPlayer.sendMessage(LeashFlag.getComponentPrefix(false).append(Locale.getComponent("Message.Command.CaptureHelper.HasPet", player)), 2000);
         }
     }
@@ -363,7 +363,7 @@ public class CreakingHeartListener implements Listener {
      * Checks if the HeartLinked leash flag is configured as a requirement for the given pet type.
      */
     private boolean isHeartLinkedRequired(PetType petType) {
-        for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(petType)) {
+        for (Settings flagSettings : MyPetApi.getPetInfo().getLeashFlagSettings(petType)) {
             if ("HeartLinked".equals(flagSettings.getName())) {
                 return true;
             }

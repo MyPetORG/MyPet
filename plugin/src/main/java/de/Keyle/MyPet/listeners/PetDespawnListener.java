@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -31,7 +31,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
- * Ensures MyPet entities are cleanly removed from the world at the right times.
+ * Ensures Pet entities are cleanly removed from the world at the right times.
  *
  * <p>Pet entities are spawned with {@code setPersistent(false)} + {@code setRemoveWhenFarAway(false)},
  * which means they stay alive in loaded chunks but are not saved to disk on
@@ -39,8 +39,8 @@ import org.bukkit.event.world.ChunkUnloadEvent;
  * don't cover:
  * <ol>
  *   <li><b>Owner disconnects.</b> The pet's Bukkit entity is removed and the
- *       {@link MyPet} domain object's state is preserved for respawn on relogin
- *       via {@link MyPet#removePet}.</li>
+ *       {@link Pet} domain object's state is preserved for respawn on relogin
+ *       via {@link Pet#removePet}.</li>
  *   <li><b>Chunk unload safety sweep.</b> Redundant with {@code persistent=false}
  *       but guarantees in-memory cleanup if any pet entities remain in the
  *       chunk at unload time.</li>
@@ -51,8 +51,8 @@ public class PetDespawnListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if (MyPetApi.getPetManager().hasActiveMyPet(event.getPlayer())) {
-            MyPet pet = MyPetApi.getPetManager().getMyPet(event.getPlayer());
+        if (MyPetApi.getPetManager().hasActivePet(event.getPlayer())) {
+            Pet pet = MyPetApi.getPetManager().getPet(event.getPlayer());
             if (pet != null) {
                 pet.removePet(false);
             }

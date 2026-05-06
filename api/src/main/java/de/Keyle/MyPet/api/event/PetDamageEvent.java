@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,13 +55,13 @@ import org.jspecify.annotations.NonNull;
 @Getter
 public class PetDamageEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final MyPet pet;
+    private final Pet pet;
     private final Entity target;
     private double damage;
     @Setter
     private boolean cancelled;
 
-    public PetDamageEvent(MyPet pet, Entity target, double damage) {
+    public PetDamageEvent(Pet pet, Entity target, double damage) {
         this.pet = pet;
         this.target = target;
         this.damage = damage;

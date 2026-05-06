@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.skill.experience;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 
 /**
  * Strategy interface for computing the cumulative experience required at each pet level.
@@ -39,11 +39,11 @@ public interface ExperienceCalculator {
     /**
      * Computes the total cumulative experience required to reach the specified level.
      *
-     * @param myPet the pet whose level curve is being calculated (allows per-type curves)
+     * @param pet the pet whose level curve is being calculated (allows per-type curves)
      * @param level the target level (1-based; level 1 typically requires 0 experience)
      * @return the total experience required to reach {@code level}
      */
-    double getExpByLevel(MyPet myPet, int level);
+    double getExpByLevel(Pet pet, int level);
 
     /**
      * Returns a version number representing the current revision of this calculator's formula.

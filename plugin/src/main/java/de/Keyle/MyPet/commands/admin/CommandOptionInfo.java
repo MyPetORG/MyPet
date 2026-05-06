@@ -141,7 +141,7 @@ public class CommandOptionInfo {
      * Displays the configured leash item for a specific pet type.
      *
      * <p>Retrieves the leash item from the pet type's configuration via
-     * {@link MyPetApi#getMyPetInfo()} and displays its serialized string representation.
+     * {@link MyPetApi#getPetInfo()} and displays its serialized string representation.
      * If no leash item is configured (null item stack), {@code "air"} is shown.
      * The output includes a clickable [Copy] button for clipboard copying.
      *
@@ -149,7 +149,7 @@ public class CommandOptionInfo {
      * @param type   the pet type whose leash item should be displayed
      */
     private void executeLeashItem(CommandSender sender, PetType type) {
-        ConfigItem configItem = MyPetApi.getMyPetInfo().getLeashItem(type);
+        ConfigItem configItem = MyPetApi.getPetInfo().getLeashItem(type);
         ItemStack configItemStack = configItem.getItem();
         String itemString = "air";
         if (configItemStack != null) {

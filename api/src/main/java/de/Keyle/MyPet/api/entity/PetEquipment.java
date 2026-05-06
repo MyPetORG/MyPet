@@ -34,7 +34,7 @@ import java.util.Set;
  * zombies use the full humanoid set. Implementations override
  * {@link #getAllowedSlotNames()} to declare which slots are available.
  */
-public interface MyPetEquipment {
+public interface PetEquipment {
 
     /** Returns all currently equipped items, indexed by slot ordinal. */
     ItemStack[] getEquipment();

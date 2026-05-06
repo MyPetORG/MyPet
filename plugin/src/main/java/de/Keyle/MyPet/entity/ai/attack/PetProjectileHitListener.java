@@ -36,7 +36,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.UUID;
 
 /**
- * Applies damage for MyPet-fired projectiles whose vanilla {@code onHit()}
+ * Applies damage for Pet-fired projectiles whose vanilla {@code onHit()}
  * would otherwise deal no configurable damage.
  *
  * <p>Arrows and tridents do <em>not</em> pass through this listener: their
@@ -50,7 +50,7 @@ import java.util.UUID;
  * reads that tag on {@link ProjectileHitEvent} to apply the damage at hit
  * time.
  *
- * <p>The listener also resolves the MyPet owner for kill-credit attribution
+ * <p>The listener also resolves the Pet owner for kill-credit attribution
  * via {@link PetRangedAttackGoal#PROJECTILE_OWNER_KEY} — so a pet-fired
  * fireball that finishes a mob still credits the owning player for the
  * kill.
@@ -58,7 +58,7 @@ import java.util.UUID;
 public class PetProjectileHitListener implements Listener {
 
     /**
-     * Applies PDC-tagged damage when a MyPet-fired throwable or fireball
+     * Applies PDC-tagged damage when a Pet-fired throwable or fireball
      * strikes a living entity.
      *
      * <p><b>Important:</b> this handler deliberately does NOT call

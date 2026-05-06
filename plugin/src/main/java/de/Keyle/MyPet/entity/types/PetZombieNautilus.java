@@ -21,12 +21,12 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetAmphibiousEntity;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
-import de.Keyle.MyPet.api.entity.MyPetSunSensitive;
+import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
+import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetSunSensitive;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 import org.bukkit.entity.ZombieNautilus;
 import org.bukkit.inventory.ArmoredSaddledMountInventory;
@@ -37,7 +37,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
-public class PetZombieNautilus extends MyPet implements MyPetEquipment, MyPetAmphibiousEntity, MyPetSunSensitive {
+public class PetZombieNautilus extends PetImpl implements PetEquipment, PetAmphibiousEntity, PetSunSensitive {
 
     public PetZombieNautilus(MyPetPlayer petOwner) {
         super(petOwner);

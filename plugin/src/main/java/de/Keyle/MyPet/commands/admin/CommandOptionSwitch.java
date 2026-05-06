@@ -32,7 +32,7 @@ import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -187,27 +187,27 @@ public class CommandOptionSwitch {
         String lang = Locale.getCommandSenderLanguage(sender);
         MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(value -> {
             Runnable listBody = () -> {
-                sender.sendMessage("Select the MyPet you want the player to switch to:");
+                sender.sendMessage("Select the Pet you want the player to switch to:");
                 if (sender instanceof Player) {
                     TextComponent.Builder messageBuilder = Component.text();
                     boolean first = true;
-                    for (StoredPet mypet : value) {
+                    for (StoredPet pet : value) {
                         if (!first) {
                             messageBuilder.append(Component.text(", "));
                         }
-                        String strippedName = Util.SANITIZED_MINIMESSAGE.stripTags(mypet.getPetName());
+                        String strippedName = Util.SANITIZED_MINIMESSAGE.stripTags(pet.getPetName());
                         messageBuilder.append(
-                                mypet.getDisplayName()
+                                pet.getDisplayName()
                                         .clickEvent(ClickEvent.runCommand("/petadmin switch " + playerName + " " + strippedName))
-                                        .hoverEvent(PetInfoBuilder.myPetToItemHover(mypet, lang))
+                                        .hoverEvent(PetInfoBuilder.petToItemHover(pet, lang))
                         );
                         first = false;
                     }
                     sender.sendMessage(messageBuilder.build());
                 } else {
-                    for (StoredPet mypet : value) {
-                        String strippedName = Util.SANITIZED_MINIMESSAGE.stripTags(mypet.getPetName());
-                        sender.sendMessage(strippedName + " (" + mypet.getPetType().name() + ") -> /petadmin switch " + playerName + " " + strippedName);
+                    for (StoredPet storedPet : value) {
+                        String strippedName = Util.SANITIZED_MINIMESSAGE.stripTags(storedPet.getPetName());
+                        sender.sendMessage(strippedName + " (" + storedPet.getPetType().name() + ") -> /petadmin switch " + playerName + " " + strippedName);
                     }
                 }
             };
@@ -256,43 +256,43 @@ public class CommandOptionSwitch {
                     return;
                 }
 
-                if (owner.hasMyPet()) {
-                    MyPetApi.getPetManager().deactivateMyPet(owner, true);
+                if (owner.hasPet()) {
+                    MyPetApi.getPetManager().deactivatePet(owner, true);
                 }
 
-                Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(newPet);
+                Optional<Pet> pet = MyPetApi.getPetManager().activatePet(newPet);
                 sender.sendMessage(Locale.getComponent("Message.Command.Success", sender));
-                if (myPet.isPresent()) {
+                if (pet.isPresent()) {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());
                     // The active world-group binding lives in the player→UUID index,
-                    // not on the snapshot. activateMyPet does not persist
+                    // not on the snapshot. activatePet does not persist
                     // StoredPet#worldGroup, so updating the snapshot here would
                     // be a no-op.
-                    newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
+                    newPet.getOwner().setPetForWorldGroup(worldGroup, newPet.getUUID());
 
-                    owner.sendMessage(Locale.getFormattedComponent("Message.MultiWorld.NowActivePet", owner, myPet.get().getDisplayName()));
-                    switch (myPet.get().createEntity()) {
+                    owner.sendMessage(Locale.getFormattedComponent("Message.MultiWorld.NowActivePet", owner, pet.get().getDisplayName()));
+                    switch (pet.get().createEntity()) {
                         case Success:
-                            sender.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", owner, myPet.get().getDisplayName()));
+                            sender.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", owner, pet.get().getDisplayName()));
                             break;
                         case Canceled:
-                            sender.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", owner, myPet.get().getDisplayName()));
+                            sender.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", owner, pet.get().getDisplayName()));
                             break;
                         case NoSpace:
-                            sender.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", owner, myPet.get().getDisplayName()));
+                            sender.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", owner, pet.get().getDisplayName()));
                             break;
                         case NotAllowed:
-                            sender.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", owner, myPet.get().getDisplayName()));
+                            sender.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", owner, pet.get().getDisplayName()));
                             break;
                         case Dead:
                             if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                sender.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", owner, myPet.get().getDisplayName()));
+                                sender.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", owner, pet.get().getDisplayName()));
                             } else {
-                                sender.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", owner, myPet.get().getDisplayName(), myPet.get().getRespawnTime()));
+                                sender.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", owner, pet.get().getDisplayName(), pet.get().getRespawnTime()));
                             }
                             break;
                         case Flying:
-                            sender.sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", owner, myPet.get().getDisplayName()));
+                            sender.sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", owner, pet.get().getDisplayName()));
                             break;
                     }
                 }

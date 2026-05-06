@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -40,9 +40,9 @@ public class VehicleListener implements Listener {
         // that case via the PetEntityMarker check.
         if (event.getEntered() instanceof Player player
                 && !PetEntityMarker.isMarked(event.getVehicle())) {
-            if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
-                MyPet pet = MyPetApi.getPetManager().getMyPet(player);
-                if (pet.getStatus() == MyPet.PetState.Here) {
+            if (MyPetApi.getPetManager().hasActivePet(player)) {
+                Pet pet = MyPetApi.getPetManager().getPet(player);
+                if (pet.getStatus() == Pet.PetState.Here) {
                     pet.removePet(true);
                 }
             }

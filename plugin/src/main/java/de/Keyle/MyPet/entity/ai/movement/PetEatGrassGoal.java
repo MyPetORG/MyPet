@@ -24,7 +24,7 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.*;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.types.PetSheep;
@@ -63,14 +63,14 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PetEatGrassGoal implements Goal<Mob> {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
     private int eatTicks = 0;
 
     /**
      * @param petEntity the sheep pet that should eat grass when sheared
      */
-    public PetEatGrassGoal(MyPet pet, Mob mob) {
+    public PetEatGrassGoal(Pet pet, Mob mob) {
         this.pet = pet;
         this.mob = mob;
     }
@@ -89,7 +89,7 @@ public class PetEatGrassGoal implements Goal<Mob> {
         if (ThreadLocalRandom.current().nextInt(1000) != 0) {
             return false;
         }
-        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) {
+        if (pet.hasTarget() && !pet.getPetTarget().isDead()) {
             return false;
         }
         Location loc = mob.getLocation();

@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Shield;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -38,18 +38,18 @@ public class ShieldImpl implements Shield {
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> redirectedDamage = new UpgradeComputer<>(0);
-    private MyPet myPet;
+    private Pet pet;
 
-    public ShieldImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public ShieldImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
-    public void setMyPet(MyPet myPet) {
-        this.myPet = myPet;
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
     public boolean isActive() {
@@ -63,13 +63,13 @@ public class ShieldImpl implements Shield {
     }
 
     public Component toPrettyComponent(String locale) {
-        return Locale.getFormattedComponent("Message.Skill.Shield.Format", locale, myPet.getDisplayName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
+        return Locale.getFormattedComponent("Message.Skill.Shield.Format", locale, pet.getDisplayName(), chance.getValue(), redirectedDamage.getValue().doubleValue());
     }
 
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Shield.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getRedirectedDamage().getValue())
+                Locale.getFormattedComponent("Message.Skill.Shield.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getRedirectedDamage().getValue())
         };
     }
 
@@ -83,13 +83,13 @@ public class ShieldImpl implements Shield {
 
     public void apply(EntityDamageEvent event) {
         double redirectedDamage = calculateRedirectedDamage(event.getFinalDamage());
-        if (myPet.getStatus() == PetState.Here && myPet.getHealth() - redirectedDamage > 0) {
-            myPet.getEntity().ifPresent(myPetBukkitEntity -> {
-                myPetBukkitEntity.damage(redirectedDamage);
+        if (pet.getStatus() == PetState.Here && pet.getHealth() - redirectedDamage > 0) {
+            pet.getEntity().ifPresent(pet -> {
+                pet.damage(redirectedDamage);
                 event.setDamage(event.getDamage() - redirectedDamage);
-                myPetBukkitEntity.getWorld().playSound(myPetBukkitEntity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.2F, 1.0F);
-                myPet.getOwner().getPlayer().getWorld().spawnParticle(Particle.ENCHANTED_HIT, myPet.getOwner().getPlayer().getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
-                myPet.getLocation().get().getWorld().spawnParticle(Particle.CRIT, myPet.getLocation().get().add(0, 1, 0), 10, 0.5F, 0.5F, 0.5F, 0.1F);
+                pet.getWorld().playSound(pet.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.2F, 1.0F);
+                this.pet.getOwner().getPlayer().getWorld().spawnParticle(Particle.ENCHANTED_HIT, this.pet.getOwner().getPlayer().getLocation().add(0, 1, 0), 20, 0.5F, 0.5F, 0.5F, 0.1F);
+                this.pet.getLocation().get().getWorld().spawnParticle(Particle.CRIT, this.pet.getLocation().get().add(0, 1, 0), 10, 0.5F, 0.5F, 0.5F, 0.1F);
             });
         }
     }

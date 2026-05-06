@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.skill.experience;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 
 /**
  * The built-in experience calculator that ships with MyPet.
@@ -41,7 +41,7 @@ public class DefaultExperienceCalculator implements ExperienceCalculator {
      * increments from level 1 up to {@code level - 1}, where each increment is
      * {@code 7 + floor((currentLevel - 1) * 3.5)}.
      */
-    public double getExpByLevel(MyPet myPet, int level) {
+    public double getExpByLevel(Pet pet, int level) {
         if (level <= 1) {
             return 0;
         }

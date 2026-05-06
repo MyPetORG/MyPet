@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -162,31 +162,31 @@ public class CommandInfo {
             return;
         }
 
-        if (petOwner.hasMyPet()) {
+        if (petOwner.hasPet()) {
             boolean infoShown = false;
-            MyPet myPet = petOwner.getMyPet();
+            Pet pet = petOwner.getPet();
 
             // Pet name header
-            if (canSee(PetInfoDisplay.Name.adminOnly, sender, myPet)) {
-                sender.sendMessage(PetInfoBuilder.petNameHeader(myPet));
+            if (canSee(PetInfoDisplay.Name.adminOnly, sender, pet)) {
+                sender.sendMessage(PetInfoBuilder.petNameHeader(pet));
                 infoShown = true;
             }
 
             // Owner line (only show if viewing someone else's pet)
-            if (!petOwner.equals(sender) && canSee(!PetInfoDisplay.Owner.adminOnly, sender, myPet)) {
-                sender.sendMessage(PetInfoBuilder.ownerLine(myPet, sender));
+            if (!petOwner.equals(sender) && canSee(!PetInfoDisplay.Owner.adminOnly, sender, pet)) {
+                sender.sendMessage(PetInfoBuilder.ownerLine(pet, sender));
                 infoShown = true;
             }
 
             // HP line
-            if (canSee(PetInfoDisplay.HP.adminOnly, sender, myPet)) {
-                sender.sendMessage(PetInfoBuilder.hpLine(myPet, sender));
+            if (canSee(PetInfoDisplay.HP.adminOnly, sender, pet)) {
+                sender.sendMessage(PetInfoBuilder.hpLine(pet, sender));
                 infoShown = true;
             }
 
             // Respawn time (if dead)
-            if (canSee(PetInfoDisplay.RespawnTime.adminOnly, sender, myPet)) {
-                Component respawnTime = PetInfoBuilder.respawnTimeLine(myPet, sender);
+            if (canSee(PetInfoDisplay.RespawnTime.adminOnly, sender, pet)) {
+                Component respawnTime = PetInfoBuilder.respawnTimeLine(pet, sender);
                 if (respawnTime != null) {
                     sender.sendMessage(respawnTime);
                     infoShown = true;
@@ -194,8 +194,8 @@ public class CommandInfo {
             }
 
             // Damage line
-            if (canSee(PetInfoDisplay.Damage.adminOnly, sender, myPet)) {
-                Component damage = PetInfoBuilder.damageLine(myPet, sender);
+            if (canSee(PetInfoDisplay.Damage.adminOnly, sender, pet)) {
+                Component damage = PetInfoBuilder.damageLine(pet, sender);
                 if (damage != null) {
                     sender.sendMessage(damage);
                     infoShown = true;
@@ -203,8 +203,8 @@ public class CommandInfo {
             }
 
             // Ranged damage line
-            if (canSee(PetInfoDisplay.RangedDamage.adminOnly, sender, myPet)) {
-                Component rangedDamage = PetInfoBuilder.rangedDamageLine(myPet, sender);
+            if (canSee(PetInfoDisplay.RangedDamage.adminOnly, sender, pet)) {
+                Component rangedDamage = PetInfoBuilder.rangedDamageLine(pet, sender);
                 if (rangedDamage != null) {
                     sender.sendMessage(rangedDamage);
                     infoShown = true;
@@ -212,14 +212,14 @@ public class CommandInfo {
             }
 
             // Hunger system
-            if (canSee(PetInfoDisplay.Hunger.adminOnly, sender, myPet)) {
-                Component hunger = PetInfoBuilder.hungerLine(myPet, sender);
+            if (canSee(PetInfoDisplay.Hunger.adminOnly, sender, pet)) {
+                Component hunger = PetInfoBuilder.hungerLine(pet, sender);
                 if (hunger != null) {
                     sender.sendMessage(hunger);
                     infoShown = true;
                 }
 
-                Component food = PetInfoBuilder.foodLine(myPet, sender);
+                Component food = PetInfoBuilder.foodLine(pet, sender);
                 if (food != null) {
                     sender.sendMessage(food);
                     infoShown = true;
@@ -227,8 +227,8 @@ public class CommandInfo {
             }
 
             // Behavior line
-            if (canSee(PetInfoDisplay.Behavior.adminOnly, sender, myPet)) {
-                Component behavior = PetInfoBuilder.behaviorLine(myPet, sender);
+            if (canSee(PetInfoDisplay.Behavior.adminOnly, sender, pet)) {
+                Component behavior = PetInfoBuilder.behaviorLine(pet, sender);
                 if (behavior != null) {
                     sender.sendMessage(behavior);
                     infoShown = true;
@@ -236,8 +236,8 @@ public class CommandInfo {
             }
 
             // Skilltree line
-            if (canSee(PetInfoDisplay.Skilltree.adminOnly, sender, myPet)) {
-                Component skilltree = PetInfoBuilder.skilltreeLine(myPet, sender);
+            if (canSee(PetInfoDisplay.Skilltree.adminOnly, sender, pet)) {
+                Component skilltree = PetInfoBuilder.skilltreeLine(pet, sender);
                 if (skilltree != null) {
                     sender.sendMessage(skilltree);
                     infoShown = true;
@@ -245,20 +245,20 @@ public class CommandInfo {
             }
 
             // Level line
-            if (canSee(PetInfoDisplay.Level.adminOnly, sender, myPet)) {
-                sender.sendMessage(PetInfoBuilder.levelLine(myPet, sender));
+            if (canSee(PetInfoDisplay.Level.adminOnly, sender, pet)) {
+                sender.sendMessage(PetInfoBuilder.levelLine(pet, sender));
                 infoShown = true;
             }
 
             // Experience line
-            if (canSee(PetInfoDisplay.Exp.adminOnly, sender, myPet)) {
-                Component exp = PetInfoBuilder.expLine(myPet, sender);
+            if (canSee(PetInfoDisplay.Exp.adminOnly, sender, pet)) {
+                Component exp = PetInfoBuilder.expLine(pet, sender);
                 if (exp != null) {
                     sender.sendMessage(exp);
                     infoShown = true;
                 }
             }
-            ContributorCheck.ContributorRank rank = ((MyPetPlayerImpl) myPet.getOwner()).getContributorRank();
+            ContributorCheck.ContributorRank rank = ((MyPetPlayerImpl) pet.getOwner()).getContributorRank();
             if (rank != ContributorCheck.ContributorRank.None) {
                 infoShown = true;
                 String icon = rank.getDefaultIcon();

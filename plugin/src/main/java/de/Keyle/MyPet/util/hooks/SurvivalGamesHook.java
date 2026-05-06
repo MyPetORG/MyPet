@@ -23,7 +23,7 @@ package de.Keyle.MyPet.util.hooks;
 import com.thundergemios10.survivalgames.GameManager;
 import com.thundergemios10.survivalgames.api.PlayerJoinArenaEvent;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
@@ -59,8 +59,8 @@ public class SurvivalGamesHook implements AllowedHook {
     public void onJoinPvPArena(PlayerJoinArenaEvent event) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
-                player.getMyPet().removePet();
+            if (player.hasPet() && player.getPet().getStatus() == Pet.PetState.Here) {
+                player.getPet().removePet();
                 player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player.getPlayer()));
             }
         }

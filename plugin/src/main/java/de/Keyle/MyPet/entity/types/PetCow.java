@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetInteractionGate;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetInteractionGate;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
@@ -33,7 +33,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
-public class PetCow extends MyPet implements MyPetBaby, MyPetInteractionGate {
+public class PetCow extends PetImpl implements PetBaby, PetInteractionGate {
 
     public PetCow(MyPetPlayer petOwner) {
         super(petOwner);

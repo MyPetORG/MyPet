@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.util.CompatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
@@ -80,7 +80,7 @@ public final class CreakingActivationSuppressor {
     private CreakingActivationSuppressor() {
     }
 
-    public static void startForPet(MyPet pet) {
+    public static void startForPet(Pet pet) {
         if (!SUPPORTED) return;
         Mob mob = pet.getBukkitEntity();
         if (mob == null) return;
@@ -105,7 +105,7 @@ public final class CreakingActivationSuppressor {
         });
     }
 
-    public static void stopForPet(MyPet pet) {
+    public static void stopForPet(Pet pet) {
         UUID petKey = pet.getUUID();
         String mobUuidEntry = registrations.remove(petKey);
         if (mobUuidEntry == null) return;

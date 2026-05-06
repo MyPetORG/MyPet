@@ -29,7 +29,7 @@ package de.Keyle.MyPet.api.skill;
  * a typed snapshot without parsing raw NBT.
  *
  * <p>Replaces the pre-4.0.0 {@code StoredPet.getSkillInfo()} escape hatch:
- * callers ask for {@code MyPet.State.class} and get a
+ * callers ask for {@code Pet.State.class} and get a
  * shape the skill author owns — not a vendor-shaped {@code CompoundBinaryTag}.
  */
 public interface SkillState {

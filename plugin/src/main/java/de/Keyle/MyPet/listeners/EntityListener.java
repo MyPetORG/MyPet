@@ -24,17 +24,18 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
+import de.Keyle.MyPet.api.skill.PetExperience;
+import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.types.PetEnderman;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.skill.MyPetExperience;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
@@ -171,7 +172,7 @@ public class EntityListener implements Listener {
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
                 return;
             }
-            if (!MyPetApi.getPlayerManager().isMyPetPlayer(player) || !MyPetApi.getPlayerManager().getMyPetPlayer(player).hasMyPet()) {
+            if (!MyPetApi.getPlayerManager().isMyPetPlayer(player) || !MyPetApi.getPlayerManager().getMyPetPlayer(player).hasPet()) {
                 ItemStack leashItem = usedItems.get(player.getUniqueId());
                 if (leashItem != null) {
                     projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), leashItem));
@@ -210,7 +211,7 @@ public class EntityListener implements Listener {
             return;
         }
         if (!event.getEntity().isDead() && !(PetEntityMarker.isMarked(event.getEntity()))) {
-            if (MyPetApi.getMyPetInfo().isLeashableEntityType(event.getEntity().getType())) {
+            if (MyPetApi.getPetInfo().isLeashableEntityType(event.getEntity().getType())) {
                 ItemStack leashItem = null;
                 ItemStack leashItemArrow = null;
                 Player player;
@@ -254,11 +255,11 @@ public class EntityListener implements Listener {
                     return;
                 }
 
-                if (!getPetManager().hasActiveMyPet(player) && !justLeashed.contains(player.getUniqueId())) {
+                if (!getPetManager().hasActivePet(player) && !justLeashed.contains(player.getUniqueId())) {
                     LivingEntity leashTarget = (LivingEntity) event.getEntity();
 
                     PetType petType = PetType.byEntityTypeName(leashTarget.getType().name());
-                    ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(petType);
+                    ConfigItem neededLeashItem = MyPetApi.getPetInfo().getLeashItem(petType);
 
                     if (!Permissions.has(player, "MyPet.leash." + petType.name())) {
                         return;
@@ -279,7 +280,7 @@ public class EntityListener implements Listener {
 
                     boolean willBeLeashed = true;
 
-                    for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(petType)) {
+                    for (Settings flagSettings : MyPetApi.getPetInfo().getLeashFlagSettings(petType)) {
                         String flagName = flagSettings.getName();
                         LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
                         if (flag == null) {
@@ -327,13 +328,13 @@ public class EntityListener implements Listener {
                         // The mob itself is kept in-place (not destroyed) — its visual state is already correct.
                         CompoundBinaryTag snapshot = PetEntitySnapshot.capture((Mob) leashTarget);
 
-                        final PersistedPet inactiveMyPet = PersistedPet.builder(owner)
+                        final PersistedPet inactivePet = PersistedPet.builder(owner)
                                 .petType(petType)
                                 .petName(Locale.getString("Name." + petType.name(), owner))
                                 .worldGroup(worldGroup.getName())
                                 .info(snapshot)
                                 .build();
-                        inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup, inactiveMyPet.getUUID());
+                        inactivePet.getOwner().setPetForWorldGroup(worldGroup, inactivePet.getUUID());
 
                         // Store reference to the original mob so the activation callback can
                         // convert it in-place rather than destroying + re-spawning.
@@ -356,26 +357,26 @@ public class EntityListener implements Listener {
                             }
                         }
 
-                        PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.LEASH);
+                        PetCreateEvent createEvent = new PetCreateEvent(inactivePet, PetCreateEvent.Source.LEASH);
                         Bukkit.getServer().getPluginManager().callEvent(createEvent);
 
-                        PetSaveEvent saveEvent = new PetSaveEvent(inactiveMyPet);
+                        PetSaveEvent saveEvent = new PetSaveEvent(inactivePet);
                         Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
                         justLeashed.add(player.getUniqueId());
-                        MyPetPlugin.getInstance().getRepository().addPet(inactiveMyPet).thenAccept(value -> {
+                        MyPetPlugin.getInstance().getRepository().addPet(inactivePet).thenAccept(value -> {
                             player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                                 owner.sendMessage(Locale.getComponent("Message.Leash.Add", owner));
 
-                                Optional<MyPet> myPet = getPetManager().activateMyPet(inactiveMyPet);
-                                myPet.ifPresent(pet -> {
+                                Optional<Pet> activePet = getPetManager().activatePet(inactivePet);
+                                activePet.ifPresent(pet -> {
                                     // In-place conversion: the original wild mob is still alive.
-                                    // Wire it into the activated MyPet without destroying + re-spawning.
+                                    // Wire it into the activated Pet without destroying + re-spawning.
                                     new VanillaMobSpawner().convertInPlace(pet, capturedMob);
                                     // Use updateStatus (direct field write) instead of setStatus —
                                     // setStatus(Here) from Despawned would call createEntity() and
                                     // spawn a DUPLICATE entity via VanillaMobSpawner.spawn().
-                                    ((de.Keyle.MyPet.entity.MyPet) pet).updateStatus(MyPet.PetState.Here);
+                                    ((PetImpl) pet).updateStatus(Pet.PetState.Here);
                                 });
                                 if (owner.isCaptureHelperActive()) {
                                     owner.setCaptureHelperActive(false);
@@ -417,7 +418,7 @@ public class EntityListener implements Listener {
                     livingSource = (LivingEntity) source;
                 }
                 if (livingSource != null) {
-                    MyPetExperience.addDamageToEntity(livingSource, (LivingEntity) target, event.getDamage());
+                    PetExperience.addDamageToEntity(livingSource, (LivingEntity) target, event.getDamage());
                 }
             }
 
@@ -432,7 +433,7 @@ public class EntityListener implements Listener {
                 if (event.getDamage() == 0) {
                     return;
                 } else if (PetEntityMarker.isMarked(target)) {
-                    if (MyPetApi.getMyPetInfo().getLeashItem(getPetManager().getMyPetFromEntity(target).getPetType()).compare(player.getInventory().getItemInMainHand())) {
+                    if (MyPetApi.getPetInfo().getLeashItem(getPetManager().getPetFromEntity(target).getPetType()).compare(player.getInventory().getItemInMainHand())) {
                         return;
                     }
                 }
@@ -440,13 +441,13 @@ public class EntityListener implements Listener {
                     if (target instanceof Tameable && source.equals(((Tameable) target).getOwner())) {
                         return;
                     }
-                    if (getPetManager().hasActiveMyPet(player)) {
-                        MyPet myPet = getPetManager().getMyPet(player);
-                        if (myPet.getStatus() == PetState.Here) {
-                            myPet.getEntity().ifPresent(entity -> {
+                    if (getPetManager().hasActivePet(player)) {
+                        Pet pet = getPetManager().getPet(player);
+                        if (pet.getStatus() == PetState.Here) {
+                            pet.getEntity().ifPresent(entity -> {
                                 if (target != entity) {
-                                    if (myPet.getDamage() > 0 || myPet.getRangedDamage() > 0) {
-                                        myPet.setTarget((LivingEntity) target, TargetPriority.OwnerHurts);
+                                    if (pet.getDamage() > 0 || pet.getRangedDamage() > 0) {
+                                        pet.setTarget((LivingEntity) target, TargetPriority.OwnerHurts);
                                     }
                                 }
                             });
@@ -467,7 +468,7 @@ public class EntityListener implements Listener {
         Entity damagedEntity = event.getEntity();
         // -- fix unwanted screaming of Endermen --
         if (damagedEntity instanceof Enderman enderman && PetEntityMarker.isMarked(damagedEntity)) {
-            MyPet pet = getPetManager().getMyPetFromEntity(damagedEntity);
+            Pet pet = getPetManager().getPetFromEntity(damagedEntity);
             if (pet instanceof PetEnderman petEnderman) {
                 enderman.setScreaming(petEnderman.isPermaScreaming());
             }
@@ -503,49 +504,49 @@ public class EntityListener implements Listener {
             event.getEntity().removeMetadata("SpawnReason", MyPetApi.getPlugin());
         }
         if (Configuration.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION) {
-            Map<UUID, Double> damagePercentMap = MyPetExperience.getDamageToEntityPercent(deadEntity);
+            Map<UUID, Double> damagePercentMap = PetExperience.getDamageToEntityPercent(deadEntity);
             for (UUID entityUUID : damagePercentMap.keySet()) {
                 Entity entity = Bukkit.getEntity(entityUUID);
                 if (PetEntityMarker.isMarked(entity)) {
-                    MyPet myPet = getPetManager().getMyPetFromEntity(entity);
-                    if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
-                        if (!myPet.autoAssignSkilltree()) {
+                    Pet pet = getPetManager().getPetFromEntity(entity);
+                    if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && pet.getSkilltree() == null) {
+                        if (!pet.autoAssignSkilltree()) {
                             continue;
                         }
                     }
-                    if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
+                    if (pet.getSkilltree() == null || pet.getSkilltree().getMaxLevel() <= 1 || pet.getExperience().getLevel() < pet.getSkilltree().getMaxLevel()) {
                         double randomExp = MonsterExperience.getMonsterExperience(deadEntity).getRandomExp();
-                        myPet.getExperience().addExp(damagePercentMap.get(entity.getUniqueId()) * randomExp, true);
+                        pet.getExperience().addExp(damagePercentMap.get(entity.getUniqueId()) * randomExp, true);
                     }
                 } else if (entity instanceof Player owner) {
-                    if (getPetManager().hasActiveMyPet(owner)) {
-                        MyPet myPet = getPetManager().getMyPet(owner);
-                        if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
-                            if (!myPet.autoAssignSkilltree()) {
+                    if (getPetManager().hasActivePet(owner)) {
+                        Pet pet = getPetManager().getPet(owner);
+                        if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && pet.getSkilltree() == null) {
+                            if (!pet.autoAssignSkilltree()) {
                                 continue;
                             }
                         }
-                        if (myPet.isPassive() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
-                            if (myPet.getStatus() == PetState.Here) {
-                                if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
+                        if (pet.isPassive() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
+                            if (pet.getStatus() == PetState.Here) {
+                                if (pet.getSkilltree() == null || pet.getSkilltree().getMaxLevel() <= 1 || pet.getExperience().getLevel() < pet.getSkilltree().getMaxLevel()) {
                                     int percentage = (int) (Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER * damagePercentMap.get(entity.getUniqueId()));
-                                    myPet.getExperience().addExp(deadEntity, percentage, true);
+                                    pet.getExperience().addExp(deadEntity, percentage, true);
                                 }
                             }
                         }
                     }
                 } else if (entity instanceof Tameable tameable) {
                     if (tameable.isTamed() && tameable.getOwner() != null && tameable.getOwner() instanceof Player owner) {
-                        if (getPetManager().hasActiveMyPet(owner)) {
-                            MyPet myPet = getPetManager().getMyPet(owner);
-                            if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
+                        if (getPetManager().hasActivePet(owner)) {
+                            Pet pet = getPetManager().getPet(owner);
+                            if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && pet.getSkilltree() == null) {
                                 continue;
                             }
-                            if (myPet.isPassive() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
-                                if (myPet.getStatus() == PetState.Here) {
-                                    if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
+                            if (pet.isPassive() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
+                                if (pet.getStatus() == PetState.Here) {
+                                    if (pet.getSkilltree() == null || pet.getSkilltree().getMaxLevel() <= 1 || pet.getExperience().getLevel() < pet.getSkilltree().getMaxLevel()) {
                                         int percentage = (int) (Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER * damagePercentMap.get(entity.getUniqueId()));
-                                        myPet.getExperience().addExp(deadEntity, percentage, true);
+                                        pet.getExperience().addExp(deadEntity, percentage, true);
                                     }
                                 }
                             }
@@ -553,7 +554,7 @@ public class EntityListener implements Listener {
                     }
                 }
             }
-            MyPetExperience.clearDamageMap(deadEntity);
+            PetExperience.clearDamageMap(deadEntity);
         } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent edbee) {
 
             Entity damager = edbee.getDamager();
@@ -561,40 +562,40 @@ public class EntityListener implements Listener {
                 damager = (Entity) ((Projectile) damager).getShooter();
             }
             if (PetEntityMarker.isMarked(damager)) {
-                MyPet myPet = getPetManager().getMyPetFromEntity(damager);
-                if (myPet.getSkilltree() == null && Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE) {
-                    if (!myPet.autoAssignSkilltree()) {
+                Pet pet = getPetManager().getPetFromEntity(damager);
+                if (pet.getSkilltree() == null && Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE) {
+                    if (!pet.autoAssignSkilltree()) {
                         return;
                     }
                 }
-                myPet.getExperience().addExp(edbee.getEntity(), true);
+                pet.getExperience().addExp(edbee.getEntity(), true);
             } else if (damager instanceof Player owner) {
-                if (getPetManager().hasActiveMyPet(owner)) {
-                    MyPet myPet = getPetManager().getMyPet(owner);
-                    if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
-                        if (!myPet.autoAssignSkilltree()) {
+                if (getPetManager().hasActivePet(owner)) {
+                    Pet pet = getPetManager().getPet(owner);
+                    if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && pet.getSkilltree() == null) {
+                        if (!pet.autoAssignSkilltree()) {
                             return;
                         }
                     }
-                    if (myPet.isPassive() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
-                        if (myPet.getStatus() == PetState.Here) {
-                            if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
-                                myPet.getExperience().addExp(deadEntity, Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER, true);
+                    if (pet.isPassive() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
+                        if (pet.getStatus() == PetState.Here) {
+                            if (pet.getSkilltree() == null || pet.getSkilltree().getMaxLevel() <= 1 || pet.getExperience().getLevel() < pet.getSkilltree().getMaxLevel()) {
+                                pet.getExperience().addExp(deadEntity, Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER, true);
                             }
                         }
                     }
                 }
             } else if (damager instanceof Tameable tameable) {
                 if (tameable.isTamed() && tameable.getOwner() != null && tameable.getOwner() instanceof Player owner) {
-                    if (getPetManager().hasActiveMyPet(owner)) {
-                        MyPet myPet = getPetManager().getMyPet(owner);
-                        if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkilltree() == null) {
+                    if (getPetManager().hasActivePet(owner)) {
+                        Pet pet = getPetManager().getPet(owner);
+                        if (Configuration.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE && pet.getSkilltree() == null) {
                             return;
                         }
-                        if (myPet.isPassive() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
-                            if (myPet.getStatus() == PetState.Here) {
-                                if (myPet.getSkilltree() == null || myPet.getSkilltree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkilltree().getMaxLevel()) {
-                                    myPet.getExperience().addExp(deadEntity, Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER, true);
+                        if (pet.isPassive() || Configuration.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP) {
+                            if (pet.getStatus() == PetState.Here) {
+                                if (pet.getSkilltree() == null || pet.getSkilltree().getMaxLevel() <= 1 || pet.getExperience().getLevel() < pet.getSkilltree().getMaxLevel()) {
+                                    pet.getExperience().addExp(deadEntity, Configuration.LevelSystem.Experience.PASSIVE_PERCENT_PER_MONSTER, true);
                                 }
                             }
                         }
@@ -615,12 +616,12 @@ public class EntityListener implements Listener {
             return;
         }
         if (PetEntityMarker.isMarked(event.getEntity())) {
-            MyPet myPet = getPetManager().getMyPetFromEntity(event.getEntity());
-            if (myPet.getSkills().isActive(Behavior.class)) {
-                Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+            Pet pet = getPetManager().getPetFromEntity(event.getEntity());
+            if (pet.getSkills().isActive(Behavior.class)) {
+                Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
                 if (behaviorSkill.getBehavior() == BehaviorMode.Friendly) {
                     event.setCancelled(true);
-                } else if (event.getTarget() instanceof Player && event.getTarget().getName().equals(myPet.getOwner().getName())) {
+                } else if (event.getTarget() instanceof Player && event.getTarget().getName().equals(pet.getOwner().getName())) {
                     event.setCancelled(true);
                 } else if (behaviorSkill.getBehavior() == BehaviorMode.Raid) {
                     if (event.getTarget() instanceof Player) {
@@ -634,8 +635,8 @@ public class EntityListener implements Listener {
             }
         } else if (event.getEntity() instanceof Tameable tameable) {
             if (PetEntityMarker.isMarked(event.getTarget())) {
-                MyPet myPet = getPetManager().getMyPetFromEntity(event.getTarget());
-                if (myPet.getOwner().equals(tameable.getOwner())) {
+                Pet pet = getPetManager().getPetFromEntity(event.getTarget());
+                if (pet.getOwner().equals(tameable.getOwner())) {
                     event.setCancelled(true);
                 }
             }

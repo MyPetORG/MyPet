@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
@@ -81,16 +81,16 @@ public class BackpackImpl implements Backpack {
      * The owning Pet.
      */
     @Getter
-    protected MyPet myPet;
+    protected Pet pet;
 
     /**
      * Creates a new Backpack skill instance for the given Pet and wires the size
      * callback so that inventory capacity follows the number of configured rows.
      *
-     * @param myPet owning Pet
+     * @param pet owning Pet
      */
-    public BackpackImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public BackpackImpl(Pet pet) {
+        this.pet = pet;
         inventory = new CustomInventory();
         // Ensure inventory reflects current row count immediately
         if (rows.getValue().intValue() > 0) {
@@ -124,7 +124,7 @@ public class BackpackImpl implements Backpack {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Inventory.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getRows().getValue().intValue() * 9)
+                Locale.getFormattedComponent("Message.Skill.Inventory.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getRows().getValue().intValue() * 9)
         };
     }
 
@@ -141,39 +141,39 @@ public class BackpackImpl implements Backpack {
      */
     public boolean activate() {
         if (rows.getValue().intValue() > 0) {
-            if (myPet.getOwner().getPlayer().isSleeping()) {
-                myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", myPet.getOwner()));
+            if (pet.getOwner().getPlayer().isSleeping()) {
+                pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", pet.getOwner()));
                 return false;
             }
-            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin")) {
-                myPet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Inventory.Creative", myPet.getOwner()));
+            if (pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(pet.getOwner().getPlayer(), "MyPet.admin")) {
+                pet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Inventory.Creative", pet.getOwner()));
                 return false;
             }
-            PetInventoryActionEvent event = new PetInventoryActionEvent(myPet, PetInventoryActionEvent.Action.OPEN);
+            PetInventoryActionEvent event = new PetInventoryActionEvent(pet, PetInventoryActionEvent.Action.OPEN);
             Bukkit.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", pet.getOwner(), pet.getDisplayName()));
                 return false;
             }
-            if (myPet.getLocation().isPresent()) {
-                Location petLoc = myPet.getLocation().get();
+            if (pet.getLocation().isPresent()) {
+                Location petLoc = pet.getLocation().get();
                 // Reading the block at the pet's location requires owning that region on Folia.
                 // If the player issued the command from a different region, skip the swim check
                 // and allow opening — the "pet is swimming" guard is cosmetic, not a hard rule.
                 boolean inLiquid = Bukkit.isOwnedByCurrentRegion(petLoc) && petLoc.getBlock().isLiquid();
                 if (!inLiquid) {
-                    openInventory(myPet.getOwner().getPlayer());
+                    openInventory(pet.getOwner().getPlayer());
                     return true;
                 } else {
-                    myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.Swimming", myPet.getOwner(), myPet.getDisplayName()));
+                    pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.Swimming", pet.getOwner(), pet.getDisplayName()));
                     return false;
                 }
             } else {
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.Swimming", myPet.getOwner(), myPet.getDisplayName()));
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.Swimming", pet.getOwner(), pet.getDisplayName()));
                 return false;
             }
         } else {
-            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.NotAvailable", myPet.getOwner(), myPet.getDisplayName()));
+            pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.NotAvailable", pet.getOwner(), pet.getDisplayName()));
             return false;
         }
     }
@@ -185,7 +185,7 @@ public class BackpackImpl implements Backpack {
      * @param p the player for whom to open the inventory
      */
     public void openInventory(Player p) {
-        inventory.setName(myPet.getDisplayName());
+        inventory.setName(pet.getDisplayName());
         inventory.open(p);
     }
 

@@ -26,13 +26,14 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetInfo;
 import de.Keyle.MyPet.api.event.PetRemoveEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -56,7 +57,7 @@ import java.util.List;
  * by running {@code /petrelease <pet-name>} with the exact pet name (MiniMessage tags
  * stripped). Upon confirmation, the pet is removed from the database, its Backpack
  * contents and equipment are dropped, and optionally a vanilla entity is spawned in
- * its place (controlled by {@link de.Keyle.MyPet.api.entity.MyPetInfo#getRemoveAfterRelease}).</p>
+ * its place (controlled by {@link PetInfo#getRemoveAfterRelease}).</p>
  *
  * <p>This command is restricted to in-game players only (no console support).</p>
  *
@@ -104,7 +105,7 @@ public class CommandRelease {
                 "/petrelease",
                 CommandCategory.PET,
                 100,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
                         && Permissions.has(player, "MyPet.command.release")
         ));
     }
@@ -120,24 +121,24 @@ public class CommandRelease {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
         if (!Permissions.has(petOwner, "MyPet.command.release")) {
             return;
         }
-        if (myPet.getStatus() == PetState.Despawned) {
-            petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
+        if (pet.getStatus() == PetState.Despawned) {
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, pet.getDisplayName()));
             return;
-        } else if (myPet.getStatus() == PetState.Dead) {
-            petOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", petOwner, myPet.getDisplayName(), myPet.getRespawnTime()));
+        } else if (pet.getStatus() == PetState.Dead) {
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", petOwner, pet.getDisplayName(), pet.getRespawnTime()));
             return;
         }
 
-        showReleasePrompt(petOwner, myPet);
+        showReleasePrompt(petOwner, pet);
     }
 
     /**
@@ -155,50 +156,50 @@ public class CommandRelease {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));
             return;
         }
 
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
         if (!Permissions.has(petOwner, "MyPet.command.release")) {
             return;
         }
-        if (myPet.getStatus() == PetState.Despawned) {
-            petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
+        if (pet.getStatus() == PetState.Despawned) {
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, pet.getDisplayName()));
             return;
-        } else if (myPet.getStatus() == PetState.Dead) {
-            petOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", petOwner, myPet.getDisplayName(), myPet.getRespawnTime()));
+        } else if (pet.getStatus() == PetState.Dead) {
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", petOwner, pet.getDisplayName(), pet.getRespawnTime()));
             return;
         }
 
-        if (Util.SANITIZED_MINIMESSAGE.stripTags(myPet.getPetName()).trim().equalsIgnoreCase(name.trim())) {
-            PetRemoveEvent removeEvent = new PetRemoveEvent(myPet, PetRemoveEvent.Source.RELEASE);
+        if (Util.SANITIZED_MINIMESSAGE.stripTags(pet.getPetName()).trim().equalsIgnoreCase(name.trim())) {
+            PetRemoveEvent removeEvent = new PetRemoveEvent(pet, PetRemoveEvent.Source.RELEASE);
             Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
             // Drop backpack contents BEFORE releaseToWild — that call detaches
-            // the Bukkit entity reference from the MyPet, after which
-            // myPet.getLocation() falls back to the owner's location (see
-            // MyPet#getLocation) and items would drop at the owner's feet
+            // the Bukkit entity reference from the Pet, after which
+            // pet.getLocation() falls back to the owner's location (see
+            // Pet#getLocation) and items would drop at the owner's feet
             // instead of where the pet is standing.
-            if (myPet.getSkills().isActive(Backpack.class)) {
-                myPet.getSkills().get(Backpack.class).getInventory().dropContentAt(myPet.getLocation().get());
+            if (pet.getSkills().isActive(Backpack.class)) {
+                pet.getSkills().get(Backpack.class).getInventory().dropContentAt(pet.getLocation().get());
             }
 
             boolean entityConverted = false;
-            if (!MyPetApi.getMyPetInfo().getRemoveAfterRelease(myPet.getPetType())) {
+            if (!MyPetApi.getPetInfo().getRemoveAfterRelease(pet.getPetType())) {
                 // The pet IS a real vanilla mob — just strip MyPet infrastructure
                 // and release it back to the wild. No need to spawn a new entity.
                 try {
-                    new VanillaMobSpawner().releaseToWild(myPet);
+                    new VanillaMobSpawner().releaseToWild(pet);
                     entityConverted = true;
                 } catch (Exception e) {
                     // Log the exception and notify the owner. releaseToWild is
-                    // exception-safe w.r.t. the MyPet domain object (it detaches
+                    // exception-safe w.r.t. the Pet domain object (it detaches
                     // state before any throwing operation), so the caller can
                     // still finish the rest of the cleanup path below.
                     MyPetApi.getLogger().log(java.util.logging.Level.SEVERE,
-                            "Failed to release pet " + myPet.getPetName() + " to wild", e);
+                            "Failed to release pet " + pet.getPetName() + " to wild", e);
                     petOwner.sendMessage(Component.text(
                                     "Failed to release your pet: " + e.getMessage())
                             .color(NamedTextColor.RED));
@@ -207,18 +208,18 @@ public class CommandRelease {
             }
 
             // Only drop equipment if the entity wasn't converted (equipment already transferred to the converted entity)
-            if (myPet instanceof MyPetEquipment && !entityConverted) {
-                ((MyPetEquipment) myPet).dropEquipment();
+            if (pet instanceof PetEquipment && !entityConverted) {
+                ((PetEquipment) pet).dropEquipment();
             }
 
-            myPet.removePet();
-            myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()), null);
+            pet.removePet();
+            pet.getOwner().setPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()), null);
 
-            petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Release.Success", petOwner, myPet.getDisplayName()));
-            MyPetApi.getPetManager().deactivateMyPet(myPet.getOwner(), false);
-            MyPetPlugin.getInstance().getRepository().removePet(myPet.getUUID());
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Release.Success", petOwner, pet.getDisplayName()));
+            MyPetApi.getPetManager().deactivatePet(pet.getOwner(), false);
+            MyPetPlugin.getInstance().getRepository().removePet(pet.getUUID());
         } else {
-            showReleasePrompt(petOwner, myPet);
+            showReleasePrompt(petOwner, pet);
         }
     }
 
@@ -228,40 +229,40 @@ public class CommandRelease {
      * showing pet stats (hunger, HP/respawn time, experience, type, and skilltree).
      *
      * @param petOwner the player to show the prompt to
-     * @param myPet    the active pet being released
+     * @param pet    the active pet being released
      */
-    private void showReleasePrompt(Player petOwner, MyPet myPet) {
+    private void showReleasePrompt(Player petOwner, Pet pet) {
         // Build hover item with pet stats
         TextComponent.Builder hoverBuilder = Component.text();
 
         hoverBuilder.append(Locale.getComponent("Name.Hunger", petOwner))
                 .append(Component.text(": "))
-                .append(Component.text(Math.round(myPet.getSaturation())).color(NamedTextColor.GOLD));
+                .append(Component.text(Math.round(pet.getSaturation())).color(NamedTextColor.GOLD));
 
-        if (myPet.getRespawnTime() > 0) {
+        if (pet.getRespawnTime() > 0) {
             hoverBuilder.append(Component.newline())
                     .append(Locale.getComponent("Name.Respawntime", petOwner))
                     .append(Component.text(": "))
-                    .append(Component.text(myPet.getRespawnTime() + "sec").color(NamedTextColor.GOLD));
+                    .append(Component.text(pet.getRespawnTime() + "sec").color(NamedTextColor.GOLD));
         } else {
             hoverBuilder.append(Component.newline())
                     .append(Locale.getComponent("Name.HP", petOwner))
                     .append(Component.text(": "))
-                    .append(Component.text(String.format("%1.2f", myPet.getHealth())).color(NamedTextColor.GOLD));
+                    .append(Component.text(String.format("%1.2f", pet.getHealth())).color(NamedTextColor.GOLD));
         }
 
         hoverBuilder.append(Component.newline())
                 .append(Locale.getComponent("Name.Exp", petOwner))
                 .append(Component.text(": "))
-                .append(Component.text(String.format("%1.2f", myPet.getExp())).color(NamedTextColor.GOLD))
+                .append(Component.text(String.format("%1.2f", pet.getExp())).color(NamedTextColor.GOLD))
                 .append(Component.newline())
                 .append(Locale.getComponent("Name.Type", petOwner))
                 .append(Component.text(": "))
-                .append(Locale.getComponent("Name." + myPet.getPetType().name(), petOwner).color(NamedTextColor.GOLD))
+                .append(Locale.getComponent("Name." + pet.getPetType().name(), petOwner).color(NamedTextColor.GOLD))
                 .append(Component.newline())
                 .append(Locale.getComponent("Name.Skilltree", petOwner))
                 .append(Component.text(": "))
-                .append(Util.SANITIZED_MINIMESSAGE.deserialize(myPet.getSkilltree() != null ? myPet.getSkilltree().getDisplayName() : "-")
+                .append(Util.SANITIZED_MINIMESSAGE.deserialize(pet.getSkilltree() != null ? pet.getSkilltree().getDisplayName() : "-")
                         .color(NamedTextColor.GOLD));
 
         HoverEvent<Component> hoverEvent = HoverEvent.showText(hoverBuilder.build());
@@ -269,8 +270,8 @@ public class CommandRelease {
         petOwner.sendMessage(
                 Locale.getComponent("Message.Command.Release.Confirm", petOwner).append(Component.text(" "))
                         .append(
-                                myPet.getDisplayName()
-                                        .clickEvent(ClickEvent.runCommand("/petrelease " + Util.SANITIZED_MINIMESSAGE.stripTags(myPet.getPetName())))
+                                pet.getDisplayName()
+                                        .clickEvent(ClickEvent.runCommand("/petrelease " + Util.SANITIZED_MINIMESSAGE.stripTags(pet.getPetName())))
                                         .hoverEvent(hoverEvent)
                         )
         );

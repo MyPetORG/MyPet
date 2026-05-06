@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.player;
 
 import com.google.common.collect.BiMap;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 import net.kyori.adventure.nbt.BinaryTag;
@@ -86,28 +86,28 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
     // ─── World-Group Bindings ───────────────────────────────────────────────────
 
     /** Binds a pet UUID as the active pet for the given world group name. */
-    void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID);
+    void setPetForWorldGroup(String worldGroup, UUID petUUID);
 
     /** Binds a pet UUID as the active pet for the given world group. */
-    void setMyPetForWorldGroup(WorldGroup worldGroup, UUID myPetUUID);
+    void setPetForWorldGroup(WorldGroup worldGroup, UUID petUUID);
 
     /** Returns the active pet UUID for the given world group, or {@code null}. */
-    UUID getMyPetForWorldGroup(String worldGroup);
+    UUID getPetForWorldGroup(String worldGroup);
 
     /** Returns the active pet UUID for the given world group, or {@code null}. */
-    UUID getMyPetForWorldGroup(WorldGroup worldGroup);
+    UUID getPetForWorldGroup(WorldGroup worldGroup);
 
     /** Returns the full world-group → pet UUID mapping (bidirectional). */
-    BiMap<String, UUID> getMyPetsForWorldGroups();
+    BiMap<String, UUID> getPetsForWorldGroups();
 
     /** Returns the world group name that a pet UUID is bound to. */
-    String getWorldGroupForMyPet(UUID petUUID);
+    String getWorldGroupForPet(UUID petUUID);
 
     /** Returns {@code true} if this player has a pet in the named world group. */
-    boolean hasMyPetInWorldGroup(String worldGroup);
+    boolean hasPetInWorldGroup(String worldGroup);
 
     /** Returns {@code true} if this player has a pet in the given world group. */
-    boolean hasMyPetInWorldGroup(WorldGroup worldGroup);
+    boolean hasPetInWorldGroup(WorldGroup worldGroup);
 
     // ─── Extended Addon Data ────────────────────────────────────────────────────
 
@@ -138,13 +138,13 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
     boolean isMyPetAdmin();
 
     /** Returns {@code true} if this player has an active (live) pet. */
-    boolean hasMyPet();
+    boolean hasPet();
 
     /**
      * Returns the player's currently active pet, or {@code null} if no
      * pet is active in the current world group.
      */
-    MyPet getMyPet();
+    Pet getPet();
 
     /**
      * Returns the underlying Bukkit player. Only valid when

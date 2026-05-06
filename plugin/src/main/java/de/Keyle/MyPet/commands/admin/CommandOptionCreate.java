@@ -28,6 +28,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.PersistedPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
@@ -35,7 +36,6 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.CommandOptionCreator;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -564,7 +564,7 @@ public class CommandOptionCreate {
 
         try {
             PetType petType = PetType.byEntityTypeName(entityType.name());
-            if (petType.checkMinecraftVersion() && MyPetApi.getMyPetInfo().isLeashableEntityType(entityType)) {
+            if (petType.checkMinecraftVersion() && MyPetApi.getPetInfo().isLeashableEntityType(entityType)) {
                 if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
                     sender.sendMessage(MessageUtil.prefixed(Component.text("Pets are not allowed in ").append(Component.text(owner.getWorld().getName()).color(NamedTextColor.GOLD))));
                     return;
@@ -574,8 +574,8 @@ public class CommandOptionCreate {
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(owner)) {
                     newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
 
-                    if (newOwner.hasMyPet() && force) {
-                        MyPetApi.getPetManager().deactivateMyPet(newOwner, true);
+                    if (newOwner.hasPet() && force) {
+                        MyPetApi.getPetManager().deactivatePet(newOwner, true);
                     }
                 } else {
                     newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
@@ -586,26 +586,26 @@ public class CommandOptionCreate {
                         .petName(Locale.getString("Name." + petType.name(), newOwner))
                         .build();
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
-                final PersistedPet inactiveMyPet = updateData(base, options).withWorldGroup(wg.getName());
+                final PersistedPet inactivePet = updateData(base, options).withWorldGroup(wg.getName());
 
-                PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.ADMIN_COMMAND);
+                PetCreateEvent createEvent = new PetCreateEvent(inactivePet, PetCreateEvent.Source.ADMIN_COMMAND);
                 Bukkit.getServer().getPluginManager().callEvent(createEvent);
 
-                PetSaveEvent saveEvent = new PetSaveEvent(inactiveMyPet);
+                PetSaveEvent saveEvent = new PetSaveEvent(inactivePet);
                 Bukkit.getServer().getPluginManager().callEvent(saveEvent);
 
-                MyPetPlugin.getInstance().getRepository().addPet(inactiveMyPet).thenAccept(added -> owner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+                MyPetPlugin.getInstance().getRepository().addPet(inactivePet).thenAccept(added -> owner.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         if (added) {
-                            if (!newOwner.hasMyPet()) {
-                                inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, inactiveMyPet.getUUID());
-                                MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(inactiveMyPet.getOwner());
+                            if (!newOwner.hasPet()) {
+                                inactivePet.getOwner().setPetForWorldGroup(wg, inactivePet.getUUID());
+                                MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(inactivePet.getOwner());
 
-                                Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(inactiveMyPet);
-                                if (myPet.isPresent()) {
-                                    myPet.get().createEntity();
+                                Optional<Pet> pet = MyPetApi.getPetManager().activatePet(inactivePet);
+                                if (pet.isPresent()) {
+                                    pet.get().createEntity();
                                     sender.sendMessage(Locale.getComponent("Message.Command.Success", sender));
                                 } else {
-                                    sender.sendMessage(MessageUtil.prefixed(Component.text("Can't create MyPet for " + newOwner.getName() + ". Is this player online?")));
+                                    sender.sendMessage(MessageUtil.prefixed(Component.text("Can't create Pet for " + newOwner.getName() + ". Is this player online?")));
                                 }
                             } else {
                                 sender.sendMessage(Locale.getComponent("Message.Command.Success", sender));

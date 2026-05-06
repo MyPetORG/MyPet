@@ -24,9 +24,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.util.VersionUtil;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.repository.Repository;
@@ -79,14 +79,14 @@ import java.util.concurrent.TimeUnit;
  *
  * <p><b>Failure conventions for {@code CompletableFuture}-returning methods.</b>
  * <ul>
- *   <li>{@code Boolean}-returning writes ({@code addMyPet}, {@code updateMyPet},
- *       {@code removeMyPet}, etc.) return {@code false} on error and log.</li>
+ *   <li>{@code Boolean}-returning writes ({@code addPet}, {@code updatePet},
+ *       {@code removePet}, etc.) return {@code false} on error and log.</li>
  *   <li>{@code Integer} counters ({@code countPets}) throw {@link CompletionException}
  *       on error — {@code 0} would be ambiguous with "no rows".</li>
  *   <li>{@code Integer cleanup} returns {@code 0} on error — {@code 0} genuinely
  *       matches "nothing deleted".</li>
  *   <li>Domain-object reads that can legitimately return {@code null} for
- *       "not found" ({@code getMyPet}, {@code getMyPetPlayer}, {@code getPets})
+ *       "not found" ({@code getPet}, {@code getMyPetPlayer}, {@code getPets})
  *       throw {@link CompletionException} on error to distinguish from empty.</li>
  *   <li>Boolean existence checks ({@code hasPets}, {@code isMyPetPlayer}) throw
  *       {@link CompletionException} — a silent {@code false} could lead to data
@@ -168,7 +168,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * but {@code VARBINARY} in MySQL (to be byte-exact with Minecraft's UTF-8
      * display names without charset surprises).
      *
-     * <p>Note: {@code addMyPet} and {@code addPets} bypass this hook and use
+     * <p>Note: {@code addPet} and {@code addPets} bypass this hook and use
      * {@code setString} directly on INSERT — that's the pre-existing asymmetry
      * with the UPDATE path and is preserved by this refactor.
      */
@@ -202,7 +202,7 @@ public abstract class AbstractSqlRepository implements Repository {
             if (jsonObject == null) return;
             for (String uuid : jsonObject.keySet()) {
                 String petUUID = jsonObject.get(uuid).getAsString();
-                player.setMyPetForWorldGroup(uuid, UUID.fromString(petUUID));
+                player.setPetForWorldGroup(uuid, UUID.fromString(petUUID));
             }
         } catch (JsonParseException e) {
             reportError(e);
@@ -288,7 +288,7 @@ public abstract class AbstractSqlRepository implements Repository {
     @Override
     public CompletableFuture<Integer> cleanup(final long timestamp) {
         return CompletableFuture.supplyAsync(() -> {
-            MyPet[] activePets = MyPetApi.getPetManager().getAllActiveMyPets();
+            Pet[] activePets = MyPetApi.getPetManager().getAllActivePets();
             StringBuilder sql = new StringBuilder("DELETE FROM ")
                     .append(qualifyTable("pets"))
                     .append(" WHERE last_used<?");
@@ -721,7 +721,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * single write) and {@link #savePets} (batch during periodic / shutdown
      * saves). Returns {@code true} if the UPDATE touched a row.
      */
-    protected boolean savePetSync(StoredPet myPet) {
+    protected boolean savePetSync(StoredPet pet) {
         try (ConnectionHolder h = acquireConnection();
              PreparedStatement stmt = h.connection().prepareStatement(
                      "UPDATE " + qualifyTable("pets") + " SET " +
@@ -729,20 +729,20 @@ public abstract class AbstractSqlRepository implements Repository {
                              "last_used=?, hunger=?, world_group=?, wants_to_spawn=?, " +
                              "skilltree=?, skills=?, info=? " +
                              "WHERE uuid=?;")) {
-            stmt.setString(1, myPet.getOwner().getUniqueId().toString());
-            stmt.setDouble(2, myPet.getExp());
-            stmt.setDouble(3, myPet.getHealth());
-            stmt.setInt(4, myPet.getRespawnTime());
-            bindPetName(stmt, 5, myPet.getPetName());
-            stmt.setString(6, myPet.getPetType().name());
-            stmt.setLong(7, myPet.getLastUsed());
-            stmt.setDouble(8, myPet.getSaturation());
-            stmt.setString(9, myPet.getWorldGroup());
-            stmt.setBoolean(10, myPet.wantsToRespawn());
-            stmt.setString(11, myPet.getSkilltree() != null ? myPet.getSkilltree().getName() : null);
-            bindBlob(stmt, 12, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(myPet)));
-            bindBlob(stmt, 13, serializeInfo(myPet));
-            stmt.setString(14, myPet.getUUID().toString());
+            stmt.setString(1, pet.getOwner().getUniqueId().toString());
+            stmt.setDouble(2, pet.getExp());
+            stmt.setDouble(3, pet.getHealth());
+            stmt.setInt(4, pet.getRespawnTime());
+            bindPetName(stmt, 5, pet.getPetName());
+            stmt.setString(6, pet.getPetType().name());
+            stmt.setLong(7, pet.getLastUsed());
+            stmt.setDouble(8, pet.getSaturation());
+            stmt.setString(9, pet.getWorldGroup());
+            stmt.setBoolean(10, pet.wantsToRespawn());
+            stmt.setString(11, pet.getSkilltree() != null ? pet.getSkilltree().getName() : null);
+            bindBlob(stmt, 12, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(pet)));
+            bindBlob(stmt, 13, serializeInfo(pet));
+            stmt.setString(14, pet.getUUID().toString());
             stmt.executeUpdate();
             return true;
         } catch (SQLException | IOException e) {
@@ -753,8 +753,8 @@ public abstract class AbstractSqlRepository implements Repository {
 
     /** Async wrapper over {@link #savePetSync}. */
     @Override
-    public CompletableFuture<Boolean> savePet(StoredPet myPet) {
-        return CompletableFuture.supplyAsync(() -> savePetSync(myPet), executor);
+    public CompletableFuture<Boolean> savePet(StoredPet pet) {
+        return CompletableFuture.supplyAsync(() -> savePetSync(pet), executor);
     }
 
     /**
@@ -881,8 +881,8 @@ public abstract class AbstractSqlRepository implements Repository {
             bindBlob(stmt, 6, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
 
             JsonObject multiWorldObject = new JsonObject();
-            for (String g : player.getMyPetsForWorldGroups().keySet()) {
-                multiWorldObject.addProperty(g, player.getMyPetsForWorldGroups().get(g).toString());
+            for (String g : player.getPetsForWorldGroups().keySet()) {
+                multiWorldObject.addProperty(g, player.getPetsForWorldGroups().get(g).toString());
             }
             stmt.setString(7, gson.toJson(multiWorldObject));
             stmt.setString(8, player.getUniqueId().toString());
@@ -933,8 +933,8 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setFloat(6, player.getPetLivingSoundVolume());
                 bindBlob(stmt, 7, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
                 JsonObject multiWorldObject = new JsonObject();
-                for (String g : player.getMyPetsForWorldGroups().keySet()) {
-                    multiWorldObject.addProperty(g, player.getMyPetsForWorldGroups().get(g).toString());
+                for (String g : player.getPetsForWorldGroups().keySet()) {
+                    multiWorldObject.addProperty(g, player.getPetsForWorldGroups().get(g).toString());
                 }
                 stmt.setString(8, gson.toJson(multiWorldObject));
                 return stmt.executeUpdate() > 0;
@@ -982,11 +982,11 @@ public abstract class AbstractSqlRepository implements Repository {
     }
 
     private void savePets() {
-        for (MyPet myPet : MyPetApi.getPetManager().getAllActiveMyPets()) {
-            savePetSync(myPet);
+        for (Pet pet : MyPetApi.getPetManager().getAllActivePets()) {
+            savePetSync(pet);
         }
-        for (StoredPet myPet : petsToBeSaved.values()) {
-            savePetSync(myPet);
+        for (StoredPet pet : petsToBeSaved.values()) {
+            savePetSync(pet);
         }
     }
 
@@ -1075,8 +1075,8 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setFloat(6, player.getPetLivingSoundVolume());
                 bindBlob(stmt, 7, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
                 JsonObject multiWorldObject = new JsonObject();
-                for (String g : player.getMyPetsForWorldGroups().keySet()) {
-                    multiWorldObject.addProperty(g, player.getMyPetsForWorldGroups().get(g).toString());
+                for (String g : player.getPetsForWorldGroups().keySet()) {
+                    multiWorldObject.addProperty(g, player.getPetsForWorldGroups().get(g).toString());
                 }
                 stmt.setString(8, gson.toJson(multiWorldObject));
                 stmt.addBatch();

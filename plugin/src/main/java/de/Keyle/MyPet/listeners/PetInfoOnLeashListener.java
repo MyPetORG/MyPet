@@ -22,7 +22,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.CommandInfo;
 import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
@@ -43,15 +43,14 @@ import org.bukkit.inventory.ItemStack;
  * leash item, display the pet's info report instead of dealing damage.
  *
  * <p>This is an "event-as-RPC" pattern — a damage event repurposed as a
- * UI input. Extracted from {@code MyPetEntityListener} to make the intent
- * explicit: this file handles the info-display gesture, not damage logic.
+ * UI input.
  */
 public class PetInfoOnLeashListener implements Listener {
 
     @EventHandler
     public void onLeashInfoGesture(final EntityDamageByEntityEvent event) {
-        MyPet myPet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
-        if (myPet == null) return;
+        Pet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
+        if (pet == null) return;
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) return;
 
         // Resolve the player behind the damager (direct hit or projectile)
@@ -66,33 +65,33 @@ public class PetInfoOnLeashListener implements Listener {
         }
 
         ItemStack leashItem = damager.getEquipment().getItemInMainHand();
-        if (!MyPetApi.getMyPetInfo().getLeashItem(myPet.getPetType()).compare(leashItem)) {
+        if (!MyPetApi.getPetInfo().getLeashItem(pet.getPetType()).compare(leashItem)) {
             return;
         }
 
         boolean infoShown = false;
 
         // Pet name header
-        if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, myPet)) {
-            damager.sendMessage(PetInfoBuilder.petNameHeader(myPet));
+        if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, pet)) {
+            damager.sendMessage(PetInfoBuilder.petNameHeader(pet));
             infoShown = true;
         }
 
         // Owner line (only show if viewing someone else's pet)
-        if (CommandInfo.canSee(PetInfoDisplay.Owner.adminOnly, damager, myPet) && myPet.getOwner().getPlayer() != damager) {
-            damager.sendMessage(PetInfoBuilder.ownerLine(myPet, damager));
+        if (CommandInfo.canSee(PetInfoDisplay.Owner.adminOnly, damager, pet) && pet.getOwner().getPlayer() != damager) {
+            damager.sendMessage(PetInfoBuilder.ownerLine(pet, damager));
             infoShown = true;
         }
 
         // HP line
-        if (CommandInfo.canSee(PetInfoDisplay.HP.adminOnly, damager, myPet)) {
-            damager.sendMessage(PetInfoBuilder.hpLine(myPet, damager));
+        if (CommandInfo.canSee(PetInfoDisplay.HP.adminOnly, damager, pet)) {
+            damager.sendMessage(PetInfoBuilder.hpLine(pet, damager));
             infoShown = true;
         }
 
         // Respawn time (if dead)
-        if (CommandInfo.canSee(PetInfoDisplay.RespawnTime.adminOnly, damager, myPet)) {
-            Component respawnTime = PetInfoBuilder.respawnTimeLine(myPet, damager);
+        if (CommandInfo.canSee(PetInfoDisplay.RespawnTime.adminOnly, damager, pet)) {
+            Component respawnTime = PetInfoBuilder.respawnTimeLine(pet, damager);
             if (respawnTime != null) {
                 damager.sendMessage(respawnTime);
                 infoShown = true;
@@ -100,8 +99,8 @@ public class PetInfoOnLeashListener implements Listener {
         }
 
         // Damage line
-        if (CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, myPet)) {
-            Component damage = PetInfoBuilder.damageLine(myPet, damager);
+        if (CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, pet)) {
+            Component damage = PetInfoBuilder.damageLine(pet, damager);
             if (damage != null) {
                 damager.sendMessage(damage);
                 infoShown = true;
@@ -109,8 +108,8 @@ public class PetInfoOnLeashListener implements Listener {
         }
 
         // Ranged damage line
-        if (CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, damager, myPet)) {
-            Component rangedDamage = PetInfoBuilder.rangedDamageLine(myPet, damager);
+        if (CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, damager, pet)) {
+            Component rangedDamage = PetInfoBuilder.rangedDamageLine(pet, damager);
             if (rangedDamage != null) {
                 damager.sendMessage(rangedDamage);
                 infoShown = true;
@@ -118,14 +117,14 @@ public class PetInfoOnLeashListener implements Listener {
         }
 
         // Hunger system
-        if (CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
-            Component hunger = PetInfoBuilder.hungerLine(myPet, damager);
+        if (CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, pet)) {
+            Component hunger = PetInfoBuilder.hungerLine(pet, damager);
             if (hunger != null) {
                 damager.sendMessage(hunger);
                 infoShown = true;
             }
 
-            Component food = PetInfoBuilder.foodLine(myPet, damager);
+            Component food = PetInfoBuilder.foodLine(pet, damager);
             if (food != null) {
                 damager.sendMessage(food);
                 infoShown = true;
@@ -133,8 +132,8 @@ public class PetInfoOnLeashListener implements Listener {
         }
 
         // Behavior line
-        if (CommandInfo.canSee(PetInfoDisplay.Behavior.adminOnly, damager, myPet)) {
-            Component behavior = PetInfoBuilder.behaviorLine(myPet, damager);
+        if (CommandInfo.canSee(PetInfoDisplay.Behavior.adminOnly, damager, pet)) {
+            Component behavior = PetInfoBuilder.behaviorLine(pet, damager);
             if (behavior != null) {
                 damager.sendMessage(behavior);
                 infoShown = true;
@@ -142,8 +141,8 @@ public class PetInfoOnLeashListener implements Listener {
         }
 
         // Skilltree line
-        if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, damager, myPet)) {
-            Component skilltree = PetInfoBuilder.skilltreeLine(myPet, damager);
+        if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, damager, pet)) {
+            Component skilltree = PetInfoBuilder.skilltreeLine(pet, damager);
             if (skilltree != null) {
                 damager.sendMessage(skilltree);
                 infoShown = true;
@@ -151,20 +150,20 @@ public class PetInfoOnLeashListener implements Listener {
         }
 
         // Level line
-        if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, damager, myPet)) {
-            damager.sendMessage(PetInfoBuilder.levelLine(myPet, damager));
+        if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, damager, pet)) {
+            damager.sendMessage(PetInfoBuilder.levelLine(pet, damager));
             infoShown = true;
         }
 
         // Experience line
-        if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet)) {
-            Component exp = PetInfoBuilder.expLine(myPet, damager);
+        if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, pet)) {
+            Component exp = PetInfoBuilder.expLine(pet, damager);
             if (exp != null) {
                 damager.sendMessage(exp);
                 infoShown = true;
             }
         }
-        ContributorCheck.ContributorRank rank = ((MyPetPlayerImpl) myPet.getOwner()).getContributorRank();
+        ContributorCheck.ContributorRank rank = ((MyPetPlayerImpl) pet.getOwner()).getContributorRank();
         if (rank != ContributorCheck.ContributorRank.None) {
             infoShown = true;
             String icon = rank.getDefaultIcon();
@@ -173,7 +172,7 @@ public class PetInfoOnLeashListener implements Listener {
         }
 
         if (!infoShown) {
-            damager.sendMessage(Locale.getComponent("Message.No.NothingToSeeHere", myPet.getOwner()));
+            damager.sendMessage(Locale.getComponent("Message.No.NothingToSeeHere", pet.getOwner()));
         }
 
         event.setCancelled(true);

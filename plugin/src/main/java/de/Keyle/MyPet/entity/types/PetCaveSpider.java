@@ -21,14 +21,14 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo(displayName = "Cave Spider")
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
-public class PetCaveSpider extends MyPet {
+public class PetCaveSpider extends PetImpl {
 
     public PetCaveSpider(MyPetPlayer petOwner) {
         super(petOwner);

@@ -20,9 +20,9 @@
 
 package de.Keyle.MyPet.entity.visual;
 
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetZombifiable;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetZombifiable;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Hoglin;
 import org.bukkit.entity.Mob;
@@ -50,9 +50,9 @@ public final class PetVisualSyncer {
     /**
      * Synchronises universal MyPet flags onto the Bukkit mob. Called from
      * {@code VanillaMobSpawner.configureMob} pre-spawn and from
-     * {@code plugin/entity/MyPet.updateVisuals} post-spawn.
+     * {@code plugin/entity/Pet.updateVisuals} post-spawn.
      */
-    public static void sync(MyPet pet, Mob mob) {
+    public static void sync(Pet pet, Mob mob) {
         sync(pet, mob, true);
     }
 
@@ -67,10 +67,10 @@ public final class PetVisualSyncer {
      *                      is also suppressed since a released mob should not
      *                      spawn in the sitting animation.
      */
-    public static void sync(MyPet pet, Mob mob, boolean applyTameable) {
+    public static void sync(Pet pet, Mob mob, boolean applyTameable) {
         if (pet == null || mob == null) return;
 
-        if (pet instanceof MyPetBaby baby && mob instanceof Ageable ageable) {
+        if (pet instanceof PetBaby baby && mob instanceof Ageable ageable) {
             if (baby.isBaby()) {
                 ageable.setBaby();
             } else {
@@ -99,11 +99,11 @@ public final class PetVisualSyncer {
         // Suppress vanilla's Overworld-conversion timer for nether-native pets
         // (Hoglin → Zoglin, Piglin → ZombifiedPiglin, PiglinBrute →
         // ZombifiedPiglin). Without this, vanilla discards the original entity
-        // and spawns a wild copy — MyPet would then respawn the original type,
-        // leaving a non-MyPet zombified mob loose in the world. Pushed every
+        // and spawns a wild copy — Pet would then respawn the original type,
+        // leaving a non-Pet zombified mob loose in the world. Pushed every
         // sync so a /reload that flips AllowZombification takes effect on the
         // next visual update without requiring a despawn/respawn round-trip.
-        if (pet instanceof MyPetZombifiable zombifiable) {
+        if (pet instanceof PetZombifiable zombifiable) {
             boolean immune = !zombifiable.allowZombification();
             if (mob instanceof Hoglin hoglin) {
                 hoglin.setImmuneToZombification(immune);

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Stomp;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -39,18 +39,18 @@ public class StompImpl implements Stomp {
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
-    private MyPet myPet;
+    private Pet pet;
 
-    public StompImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public StompImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
-    public void setMyPet(MyPet myPet) {
-        this.myPet = myPet;
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
     public boolean isActive() {
@@ -76,7 +76,7 @@ public class StompImpl implements Stomp {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Stomp.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getChance().getValue().doubleValue())
+                Locale.getFormattedComponent("Message.Skill.Stomp.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getChance().getValue().doubleValue())
         };
     }
 
@@ -93,35 +93,35 @@ public class StompImpl implements Stomp {
         double posY = location.getY();
         double posZ = location.getZ();
 
-        myPet.getEntity().ifPresent(petEntity -> {
+        pet.getEntity().ifPresent(petEntity -> {
             for (Entity e : petEntity.getNearbyEntities(2.5, 2.5, 2.5)) {
                 if (e instanceof LivingEntity livingEntity) {
 
                     if (livingEntity instanceof Player targetPlayer) {
-                        if (myPet.getOwner().equals(targetPlayer)) {
+                        if (pet.getOwner().equals(targetPlayer)) {
                             continue;
-                        } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
+                        } else if (!MyPetApi.getHookHelper().canHurt(pet.getOwner().getPlayer(), targetPlayer, true)) {
                             continue;
                         }
                     } else if (livingEntity instanceof Tameable tameable) {
                         if (tameable.isTamed() && tameable.getOwner() != null) {
                             AnimalTamer tameableOwner = tameable.getOwner();
-                            if (myPet.getOwner().equals(tameableOwner)) {
+                            if (pet.getOwner().equals(tameableOwner)) {
                                 continue;
                             } else {
-                                if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
+                                if (!MyPetApi.getHookHelper().canHurt(pet.getOwner().getPlayer(), livingEntity)) {
                                     continue;
                                 }
                             }
                         }
                     } else {
-                        MyPet targetMyPet = MyPetApi.getPetManager().getMyPetFromEntity(livingEntity);
-                        if (targetMyPet != null && targetMyPet.getOwner() != null
-                                && !MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
+                        Pet targetPet = MyPetApi.getPetManager().getPetFromEntity(livingEntity);
+                        if (targetPet != null && targetPet.getOwner() != null
+                                && !MyPetApi.getHookHelper().canHurt(pet.getOwner().getPlayer(), targetPet.getOwner().getPlayer(), true)) {
                             continue;
                         }
                     }
-                    if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), livingEntity)) {
+                    if (!MyPetApi.getHookHelper().canHurt(pet.getOwner().getPlayer(), livingEntity)) {
                         continue;
                     }
 

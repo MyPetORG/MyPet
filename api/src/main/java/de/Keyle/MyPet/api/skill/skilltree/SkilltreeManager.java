@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill.skilltree;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.Requirement;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.RequirementName;
 import de.Keyle.MyPet.api.util.service.Load;
@@ -100,7 +100,7 @@ public class SkilltreeManager implements ServiceContainer {
      * @param pet the pet to select a skilltree for
      * @return a randomly selected skilltree, or {@code null} if no candidates qualify
      */
-    public Skilltree getRandomSkilltree(MyPet pet) {
+    public Skilltree getRandomSkilltree(Pet pet) {
         TreeMap<Double, Skilltree> skilltreeMap = new TreeMap<>();
         List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getSkilltrees());
         if (skilltrees.isEmpty()) {

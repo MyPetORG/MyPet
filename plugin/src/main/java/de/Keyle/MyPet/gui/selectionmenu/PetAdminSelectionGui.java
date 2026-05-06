@@ -37,12 +37,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import java.util.*;
 
-public class MyPetAdminSelectionGui {
+public class PetAdminSelectionGui {
     MyPetPlayer petOwner;
     Player admin;
     Component title;
 
-    public MyPetAdminSelectionGui(MyPetPlayer player, Player admin, Component title) {
+    public PetAdminSelectionGui(MyPetPlayer player, Player admin, Component title) {
         this.petOwner = player;
         this.admin = admin;
         this.title = title;
@@ -69,10 +69,10 @@ public class MyPetAdminSelectionGui {
 
             Iterator<StoredPet> iterator = pets.iterator();
             while (iterator.hasNext()) {
-                StoredPet mypet = iterator.next();
-                if (mypet.getWorldGroup().isEmpty()
-                        || !mypet.getWorldGroup().equals(wg.getName())
-                        || (petOwner.hasMyPet() && petOwner.getMyPet().getUUID().equals(mypet.getUUID()))) {
+                StoredPet storedPet = iterator.next();
+                if (storedPet.getWorldGroup().isEmpty()
+                        || !storedPet.getWorldGroup().equals(wg.getName())
+                        || (petOwner.hasPet() && petOwner.getPet().getUUID().equals(storedPet.getUUID()))) {
                     iterator.remove();
                 }
             }
@@ -100,30 +100,30 @@ public class MyPetAdminSelectionGui {
 
             int pagePets = pets.size() - (page - 1) * 45;
             for (int i = 0; i < pagePets && i < 45; i++) {
-                StoredPet mypet = pets.get(i + ((page - 1) * 45));
+                StoredPet storedPet = pets.get(i + ((page - 1) * 45));
 
                 IconMenuItem icon = new IconMenuItem();
-                icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Hunger", admin)).append(Component.text(": ")).append(Component.text(Math.round(mypet.getSaturation())).color(NamedTextColor.GOLD)).build());
-                if (mypet.getRespawnTime() > 0) {
-                    icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Respawntime", admin)).append(Component.text(": ")).append(Component.text(mypet.getRespawnTime() + "sec").color(NamedTextColor.GOLD)).build());
+                icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Hunger", admin)).append(Component.text(": ")).append(Component.text(Math.round(storedPet.getSaturation())).color(NamedTextColor.GOLD)).build());
+                if (storedPet.getRespawnTime() > 0) {
+                    icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Respawntime", admin)).append(Component.text(": ")).append(Component.text(storedPet.getRespawnTime() + "sec").color(NamedTextColor.GOLD)).build());
                 } else {
-                    icon.addLoreLine(Component.text().append(Locale.getComponent("Name.HP", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", mypet.getHealth())).color(NamedTextColor.GOLD)).build());
+                    icon.addLoreLine(Component.text().append(Locale.getComponent("Name.HP", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", storedPet.getHealth())).color(NamedTextColor.GOLD)).build());
                 }
-                int level = mypet.getLevel();
+                int level = storedPet.getLevel();
                 if (level > 0) {
                     icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Level", admin)).append(Component.text(": ")).append(Component.text(level).color(NamedTextColor.GOLD)).build());
                 } else {
-                    icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Exp", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", mypet.getExp())).color(NamedTextColor.GOLD)).build());
+                    icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Exp", admin)).append(Component.text(": ")).append(Component.text(String.format("%1.2f", storedPet.getExp())).color(NamedTextColor.GOLD)).build());
                 }
-                icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Type", admin)).append(Component.text(": ")).append(Locale.getComponent("Name." + mypet.getPetType().name(), admin).color(NamedTextColor.GOLD)).build());
-                icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Skilltree", admin)).append(Component.text(": ")).append(Util.SANITIZED_MINIMESSAGE.deserialize(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-").color(NamedTextColor.GOLD)).build());
+                icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Type", admin)).append(Component.text(": ")).append(Locale.getComponent("Name." + storedPet.getPetType().name(), admin).color(NamedTextColor.GOLD)).build());
+                icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Skilltree", admin)).append(Component.text(": ")).append(Util.SANITIZED_MINIMESSAGE.deserialize(storedPet.getSkilltree() != null ? storedPet.getSkilltree().getDisplayName() : "-").color(NamedTextColor.GOLD)).build());
 
-                icon.setTitle(mypet.getDisplayName());
+                icon.setTitle(storedPet.getDisplayName());
                 Optional<EggIconService> egg = MyPetApi.getServiceManager().getService(EggIconService.class);
-                egg.ifPresent(service -> service.updateIcon(mypet.getPetType(), icon));
+                egg.ifPresent(service -> service.updateIcon(storedPet.getPetType(), icon));
 
                 int pos = menu.addOption(icon);
-                petSlotList.put(pos, mypet);
+                petSlotList.put(pos, storedPet);
             }
 
             if (previousPage != page) {

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Bleed;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -43,7 +43,7 @@ public class BleedImpl implements Bleed {
     private static Random random = new Random();
 
     @Getter
-    private MyPet myPet;
+    private Pet pet;
 
     @Getter
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
@@ -56,8 +56,8 @@ public class BleedImpl implements Bleed {
 
     private final Map<UUID, BleedEffect> activeEffects = new ConcurrentHashMap<>();
 
-    public BleedImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public BleedImpl(Pet pet) {
+        this.pet = pet;
     }
 
     @Override
@@ -99,8 +99,8 @@ public class BleedImpl implements Bleed {
         return new Component[]{
                 Locale.getFormattedComponent(
                         "Message.Skill.Bleed.Upgrade",
-                        myPet.getOwner().getLanguage(),
-                        myPet.getDisplayName(),
+                        pet.getOwner().getLanguage(),
+                        pet.getDisplayName(),
                         getChance().getValue(),
                         getDamage().getValue().doubleValue(),
                         getInterval().getValue(),
@@ -133,7 +133,7 @@ public class BleedImpl implements Bleed {
             activeEffects.put(targetId, effect);
 
             // Apply first bleed damage immediately on hit
-            LivingEntity petEntity = myPet.getEntity().map(e -> (LivingEntity) e).orElse(null);
+            LivingEntity petEntity = pet.getEntity().map(e -> (LivingEntity) e).orElse(null);
             effect.applyDamage(petEntity);
 
             // Schedule per-target tick on the target's entity scheduler — this
@@ -184,7 +184,7 @@ public class BleedImpl implements Bleed {
                     owner.onEffectExpired(target.getUniqueId());
                     return;
                 }
-                LivingEntity petEntity = owner.myPet.getEntity().map(e -> (LivingEntity) e).orElse(null);
+                LivingEntity petEntity = owner.pet.getEntity().map(e -> (LivingEntity) e).orElse(null);
                 tick(petEntity);
             }, () -> owner.onEffectExpired(target.getUniqueId()), 20L, 20L);
         }

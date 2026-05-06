@@ -23,13 +23,12 @@ package de.Keyle.MyPet.entity.ai.movement;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,7 +69,7 @@ public class PetRandomSwimGoal implements Goal<Mob> {
     private static final double SWIM_SPEED = 0.25;
     private static final int MAX_ATTEMPTS = 5;
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
     private Location moveTo = null;
     private int timeToMove = 0;
@@ -82,7 +81,7 @@ public class PetRandomSwimGoal implements Goal<Mob> {
     /**
      * @param petEntity the aquatic pet that will drift when its owner stands still
      */
-    public PetRandomSwimGoal(MyPet pet, Mob mob) {
+    public PetRandomSwimGoal(Pet pet, Mob mob) {
         this.pet = pet;
         this.mob = mob;
     }
@@ -118,7 +117,7 @@ public class PetRandomSwimGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) return false;
         if (ThreadLocalRandom.current().nextFloat() >= SWIM_STROLL_CHANCE) return false;
         if (!pet.canMove()) return false;
-        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) return false;
+        if (pet.hasTarget() && !pet.getPetTarget().isDead()) return false;
 
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
@@ -139,7 +138,7 @@ public class PetRandomSwimGoal implements Goal<Mob> {
         if (moveTo == null) return false;
         if (mob.getLocation().distance(moveTo) < 0.75) return false;
         if (timeToMove <= 0) return false;
-        if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) return false;
+        if (pet.hasTarget() && !pet.getPetTarget().isDead()) return false;
         return true;
     }
 

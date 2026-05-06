@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
@@ -44,7 +44,7 @@ import org.bukkit.Material;
         Material.LILY_OF_THE_VALLEY,
         Material.WITHER_ROSE,
 })
-public class PetBee extends MyPet implements MyPetBaby, MyPetFlyingEntity {
+public class PetBee extends PetImpl implements PetBaby, PetFlyingEntity {
 
     public PetBee(MyPetPlayer petOwner) {
         super(petOwner);

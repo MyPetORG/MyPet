@@ -24,7 +24,7 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -59,7 +59,7 @@ import java.util.EnumSet;
  * </ul>
  *
  * <p>Once selected, the target is installed via
- * {@link MyPetBukkitEntity#setTarget(LivingEntity, TargetPriority)} at
+ * {@link Pet#setTarget(LivingEntity, TargetPriority)} at
  * {@link TargetPriority#Aggressive}; the attack goals then pick the target
  * up on their own. The goal stops when the target dies, teleports worlds,
  * or the pet drifts more than ~20 blocks from it / more than ~24.5 blocks
@@ -70,9 +70,8 @@ import java.util.EnumSet;
  */
 public class PetAggressiveTargetGoal implements Goal<Mob> {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
-    private final MyPet myPet;
     private final double range;
     private LivingEntity target;
 
@@ -80,20 +79,19 @@ public class PetAggressiveTargetGoal implements Goal<Mob> {
      * @param petEntity the pet that will acquire targets
      * @param range     radius (in blocks) of the "near owner" search box
      */
-    public PetAggressiveTargetGoal(MyPet pet, Mob mob, float range) {
+    public PetAggressiveTargetGoal(Pet pet, Mob mob, float range) {
         this.pet = pet;
         this.mob = mob;
-        this.myPet = pet;
         this.range = range;
     }
 
     @Override
     public boolean shouldActivate() {
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (!behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorMode.Aggressive) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+        if (pet.getDamage() <= 0 && pet.getRangedDamage() <= 0) {
             return false;
         }
         if (!pet.canMove()) {
@@ -130,21 +128,21 @@ public class PetAggressiveTargetGoal implements Goal<Mob> {
                 continue;
             }
             if (entity instanceof Player targetPlayer) {
-                if (myPet.getOwner().equals(targetPlayer)) {
+                if (pet.getOwner().equals(targetPlayer)) {
                     continue;
                 }
                 if (!MyPetApi.getHookHelper().canHurt(owner, targetPlayer, true)) {
                     continue;
                 }
             } else if (PetEntityMarker.isMarked(entity)) {
-                MyPet otherPet = MyPetApi.getPetManager().getMyPetFromEntity(entity);
+                Pet otherPet = MyPetApi.getPetManager().getPetFromEntity(entity);
                 if (otherPet != null && otherPet.getOwner() != null
                         && !MyPetApi.getHookHelper().canHurt(owner, otherPet.getOwner().getPlayer(), true)) {
                     continue;
                 }
             } else if (entity instanceof Tameable tameable && tameable.isTamed() && tameable.getOwner() != null) {
                 Player tameableOwner = (Player) tameable.getOwner();
-                if (myPet.getOwner().equals(tameableOwner)) {
+                if (pet.getOwner().equals(tameableOwner)) {
                     continue;
                 }
                 if (!MyPetApi.getHookHelper().canHurt(owner, tameableOwner, true)) {
@@ -177,15 +175,15 @@ public class PetAggressiveTargetGoal implements Goal<Mob> {
         if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity currentTarget = pet.getMyPetTarget();
+        LivingEntity currentTarget = pet.getPetTarget();
         if (currentTarget == null || currentTarget.isDead()) {
             return false;
         }
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (behaviorSkill.getBehavior() != BehaviorMode.Aggressive) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+        if (pet.getDamage() <= 0 && pet.getRangedDamage() <= 0) {
             return false;
         }
         if (!currentTarget.getWorld().equals(mob.getWorld())) {

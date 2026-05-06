@@ -27,8 +27,8 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
@@ -97,8 +97,8 @@ public class CommandInventory {
                 "/petinventory",
                 CommandCategory.SKILLS,
                 170,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
-                        && MyPetApi.getPetManager().getMyPet(player).getSkills().isActive(BackpackImpl.class)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
+                        && MyPetApi.getPetManager().getPet(player).getSkills().isActive(BackpackImpl.class)
         ));
     }
 
@@ -113,22 +113,22 @@ public class CommandInventory {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
-        if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
-            MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
-            if (myPet.getStatus() == PetState.Despawned) {
-                player.sendMessage(Locale.getFormattedComponent("Message.Call.First", player, myPet.getDisplayName()));
+        if (MyPetApi.getPetManager().hasActivePet(player)) {
+            Pet pet = MyPetApi.getPetManager().getPet(player);
+            if (pet.getStatus() == PetState.Despawned) {
+                player.sendMessage(Locale.getFormattedComponent("Message.Call.First", player, pet.getDisplayName()));
                 return;
             }
-            if (myPet.getStatus() == PetState.Dead) {
-                player.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", player, myPet.getDisplayName()));
+            if (pet.getStatus() == PetState.Dead) {
+                player.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", player, pet.getDisplayName()));
                 return;
             }
             if (!Permissions.hasExtended(player, "MyPet.extended.inventory") && !Permissions.has(player, "MyPet.admin")) {
-                myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", player));
+                pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", player));
                 return;
             }
-            if (myPet.getSkills().has(BackpackImpl.class)) {
-                myPet.getSkills().get(BackpackImpl.class).activate();
+            if (pet.getSkills().has(BackpackImpl.class)) {
+                pet.getSkills().get(BackpackImpl.class).activate();
             }
         } else {
             player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
@@ -155,10 +155,10 @@ public class CommandInventory {
         Player petOwner = Bukkit.getServer().getOfflinePlayer(targetName).getPlayer();
         if (petOwner == null) {
             player.sendMessage(Locale.getComponent("Message.No.PlayerOnline", player));
-        } else if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
-            if (myPet.getSkills().isActive(BackpackImpl.class)) {
-                myPet.getSkills().get(BackpackImpl.class).openInventory(player);
+        } else if (MyPetApi.getPetManager().hasActivePet(petOwner)) {
+            Pet pet = MyPetApi.getPetManager().getPet(petOwner);
+            if (pet.getSkills().isActive(BackpackImpl.class)) {
+                pet.getSkills().get(BackpackImpl.class).openInventory(player);
             }
         }
     }

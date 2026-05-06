@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai.target;
 
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -44,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * <p>The tracker listens to {@link EntityDamageByEntityEvent} and records
  * a {@link DamageRecord} for every hit against a {@link Player} or
- * {@link MyPetBukkitEntity}, resolving projectiles back to their shooter
+ * {@link Pet}, resolving projectiles back to their shooter
  * via {@link ProjectileSource}. Entries expire after
  * {@link #EXPIRY_TICKS} ticks (5 seconds) and are also dropped when the
  * victim dies ({@link EntityDeathEvent}) or when a pet is explicitly
@@ -76,7 +77,7 @@ public class PetDamageTracker implements Listener {
     /**
      * Drops the tracker entry when an entity dies, so dead victims don't
      * linger in the static map. Combined with the explicit cleanup in
-     * {@code MyPet.removePet()}, this bounds the map size: death covers
+     * {@code Pet.removePet()}, this bounds the map size: death covers
      * combat kills, removePet() covers owner-logout/respawn/despawn.
      */
     @EventHandler(priority = EventPriority.MONITOR)
@@ -86,7 +87,7 @@ public class PetDamageTracker implements Listener {
 
     /**
      * Records the damager-victim pair for every live hit against a
-     * {@link Player} or {@link MyPetBukkitEntity}. Non-tracked victims
+     * {@link Player} or {@link Pet}. Non-tracked victims
      * (monsters, animals, etc.) are ignored so the map only holds
      * entries the retaliation goals will ever need.
      */
@@ -153,7 +154,7 @@ public class PetDamageTracker implements Listener {
 
     /**
      * Explicitly removes the tracked entry for the given entity UUID.
-     * Call from {@code MyPet.removePet()} (or any other despawn path)
+     * Call from {@code Pet.removePet()} (or any other despawn path)
      * so tracker entries for despawned pets don't linger beyond their
      * natural expiry window.
      *

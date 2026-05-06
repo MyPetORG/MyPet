@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -66,7 +66,7 @@ public final class PetFollowOwnerSupport {
      *            itself before this method is called — {@code nav.stop()} is load-bearing
      *            state cleanup in the pathfinding-based caller.
      */
-    public static boolean snapAcrossRegionsIfNeeded(MyPet pet, Mob mob, Player owner,
+    public static boolean snapAcrossRegionsIfNeeded(Pet pet, Mob mob, Player owner,
                                                     @Nullable AbstractNavigation nav) {
         if (Bukkit.isOwnedByCurrentRegion(owner)) {
             return false;
@@ -115,7 +115,7 @@ public final class PetFollowOwnerSupport {
      * @param nav             optional navigation handle to stop before teleporting; pass
      *                        {@code null} for non-pathfinding strategies.
      */
-    public static boolean teleportIfTooFar(MyPet pet, Mob mob, Player owner,
+    public static boolean teleportIfTooFar(Pet pet, Mob mob, Player owner,
                                            double distanceSqr, double teleportDistanceSqr,
                                            boolean flyingPet, boolean controlIsMoving,
                                            @Nullable AbstractNavigation nav,

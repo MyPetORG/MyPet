@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Enderman;
@@ -31,10 +31,10 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 @Getter
 @ShopInfo
 @DefaultInfo(food = {Material.SOUL_SAND})
-public class PetEnderman extends MyPet {
+public class PetEnderman extends PetImpl {
 
     /**
-     * MyPet-only override: vanilla {@link Enderman} screaming is AI-driven and
+     * Pet-only override: vanilla {@link Enderman} screaming is AI-driven and
      * does not persist to NBT. When this flag is set, the live entity is
      * force-screamed on each {@code updateVisuals} pass.
      */

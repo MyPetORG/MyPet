@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,7 +31,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Dispatches player right-click on a MyPet to the pet's {@link MyPet#onInteract}
+ * Dispatches player right-click on a Pet to the pet's {@link Pet#onInteract}
  * method. Cancels the underlying {@link PlayerInteractEntityEvent} if the pet
  * consumed the interaction (feed, sit toggle, per-type action).
  *
@@ -55,7 +55,7 @@ public class PetInteractionListener implements Listener {
         if (!PetEntityMarker.isMarked(event.getRightClicked())) {
             return;
         }
-        MyPet pet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
+        Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getRightClicked());
         if (pet == null) {
             return;
         }

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.OnHitSkill;
 import lombok.Getter;
@@ -56,14 +56,14 @@ import org.jspecify.annotations.NonNull;
 public class PetOnHitSkillEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    private final MyPet pet;
+    private final Pet pet;
     @Getter
     private final OnHitSkill skill;
     @Getter
     private final LivingEntity target;
     private boolean isCancelled = false;
 
-    public PetOnHitSkillEvent(MyPet pet, OnHitSkill skill, LivingEntity target) {
+    public PetOnHitSkillEvent(Pet pet, OnHitSkill skill, LivingEntity target) {
         this.pet = pet;
         this.skill = skill;
         this.target = target;

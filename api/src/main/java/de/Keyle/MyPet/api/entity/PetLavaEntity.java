@@ -20,23 +20,11 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.Configuration;
-
 /**
- * Marker for nether-native pet types that vanilla converts to a zombified
- * form when they spend too long in the Overworld (Hoglin → Zoglin, Piglin →
- * ZombifiedPiglin, PiglinBrute → ZombifiedPiglin). The
- * {@link #allowZombification()} default consults the per-pet preference
- * loaded from {@code MyPet.Pets.<Type>.AllowZombification} in
- * {@code pet-config.yml}; the default is {@code false} so pets stay their
- * original type.
- *
- * <p>The YAML row is auto-registered for every type that implements this marker
- * — adding a new convertible pet only requires implementing this interface.
+ * Marker for pet types whose underlying vanilla mob is immune to lava
+ * and navigates through it naturally (Strider, all Nether skeletons, and
+ * Magma Cube). The movement layer uses this to allow lava pathfinding,
+ * and the survival listener uses it to cancel lava damage events.
  */
-public interface MyPetZombifiable extends MyPet {
-
-    default boolean allowZombification() {
-        return Configuration.MyPet.allowZombification(getPetType());
-    }
+public interface PetLavaEntity {
 }

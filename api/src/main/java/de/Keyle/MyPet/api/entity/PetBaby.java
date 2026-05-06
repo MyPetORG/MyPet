@@ -31,7 +31,7 @@ package de.Keyle.MyPet.api.entity;
  * {@link DefaultInfo#growUpItem()} interaction is only offered to types
  * that implement this interface.
  */
-public interface MyPetBaby {
+public interface PetBaby {
 
     /** Returns {@code true} if this pet is currently in its baby form. */
     boolean isBaby();

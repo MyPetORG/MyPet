@@ -24,7 +24,7 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -52,10 +52,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * {@link AbstractArrow#setDamage(double)}; every other projectile type
  * (throwables, fireballs, llama spit) carries the damage as the float
  * {@link #PROJECTILE_DAMAGE_KEY} PDC tag and is resolved at hit time by
- * {@link PetProjectileHitListener}. Every MyPet-fired projectile also
+ * {@link PetProjectileHitListener}. Every Pet-fired projectile also
  * carries the owner's UUID as the string {@link #PROJECTILE_OWNER_KEY}
  * tag so downstream listeners can attribute damage back to the owning
- * pet via {@link #getSourceMyPet(org.bukkit.entity.Projectile)}.
+ * pet via {@link #getSourcePet(org.bukkit.entity.Projectile)}.
  *
  * <p>The goal cooperates with {@link PetMeleeAttackGoal}: both are selected
  * as {@link GoalType#MOVE}, but each defers to the other whenever its
@@ -73,7 +73,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p>Ranged supports a graceful degradation path: if the {@code Ranged}
  * skill instance is momentarily {@code null} (e.g. during a skilltree
  * hot-reload that clears the skills container but leaves
- * {@code MyPet.getRangedDamage()} returning a cached value), the goal falls
+ * {@code Pet.getRangedDamage()} returning a cached value), the goal falls
  * back to a 1-second cooldown and the default {@link Ranged.Projectile#Arrow} type
  * rather than crashing.
  */
@@ -90,9 +90,8 @@ public class PetRangedAttackGoal implements Goal<Mob> {
     // threshold in PetMeleeAttackGoal to avoid a dead zone between the two goals.
     static final double MELEE_PREFERENCE_RANGE_SQ = 25.0;
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
-    private final MyPet myPet;
     private final float walkSpeedModifier;
     private final double rangeSq;
     private LivingEntity target;
@@ -105,10 +104,9 @@ public class PetRangedAttackGoal implements Goal<Mob> {
      * @param range             maximum engagement distance in blocks (stored internally as its square for
      *                          per-tick distance comparisons)
      */
-    public PetRangedAttackGoal(MyPet pet, Mob mob, float walkSpeedModifier, float range) {
+    public PetRangedAttackGoal(Pet pet, Mob mob, float walkSpeedModifier, float range) {
         this.pet = pet;
         this.mob = mob;
-        this.myPet = pet;
         this.walkSpeedModifier = walkSpeedModifier;
         this.rangeSq = range * range;
     }
@@ -118,28 +116,28 @@ public class PetRangedAttackGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        if (myPet.getRangedDamage() <= 0) {
+        if (pet.getRangedDamage() <= 0) {
             return false;
         }
         if (!pet.canMove() || !pet.hasTarget()) {
             return false;
         }
-        LivingEntity target = pet.getMyPetTarget();
+        LivingEntity target = pet.getPetTarget();
         if (target == null || target.isDead() || target instanceof ArmorStand) {
             return false;
         }
         // Defer to melee when target is within melee reach AND melee damage is higher.
         // rangedSkill may legitimately be null during skilltree hot-reload even when
-        // myPet.getRangedDamage() still returns a cached non-zero value, so the
+        // pet.getRangedDamage() still returns a cached non-zero value, so the
         // comparison is gated on skill presence rather than crashing.
-        double meleeDamage = myPet.getDamage();
+        double meleeDamage = pet.getDamage();
         if (meleeDamage > 0 && mob.getLocation().distanceSquared(target.getLocation()) < MELEE_PREFERENCE_RANGE_SQ) {
-            Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
+            Ranged rangedSkill = pet.getSkills().get(Ranged.class);
             if (rangedSkill != null && meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return false;
             }
         }
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (behaviorSkill != null && behaviorSkill.isActive()) {
             if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) {
                 return false;
@@ -159,24 +157,24 @@ public class PetRangedAttackGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        if (!pet.hasTarget() || myPet.getRangedDamage() <= 0 || !pet.canMove()) {
+        if (!pet.hasTarget() || pet.getRangedDamage() <= 0 || !pet.canMove()) {
             return false;
         }
-        LivingEntity current = pet.getMyPetTarget();
+        LivingEntity current = pet.getPetTarget();
         if (current == null || !current.equals(target)) {
             return false;
         }
         // Defer to melee when target is within melee reach AND melee damage is higher.
         // See the matching comment in shouldActivate() for the rationale behind the
         // null gate on rangedSkill.
-        double meleeDamage = myPet.getDamage();
+        double meleeDamage = pet.getDamage();
         if (meleeDamage > 0 && mob.getLocation().distanceSquared(target.getLocation()) < MELEE_PREFERENCE_RANGE_SQ) {
-            Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
+            Ranged rangedSkill = pet.getSkills().get(Ranged.class);
             if (rangedSkill != null && meleeDamage > rangedSkill.getDamage().getValue().doubleValue()) {
                 return false;
             }
         }
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (behaviorSkill != null && behaviorSkill.isActive()) {
             if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) return false;
             if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Raid) {
@@ -224,8 +222,8 @@ public class PetRangedAttackGoal implements Goal<Mob> {
 
         if (--shootTimer <= 0) {
             if (distSq < rangeSq && canSee) {
-                shootProjectile(target, (float) myPet.getRangedDamage(), getProjectile());
-                Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
+                shootProjectile(target, (float) pet.getRangedDamage(), getProjectile());
+                Ranged rangedSkill = pet.getSkills().get(Ranged.class);
                 // Fall back to a 1-second cooldown if the skill instance is
                 // momentarily unavailable (e.g., during skilltree hot-reload).
                 shootTimer = rangedSkill != null ? rangedSkill.getRateOfFire().getValue() : 20;
@@ -234,7 +232,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
     }
 
     private Ranged.Projectile getProjectile() {
-        Ranged rangedSkill = myPet.getSkills().get(Ranged.class);
+        Ranged rangedSkill = pet.getSkills().get(Ranged.class);
         if (rangedSkill != null && rangedSkill.isActive()) {
             return rangedSkill.getProjectile().getValue();
         }
@@ -264,8 +262,8 @@ public class PetRangedAttackGoal implements Goal<Mob> {
                     a.setCritical(false);
                     a.setShooter(owner != null ? owner : mob);
                     a.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
-                    // Mark as MyPet-fired so listeners can apply friendly-fire / duel
-                    // logic (see PetRangedAttackGoal.getSourceMyPet). Arrows don't use
+                    // Mark as Pet-fired so listeners can apply friendly-fire / duel
+                    // logic (see PetRangedAttackGoal.getSourcePet). Arrows don't use
                     // the PROJECTILE_DAMAGE_KEY path — setDamage() is native — but the
                     // owner tag is still needed to distinguish pet arrows from
                     // player-fired arrows.
@@ -365,13 +363,13 @@ public class PetRangedAttackGoal implements Goal<Mob> {
     }
 
     /**
-     * Resolves the MyPet that fired a given projectile, or {@code null} if the
-     * projectile was not fired by a MyPet (or its owner is offline / has no
+     * Resolves the Pet that fired a given projectile, or {@code null} if the
+     * projectile was not fired by a Pet (or its owner is offline / has no
      * active pet when the projectile lands).
      *
      * <p>Identification relies on the {@link #PROJECTILE_OWNER_KEY} PDC tag set
      * at launch time in {@link #shootProjectile} and its helper methods. Every
-     * MyPet-fired projectile type — Arrow, Trident, throwables, fireballs —
+     * Pet-fired projectile type — Arrow, Trident, throwables, fireballs —
      * carries this tag. Paper-native projectiles (e.g., an arrow fired by a
      * player with a regular bow) do NOT carry the tag, so this method cleanly
      * distinguishes the two.
@@ -381,9 +379,9 @@ public class PetRangedAttackGoal implements Goal<Mob> {
      * exemptions for projectile-dealt damage.
      *
      * @param projectile the projectile that dealt damage
-     * @return the source pet, or {@code null} if not MyPet-fired / unresolvable
+     * @return the source pet, or {@code null} if not Pet-fired / unresolvable
      */
-    public static MyPet getSourceMyPet(Projectile projectile) {
+    public static Pet getSourcePet(Projectile projectile) {
         PersistentDataContainer pdc = projectile.getPersistentDataContainer();
         String ownerUuidStr = pdc.get(PROJECTILE_OWNER_KEY, PersistentDataType.STRING);
         if (ownerUuidStr == null) {
@@ -403,7 +401,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
             return null;
         }
         MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
-        return (myPetPlayer != null && myPetPlayer.hasMyPet()) ? myPetPlayer.getMyPet() : null;
+        return (myPetPlayer != null && myPetPlayer.hasPet()) ? myPetPlayer.getPet() : null;
     }
 
     @Override

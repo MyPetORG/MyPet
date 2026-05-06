@@ -23,7 +23,7 @@ package de.Keyle.MyPet.util.hooks;
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.garbagemule.MobArena.events.ArenaPlayerJoinEvent;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
@@ -106,8 +106,8 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
         if (!ALLOW_PETS) {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
                 MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
-                if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
-                    player.getMyPet().removePet();
+                if (player.hasPet() && player.getPet().getStatus() == Pet.PetState.Here) {
+                    player.getPet().removePet();
                     player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player.getPlayer()));
                 }
             }
@@ -115,7 +115,7 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onMyPetDamageInArena(EntityDamageByEntityEvent event) {
+    public void onPetDamageInArena(EntityDamageByEntityEvent event) {
         Entity damagerEntity = event.getDamager();
         if (damagerEntity instanceof Projectile p && p.getShooter() instanceof Entity shooter) {
             damagerEntity = shooter;
@@ -123,7 +123,7 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
         if (!PetEntityMarker.isMarked(damagerEntity)) {
             return;
         }
-        MyPet pet = getPetManager().getMyPetFromEntity(damagerEntity);
+        Pet pet = getPetManager().getPetFromEntity(damagerEntity);
         if (pet == null) return;
         if (!isPetAllowed(pet.getOwner())) {
             event.setCancelled(false);

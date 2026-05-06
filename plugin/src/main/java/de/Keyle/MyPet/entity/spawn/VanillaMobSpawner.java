@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.entity.spawn;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
@@ -50,7 +50,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.UUID;
 
 /**
- * Spawns a Bukkit {@link Mob} for a {@link MyPet}, configures it
+ * Spawns a Bukkit {@link Mob} for a {@link Pet}, configures it
  * (persistence, attributes, PDC marker), strips vanilla AI, and installs MyPet goals
  * via {@link PetGoalInstaller}.
  */
@@ -61,7 +61,7 @@ public final class VanillaMobSpawner {
      * On failure (no Bukkit class for this type, or no valid spawn position),
      * logs a warning and returns false.
      */
-    public boolean spawn(MyPet pet, Location loc) {
+    public boolean spawn(Pet pet, Location loc) {
         Class<? extends Mob> mobClass = pet.getPetType().getBukkitEntityClass();
         if (mobClass == null) {
             MyPetApi.getLogger().warning("No Bukkit entity class for pet type " + pet.getPetType().name());
@@ -117,22 +117,22 @@ public final class VanillaMobSpawner {
     }
 
     /**
-     * Converts an existing vanilla mob in-place into a MyPet. Used during the
+     * Converts an existing vanilla mob in-place into a Pet. Used during the
      * leash/tame flow — the mob already exists in the world, so no
      * {@code world.spawn()} call is needed. The mob's existing visual state
      * (colour, variant, etc.) is preserved because the entity is the same.
      *
-     * <p>Responsibilities: strip vanilla AI, install MyPet goals, configure
-     * attributes, mark with PDC, wire the mob into the MyPet domain object.
+     * <p>Responsibilities: strip vanilla AI, install Pet goals, configure
+     * attributes, mark with PDC, wire the mob into the Pet domain object.
      */
-    public void convertInPlace(MyPet pet, Mob mob) {
+    public void convertInPlace(Pet pet, Mob mob) {
         // Tame path: the wild mob already exists with its visual state intact;
         // treat it like a snapshot-restored pet so we don't clobber equipment.
         configureMob(pet, mob, true);
     }
 
     /**
-     * Releases a MyPet back to the wild as a fresh vanilla mob with full
+     * Releases a Pet back to the wild as a fresh vanilla mob with full
      * vanilla AI intact. Implemented as destroy-and-respawn because Paper's
      * {@code MobGoals} API has no way to reinstate vanilla goals once they
      * have been stripped by {@link PetGoalInstaller#install}: the vanilla
@@ -145,7 +145,7 @@ public final class VanillaMobSpawner {
      * <p>State preserved across the respawn:
      * <ul>
      *   <li>Location (exact)</li>
-     *   <li>Visual state applied via {@link PetVisualSyncer#sync(MyPet, Mob, boolean)}
+     *   <li>Visual state applied via {@link PetVisualSyncer#sync(Pet, Mob, boolean)}
      *       with {@code applyTameable=false} — colour, variant, profession,
      *       baby/adult, etc., but NOT tamed/owner (the mob is wild) and NOT
      *       sit pose (a released mob should not spawn sitting)</li>
@@ -156,14 +156,14 @@ public final class VanillaMobSpawner {
      * MyPet PDC marker, pet-scale MAX_HEALTH, pet-scale MOVEMENT_SPEED,
      * {@code setPersistent(false)} / {@code removeWhenFarAway(false)}.
      *
-     * <p>Ownership of the {@link MyPet}'s {@code bukkitEntity} reference is
+     * <p>Ownership of the {@link Pet}'s {@code bukkitEntity} reference is
      * transferred away (set to {@code null}) so a subsequent
-     * {@link MyPet#removePet()} does not call {@code .remove()} on either
+     * {@link Pet#removePet()} does not call {@code .remove()} on either
      * the old (already-removed) mob or the new (wild) mob. The damage
      * tracker entry for the old UUID is cleaned up here because
      * {@code removePet()} will no longer see the reference.
      */
-    public void releaseToWild(MyPet pet) {
+    public void releaseToWild(Pet pet) {
         Mob oldMob = pet.getBukkitEntity();
         if (oldMob == null) return;
 
@@ -198,9 +198,9 @@ public final class VanillaMobSpawner {
             }
         }
 
-        // Detach MyPet state BEFORE any potentially-throwing operation below.
+        // Detach Pet state BEFORE any potentially-throwing operation below.
         // If world.spawn() throws (plugin-cancelled CreatureSpawnEvent,
-        // world-unloaded races, etc.), the MyPet domain object is already in
+        // world-unloaded races, etc.), the Pet domain object is already in
         // a consistent "detached" state, so the caller's exception handler
         // just needs to finish the repository/worldgroup cleanup — it does
         // not inherit a dead entity reference.
@@ -251,15 +251,15 @@ public final class VanillaMobSpawner {
      *        domain-side equipment cache. {@code false} for fresh world.spawn,
      *        in which case the domain cache is the only source of truth.
      */
-    private void configureMob(MyPet pet, Mob mob, boolean mobHasPersistentState) {
-        // Wire the mob into the MyPet domain object FIRST, so
+    private void configureMob(Pet pet, Mob mob, boolean mobHasPersistentState) {
+        // Wire the mob into the Pet domain object FIRST, so
         // pet.getPetNavigation() returns a valid PaperNavigation when the goal
         // classes fetch it during construction below. Doing this after goal
         // install caused goals to store a null nav reference and NPE on tick.
         pet.setBukkitEntity(mob);
 
         // persistent=false means the entity is NOT written to the world save
-        // file on chunk unload — MyPet owns canonical pet state in its repo,
+        // file on chunk unload — Pet owns canonical pet state in its repo,
         // and the entity is re-spawned from that state on owner relogin.
         // Combined with removeWhenFarAway=false so the entity doesn't
         // auto-despawn while its chunk is loaded and the owner is online.
@@ -277,7 +277,7 @@ public final class VanillaMobSpawner {
 
         AttributeInstance speed = mob.getAttribute(PetAttributes.MOVEMENT_SPEED);
         if (speed != null) {
-            speed.setBaseValue(MyPetApi.getMyPetInfo().getSpeed(pet.getPetType()));
+            speed.setBaseValue(MyPetApi.getPetInfo().getSpeed(pet.getPetType()));
         }
 
         // Initial visual state — applied inside the spawn consumer so the
@@ -295,7 +295,7 @@ public final class VanillaMobSpawner {
         // carry the canonical equipment in their inventory, and the domain
         // cache may be empty across server-restart cycles — applying it
         // unconditionally would clobber the snapshot.
-        if (!mobHasPersistentState && pet instanceof MyPetEquipment equipmentPet) {
+        if (!mobHasPersistentState && pet instanceof PetEquipment equipmentPet) {
             EntityEquipment eq = mob.getEquipment();
             if (eq != null) {
                 for (EquipmentSlot slot : EquipmentSlot.values()) {

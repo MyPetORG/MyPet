@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.event.PetCallEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
@@ -72,8 +72,8 @@ public class SuperVanishHook implements PlayerVersusPlayerHook {
     public void on(PlayerHideEvent e) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(e.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(e.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Here) {
-                player.getMyPet().removePet(true);
+            if (player.hasPet() && player.getPet().getStatus() == Pet.PetState.Here) {
+                player.getPet().removePet(true);
             }
         }
     }
@@ -83,8 +83,8 @@ public class SuperVanishHook implements PlayerVersusPlayerHook {
     public void on(PlayerShowEvent e) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(e.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(e.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == MyPet.PetState.Despawned && player.getMyPet().wantsToRespawn()) {
-                player.getMyPet().createEntity();
+            if (player.hasPet() && player.getPet().getStatus() == Pet.PetState.Despawned && player.getPet().wantsToRespawn()) {
+                player.getPet().createEntity();
             }
         }
     }

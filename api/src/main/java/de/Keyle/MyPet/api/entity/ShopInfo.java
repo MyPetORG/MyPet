@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * automatic inclusion in the generated pet-shops.yml file.
  * <p>
  * Only pets with this annotation will appear in the shop.
- * Pets implementing {@link MyPetBaby} will also appear in the "babies" shop.
+ * Pets implementing {@link PetBaby} will also appear in the "babies" shop.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

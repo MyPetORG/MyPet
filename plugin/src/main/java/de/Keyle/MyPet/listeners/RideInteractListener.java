@@ -22,7 +22,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -40,7 +40,7 @@ import org.bukkit.inventory.EquipmentSlot;
  */
 public class RideInteractListener implements Listener {
 
-    private static boolean isOwner(Player player, MyPet pet) {
+    private static boolean isOwner(Player player, Pet pet) {
         return pet != null && pet.getOwner() != null && pet.getOwner().getPlayer() != null
                 && pet.getOwner().getPlayer().getUniqueId().equals(player.getUniqueId());
     }
@@ -58,10 +58,10 @@ public class RideInteractListener implements Listener {
         }
 
         final Player player = event.getPlayer();
-        MyPet myPet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
-        if (myPet == null) return;
+        Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getRightClicked());
+        if (pet == null) return;
 
-        if (!isOwner(player, myPet)) {
+        if (!isOwner(player, pet)) {
             return;
         }
 
@@ -69,15 +69,15 @@ public class RideInteractListener implements Listener {
             return;
         }
 
-        if (!myPet.canMove() || !myPet.getSkills().isActive(Ride.class)) {
+        if (!pet.canMove() || !pet.getSkills().isActive(Ride.class)) {
             return;
         }
         if (!Permissions.hasExtended(player, "MyPet.extended.ride")) {
-            myPet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", myPet.getOwner()), 2000);
+            pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", pet.getOwner()), 2000);
             return;
         }
 
-        Mob mob = myPet.getBukkitEntity();
+        Mob mob = pet.getBukkitEntity();
         if (mob == null) return;
         if (!mob.getPassengers().contains(player)) {
             boolean mounted = mob.addPassenger(player);
@@ -95,16 +95,16 @@ public class RideInteractListener implements Listener {
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
-        MyPet myPet = MyPetApi.getPetManager().getMyPetFromEntity(event.getRightClicked());
-        if (myPet == null) return;
+        Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getRightClicked());
+        if (pet == null) return;
         final Player player = event.getPlayer();
-        if (!isOwner(player, myPet)) {
+        if (!isOwner(player, pet)) {
             return;
         }
         if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM != null && !Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(player.getInventory().getItemInMainHand())) {
             return;
         }
-        Mob mob = myPet.getBukkitEntity();
+        Mob mob = pet.getBukkitEntity();
         if (mob == null) return;
         if (event.isCancelled() && !mob.getPassengers().contains(player)) {
             event.setCancelled(false);

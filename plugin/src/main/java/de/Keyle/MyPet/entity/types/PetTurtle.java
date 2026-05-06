@@ -20,19 +20,19 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import lombok.Getter;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetAmphibiousEntity;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @Getter
 @ShopInfo
 @DefaultInfo(food = {Material.SEAGRASS})
-public class PetTurtle extends MyPet implements MyPetBaby, MyPetAmphibiousEntity {
+public class PetTurtle extends PetImpl implements PetBaby, PetAmphibiousEntity {
 
     public PetTurtle(MyPetPlayer petOwner) {
         super(petOwner);

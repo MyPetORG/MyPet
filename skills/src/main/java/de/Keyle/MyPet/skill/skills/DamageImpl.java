@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Damage;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -28,15 +28,15 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class DamageImpl implements Damage {
-    protected MyPet myPet;
+    protected Pet pet;
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
 
-    public DamageImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public DamageImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
     public boolean isActive() {
@@ -59,7 +59,7 @@ public class DamageImpl implements Damage {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Damage.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getDamage().getValue().doubleValue())
+                Locale.getFormattedComponent("Message.Skill.Damage.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getDamage().getValue().doubleValue())
         };
     }
 

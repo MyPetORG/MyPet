@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.event.PetLevelDownEvent;
 import de.Keyle.MyPet.api.event.PetLevelUpEvent;
 import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
@@ -49,31 +49,31 @@ public class LevelListener implements Listener {
 
     @EventHandler
     public void on(PetLevelUpEvent event) {
-        MyPet myPet = event.getPet();
+        Pet pet = event.getPet();
         int lvl = event.getLevel();
         int fromLvl = event.fromLevel();
 
         if (!event.isQuiet()) {
-            int maxlevel = myPet.getSkilltree() != null ? myPet.getSkilltree().getMaxLevel() : 0;
+            int maxlevel = pet.getSkilltree() != null ? pet.getSkilltree().getMaxLevel() : 0;
             if (maxlevel != 0 && lvl >= maxlevel) {
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.LevelSystem.ReachedMaxLevel", event.getOwner(), myPet.getDisplayName(), maxlevel));
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.LevelSystem.ReachedMaxLevel", event.getOwner(), pet.getDisplayName(), maxlevel));
             } else {
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.LevelSystem.LevelUp", event.getOwner(), myPet.getDisplayName(), event.getLevel()));
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.LevelSystem.LevelUp", event.getOwner(), pet.getDisplayName(), event.getLevel()));
             }
         }
-        Skilltree skilltree = myPet.getSkilltree();
+        Skilltree skilltree = pet.getSkilltree();
         if (skilltree != null) {
             for (int i = fromLvl + 1; i <= lvl; i++) {
                 if (!event.isQuiet()) {
                     List<String> notifications = skilltree.getNotifications(i);
                     for (String notification : notifications) {
                         notification = notification
-                                .replace("{{owner}}", myPet.getOwner().getName())
+                                .replace("{{owner}}", pet.getOwner().getName())
                                 .replace("{{level}}", "" + lvl)
-                                .replace("{{pet}}", myPet.getPetName());
+                                .replace("{{pet}}", pet.getPetName());
                         String[] lines = notification.split("(<br>|\\\\n|\n|<br\\s?/>)");
                         for (String line : lines) {
-                            myPet.getOwner().sendMessage(Util.SANITIZED_MINIMESSAGE.deserialize(line));
+                            pet.getOwner().sendMessage(Util.SANITIZED_MINIMESSAGE.deserialize(line));
                         }
                     }
                 }
@@ -85,7 +85,7 @@ public class LevelListener implements Listener {
                     }
                     SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
                     if (sn != null) {
-                        Skill skill = myPet.getSkills().get(sn.value());
+                        Skill skill = pet.getSkills().get(sn.value());
                         if (skill != null) {
                             applyUpgrade(upgrade, skill);
                             affectedSkills.add(skill);
@@ -97,7 +97,7 @@ public class LevelListener implements Listener {
                         Component[] messages = skill.getUpgradeMessage();
                         if (messages != null) {
                             for (Component message : messages) {
-                                myPet.getOwner().sendMessage(Component.text("  ").append(message));
+                                pet.getOwner().sendMessage(Component.text("  ").append(message));
                             }
                         }
                     }
@@ -105,12 +105,12 @@ public class LevelListener implements Listener {
             }
         }
 
-        if (myPet.getStatus() == MyPet.PetState.Here) {
-            myPet.getEntity().ifPresent(entity -> {
-                myPet.updateNameTag();
+        if (pet.getStatus() == Pet.PetState.Here) {
+            pet.getEntity().ifPresent(entity -> {
+                pet.updateNameTag();
                 if (!event.isQuiet()) {
-                    myPet.setHealth(myPet.getMaxHealth());
-                    myPet.setSaturation(100);
+                    pet.setHealth(pet.getMaxHealth());
+                    pet.setSaturation(100);
 
                     new SpiralAnimation(1, entity.getEyeHeight() + 0.5, () -> entity.isDead() ? null : entity.getLocation()) {
                         @Override
@@ -127,14 +127,14 @@ public class LevelListener implements Listener {
 
     @EventHandler
     public void on(PetLevelDownEvent event) {
-        MyPet myPet = event.getPet();
+        Pet pet = event.getPet();
         int lvl = event.getLevel();
         int fromLvl = event.fromLevel();
 
         if (!event.isQuiet()) {
-            myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.LevelSystem.LevelDown", event.getOwner(), myPet.getDisplayName(), event.getLevel()));
+            pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.LevelSystem.LevelDown", event.getOwner(), pet.getDisplayName(), event.getLevel()));
         }
-        Skilltree skilltree = myPet.getSkilltree();
+        Skilltree skilltree = pet.getSkilltree();
         if (skilltree != null) {
             for (int i = fromLvl; i > lvl; i--) {
                 List<Upgrade<?>> upgrades = skilltree.getUpgrades(i);
@@ -144,7 +144,7 @@ public class LevelListener implements Listener {
                     }
                     SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
                     if (sn != null) {
-                        Skill skill = myPet.getSkills().get(sn.value());
+                        Skill skill = pet.getSkills().get(sn.value());
                         if (skill != null) {
                             invertUpgrade(upgrade, skill);
                         }
@@ -153,12 +153,12 @@ public class LevelListener implements Listener {
             }
         }
 
-        if (myPet.getStatus() == MyPet.PetState.Here) {
-            myPet.getEntity().ifPresent(entity -> {
-                myPet.updateNameTag();
+        if (pet.getStatus() == Pet.PetState.Here) {
+            pet.getEntity().ifPresent(entity -> {
+                pet.updateNameTag();
                 if (!event.isQuiet()) {
-                    myPet.setHealth(myPet.getMaxHealth());
-                    myPet.setSaturation(100);
+                    pet.setHealth(pet.getMaxHealth());
+                    pet.setSaturation(100);
 
                     new FixedCircleAnimation(1, entity.getEyeHeight() + 0.5, 10, () -> entity.isDead() ? null : entity.getLocation()) {
                         @Override
@@ -175,12 +175,12 @@ public class LevelListener implements Listener {
 
     @EventHandler
     public void on(PetSelectSkilltreeEvent event) {
-        if (!(event.getPet() instanceof MyPet myPet)) {
+        if (!(event.getPet() instanceof Pet pet)) {
             return;
         }
-        int lvl = myPet.getExperience().getLevel();
+        int lvl = pet.getExperience().getLevel();
 
-        myPet.getSkills().all().forEach(Skill::reset);
+        pet.getSkills().all().forEach(Skill::reset);
 
         Skilltree skilltree = event.getSkilltree();
         if (skilltree != null) {
@@ -192,7 +192,7 @@ public class LevelListener implements Listener {
                     }
                     SkillName sn = Util.getClassAnnotation(upgrade.getClass(), SkillName.class);
                     if (sn != null) {
-                        Skill skill = myPet.getSkills().get(sn.value());
+                        Skill skill = pet.getSkills().get(sn.value());
                         if (skill != null) {
                             applyUpgrade(upgrade, skill);
                         }

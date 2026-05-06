@@ -20,17 +20,17 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.MyPet;
+import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetEquipment;
-import de.Keyle.MyPet.api.entity.MyPetZombifiable;
+import de.Keyle.MyPet.api.entity.PetZombifiable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo(displayName = "Piglin Brute")
 @DefaultInfo(food = {Material.GOLD_NUGGET})
-public class PetPiglinBrute extends MyPet implements MyPetEquipment, MyPetZombifiable {
+public class PetPiglinBrute extends PetImpl implements PetEquipment, PetZombifiable {
 
     public PetPiglinBrute(MyPetPlayer petOwner) {
         super(petOwner);

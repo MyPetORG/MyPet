@@ -27,8 +27,8 @@ import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPet.PetState;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -111,8 +111,8 @@ public class CommandBehavior {
                 "/petbehavior",
                 CommandCategory.SKILLS,
                 190,
-                player -> MyPetApi.getPetManager().hasActiveMyPet(player)
-                        && MyPetApi.getPetManager().getMyPet(player).getSkills().isActive(BehaviorImpl.class)
+                player -> MyPetApi.getPetManager().hasActivePet(player)
+                        && MyPetApi.getPetManager().getPet(player).getSkills().isActive(BehaviorImpl.class)
         ));
     }
 
@@ -130,18 +130,18 @@ public class CommandBehavior {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
-            if (myPet.getStatus() == PetState.Despawned) {
-                petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
+        if (MyPetApi.getPetManager().hasActivePet(petOwner)) {
+            Pet pet = MyPetApi.getPetManager().getPet(petOwner);
+            if (pet.getStatus() == PetState.Despawned) {
+                petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, pet.getDisplayName()));
                 return;
             }
-            if (myPet.getStatus() == PetState.Dead) {
-                petOwner.sendMessage(Locale.getFormattedComponent("Message.No.CanUse", petOwner, myPet.getDisplayName()));
+            if (pet.getStatus() == PetState.Dead) {
+                petOwner.sendMessage(Locale.getFormattedComponent("Message.No.CanUse", petOwner, pet.getDisplayName()));
                 return;
             }
-            if (myPet.getSkills().has(BehaviorImpl.class)) {
-                BehaviorImpl behaviorSkill = myPet.getSkills().get(BehaviorImpl.class);
+            if (pet.getSkills().has(BehaviorImpl.class)) {
+                BehaviorImpl behaviorSkill = pet.getSkills().get(BehaviorImpl.class);
                 behaviorSkill.activate();
             }
         } else {
@@ -168,46 +168,46 @@ public class CommandBehavior {
             petOwner.sendMessage(Locale.getComponent("Message.No.AllowedHere", petOwner));
             return;
         }
-        if (MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
-            MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
-            if (myPet.getStatus() == PetState.Despawned) {
-                petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, myPet.getDisplayName()));
+        if (MyPetApi.getPetManager().hasActivePet(petOwner)) {
+            Pet pet = MyPetApi.getPetManager().getPet(petOwner);
+            if (pet.getStatus() == PetState.Despawned) {
+                petOwner.sendMessage(Locale.getFormattedComponent("Message.Call.First", petOwner, pet.getDisplayName()));
                 return;
             }
-            if (myPet.getStatus() == PetState.Dead) {
-                petOwner.sendMessage(Locale.getFormattedComponent("Message.No.CanUse", petOwner, myPet.getDisplayName()));
+            if (pet.getStatus() == PetState.Dead) {
+                petOwner.sendMessage(Locale.getFormattedComponent("Message.No.CanUse", petOwner, pet.getDisplayName()));
                 return;
             }
-            if (myPet.getSkills().has(BehaviorImpl.class)) {
-                BehaviorImpl behaviorSkill = myPet.getSkills().get(BehaviorImpl.class);
+            if (pet.getSkills().has(BehaviorImpl.class)) {
+                BehaviorImpl behaviorSkill = pet.getSkills().get(BehaviorImpl.class);
 
                 if (mode.equalsIgnoreCase("friendly") || mode.equalsIgnoreCase("friend")) {
                     if (!Permissions.hasExtended(petOwner, "MyPet.extended.behavior.friendly") || !behaviorSkill.isModeUsable(BehaviorMode.Friendly)) {
-                        myPet.getOwner().sendMessage(Locale.getComponent("Message.No.Allowed", petOwner));
+                        pet.getOwner().sendMessage(Locale.getComponent("Message.No.Allowed", petOwner));
                         return;
                     }
                     behaviorSkill.setBehavior(BehaviorMode.Friendly);
                 } else if (mode.equalsIgnoreCase("aggressive") || mode.equalsIgnoreCase("aggro")) {
                     if (!Permissions.hasExtended(petOwner, "MyPet.extended.behavior.aggressive") || !behaviorSkill.isModeUsable(BehaviorMode.Aggressive)) {
-                        myPet.getOwner().sendMessage(Locale.getComponent("Message.No.Allowed", petOwner));
+                        pet.getOwner().sendMessage(Locale.getComponent("Message.No.Allowed", petOwner));
                         return;
                     }
                     behaviorSkill.setBehavior(BehaviorMode.Aggressive);
                 } else if (mode.equalsIgnoreCase("farm")) {
                     if (!Permissions.hasExtended(petOwner, "MyPet.extended.behavior.farm") || !behaviorSkill.isModeUsable(BehaviorMode.Farm)) {
-                        myPet.getOwner().sendMessage(Locale.getComponent("Message.No.Allowed", petOwner));
+                        pet.getOwner().sendMessage(Locale.getComponent("Message.No.Allowed", petOwner));
                         return;
                     }
                     behaviorSkill.setBehavior(BehaviorMode.Farm);
                 } else if (mode.equalsIgnoreCase("raid")) {
                     if (!Permissions.hasExtended(petOwner, "MyPet.extended.behavior.raid") || !behaviorSkill.isModeUsable(BehaviorMode.Raid)) {
-                        myPet.getOwner().sendMessage(Locale.getComponent("Message.No.Allowed", petOwner));
+                        pet.getOwner().sendMessage(Locale.getComponent("Message.No.Allowed", petOwner));
                         return;
                     }
                     behaviorSkill.setBehavior(BehaviorMode.Raid);
                 } else if (mode.equalsIgnoreCase("duel")) {
                     if (!Permissions.hasExtended(petOwner, "MyPet.extended.behavior.duel") || !behaviorSkill.isModeUsable(BehaviorMode.Duel)) {
-                        myPet.getOwner().sendMessage(Locale.getComponent("Message.No.Allowed", petOwner));
+                        pet.getOwner().sendMessage(Locale.getComponent("Message.No.Allowed", petOwner));
                         return;
                     }
                     behaviorSkill.setBehavior(BehaviorMode.Duel);
@@ -217,7 +217,7 @@ public class CommandBehavior {
                     behaviorSkill.activate();
                     return;
                 }
-                myPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Behavior.NewMode", myPet.getOwner(), myPet.getDisplayName(), Locale.getComponent("Name." + behaviorSkill.getBehavior().name(), myPet.getOwner().getPlayer())));
+                pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Behavior.NewMode", pet.getOwner(), pet.getDisplayName(), Locale.getComponent("Name." + behaviorSkill.getBehavior().name(), pet.getOwner().getPlayer())));
             }
         } else {
             petOwner.sendMessage(Locale.getComponent("Message.No.HasPet", petOwner));

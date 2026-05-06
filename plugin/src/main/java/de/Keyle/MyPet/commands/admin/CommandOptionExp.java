@@ -30,7 +30,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -170,20 +170,20 @@ public class CommandOptionExp {
     private void executeExp(CommandSender sender, Player petOwner, double amount, Operator operator) {
         String lang = Locale.getCommandSenderLanguage(sender);
 
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
         double exp = switch (operator) {
-            case SET -> Math.min(amount, myPet.getExperience().getMaxExp());
-            case ADD -> Math.min(myPet.getExp() + amount, myPet.getExperience().getMaxExp());
-            case REMOVE -> Math.max(0, myPet.getExp() - amount);
+            case SET -> Math.min(amount, pet.getExperience().getMaxExp());
+            case ADD -> Math.min(pet.getExp() + amount, pet.getExperience().getMaxExp());
+            case REMOVE -> Math.max(0, pet.getExp() - amount);
         };
 
-        myPet.getExperience().setExp(exp);
+        pet.getExperience().setExp(exp);
         sender.sendMessage(MessageUtil.prefixed(Component.text(
-                "set exp to " + exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".")));
+                "set exp to " + exp + ". Pet is now level " + pet.getExperience().getLevel() + ".")));
     }
 
     /**
@@ -201,20 +201,20 @@ public class CommandOptionExp {
     private void executeLevels(CommandSender sender, Player petOwner, int levels, Operator operator) {
         String lang = Locale.getCommandSenderLanguage(sender);
 
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
         int targetLevel = switch (operator) {
             case SET -> Math.min(levels, Configuration.LevelSystem.Experience.LEVEL_CAP);
-            case ADD -> Math.min(myPet.getExperience().getLevel() + levels, Configuration.LevelSystem.Experience.LEVEL_CAP);
-            case REMOVE -> Math.max(1, myPet.getExperience().getLevel() - levels);
+            case ADD -> Math.min(pet.getExperience().getLevel() + levels, Configuration.LevelSystem.Experience.LEVEL_CAP);
+            case REMOVE -> Math.max(1, pet.getExperience().getLevel() - levels);
         };
 
-        double exp = targetLevel <= 1 ? 0 : myPet.getExperience().getExpByLevel(targetLevel);
-        myPet.getExperience().setExp(exp);
+        double exp = targetLevel <= 1 ? 0 : pet.getExperience().getExpByLevel(targetLevel);
+        pet.getExperience().setExp(exp);
         sender.sendMessage(MessageUtil.prefixed(Component.text(
-                "set exp to " + exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".")));
+                "set exp to " + exp + ". Pet is now level " + pet.getExperience().getLevel() + ".")));
     }
 }

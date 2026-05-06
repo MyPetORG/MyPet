@@ -63,7 +63,7 @@ public final class PetGoalKey {
     public static final GoalKey<Mob> AGGRESSIVE_TARGET = GoalKey.of(Mob.class, new NamespacedKey("mypet", "aggressive_target"));
     /** Picks a nearby hostile monster when the Behavior skill is set to {@code Farm}. */
     public static final GoalKey<Mob> FARM_TARGET = GoalKey.of(Mob.class, new NamespacedKey("mypet", "farm_target"));
-    /** Picks another MyPet in {@code Duel} mode to fight one-on-one. */
+    /** Picks another Pet in {@code Duel} mode to fight one-on-one. */
     public static final GoalKey<Mob> DUEL_TARGET = GoalKey.of(Mob.class, new NamespacedKey("mypet", "duel_target"));
     /** Lifts the pet to the water / lava surface when submerged. */
     public static final GoalKey<Mob> FLOAT = GoalKey.of(Mob.class, new NamespacedKey("mypet", "float"));

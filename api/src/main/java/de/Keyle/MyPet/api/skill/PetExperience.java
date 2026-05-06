@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.skill;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.event.PetExpEvent;
 import de.Keyle.MyPet.api.event.PetLevelDownEvent;
 import de.Keyle.MyPet.api.event.PetLevelUpEvent;
@@ -44,7 +44,7 @@ import java.util.WeakHashMap;
 
 /**
  * Manages a pet's experience points, level progression, and the damage-tracking maps
- * used to attribute kills for XP distribution. Each {@link MyPet} owns one instance of
+ * used to attribute kills for XP distribution. Each {@link Pet} owns one instance of
  * this class.
  *
  * <p>Experience gain flows through {@link #addExp} overloads, which optionally apply
@@ -61,7 +61,7 @@ import java.util.WeakHashMap;
  * @see ExperienceCalculator
  * @see ExperienceCache
  */
-public class MyPetExperience {
+public class PetExperience {
 
     /** Singleton global XP modifier applied to all pets (e.g. event multiplier). */
     public static final GlobalModifier GLOBAL_MODIFIER = new GlobalModifier();
@@ -73,7 +73,7 @@ public class MyPetExperience {
     private static final Map<LivingEntity, Map<UUID, Double>> DAMAGE_MAPS = new WeakHashMap<>();
 
     @Getter
-    protected final MyPet myPet;
+    protected final Pet pet;
     @Getter
     protected int level = 1;
     @Getter
@@ -90,15 +90,15 @@ public class MyPetExperience {
      *
      * @param pet the pet that owns this experience instance
      */
-    public MyPetExperience(MyPet pet) {
-        this.myPet = pet;
+    public PetExperience(Pet pet) {
+        this.pet = pet;
         this.expCalculator = MyPetApi.getServiceManager()
                 .getService(ExperienceCalculatorManager.class).orElseThrow()
                 .getCalculator();
         cache = MyPetApi.getServiceManager().getService(ExperienceCache.class).orElseThrow();
 
         this.modifier.put("Global", GLOBAL_MODIFIER);
-        this.modifier.put("Permission", new PermissionModifier(myPet));
+        this.modifier.put("Permission", new PermissionModifier(this.pet));
     }
 
     /** Returns the raw damage map for a victim, or {@code null} if none exists. */
@@ -363,7 +363,7 @@ public class MyPetExperience {
      * @return the actual XP change applied
      */
     protected double updateExp(double exp, boolean quiet) {
-        PetExpEvent expEvent = new PetExpEvent(myPet, exp, quiet);
+        PetExpEvent expEvent = new PetExpEvent(pet, exp, quiet);
         Bukkit.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
             return 0;
@@ -373,7 +373,7 @@ public class MyPetExperience {
         double oldExp = this.exp;
         this.exp += expEvent.getExp();
         this.exp = Math.max(0, Math.min(maxExp, this.exp));
-        int lvl = cache.getLevel(myPet.getWorldGroup(), myPet.getPetType(), this.exp);
+        int lvl = cache.getLevel(pet.getWorldGroup(), pet.getPetType(), this.exp);
         if (lvl != 0) {
             this.level = lvl;
         } else {
@@ -381,9 +381,9 @@ public class MyPetExperience {
         }
         if (oldLvl != this.level) {
             if (oldLvl < this.level) {
-                Bukkit.getServer().getPluginManager().callEvent(new PetLevelUpEvent(myPet, this.level, oldLvl, quiet));
+                Bukkit.getServer().getPluginManager().callEvent(new PetLevelUpEvent(pet, this.level, oldLvl, quiet));
             } else {
-                Bukkit.getServer().getPluginManager().callEvent(new PetLevelDownEvent(myPet, this.level, oldLvl, quiet));
+                Bukkit.getServer().getPluginManager().callEvent(new PetLevelDownEvent(pet, this.level, oldLvl, quiet));
             }
         }
         return this.exp - oldExp;
@@ -456,19 +456,19 @@ public class MyPetExperience {
         double prev = 0, exp, next;
         try {
             if (level > 2) {
-                prev = cache.getExp(myPet.getWorldGroup(), myPet.getPetType(), level - 1);
+                prev = cache.getExp(pet.getWorldGroup(), pet.getPetType(), level - 1);
             }
-            exp = cache.getExp(myPet.getWorldGroup(), myPet.getPetType(), level);
-            next = cache.getExp(myPet.getWorldGroup(), myPet.getPetType(), level + 1);
+            exp = cache.getExp(pet.getWorldGroup(), pet.getPetType(), level);
+            next = cache.getExp(pet.getWorldGroup(), pet.getPetType(), level + 1);
         } catch (ExperienceCache.LevelNotCalculatedException e) {
             if (level > 2) {
-                prev = expCalculator.getExpByLevel(this.getMyPet(), level - 1);
-                cache.insertExp(myPet.getWorldGroup(), myPet.getPetType(), level - 1, prev);
+                prev = expCalculator.getExpByLevel(this.getPet(), level - 1);
+                cache.insertExp(pet.getWorldGroup(), pet.getPetType(), level - 1, prev);
             }
-            exp = expCalculator.getExpByLevel(this.getMyPet(), level);
-            next = expCalculator.getExpByLevel(this.getMyPet(), level + 1);
-            cache.insertExp(myPet.getWorldGroup(), myPet.getPetType(), level, exp);
-            cache.insertExp(myPet.getWorldGroup(), myPet.getPetType(), level + 1, next);
+            exp = expCalculator.getExpByLevel(this.getPet(), level);
+            next = expCalculator.getExpByLevel(this.getPet(), level + 1);
+            cache.insertExp(pet.getWorldGroup(), pet.getPetType(), level, exp);
+            cache.insertExp(pet.getWorldGroup(), pet.getPetType(), level + 1, next);
         }
         if (prev == exp) {
             MyPetApi.getLogger().warning("Level " + (level - 1) + " and " + level + " require the same amount of XP. Please change that.");

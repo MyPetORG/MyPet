@@ -25,10 +25,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.arguments.MiniMessageSuggestions;
@@ -117,11 +117,11 @@ public class CommandOptionName {
     private void execute(CommandSender sender, Player petOwner, String name) {
         String lang = Locale.getCommandSenderLanguage(sender);
 
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
 
         StringBuilder nameBuilder = new StringBuilder(name);
         Pattern regex = Pattern.compile("<[a-zA-Z_]+>");
@@ -130,7 +130,7 @@ public class CommandOptionName {
             nameBuilder.append("<reset>");
         }
 
-        myPet.setPetName(nameBuilder.toString());
+        pet.setPetName(nameBuilder.toString());
         sender.sendMessage(MessageUtil.prefixed(Component.text("new name is now: ").append(Util.SANITIZED_MINIMESSAGE.deserialize(nameBuilder.toString()))));
     }
 }

@@ -45,7 +45,7 @@ import java.util.List;
  *
  * <p>Lists all stored pets belonging to the sender, or to another player when an admin
  * provides a target name. Each pet's display name is shown as a comma-separated list
- * with hover tooltips containing pet details (via {@link PetInfoBuilder#myPetToItemHover}).</p>
+ * with hover tooltips containing pet details (via {@link PetInfoBuilder#petToItemHover}).</p>
  *
  * <p>This command is restricted to in-game players only (no console support).</p>
  *
@@ -141,13 +141,13 @@ public class CommandList {
                     }
                     boolean doComma = false;
                     TextComponent.Builder messageBuilder = Component.text();
-                    for (StoredPet mypet : value) {
+                    for (StoredPet pet : value) {
                         if (doComma) {
                             messageBuilder.append(Component.text(", "));
                         }
                         messageBuilder.append(
-                                mypet.getDisplayName()
-                                        .hoverEvent(PetInfoBuilder.myPetToItemHover(mypet, lang))
+                                pet.getDisplayName()
+                                        .hoverEvent(PetInfoBuilder.petToItemHover(pet, lang))
                         );
                         if (!doComma) {
                             doComma = true;

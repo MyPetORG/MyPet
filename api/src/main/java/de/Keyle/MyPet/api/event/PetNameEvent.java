@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.event.Cancellable;
@@ -34,7 +34,7 @@ import org.jspecify.annotations.NonNull;
  * profanity, enforcing length / character constraints, or applying server-wide
  * formatting rules (color codes, bracket prefixes, etc.).
  *
- * <p>Fires from {@code MyPet#setPetName} for every name change source — owner
+ * <p>Fires from {@code Pet#setPetName} for every name change source — owner
  * rename via {@code /mypet name}, admin rename via {@code /petadmin name}, and
  * any third-party setter call. The new name is applied with the value of
  * {@link #getNewName()} at the end of the event dispatch, so listeners that
@@ -46,14 +46,14 @@ import org.jspecify.annotations.NonNull;
  * <p><b>Pet state:</b> live pet (name changes only happen on active pets).
  *
  * <p><b>Format note:</b> the name string is in MiniMessage format —
- * {@code MyPet#getDisplayName} deserializes it into a {@code Component} via
+ * {@code Pet#getDisplayName} deserializes it into a {@code Component} via
  * the sanitized MiniMessage parser. Listeners modifying the name should
  * preserve MiniMessage syntax.
  */
 public class PetNameEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    private final MyPet pet;
+    private final Pet pet;
     @Getter
     @Setter
     private String newName;
@@ -61,7 +61,7 @@ public class PetNameEvent extends Event implements Cancellable {
     @Setter
     private boolean cancelled;
 
-    public PetNameEvent(MyPet pet, String newName) {
+    public PetNameEvent(Pet pet, String newName) {
         this.pet = pet;
         this.newName = newName;
     }

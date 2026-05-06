@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,12 +54,12 @@ import org.jspecify.annotations.NonNull;
 @Getter
 public class PetPickupItemEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private final MyPet pet;
+    private final Pet pet;
     private final Item item;
     @Setter
     private boolean isCancelled = false;
 
-    public PetPickupItemEvent(MyPet pet, Item item) {
+    public PetPickupItemEvent(Pet pet, Item item) {
         this.pet = pet;
         this.item = item;
     }

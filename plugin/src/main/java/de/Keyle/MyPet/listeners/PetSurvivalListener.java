@@ -22,9 +22,9 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
-import de.Keyle.MyPet.api.entity.MyPetSunSensitive;
+import de.Keyle.MyPet.api.entity.PetAquaticEntity;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetSunSensitive;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import org.bukkit.entity.LivingEntity;
@@ -44,9 +44,9 @@ import org.bukkit.potion.PotionEffectType;
  *   <li>Fall damage immunity when the pet has a JUMP_BOOST effect</li>
  *   <li>Suffocation respawn — despawns the pet and re-spawns it on the
  *       next tick to escape solid blocks</li>
- *   <li>Daylight burn suppression for {@link MyPetSunSensitive} pets when
+ *   <li>Daylight burn suppression for {@link PetSunSensitive} pets when
  *       the per-type {@code PreventDaylightBurn} flag is on</li>
- *   <li>Out-of-water suffocation suppression for {@link MyPetAquaticEntity}
+ *   <li>Out-of-water suffocation suppression for {@link PetAquaticEntity}
  *       pets when the per-type {@code PreventSuffocation} flag is on</li>
  * </ul>
  */
@@ -64,8 +64,8 @@ public class PetSurvivalListener implements Listener {
 
     @EventHandler
     public void onEntityDamage(final EntityDamageEvent event) {
-        MyPet myPet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
-        if (myPet == null) return;
+        Pet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
+        if (pet == null) return;
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) return;
 
         LivingEntity bukkitEntity = (LivingEntity) event.getEntity();
@@ -80,43 +80,43 @@ public class PetSurvivalListener implements Listener {
         // the only one that fires in vanilla — strict water-breathers cannot
         // enter the land-breather state.
         if (event.getCause() == DamageCause.DROWNING
-                && myPet instanceof MyPetAquaticEntity aquatic
+                && pet instanceof PetAquaticEntity aquatic
                 && aquatic.preventSuffocation()) {
             event.setCancelled(true);
             return;
         }
 
         if (event.getCause() == DamageCause.SUFFOCATION) {
-            if (myPet.hasMyPetRider()) {
+            if (pet.hasPetRider()) {
                 event.setCancelled(true);
                 return;
             }
-            final MyPetPlayer myPetPlayer = myPet.getOwner();
+            final MyPetPlayer myPetPlayer = pet.getOwner();
 
-            myPet.removePet();
-            myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Despawn", myPetPlayer.getLanguage(), myPet.getDisplayName()));
+            pet.removePet();
+            myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Despawn", myPetPlayer.getLanguage(), pet.getDisplayName()));
 
             Player ownerPlayer = myPetPlayer.getPlayer();
             if (ownerPlayer == null) return;
             ownerPlayer.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> {
-                if (myPetPlayer.hasMyPet()) {
-                    MyPet runMyPet = myPetPlayer.getMyPet();
-                    switch (runMyPet.createEntity()) {
+                if (myPetPlayer.hasPet()) {
+                    Pet runPet = myPetPlayer.getPet();
+                    switch (runPet.createEntity()) {
                         case Canceled:
-                            runMyPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", myPet.getOwner(), runMyPet.getDisplayName()));
+                            runPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", pet.getOwner(), runPet.getDisplayName()));
                             break;
                         case NoSpace:
-                            runMyPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", myPet.getOwner(), runMyPet.getDisplayName()));
+                            runPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", pet.getOwner(), runPet.getDisplayName()));
                             break;
                         case NotAllowed:
-                            runMyPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPet.getOwner(), myPet.getDisplayName()));
+                            runPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", pet.getOwner(), pet.getDisplayName()));
                             break;
                         case Flying:
-                            runMyPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", myPet.getOwner(), myPet.getDisplayName()));
+                            runPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", pet.getOwner(), pet.getDisplayName()));
                             break;
                         case Success:
-                            if (runMyPet != myPet) {
-                                runMyPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", myPet.getOwner(), runMyPet.getDisplayName()));
+                            if (runPet != pet) {
+                                runPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", pet.getOwner(), runPet.getDisplayName()));
                             }
                             break;
                     }
@@ -135,10 +135,10 @@ public class PetSurvivalListener implements Listener {
         if (event instanceof EntityCombustByBlockEvent || event instanceof EntityCombustByEntityEvent) {
             return;
         }
-        MyPet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
+        Pet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
         if (pet == null) return;
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) return;
-        if (pet instanceof MyPetSunSensitive sunSensitive && sunSensitive.preventDaylightBurn()) {
+        if (pet instanceof PetSunSensitive sunSensitive && sunSensitive.preventDaylightBurn()) {
             event.setCancelled(true);
         }
     }

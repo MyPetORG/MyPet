@@ -23,7 +23,7 @@ package de.Keyle.MyPet.util.hooks;
 import com.SirBlobman.combatlogx.config.ConfigOptions;
 import com.SirBlobman.combatlogx.utility.CombatUtil;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.util.hooks.PluginHook;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
@@ -77,20 +77,20 @@ public class CombatLogXHook implements PluginHook {
         Entity damaged = e.getEntity();
         Entity damager = e.getDamager();
 
-        // Resolve MyPet-fired projectiles back to the shooting pet (so the
+        // Resolve Pet-fired projectiles back to the shooting pet (so the
         // pet-link check below can then resolve it to the owner Player).
         // Replaces the legacy `instanceof CraftMyPetProjectile` check —
         // identification is now via the PDC owner tag that
         // PetRangedAttackGoal writes at launch time.
         if (damager instanceof Projectile projectile && (ConfigOptions.OPTION_LINK_PROJECTILES || IGNORE_PLUGIN_SETTINGS)) {
-            MyPet sourcePet = PetRangedAttackGoal.getSourceMyPet(projectile);
+            Pet sourcePet = PetRangedAttackGoal.getSourcePet(projectile);
             if (sourcePet != null && sourcePet.getEntity().isPresent()) {
                 damager = (Entity) sourcePet.getEntity().get();
             }
         }
 
         if ((PetEntityMarker.isMarked(damager)) && (ConfigOptions.OPTION_LINK_PETS || IGNORE_PLUGIN_SETTINGS)) {
-            damager = getPetManager().getMyPetFromEntity(damager).getOwner().getPlayer();
+            damager = getPetManager().getPetFromEntity(damager).getOwner().getPlayer();
         } else {
             return;
         }

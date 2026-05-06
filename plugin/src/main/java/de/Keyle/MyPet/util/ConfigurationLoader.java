@@ -225,7 +225,7 @@ public class ConfigurationLoader {
             if (!petType.checkMinecraftVersion()) {
                 continue;
             }
-            DefaultInfo pi = petType.getMyPetClass().getAnnotation(DefaultInfo.class);
+            DefaultInfo pi = petType.getPetClass().getAnnotation(DefaultInfo.class);
             if (pi == null) {
                 continue;
             }
@@ -239,7 +239,7 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", "lead");
             config.addDefault("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false);
             config.addDefault("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false);
-            if (MyPetBaby.class.isAssignableFrom(petType.getMyPetClass())) {
+            if (PetBaby.class.isAssignableFrom(petType.getPetClass())) {
                 config.addDefault("MyPet.Pets." + petType.name() + ".GrowUpItem", pi.growUpItem().name().toLowerCase());
             }
         }
@@ -254,22 +254,22 @@ public class ConfigurationLoader {
         // MigrateFlyingPetsCanGlideToCanFly.
         for (PetType type : PetType.values()) {
             String base = "MyPet.Pets." + type.name();
-            if (MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetFlyingEntity.class.isAssignableFrom(type.getPetClass())) {
                 config.addDefault(base + ".CanFly", true);
             }
-            if (MyPetGlidingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetGlidingEntity.class.isAssignableFrom(type.getPetClass())) {
                 config.addDefault(base + ".CanGlide", true);
             }
-            if (MyPetSwimmingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetSwimmingEntity.class.isAssignableFrom(type.getPetClass())) {
                 config.addDefault(base + ".CanSwim", true);
             }
-            if (MyPetZombifiable.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetZombifiable.class.isAssignableFrom(type.getPetClass())) {
                 config.addDefault(base + ".AllowZombification", false);
             }
-            if (MyPetSunSensitive.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetSunSensitive.class.isAssignableFrom(type.getPetClass())) {
                 config.addDefault(base + ".PreventDaylightBurn", true);
             }
-            if (MyPetAquaticEntity.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetAquaticEntity.class.isAssignableFrom(type.getPetClass())) {
                 config.addDefault(base + ".PreventSuffocation", true);
             }
         }
@@ -504,22 +504,22 @@ public class ConfigurationLoader {
         // keys populated by setDefault().
         for (PetType type : PetType.values()) {
             String base = "MyPet.Pets." + type.name();
-            if (MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetFlyingEntity.class.isAssignableFrom(type.getPetClass())) {
                 MyPet.setCanFly(type.name(), config.getBoolean(base + ".CanFly", true));
             }
-            if (MyPetGlidingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetGlidingEntity.class.isAssignableFrom(type.getPetClass())) {
                 MyPet.setCanGlide(type.name(), config.getBoolean(base + ".CanGlide", true));
             }
-            if (MyPetSwimmingEntity.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetSwimmingEntity.class.isAssignableFrom(type.getPetClass())) {
                 MyPet.setCanSwim(type.name(), config.getBoolean(base + ".CanSwim", true));
             }
-            if (MyPetZombifiable.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetZombifiable.class.isAssignableFrom(type.getPetClass())) {
                 MyPet.setAllowZombification(type.name(), config.getBoolean(base + ".AllowZombification", false));
             }
-            if (MyPetSunSensitive.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetSunSensitive.class.isAssignableFrom(type.getPetClass())) {
                 MyPet.setPreventDaylightBurn(type.name(), config.getBoolean(base + ".PreventDaylightBurn", true));
             }
-            if (MyPetAquaticEntity.class.isAssignableFrom(type.getMyPetClass())) {
+            if (PetAquaticEntity.class.isAssignableFrom(type.getPetClass())) {
                 MyPet.setPreventSuffocation(type.name(), config.getBoolean(base + ".PreventSuffocation", true));
             }
         }
@@ -546,30 +546,30 @@ public class ConfigurationLoader {
             if (!petType.checkMinecraftVersion()) {
                 continue;
             }
-            DefaultInfo pi = petType.getMyPetClass().getAnnotation(DefaultInfo.class);
+            DefaultInfo pi = petType.getPetClass().getAnnotation(DefaultInfo.class);
             if (pi == null) {
                 continue;
             }
 
-            MyPetApi.getMyPetInfo().setStartHP(petType, config.getDouble("MyPet.Pets." + petType.name() + ".HP", pi.hp()));
-            MyPetApi.getMyPetInfo().setSpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".Speed", pi.walkSpeed()));
-            MyPetApi.getMyPetInfo().clearFood(petType);
+            MyPetApi.getPetInfo().setStartHP(petType, config.getDouble("MyPet.Pets." + petType.name() + ".HP", pi.hp()));
+            MyPetApi.getPetInfo().setSpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".Speed", pi.walkSpeed()));
+            MyPetApi.getPetInfo().clearFood(petType);
             if (config.get("MyPet.Pets." + petType.name() + ".Food") instanceof ArrayList) {
                 List<String> foodList = config.getStringList("MyPet.Pets." + petType.name() + ".Food");
                 for (String foodString : foodList) {
                     ConfigItem ci = ConfigItem.createConfigItem(foodString);
                     if (ci.getItem() != null && ci.getItem().getType() != Material.AIR) {
-                        MyPetApi.getMyPetInfo().addFood(petType, ci);
+                        MyPetApi.getPetInfo().addFood(petType, ci);
                     }
                 }
             }
             loadLeashFlags(petType, config.getStringList("MyPet.Pets." + petType + ".LeashRequirements"));
-            MyPetApi.getMyPetInfo().setCustomRespawnTimeFactor(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0));
-            MyPetApi.getMyPetInfo().setCustomRespawnTimeFixed(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0));
-            MyPetApi.getMyPetInfo().setReleaseOnDeath(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false));
-            MyPetApi.getMyPetInfo().setRemoveAfterRelease(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false));
-            MyPetApi.getMyPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "lead")));
-            if (MyPetBaby.class.isAssignableFrom(petType.getMyPetClass())) {
+            MyPetApi.getPetInfo().setCustomRespawnTimeFactor(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0));
+            MyPetApi.getPetInfo().setCustomRespawnTimeFixed(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0));
+            MyPetApi.getPetInfo().setReleaseOnDeath(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false));
+            MyPetApi.getPetInfo().setRemoveAfterRelease(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false));
+            MyPetApi.getPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "lead")));
+            if (PetBaby.class.isAssignableFrom(petType.getPetClass())) {
                 String growUp = config.getString("MyPet.Pets." + petType.name() + ".GrowUpItem", pi.growUpItem().name().toLowerCase());
                 MyPet.setGrowUpItem(petType.name(), ConfigItem.createConfigItem(growUp));
             }
@@ -589,7 +589,7 @@ public class ConfigurationLoader {
     }
 
     public static void loadLeashFlags(PetType type, List<String> leashFlagStrings) {
-        MyPetApi.getMyPetInfo().clearLeashFlagSettings(type);
+        MyPetApi.getPetInfo().clearLeashFlagSettings(type);
         for (String leashFlagString : leashFlagStrings) {
             boolean hasParameter = leashFlagString.contains(":");
             String[] data = leashFlagString.split(":", 2);
@@ -597,7 +597,7 @@ public class ConfigurationLoader {
             if (hasParameter) {
                 settings.load(data[1]);
             }
-            MyPetApi.getMyPetInfo().addLeashFlagSetting(type, settings);
+            MyPetApi.getPetInfo().addLeashFlagSetting(type, settings);
         }
     }
 }

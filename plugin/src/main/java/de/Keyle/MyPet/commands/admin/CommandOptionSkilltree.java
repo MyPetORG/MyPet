@@ -25,10 +25,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -97,10 +97,10 @@ public class CommandOptionSkilltree {
                                                 .resolve(ctx.getSource());
                                         if (!resolved.isEmpty()) {
                                             Player player = resolved.getFirst();
-                                            if (MyPetApi.getPetManager().hasActiveMyPet(player)) {
-                                                MyPet myPet = MyPetApi.getPetManager().getMyPet(player);
+                                            if (MyPetApi.getPetManager().hasActivePet(player)) {
+                                                Pet pet = MyPetApi.getPetManager().getPet(player);
                                                 for (Skilltree skilltree : MyPetApi.getSkilltreeManager().getSkilltrees()) {
-                                                    if (skilltree.getMobTypes().contains(myPet.getPetType())) {
+                                                    if (skilltree.getMobTypes().contains(pet.getPetType())) {
                                                         builder.suggest(skilltree.getName());
                                                     }
                                                 }
@@ -136,15 +136,15 @@ public class CommandOptionSkilltree {
     private void execute(CommandSender sender, Player petOwner, String skilltreeName) {
         String lang = Locale.getCommandSenderLanguage(sender);
 
-        if (!MyPetApi.getPetManager().hasActiveMyPet(petOwner)) {
+        if (!MyPetApi.getPetManager().hasActivePet(petOwner)) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, petOwner.getName())));
             return;
         }
-        MyPet myPet = MyPetApi.getPetManager().getMyPet(petOwner);
+        Pet pet = MyPetApi.getPetManager().getPet(petOwner);
 
         if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
             Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
-            if (skilltree.getMobTypes().contains(myPet.getPetType()) && myPet.setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.ADMIN_COMMAND)) {
+            if (skilltree.getMobTypes().contains(pet.getPetType()) && pet.setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.ADMIN_COMMAND)) {
                 sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.Skilltree.SwitchedToFor", lang, petOwner.getName(), Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName()))));
             } else {
                 sender.sendMessage(MessageUtil.prefixed(Locale.getComponent("Message.Skilltree.NotSwitched", lang)));

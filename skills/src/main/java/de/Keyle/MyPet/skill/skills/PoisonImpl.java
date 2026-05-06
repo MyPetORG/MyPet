@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Poison;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -37,14 +37,14 @@ public class PoisonImpl implements Poison {
     private static Random random = new Random();
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
-    private MyPet myPet;
+    private Pet pet;
 
-    public PoisonImpl(MyPet myPet) {
-        this.myPet = myPet;
+    public PoisonImpl(Pet pet) {
+        this.pet = pet;
     }
 
-    public MyPet getMyPet() {
-        return myPet;
+    public Pet getPet() {
+        return pet;
     }
 
     public boolean isActive() {
@@ -70,7 +70,7 @@ public class PoisonImpl implements Poison {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Poison.Upgrade", myPet.getOwner().getLanguage(), myPet.getDisplayName(), getChance().getValue(), getDuration().getValue())
+                Locale.getFormattedComponent("Message.Skill.Poison.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getDuration().getValue())
         };
     }
 

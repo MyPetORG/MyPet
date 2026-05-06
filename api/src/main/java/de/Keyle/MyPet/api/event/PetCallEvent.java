@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -31,7 +31,7 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Fired when an owner attempts to spawn the world entity for an already-active
- * pet — i.e. {@code /mypet call} or any equivalent call to {@code MyPet#createEntity}.
+ * pet — i.e. {@code /mypet call} or any equivalent call to {@code Pet#createEntity}.
  * Fires once per call attempt, before the vanilla {@code Mob} is spawned.
  *
  * <p>The pet exposed via {@link #getPet()} is already active (skills loaded,
@@ -44,16 +44,16 @@ import org.jspecify.annotations.NonNull;
  * region-based call restrictions (WorldGuard / Towny integrations) and per-pet
  * cooldown enforcement.
  *
- * <p><b>Pet state:</b> always a live {@link MyPet} — the pet is active but
+ * <p><b>Pet state:</b> always a live {@link Pet} — the pet is active but
  * its world entity has not yet been spawned.
  */
 public class PetCallEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    private final MyPet pet;
+    private final Pet pet;
     boolean isCancelled = false;
 
-    public PetCallEvent(MyPet pet) {
+    public PetCallEvent(Pet pet) {
         this.pet = pet;
     }
 

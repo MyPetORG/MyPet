@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.ai.target;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -44,12 +44,12 @@ import java.util.EnumSet;
 import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 /**
- * Paper {@link Goal} that pairs up two MyPets whose owners have both set
+ * Paper {@link Goal} that pairs up two Pets whose owners have both set
  * {@link Behavior} to {@link BehaviorMode#Duel}, locking each pet onto
  * the other as a one-on-one target.
  *
  * <p>On first activation the goal scans entities near the owner for
- * another {@link MyPetBukkitEntity} that:
+ * another {@link Pet} that:
  * <ul>
  *   <li>is alive, movable, and has its Behavior skill active in
  *       {@code Duel} mode,</li>
@@ -76,9 +76,8 @@ import static de.Keyle.MyPet.MyPetApi.getPetManager;
  */
 public class PetDuelTargetGoal implements Goal<Mob> {
 
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
-    private final MyPet myPet;
     private final double range;
     private Mob target;
     private Mob duelOpponent = null;
@@ -87,10 +86,9 @@ public class PetDuelTargetGoal implements Goal<Mob> {
      * @param petEntity the pet that will look for a duel partner
      * @param range     radius (in blocks) of the "near owner" search box
      */
-    public PetDuelTargetGoal(MyPet pet, Mob mob, float range) {
+    public PetDuelTargetGoal(Pet pet, Mob mob, float range) {
         this.pet = pet;
         this.mob = mob;
-        this.myPet = pet;
         this.range = range;
     }
 
@@ -99,11 +97,11 @@ public class PetDuelTargetGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (!behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorMode.Duel) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+        if (pet.getDamage() <= 0 && pet.getRangedDamage() <= 0) {
             return false;
         }
         if (!pet.canMove()) {
@@ -133,21 +131,21 @@ public class PetDuelTargetGoal implements Goal<Mob> {
             if (!(entity instanceof Mob otherMob) || otherMob.isDead()) {
                 continue;
             }
-            MyPet targetMyPet = getPetManager().getMyPetFromEntity(otherMob);
-            if (targetMyPet == null) {
+            Pet targetPet = getPetManager().getPetFromEntity(otherMob);
+            if (targetPet == null) {
                 continue;
             }
-            if (!targetMyPet.getSkills().isActive(BehaviorImpl.class)) {
+            if (!targetPet.getSkills().isActive(BehaviorImpl.class)) {
                 continue;
             }
-            if (!targetMyPet.canMove()) {
+            if (!targetPet.canMove()) {
                 continue;
             }
-            BehaviorImpl targetBehavior = targetMyPet.getSkills().get(BehaviorImpl.class);
+            BehaviorImpl targetBehavior = targetPet.getSkills().get(BehaviorImpl.class);
             if (targetBehavior.getBehavior() != BehaviorMode.Duel) {
                 continue;
             }
-            if (targetMyPet.getDamage() == 0 && targetMyPet.getRangedDamage() == 0) {
+            if (targetPet.getDamage() == 0 && targetPet.getRangedDamage() == 0) {
                 continue;
             }
             this.target = otherMob;
@@ -167,15 +165,15 @@ public class PetDuelTargetGoal implements Goal<Mob> {
         if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity currentTarget = pet.getMyPetTarget();
+        LivingEntity currentTarget = pet.getPetTarget();
         if (currentTarget == null || currentTarget.isDead()) {
             return false;
         }
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (behaviorSkill.getBehavior() != BehaviorMode.Duel) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
+        if (pet.getDamage() <= 0 && pet.getRangedDamage() <= 0) {
             return false;
         }
         if (!currentTarget.getWorld().equals(mob.getWorld())) {

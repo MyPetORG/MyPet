@@ -83,7 +83,7 @@ public class NavigationParameters {
 
     /**
      * @param baseSpeed the pet type's default walk speed, typically sourced
-     *                  from {@code MyPetInfoImpl} attribute defaults
+     *                  from {@code PetInfoImpl} attribute defaults
      */
     public NavigationParameters(double baseSpeed) {
         this.speed = baseSpeed;

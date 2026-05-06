@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.ai.attack;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
@@ -39,12 +39,12 @@ import java.util.EnumSet;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Paper {@link Goal} that walks the pet up to a {@link MyPetBukkitEntity#getMyPetTarget() selected target}
+ * Paper {@link Goal} that walks the pet up to a {@link Pet#getPetTarget() selected target}
  * and performs melee attacks on a fixed cooldown.
  *
  * <p>Activation is gated by several conditions, all of which must hold:
  * <ul>
- *   <li>The pet has non-zero melee damage ({@code MyPet#getDamage()}).</li>
+ *   <li>The pet has non-zero melee damage ({@code Pet#getDamage()}).</li>
  *   <li>A target exists, is alive, and is not an {@link ArmorStand}.</li>
  *   <li>The pet's {@link Behavior} skill, if active, does not forbid the hit
  *       (Friendly never attacks; Raid spares tamed mobs, players, and other
@@ -63,7 +63,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * {@code "MeleeAttack"}, and — once the target is within an
  * entity-height-adjusted reach, the attacker's line of sight is clear, and the
  * attacker's eyes are not inside a solid block — fires
- * {@link MyPetBukkitEntity#attackEntity(LivingEntity)} on the cooldown
+ * {@link #applyPetDamage(Pet, LivingEntity, double)} on the cooldown
  * configured at construction time.
  *
  * <p>The line-of-sight and eye-in-block checks are deliberate: the raycast
@@ -79,9 +79,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class PetMeleeAttackGoal implements Goal<Mob> {
 
     private final int ticksUntilNextHit;
-    private final MyPet pet;
+    private final Pet pet;
     private final Mob mob;
-    private final MyPet myPet;
     private final double range;
     private final float walkSpeedModifier;
     private LivingEntity targetEntity;
@@ -96,10 +95,9 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
      *                          width plus a small constant
      * @param ticksUntilNextHit cooldown in ticks between successful hits
      */
-    public PetMeleeAttackGoal(MyPet pet, Mob mob, float walkSpeedModifier, double range, int ticksUntilNextHit) {
+    public PetMeleeAttackGoal(Pet pet, Mob mob, float walkSpeedModifier, double range, int ticksUntilNextHit) {
         this.pet = pet;
         this.mob = mob;
-        this.myPet = pet;
         this.walkSpeedModifier = walkSpeedModifier;
         this.range = range;
         this.ticksUntilNextHit = ticksUntilNextHit;
@@ -110,13 +108,13 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        if (myPet.getDamage() <= 0) {
+        if (pet.getDamage() <= 0) {
             return false;
         }
         if (!pet.hasTarget()) {
             return false;
         }
-        LivingEntity target = pet.getMyPetTarget();
+        LivingEntity target = pet.getPetTarget();
         if (target == null || target.isDead()) {
             return false;
         }
@@ -125,13 +123,13 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
         }
         // Defer to ranged when target is far AND ranged damage is higher (mirrors
         // the logic in PetRangedAttackGoal — must use the same distance threshold)
-        double rangedDamage = myPet.getRangedDamage();
+        double rangedDamage = pet.getRangedDamage();
         if (rangedDamage > 0 && mob.getLocation().distanceSquared(target.getLocation()) >= PetRangedAttackGoal.MELEE_PREFERENCE_RANGE_SQ) {
-            if (rangedDamage >= myPet.getDamage()) {
+            if (rangedDamage >= pet.getDamage()) {
                 return false;
             }
         }
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (behaviorSkill != null && behaviorSkill.isActive()) {
             if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) {
                 return false;
@@ -160,18 +158,18 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
         if (!pet.hasTarget() || !pet.canMove()) {
             return false;
         }
-        LivingEntity currentTarget = pet.getMyPetTarget();
+        LivingEntity currentTarget = pet.getPetTarget();
         if (currentTarget == null || !currentTarget.equals(targetEntity)) {
             return false;
         }
         // Defer to ranged when target is far AND ranged damage is higher
-        double stayRangedDamage = myPet.getRangedDamage();
+        double stayRangedDamage = pet.getRangedDamage();
         if (stayRangedDamage > 0 && mob.getLocation().distanceSquared(targetEntity.getLocation()) >= PetRangedAttackGoal.MELEE_PREFERENCE_RANGE_SQ) {
-            if (stayRangedDamage >= myPet.getDamage()) {
+            if (stayRangedDamage >= pet.getDamage()) {
                 return false;
             }
         }
-        Behavior behaviorSkill = myPet.getSkills().get(Behavior.class);
+        Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
         if (behaviorSkill != null && behaviorSkill.isActive()) {
             if (behaviorSkill.getBehavior() == Behavior.BehaviorMode.Friendly) {
                 return false;
@@ -254,7 +252,7 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
     }
 
     /**
-     * Applies damage from a MyPet to a target entity using Paper's
+     * Applies damage from a Pet to a target entity using Paper's
      * {@link DamageSource} builder. When the owner is online and in the same
      * world, {@code withCausingEntity(owner)} routes kill credit through
      * vanilla's {@code lastHurtByPlayer} tracking so mob drops and XP land
@@ -269,7 +267,7 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
      * in death messages and in {@code Player#getKiller()} for any combat
      * / kill-tracking plugins.
      */
-    private static void applyPetDamage(MyPet pet, LivingEntity target, double damage) {
+    private static void applyPetDamage(Pet pet, LivingEntity target, double damage) {
         if (pet == null || target == null || target.isDead()) return;
         Mob mob = pet.getBukkitEntity();
         if (mob == null) return;

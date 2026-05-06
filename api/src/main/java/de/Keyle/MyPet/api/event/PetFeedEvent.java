@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.event.HandlerList;
@@ -32,7 +32,7 @@ import org.jspecify.annotations.NonNull;
  * Subclass of {@link PetInteractEvent} — extends the right-click hook with
  * food-specific fields.
  *
- * <p>Fires from {@code MyPet#mobInteract} on player-pet right-click and from
+ * <p>Fires from {@code Pet#mobInteract} on player-pet right-click and from
  * the self-feed branch when the pet auto-eats a held item.
  *
  * <p><b>Cancellable</b> (inherited): cancellation suppresses the feed action
@@ -56,7 +56,7 @@ public class PetFeedEvent extends PetInteractEvent {
     private double saturation;
     private Result result;
 
-    public PetFeedEvent(MyPet pet, ItemStack item, double saturation, Result result) {
+    public PetFeedEvent(Pet pet, ItemStack item, double saturation, Result result) {
         super(pet, item);
         this.saturation = saturation;
         this.result = result;

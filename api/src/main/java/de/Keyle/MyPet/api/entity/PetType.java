@@ -34,8 +34,8 @@ import java.util.*;
  * third-party plugins register custom types via {@link #register(String, Class)}.
  * <p>
  * Each impl class carries its own {@code @ShopInfo} / {@code @DefaultInfo} annotations
- * and {@code implements} the relevant marker interfaces ({@link MyPetBaby},
- * {@link MyPetFlyingEntity}, etc.) directly.
+ * and {@code implements} the relevant marker interfaces ({@link PetBaby},
+ * {@link PetFlyingEntity}, etc.) directly.
  */
 public final class PetType {
 
@@ -45,14 +45,14 @@ public final class PetType {
     private final String name;
     @Getter
     private final String bukkitName;
-    private final Class<? extends MyPet> mypetClass;
+    private final Class<? extends Pet> petClass;
     @Getter
     private final Class<? extends Mob> bukkitEntityClass;
 
-    private PetType(String name, String bukkitName, Class<? extends MyPet> mypetClass) {
+    private PetType(String name, String bukkitName, Class<? extends Pet> petClass) {
         this.name = name;
         this.bukkitName = bukkitName;
-        this.mypetClass = mypetClass;
+        this.petClass = petClass;
         this.bukkitEntityClass = resolveBukkitEntityClass(bukkitName);
     }
 
@@ -72,11 +72,11 @@ public final class PetType {
      * Registers a custom pet type. Use this for third-party or ModelEngine-backed entities.
      *
      * @param name     CamelCase name (e.g. "MyCustomMob")
-     * @param petClass interface extending MyPet
+     * @param petClass interface extending Pet
      * @return the registered PetType
      * @throws IllegalArgumentException if a type with this name is already registered
      */
-    public static PetType register(String name, Class<? extends MyPet> petClass) {
+    public static PetType register(String name, Class<? extends Pet> petClass) {
         String key = name.toUpperCase();
         if (BY_NAME.containsKey(key)) {
             throw new IllegalArgumentException("PetType '" + name + "' is already registered");
@@ -90,7 +90,7 @@ public final class PetType {
 
     /**
      * Removes a previously registered pet type. Third-party plugins should call this from
-     * their {@code onDisable} to release the {@code Class<? extends MyPet>} reference and
+     * their {@code onDisable} to release the {@code Class<? extends Pet>} reference and
      * avoid leaking their plugin classloader across reloads. No-op if the name is unknown.
      */
     public static void unregister(String name) {
@@ -177,24 +177,24 @@ public final class PetType {
     }
 
     /** Returns the pet implementation class for this type. */
-    public Class<? extends MyPet> getMyPetClass() {
-        return mypetClass;
+    public Class<? extends Pet> getPetClass() {
+        return petClass;
     }
 
     /**
      * Type-level capability check: does this pet type's interface declare
-     * {@link MyPetFlyingEntity}? The per-pet {@code CanFly} preference is
+     * {@link PetFlyingEntity}? The per-pet {@code CanFly} preference is
      * checked separately at the pet *instance* level (see
-     * {@link MyPetFlyingEntity#canFly()}) — callers that need the combined
+     * {@link PetFlyingEntity#canFly()}) — callers that need the combined
      * capability and preference answer should use the instance check directly.
      */
     public boolean isFlyingPet() {
-        return MyPetFlyingEntity.class.isAssignableFrom(mypetClass);
+        return PetFlyingEntity.class.isAssignableFrom(petClass);
     }
 
-    /** Type-level check: does this type implement {@link MyPetSwimmingEntity}? */
+    /** Type-level check: does this type implement {@link PetSwimmingEntity}? */
     public boolean isSwimmingPet() {
-        return MyPetSwimmingEntity.class.isAssignableFrom(mypetClass);
+        return PetSwimmingEntity.class.isAssignableFrom(petClass);
     }
 
     /** Whether this pet type should float on lava (Strider). */

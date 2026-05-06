@@ -23,7 +23,7 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -69,20 +69,20 @@ public class PetPvPListener implements Listener {
             damager = (Player) event.getCombuster();
         }
 
-        MyPet myPet = getPetManager().getMyPetFromEntity(event.getEntity());
-        if (myPet == null) return;
+        Pet pet = getPetManager().getPetFromEntity(event.getEntity());
+        if (pet == null) return;
 
-        if (myPet.getOwner().equals(damager) && !Configuration.Misc.OWNER_CAN_ATTACK_PET) {
+        if (pet.getOwner().equals(damager) && !Configuration.Misc.OWNER_CAN_ATTACK_PET) {
             event.setCancelled(true);
-        } else if (!myPet.getOwner().equals(damager) && !MyPetApi.getHookHelper().canHurt(damager, myPet.getOwner().getPlayer(), true)) {
+        } else if (!pet.getOwner().equals(damager) && !MyPetApi.getHookHelper().canHurt(damager, pet.getOwner().getPlayer(), true)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onDamageByEntity(final EntityDamageByEntityEvent event) {
-        MyPet myPet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
-        if (myPet == null) return;
+        Pet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
+        if (pet == null) return;
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) return;
 
         // Player-on-pet PvP gate
@@ -93,24 +93,24 @@ public class PetPvPListener implements Listener {
             } else {
                 damager = (Player) event.getDamager();
             }
-            if (myPet.getOwner().equals(damager) && (!Configuration.Misc.OWNER_CAN_ATTACK_PET)) {
+            if (pet.getOwner().equals(damager) && (!Configuration.Misc.OWNER_CAN_ATTACK_PET)) {
                 event.setCancelled(true);
-            } else if (!myPet.getOwner().equals(damager) && !MyPetApi.getHookHelper().canHurt(damager, myPet.getOwner().getPlayer(), true)) {
+            } else if (!pet.getOwner().equals(damager) && !MyPetApi.getHookHelper().canHurt(damager, pet.getOwner().getPlayer(), true)) {
                 event.setCancelled(true);
             }
         }
 
         // Pet-on-pet projectile: self-damage prevention + duel bypass
         if (event.getDamager() instanceof Projectile projectile) {
-            MyPet shooterPet = PetRangedAttackGoal.getSourceMyPet(projectile);
+            Pet shooterPet = PetRangedAttackGoal.getSourcePet(projectile);
             if (shooterPet != null && shooterPet.getEntity().isPresent()) {
-                if (myPet == shooterPet) {
+                if (pet == shooterPet) {
                     event.setCancelled(true);
                 }
                 boolean inDuel = shooterPet.getTargetPriority() == TargetPriority.Duel
-                        && myPet.getTargetPriority() == TargetPriority.Duel
-                        && shooterPet.getMyPetTarget() == myPet.getBukkitEntity();
-                if (!inDuel && !MyPetApi.getHookHelper().canHurt(shooterPet.getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
+                        && pet.getTargetPriority() == TargetPriority.Duel
+                        && shooterPet.getPetTarget() == pet.getBukkitEntity();
+                if (!inDuel && !MyPetApi.getHookHelper().canHurt(shooterPet.getOwner().getPlayer(), pet.getOwner().getPlayer(), true)) {
                     event.setCancelled(true);
                 }
             }
@@ -143,17 +143,17 @@ public class PetPvPListener implements Listener {
         if (!PetEntityMarker.isMarked(damagerSlime)) return;
         if (WorldGroup.getGroupByWorld(damagerSlime.getWorld()).isDisabled()) return;
 
-        MyPet myPet = getPetManager().getMyPetFromEntity(damagerSlime);
-        if (myPet == null) return;
+        Pet pet = getPetManager().getPetFromEntity(damagerSlime);
+        if (pet == null) return;
 
         // Deliberate attacks via PetMeleeAttackGoal target the pet's current target.
         // Don't gate those — that's the user's intentional Aggressive/Farm/Duel use.
-        if (myPet.getMyPetTarget() == victim) {
+        if (pet.getPetTarget() == victim) {
             return;
         }
 
         // Owner is universally protected.
-        var owner = myPet.getOwner();
+        var owner = pet.getOwner();
         Player ownerPlayer = owner != null ? owner.getPlayer() : null;
         if (ownerPlayer != null && ownerPlayer.equals(victim)) {
             event.setCancelled(true);

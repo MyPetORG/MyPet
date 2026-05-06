@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.Scheduler;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
@@ -81,7 +81,7 @@ public class Timer {
         miscTasks.add(miscTask);
     }
 
-    public static void startPetTicking(MyPet pet) {
+    public static void startPetTicking(Pet pet) {
         Mob mob = pet.getBukkitEntity();
         if (mob == null) {
             return;
@@ -95,7 +95,7 @@ public class Timer {
         }
     }
 
-    public static void stopPetTicking(MyPet pet) {
+    public static void stopPetTicking(Pet pet) {
         UUID key = pet.getUUID();
         ScheduledTask task = petTasks.remove(key);
         if (task != null) {

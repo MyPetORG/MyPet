@@ -21,9 +21,9 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetType;
-import de.Keyle.MyPet.api.entity.MyPetZombifiable;
+import de.Keyle.MyPet.api.entity.PetZombifiable;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.repository.PetManager;
@@ -39,10 +39,10 @@ import org.bukkit.event.entity.EntityTransformEvent;
  * Handles the Overworld conversion of nether-native pet types
  * (Hoglin → Zoglin, Piglin → ZombifiedPiglin, PiglinBrute → ZombifiedPiglin).
  *
- * <p>Two paths, gated on {@link MyPetZombifiable#allowZombification()}:
+ * <p>Two paths, gated on {@link PetZombifiable#allowZombification()}:
  * <ul>
  *   <li><b>{@code true} (admin opted in):</b> let vanilla complete the
- *       conversion and re-type the MyPet domain object via
+ *       conversion and re-type the Pet domain object via
  *       {@link PetManager#convertPetType}. The original instance is
  *       discarded; a fresh instance of the new type takes its place with
  *       the same UUID, name, XP, skill state, and owner. If the re-type
@@ -71,8 +71,8 @@ public class PetZombificationListener implements Listener {
     public void onPetTransform(EntityTransformEvent event) {
         if (!PetEntityMarker.isMarked(event.getEntity())) return;
 
-        MyPet pet = MyPetApi.getPetManager().getMyPetFromEntity(event.getEntity());
-        if (!(pet instanceof MyPetZombifiable zombifiable)) return;
+        Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getEntity());
+        if (!(pet instanceof PetZombifiable zombifiable)) return;
 
         if (zombifiable.allowZombification() && tryRetype(event, pet)) {
             return;
@@ -93,12 +93,12 @@ public class PetZombificationListener implements Listener {
 
     /**
      * Attempts the re-type path. Returns {@code true} if the conversion
-     * was accepted (event left uncancelled, MyPet domain object swapped);
+     * was accepted (event left uncancelled, Pet domain object swapped);
      * {@code false} if the new type couldn't be resolved or the new entity
      * isn't a {@link Mob} — in which case the caller falls back to the
      * trap path.
      */
-    private boolean tryRetype(EntityTransformEvent event, MyPet oldPet) {
+    private boolean tryRetype(EntityTransformEvent event, Pet oldPet) {
         if (!(event.getTransformedEntity() instanceof Mob newEntity)) {
             return false;
         }

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.api.skill.skilltree;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
@@ -276,7 +276,7 @@ public class Skilltree {
      * @param pet the pet to check requirements against
      * @return {@code true} if the pet satisfies all requirements for this skilltree
      */
-    public boolean checkRequirements(MyPet pet) {
+    public boolean checkRequirements(Pet pet) {
         boolean usable = true;
         for (Settings flagSettings : requirementSettings) {
             String reqName = flagSettings.getName();

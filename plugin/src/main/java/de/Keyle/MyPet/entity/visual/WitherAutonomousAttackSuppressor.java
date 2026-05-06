@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Wither;
@@ -49,8 +49,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * <p>Clearing all three head targets each tick removes the precondition for
  * {@code performRangedAttack()}: with no target on any head, the fire loop
- * never runs. The {@link Wither.Head#CENTER} target is also cleared — MyPet
- * goals never set it (they update {@code MyPet.targetEntity} internally, not
+ * never runs. The {@link Wither.Head#CENTER} target is also cleared — Pet
+ * goals never set it (they update {@code Pet.targetEntity} internally, not
  * {@code Mob.setTarget}), but belt-and-suspenders guards against a stray
  * setter from an integration or a future refactor. The clear is gated on a
  * non-null read so we don't fire {@code EntityTargetEvent} 20 times per
@@ -67,7 +67,7 @@ public final class WitherAutonomousAttackSuppressor {
     private WitherAutonomousAttackSuppressor() {
     }
 
-    public static void startForPet(MyPet pet) {
+    public static void startForPet(Pet pet) {
         Mob mob = pet.getBukkitEntity();
         if (!(mob instanceof Wither wither)) return;
 
@@ -89,7 +89,7 @@ public final class WitherAutonomousAttackSuppressor {
         }
     }
 
-    public static void stopForPet(MyPet pet) {
+    public static void stopForPet(Pet pet) {
         ScheduledTask task = tasks.remove(pet.getUUID());
         if (task != null) {
             try {

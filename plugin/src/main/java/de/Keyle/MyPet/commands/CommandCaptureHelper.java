@@ -103,7 +103,7 @@ public class CommandCaptureHelper {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                 myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
-                if (myPetPlayer.hasMyPet()) {
+                if (myPetPlayer.hasPet()) {
                     player.sendMessage(Locale.getComponent("Message.Command.CaptureHelper.HasPet", player));
                     return;
                 }

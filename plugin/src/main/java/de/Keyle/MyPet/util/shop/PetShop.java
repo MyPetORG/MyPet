@@ -25,7 +25,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.MyPet;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
@@ -55,7 +55,7 @@ public class PetShop {
 
     protected String name;
     protected String displayName = "Pet - Shop";
-    protected Map<Integer, ShopMyPet> pets = new HashMap<>();
+    protected Map<Integer, ShopPet> pets = new HashMap<>();
     protected WalletType wallet = WalletType.None;
     @Getter
     @Setter
@@ -88,7 +88,7 @@ public class PetShop {
 
         IconMenu shop = new IconMenu(Util.SANITIZED_MINIMESSAGE.deserialize(displayName), event -> {
             if (pets.containsKey(event.getPosition())) {
-                final ShopMyPet pet = pets.get(event.getPosition());
+                final ShopPet pet = pets.get(event.getPosition());
                 if (pet != null) {
                     final Player p = event.getPlayer();
                     final MyPetPlayer owner;
@@ -100,7 +100,7 @@ public class PetShop {
                             return;
                         }
 
-                        if (owner.hasMyPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
+                        if (owner.hasPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
                             p.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.HasPet", player));
                             return;
                         }
@@ -149,12 +149,12 @@ public class PetShop {
                                             p.sendMessage(Locale.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
                                             PetCreateEvent createEvent = new PetCreateEvent(clonedPet, PetCreateEvent.Source.PET_SHOP);
                                             Bukkit.getServer().getPluginManager().callEvent(createEvent);
-                                            if (petOwner.hasMyPet()) {
+                                            if (petOwner.hasPet()) {
                                                 p.sendMessage(Locale.getFormattedComponent("Message.Shop.SuccessStorage", player, clonedPet.getDisplayName()));
                                             } else {
-                                                petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
+                                                petOwner.setPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
                                                 MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(petOwner);
-                                                MyPetApi.getPetManager().activateMyPet(clonedPet).ifPresent(MyPet::createEntity);
+                                                MyPetApi.getPetManager().activatePet(clonedPet).ifPresent(Pet::createEntity);
                                             }
                                     }, null));
                                 }
@@ -166,7 +166,7 @@ public class PetShop {
                                     .setData(5)
                                     .setTitle(Locale.getComponent("Name.Yes", player).color(NamedTextColor.GREEN));
                             icon.addLoreLine(Locale.getFormattedComponent("Message.Shop.Confirm.Yes", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
-                            if (owner != null && owner.hasMyPet()) {
+                            if (owner != null && owner.hasPet()) {
                                 icon.addLoreLine(Component.empty()).addLoreLine(Locale.getComponent("Message.Shop.Confirm.SendStorage", player));
                             }
                             menu.setOption(3, icon);
@@ -178,7 +178,7 @@ public class PetShop {
                             menu.open(player);
                     };
 
-                    if (owner != null && owner.hasMyPet()) {
+                    if (owner != null && owner.hasPet()) {
                         MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), pTask -> {
                                 int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
                                 int limit = getMaxPetCount(p);
@@ -197,7 +197,7 @@ public class PetShop {
 
         double balance = economyHook.getBalance(player);
         for (int pos : pets.keySet()) {
-            ShopMyPet pet = pets.get(pos);
+            ShopPet pet = pets.get(pos);
             IconMenuItem icon = pet.getIcon();
             NamedTextColor canPay = balance >= pet.getPrice() ? NamedTextColor.GREEN : NamedTextColor.RED;
             icon.addLoreLine(Component.text()
@@ -287,10 +287,10 @@ public class PetShop {
                 return;
             }
 
-            Queue<ShopMyPet> filler = new ArrayDeque<>();
+            Queue<ShopPet> filler = new ArrayDeque<>();
             for (String name : pets.getKeys(false)) {
                 tryToLoad("Pets." + name, () -> {
-                    ShopMyPet pet = new ShopMyPet(name);
+                    ShopPet pet = new ShopPet(name);
                     try {
                         pet.load(pets.getConfigurationSection(name));
 
@@ -311,7 +311,7 @@ public class PetShop {
                     slot++;
                     continue;
                 }
-                ShopMyPet pet = filler.poll();
+                ShopPet pet = filler.poll();
                 this.pets.put(slot, pet);
             }
         });

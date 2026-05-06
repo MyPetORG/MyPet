@@ -29,9 +29,9 @@ import java.lang.annotation.Target;
 
 /**
  * Declares the out-of-box defaults for a pet type. Applied to
- * {@code My<Type>} classes in the plugin module alongside
+ * {@code Pet<Type>} classes in the plugin module alongside
  * {@link ShopInfo}. Values are read reflectively by
- * {@code MyPetInfoImpl} at startup and used as fallbacks when no
+ * {@code PetInfoImpl} at startup and used as fallbacks when no
  * per-type override exists in {@code pet-config.yml}.
  * <p>
  * Admins may override every value via config; this annotation merely
