@@ -25,10 +25,10 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -132,8 +132,8 @@ public class CommandSwitch {
                         Component stats = Component.text(" (" + inactivePetCount + "/" + maxPetCount + ")");
 
                         final MyPetSelectionGui gui = new MyPetSelectionGui(owner, title.append(stats), 1);
-                        gui.open(pets, storedMyPet -> {
-                                Optional<MyPet> activePet = MyPetApi.getPetManager().activateMyPet(storedMyPet);
+                        gui.open(pets, storedPet -> {
+                                Optional<MyPet> activePet = MyPetApi.getPetManager().activateMyPet(storedPet);
                                 if (activePet.isPresent() && owner.isOnline()) {
                                     Player ownerPlayer = owner.getPlayer();
                                     activePet.get().getOwner().sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", owner, activePet.get().getDisplayName()));
@@ -200,10 +200,10 @@ public class CommandSwitch {
      * @param worldGroup the world group name to filter by
      * @return the number of pets in the specified world group
      */
-    private int getInactivePetCount(List<StoredMyPet> pets, String worldGroup) {
+    private int getInactivePetCount(List<StoredPet> pets, String worldGroup) {
         int inactivePetCount = 0;
 
-        for (StoredMyPet pet : pets) {
+        for (StoredPet pet : pets) {
             if (!pet.getWorldGroup().equals(worldGroup)) {
                 continue;
             }

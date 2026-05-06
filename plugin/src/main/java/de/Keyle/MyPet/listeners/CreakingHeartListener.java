@@ -36,7 +36,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.api.entity.PersistedMyPet;
+import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -196,7 +196,7 @@ public class CreakingHeartListener implements Listener {
         WorldGroup worldGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
         CompoundBinaryTag snapshot = PetEntitySnapshot.capture((Mob) linkedCreaking);
 
-        final PersistedMyPet inactiveMyPet = PersistedMyPet.builder(owner)
+        final PersistedPet inactiveMyPet = PersistedPet.builder(owner)
                 .petType(petType)
                 .petName(Locale.getString("Name." + petType.name(), owner))
                 .worldGroup(worldGroup.getName())

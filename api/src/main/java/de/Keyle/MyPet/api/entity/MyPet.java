@@ -43,15 +43,15 @@ import java.util.UUID;
 import java.util.Optional;
 
 /**
- * Active, in-world pet. Extends the read-only {@link StoredMyPet} contract
+ * Active, in-world pet. Extends the read-only {@link StoredPet} contract
  * with the mutators the live entity needs as it takes damage, gains XP,
  * eats, and is renamed. Mutations on the persisted snapshot type
- * {@code PersistedMyPet} use {@code withX} / {@code Builder} instead — only
+ * {@code PersistedPet} use {@code withX} / {@code Builder} instead — only
  * the active pet (this interface) is genuinely mutable.
  */
-public non-sealed interface MyPet extends StoredMyPet, Scheduler {
+public non-sealed interface MyPet extends StoredPet, Scheduler {
 
-    // ─── Mutators (previously inherited from StoredMyPet) ───
+    // ─── Mutators (previously inherited from StoredPet) ───
 
     void setUUID(UUID uuid);
 

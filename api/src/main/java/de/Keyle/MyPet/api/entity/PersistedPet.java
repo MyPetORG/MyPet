@@ -28,7 +28,7 @@ import java.util.logging.Level;
  * generated if absent; {@code petType} defaults to {@code Wolf}; {@code petName}
  * and {@code worldGroup} default to empty strings.
  */
-public record PersistedMyPet(
+public record PersistedPet(
         UUID uuid,
         MyPetPlayer owner,
         MyPetType petType,
@@ -43,9 +43,9 @@ public record PersistedMyPet(
         Skilltree skilltree,
         CompoundBinaryTag skillInfo,
         CompoundBinaryTag info
-) implements StoredMyPet {
+) implements StoredPet {
 
-    public PersistedMyPet {
+    public PersistedPet {
         if (owner == null) throw new IllegalArgumentException("Owner must not be null.");
         if (uuid == null) uuid = UUID.randomUUID();
         if (petType == null) petType = MyPetType.byName("Wolf");
@@ -61,7 +61,7 @@ public record PersistedMyPet(
         if (info == null || info.keySet().isEmpty()) info = CompoundBinaryTag.empty();
     }
 
-    // --- StoredMyPet bridge accessors (records expose components via x(), interface expects getX()) ---
+    // --- StoredPet bridge accessors (records expose components via x(), interface expects getX()) ---
 
     @Override public UUID getUUID() { return uuid; }
     @Override public MyPetPlayer getOwner() { return owner; }
@@ -76,57 +76,57 @@ public record PersistedMyPet(
     @Override public Skilltree getSkilltree() { return skilltree; }
 
     /**
-     * Single-field updaters — each returns a new {@code PersistedMyPet}
+     * Single-field updaters — each returns a new {@code PersistedPet}
      * with the named field changed and all other fields copied verbatim.
      */
 
-    public PersistedMyPet withUuid(UUID v) {
-        return new PersistedMyPet(v, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
+    public PersistedPet withUuid(UUID v) {
+        return new PersistedPet(v, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
-    public PersistedMyPet withOwner(MyPetPlayer v) {
-        return new PersistedMyPet(uuid, v, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
+    public PersistedPet withOwner(MyPetPlayer v) {
+        return new PersistedPet(uuid, v, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
-    public PersistedMyPet withPetType(MyPetType v) {
-        return new PersistedMyPet(uuid, owner, v, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
+    public PersistedPet withPetType(MyPetType v) {
+        return new PersistedPet(uuid, owner, v, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
-    public PersistedMyPet withPetName(String v) {
-        return new PersistedMyPet(uuid, owner, petType, v, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
+    public PersistedPet withPetName(String v) {
+        return new PersistedPet(uuid, owner, petType, v, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
-    public PersistedMyPet withWorldGroup(String v) {
-        return new PersistedMyPet(uuid, owner, petType, petName, v, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
+    public PersistedPet withWorldGroup(String v) {
+        return new PersistedPet(uuid, owner, petType, petName, v, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
-    public PersistedMyPet withExp(double v) {
-        return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, v, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
+    public PersistedPet withExp(double v) {
+        return new PersistedPet(uuid, owner, petType, petName, worldGroup, v, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
-    public PersistedMyPet withHealth(double v) {
-        return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, v, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
+    public PersistedPet withHealth(double v) {
+        return new PersistedPet(uuid, owner, petType, petName, worldGroup, exp, v, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
     /**
      * Returns {@code this} unchanged (with a logged warning) when {@code v} is
      * {@code NaN} or {@code Infinite}, preserving the prior value rather than
      * coercing — silently substituting a default would mask data corruption.
      */
-    public PersistedMyPet withSaturation(double v) {
+    public PersistedPet withSaturation(double v) {
         if (Double.isNaN(v) || Double.isInfinite(v)) {
             MyPetApi.getLogger().log(Level.WARNING, "Saturation was set to an invalid number!", new Throwable());
             return this;
         }
-        return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, health, v, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
+        return new PersistedPet(uuid, owner, petType, petName, worldGroup, exp, health, v, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
-    public PersistedMyPet withRespawnTime(int v) {
-        return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, v, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
+    public PersistedPet withRespawnTime(int v) {
+        return new PersistedPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, v, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
-    public PersistedMyPet withWantsToRespawn(boolean v) {
-        return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, v, lastUsed, skilltree, skillInfo, info);
+    public PersistedPet withWantsToRespawn(boolean v) {
+        return new PersistedPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, v, lastUsed, skilltree, skillInfo, info);
     }
-    public PersistedMyPet withLastUsed(long v) {
-        return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, v, skilltree, skillInfo, info);
+    public PersistedPet withLastUsed(long v) {
+        return new PersistedPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, v, skilltree, skillInfo, info);
     }
-    public PersistedMyPet withSkilltree(Skilltree v) {
-        return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, v, skillInfo, info);
+    public PersistedPet withSkilltree(Skilltree v) {
+        return new PersistedPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, v, skillInfo, info);
     }
-    public PersistedMyPet withSkillInfo(CompoundBinaryTag v) {
-        return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, v, info);
+    public PersistedPet withSkillInfo(CompoundBinaryTag v) {
+        return new PersistedPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, v, info);
     }
 
     /**
@@ -134,7 +134,7 @@ public record PersistedMyPet(
      * keys not produced by the active {@code skills} collection so removing
      * a skill from the live tree does not erase its persisted state.
      */
-    public PersistedMyPet withSkills(Collection<Skill> skills) {
+    public PersistedPet withSkills(Collection<Skill> skills) {
         CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder().put(skillInfo);
         for (Skill skill : skills) {
             if (skill instanceof NBTStorage storageSkill) {
@@ -221,8 +221,8 @@ public record PersistedMyPet(
         public Builder skillInfo(CompoundBinaryTag v) { this.skillInfo = v != null ? v : CompoundBinaryTag.empty(); return this; }
         public Builder info(CompoundBinaryTag v) { this.info = v != null ? v : CompoundBinaryTag.empty(); return this; }
 
-        public PersistedMyPet build() {
-            return new PersistedMyPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation,
+        public PersistedPet build() {
+            return new PersistedPet(uuid, owner, petType, petName, worldGroup, exp, health, saturation,
                     respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
         }
     }

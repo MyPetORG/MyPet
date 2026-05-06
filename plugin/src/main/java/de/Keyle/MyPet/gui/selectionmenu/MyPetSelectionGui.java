@@ -23,7 +23,7 @@ package de.Keyle.MyPet.gui.selectionmenu;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -54,8 +54,8 @@ public class MyPetSelectionGui {
         this.page = page;
     }
 
-    public void open(List<StoredMyPet> pets, final Consumer<StoredMyPet> callback) {
-        List<StoredMyPet> pagedPets;
+    public void open(List<StoredPet> pets, final Consumer<StoredPet> callback) {
+        List<StoredPet> pagedPets;
         // restrict the number of pets to 54 per page
         int startIndex = (page - 1) * 54;
         int endIndex = Math.min(startIndex + 54, pets.size());
@@ -66,14 +66,14 @@ public class MyPetSelectionGui {
         }
 
 
-        final Map<Integer, StoredMyPet> petSlotList = new HashMap<>();
+        final Map<Integer, StoredPet> petSlotList = new HashMap<>();
         WorldGroup wg = WorldGroup.getGroupByWorld(player.getPlayer().getWorld().getName());
 
         IconMenu menu = new IconMenu(title, event -> {
             if (petSlotList.containsKey(event.getPosition())) {
-                StoredMyPet storedMyPet = petSlotList.get(event.getPosition());
-                if (storedMyPet != null && callback != null) {
-                    callback.accept(storedMyPet);
+                StoredPet storedPet = petSlotList.get(event.getPosition());
+                if (storedPet != null && callback != null) {
+                    callback.accept(storedPet);
                 }
             }
 
@@ -83,7 +83,7 @@ public class MyPetSelectionGui {
 
         int nextPosition = 0;
 
-        for (StoredMyPet currentPet : pagedPets) {
+        for (StoredPet currentPet : pagedPets) {
             if (currentPet.getWorldGroup().isEmpty() || !currentPet.getWorldGroup().equals(wg.getName()))
                 continue;
 

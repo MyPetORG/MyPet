@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import lombok.Getter;
@@ -58,11 +58,11 @@ import org.jspecify.annotations.NonNull;
 @Getter
 public class PetSelectSkilltreeEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    private final StoredMyPet pet;
+    private final StoredPet pet;
     private final Skilltree skilltree;
     private final Source source;
 
-    public PetSelectSkilltreeEvent(StoredMyPet pet, Skilltree skilltree, Source source) {
+    public PetSelectSkilltreeEvent(StoredPet pet, Skilltree skilltree, Source source) {
         this.pet = pet;
         this.skilltree = skilltree;
         this.source = source;

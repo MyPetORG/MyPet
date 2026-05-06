@@ -38,7 +38,7 @@ import java.util.UUID;
  * Read-only view of a pet at rest. Sealed: the only permitted implementations are
  *
  * <ul>
- *   <li>{@link PersistedMyPet} — the immutable record that the repository
+ *   <li>{@link PersistedPet} — the immutable record that the repository
  *       loads from disk and that {@code PetManager} round-trips between
  *       active and inactive states. "Mutations" return new instances via
  *       {@code withX} or {@code Builder}.
@@ -47,7 +47,7 @@ import java.util.UUID;
  *       being named in the seal.
  * </ul>
  */
-public sealed interface StoredMyPet permits PersistedMyPet, MyPet {
+public sealed interface StoredPet permits PersistedPet, MyPet {
 
     /** Globally unique identifier for this pet instance (persisted). */
     UUID getUUID();
@@ -113,7 +113,7 @@ public sealed interface StoredMyPet permits PersistedMyPet, MyPet {
      *
      * <p>Dispatches over the sealed permits:
      * <ul>
-     *   <li>{@link PersistedMyPet}: looks up the {@code SkillStateParser}
+     *   <li>{@link PersistedPet}: looks up the {@code SkillStateParser}
      *       registered for {@code skillClass} and parses the per-skill
      *       compound from {@code skillInfo}.</li>
      *   <li>{@link MyPet} (live): asks the live {@link Skill} instance for
@@ -132,7 +132,7 @@ public sealed interface StoredMyPet permits PersistedMyPet, MyPet {
     default <S extends Skill, T extends SkillState> Optional<T> skillState(
             Class<S> skillClass, Class<T> stateClass) {
         return switch (this) {
-            case PersistedMyPet p -> {
+            case PersistedPet p -> {
                 SkillManager mgr = MyPetApi.getSkillManager();
                 String skillName = mgr.getSkillName(skillClass);
                 if (skillName == null) yield Optional.empty();

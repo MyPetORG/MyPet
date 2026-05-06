@@ -27,6 +27,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
@@ -41,7 +42,6 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.commands.arguments.RegistryArgumentType;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -549,7 +549,7 @@ public class CommandOptionCreate {
      * Executes the pet creation logic.
      *
      * <p>Validates the pet type, checks world-group restrictions, resolves or registers the
-     * {@link MyPetPlayer}, builds a {@link PersistedMyPet} with the parsed options, fires
+     * {@link MyPetPlayer}, builds a {@link PersistedPet} with the parsed options, fires
      * {@link PetCreateEvent} and {@link PetSaveEvent}, persists the pet to the repository,
      * and activates it if the owner has no current pet.</p>
      *
@@ -581,12 +581,12 @@ public class CommandOptionCreate {
                     newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
                 }
 
-                PersistedMyPet base = PersistedMyPet.builder(newOwner)
+                PersistedPet base = PersistedPet.builder(newOwner)
                         .petType(myPetType)
                         .petName(Locale.getString("Name." + myPetType.name(), newOwner))
                         .build();
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
-                final PersistedMyPet inactiveMyPet = updateData(base, options).withWorldGroup(wg.getName());
+                final PersistedPet inactiveMyPet = updateData(base, options).withWorldGroup(wg.getName());
 
                 PetCreateEvent createEvent = new PetCreateEvent(inactiveMyPet, PetCreateEvent.Source.ADMIN_COMMAND);
                 Bukkit.getServer().getPluginManager().callEvent(createEvent);
@@ -619,7 +619,7 @@ public class CommandOptionCreate {
     }
 
     /**
-     * Applies non-NBT metadata from the options array to a {@link PersistedMyPet}
+     * Applies non-NBT metadata from the options array to a {@link PersistedPet}
      * and returns the updated record (records being immutable).
      *
      * <p>Currently handles:</p>
@@ -631,9 +631,9 @@ public class CommandOptionCreate {
      * </ul>
      *
      * <p>This is separated from {@link #createInfo} because these properties live
-     * on the {@link PersistedMyPet} object rather than in the NBT info compound.</p>
+     * on the {@link PersistedPet} object rather than in the NBT info compound.</p>
      */
-    public static PersistedMyPet updateData(PersistedMyPet pet, String[] args) {
+    public static PersistedPet updateData(PersistedPet pet, String[] args) {
         for (String arg : args) {
             if (arg.startsWith("skilltree:")) {
                 String skilltreeName = arg.replace("skilltree:", "");

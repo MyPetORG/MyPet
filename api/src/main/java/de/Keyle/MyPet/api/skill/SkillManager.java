@@ -261,7 +261,7 @@ public class SkillManager implements ServiceContainer {
      * is registered, the registered state class doesn't match
      * {@code stateClass}, or the parser declines the compound.
      *
-     * <p>Called from {@code StoredMyPet#skillState} on the persisted-pet
+     * <p>Called from {@code StoredPet#skillState} on the persisted-pet
      * branch; addons should not call this directly.
      */
     @SuppressWarnings("unchecked")

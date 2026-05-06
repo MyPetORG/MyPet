@@ -45,7 +45,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -100,7 +100,7 @@ public class StorageTrait extends Trait {
                         int inactivePetCount = 0;
                         UUID activePetUUID = myPetPlayer.getMyPet().getUUID();
 
-                        for (StoredMyPet mypet : pets) {
+                        for (StoredPet mypet : pets) {
                             if (activePetUUID.equals(mypet.getUUID()) || (!mypet.getWorldGroup().isEmpty() && !mypet.getWorldGroup().equals(wg.getName()))) {
                                 continue;
                             }
@@ -128,9 +128,9 @@ public class StorageTrait extends Trait {
                             String stats = "(" + inactivePetCount + "/" + maxPetCount + ")";
 
                             final MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Component.text(stats + " ").append(Locale.getComponent("Message.Npc.SwitchTitle", player)));
-                            gui.open(pets, storedMyPet -> {
+                            gui.open(pets, storedPet -> {
                                     MyPetApi.getPetManager().deactivateMyPet(myPetPlayer, true);
-                                    Optional<MyPet> activePet = MyPetApi.getPetManager().activateMyPet(storedMyPet);
+                                    Optional<MyPet> activePet = MyPetApi.getPetManager().activateMyPet(storedPet);
                                     if (activePet.isPresent() && myPetPlayer.isOnline()) {
                                         Player p = myPetPlayer.getPlayer();
                                         myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", player, activePet.get().getDisplayName()));
@@ -182,14 +182,14 @@ public class StorageTrait extends Trait {
                                     }
 
                                     if (store) {
-                                        StoredMyPet storedMyPet = myPetPlayer.getMyPet();
+                                        StoredPet storedPet = myPetPlayer.getMyPet();
                                         if (MyPetApi.getPetManager().deactivateMyPet(myPetPlayer, true)) {
                                             // remove pet from world groups
-                                            String wg1 = myPetPlayer.getWorldGroupForMyPet(storedMyPet.getUUID());
+                                            String wg1 = myPetPlayer.getWorldGroupForMyPet(storedPet.getUUID());
                                             myPetPlayer.setMyPetForWorldGroup(wg1, null);
                                             MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(myPetPlayer);
 
-                                            player.sendMessage(Locale.getFormattedComponent("Message.Npc.HandOver", myPetPlayer, storedMyPet.getDisplayName(), npcEvent.getNPC().getName()));
+                                            player.sendMessage(Locale.getFormattedComponent("Message.Npc.HandOver", myPetPlayer, storedPet.getDisplayName(), npcEvent.getNPC().getName()));
                                         }
                                     }
                                 }
@@ -239,8 +239,8 @@ public class StorageTrait extends Trait {
                             }
                             String stats = "(" + pets.size() + "/" + maxPetCount + ")";
                             MyPetSelectionGui gui = new MyPetSelectionGui(myPetPlayer, Locale.getComponent("Message.Npc.TakeTitle", myPetPlayer).append(Component.text(" " + stats)));
-                            gui.open(pets, storedMyPet -> {
-                                    Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(storedMyPet);
+                            gui.open(pets, storedPet -> {
+                                    Optional<MyPet> myPet = MyPetApi.getPetManager().activateMyPet(storedPet);
                                     if (myPet.isPresent()) {
                                         Player ownerPlayer = myPetPlayer.getPlayer();
                                         myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", myPetPlayer, myPet.get().getDisplayName()));

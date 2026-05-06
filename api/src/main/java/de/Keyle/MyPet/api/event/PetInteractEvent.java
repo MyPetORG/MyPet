@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import lombok.Getter;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -50,7 +50,7 @@ import org.jspecify.annotations.NonNull;
 public class PetInteractEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    private final StoredMyPet pet;
+    private final StoredPet pet;
     @Getter
     private final ItemStack item;
     boolean isCancelled = false;

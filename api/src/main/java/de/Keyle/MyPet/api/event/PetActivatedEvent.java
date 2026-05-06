@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.PersistedMyPet;
+import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -30,11 +30,11 @@ import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Fired after a pet has finished transitioning from at-rest ({@link PersistedMyPet})
+ * Fired after a pet has finished transitioning from at-rest ({@link PersistedPet})
  * to live ({@link MyPet}) — i.e., once the runtime entity exists, all skills are
  * registered and rebuilt from persisted state, and the pet is in the active-pets map.
  *
- * <p>Fires from {@code PetManager.activateMyPet(StoredMyPet)} and from the clone
+ * <p>Fires from {@code PetManager.activateMyPet(StoredPet)} and from the clone
  * path that follows pet-type transformations.
  *
  * <p><b>Not cancellable:</b> activation has already completed before this event
@@ -46,7 +46,7 @@ import org.jspecify.annotations.NonNull;
  * spatial; the world entity is created when the owner uses {@code /mypet call}.
  *
  * <p><b>Related events:</b> {@link PetLoadEvent} fires earlier in the same flow
- * (before any wiring happens, while the pet is still a {@code StoredMyPet}).
+ * (before any wiring happens, while the pet is still a {@code StoredPet}).
  * {@link PetCallEvent} can fire afterward when the owner spawns the pet entity.
  */
 @Getter

@@ -25,6 +25,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
@@ -33,7 +34,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -98,7 +98,7 @@ public class CommandOptionClone {
      * Executes the pet cloning logic.
      *
      * <p>Validates that the source player has an active pet and that the target player does not.
-     * Creates a new {@link PersistedMyPet} with all properties copied from the source pet,
+     * Creates a new {@link PersistedPet} with all properties copied from the source pet,
      * persists it to the repository, activates it for the target player, and assigns it to
      * the target's current world group.</p>
      *
@@ -134,7 +134,7 @@ public class CommandOptionClone {
         }
 
         MyPet oldPet = oldPetOwner.getMyPet();
-        final PersistedMyPet newPet = PersistedMyPet.builder(newPetOwner)
+        final PersistedPet newPet = PersistedPet.builder(newPetOwner)
                 .petType(oldPet.getPetType())
                 .petName(oldPet.getPetName())
                 .worldGroup(oldPet.getWorldGroup())

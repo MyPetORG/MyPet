@@ -8,7 +8,7 @@ package de.Keyle.MyPet.api.skill;
  * {@link SkillManager#registerStateParser} so persisted pets can hand callers
  * a typed snapshot without parsing raw NBT.
  *
- * <p>Replaces the pre-4.0.0 {@code StoredMyPet.getSkillInfo()} escape hatch:
+ * <p>Replaces the pre-4.0.0 {@code StoredPet.getSkillInfo()} escape hatch:
  * callers ask for {@code MyPet.State.class} and get a
  * shape the skill author owns — not a vendor-shaped {@code CompoundBinaryTag}.
  */

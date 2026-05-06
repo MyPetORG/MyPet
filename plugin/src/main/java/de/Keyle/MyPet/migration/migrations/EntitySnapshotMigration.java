@@ -2,7 +2,7 @@ package de.Keyle.MyPet.migration.migrations;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.migration.Migration;
 import de.Keyle.MyPet.migration.MigrationException;
 import de.Keyle.MyPet.migration.PetDataMigration;
@@ -58,7 +58,7 @@ import java.util.logging.Logger;
  *
  * <p>The {@link SqlMigrationContext} parameter is unused: pet info reads and
  * writes go through {@code MyPetPlugin.getInstance().getRepository()} so the high-level
- * {@code StoredMyPet} model is preserved (ctx exposes a raw connection that
+ * {@code StoredPet} model is preserved (ctx exposes a raw connection that
  * would require duplicating the GZIP+NBT codec).
  */
 @Migration(
@@ -79,8 +79,8 @@ public final class EntitySnapshotMigration implements PetDataMigration {
             throw new MigrationException("Repository is null at EntitySnapshot migration time");
         }
 
-        List<StoredMyPet> all = repository.getAllPets().join();
-        List<StoredMyPet> legacy = all.stream()
+        List<StoredPet> all = repository.getAllPets().join();
+        List<StoredPet> legacy = all.stream()
                 .filter(EntitySnapshotMigration::isLegacy)
                 .toList();
 
@@ -94,7 +94,7 @@ public final class EntitySnapshotMigration implements PetDataMigration {
 
         int successes = 0;
         int failures = 0;
-        for (StoredMyPet pet : legacy) {
+        for (StoredPet pet : legacy) {
             if (convertOne(plugin, repository, pet)) {
                 successes++;
             } else {
@@ -111,7 +111,7 @@ public final class EntitySnapshotMigration implements PetDataMigration {
         }
     }
 
-    private boolean convertOne(JavaPlugin plugin, Repository repository, StoredMyPet pet) {
+    private boolean convertOne(JavaPlugin plugin, Repository repository, StoredPet pet) {
         World world = Bukkit.getWorlds().stream().findFirst().orElse(null);
         if (world == null) {
             logger.warning("EntitySnapshot: pet " + pet.getUUID()
@@ -153,7 +153,7 @@ public final class EntitySnapshotMigration implements PetDataMigration {
         }
     }
 
-    private boolean doConvert(Repository repository, StoredMyPet pet,
+    private boolean doConvert(Repository repository, StoredPet pet,
                                World world, Location hiddenLoc) {
         try {
             Class<? extends Mob> mobClass = pet.getPetType().getBukkitEntityClass();
@@ -212,7 +212,7 @@ public final class EntitySnapshotMigration implements PetDataMigration {
      * entity NBT always carries it). Empty compounds are treated as
      * already-migrated.
      */
-    private static boolean isLegacy(StoredMyPet pet) {
+    private static boolean isLegacy(StoredPet pet) {
         CompoundBinaryTag info = PetInfoAccess.read(pet);
         if (info.keySet().isEmpty()) {
             return false;

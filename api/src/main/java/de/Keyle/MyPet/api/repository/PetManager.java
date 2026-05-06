@@ -24,8 +24,8 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.PersistedMyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.PersistedPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ComplexEntityPart;
@@ -132,7 +132,7 @@ public abstract class PetManager {
      * @param activePet the live pet to snapshot
      * @return an immutable record carrying the pet's persistent fields
      */
-    public abstract PersistedMyPet snapshot(MyPet activePet);
+    public abstract PersistedPet snapshot(MyPet activePet);
 
     // ─── Activation / Deactivation ──────────────────────────────────────────────
 
@@ -143,7 +143,7 @@ public abstract class PetManager {
      * @return the activated pet, or empty if activation failed (e.g.,
      *         player already has an active pet, or spawn conditions not met)
      */
-    public abstract Optional<MyPet> activateMyPet(StoredMyPet storedMyPet);
+    public abstract Optional<MyPet> activateMyPet(StoredPet storedPet);
 
     /**
      * Deactivates the owner's active pet — despawns the entity and moves
@@ -166,7 +166,7 @@ public abstract class PetManager {
      * continuation; touching Bukkit API directly from the continuation is
      * undefined behavior on Paper and an outright crash on Folia.
      */
-    public abstract CompletableFuture<List<StoredMyPet>> getStoredPets(MyPetPlayer owner);
+    public abstract CompletableFuture<List<StoredPet>> getStoredPets(MyPetPlayer owner);
 
     /** Returns the total number of currently active pets across all players. */
     public int countActiveMyPets() {

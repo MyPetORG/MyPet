@@ -116,7 +116,7 @@ public interface Skill {
      * driven by skilltree upgrade levels).
      *
      * <p>Implementations should construct a fresh, immutable record each
-     * call from their current fields. Used by {@code StoredMyPet#skillState}
+     * call from their current fields. Used by {@code StoredPet#skillState}
      * on the live-pet branch (the persisted-pet branch consults the
      * registered {@code SkillStateParser} instead).
      */

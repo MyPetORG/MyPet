@@ -23,7 +23,7 @@ package de.Keyle.MyPet.gui.selectionmenu;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.WorldGroup;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -48,28 +48,28 @@ public class MyPetAdminSelectionGui {
         this.title = title;
     }
 
-    public void open(final Consumer<StoredMyPet> callback) {
+    public void open(final Consumer<StoredPet> callback) {
         MyPetPlugin.getInstance().getRepository().getPets(petOwner).thenAccept(pets -> {
             admin.getScheduler().run(MyPetApi.getPlugin(), folaTask -> open(pets, callback), null);
         });
     }
 
-    public void open(List<StoredMyPet> pets, final Consumer<StoredMyPet> callback) {
+    public void open(List<StoredPet> pets, final Consumer<StoredPet> callback) {
         open(pets, 1, callback);
     }
 
-    public void open(final List<StoredMyPet> pets, int page, final Consumer<StoredMyPet> callback) {
+    public void open(final List<StoredPet> pets, int page, final Consumer<StoredPet> callback) {
         if (!pets.isEmpty()) {
             if (page < 1 || Math.ceil(pets.size() / 45.) < page) {
                 page = 1;
             }
 
-            final Map<Integer, StoredMyPet> petSlotList = new HashMap<>();
+            final Map<Integer, StoredPet> petSlotList = new HashMap<>();
             WorldGroup wg = WorldGroup.getGroupByWorld(petOwner.getPlayer().getWorld().getName());
 
-            Iterator<StoredMyPet> iterator = pets.iterator();
+            Iterator<StoredPet> iterator = pets.iterator();
             while (iterator.hasNext()) {
-                StoredMyPet mypet = iterator.next();
+                StoredPet mypet = iterator.next();
                 if (mypet.getWorldGroup().isEmpty()
                         || !mypet.getWorldGroup().equals(wg.getName())
                         || (petOwner.hasMyPet() && petOwner.getMyPet().getUUID().equals(mypet.getUUID()))) {
@@ -89,9 +89,9 @@ public class MyPetAdminSelectionGui {
                 } else if (event.getPosition() > 45) {
                     return;
                 } else if (petSlotList.containsKey(event.getPosition())) {
-                    StoredMyPet storedMyPet = petSlotList.get(event.getPosition());
-                    if (storedMyPet != null && callback != null) {
-                        callback.accept(storedMyPet);
+                    StoredPet storedPet = petSlotList.get(event.getPosition());
+                    if (storedPet != null && callback != null) {
+                        callback.accept(storedPet);
                     }
                 }
                 event.setWillClose(true);
@@ -100,7 +100,7 @@ public class MyPetAdminSelectionGui {
 
             int pagePets = pets.size() - (page - 1) * 45;
             for (int i = 0; i < pagePets && i < 45; i++) {
-                StoredMyPet mypet = pets.get(i + ((page - 1) * 45));
+                StoredPet mypet = pets.get(i + ((page - 1) * 45));
 
                 IconMenuItem icon = new IconMenuItem();
                 icon.addLoreLine(Component.text().append(Locale.getComponent("Name.Hunger", admin)).append(Component.text(": ")).append(Component.text(Math.round(mypet.getSaturation())).color(NamedTextColor.GOLD)).build());

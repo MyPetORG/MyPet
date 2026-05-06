@@ -22,7 +22,7 @@ package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.PersistedMyPet;
+import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -40,16 +40,16 @@ import java.util.Optional;
 /**
  * Mutable shop-template for the pet shop UI. Carries presentation state
  * ({@link IconMenuItem}, price, position) plus the seed data needed to mint a
- * {@link PersistedMyPet} when a player checks out.
+ * {@link PersistedPet} when a player checks out.
  *
- * <p>Previously implemented {@code StoredMyPet} so that the manager's
- * {@code StoredMyPet → PersistedMyPet} converter (now {@code PetManager.snapshot})
- * would reflectively copy its fields into a {@code PersistedMyPet}. That polymorphism was a hack — the
+ * <p>Previously implemented {@code StoredPet} so that the manager's
+ * {@code StoredPet → PersistedPet} converter (now {@code PetManager.snapshot})
+ * would reflectively copy its fields into a {@code PersistedPet}. That polymorphism was a hack — the
  * shop-template's "fields" are partly computed (e.g. health = type's start HP)
  * and partly mutable (icon, price), neither of which fits the immutable
- * {@code StoredMyPet} contract. The {@link #toPersisted(MyPetPlayer)} factory
+ * {@code StoredPet} contract. The {@link #toPersisted(MyPetPlayer)} factory
  * replaces that round-trip with a direct construction of the record, which let
- * {@code StoredMyPet} become a sealed interface.</p>
+ * {@code StoredPet} become a sealed interface.</p>
  */
 public class ShopMyPet {
 
@@ -118,12 +118,12 @@ public class ShopMyPet {
     }
 
     /**
-     * Mints a {@link PersistedMyPet} for the given buyer using this template's
+     * Mints a {@link PersistedPet} for the given buyer using this template's
      * seed data. Health is left to the record's compact constructor (which
      * seeds it from the pet type's start HP via the builder).
      */
-    public PersistedMyPet toPersisted(MyPetPlayer buyer) {
-        return PersistedMyPet.builder(buyer)
+    public PersistedPet toPersisted(MyPetPlayer buyer) {
+        return PersistedPet.builder(buyer)
                 .petType(petType)
                 .petName(resolvePetName(buyer))
                 .worldGroup(worldGroup)

@@ -25,7 +25,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.event.PetPlayerJoinEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -245,9 +245,9 @@ public class PlayerListener implements Listener {
 
                     if (!joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                         final UUID petUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
-                        MyPetPlugin.getInstance().getRepository().getPet(petUUID).thenAccept(storedMyPet -> {
+                        MyPetPlugin.getInstance().getRepository().getPet(petUUID).thenAccept(storedPet -> {
                             joinPlayer.getScheduler().run(MyPetApi.getPlugin(), petTask -> {
-                                MyPetApi.getPetManager().activateMyPet(storedMyPet);
+                                MyPetApi.getPetManager().activateMyPet(storedPet);
 
                                 if (joinedPlayer.hasMyPet()) {
                                     final MyPet myPet = joinedPlayer.getMyPet();
@@ -442,7 +442,7 @@ public class PlayerListener implements Listener {
                     final UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup);
                     MyPetPlugin.getInstance().getRepository().getPets(myPetPlayer).thenAccept(pets -> {
                         worldChangedPlayer.getScheduler().run(MyPetApi.getPlugin(), runTask -> {
-                            for (StoredMyPet storedPet : pets) {
+                            for (StoredPet storedPet : pets) {
                                 if (storedPet.getUUID().equals(groupMyPetUUID)) {
                                     MyPetApi.getPetManager().activateMyPet(storedPet);
                                     break;

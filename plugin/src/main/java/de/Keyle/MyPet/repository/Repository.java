@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.entity.Player;
@@ -37,7 +37,7 @@ public interface Repository {
 
     void init() throws RepositoryInitException;
 
-    CompletableFuture<List<StoredMyPet>> getAllPets();
+    CompletableFuture<List<StoredPet>> getAllPets();
 
     CompletableFuture<List<MyPetPlayer>> getAllMyPetPlayers();
 
@@ -49,19 +49,19 @@ public interface Repository {
 
     CompletableFuture<Boolean> hasPets(MyPetPlayer myPetPlayer);
 
-    CompletableFuture<List<StoredMyPet>> getPets(MyPetPlayer owner);
+    CompletableFuture<List<StoredPet>> getPets(MyPetPlayer owner);
 
-    CompletableFuture<StoredMyPet> getPet(UUID uuid);
+    CompletableFuture<StoredPet> getPet(UUID uuid);
 
     CompletableFuture<Boolean> removePet(UUID uuid);
 
-    CompletableFuture<Boolean> removePet(StoredMyPet storedMyPet);
+    CompletableFuture<Boolean> removePet(StoredPet storedPet);
 
-    CompletableFuture<Boolean> addPet(StoredMyPet storedMyPet);
+    CompletableFuture<Boolean> addPet(StoredPet storedPet);
 
-    CompletableFuture<Boolean> savePet(StoredMyPet storedMyPet);
+    CompletableFuture<Boolean> savePet(StoredPet storedPet);
 
-    CompletableFuture<Boolean> updatePet(StoredMyPet storedMyPet);
+    CompletableFuture<Boolean> updatePet(StoredPet storedPet);
 
     /**
      * Narrow UPDATE of just the {@code info} BLOB. Required for migrations that

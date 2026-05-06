@@ -25,7 +25,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -501,7 +501,7 @@ public class PetInfoBuilder {
      * Builds a hover event displaying a stored pet's stats: hunger, HP/respawn time,
      * experience, level, pet type, skill tree, and dead status (if applicable).
      */
-    public static HoverEvent<Component> myPetToItemHover(StoredMyPet mypet, String lang) {
+    public static HoverEvent<Component> myPetToItemHover(StoredPet mypet, String lang) {
         TextComponent.Builder builder = Component.text();
 
         builder.append(Locale.getComponent("Name.Hunger", lang))

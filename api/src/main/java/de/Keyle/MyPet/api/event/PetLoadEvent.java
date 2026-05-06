@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -33,7 +33,7 @@ import org.jspecify.annotations.NonNull;
  * Fired when the repository hands a stored pet to {@code PetManager} for
  * activation — i.e., just before the manager wires it up as a live
  * {@link MyPet}. The pet exposed via {@link #getPet()} is still a
- * {@link StoredMyPet} (concretely a {@code PersistedMyPet} record); skills
+ * {@link StoredPet} (concretely a {@code PersistedPet} record); skills
  * have not yet been instantiated.
  *
  * <p>Fires from {@code PetManager.activateMyPet} before any setup runs.
@@ -54,9 +54,9 @@ import org.jspecify.annotations.NonNull;
 public class PetLoadEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    private final StoredMyPet pet;
+    private final StoredPet pet;
 
-    public PetLoadEvent(StoredMyPet mypet) {
+    public PetLoadEvent(StoredPet mypet) {
         this.pet = mypet;
     }
 

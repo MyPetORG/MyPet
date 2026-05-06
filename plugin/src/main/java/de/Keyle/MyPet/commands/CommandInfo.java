@@ -24,10 +24,10 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -72,12 +72,12 @@ public class CommandInfo {
      *
      * @param adminOnly   whether the field requires admin or owner status to view
      * @param sender      the command sender requesting the information
-     * @param storedMyPet the pet whose info is being displayed
+     * @param storedPet the pet whose info is being displayed
      * @return {@code true} if the sender is allowed to see the field
      */
-    public static boolean canSee(boolean adminOnly, CommandSender sender, StoredMyPet storedMyPet) {
+    public static boolean canSee(boolean adminOnly, CommandSender sender, StoredPet storedPet) {
         if (sender instanceof Player player) {
-            return !adminOnly || storedMyPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin");
+            return !adminOnly || storedPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin");
         } else {
             return true;
         }

@@ -27,10 +27,10 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.util.PetInfoBuilder;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -193,11 +193,11 @@ public class CommandTrade {
                 final String worldGroup = offer.pet().getWorldGroup();
 
                 MyPetApi.getPetManager().deactivateMyPet(oldOwner, false);
-                final PersistedMyPet originalPet = MyPetApi.getPetManager().snapshot(offer.pet());
+                final PersistedPet originalPet = MyPetApi.getPetManager().snapshot(offer.pet());
 
                 final Repository repo = MyPetPlugin.getInstance().getRepository();
                 repo.removePet(originalPet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
-                        PersistedMyPet pet = originalPet.withOwner(newOwner);
+                        PersistedPet pet = originalPet.withOwner(newOwner);
                         PetSaveEvent event = new PetSaveEvent(pet);
                         Bukkit.getServer().getPluginManager().callEvent(event);
                         repo.addPet(pet);

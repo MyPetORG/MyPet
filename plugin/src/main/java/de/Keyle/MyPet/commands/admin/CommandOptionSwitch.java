@@ -28,11 +28,11 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -127,7 +127,7 @@ public class CommandOptionSwitch {
                                             MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
                                             MyPetPlugin.getInstance().getRepository().getPets(petPlayer).thenAccept(pets -> {
                                                 try {
-                                                    for (StoredMyPet pet : pets) {
+                                                    for (StoredPet pet : pets) {
                                                         String name = Util.SANITIZED_MINIMESSAGE.stripTags(pet.getPetName());
                                                         builder.suggest(name);
                                                     }
@@ -191,7 +191,7 @@ public class CommandOptionSwitch {
                 if (sender instanceof Player) {
                     TextComponent.Builder messageBuilder = Component.text();
                     boolean first = true;
-                    for (StoredMyPet mypet : value) {
+                    for (StoredPet mypet : value) {
                         if (!first) {
                             messageBuilder.append(Component.text(", "));
                         }
@@ -205,7 +205,7 @@ public class CommandOptionSwitch {
                     }
                     sender.sendMessage(messageBuilder.build());
                 } else {
-                    for (StoredMyPet mypet : value) {
+                    for (StoredPet mypet : value) {
                         String strippedName = Util.SANITIZED_MINIMESSAGE.stripTags(mypet.getPetName());
                         sender.sendMessage(strippedName + " (" + mypet.getPetType().name() + ") -> /petadmin switch " + playerName + " " + strippedName);
                     }
@@ -242,8 +242,8 @@ public class CommandOptionSwitch {
 
         MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                 // Find pet by name (stripped of MiniMessage tags)
-                StoredMyPet newPet = null;
-                for (StoredMyPet pet : pets) {
+                StoredPet newPet = null;
+                for (StoredPet pet : pets) {
                     String strippedName = Util.SANITIZED_MINIMESSAGE.stripTags(pet.getPetName());
                     if (strippedName.equalsIgnoreCase(petName)) {
                         newPet = pet;
@@ -266,7 +266,7 @@ public class CommandOptionSwitch {
                     WorldGroup worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName());
                     // The active world-group binding lives in the player→UUID index,
                     // not on the snapshot. activateMyPet does not persist
-                    // StoredMyPet#worldGroup, so updating the snapshot here would
+                    // StoredPet#worldGroup, so updating the snapshot here would
                     // be a no-op.
                     newPet.getOwner().setMyPetForWorldGroup(worldGroup, newPet.getUUID());
 

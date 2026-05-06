@@ -4,16 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.util.NbtUtil;
-import de.Keyle.MyPet.api.entity.PersistedMyPet;
+import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -82,7 +82,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * Entries here take precedence over the DB row in {@link #getPet} and
      * are flushed by {@link #savePets} during periodic / shutdown saves.
      */
-    protected final Map<UUID, StoredMyPet> petsToBeSaved = new ConcurrentHashMap<>();
+    protected final Map<UUID, StoredPet> petsToBeSaved = new ConcurrentHashMap<>();
 
     /** Same pattern as {@link #petsToBeSaved} but for player rows. */
     protected final Map<UUID, MyPetPlayer> playersToBeSaved = new ConcurrentHashMap<>();
@@ -138,7 +138,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * BLOB column. Empty compounds (graceful-degradation pets, shop
      * templates) become zero-length byte arrays.
      */
-    private static byte[] serializeInfo(StoredMyPet pet) throws IOException {
+    private static byte[] serializeInfo(StoredPet pet) throws IOException {
         CompoundBinaryTag info = PetInfoAccess.read(pet);
         return info.keySet().isEmpty() ? new byte[0] : NbtUtil.writeCompressed(info);
     }
@@ -355,8 +355,8 @@ public abstract class AbstractSqlRepository implements Repository {
 
     /** Convenience overload; delegates to {@link #removePet(UUID)}. */
     @Override
-    public CompletableFuture<Boolean> removePet(final StoredMyPet storedMyPet) {
-        return removePet(storedMyPet.getUUID());
+    public CompletableFuture<Boolean> removePet(final StoredPet storedPet) {
+        return removePet(storedPet.getUUID());
     }
 
     /** Delete a player row. Same failure semantics as {@link #removePet(UUID)}. */
@@ -427,11 +427,11 @@ public abstract class AbstractSqlRepository implements Repository {
     // Pets ------------------------------------------------------------------------------------------------------------
 
     /**
-     * Builds one {@link PersistedMyPet} from the ResultSet's current row. Caller
+     * Builds one {@link PersistedPet} from the ResultSet's current row. Caller
      * must have already advanced the cursor with rs.next(). Returns null if the
      * row's type is unknown (pet type no longer registered).
      */
-    protected PersistedMyPet petFromRow(MyPetPlayer owner, ResultSet rs) throws SQLException {
+    protected PersistedPet petFromRow(MyPetPlayer owner, ResultSet rs) throws SQLException {
         MyPetType type = MyPetType.byNameOrNull(rs.getString("type"));
         if (type == null) return null;
 
@@ -470,7 +470,7 @@ public abstract class AbstractSqlRepository implements Repository {
             }
         }
 
-        return PersistedMyPet.builder(owner)
+        return PersistedPet.builder(owner)
                 .uuid(uuid)
                 .petType(type)
                 .petName(petName)
@@ -492,11 +492,11 @@ public abstract class AbstractSqlRepository implements Repository {
      * owned by {@code owner}. Rows with unknown pet types are skipped silently.
      * SQL errors during iteration are logged and the partial list is returned.
      */
-    protected List<StoredMyPet> petsFromResultSet(MyPetPlayer owner, ResultSet rs) {
-        List<StoredMyPet> pets = new ArrayList<>();
+    protected List<StoredPet> petsFromResultSet(MyPetPlayer owner, ResultSet rs) {
+        List<StoredPet> pets = new ArrayList<>();
         try {
             while (rs.next()) {
-                StoredMyPet pet = petFromRow(owner, rs);
+                StoredPet pet = petFromRow(owner, rs);
                 if (pet != null) pets.add(pet);
             }
         } catch (SQLException e) {
@@ -515,11 +515,11 @@ public abstract class AbstractSqlRepository implements Repository {
      * note on {@link #acquireConnection()}.
      */
     @Override
-    public CompletableFuture<List<StoredMyPet>> getAllPets() {
+    public CompletableFuture<List<StoredPet>> getAllPets() {
         return CompletableFuture.supplyAsync(this::fetchAllPetsBlocking, executor);
     }
 
-    private List<StoredMyPet> fetchAllPetsBlocking() {
+    private List<StoredPet> fetchAllPetsBlocking() {
         List<MyPetPlayer> playerList = fetchAllMyPetPlayersBlocking();
         Map<UUID, MyPetPlayer> owners = new HashMap<>();
         for (MyPetPlayer p : playerList) owners.put(p.getUniqueId(), p);
@@ -528,12 +528,12 @@ public abstract class AbstractSqlRepository implements Repository {
              Statement stmt = h.connection().createStatement();
              ResultSet rs = stmt.executeQuery(
                      "SELECT * FROM " + qualifyTable("pets") + ";")) {
-            List<StoredMyPet> pets = new ArrayList<>();
+            List<StoredPet> pets = new ArrayList<>();
             while (rs.next()) {
                 UUID ownerId = UUID.fromString(rs.getString("owner_uuid"));
                 MyPetPlayer owner = owners.get(ownerId);
                 if (owner == null) continue;
-                StoredMyPet pet = petFromRow(owner, rs);
+                StoredPet pet = petFromRow(owner, rs);
                 if (pet != null) pets.add(pet);
             }
             return pets;
@@ -549,7 +549,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * {@link CompletionException} on query error.
      */
     @Override
-    public CompletableFuture<List<StoredMyPet>> getPets(final MyPetPlayer owner) {
+    public CompletableFuture<List<StoredPet>> getPets(final MyPetPlayer owner) {
         if (owner == null) {
             return CompletableFuture.completedFuture(new ArrayList<>());
         }
@@ -579,10 +579,10 @@ public abstract class AbstractSqlRepository implements Repository {
      * database failure from a legitimate null).
      */
     @Override
-    public CompletableFuture<StoredMyPet> getPet(final UUID uuid) {
+    public CompletableFuture<StoredPet> getPet(final UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
             if (!MyPetApi.getPlugin().isEnabled()) return null;
-            StoredMyPet pending = petsToBeSaved.get(uuid);
+            StoredPet pending = petsToBeSaved.get(uuid);
             if (pending != null) return pending;
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(
@@ -701,7 +701,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * single write) and {@link #savePets} (batch during periodic / shutdown
      * saves). Returns {@code true} if the UPDATE touched a row.
      */
-    protected boolean savePetSync(StoredMyPet myPet) {
+    protected boolean savePetSync(StoredPet myPet) {
         try (ConnectionHolder h = acquireConnection();
              PreparedStatement stmt = h.connection().prepareStatement(
                      "UPDATE " + qualifyTable("pets") + " SET " +
@@ -733,7 +733,7 @@ public abstract class AbstractSqlRepository implements Repository {
 
     /** Async wrapper over {@link #savePetSync}. */
     @Override
-    public CompletableFuture<Boolean> savePet(StoredMyPet myPet) {
+    public CompletableFuture<Boolean> savePet(StoredPet myPet) {
         return CompletableFuture.supplyAsync(() -> savePetSync(myPet), executor);
     }
 
@@ -743,7 +743,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * practice means the caller should have used {@link #updatePet}).
      */
     @Override
-    public CompletableFuture<Boolean> addPet(final StoredMyPet storedMyPet) {
+    public CompletableFuture<Boolean> addPet(final StoredPet storedPet) {
         return CompletableFuture.supplyAsync(() -> {
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(
@@ -751,21 +751,21 @@ public abstract class AbstractSqlRepository implements Repository {
                                  "respawn_time, name, type, last_used, hunger, world_group, " +
                                  "wants_to_spawn, skilltree, skills, info) " +
                                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
-                stmt.setString(1, storedMyPet.getUUID().toString());
-                stmt.setString(2, storedMyPet.getOwner().getUniqueId().toString());
-                stmt.setDouble(3, storedMyPet.getExp());
-                stmt.setDouble(4, storedMyPet.getHealth());
-                stmt.setInt(5, storedMyPet.getRespawnTime());
-                stmt.setString(6, storedMyPet.getPetName());
-                stmt.setString(7, storedMyPet.getPetType().name());
-                stmt.setLong(8, storedMyPet.getLastUsed());
-                stmt.setDouble(9, storedMyPet.getSaturation());
-                stmt.setString(10, storedMyPet.getWorldGroup());
-                stmt.setBoolean(11, storedMyPet.wantsToRespawn());
-                stmt.setString(12, storedMyPet.getSkilltree() != null
-                        ? storedMyPet.getSkilltree().getName() : null);
-                bindBlob(stmt, 13, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(storedMyPet)));
-                bindBlob(stmt, 14, serializeInfo(storedMyPet));
+                stmt.setString(1, storedPet.getUUID().toString());
+                stmt.setString(2, storedPet.getOwner().getUniqueId().toString());
+                stmt.setDouble(3, storedPet.getExp());
+                stmt.setDouble(4, storedPet.getHealth());
+                stmt.setInt(5, storedPet.getRespawnTime());
+                stmt.setString(6, storedPet.getPetName());
+                stmt.setString(7, storedPet.getPetType().name());
+                stmt.setLong(8, storedPet.getLastUsed());
+                stmt.setDouble(9, storedPet.getSaturation());
+                stmt.setString(10, storedPet.getWorldGroup());
+                stmt.setBoolean(11, storedPet.wantsToRespawn());
+                stmt.setString(12, storedPet.getSkilltree() != null
+                        ? storedPet.getSkilltree().getName() : null);
+                bindBlob(stmt, 13, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(storedPet)));
+                bindBlob(stmt, 14, serializeInfo(storedPet));
                 return stmt.executeUpdate() > 0;
             } catch (SQLException | IOException e) {
                 reportError(e);
@@ -785,8 +785,8 @@ public abstract class AbstractSqlRepository implements Repository {
      * {@code .exceptionally()} to avoid uncaught exceptions.
      */
     @Override
-    public CompletableFuture<Boolean> updatePet(final StoredMyPet storedMyPet) {
-        petsToBeSaved.put(storedMyPet.getUUID(), storedMyPet);
+    public CompletableFuture<Boolean> updatePet(final StoredPet storedPet) {
+        petsToBeSaved.put(storedPet.getUUID(), storedPet);
         return CompletableFuture.supplyAsync(() -> {
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(
@@ -795,24 +795,24 @@ public abstract class AbstractSqlRepository implements Repository {
                                  "last_used=?, hunger=?, world_group=?, wants_to_spawn=?, " +
                                  "skilltree=?, skills=?, info=? " +
                                  "WHERE uuid=?;")) {
-                stmt.setString(1, storedMyPet.getOwner().getUniqueId().toString());
-                stmt.setDouble(2, storedMyPet.getExp());
-                stmt.setDouble(3, storedMyPet.getHealth());
-                stmt.setInt(4, storedMyPet.getRespawnTime());
-                bindPetName(stmt, 5, storedMyPet.getPetName());
-                stmt.setString(6, storedMyPet.getPetType().name());
-                stmt.setLong(7, storedMyPet.getLastUsed());
-                stmt.setDouble(8, storedMyPet.getSaturation());
-                stmt.setString(9, storedMyPet.getWorldGroup());
-                stmt.setBoolean(10, storedMyPet.wantsToRespawn());
-                stmt.setString(11, storedMyPet.getSkilltree() != null
-                        ? storedMyPet.getSkilltree().getName() : null);
-                bindBlob(stmt, 12, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(storedMyPet)));
-                bindBlob(stmt, 13, serializeInfo(storedMyPet));
-                stmt.setString(14, storedMyPet.getUUID().toString());
+                stmt.setString(1, storedPet.getOwner().getUniqueId().toString());
+                stmt.setDouble(2, storedPet.getExp());
+                stmt.setDouble(3, storedPet.getHealth());
+                stmt.setInt(4, storedPet.getRespawnTime());
+                bindPetName(stmt, 5, storedPet.getPetName());
+                stmt.setString(6, storedPet.getPetType().name());
+                stmt.setLong(7, storedPet.getLastUsed());
+                stmt.setDouble(8, storedPet.getSaturation());
+                stmt.setString(9, storedPet.getWorldGroup());
+                stmt.setBoolean(10, storedPet.wantsToRespawn());
+                stmt.setString(11, storedPet.getSkilltree() != null
+                        ? storedPet.getSkilltree().getName() : null);
+                bindBlob(stmt, 12, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(storedPet)));
+                bindBlob(stmt, 13, serializeInfo(storedPet));
+                stmt.setString(14, storedPet.getUUID().toString());
                 int result = stmt.executeUpdate();
                 if (result > 0) {
-                    petsToBeSaved.remove(storedMyPet.getUUID());
+                    petsToBeSaved.remove(storedPet.getUUID());
                 }
                 return result > 0;
             } catch (SQLException | IOException e) {
@@ -965,7 +965,7 @@ public abstract class AbstractSqlRepository implements Repository {
         for (MyPet myPet : MyPetApi.getPetManager().getAllActiveMyPets()) {
             savePetSync(myPet);
         }
-        for (StoredMyPet myPet : petsToBeSaved.values()) {
+        for (StoredPet myPet : petsToBeSaved.values()) {
             savePetSync(myPet);
         }
     }
@@ -985,7 +985,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * between backends. Synchronous on the calling thread.
      * Returns {@code true} only if every batch executed without error.
      */
-    public boolean addPets(List<StoredMyPet> pets) {
+    public boolean addPets(List<StoredPet> pets) {
         try (ConnectionHolder h = acquireConnection();
              PreparedStatement stmt = h.connection().prepareStatement(
                      "INSERT INTO " + qualifyTable("pets") + " (uuid, owner_uuid, exp, health, " +
@@ -993,22 +993,22 @@ public abstract class AbstractSqlRepository implements Repository {
                              "wants_to_spawn, skilltree, skills, info) " +
                              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
             int i = 0;
-            for (StoredMyPet storedMyPet : pets) {
-                stmt.setString(1, storedMyPet.getUUID().toString());
-                stmt.setString(2, storedMyPet.getOwner().getUniqueId().toString());
-                stmt.setDouble(3, storedMyPet.getExp());
-                stmt.setDouble(4, storedMyPet.getHealth());
-                stmt.setInt(5, storedMyPet.getRespawnTime());
-                stmt.setString(6, storedMyPet.getPetName());
-                stmt.setString(7, storedMyPet.getPetType().name());
-                stmt.setLong(8, storedMyPet.getLastUsed());
-                stmt.setDouble(9, storedMyPet.getSaturation());
-                stmt.setString(10, storedMyPet.getWorldGroup());
-                stmt.setBoolean(11, storedMyPet.wantsToRespawn());
-                stmt.setString(12, storedMyPet.getSkilltree() != null
-                        ? storedMyPet.getSkilltree().getName() : null);
-                bindBlob(stmt, 13, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(storedMyPet)));
-                bindBlob(stmt, 14, serializeInfo(storedMyPet));
+            for (StoredPet storedPet : pets) {
+                stmt.setString(1, storedPet.getUUID().toString());
+                stmt.setString(2, storedPet.getOwner().getUniqueId().toString());
+                stmt.setDouble(3, storedPet.getExp());
+                stmt.setDouble(4, storedPet.getHealth());
+                stmt.setInt(5, storedPet.getRespawnTime());
+                stmt.setString(6, storedPet.getPetName());
+                stmt.setString(7, storedPet.getPetType().name());
+                stmt.setLong(8, storedPet.getLastUsed());
+                stmt.setDouble(9, storedPet.getSaturation());
+                stmt.setString(10, storedPet.getWorldGroup());
+                stmt.setBoolean(11, storedPet.wantsToRespawn());
+                stmt.setString(12, storedPet.getSkilltree() != null
+                        ? storedPet.getSkilltree().getName() : null);
+                bindBlob(stmt, 13, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(storedPet)));
+                bindBlob(stmt, 14, serializeInfo(storedPet));
                 stmt.addBatch();
                 if (++i % 500 == 0 && i != pets.size()) {
                     stmt.executeBatch();

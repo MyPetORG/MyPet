@@ -23,7 +23,7 @@ package de.Keyle.MyPet.repository;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.repository.types.AbstractSqlRepository;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
@@ -64,7 +64,7 @@ public class Converter {
             sql.addMyPetPlayers(playerList);
         }
 
-        List<StoredMyPet> pets = fromRepo.getAllPets().join();
+        List<StoredPet> pets = fromRepo.getAllPets().join();
         if (toRepo instanceof AbstractSqlRepository sql) {
             sql.addPets(pets);
         }

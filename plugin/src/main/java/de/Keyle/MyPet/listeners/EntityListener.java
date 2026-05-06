@@ -43,7 +43,7 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.api.entity.PersistedMyPet;
+import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
@@ -327,7 +327,7 @@ public class EntityListener implements Listener {
                         // The mob itself is kept in-place (not destroyed) — its visual state is already correct.
                         CompoundBinaryTag snapshot = PetEntitySnapshot.capture((Mob) leashTarget);
 
-                        final PersistedMyPet inactiveMyPet = PersistedMyPet.builder(owner)
+                        final PersistedPet inactiveMyPet = PersistedPet.builder(owner)
                                 .petType(petType)
                                 .petName(Locale.getString("Name." + petType.name(), owner))
                                 .worldGroup(worldGroup.getName())

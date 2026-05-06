@@ -26,8 +26,8 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.PersistedMyPet;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.PersistedPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.api.gui.IconMenu;
@@ -141,7 +141,7 @@ public class PetShop {
                                         petOwner = owner;
                                     }
 
-                                    final PersistedMyPet clonedPet = pet.toPersisted(petOwner)
+                                    final PersistedPet clonedPet = pet.toPersisted(petOwner)
                                             .withWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName())
                                             .withUuid(UUID.randomUUID());
 
@@ -226,10 +226,10 @@ public class PetShop {
         return maxPetCount;
     }
 
-    private int getInactivePetCount(List<StoredMyPet> pets, String worldGroup) {
+    private int getInactivePetCount(List<StoredPet> pets, String worldGroup) {
         int inactivePetCount = 0;
 
-        for (StoredMyPet pet : pets) {
+        for (StoredPet pet : pets) {
             if (!pet.getWorldGroup().equals(worldGroup)) {
                 continue;
             }

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.event;
 
-import de.Keyle.MyPet.api.entity.StoredMyPet;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -58,10 +58,10 @@ import org.jspecify.annotations.NonNull;
 @Getter
 public class PetCreateEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    private final StoredMyPet pet;
+    private final StoredPet pet;
     private final Source source;
 
-    public PetCreateEvent(StoredMyPet pet, Source source) {
+    public PetCreateEvent(StoredPet pet, Source source) {
         this.pet = pet;
         this.source = source;
     }

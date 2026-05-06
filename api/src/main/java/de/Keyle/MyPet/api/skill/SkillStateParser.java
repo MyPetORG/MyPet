@@ -1,5 +1,6 @@
 package de.Keyle.MyPet.api.skill;
 
+import de.Keyle.MyPet.api.entity.PersistedPet;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 import java.util.Optional;
@@ -8,8 +9,8 @@ import java.util.Optional;
  * Parses the persisted NBT compound for one skill into its typed
  * {@link SkillState} record. Registered with
  * {@link SkillManager#registerStateParser} once per skill at plugin enable;
- * looked up by {@code de.Keyle.MyPet.api.entity.StoredMyPet#skillState} when an
- * addon asks a {@link de.Keyle.MyPet.api.entity.PersistedMyPet} for typed
+ * looked up by {@code de.Keyle.MyPet.api.entity.StoredPet#skillState} when an
+ * addon asks a {@link PersistedPet} for typed
  * state.
  *
  * <p>{@code compound} is the per-skill compound (the value stored under the

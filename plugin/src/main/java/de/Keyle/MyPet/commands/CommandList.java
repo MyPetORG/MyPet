@@ -24,10 +24,10 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -141,7 +141,7 @@ public class CommandList {
                     }
                     boolean doComma = false;
                     TextComponent.Builder messageBuilder = Component.text();
-                    for (StoredMyPet mypet : value) {
+                    for (StoredPet mypet : value) {
                         if (doComma) {
                             messageBuilder.append(Component.text(", "));
                         }
