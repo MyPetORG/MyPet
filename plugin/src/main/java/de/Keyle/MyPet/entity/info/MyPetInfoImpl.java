@@ -2,7 +2,7 @@ package de.Keyle.MyPet.entity.info;
 
 import de.Keyle.MyPet.api.entity.MyPetInfo;
 import de.Keyle.MyPet.api.entity.MyPetType;
-import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
+import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import org.bukkit.entity.EntityType;
 
 /**
@@ -15,7 +15,7 @@ public class MyPetInfoImpl extends MyPetInfo {
         try {
             MyPetType type = MyPetType.byEntityTypeName(bukkitType.name());
             return type != null;
-        } catch (MyPetTypeNotFoundException e) {
+        } catch (PetTypeNotFoundException e) {
             return false;
         }
     }

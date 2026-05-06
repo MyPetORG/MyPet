@@ -36,7 +36,7 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
-import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
+import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -90,7 +90,7 @@ public class CommandOptionCreate {
                 try {
                     MyPetType.byEntityTypeName(entityType.name());
                     return true;
-                } catch (MyPetTypeNotFoundException e) {
+                } catch (PetTypeNotFoundException e) {
                     return false;
                 }
             });
@@ -613,7 +613,7 @@ public class CommandOptionCreate {
                         }
                 }, null));
             }
-        } catch (MyPetTypeNotFoundException e) {
+        } catch (PetTypeNotFoundException e) {
             sender.sendMessage(Locale.getComponent("Message.Command.PetType.Unknown", lang));
         }
     }

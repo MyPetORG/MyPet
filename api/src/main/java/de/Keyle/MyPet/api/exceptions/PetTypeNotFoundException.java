@@ -29,12 +29,12 @@ import de.Keyle.MyPet.api.entity.MyPetType;
  * need a null-safe lookup should use
  * {@link MyPetType#byNameOrNull(String)} instead.
  */
-public class MyPetTypeNotFoundException extends RuntimeException {
+public class PetTypeNotFoundException extends RuntimeException {
 
     /**
      * @param type the unrecognized type name that triggered the lookup failure
      */
-    public MyPetTypeNotFoundException(String type) {
+    public PetTypeNotFoundException(String type) {
         super(type + " is not a valid MyPet type");
     }
 }

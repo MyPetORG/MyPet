@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
+import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import lombok.Getter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -125,7 +125,7 @@ public final class MyPetType {
     /**
      * Looks up a type by its CamelCase name (case-insensitive).
      *
-     * @throws MyPetTypeNotFoundException if no type is registered
+     * @throws PetTypeNotFoundException if no type is registered
      */
     public static MyPetType valueOf(String name) {
         return byName(name);
@@ -135,27 +135,27 @@ public final class MyPetType {
      * Looks up a type by its Bukkit {@link EntityType} enum name
      * (UPPER_SNAKE_CASE, case-insensitive).
      *
-     * @throws MyPetTypeNotFoundException if no type is registered
+     * @throws PetTypeNotFoundException if no type is registered
      */
     public static MyPetType byEntityTypeName(String name) {
         MyPetType type = BY_BUKKIT_NAME.get(name.toUpperCase());
         if (type != null) {
             return type;
         }
-        throw new MyPetTypeNotFoundException(name);
+        throw new PetTypeNotFoundException(name);
     }
 
     /**
      * Looks up a type by its CamelCase name (case-insensitive).
      *
-     * @throws MyPetTypeNotFoundException if no type is registered
+     * @throws PetTypeNotFoundException if no type is registered
      */
     public static MyPetType byName(String name) {
         MyPetType type = BY_NAME.get(name.toUpperCase());
         if (type != null) {
             return type;
         }
-        throw new MyPetTypeNotFoundException(name);
+        throw new PetTypeNotFoundException(name);
     }
 
     /**

@@ -4,7 +4,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.MyPetZombifiable;
-import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
+import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.repository.MyPetManager;
 import org.bukkit.entity.Hoglin;
@@ -85,7 +85,7 @@ public class PetZombificationListener implements Listener {
         MyPetType newType;
         try {
             newType = MyPetType.byEntityTypeName(newEntity.getType().name());
-        } catch (MyPetTypeNotFoundException e) {
+        } catch (PetTypeNotFoundException e) {
             return false;
         }
         if (newType == null) return false;

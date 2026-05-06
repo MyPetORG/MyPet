@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.PersistedMyPet;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
-import de.Keyle.MyPet.api.exceptions.MyPetTypeNotFoundException;
+import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -300,7 +300,7 @@ public class PetShop {
                         }
 
                         this.pets.put(pet.getPosition(), pet);
-                    } catch (MyPetTypeNotFoundException ignored) {
+                    } catch (PetTypeNotFoundException ignored) {
                     }
                 });
             }
