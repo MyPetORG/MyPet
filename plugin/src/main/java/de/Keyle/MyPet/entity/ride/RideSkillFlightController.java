@@ -102,6 +102,7 @@ public class RideSkillFlightController {
         if (input == null) return;
 
         float yaw = rider.getLocation().getYaw();
+        float pitch = rider.getLocation().getPitch();
         mob.setRotation(yaw, 0);
 
         double baseSpeed = 0.22;
@@ -117,10 +118,14 @@ public class RideSkillFlightController {
         if (input.isRight()) fz += 0.5;
 
         double radYaw = Math.toRadians(yaw);
-        double worldX = -Math.sin(radYaw) * fx - Math.cos(radYaw) * fz;
-        double worldZ = Math.cos(radYaw) * fx - Math.sin(radYaw) * fz;
-        worldX *= speed;
-        worldZ *= speed;
+        double radPitch = Math.toRadians(pitch);
+        double cosPitch = Math.cos(radPitch);
+        // Forward (W/S) follows the rider's look vector — looking down tilts the
+        // motion downward, looking up tilts it upward. Strafe (A/D) stays purely
+        // horizontal so sideways input doesn't drift vertically.
+        double worldX = (-Math.sin(radYaw) * fx * cosPitch - Math.cos(radYaw) * fz) * speed;
+        double worldZ = (Math.cos(radYaw) * fx * cosPitch - Math.sin(radYaw) * fz) * speed;
+        double pitchInducedY = -Math.sin(radPitch) * fx * speed;
 
         boolean canFly = rideSkill.getCanFly() != null && Boolean.TRUE.equals(rideSkill.getCanFly().getValue());
         double flyLimitSeconds = rideSkill.getFlyLimit() != null && rideSkill.getFlyLimit().getValue() != null
@@ -147,8 +152,11 @@ public class RideSkillFlightController {
                 }
             }
         } else {
-            if (input.isSneak() && !mob.isOnGround()) {
-                worldY = Math.min(worldY, -0.2);
+            // Pitch-driven vertical motion: only kicks in while the rider is
+            // pressing forward/backward, so a stationary look-around doesn't
+            // bob the pet up and down.
+            if (fx != 0) {
+                worldY = pitchInducedY;
             }
             if (flyLimitSeconds > 0) {
                 double maxFuel = flyLimitSeconds * 20.0;

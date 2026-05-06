@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
-import de.Keyle.MyPet.entity.ai.movement.PetFollowOwnerSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -469,6 +468,8 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
      * skip subsequent calls and avoid per-tick goal-list iteration.
      */
     private boolean controlGoalLookupDone = false;
+    private MyPetFlyingMovementGoal flyingMovementGoal;
+    private boolean flyingGoalLookupDone = false;
     /**
      * The owner Player. This is refreshed each tick because {@link
      * MyPetPlayer#getPlayer()} returns a fresh object after a reconnect,
@@ -567,6 +568,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
+        if (!mob.getPassengers().isEmpty()) {
+            return false;
+        }
         // Cache the PetControlGoal reference on first successful lookup, and
         // remember a negative result via controlGoalLookupDone so subsequent
         // activations don't iterate the goal list every tick for flying pets
@@ -580,6 +584,14 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                 controlPathfinderGoal = pcg;
             }
             controlGoalLookupDone = true;
+        }
+        if (flyingPet && flyingMovementGoal == null && !flyingGoalLookupDone) {
+            Goal<Mob> goal =
+                    Bukkit.getMobGoals().getGoal(pet.getBukkitEntity(), PetGoalKey.FLYING_MOVEMENT);
+            if (goal instanceof MyPetFlyingMovementGoal fmg) {
+                flyingMovementGoal = fmg;
+            }
+            flyingGoalLookupDone = true;
         }
         if (!this.pet.canMove()) {
             return false;
@@ -607,6 +619,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
     @Override
     public boolean shouldStayActive() {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return false;
+        }
+        if (!mob.getPassengers().isEmpty()) {
             return false;
         }
         if (controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null) {
@@ -659,6 +674,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         // the pet was despawned mid-glide doesn't come back stuck in
         // "waiting for ground" state.
         teleportState.waitForGround = false;
+        if (flyingMovementGoal != null) {
+            flyingMovementGoal.clearTarget();
+        }
     }
 
     @Override
@@ -964,7 +982,11 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                         }
                     }
                 }
-                if (this.nav.navigateTo(owner)) {
+                if (flyingPet && flyingMovementGoal != null) {
+                    flyingMovementGoal.setWantedPosition(
+                            ownerLoc.getX(), ownerLoc.getY() + HOVER_HEIGHT, ownerLoc.getZ(), 1.0);
+                    applyWalkSpeed(distance);
+                } else if (this.nav.navigateTo(owner)) {
                     applyWalkSpeed(distance);
                 }
             } else {
@@ -972,6 +994,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                 this.nav.stop();
                 if (flyingPet || isSwimmingPet()) {
                     mob.setVelocity(new Vector(0, 0, 0));
+                }
+                if (flyingMovementGoal != null) {
+                    flyingMovementGoal.clearTarget();
                 }
             }
         }

@@ -49,6 +49,7 @@ public class PetRandomFlyGoal implements Goal<Mob> {
 
     private final MyPet pet;
     private final Mob mob;
+    private final MyPetFlyingMovementGoal flyingMovementGoal;
     private Location moveTo = null;
     private int timeToMove = 0;
     private boolean ownerStationary = false;
@@ -56,12 +57,10 @@ public class PetRandomFlyGoal implements Goal<Mob> {
     private double lastOwnerX, lastOwnerZ;
     private boolean ownerPositionInitialized = false;
 
-    /**
-     * @param petEntity the aerial pet that will hover-wander when its owner stands still
-     */
-    public PetRandomFlyGoal(MyPet pet, Mob mob) {
+    public PetRandomFlyGoal(MyPet pet, Mob mob, MyPetFlyingMovementGoal flyingMovementGoal) {
         this.pet = pet;
         this.mob = mob;
+        this.flyingMovementGoal = flyingMovementGoal;
     }
 
     private void updateOwnerMovement(Player owner) {
@@ -86,6 +85,7 @@ public class PetRandomFlyGoal implements Goal<Mob> {
     @Override
     public boolean shouldActivate() {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) return false;
+        if (!mob.getPassengers().isEmpty()) return false;
         if (ThreadLocalRandom.current().nextFloat() >= FLY_STROLL_CHANCE) return false;
         if (!pet.canMove()) return false;
         if (pet.hasTarget() && !pet.getMyPetTarget().isDead()) return false;
@@ -102,6 +102,7 @@ public class PetRandomFlyGoal implements Goal<Mob> {
     @Override
     public boolean shouldStayActive() {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) return false;
+        if (!mob.getPassengers().isEmpty()) return false;
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
         updateOwnerMovement(owner);
@@ -120,9 +121,10 @@ public class PetRandomFlyGoal implements Goal<Mob> {
         if (target == null) return;
         moveTo = target;
         timeToMove = Math.max(3, (int) (mob.getLocation().distance(moveTo) / 3));
-        // See PetRandomStrollGoal.start(): gate the speed modifier on a
-        // successful navigateTo() to avoid leaking it on path rejection.
-        if (pet.getPetNavigation().navigateTo(moveTo)) {
+        if (flyingMovementGoal != null) {
+            pet.getPetNavigation().getParameters().addSpeedModifier("RandomStroll", FLY_SPEED);
+            flyingMovementGoal.setWantedPosition(moveTo.getX(), moveTo.getY(), moveTo.getZ(), 1.0);
+        } else if (pet.getPetNavigation().navigateTo(moveTo)) {
             pet.getPetNavigation().getParameters().addSpeedModifier("RandomStroll", FLY_SPEED);
         } else {
             moveTo = null;
@@ -132,13 +134,20 @@ public class PetRandomFlyGoal implements Goal<Mob> {
     @Override
     public void stop() {
         pet.getPetNavigation().getParameters().removeSpeedModifier("RandomStroll");
-        pet.getPetNavigation().stop();
+        if (flyingMovementGoal != null) {
+            flyingMovementGoal.clearTarget();
+        } else {
+            pet.getPetNavigation().stop();
+        }
         moveTo = null;
     }
 
     @Override
     public void tick() {
         timeToMove--;
+        if (flyingMovementGoal != null && moveTo != null) {
+            flyingMovementGoal.setWantedPosition(moveTo.getX(), moveTo.getY(), moveTo.getZ(), 1.0);
+        }
     }
 
     private Location findFlyTarget() {
