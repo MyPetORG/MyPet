@@ -7,7 +7,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
 import org.bukkit.*;
 import org.bukkit.entity.Mob;
-import de.Keyle.MyPet.entity.types.MySheep;
+import de.Keyle.MyPet.entity.types.PetSheep;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * <ul>
  *   <li>{@link Configuration.MyPet.Sheep#CAN_REGROW_WOOL}
  *       is enabled in config.yml.</li>
- *   <li>The underlying {@link MySheep} is currently sheared.</li>
+ *   <li>The underlying {@link PetSheep} is currently sheared.</li>
  *   <li>A random 1-in-1000 roll succeeds (matches vanilla frequency).</li>
  *   <li>The pet has no active target.</li>
  *   <li>The block at the pet's feet is {@link Material#SHORT_GRASS} or the
@@ -63,7 +63,7 @@ public class PetEatGrassGoal implements Goal<Mob> {
         if (!Configuration.MyPet.Sheep.CAN_REGROW_WOOL) {
             return false;
         }
-        if (!(pet instanceof MySheep) || !(mob instanceof Sheep sheep) || !sheep.isSheared()) {
+        if (!(pet instanceof PetSheep) || !(mob instanceof Sheep sheep) || !sheep.isSheared()) {
             return false;
         }
         if (ThreadLocalRandom.current().nextInt(1000) != 0) {

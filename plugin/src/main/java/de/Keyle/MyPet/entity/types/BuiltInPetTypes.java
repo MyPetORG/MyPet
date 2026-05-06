@@ -28,20 +28,20 @@ import org.bukkit.entity.EntityType;
  * Registers MyPet's bundled pet-type implementations with {@link PetType}.
  *
  * <p>The registration set is discovered by walking Bukkit's {@link EntityType} enum and
- * resolving each entry to a {@code de.Keyle.MyPet.entity.types.My<CamelName>} class via
+ * resolving each entry to a {@code de.Keyle.MyPet.entity.types.Pet<CamelName>} class via
  * {@link Class#forName}. The lazy resolution is load-bearing: pet types whose Bukkit
  * counterpart does not exist on the running server (e.g. {@code CopperGolem} on a Paper
  * version that predates it) are silently skipped without ever triggering JVM verification
- * of their {@code My*} class — which would fail because those classes import Paper types
+ * of their {@code Pet*} class — which would fail because those classes import Paper types
  * that do not exist on older versions.</p>
  *
  * <p>Invoked once during {@code MyPetPlugin.onLoad} before any code that resolves pet
- * types. Idempotent: types already registered (e.g. by a previous {@code onLoad} during
+ * types. Idempotent: types already registered (e.g., by a previous {@code onLoad} during
  * a soft reload) are skipped.</p>
  */
 public final class BuiltInPetTypes {
 
-    private static final String IMPL_TYPES_PACKAGE = "de.Keyle.MyPet.entity.types.My";
+    private static final String IMPL_TYPES_PACKAGE = "de.Keyle.MyPet.entity.types.Pet";
 
     private BuiltInPetTypes() {
     }

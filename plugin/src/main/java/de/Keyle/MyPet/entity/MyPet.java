@@ -39,7 +39,7 @@ import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.ai.navigation.PaperNavigation;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
-import de.Keyle.MyPet.entity.types.MyHappyGhast;
+import de.Keyle.MyPet.entity.types.PetHappyGhast;
 import de.Keyle.MyPet.util.NameFilter;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
@@ -296,7 +296,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
                 // player's leashed mob to it. Defer to vanilla so the
                 // leash-transfer can happen instead of consuming the gesture
                 // for sit-toggle.
-                if (this instanceof MyHappyGhast && hasLeashedEntity(player)) {
+                if (this instanceof PetHappyGhast && hasLeashedEntity(player)) {
                     return false;
                 }
                 boolean willSit = !isSitting();

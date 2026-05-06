@@ -30,7 +30,7 @@ import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
-import de.Keyle.MyPet.entity.types.MyEnderman;
+import de.Keyle.MyPet.entity.types.PetEnderman;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -465,11 +465,11 @@ public class EntityListener implements Listener {
             return;
         }
         Entity damagedEntity = event.getEntity();
-        // --  fix unwanted screaming of Endermen --
+        // -- fix unwanted screaming of Endermen --
         if (damagedEntity instanceof Enderman enderman && PetEntityMarker.isMarked(damagedEntity)) {
             MyPet pet = getPetManager().getMyPetFromEntity(damagedEntity);
-            if (pet instanceof MyEnderman endermanPet) {
-                enderman.setScreaming(endermanPet.isPermaScreaming());
+            if (pet instanceof PetEnderman petEnderman) {
+                enderman.setScreaming(petEnderman.isPermaScreaming());
             }
         }
     }

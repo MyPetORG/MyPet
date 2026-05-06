@@ -264,7 +264,7 @@ public final class VanillaMobSpawner {
         // correct colour/variant/profession/etc. lands in the initial spawn
         // packet (no default-flash). Goes through pet.updateVisuals() rather
         // than PetVisualSyncer.sync() directly so per-type overrides
-        // (e.g. MyEnderman's permaScreaming reassertion) fire on respawn.
+        // (e.g. PetEnderman's permaScreaming reassertion) fire on respawn.
         pet.updateVisuals();
         pet.updateNameTag();
 
