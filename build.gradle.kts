@@ -7,6 +7,7 @@ plugins {
     id("io.freefair.lombok") version "9.1.0"
     id("io.sentry.jvm.gradle") version "5.12.2"
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
+    id("net.minecraftforge.licenser") version "1.2.0" apply false
     `maven-publish`
 }
 
@@ -35,6 +36,22 @@ subprojects {
     apply(plugin = "java-library")
     apply(plugin = "io.freefair.lombok")
     apply(plugin = "io.sentry.jvm.gradle")
+    apply(plugin = "net.minecraftforge.licenser")
+
+    configure<net.minecraftforge.licenser.LicenseExtension> {
+        setHeader(rootProject.file("HEADER.txt"))
+        include("**/*.java")
+        newLine.set(true)
+    }
+
+    // Licenser scans sourceSet.allSource, which overlaps with Sentry's generated
+    // resources directory. Order the tasks so Gradle 9's strict validator is satisfied.
+    val sentryGenerators = tasks.matching {
+        it.name.startsWith("generateSentry") || it.name.startsWith("collectExternalDependenciesForSentry")
+    }
+    tasks.matching { it.name.startsWith("checkLicense") || it.name.startsWith("updateLicense") }.configureEach {
+        mustRunAfter(sentryGenerators)
+    }
 
     repositories {
         mavenCentral()

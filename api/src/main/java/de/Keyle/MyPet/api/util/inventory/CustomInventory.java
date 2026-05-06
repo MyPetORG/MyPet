@@ -1,12 +1,12 @@
 /*
  * This file is part of MyPet
  *
- * Copyright © 2011-2025 Keyle
+ * Copyright © 2011-2026 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License,
- * as published by the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * MyPet is distributed in the hope that it will be useful,

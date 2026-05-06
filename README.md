@@ -50,12 +50,6 @@ The output will be located in the `build/libs` folder.
 
 ---
 
-## The License
-
-Copyright (c) 2011-2025, Keyle<br/>
-MyPet is licensed under the [GNU Lesser General Public License Version 3][License].
----
-
 [Logo]: .github/readme-images/logo.png
 
 [License]: http://www.gnu.org/licenses/lgpl.html
