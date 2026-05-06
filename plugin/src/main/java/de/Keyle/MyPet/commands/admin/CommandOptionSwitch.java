@@ -77,7 +77,6 @@ import java.util.concurrent.CompletableFuture;
  *
  * <p>Requires the {@code MyPet.admin} permission.
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionSwitch {
 
     /**

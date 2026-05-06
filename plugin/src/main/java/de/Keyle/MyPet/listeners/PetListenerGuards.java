@@ -42,7 +42,6 @@ public final class PetListenerGuards {
      * <p>Handles the defensive null-check against broken plugin events
      * (e.g. EnchantmentAPI sending events with null entities).
      */
-    @SuppressWarnings("ConstantConditions")
     public static Optional<Pet> markedPet(Entity entity) {
         if (entity == null) return Optional.empty();
         if (!PetEntityMarker.isMarked(entity)) return Optional.empty();

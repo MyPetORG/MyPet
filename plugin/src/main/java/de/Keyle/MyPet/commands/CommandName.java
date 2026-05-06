@@ -66,7 +66,6 @@ import java.util.regex.Pattern;
  *       {@link Configuration.Name#MAX_LENGTH}</li>
  * </ul>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandName {
 
     /**

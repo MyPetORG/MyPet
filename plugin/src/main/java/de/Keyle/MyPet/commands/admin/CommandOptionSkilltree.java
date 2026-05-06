@@ -57,7 +57,6 @@ import java.util.List;
  *
  * <p>Requires the {@code MyPet.admin} permission.
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionSkilltree {
 
     /**

@@ -57,7 +57,6 @@ import java.util.List;
  *       also bypasses the extended inventory permission check</li>
  * </ul>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandInventory {
     /**
      * Registers the {@code /petinventory} Brigadier command and its help entry.

@@ -62,7 +62,6 @@ import java.util.List;
  * <p>The help system groups entries from the {@link HelpRegistry} by
  * {@link CommandCategory} and filters visibility based on the player's permissions.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandMyPet {
 
     /** Character width of the dash separators used in help output. */

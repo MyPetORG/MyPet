@@ -48,7 +48,6 @@ import java.util.List;
  * <p><b>Permissions:</b> {@code MyPet.command.capturehelper} — required to toggle the helper</p>
  * <p><b>Help category:</b> {@link CommandCategory#PET PET} (priority 180)</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandCaptureHelper {
 
     /**

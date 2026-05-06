@@ -61,7 +61,6 @@ import java.util.List;
  *   <li>{@code MyPet.command.respawn} -- required to use any respawn subcommand</li>
  * </ul>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandRespawn {
     /**
      * Registers the {@code /petrespawn} Brigadier command and its help entry.

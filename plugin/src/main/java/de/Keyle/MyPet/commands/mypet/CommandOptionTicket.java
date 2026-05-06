@@ -60,7 +60,6 @@ import java.util.zip.ZipOutputStream;
  * legacy data ({@code My.Pets.old}), and a snapshot of all online players' effective
  * permissions.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionTicket {
 
     /**

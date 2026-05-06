@@ -47,7 +47,6 @@ import java.util.List;
  *
  * @see PickupImpl
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandPickup {
 
     /**

@@ -46,7 +46,6 @@ import org.bukkit.entity.Player;
  * <p>Reports the latest available version if an update exists, or confirms the
  * installation is up to date. For local (development) builds, update checks are skipped.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionUpdate {
 
     /**

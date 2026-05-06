@@ -45,7 +45,6 @@ import java.util.List;
  * {@code /psettings}</p>
  * <p><b>Help category:</b> {@link CommandCategory#PET PET} (priority 40)</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandSettings {
 
     /**

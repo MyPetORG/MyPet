@@ -66,7 +66,6 @@ import java.util.Optional;
  *   /mypet reload shops       - reloads shop definitions via the {@link ShopManager}
  * </pre>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionReload {
 
     /**

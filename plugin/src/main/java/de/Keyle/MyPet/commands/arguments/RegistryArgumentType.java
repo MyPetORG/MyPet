@@ -55,7 +55,6 @@ import static net.kyori.adventure.text.Component.translatable;
  *            {@link Keyed} and Bukkit's {@link org.bukkit.Keyed} so it can
  *            be looked up by {@link Key} and used with Paper's registry API
  */
-@SuppressWarnings("UnstableApiUsage")
 public final class RegistryArgumentType<T extends Keyed & org.bukkit.Keyed>
         implements CustomArgumentType.Converted<T, T> {
 

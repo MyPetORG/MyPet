@@ -39,7 +39,6 @@ import java.util.function.BiConsumer;
  * {@code LifecycleEvents.COMMANDS} event handler — that is the only valid time to populate
  * the Brigadier dispatcher in the modern Paper plugin lifecycle.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public final class BuiltInCommands {
 
     private static final List<BiConsumer<Commands, HelpRegistry>> COMMANDS = List.of(

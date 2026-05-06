@@ -57,7 +57,6 @@ import java.util.List;
  *   <li>{@code /petadmin}</li>
  * </ul>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandAdmin {
 
     /**

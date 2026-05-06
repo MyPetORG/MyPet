@@ -59,7 +59,6 @@ import java.util.Optional;
  *
  * <p>Requires the {@code MyPet.admin} permission.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionClone {
 
     /**

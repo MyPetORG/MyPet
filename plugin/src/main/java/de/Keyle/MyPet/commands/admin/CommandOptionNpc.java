@@ -41,7 +41,6 @@ import io.papermc.paper.command.brigadier.Commands;
  * <p>This subcommand group is only available when the Citizens plugin hook is active.
  * Individual subcommands are delegated to {@link CommandOptionShop} and {@link CommandOptionWallet}.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionNpc {
 
     /**

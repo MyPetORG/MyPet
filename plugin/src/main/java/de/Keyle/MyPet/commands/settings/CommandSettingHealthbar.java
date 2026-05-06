@@ -40,7 +40,6 @@ import org.bukkit.entity.Player;
  * being a registered MyPet player. Each invocation flips the health bar display
  * state between enabled and disabled.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandSettingHealthbar {
 
     /**

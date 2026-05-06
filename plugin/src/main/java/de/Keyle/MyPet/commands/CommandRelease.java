@@ -68,7 +68,6 @@ import java.util.List;
  *   <li>{@code MyPet.command.release} -- required to release a pet</li>
  * </ul>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandRelease {
     /**
      * Registers the {@code /petrelease} Brigadier command and its help entry.

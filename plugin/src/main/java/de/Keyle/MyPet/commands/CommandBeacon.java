@@ -48,7 +48,6 @@ import java.util.List;
  *
  * @see BeaconImpl
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandBeacon {
 
     /**

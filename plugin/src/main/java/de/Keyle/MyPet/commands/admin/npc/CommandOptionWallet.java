@@ -58,7 +58,6 @@ import java.util.Optional;
  * <p>This command is part of the admin {@code /petadmin npc} group and inherits
  * its permission requirements (typically {@code MyPet.admin}).</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionWallet {
 
     /**

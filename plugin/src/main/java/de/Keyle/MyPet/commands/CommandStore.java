@@ -56,7 +56,6 @@ import java.util.List;
  *   <li>{@code MyPet.admin} -- grants the maximum configured storage limit</li>
  * </ul>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandStore {
 
     /**

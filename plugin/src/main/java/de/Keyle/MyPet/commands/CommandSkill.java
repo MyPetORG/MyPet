@@ -55,7 +55,6 @@ import java.util.List;
  *   <li>{@code MyPet.admin} -- required to view another player's pet skills</li>
  * </ul>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandSkill {
 
     /**

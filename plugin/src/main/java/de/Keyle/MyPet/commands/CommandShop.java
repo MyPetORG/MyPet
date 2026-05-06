@@ -61,7 +61,6 @@ import java.util.*;
  * <p>Requires a Vault-compatible economy plugin to be active. The command is only
  * usable by players and is disabled in worlds where MyPet is disabled.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandShop {
 
     /**

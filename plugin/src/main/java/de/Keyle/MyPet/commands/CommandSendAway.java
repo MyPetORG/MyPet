@@ -55,7 +55,6 @@ import java.util.List;
  *
  * @see PetSendAwayEvent
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandSendAway {
 
     /**

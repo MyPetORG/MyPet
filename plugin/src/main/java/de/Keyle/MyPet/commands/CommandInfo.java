@@ -60,7 +60,6 @@ import java.util.List;
  *   <li>{@code MyPet.admin} -- bypasses admin-only display restrictions</li>
  * </ul>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandInfo {
 
     /**

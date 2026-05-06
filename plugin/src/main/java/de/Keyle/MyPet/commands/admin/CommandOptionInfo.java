@@ -59,7 +59,6 @@ import org.bukkit.inventory.ItemStack;
  *
  * <p>Requires the {@code MyPet.admin} permission.
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionInfo {
 
     /**

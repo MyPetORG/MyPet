@@ -70,7 +70,6 @@ import java.util.*;
  * receiver must have sufficient funds. The command is only usable by players (not the console)
  * and is disabled in worlds where MyPet is disabled.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandTrade {
 
     protected HashMap<UUID, Offer> offers = new HashMap<>();

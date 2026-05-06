@@ -56,7 +56,6 @@ import java.util.regex.Pattern;
  *
  * <p>Requires the {@code MyPet.admin} permission.
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionName {
 
     /**

@@ -58,7 +58,6 @@ import java.time.temporal.ChronoUnit;
  *
  * <p>Requires the {@code MyPet.admin} permission.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionPurge {
 
     /**

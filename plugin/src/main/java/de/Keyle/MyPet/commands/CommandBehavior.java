@@ -64,7 +64,6 @@ import java.util.List;
  * @see BehaviorImpl
  * @see BehaviorMode
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandBehavior {
 
     /** The list of recognized behavior mode names used for tab-completion suggestions. */

@@ -48,7 +48,6 @@ import java.util.List;
  * <p>This is a player-only command with no additional permission requirement beyond
  * being a registered MyPet player.</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandSettingsPetLivingSound {
 
     private static final List<Integer> PRESET_VOLUMES = List.of(100, 75, 50, 25, 0);

@@ -59,7 +59,6 @@ import java.util.Optional;
  *   <li>{@code MyPet.admin} -- grants the maximum configured storage limit</li>
  * </ul>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandSwitch {
 
     /**

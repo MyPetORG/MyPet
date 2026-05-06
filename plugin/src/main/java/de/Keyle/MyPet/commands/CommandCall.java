@@ -56,7 +56,6 @@ import java.util.List;
  *   <li>{@code /pc}</li>
  * </ul>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandCall {
 
     /**

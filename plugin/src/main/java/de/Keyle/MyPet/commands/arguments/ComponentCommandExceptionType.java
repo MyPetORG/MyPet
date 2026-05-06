@@ -51,7 +51,6 @@ import net.kyori.adventure.text.Component;
  *
  * @param message the Brigadier-compatible error message displayed to the player
  */
-@SuppressWarnings("UnstableApiUsage")
 public record ComponentCommandExceptionType(Message message) implements CommandExceptionType {
 
     /**

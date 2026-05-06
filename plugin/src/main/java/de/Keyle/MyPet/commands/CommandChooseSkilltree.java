@@ -73,7 +73,6 @@ import java.util.*;
  * @see Skilltree
  * @see PetSelectSkilltreeEvent
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandChooseSkilltree {
 
     /**

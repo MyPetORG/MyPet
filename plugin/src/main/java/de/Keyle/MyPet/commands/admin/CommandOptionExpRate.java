@@ -49,7 +49,6 @@ import org.bukkit.command.CommandSender;
  *
  * <p>Requires the {@code MyPet.admin} permission.
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionExpRate {
 
     /**

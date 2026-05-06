@@ -55,7 +55,6 @@ import org.bukkit.entity.Player;
  *
  * <p>Requires the {@code MyPet.admin} permission.
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionRespawn {
 
     /**

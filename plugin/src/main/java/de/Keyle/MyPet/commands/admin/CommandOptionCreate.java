@@ -77,7 +77,6 @@ import java.util.*;
  *
  * @see CommandOptionCreator helper used to build per-type option lists
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandOptionCreate {
 
     /**

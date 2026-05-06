@@ -42,7 +42,6 @@ import java.util.List;
  * <p><b>Aliases:</b> {@code /pets}, {@code /ps}</p>
  * <p><b>Help category:</b> {@link CommandCategory#PET PET} (priority 70)</p>
  */
-@SuppressWarnings("UnstableApiUsage")
 public class CommandStop {
 
     /**
