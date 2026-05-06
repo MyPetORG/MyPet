@@ -31,7 +31,7 @@ import java.util.logging.Level;
 public record PersistedPet(
         UUID uuid,
         MyPetPlayer owner,
-        MyPetType petType,
+        PetType petType,
         String petName,
         String worldGroup,
         double exp,
@@ -48,7 +48,7 @@ public record PersistedPet(
     public PersistedPet {
         if (owner == null) throw new IllegalArgumentException("Owner must not be null.");
         if (uuid == null) uuid = UUID.randomUUID();
-        if (petType == null) petType = MyPetType.byName("Wolf");
+        if (petType == null) petType = PetType.byName("Wolf");
         if (petName == null) petName = "";
         if (worldGroup == null) worldGroup = "";
         if (Double.isNaN(saturation) || Double.isInfinite(saturation)) {
@@ -65,7 +65,7 @@ public record PersistedPet(
 
     @Override public UUID getUUID() { return uuid; }
     @Override public MyPetPlayer getOwner() { return owner; }
-    @Override public MyPetType getPetType() { return petType; }
+    @Override public PetType getPetType() { return petType; }
     @Override public String getPetName() { return petName; }
     @Override public String getWorldGroup() { return worldGroup; }
     @Override public double getExp() { return exp; }
@@ -86,7 +86,7 @@ public record PersistedPet(
     public PersistedPet withOwner(MyPetPlayer v) {
         return new PersistedPet(uuid, v, petType, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
-    public PersistedPet withPetType(MyPetType v) {
+    public PersistedPet withPetType(PetType v) {
         return new PersistedPet(uuid, owner, v, petName, worldGroup, exp, health, saturation, respawnTime, wantsToRespawn, lastUsed, skilltree, skillInfo, info);
     }
     public PersistedPet withPetName(String v) {
@@ -183,7 +183,7 @@ public record PersistedPet(
     public static final class Builder {
         private UUID uuid;
         private final MyPetPlayer owner;
-        private MyPetType petType = MyPetType.byName("Wolf");
+        private PetType petType = PetType.byName("Wolf");
         private String petName = "";
         private String worldGroup = "";
         private double exp = 0;
@@ -202,7 +202,7 @@ public record PersistedPet(
         }
 
         public Builder uuid(UUID v) { this.uuid = v; return this; }
-        public Builder petType(MyPetType v) {
+        public Builder petType(PetType v) {
             this.petType = v;
             if (this.respawnTime <= 0 && this.health == -1) {
                 this.health = MyPetApi.getMyPetInfo().getStartHP(v);

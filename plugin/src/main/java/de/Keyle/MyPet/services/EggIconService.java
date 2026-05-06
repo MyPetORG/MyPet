@@ -1,6 +1,6 @@
 package de.Keyle.MyPet.services;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -13,7 +13,7 @@ public class EggIconService implements ServiceContainer {
         return in.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
     }
 
-    public void updateIcon(MyPetType type, IconMenuItem icon) {
+    public void updateIcon(PetType type, IconMenuItem icon) {
         icon.setGlowing(false);
 
         String upperSnake = toUpperSnake(type.name());

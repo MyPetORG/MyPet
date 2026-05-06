@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skilltree;
 import com.google.gson.*;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.exceptions.InvalidSkilltreeException;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.UpgradeParser;
@@ -128,9 +128,9 @@ public class SkillTreeLoaderJSON {
 
         tryToLoad("MobTypes", () -> {
             if (containsKey(skilltreeObject, "MobTypes")) {
-                List<MyPetType> availableTypes = MyPetType.all();
+                List<PetType> availableTypes = PetType.all();
                 JsonArray mobTypeArray = get(skilltreeObject, "MobTypes").getAsJsonArray();
-                Set<MyPetType> mobTypes = new HashSet<>();
+                Set<PetType> mobTypes = new HashSet<>();
                 if (mobTypeArray.isEmpty()) {
                     mobTypes.addAll(availableTypes);
                 } else {
@@ -155,7 +155,7 @@ public class SkillTreeLoaderJSON {
                                 type = type.substring(1);
                                 negative = true;
                             }
-                            MyPetType mobType = MyPetType.byNameOrNull(type);
+                            PetType mobType = PetType.byNameOrNull(type);
                             if (mobType == null) {
                                 MyPetApi.getLogger().warning("Skilltree '" + skilltreeID + "': Unknown mob type '" + type + "' - skipping (not a valid MyPet type or not available in this Minecraft version)");
                             } else if (mobType.checkMinecraftVersion()) {

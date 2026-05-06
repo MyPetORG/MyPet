@@ -160,7 +160,7 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
     }
 
     /**
-     * Re-types a live, active MyPet to a new {@link MyPetType} by binding it
+     * Re-types a live, active MyPet to a new {@link PetType} by binding it
      * to the entity vanilla just produced from a transformation (Hoglin →
      * Zoglin, Piglin/PiglinBrute → ZombifiedPiglin). The old {@link MyPet}
      * domain object is discarded; a fresh instance of the new type takes
@@ -189,7 +189,7 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
      * @return the new {@link MyPet} on success, or empty if the new
      *         instance could not be created or the types are equal
      */
-    public Optional<MyPet> convertPetType(MyPet oldPet, MyPetType newType, Mob newEntity) {
+    public Optional<MyPet> convertPetType(MyPet oldPet, PetType newType, Mob newEntity) {
         if (oldPet == null || newType == null || newEntity == null) {
             return Optional.empty();
         }
@@ -280,7 +280,7 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
         return Optional.of(newPet);
     }
 
-    private static MyPet createMyPetInstance(MyPetType type, MyPetPlayer owner) {
+    private static MyPet createMyPetInstance(PetType type, MyPetPlayer owner) {
         String className = "de.Keyle.MyPet.entity.types.My" + type.name();
         try {
             Class<?> clazz = Class.forName(className);

@@ -37,10 +37,10 @@ import java.util.*;
  * and {@code implements} the relevant marker interfaces ({@link MyPetBaby},
  * {@link MyPetFlyingEntity}, etc.) directly.
  */
-public final class MyPetType {
+public final class PetType {
 
-    private static final Map<String, MyPetType> BY_NAME = new LinkedHashMap<>();
-    private static final Map<String, MyPetType> BY_BUKKIT_NAME = new LinkedHashMap<>();
+    private static final Map<String, PetType> BY_NAME = new LinkedHashMap<>();
+    private static final Map<String, PetType> BY_BUKKIT_NAME = new LinkedHashMap<>();
 
     private final String name;
     @Getter
@@ -49,7 +49,7 @@ public final class MyPetType {
     @Getter
     private final Class<? extends Mob> bukkitEntityClass;
 
-    private MyPetType(String name, String bukkitName, Class<? extends MyPet> mypetClass) {
+    private PetType(String name, String bukkitName, Class<? extends MyPet> mypetClass) {
         this.name = name;
         this.bukkitName = bukkitName;
         this.mypetClass = mypetClass;
@@ -73,16 +73,16 @@ public final class MyPetType {
      *
      * @param name     CamelCase name (e.g. "MyCustomMob")
      * @param petClass interface extending MyPet
-     * @return the registered MyPetType
+     * @return the registered PetType
      * @throws IllegalArgumentException if a type with this name is already registered
      */
-    public static MyPetType register(String name, Class<? extends MyPet> petClass) {
+    public static PetType register(String name, Class<? extends MyPet> petClass) {
         String key = name.toUpperCase();
         if (BY_NAME.containsKey(key)) {
-            throw new IllegalArgumentException("MyPetType '" + name + "' is already registered");
+            throw new IllegalArgumentException("PetType '" + name + "' is already registered");
         }
         String bukkitName = camelToSnake(name).toUpperCase();
-        MyPetType type = new MyPetType(name, bukkitName, petClass);
+        PetType type = new PetType(name, bukkitName, petClass);
         BY_NAME.put(key, type);
         BY_BUKKIT_NAME.put(bukkitName, type);
         return type;
@@ -94,7 +94,7 @@ public final class MyPetType {
      * avoid leaking their plugin classloader across reloads. No-op if the name is unknown.
      */
     public static void unregister(String name) {
-        MyPetType type = BY_NAME.remove(name.toUpperCase());
+        PetType type = BY_NAME.remove(name.toUpperCase());
         if (type != null) {
             BY_BUKKIT_NAME.remove(type.bukkitName);
         }
@@ -113,12 +113,12 @@ public final class MyPetType {
     }
 
     /** Returns a mutable copy of all registered types in insertion order. */
-    public static List<MyPetType> all() {
+    public static List<PetType> all() {
         return new ArrayList<>(BY_NAME.values());
     }
 
     /** Returns an unmodifiable view of all registered types. */
-    public static Collection<MyPetType> values() {
+    public static Collection<PetType> values() {
         return Collections.unmodifiableCollection(BY_NAME.values());
     }
 
@@ -127,7 +127,7 @@ public final class MyPetType {
      *
      * @throws PetTypeNotFoundException if no type is registered
      */
-    public static MyPetType valueOf(String name) {
+    public static PetType valueOf(String name) {
         return byName(name);
     }
 
@@ -137,8 +137,8 @@ public final class MyPetType {
      *
      * @throws PetTypeNotFoundException if no type is registered
      */
-    public static MyPetType byEntityTypeName(String name) {
-        MyPetType type = BY_BUKKIT_NAME.get(name.toUpperCase());
+    public static PetType byEntityTypeName(String name) {
+        PetType type = BY_BUKKIT_NAME.get(name.toUpperCase());
         if (type != null) {
             return type;
         }
@@ -150,8 +150,8 @@ public final class MyPetType {
      *
      * @throws PetTypeNotFoundException if no type is registered
      */
-    public static MyPetType byName(String name) {
-        MyPetType type = BY_NAME.get(name.toUpperCase());
+    public static PetType byName(String name) {
+        PetType type = BY_NAME.get(name.toUpperCase());
         if (type != null) {
             return type;
         }
@@ -162,7 +162,7 @@ public final class MyPetType {
      * Looks up a type by name, returning {@code null} instead of
      * throwing if the type is not registered.
      */
-    public static MyPetType byNameOrNull(String name) {
+    public static PetType byNameOrNull(String name) {
         return BY_NAME.get(name.toUpperCase());
     }
 
@@ -218,7 +218,7 @@ public final class MyPetType {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MyPetType other)) return false;
+        if (!(o instanceof PetType other)) return false;
         return name.equals(other.name);
     }
 

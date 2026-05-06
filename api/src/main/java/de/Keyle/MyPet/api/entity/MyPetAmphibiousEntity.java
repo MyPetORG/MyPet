@@ -10,7 +10,7 @@ package de.Keyle.MyPet.api.entity;
  * for a future "dynamic land/water goal switching" pass (see the Frog
  * "doesn't move on land" entry in {@code docs/pet-type-issue-tracker.md}).
  * Reclassifying these four pets out of {@link MyPetAquaticEntity} into this
- * marker is the prerequisite for {@link MyPetType#isSwimmingPet()} and
+ * marker is the prerequisite for {@link PetType#isSwimmingPet()} and
  * {@code PetGoalInstaller} to grant them ground stroll / mêlée goals
  * alongside the swim path.
  *

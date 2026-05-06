@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -61,7 +61,7 @@ public class ShopMyPet {
     protected String petName = "";
     protected String worldGroup = "";
     protected double exp = 0;
-    protected MyPetType petType = MyPetType.byName("Wolf");
+    protected PetType petType = PetType.byName("Wolf");
     protected Skilltree skilltree = null;
     protected CompoundBinaryTag NBTextendetInfo = CompoundBinaryTag.empty();
 
@@ -99,7 +99,7 @@ public class ShopMyPet {
         this.price = price;
     }
 
-    public MyPetType getPetType() {
+    public PetType getPetType() {
         return petType;
     }
 
@@ -139,7 +139,7 @@ public class ShopMyPet {
         }
         price = config.getDouble("Price", 0);
         position = config.getInt("Position", -1);
-        MyPetType type = MyPetType.byNameOrNull(config.getString("PetType", "Pig"));
+        PetType type = PetType.byNameOrNull(config.getString("PetType", "Pig"));
         if (type == null) return;
         petType = type;
         exp = config.getDouble("EXP");

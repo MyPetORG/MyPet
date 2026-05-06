@@ -2,7 +2,7 @@ package de.Keyle.MyPet.migration.migrations.entitysnapshot;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.key.Key;
@@ -103,7 +103,7 @@ public final class LegacyPetReader {
      * Applies the legacy info compound to the given mob. The mob must already
      * have been spawned and be of the Bukkit class that matches {@code petType}.
      */
-    public static void applyToMob(Mob mob, MyPetType petType, CompoundBinaryTag info) {
+    public static void applyToMob(Mob mob, PetType petType, CompoundBinaryTag info) {
         try {
             applyTypeSpecific(mob, petType, info);
             LegacyUniversalReader.apply(mob, info);
@@ -114,7 +114,7 @@ public final class LegacyPetReader {
         }
     }
 
-    private static void applyTypeSpecific(Mob mob, MyPetType petType, CompoundBinaryTag info) {
+    private static void applyTypeSpecific(Mob mob, PetType petType, CompoundBinaryTag info) {
         switch (petType.name()) {
             case "Axolotl" -> applyAxolotl(mob, info);
             case "Bee" -> applyBee(mob, info);

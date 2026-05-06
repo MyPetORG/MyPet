@@ -2,7 +2,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import net.kyori.adventure.text.Component;
@@ -63,7 +63,7 @@ final class PetDeathMessageFormatter {
                     }
                 } else {
                     if (MyPetApi.getMyPetInfo().isLeashableEntityType(e.getDamager().getType())) {
-                        shooterName = Locale.getComponent("Name." + capitalizeName(MyPetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
+                        shooterName = Locale.getComponent("Name." + capitalizeName(PetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
                     } else if (e.getDamager().getType().getName() != null) {
                         shooterName = Locale.getComponent("Name." + capitalizeName(e.getDamager().getType().getName()), myPet.getOwner());
                     } else {
@@ -73,7 +73,7 @@ final class PetDeathMessageFormatter {
                 killer = projectileName.append(Component.text(" (")).append(shooterName).append(Component.text(")"));
             } else {
                 if (MyPetApi.getMyPetInfo().isLeashableEntityType(e.getDamager().getType())) {
-                    killer = Locale.getComponent("Name." + capitalizeName(MyPetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
+                    killer = Locale.getComponent("Name." + capitalizeName(PetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
                 } else {
                     if (e.getDamager().getType().getName() != null) {
                         killer = Locale.getComponent("Name." + capitalizeName(e.getDamager().getType().getName()), myPet.getOwner());

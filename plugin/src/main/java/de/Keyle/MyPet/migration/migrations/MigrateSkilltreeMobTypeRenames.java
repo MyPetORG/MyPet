@@ -3,6 +3,7 @@ package de.Keyle.MyPet.migration.migrations;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.migration.Migration;
 import de.Keyle.MyPet.migration.MigrationException;
 import de.Keyle.MyPet.migration.SkilltreeMigration;
@@ -22,7 +23,7 @@ import java.util.logging.Logger;
  *     <li>{@code Snowman} / {@code snowman} → {@code SnowGolem}</li>
  * </ul>
  * The skilltree loader still looks types up case-insensitively, but unknown legacy names
- * are silently dropped because no {@link de.Keyle.MyPet.api.entity.MyPetType} is registered
+ * are silently dropped because no {@link PetType} is registered
  * under the old identifiers, leaving affected skilltrees inapplicable to those pets.
  * <p>
  * The leading {@code -} that marks a negated entry is preserved across the rewrite.

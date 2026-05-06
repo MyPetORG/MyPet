@@ -2,7 +2,7 @@ package de.Keyle.MyPet.migration.migrations;
 
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.migration.ConfigMigration;
 import de.Keyle.MyPet.migration.ConfigMigrationContext;
 import de.Keyle.MyPet.migration.Migration;
@@ -56,7 +56,7 @@ public class MigrateFlyingPetsCanGlideToCanFly implements ConfigMigration {
 
         boolean changed = false;
         int converted = 0;
-        for (MyPetType type : MyPetType.values()) {
+        for (PetType type : PetType.values()) {
             if (!MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
                 continue;
             }

@@ -7,7 +7,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -317,7 +317,7 @@ public abstract class AbstractSqlRepository implements Repository {
 
     /** Count pets of a specific type. Same failure semantics as {@link #countPets()}. */
     @Override
-    public CompletableFuture<Integer> countPets(final MyPetType type) {
+    public CompletableFuture<Integer> countPets(final PetType type) {
         return CompletableFuture.supplyAsync(() -> {
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(
@@ -432,7 +432,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * row's type is unknown (pet type no longer registered).
      */
     protected PersistedPet petFromRow(MyPetPlayer owner, ResultSet rs) throws SQLException {
-        MyPetType type = MyPetType.byNameOrNull(rs.getString("type"));
+        PetType type = PetType.byNameOrNull(rs.getString("type"));
         if (type == null) return null;
 
         UUID uuid = UUID.fromString(rs.getString("uuid"));

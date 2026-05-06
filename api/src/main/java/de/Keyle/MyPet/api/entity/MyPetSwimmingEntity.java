@@ -6,7 +6,7 @@ import de.Keyle.MyPet.api.Configuration;
  * Marker for pet types whose underlying vanilla mob can swim — implies
  * MyPet's movement layer should treat the pet as a swimmer when it's in
  * water (aquatic follow path, no float goal). Read at runtime by
- * {@link MyPetType#isSwimmingPet()} via {@code Class.isAssignableFrom}.
+ * {@link PetType#isSwimmingPet()} via {@code Class.isAssignableFrom}.
  *
  * <p>This is the swim-physics base; concrete pets implement one of the two
  * sub-markers depending on their out-of-water survival semantics:

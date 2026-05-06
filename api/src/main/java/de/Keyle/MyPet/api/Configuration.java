@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.util.ConfigItem;
 
 import java.util.HashMap;
@@ -195,7 +195,7 @@ public class Configuration {
     public static class MyPet {
 
         // Dynamic per-type maps populated by ConfigurationLoader after pet types
-        // register, all keyed by MyPetType.name(). Adding a new pet only requires
+        // register, all keyed by PetType.name(). Adding a new pet only requires
         // implementing the appropriate marker:
         //   MyPetFlyingEntity     → CanFly + CanGlide rows + CAN_FLY/CAN_GLIDE entries
         //   MyPetGlidingEntity    → CanGlide row + CAN_GLIDE entry
@@ -214,7 +214,7 @@ public class Configuration {
         private static final Map<String, Boolean> PREVENT_SUFFOCATION = new HashMap<>();
         private static final Map<String, ConfigItem> GROW_UP_ITEMS = new HashMap<>();
 
-        public static boolean canFly(MyPetType type) {
+        public static boolean canFly(PetType type) {
             return CAN_FLY.getOrDefault(type.name(), true);
         }
 
@@ -222,7 +222,7 @@ public class Configuration {
             CAN_FLY.put(typeName, value);
         }
 
-        public static boolean canGlide(MyPetType type) {
+        public static boolean canGlide(PetType type) {
             return CAN_GLIDE.getOrDefault(type.name(), true);
         }
 
@@ -230,7 +230,7 @@ public class Configuration {
             CAN_GLIDE.put(typeName, value);
         }
 
-        public static boolean canSwim(MyPetType type) {
+        public static boolean canSwim(PetType type) {
             return CAN_SWIM.getOrDefault(type.name(), true);
         }
 
@@ -238,7 +238,7 @@ public class Configuration {
             CAN_SWIM.put(typeName, value);
         }
 
-        public static boolean allowZombification(MyPetType type) {
+        public static boolean allowZombification(PetType type) {
             return ALLOW_ZOMBIFICATION.getOrDefault(type.name(), false);
         }
 
@@ -246,7 +246,7 @@ public class Configuration {
             ALLOW_ZOMBIFICATION.put(typeName, value);
         }
 
-        public static boolean preventDaylightBurn(MyPetType type) {
+        public static boolean preventDaylightBurn(PetType type) {
             return PREVENT_DAYLIGHT_BURN.getOrDefault(type.name(), true);
         }
 
@@ -254,7 +254,7 @@ public class Configuration {
             PREVENT_DAYLIGHT_BURN.put(typeName, value);
         }
 
-        public static boolean preventSuffocation(MyPetType type) {
+        public static boolean preventSuffocation(PetType type) {
             return PREVENT_SUFFOCATION.getOrDefault(type.name(), true);
         }
 
@@ -262,7 +262,7 @@ public class Configuration {
             PREVENT_SUFFOCATION.put(typeName, value);
         }
 
-        public static ConfigItem getGrowUpItem(MyPetType type) {
+        public static ConfigItem getGrowUpItem(PetType type) {
             return GROW_UP_ITEMS.get(type.name());
         }
 

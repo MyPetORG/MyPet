@@ -56,7 +56,7 @@ public sealed interface StoredPet permits PersistedPet, MyPet {
     MyPetPlayer getOwner();
 
     /** The mob type this pet represents (e.g., Wolf, Creeper). */
-    MyPetType getPetType();
+    PetType getPetType();
 
     /** Raw pet name in MiniMessage format. */
     String getPetName();

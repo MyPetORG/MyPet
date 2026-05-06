@@ -23,7 +23,7 @@ package de.Keyle.MyPet.api.skill.skilltree;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.Requirement;
@@ -76,7 +76,7 @@ public class Skilltree {
     @Setter
     protected double weight = 1;
     @Getter
-    protected final Set<MyPetType> mobTypes = new HashSet<>();
+    protected final Set<PetType> mobTypes = new HashSet<>();
     protected final Map<LevelRule, Upgrade<?>> upgrades = new HashMap<>();
     protected final Map<LevelRule, String> notifications = new HashMap<>();
     protected @Getter List<Settings> requirementSettings = new ArrayList<>();
@@ -257,7 +257,7 @@ public class Skilltree {
      *
      * @param mobTypes the collection of allowed pet types
      */
-    public void setMobTypes(Collection<MyPetType> mobTypes) {
+    public void setMobTypes(Collection<PetType> mobTypes) {
         this.mobTypes.clear();
         this.mobTypes.addAll(mobTypes);
     }

@@ -2,7 +2,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.MyPetZombifiable;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -26,7 +26,7 @@ import org.bukkit.event.entity.EntityTransformEvent;
  *       {@link PetManager#convertPetType}. The original instance is
  *       discarded; a fresh instance of the new type takes its place with
  *       the same UUID, name, XP, skill state, and owner. If the re-type
- *       fails (no MyPetType registered for the target Bukkit type, or the
+ *       fails (no PetType registered for the target Bukkit type, or the
  *       transformed entity isn't a {@link Mob}), falls through to the trap
  *       path so the pet at least doesn't disappear.</li>
  *   <li><b>{@code false} (default):</b> shouldn't fire — the pet was made
@@ -62,7 +62,7 @@ public class PetZombificationListener implements Listener {
         // Reaches here when the admin disallowed zombification (race with a
         // third-party plugin flipping immunity off mid-life), or when the
         // re-type failed because the new entity didn't map to a registered
-        // MyPetType.
+        // PetType.
         event.setCancelled(true);
         if (event.getEntity() instanceof Hoglin hoglin) {
             hoglin.setImmuneToZombification(true);
@@ -82,9 +82,9 @@ public class PetZombificationListener implements Listener {
         if (!(event.getTransformedEntity() instanceof Mob newEntity)) {
             return false;
         }
-        MyPetType newType;
+        PetType newType;
         try {
-            newType = MyPetType.byEntityTypeName(newEntity.getType().name());
+            newType = PetType.byEntityTypeName(newEntity.getType().name());
         } catch (PetTypeNotFoundException e) {
             return false;
         }

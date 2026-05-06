@@ -23,15 +23,9 @@ package de.Keyle.MyPet.util;
 import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration.*;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.MyPetAquaticEntity;
-import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetFlyingEntity;
-import de.Keyle.MyPet.api.entity.MyPetGlidingEntity;
-import de.Keyle.MyPet.api.entity.MyPetZombifiable;
-import de.Keyle.MyPet.api.entity.MyPetSunSensitive;
-import de.Keyle.MyPet.api.entity.MyPetSwimmingEntity;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.Configuration.MyPet;
+import de.Keyle.MyPet.api.entity.*;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -227,7 +221,7 @@ public class ConfigurationLoader {
                 """);
         config.options().copyHeader(true);
 
-        for (MyPetType petType : MyPetType.values()) {
+        for (PetType petType : PetType.values()) {
             if (!petType.checkMinecraftVersion()) {
                 continue;
             }
@@ -258,7 +252,7 @@ public class ConfigurationLoader {
         // interface and the YAML row appears. Migration of pre-4.x configs (single
         // CanGlide key on flying pets) is handled by
         // MigrateFlyingPetsCanGlideToCanFly.
-        for (MyPetType type : MyPetType.values()) {
+        for (PetType type : PetType.values()) {
             String base = "MyPet.Pets." + type.name();
             if (MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
                 config.addDefault(base + ".CanFly", true);
@@ -281,7 +275,7 @@ public class ConfigurationLoader {
         }
         config.addDefault("MyPet.Pets.Armadillo.CanShedScute", MyPet.Armadillo.CAN_SHED_SCUTE);
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
-        if (MyPetType.byNameOrNull("CopperGolem") != null) {
+        if (PetType.byNameOrNull("CopperGolem") != null) {
             config.addDefault("MyPet.Pets.CopperGolem.CanOxidize", true);
         }
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
@@ -508,7 +502,7 @@ public class ConfigurationLoader {
         // PreventDaylightBurn / PreventSuffocation load. Reads the
         // MyPet.Pets.<Type>.{CanFly,CanGlide,CanSwim,AllowZombification,PreventDaylightBurn,PreventSuffocation}
         // keys populated by setDefault().
-        for (MyPetType type : MyPetType.values()) {
+        for (PetType type : PetType.values()) {
             String base = "MyPet.Pets." + type.name();
             if (MyPetFlyingEntity.class.isAssignableFrom(type.getMyPetClass())) {
                 MyPet.setCanFly(type.name(), config.getBoolean(base + ".CanFly", true));
@@ -548,7 +542,7 @@ public class ConfigurationLoader {
             }
         }
 
-        for (MyPetType petType : MyPetType.values()) {
+        for (PetType petType : PetType.values()) {
             if (!petType.checkMinecraftVersion()) {
                 continue;
             }
@@ -594,7 +588,7 @@ public class ConfigurationLoader {
         return result;
     }
 
-    public static void loadLeashFlags(MyPetType type, List<String> leashFlagStrings) {
+    public static void loadLeashFlags(PetType type, List<String> leashFlagStrings) {
         MyPetApi.getMyPetInfo().clearLeashFlagSettings(type);
         for (String leashFlagString : leashFlagStrings) {
             boolean hasParameter = leashFlagString.contains(":");

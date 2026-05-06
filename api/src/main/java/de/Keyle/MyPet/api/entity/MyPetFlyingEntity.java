@@ -6,7 +6,7 @@ import de.Keyle.MyPet.api.Configuration;
  * Marker for pet types whose underlying vanilla mob naturally flies — implies
  * MyPet's AI/movement layer should treat this pet as airborne (no gravity,
  * flight pathing, no float goal). Read at runtime by
- * {@link MyPetType#isFlyingPet()} via {@code Class.isAssignableFrom}.
+ * {@link PetType#isFlyingPet()} via {@code Class.isAssignableFrom}.
  *
  * <p>The {@link #canFly()} default consults the per-pet preference loaded
  * from {@code MyPet.Pets.<Type>.CanFly} in {@code pet-config.yml}. The YAML

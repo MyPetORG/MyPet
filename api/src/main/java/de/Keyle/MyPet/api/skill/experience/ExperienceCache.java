@@ -23,7 +23,7 @@ package de.Keyle.MyPet.api.skill.experience;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
@@ -73,7 +73,7 @@ public class ExperienceCache implements ServiceContainer {
      * @return the cached experience value
      * @throws LevelNotCalculatedException if no cached value exists for the given combination
      */
-    public double getExp(String worldGroup, MyPetType type, int level) throws LevelNotCalculatedException {
+    public double getExp(String worldGroup, PetType type, int level) throws LevelNotCalculatedException {
         if (this.expMap.has(worldGroup)) {
             JsonObject typeMap = this.expMap.getAsJsonObject(worldGroup);
             if (typeMap.has(type.name())) {
@@ -95,7 +95,7 @@ public class ExperienceCache implements ServiceContainer {
      * @param exp        the current experience total
      * @return the highest level the pet qualifies for, or {@code 0} if no cache entries exist
      */
-    public int getLevel(String worldGroup, MyPetType type, double exp) {
+    public int getLevel(String worldGroup, PetType type, double exp) {
         if (!this.expMap.has(worldGroup)) return 0;
         JsonObject typeMap = this.expMap.getAsJsonObject(worldGroup);
         if (!typeMap.has(type.name())) return 0;
@@ -124,7 +124,7 @@ public class ExperienceCache implements ServiceContainer {
      * @param level      the level (must be >= 1)
      * @param exp        the cumulative experience required to reach this level
      */
-    public void insertExp(String worldGroup, MyPetType type, int level, double exp) {
+    public void insertExp(String worldGroup, PetType type, int level, double exp) {
         if (level < 1) {
             return;
         }
@@ -226,11 +226,11 @@ public class ExperienceCache implements ServiceContainer {
     public static class LevelNotCalculatedException extends Exception {
 
         @Getter
-        private final MyPetType type;
+        private final PetType type;
         @Getter
         private final int level;
 
-        public LevelNotCalculatedException(MyPetType type, int level) {
+        public LevelNotCalculatedException(PetType type, int level) {
             super("Exp for " + type + " at level " + level + " not yet calculated!");
             this.type = type;
             this.level = level;

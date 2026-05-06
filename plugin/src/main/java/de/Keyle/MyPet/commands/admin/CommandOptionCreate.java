@@ -28,6 +28,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.PersistedPet;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
@@ -35,7 +36,6 @@ import de.Keyle.MyPet.commands.CommandOptionCreator;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -69,7 +69,7 @@ import java.util.*;
  *   <li>{@code /petadmin create -f <player> <type> [options...]} -- force-creates a pet, deactivating any existing one</li>
  * </ul>
  *
- * <p>The {@code type} argument accepts any Minecraft entity type that maps to a valid {@link MyPetType}.
+ * <p>The {@code type} argument accepts any Minecraft entity type that maps to a valid {@link PetType}.
  * Optional trailing arguments control the pet's appearance and metadata (e.g. {@code baby}, {@code saddle},
  * {@code variant:3}, {@code skilltree:Combat}, {@code name:Fluffy}).</p>
  *
@@ -82,13 +82,13 @@ public class CommandOptionCreate {
 
     /**
      * Custom {@link RegistryArgumentType} that filters the Paper entity-type registry to only include
-     * entity types that have a corresponding {@link MyPetType} entry. This ensures tab-completion
+     * entity types that have a corresponding {@link PetType} entry. This ensures tab-completion
      * only suggests valid pet types.
      */
     static final RegistryArgumentType<EntityType> PET_ENTITY_TYPE =
             RegistryArgumentType.of(RegistryKey.ENTITY_TYPE, entityType -> {
                 try {
-                    MyPetType.byEntityTypeName(entityType.name());
+                    PetType.byEntityTypeName(entityType.name());
                     return true;
                 } catch (PetTypeNotFoundException e) {
                     return false;
@@ -563,8 +563,8 @@ public class CommandOptionCreate {
         String lang = Locale.getCommandSenderLanguage(sender);
 
         try {
-            MyPetType myPetType = MyPetType.byEntityTypeName(entityType.name());
-            if (myPetType.checkMinecraftVersion() && MyPetApi.getMyPetInfo().isLeashableEntityType(entityType)) {
+            PetType petType = PetType.byEntityTypeName(entityType.name());
+            if (petType.checkMinecraftVersion() && MyPetApi.getMyPetInfo().isLeashableEntityType(entityType)) {
                 if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
                     sender.sendMessage(MessageUtil.prefixed(Component.text("Pets are not allowed in ").append(Component.text(owner.getWorld().getName()).color(NamedTextColor.GOLD))));
                     return;
@@ -582,8 +582,8 @@ public class CommandOptionCreate {
                 }
 
                 PersistedPet base = PersistedPet.builder(newOwner)
-                        .petType(myPetType)
-                        .petName(Locale.getString("Name." + myPetType.name(), newOwner))
+                        .petType(petType)
+                        .petName(Locale.getString("Name." + petType.name(), newOwner))
                         .build();
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
                 final PersistedPet inactiveMyPet = updateData(base, options).withWorldGroup(wg.getName());
@@ -664,11 +664,11 @@ public class CommandOptionCreate {
      * <p>Pet-type-specific validation is applied where appropriate (e.g. clamping horse variant
      * to 0-1030, rabbit variant to 0-5 or 99, llama variant to 0-3).</p>
      *
-     * @param petType the {@link MyPetType} being created, used for type-specific variant handling
+     * @param petType the {@link PetType} being created, used for type-specific variant handling
      * @param args    the option strings to parse
      * @param builder the NBT compound builder to populate with parsed data
      */
-    public static void createInfo(MyPetType petType, String[] args, CompoundBinaryTag.Builder builder) {
+    public static void createInfo(PetType petType, String[] args, CompoundBinaryTag.Builder builder) {
         for (String arg : args) {
             if (arg.equalsIgnoreCase("baby")) {
                 builder.putBoolean("Baby", true);
@@ -711,46 +711,46 @@ public class CommandOptionCreate {
                 String variantString = arg.replace("variant:", "");
                 if (Util.isInt(variantString)) {
                     int variant = Integer.parseInt(variantString);
-                    if (petType.equals(MyPetType.byName("Horse"))) {
+                    if (petType.equals(PetType.byName("Horse"))) {
                         variant = Math.min(Math.max(0, variant), 1030);
                         builder.putInt("Variant", variant);
-                    } else if (petType.equals(MyPetType.byName("Rabbit"))) {
+                    } else if (petType.equals(PetType.byName("Rabbit"))) {
                         if (variant != 99 && (variant > 5 || variant < 0)) {
                             variant = 0;
                         }
                         builder.putByte("Variant", (byte) variant);
-                    } else if (petType.equals(MyPetType.byName("Llama")) || petType.equals(MyPetType.byName("TraderLlama"))) {
+                    } else if (petType.equals(PetType.byName("Llama")) || petType.equals(PetType.byName("TraderLlama"))) {
                         if (variant > 3 || variant < 0) {
                             variant = 0;
                         }
                         builder.putInt("Variant", variant);
-                    } else if (petType.equals(MyPetType.byName("Parrot"))) {
+                    } else if (petType.equals(PetType.byName("Parrot"))) {
                         builder.putInt("Variant", variant);
-                    } else if (petType.equals(MyPetType.byName("Axolotl"))) {
+                    } else if (petType.equals(PetType.byName("Axolotl"))) {
                         builder.putInt("Variant", variant);
-                    } else if (petType.equals(MyPetType.byName("Frog"))) {
+                    } else if (petType.equals(PetType.byName("Frog"))) {
                         builder.putInt("FrogType", variant);
-                    } else if (petType.equals(MyPetType.byName("TropicalFish"))) {
+                    } else if (petType.equals(PetType.byName("TropicalFish"))) {
                         builder.putInt("Variant", variant);
                     }
-                } else if (petType.equals(MyPetType.byName("Wolf"))) {
+                } else if (petType.equals(PetType.byName("Wolf"))) {
                     // Wolf Variants are handled as (lowercase) Strings.
                     builder.putString("Variant", variantString.toLowerCase());
-                } else if (petType.equals(MyPetType.byName("Cow")) || petType.equals(MyPetType.byName("Chicken")) || petType.equals(MyPetType.byName("Pig"))) {
+                } else if (petType.equals(PetType.byName("Cow")) || petType.equals(PetType.byName("Chicken")) || petType.equals(PetType.byName("Pig"))) {
                     // Cow/chicken/pig Variants are handled as (lowercase) Strings.
                     builder.putString("Variant", variantString.toLowerCase());
                 }
-            } else if (arg.startsWith("heartattack") && petType.equals(MyPetType.byName("Warden"))) {
+            } else if (arg.startsWith("heartattack") && petType.equals(PetType.byName("Warden"))) {
                 builder.putBoolean("HeartAttack", true);
             } else if (arg.startsWith("profession:")) {
                 String professionString = arg.replace("profession:", "");
                 if (Util.isInt(professionString)) {
                     int profession = Integer.parseInt(professionString);
                     profession = Math.min(Math.max(0, profession), 14);
-                    if (petType.equals(MyPetType.byName("Villager"))) {
+                    if (petType.equals(PetType.byName("Villager"))) {
                         builder.putInt("Profession", profession);
                         builder.putInt("VillagerLevel", 1);
-                    } else if (petType.equals(MyPetType.byName("Zombie")) || petType.equals(MyPetType.byName("ZombieVillager"))) {
+                    } else if (petType.equals(PetType.byName("Zombie")) || petType.equals(PetType.byName("ZombieVillager"))) {
                         builder.putBoolean("Villager", true);
                         builder.putInt("Profession", profession);
                         builder.putInt("TradingLevel", 1);

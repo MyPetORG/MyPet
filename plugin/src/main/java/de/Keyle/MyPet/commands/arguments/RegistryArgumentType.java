@@ -77,7 +77,7 @@ public final class RegistryArgumentType<T extends Keyed & org.bukkit.Keyed>
      *
      * <p>Example usage for entity types that MyPet supports:</p>
      * <pre>{@code
-     * RegistryArgumentType.of(RegistryKey.ENTITY_TYPE, MyPetType::isSupported)
+     * RegistryArgumentType.of(RegistryKey.ENTITY_TYPE, PetType::isSupported)
      * }</pre>
      *
      * @param <T>    the registry element type

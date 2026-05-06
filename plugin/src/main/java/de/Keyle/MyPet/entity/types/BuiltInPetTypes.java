@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import org.bukkit.entity.EntityType;
 
 /**
- * Registers MyPet's bundled pet-type implementations with {@link MyPetType}.
+ * Registers MyPet's bundled pet-type implementations with {@link PetType}.
  *
  * <p>The registration set is discovered by walking Bukkit's {@link EntityType} enum and
  * resolving each entry to a {@code de.Keyle.MyPet.entity.types.My<CamelName>} class via
@@ -49,7 +49,7 @@ public final class BuiltInPetTypes {
     public static void register() {
         for (EntityType entityType : EntityType.values()) {
             String camelName = snakeToCamel(entityType.name());
-            if (MyPetType.byNameOrNull(camelName) != null) {
+            if (PetType.byNameOrNull(camelName) != null) {
                 continue;
             }
             String className = IMPL_TYPES_PACKAGE + camelName;
@@ -58,7 +58,7 @@ public final class BuiltInPetTypes {
                 if (MyPet.class.isAssignableFrom(clazz)) {
                     @SuppressWarnings("unchecked")
                     Class<? extends MyPet> petClass = (Class<? extends MyPet>) clazz;
-                    MyPetType.register(camelName, petClass);
+                    PetType.register(camelName, petClass);
                 }
             } catch (ClassNotFoundException ignored) {
             }

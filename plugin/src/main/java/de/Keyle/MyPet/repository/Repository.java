@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.repository;
 
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -45,7 +45,7 @@ public interface Repository {
 
     CompletableFuture<Integer> countPets();
 
-    CompletableFuture<Integer> countPets(MyPetType type);
+    CompletableFuture<Integer> countPets(PetType type);
 
     CompletableFuture<Boolean> hasPets(MyPetPlayer myPetPlayer);
 

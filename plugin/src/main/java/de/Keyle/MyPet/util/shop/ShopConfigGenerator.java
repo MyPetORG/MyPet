@@ -22,7 +22,7 @@ package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.MyPetBaby;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.bukkit.configuration.ConfigurationSection;
@@ -38,7 +38,7 @@ import java.util.List;
  * Generates the pet-shops.yml configuration file dynamically based on
  * {@link ShopInfo} annotations on pet type interfaces.
  * <p>
- * This utility class scans all {@link MyPetType} values for the {@code @ShopInfo}
+ * This utility class scans all {@link PetType} values for the {@code @ShopInfo}
  * annotation and creates a default shop configuration with two shops:
  * <ul>
  *   <li><b>all</b> - Contains all annotated pet types</li>
@@ -95,7 +95,7 @@ public class ShopConfigGenerator {
         ConfigurationSection allPets = allShop.createSection("Pets");
         ConfigurationSection babyPets = babiesShop.createSection("Pets");
 
-        for (MyPetType petType : MyPetType.values()) {
+        for (PetType petType : PetType.values()) {
             if (!petType.checkMinecraftVersion()) {
                 continue;
             }
@@ -166,7 +166,7 @@ public class ShopConfigGenerator {
      * @param petType  the pet type to get the display name for
      * @return the resolved display name
      */
-    private static String getDisplayName(ShopInfo shopInfo, MyPetType petType) {
+    private static String getDisplayName(ShopInfo shopInfo, PetType petType) {
         if (!shopInfo.displayName().isEmpty()) {
             return shopInfo.displayName();
         }
@@ -185,7 +185,7 @@ public class ShopConfigGenerator {
      * @param petType  the pet type to generate description for
      * @return the description string with MiniMessage color formatting
      */
-    private static String getDescription(ShopInfo shopInfo, MyPetType petType) {
+    private static String getDescription(ShopInfo shopInfo, PetType petType) {
         if (!shopInfo.description().isEmpty()) {
             return shopInfo.description();
         }
@@ -204,7 +204,7 @@ public class ShopConfigGenerator {
      * @param petType  the pet type to generate baby description for
      * @return the baby description string with MiniMessage color formatting
      */
-    private static String getBabyDescription(ShopInfo shopInfo, MyPetType petType) {
+    private static String getBabyDescription(ShopInfo shopInfo, PetType petType) {
         String name = getDisplayName(shopInfo, petType);
         String article = startsWithVowel(name) ? "an" : "a";
         return "<green>It's " + article + " baby " + name + "!";

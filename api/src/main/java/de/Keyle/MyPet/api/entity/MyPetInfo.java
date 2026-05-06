@@ -42,48 +42,48 @@ import java.util.Map;
  */
 public abstract class MyPetInfo {
 
-    private final Map<MyPetType, Double> startHP = new HashMap<>();
-    private final Map<MyPetType, Double> startSpeed = new HashMap<>();
-    private final ArrayListMultimap<MyPetType, ConfigItem> food = ArrayListMultimap.create();
-    private final ArrayListMultimap<MyPetType, Settings> leashFlagSettings = ArrayListMultimap.create();
-    private final Map<MyPetType, Integer> customRespawnTimeFactor = new HashMap<>();
-    private final Map<MyPetType, Integer> customRespawnTimeFixed = new HashMap<>();
-    private final Map<MyPetType, Boolean> releaseOnDeath = new HashMap<>();
-    private final Map<MyPetType, Boolean> removeAfterRelease = new HashMap<>();
-    private final Map<MyPetType, ConfigItem> leashItem = new HashMap<>();
+    private final Map<PetType, Double> startHP = new HashMap<>();
+    private final Map<PetType, Double> startSpeed = new HashMap<>();
+    private final ArrayListMultimap<PetType, ConfigItem> food = ArrayListMultimap.create();
+    private final ArrayListMultimap<PetType, Settings> leashFlagSettings = ArrayListMultimap.create();
+    private final Map<PetType, Integer> customRespawnTimeFactor = new HashMap<>();
+    private final Map<PetType, Integer> customRespawnTimeFixed = new HashMap<>();
+    private final Map<PetType, Boolean> releaseOnDeath = new HashMap<>();
+    private final Map<PetType, Boolean> removeAfterRelease = new HashMap<>();
+    private final Map<PetType, ConfigItem> leashItem = new HashMap<>();
 
     /**
      * Per-level multiplier added to the base respawn timer. Total respawn
      * time = {@code fixed + (factor * petLevel)}.
      */
-    public int getCustomRespawnTimeFactor(MyPetType type) {
+    public int getCustomRespawnTimeFactor(PetType type) {
         return customRespawnTimeFactor.getOrDefault(type, 0);
     }
 
-    public void setCustomRespawnTimeFactor(MyPetType type, int factor) {
+    public void setCustomRespawnTimeFactor(PetType type, int factor) {
         customRespawnTimeFactor.put(type, factor);
     }
 
     /** Flat respawn time (seconds) added regardless of pet level. */
-    public int getCustomRespawnTimeFixed(MyPetType type) {
+    public int getCustomRespawnTimeFixed(PetType type) {
         return customRespawnTimeFixed.getOrDefault(type, 0);
     }
 
-    public void setCustomRespawnTimeFixed(MyPetType type, int factor) {
+    public void setCustomRespawnTimeFixed(PetType type, int factor) {
         customRespawnTimeFixed.put(type, factor);
     }
 
     /** Returns the list of items that restore saturation for this type. */
-    public List<ConfigItem> getFood(MyPetType type) {
+    public List<ConfigItem> getFood(PetType type) {
         return food.get(type);
     }
 
-    public void clearFood(MyPetType type) {
+    public void clearFood(PetType type) {
         food.removeAll(type);
     }
 
     /** Adds a food item if not already registered (duplicate-safe). */
-    public void addFood(MyPetType type, ConfigItem foodToAdd) {
+    public void addFood(PetType type, ConfigItem foodToAdd) {
         for (ConfigItem configItem : food.get(type)) {
             if (configItem.compare(foodToAdd.getItem())) {
                 return;
@@ -97,28 +97,28 @@ public abstract class MyPetInfo {
      * entry corresponds to one flag with its per-flag parameters (e.g.,
      * chance percentage, required size).
      */
-    public List<Settings> getLeashFlagSettings(MyPetType type) {
+    public List<Settings> getLeashFlagSettings(PetType type) {
         return leashFlagSettings.get(type);
     }
 
-    public void addLeashFlagSetting(MyPetType type, Settings setting) {
+    public void addLeashFlagSetting(PetType type, Settings setting) {
         if (!leashFlagSettings.get(type).contains(setting)) {
             leashFlagSettings.put(type, setting);
         }
     }
 
-    public void clearLeashFlagSettings(MyPetType petType) {
+    public void clearLeashFlagSettings(PetType petType) {
         if (leashFlagSettings.containsKey(petType)) {
             leashFlagSettings.get(petType).clear();
         }
     }
 
     /** Starting max health for freshly tamed pets of this type. */
-    public double getStartHP(MyPetType type) {
+    public double getStartHP(PetType type) {
         return startHP.getOrDefault(type, 20.0);
     }
 
-    public void setStartHP(MyPetType type, double hp) {
+    public void setStartHP(PetType type, double hp) {
         startHP.put(type, hp);
     }
 
@@ -126,11 +126,11 @@ public abstract class MyPetInfo {
      * The item the player must use to leash (tame) this mob type, or
      * {@code null} if the default (lead) applies.
      */
-    public ConfigItem getLeashItem(MyPetType type) {
+    public ConfigItem getLeashItem(PetType type) {
         return leashItem.get(type);
     }
 
-    public void setLeashItem(MyPetType type, ConfigItem configItem) {
+    public void setLeashItem(PetType type, ConfigItem configItem) {
         leashItem.put(type, configItem);
     }
 
@@ -138,21 +138,21 @@ public abstract class MyPetInfo {
      * Base walk speed (Bukkit MOVEMENT_SPEED attribute value). Falls back
      * to {@code 0.3} if no override is configured.
      */
-    public double getSpeed(MyPetType myPetType) {
-        if (myPetType == null) {
+    public double getSpeed(PetType petType) {
+        if (petType == null) {
             return 0.3;
         }
-        return startSpeed.getOrDefault(myPetType, 0.3);
+        return startSpeed.getOrDefault(petType, 0.3);
     }
 
-    public void setSpeed(MyPetType type, double speed) {
+    public void setSpeed(PetType type, double speed) {
         startSpeed.put(type, speed);
     }
 
     /**
      * Returns whether a given Bukkit {@link EntityType} can be leashed as
      * a pet at all. The implementation typically checks version gates and
-     * the registered {@link MyPetType} set.
+     * the registered {@link PetType} set.
      */
     public abstract boolean isLeashableEntityType(EntityType type);
 
@@ -160,8 +160,8 @@ public abstract class MyPetInfo {
      * If {@code true}, the pet is permanently released (deleted) when it
      * dies instead of entering the respawn timer.
      */
-    public void setReleaseOnDeath(MyPetType myPetType, boolean releaseOnDeath) {
-        this.releaseOnDeath.put(myPetType, releaseOnDeath);
+    public void setReleaseOnDeath(PetType petType, boolean releaseOnDeath) {
+        this.releaseOnDeath.put(petType, releaseOnDeath);
     }
 
     /**
@@ -169,21 +169,21 @@ public abstract class MyPetInfo {
      * immediately after releasing the pet (rather than leaving the mob
      * alive as a wild entity).
      */
-    public void setRemoveAfterRelease(MyPetType myPetType, boolean removeAfterRelease) {
-        this.removeAfterRelease.put(myPetType, removeAfterRelease);
+    public void setRemoveAfterRelease(PetType petType, boolean removeAfterRelease) {
+        this.removeAfterRelease.put(petType, removeAfterRelease);
     }
 
-    public boolean getReleaseOnDeath(MyPetType myPetType) {
-        if (myPetType == null) {
+    public boolean getReleaseOnDeath(PetType petType) {
+        if (petType == null) {
             return false;
         }
-        return releaseOnDeath.getOrDefault(myPetType, false);
+        return releaseOnDeath.getOrDefault(petType, false);
     }
 
-    public boolean getRemoveAfterRelease(MyPetType myPetType) {
-        if (myPetType == null) {
+    public boolean getRemoveAfterRelease(PetType petType) {
+        if (petType == null) {
             return false;
         }
-        return removeAfterRelease.getOrDefault(myPetType, false);
+        return removeAfterRelease.getOrDefault(petType, false);
     }
 }

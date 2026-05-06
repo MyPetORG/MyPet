@@ -127,7 +127,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
      * </ul>
      */
     private CompoundBinaryTag pendingSnapshot;
-    private MyPetType petType;
+    private PetType petType;
 
     protected MyPet(MyPetPlayer petOwner) {
         if (petOwner == null) {
@@ -643,9 +643,9 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         return Util.SANITIZED_MINIMESSAGE.deserialize(getPetName());
     }
 
-    public MyPetType getPetType() {
+    public PetType getPetType() {
         if (petType == null) {
-            for (MyPetType type : MyPetType.values()) {
+            for (PetType type : PetType.values()) {
                 if (type.getMyPetClass().isAssignableFrom(this.getClass())) {
                     petType = type;
                     break;
@@ -656,7 +656,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
     }
 
     @Override
-    public void setPetType(MyPetType petType) {
+    public void setPetType(PetType petType) {
         throw new UnsupportedOperationException("You can't change the type for an active MyPet!");
     }
 

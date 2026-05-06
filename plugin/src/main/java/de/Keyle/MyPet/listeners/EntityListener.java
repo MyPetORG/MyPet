@@ -26,7 +26,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
@@ -257,7 +257,7 @@ public class EntityListener implements Listener {
                 if (!getPetManager().hasActiveMyPet(player) && !justLeashed.contains(player.getUniqueId())) {
                     LivingEntity leashTarget = (LivingEntity) event.getEntity();
 
-                    MyPetType petType = MyPetType.byEntityTypeName(leashTarget.getType().name());
+                    PetType petType = PetType.byEntityTypeName(leashTarget.getType().name());
                     ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(petType);
 
                     if (!Permissions.has(player, "MyPet.leash." + petType.name())) {

@@ -60,7 +60,7 @@ public non-sealed interface MyPet extends StoredPet, Scheduler {
     /** Updates the pet's display name (MiniMessage format). */
     void setPetName(String petName);
 
-    void setPetType(MyPetType petType);
+    void setPetType(PetType petType);
 
     void setWorldGroup(String worldGroup);
 

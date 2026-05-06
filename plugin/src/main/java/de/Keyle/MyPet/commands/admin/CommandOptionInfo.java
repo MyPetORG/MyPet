@@ -23,10 +23,10 @@ package de.Keyle.MyPet.commands.admin;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -100,7 +100,7 @@ public class CommandOptionInfo {
                         .then(Commands.argument("pettype", CommandOptionCreate.PET_ENTITY_TYPE)
                                 .executes(ctx -> {
                                     EntityType entityType = ctx.getArgument("pettype", EntityType.class);
-                                    MyPetType type = MyPetType.byEntityTypeName(entityType.name());
+                                    PetType type = PetType.byEntityTypeName(entityType.name());
                                     executeLeashItem(ctx.getSource().getSender(), type);
                                     return Command.SINGLE_SUCCESS;
                                 })))
@@ -148,7 +148,7 @@ public class CommandOptionInfo {
      * @param sender the command sender to receive the output message
      * @param type   the pet type whose leash item should be displayed
      */
-    private void executeLeashItem(CommandSender sender, MyPetType type) {
+    private void executeLeashItem(CommandSender sender, PetType type) {
         ConfigItem configItem = MyPetApi.getMyPetInfo().getLeashItem(type);
         ItemStack configItemStack = configItem.getItem();
         String itemString = "air";

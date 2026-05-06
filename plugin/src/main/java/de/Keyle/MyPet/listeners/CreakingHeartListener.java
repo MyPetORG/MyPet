@@ -25,7 +25,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
@@ -117,7 +117,7 @@ public class CreakingHeartListener implements Listener {
             return;
         }
 
-        MyPetType petType = MyPetType.byEntityTypeName(linkedCreaking.getType().name());
+        PetType petType = PetType.byEntityTypeName(linkedCreaking.getType().name());
 
         // Only allow heart-based capture if HeartLinked is a configured leash requirement
         if (!isHeartLinkedRequired(petType)) {
@@ -298,7 +298,7 @@ public class CreakingHeartListener implements Listener {
             return;
         }
 
-        MyPetType petType = MyPetType.byName("Creaking");
+        PetType petType = PetType.byName("Creaking");
 
         // Only show heart-based capture info if HeartLinked is a configured leash requirement
         if (!isHeartLinkedRequired(petType)) {
@@ -362,7 +362,7 @@ public class CreakingHeartListener implements Listener {
     /**
      * Checks if the HeartLinked leash flag is configured as a requirement for the given pet type.
      */
-    private boolean isHeartLinkedRequired(MyPetType petType) {
+    private boolean isHeartLinkedRequired(PetType petType) {
         for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(petType)) {
             if ("HeartLinked".equals(flagSettings.getName())) {
                 return true;

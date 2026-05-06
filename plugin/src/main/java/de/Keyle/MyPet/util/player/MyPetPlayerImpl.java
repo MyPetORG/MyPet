@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.MyPet;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.MyPetType;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -470,7 +470,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         if (!MyPetApi.getHookHelper().canHurt(p, entity)) {
                             continue;
                         }
-                        if (!Permissions.has(this, "MyPet.leash." + MyPetType.byEntityTypeName(entity.getType().name()))) {
+                        if (!Permissions.has(this, "MyPet.leash." + PetType.byEntityTypeName(entity.getType().name()))) {
                             continue;
                         }
                         Location l = entity.getLocation();
@@ -549,7 +549,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     }
 
     protected boolean checkTamable(LivingEntity leashTarget, Player p) {
-        for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(MyPetType.byEntityTypeName(leashTarget.getType().name()))) {
+        for (Settings flagSettings : MyPetApi.getMyPetInfo().getLeashFlagSettings(PetType.byEntityTypeName(leashTarget.getType().name()))) {
             String flagName = flagSettings.getName();
             LeashFlag flag = MyPetApi.getLeashFlagManager().getLeashFlag(flagName);
             if (flag != null && (flag.ignoredByHelper() || !flag.check(p, leashTarget, 0, flagSettings))) {
