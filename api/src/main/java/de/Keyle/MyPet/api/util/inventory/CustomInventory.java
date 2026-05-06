@@ -404,7 +404,7 @@ public class CustomInventory implements InventoryHolder {
     public void load(CompoundBinaryTag nbtTagCompound) {
         createInventoryIfNeeded();
         ListBinaryTag items = nbtTagCompound.getList("Items", BinaryTagTypes.COMPOUND);
-        if (items.isEmpty()) return;
+        if (items.size() == 0) return;
         if (this.bukkitInventory == null) return;
 
         for (int i = 0; i < items.size(); i++) {
