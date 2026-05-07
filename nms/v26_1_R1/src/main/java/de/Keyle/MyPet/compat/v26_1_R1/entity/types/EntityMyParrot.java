@@ -38,6 +38,7 @@ import java.util.Optional;
 public class EntityMyParrot extends EntityMyFlyingPet {
 	
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
 	private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyParrot.class, EntityDataSerializers.INT);
@@ -76,6 +77,7 @@ public class EntityMyParrot extends EntityMyFlyingPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(SIT_WATCHER, (byte) 0);
 		builder.define(OWNER_WATCHER, Optional.empty());
 		builder.define(VARIANT_WATCHER, 0);

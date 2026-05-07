@@ -34,6 +34,7 @@ public class EntityMySquid extends EntityMyAquaticPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySquid.class, EntityDataSerializers.BOOLEAN);
 
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMySquid.class, EntityDataSerializers.BOOLEAN);
 	public EntityMySquid(Level world, MyPet myPet) {
 		super(world, myPet);
 	}
@@ -67,5 +68,6 @@ public class EntityMySquid extends EntityMyAquaticPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 	}
 }

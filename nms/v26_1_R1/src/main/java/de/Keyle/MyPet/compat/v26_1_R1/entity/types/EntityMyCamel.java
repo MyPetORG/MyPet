@@ -46,6 +46,7 @@ import static de.Keyle.MyPet.compat.v26_1_R1.util.HandSlot.getSlotForHand;
 public class EntityMyCamel extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BYTE);
 	public static final EntityDataAccessor<Boolean> DASH = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Long> LAST_POSE_CHANGE_TICK = SynchedEntityData.defineId(EntityMyCamel.class, EntityDataSerializers.LONG);
@@ -145,6 +146,7 @@ public class EntityMyCamel extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(SADDLE_CHEST_WATCHER, (byte) 0);
 		builder.define(DASH, false);
 

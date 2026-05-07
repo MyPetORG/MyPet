@@ -51,6 +51,7 @@ import static de.Keyle.MyPet.compat.v26_1_R1.util.HandSlot.getSlotForHand;
 public class EntityMySheep extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySheep.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMySheep.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> COLOR_WATCHER = SynchedEntityData.defineId(EntityMySheep.class, EntityDataSerializers.BYTE);
 
 	private static final Map<DyeColor, Block> colorMap = new HashMap<>();
@@ -147,6 +148,7 @@ public class EntityMySheep extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(COLOR_WATCHER, (byte) 0); // color/sheared
 	}
 

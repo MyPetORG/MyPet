@@ -39,6 +39,7 @@ import net.minecraft.world.level.Level;
 public class EntityMyArmadillo extends EntityMyPet {
 
     private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyArmadillo.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyArmadillo.class, EntityDataSerializers.BOOLEAN);
     // TODO use this :)
     private static final EntityDataAccessor<Armadillo.ArmadilloState> ARMADILLO_STATE_WATCHER = SynchedEntityData.defineId(EntityMyArmadillo.class, EntityDataSerializers.ARMADILLO_STATE);
 
@@ -86,6 +87,7 @@ public class EntityMyArmadillo extends EntityMyPet {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(AGE_WATCHER, false);
+        builder.define(AGE_LOCKED_WATCHER, false);
         builder.define(ARMADILLO_STATE_WATCHER, Armadillo.ArmadilloState.IDLE);
     }
 

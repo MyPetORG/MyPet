@@ -53,6 +53,7 @@ import static de.Keyle.MyPet.compat.v26_1_R1.util.HandSlot.getSlotForHand;
 public class EntityMyStrider extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> BOOST_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> SUFFOCATING_WATCHER = SynchedEntityData.defineId(EntityMyStrider.class, EntityDataSerializers.BOOLEAN);
 
@@ -127,6 +128,7 @@ public class EntityMyStrider extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(BOOST_TICKS_WATCHER, 0);
 		builder.define(SUFFOCATING_WATCHER, false);
 	}

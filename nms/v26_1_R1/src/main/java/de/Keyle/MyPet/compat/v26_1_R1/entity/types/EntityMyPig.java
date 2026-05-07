@@ -56,6 +56,7 @@ import static de.Keyle.MyPet.compat.v26_1_R1.util.HandSlot.getSlotForHand;
 public class EntityMyPig extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> DATA_BOOST_TIME = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Holder<PigVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyPig.class, EntityDataSerializers.PIG_VARIANT);
 
@@ -152,6 +153,7 @@ public class EntityMyPig extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(DATA_BOOST_TIME, 0);
 
         Registry<PigVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.PIG_VARIANT);

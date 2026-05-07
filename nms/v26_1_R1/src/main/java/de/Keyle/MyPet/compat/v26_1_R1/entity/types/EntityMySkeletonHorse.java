@@ -49,6 +49,7 @@ import static de.Keyle.MyPet.compat.v26_1_R1.util.HandSlot.getSlotForHand;
 public class EntityMySkeletonHorse extends EntityMyPet {
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySkeletonHorse.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMySkeletonHorse.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SADDLE_CHEST_WATCHER = SynchedEntityData.defineId(EntityMySkeletonHorse.class, EntityDataSerializers.BYTE);
 
 	int soundCounter = 0;
@@ -160,6 +161,7 @@ public class EntityMySkeletonHorse extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(SADDLE_CHEST_WATCHER, (byte) 0);
 	}
 

@@ -52,6 +52,7 @@ import java.util.Optional;
 public class EntityMyCat extends EntityMyPet {
 
 	protected static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
 	protected static final EntityDataAccessor<Holder<CatVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyCat.class, EntityDataSerializers.CAT_VARIANT);
@@ -126,6 +127,7 @@ public class EntityMyCat extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(SIT_WATCHER, (byte) 0);
 		builder.define(OWNER_WATCHER, Optional.empty());
 		Registry<CatVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CAT_VARIANT);

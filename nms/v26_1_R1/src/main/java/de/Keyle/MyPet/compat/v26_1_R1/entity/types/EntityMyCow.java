@@ -46,6 +46,7 @@ import org.bukkit.craftbukkit.CraftRegistry;
 public class EntityMyCow extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyCow.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyCow.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Holder<CowVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyCow.class, EntityDataSerializers.COW_VARIANT);
 
 	public EntityMyCow(Level world, MyPet myPet) {
@@ -104,6 +105,7 @@ public class EntityMyCow extends EntityMyPet {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
 
+		builder.define(AGE_LOCKED_WATCHER, false);
 		Registry<CowVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.COW_VARIANT);
 		builder.define(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.COW_REGISTRY.getOrThrow(CowVariants.TEMPERATE).value()));
 	}

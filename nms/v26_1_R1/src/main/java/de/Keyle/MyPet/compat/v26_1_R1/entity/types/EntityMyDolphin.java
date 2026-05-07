@@ -38,6 +38,7 @@ public class EntityMyDolphin extends EntityMyAquaticPet {
 	public boolean canDolphinjump = false;
 
 	private static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> GOT_FISH_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> MOISTNESS_WATCHER = SynchedEntityData.defineId(EntityMyDolphin.class, EntityDataSerializers.INT);
 
@@ -91,6 +92,7 @@ public class EntityMyDolphin extends EntityMyAquaticPet {
 		super.defineSynchedData(builder);
 
 		builder.define(DATA_BABY_ID, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(GOT_FISH_WATCHER, false);
 		builder.define(MOISTNESS_WATCHER, 2400);
 	}

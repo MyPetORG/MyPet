@@ -43,6 +43,7 @@ import java.util.OptionalInt;
 @EntitySize(width = 0.7F, height = 1.3F)
 public class EntityMyFrog extends EntityMyAquaticPet {
     private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyFrog.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyFrog.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Holder<FrogVariant>> DATA_VARIANT_ID = SynchedEntityData.defineId(EntityMyFrog.class, EntityDataSerializers.FROG_VARIANT);
     private static final EntityDataAccessor<OptionalInt> TONGUE_TARGET_ID = SynchedEntityData.defineId(EntityMyFrog.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
     int jumpDelay;
@@ -82,6 +83,7 @@ public class EntityMyFrog extends EntityMyAquaticPet {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(AGE_WATCHER, false);
+        builder.define(AGE_LOCKED_WATCHER, false);
         Registry<FrogVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.FROG_VARIANT);
         builder.define(EntityMyFrog.DATA_VARIANT_ID, registry.wrapAsHolder(VariantConverter.FROG_REGISTRY.getOrThrow(FrogVariants.TEMPERATE).value()));
         builder.define(TONGUE_TARGET_ID, OptionalInt.empty());

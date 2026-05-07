@@ -39,6 +39,7 @@ import net.minecraft.world.level.Level;
 public class EntityMyPolarBear extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPolarBear.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyPolarBear.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> REAR_WATCHER = SynchedEntityData.defineId(EntityMyPolarBear.class, EntityDataSerializers.BOOLEAN);
 
 	int rearCounter = -1;
@@ -87,6 +88,7 @@ public class EntityMyPolarBear extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(REAR_WATCHER, false);
 
 	}

@@ -38,6 +38,7 @@ import net.minecraft.world.level.Level;
 public class EntityMySniffer extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMySniffer.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMySniffer.class, EntityDataSerializers.BOOLEAN);
 
 	public EntityMySniffer(Level world, MyPet myPet) {
 		super(world, myPet);
@@ -88,6 +89,7 @@ public class EntityMySniffer extends EntityMyPet {
 	public void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false); // is baby
+		builder.define(AGE_LOCKED_WATCHER, false);
 	}
 
 	@Override

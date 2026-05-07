@@ -40,6 +40,7 @@ import net.minecraft.world.level.Level;
 public class EntityMyBee extends EntityMyFlyingPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> BEE_STATUS_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Long> ANGER_WATCHER = SynchedEntityData.defineId(EntityMyBee.class, EntityDataSerializers.LONG);
 
@@ -79,6 +80,7 @@ public class EntityMyBee extends EntityMyFlyingPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(BEE_STATUS_WATCHER, (byte) 0);
 		builder.define(ANGER_WATCHER, -1L);
 	}

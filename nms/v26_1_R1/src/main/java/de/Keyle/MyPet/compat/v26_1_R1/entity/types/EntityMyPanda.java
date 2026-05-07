@@ -38,6 +38,7 @@ import net.minecraft.world.level.Level;
 public class EntityMyPanda extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> ASK_FOR_BAMBOO_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> SNEEZE_PROGRESS_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> EATING_TICKS_WATCHER = SynchedEntityData.defineId(EntityMyPanda.class, EntityDataSerializers.INT);
@@ -91,6 +92,7 @@ public class EntityMyPanda extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(ASK_FOR_BAMBOO_TICKS_WATCHER, 0);
 		builder.define(SNEEZE_PROGRESS_WATCHER, 0);
 		builder.define(MAIN_GENE_WATCHER, (byte) 0);

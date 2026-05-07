@@ -34,6 +34,7 @@ import net.minecraft.world.level.Level;
 public class EntityMyWanderingTrader extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyWanderingTrader.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyWanderingTrader.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> UNHAPPY_COUNTER = SynchedEntityData.defineId(EntityMyWanderingTrader.class, EntityDataSerializers.INT);
 
 	public EntityMyWanderingTrader(Level world, MyPet myPet) {
@@ -61,6 +62,7 @@ public class EntityMyWanderingTrader extends EntityMyPet {
 
 		builder.define(AGE_WATCHER, false);
 
+		builder.define(AGE_LOCKED_WATCHER, false);
 		if (MyPetApi.getCompatUtil().isCompatible("1.14.1")) {
 			builder.define(UNHAPPY_COUNTER, 0);
 		}

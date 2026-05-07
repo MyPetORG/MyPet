@@ -38,6 +38,7 @@ import net.minecraft.world.level.Level;
 public class EntityMyAxolotl extends EntityMyAquaticPet {
 
     private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> PLAYING_DEAD_WATCHER = SynchedEntityData.defineId(EntityMyAxolotl.class, EntityDataSerializers.BOOLEAN);
 
@@ -85,6 +86,7 @@ public class EntityMyAxolotl extends EntityMyAquaticPet {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(AGE_WATCHER, false);
+        builder.define(AGE_LOCKED_WATCHER, false);
         builder.define(VARIANT_WATCHER, 0);
         builder.define(PLAYING_DEAD_WATCHER, false);
     }

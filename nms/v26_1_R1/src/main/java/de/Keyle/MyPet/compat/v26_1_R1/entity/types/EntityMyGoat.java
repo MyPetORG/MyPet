@@ -40,6 +40,7 @@ public class EntityMyGoat extends EntityMyPet {
 
     private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
 
+    private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> SCREAMING_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> LEFT_HORN_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> RIGHT_HORN_WATCHER = SynchedEntityData.defineId(EntityMyGoat.class, EntityDataSerializers.BOOLEAN);
@@ -100,6 +101,7 @@ public class EntityMyGoat extends EntityMyPet {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(AGE_WATCHER, false);
+        builder.define(AGE_LOCKED_WATCHER, false);
         builder.define(LEFT_HORN_WATCHER, true);
         builder.define(RIGHT_HORN_WATCHER, true);
         builder.define(SCREAMING_WATCHER, false);

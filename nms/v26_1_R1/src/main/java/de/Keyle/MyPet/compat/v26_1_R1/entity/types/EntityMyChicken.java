@@ -46,6 +46,7 @@ import org.bukkit.craftbukkit.CraftRegistry;
 public class EntityMyChicken extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyChicken.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyChicken.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Holder<ChickenVariant>> VARIANT_WATCHER = SynchedEntityData.defineId(EntityMyChicken.class, EntityDataSerializers.CHICKEN_VARIANT);
 
 	private int nextEggTimer;
@@ -96,6 +97,7 @@ public class EntityMyChicken extends EntityMyPet {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
 
+		builder.define(AGE_LOCKED_WATCHER, false);
         Registry<ChickenVariant> registry = CraftRegistry.getMinecraftRegistry(Registries.CHICKEN_VARIANT);
         builder.define(VARIANT_WATCHER, registry.wrapAsHolder(VariantConverter.CHICKEN_REGISTRY.getOrThrow(ChickenVariants.TEMPERATE).value()));
 	}

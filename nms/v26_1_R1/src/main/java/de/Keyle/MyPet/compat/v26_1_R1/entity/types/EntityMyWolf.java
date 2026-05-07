@@ -55,6 +55,7 @@ import java.util.Optional;
 public class EntityMyWolf extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Byte> SIT_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> OWNER_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
 	private static final EntityDataAccessor<Boolean> UNUSED_WATCHER = SynchedEntityData.defineId(EntityMyWolf.class, EntityDataSerializers.BOOLEAN); //Interested
@@ -141,6 +142,7 @@ public class EntityMyWolf extends EntityMyPet {
 		super.defineSynchedData(builder);
 
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(SIT_WATCHER, (byte) 0);
 		builder.define(OWNER_WATCHER, Optional.empty());
 		builder.define(UNUSED_WATCHER, false); // not used

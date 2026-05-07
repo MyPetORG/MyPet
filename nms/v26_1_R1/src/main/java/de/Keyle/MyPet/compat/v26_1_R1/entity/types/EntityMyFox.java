@@ -55,6 +55,7 @@ import static de.Keyle.MyPet.compat.v26_1_R1.util.HandSlot.getSlotForHand;
 public class EntityMyFox extends EntityMyPet {
 
 	private static final EntityDataAccessor<Boolean> AGE_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> AGE_LOCKED_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> FOX_TYPE_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Byte> ACTIONS_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> FRIEND_A_WATCHER = SynchedEntityData.defineId(EntityMyFox.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
@@ -146,6 +147,7 @@ public class EntityMyFox extends EntityMyPet {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(AGE_WATCHER, false);
+		builder.define(AGE_LOCKED_WATCHER, false);
 		builder.define(FRIEND_A_WATCHER, Optional.empty());
 		builder.define(FRIEND_B_WATCHER, Optional.empty());
 		builder.define(FOX_TYPE_WATCHER, 0);
