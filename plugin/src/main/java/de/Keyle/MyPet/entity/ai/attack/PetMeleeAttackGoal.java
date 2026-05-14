@@ -270,6 +270,19 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
      * makes the pet's Aggressive mode read as the owner killing the victim
      * in death messages and in {@code Player#getKiller()} for any combat
      * / kill-tracking plugins.
+     *
+     * <p>The damage type is {@link DamageType#MOB_ATTACK_NO_AGGRO} rather
+     * than {@code MOB_ATTACK}: it sits in vanilla's {@code no_anger}
+     * damage-type tag, so {@code LivingEntity#hurtServer} skips
+     * {@code setLastHurtByMob(...)} and the victim's brain {@code
+     * HURT_BY_ENTITY} memory stays empty. Without that skip the
+     * {@code withCausingEntity(owner)} above would seed the memory with
+     * the player owner and vanilla retaliation tasks would re-target the
+     * mob onto the player (Cluster G). The Iron Golem accidental-villager
+     * path uses the same damage type in vanilla for the same reason.
+     * {@code lastHurtByPlayer} is gated on the causing entity being a
+     * {@link Player}, not on the {@code no_anger} tag, so kill-credit
+     * routing through {@code withCausingEntity(owner)} is unaffected.
      */
     private static void applyPetDamage(Pet pet, LivingEntity target, double damage) {
         if (pet == null || target == null || target.isDead()) return;
@@ -278,7 +291,7 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
 
         Player owner = pet.getOwner() != null ? pet.getOwner().getPlayer() : null;
 
-        DamageSource.Builder builder = DamageSource.builder(DamageType.MOB_ATTACK)
+        DamageSource.Builder builder = DamageSource.builder(DamageType.MOB_ATTACK_NO_AGGRO)
                 .withDirectEntity(mob);
         if (owner != null && owner.isOnline() && owner.getWorld().equals(mob.getWorld())
                 && !(target instanceof Player)) {
