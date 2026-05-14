@@ -34,8 +34,8 @@ public class PermissionFlag implements LeashFlag {
 
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
-        for (Setting setting : settings.all()) {
-            if (!player.hasPermission(setting.getValue())) {
+        for (Setting setting : settings.entries()) {
+            if (!player.hasPermission(setting.asString())) {
                 return false;
             }
         }
@@ -44,11 +44,6 @@ public class PermissionFlag implements LeashFlag {
 
     @Override
     public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
-        for (Setting setting : settings.all()) {
-            if (!player.hasPermission(setting.getKey())) {
-                return Locale.getComponent("Message.Command.CaptureHelper.Requirement.Permission", player);
-            }
-        }
         return Locale.getComponent("Message.Command.CaptureHelper.Requirement.Permission", player);
     }
 }

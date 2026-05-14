@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.leashing;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
@@ -31,51 +30,45 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 
+import java.util.OptionalInt;
+
 @LeashFlagName("Size")
 public class SizeFlag implements LeashFlag {
 
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
-        if (entity instanceof Slime) {
-            for (Setting setting : settings.all()) {
-                if (Util.isInt(setting.getKey())) {
-                    return ((Slime) entity).getSize() >= Integer.parseInt(setting.getKey());
-                }
-            }
-            boolean correctSize = true;
-            if (settings.map().containsKey("min") && Util.isInt(settings.map().get("min").getValue())) {
-                correctSize = ((Slime) entity).getSize() >= Integer.parseInt(settings.map().get("min").getValue());
-            }
-            if (settings.map().containsKey("max") && Util.isInt(settings.map().get("max").getValue())) {
-                correctSize = correctSize && ((Slime) entity).getSize() <= Integer.parseInt(settings.map().get("max").getValue());
-            }
-            return correctSize;
+        if (!(entity instanceof Slime slime)) {
+            return true;
         }
-        return true;
+        for (Setting setting : settings.entries()) {
+            OptionalInt fixed = setting.getInt();
+            if (fixed.isPresent()) {
+                return slime.getSize() >= fixed.getAsInt();
+            }
+        }
+        boolean correctSize = slime.getSize() >= settings.getInt("min").orElse(Integer.MIN_VALUE);
+        correctSize &= slime.getSize() <= settings.getInt("max").orElse(Integer.MAX_VALUE);
+        return correctSize;
     }
 
     @Override
     public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
-        if (entity instanceof Slime) {
-            for (Setting setting : settings.all()) {
-                if (Util.isInt(setting.getKey())) {
-                    return Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Equal", player, setting.getKey());
-                }
-            }
-            Component message = null;
-            if (settings.map().containsKey("min") && Util.isInt(settings.map().get("min").getValue())) {
-                message = Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Min", player, settings.map().get("min").getValue());
-            }
-            if (settings.map().containsKey("max") && Util.isInt(settings.map().get("max").getValue())) {
-                Component maxComponent = Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Min", player, settings.map().get("max").getValue());
-                if (message != null) {
-                    message = message.append(Component.text(", ")).append(maxComponent);
-                } else {
-                    message = maxComponent;
-                }
-            }
-            return message;
+        if (!(entity instanceof Slime)) {
+            return null;
         }
-        return null;
+        for (Setting setting : settings.entries()) {
+            if (setting.getInt().isPresent()) {
+                return Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Equal", player, setting.asString());
+            }
+        }
+        Component message = null;
+        if (settings.getInt("min").isPresent()) {
+            message = Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Min", player, settings.getString("min").orElse(""));
+        }
+        if (settings.getInt("max").isPresent()) {
+            Component maxComponent = Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.Size.Min", player, settings.getString("max").orElse(""));
+            message = message != null ? message.append(Component.text(", ")).append(maxComponent) : maxComponent;
+        }
+        return message;
     }
 }

@@ -236,14 +236,13 @@ public class VaultHook implements EconomyHook, PermissionGroupHook {
 
         @Override
         public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
-            String world = null;
+            String world = settings.getString("world").orElse(null);
             String group = null;
-            for (Setting setting : settings.all()) {
-                if (setting.getKey().equalsIgnoreCase("world")) {
-                    world = setting.getValue();
-                } else {
-                    group = setting.getValue();
+            for (Setting setting : settings.entries()) {
+                if ("world".equalsIgnoreCase(setting.getKey())) {
+                    continue;
                 }
+                group = setting.asString();
             }
             if (group != null) {
                 if (world != null) {

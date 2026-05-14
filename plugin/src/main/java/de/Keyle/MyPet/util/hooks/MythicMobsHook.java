@@ -190,8 +190,8 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
         public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
             if (MythicBukkit.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(entity))) {
                 String name = MythicBukkit.inst().getMobManager().getMythicMobInstance(entity).getType().getInternalName();
-                for (Setting setting : settings.all()) {
-                    if (setting.getValue().equalsIgnoreCase(name)) {
+                for (Setting setting : settings.entries()) {
+                    if (setting.asString().equalsIgnoreCase(name)) {
                         return true;
                     }
                 }

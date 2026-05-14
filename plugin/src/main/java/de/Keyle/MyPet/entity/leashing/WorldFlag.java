@@ -39,8 +39,8 @@ public class WorldFlag implements LeashFlag {
 
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
-        for (Setting setting : settings.all()) {
-            if (setting.getValue().equals(entity.getWorld().getName())) {
+        for (Setting setting : settings.entries()) {
+            if (setting.asString().equals(entity.getWorld().getName())) {
                 return true;
             }
         }
@@ -49,14 +49,13 @@ public class WorldFlag implements LeashFlag {
 
     @Override
     public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
-        for (Setting setting : settings.all()) {
-            if (setting.getValue().equals(entity.getWorld().getName())) {
+        for (Setting setting : settings.entries()) {
+            if (setting.asString().equals(entity.getWorld().getName())) {
                 return Locale.getComponent("Message.Command.CaptureHelper.Requirement.World.Right", player);
             }
         }
-        String worlds = settings.all()
-                .stream()
-                .map(setting -> Bukkit.getWorld(setting.getValue()))
+        String worlds = settings.entries().stream()
+                .map(setting -> Bukkit.getWorld(setting.asString()))
                 .filter(Objects::nonNull)
                 .map(World::getName)
                 .collect(Collectors.joining(", "));

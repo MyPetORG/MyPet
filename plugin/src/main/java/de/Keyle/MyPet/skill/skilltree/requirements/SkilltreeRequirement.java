@@ -39,9 +39,10 @@ public class SkilltreeRequirement implements Requirement {
             return false;
         }
         Set<String> neededSkilltrees = new HashSet<>();
-        for (Setting setting : settings.all()) {
-            if (!setting.getValue().isEmpty()) {
-                neededSkilltrees.add(setting.getValue());
+        for (Setting setting : settings.entries()) {
+            String name = setting.asString();
+            if (!name.isEmpty()) {
+                neededSkilltrees.add(name);
             }
         }
         return neededSkilltrees.contains(pet.getSkilltree().getName());

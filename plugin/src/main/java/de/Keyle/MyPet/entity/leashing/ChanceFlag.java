@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.leashing;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
@@ -28,20 +27,19 @@ import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @LeashFlagName("Chance")
 public class ChanceFlag implements LeashFlag {
 
-    Random random = new Random();
-
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
-        int r = random.nextInt(100);
-        for (Setting setting : settings.all()) {
-            if (Util.isInt(setting.getKey().replace("%", "").trim())) {
-                int chance = Integer.parseInt(setting.getValue().replace("%", "").trim());
-                return r <= chance;
+        for (Setting setting : settings.entries()) {
+            String token = setting.asString().replace("%", "").trim();
+            try {
+                int chance = Integer.parseInt(token);
+                return ThreadLocalRandom.current().nextInt(100) <= chance;
+            } catch (NumberFormatException ignored) {
             }
         }
         return true;

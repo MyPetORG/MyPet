@@ -36,9 +36,10 @@ public class PermissionRequirement implements Requirement {
     public boolean check(Skilltree skilltree, Pet pet, Settings settings) {
         Player player = pet.getOwner().getPlayer();
         String permission = "MyPet.skilltree." + skilltree.getName();
-        for (Setting setting : settings.all()) {
-            if (setting.getValue() != null && !setting.getValue().isEmpty()) {
-                permission = "MyPet.skilltree." + setting.getValue();
+        for (Setting setting : settings.entries()) {
+            String node = setting.asString();
+            if (!node.isEmpty()) {
+                permission = "MyPet.skilltree." + node;
             }
         }
         return Permissions.has(player, permission);

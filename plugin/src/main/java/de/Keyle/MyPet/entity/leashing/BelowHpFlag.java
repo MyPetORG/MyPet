@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.leashing;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
@@ -30,29 +29,18 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.util.OptionalDouble;
+
 @LeashFlagName("BelowHP")
 public class BelowHpFlag implements LeashFlag {
+
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
-        for (Setting setting : settings.all()) {
-            boolean isPercent = setting.getValue().endsWith("%");
-            String valueString = setting.getValue();
-            if (isPercent) {
-                valueString = valueString.substring(0, valueString.length() - 1);
+        for (Setting setting : settings.entries()) {
+            OptionalDouble threshold = parseThreshold(setting, entity.getMaxHealth());
+            if (threshold.isPresent()) {
+                return entity.getHealth() - damage <= threshold.getAsDouble();
             }
-
-            if (isPercent) {
-                if (Util.isInt(valueString)) {
-                    int percent = Integer.parseInt(valueString);
-                    return (entity.getHealth() - damage) * 100 / entity.getMaxHealth() <= percent;
-                }
-            } else {
-                if (isDouble(valueString)) {
-                    double below = Double.parseDouble(valueString);
-                    return entity.getHealth() - damage <= below;
-                }
-            }
-
         }
         return true;
     }
@@ -60,36 +48,34 @@ public class BelowHpFlag implements LeashFlag {
     @Override
     public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
         double health = 0;
-        for (Setting setting : settings.all()) {
-            boolean isPercent = setting.getValue().endsWith("%");
-            String valueString = setting.getValue();
-            if (isPercent) {
-                valueString = valueString.substring(0, valueString.length() - 1);
+        for (Setting setting : settings.entries()) {
+            OptionalDouble threshold = parseThreshold(setting, entity.getMaxHealth());
+            if (threshold.isPresent()) {
+                health = threshold.getAsDouble();
+                break;
             }
-
-            if (isPercent) {
-                if (Util.isInt(valueString)) {
-                    int percent = Integer.parseInt(valueString);
-                    health = entity.getMaxHealth() * percent / 100;
-                    break;
-                }
-            } else {
-                if (isDouble(valueString)) {
-                    health = Double.parseDouble(valueString);
-                    break;
-                }
-            }
-
         }
         return Locale.getFormattedComponent("Message.Command.CaptureHelper.Requirement.BelowHP", player, String.format("%1.2f", health));
     }
 
-    private static boolean isDouble(String number) {
-        try {
-            Double.parseDouble(number);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
+    /**
+     * Resolve a single setting to an absolute HP threshold. Supports two
+     * syntaxes that share this flag's positional slot:
+     * <ul>
+     *   <li>{@code "50%"} — percent of {@code maxHealth}</li>
+     *   <li>{@code "5"} or {@code "5.0"} — absolute HP value</li>
+     * </ul>
+     */
+    private static OptionalDouble parseThreshold(Setting setting, double maxHealth) {
+        String raw = setting.asString();
+        if (raw.endsWith("%")) {
+            try {
+                int percent = Integer.parseInt(raw.substring(0, raw.length() - 1));
+                return OptionalDouble.of(maxHealth * percent / 100.0);
+            } catch (NumberFormatException ignored) {
+                return OptionalDouble.empty();
+            }
         }
+        return setting.getDouble();
     }
 }

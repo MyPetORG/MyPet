@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.skill.skilltree.requirements;
 
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.Requirement;
@@ -35,20 +34,15 @@ public class PetLevelRequirement implements Requirement {
     public boolean check(Skilltree skilltree, Pet pet, Settings settings) {
         int level = pet.getExperience().getLevel();
 
-        if (settings.map().containsKey("min") || settings.map().containsKey("max")) {
-            boolean levelInRange = true;
-            if (settings.map().containsKey("min") && Util.isInt(settings.map().get("min").getValue())) {
-                levelInRange = level >= Integer.parseInt(settings.map().get("min").getValue());
-            }
-            if (settings.map().containsKey("max") && Util.isInt(settings.map().get("max").getValue())) {
-                levelInRange = levelInRange && level <= Integer.parseInt(settings.map().get("max").getValue());
-            }
-            return levelInRange;
-        } else {
-            for (Setting setting : settings.all()) {
-                if (Util.isInt(setting.getKey())) {
-                    return level >= Integer.parseInt(setting.getKey());
-                }
+        if (settings.contains("min") || settings.contains("max")) {
+            boolean inRange = level >= settings.getInt("min").orElse(Integer.MIN_VALUE);
+            inRange &= level <= settings.getInt("max").orElse(Integer.MAX_VALUE);
+            return inRange;
+        }
+        for (Setting setting : settings.entries()) {
+            var bound = setting.getInt();
+            if (bound.isPresent()) {
+                return level >= bound.getAsInt();
             }
         }
         return true;

@@ -25,10 +25,8 @@ import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import com.gmail.nossr50.util.player.UserManager;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
-import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
@@ -40,6 +38,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 @PluginHookName("mcMMO")
 public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
@@ -91,17 +90,13 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
         @Override
         public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
             for (PrimarySkillType skillType : PrimarySkillType.values()) {
-                String skillName = skillType.getName().toLowerCase();
-                if (settings.map().containsKey(skillName)) {
-                    Setting setting = settings.map().get(skillName);
-                    if (Util.isInt(setting.getValue())) {
-                        int requiredLevel = Integer.parseInt(setting.getValue());
-                        McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
-                        int skillLevel = mmoPlayer.getSkillLevel(skillType);
-                        if (skillLevel < requiredLevel) {
-                            return false;
-                        }
-                    }
+                OptionalInt requiredLevel = settings.getInt(skillType.getName());
+                if (requiredLevel.isEmpty()) {
+                    continue;
+                }
+                McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
+                if (mmoPlayer.getSkillLevel(skillType) < requiredLevel.getAsInt()) {
+                    return false;
                 }
             }
             return true;
@@ -111,13 +106,9 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
         public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
             List<String> skills = new ArrayList<>();
             for (PrimarySkillType skillType : PrimarySkillType.values()) {
-                String skillName = skillType.getName();
-                if (settings.map().containsKey(skillName.toLowerCase())) {
-                    Setting setting = settings.map().get(skillName.toLowerCase());
-                    if (Util.isInt(setting.getValue())) {
-                        int requiredLevel = Integer.parseInt(setting.getValue());
-                        skills.add(skillName + ": " + Locale.getString("Name.Level", player) + " " + requiredLevel);
-                    }
+                OptionalInt requiredLevel = settings.getInt(skillType.getName());
+                if (requiredLevel.isPresent()) {
+                    skills.add(skillType.getName() + ": " + Locale.getString("Name.Level", player) + " " + requiredLevel.getAsInt());
                 }
             }
             return Component.text("mcMMO: " + String.join(", ", skills));
