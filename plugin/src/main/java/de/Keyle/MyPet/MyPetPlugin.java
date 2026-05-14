@@ -34,6 +34,7 @@ import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.logger.DebugLogHandler;
+import de.Keyle.MyPet.util.translation.VanillaTranslationLoader;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.services.EggIconService;
@@ -311,6 +312,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         SplashScreen.print(updateStatus, Configuration.Repository.REPOSITORY_TYPE);
 
         serviceManager.activate(Load.State.OnEnable);
+
+        VanillaTranslationLoader.loadAsync(this);
 
         DebugLogHandler.setup(getLogger());
 

@@ -42,6 +42,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.commands.arguments.RegistryArgumentType;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -582,7 +583,7 @@ public class CommandOptionCreate {
 
                 PersistedPet base = PersistedPet.builder(newOwner)
                         .petType(petType)
-                        .petName(Locale.getString("Name." + petType.name(), newOwner))
+                        .petName(PetDefaultNameResolver.resolve(petType, newOwner))
                         .build();
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
                 final PersistedPet inactivePet = updateData(base, options).withWorldGroup(wg.getName());

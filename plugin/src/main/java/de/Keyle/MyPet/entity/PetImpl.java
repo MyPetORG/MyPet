@@ -57,6 +57,7 @@ import de.Keyle.MyPet.skill.skills.DamageImpl;
 import de.Keyle.MyPet.skill.skills.LifeImpl;
 import de.Keyle.MyPet.skill.skills.RangedImpl;
 import de.Keyle.MyPet.util.StackTraces;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.hooks.WorldGuardHook;
 import lombok.Getter;
@@ -138,7 +139,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
         skills = new Skills(this);
         experience = new PetExperience(this);
         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
-        petName = Locale.getString("Name." + getPetType().name(), petOwner);
+        petName = PetDefaultNameResolver.resolve(getPetType(), petOwner);
     }
 
     protected AbstractNavigation petNavigation;
@@ -623,7 +624,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
 
     public void setPetName(String newName) {
         if (!NameFilter.isClean(newName)) {
-            newName = Locale.getString("Name." + getPetType().name(), getOwner().getLanguage());
+            newName = PetDefaultNameResolver.resolve(getPetType(), getOwner());
         }
         if (!this.petName.equals(newName)) {
             PetNameEvent event = new PetNameEvent(this, newName);
