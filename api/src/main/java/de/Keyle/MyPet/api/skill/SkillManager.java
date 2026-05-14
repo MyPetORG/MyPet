@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.AnnotationLookup;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -40,7 +39,7 @@ import java.util.Set;
 
 /**
  * Central registry for all {@link Skill} classes, their {@link UpgradeParser}s, and
- * {@link SkillStateParser}s. Registered as a {@link ServiceContainer} that loads at
+ * {@link SkillStateCodec}s. Registered as a {@link ServiceContainer} that loads at
  * {@link Load.State#OnEnable}.
  *
  * <p>Skills are registered by class via {@link #registerSkill(Class)} during plugin
@@ -49,8 +48,8 @@ import java.util.Set;
  * in {@code .st.json} skilltree files and in the {@link Skills} name-based lookup.
  *
  * <p>Upgrade parsers (registered via {@link #registerUpgradeParser}) convert skilltree
- * JSON nodes into {@link Upgrade} objects; state parsers (registered via
- * {@link #registerStateParser}) convert persisted NBT into typed {@link SkillState}
+ * JSON nodes into {@link Upgrade} objects; state codecs (registered via
+ * {@link #registerCodec}) round-trip persisted NBT to typed {@link SkillState}
  * records.
  *
  * @see Skills
@@ -62,11 +61,7 @@ public class SkillManager implements ServiceContainer {
     private final Map<Class<? extends Skill>, String> registeredSkillsNames = new HashMap<>();
     private final Map<String, Class<? extends Skill>> registeredNamesSkills = new HashMap<>();
     private final Map<String, UpgradeParser<?>> upgradeParsers = new HashMap<>();
-    private final Map<Class<? extends Skill>, SkillStateBinding<?>> stateParsers = new HashMap<>();
     private final Map<Class<? extends Skill>, SkillStateCodecBinding<?>> stateCodecs = new HashMap<>();
-
-    /** Pairs the registered state class with its parser so {@link #parseState} can do a typed lookup keyed only on the skill class. */
-    private record SkillStateBinding<T extends SkillState>(Class<T> stateClass, SkillStateParser<T> parser) {}
 
     /** Pairs the registered state class with its codec so save/load/parse can dispatch on skill class alone. */
     private record SkillStateCodecBinding<T extends SkillState>(Class<T> stateClass, SkillStateCodec<T> codec) {}
@@ -76,7 +71,6 @@ public class SkillManager implements ServiceContainer {
         registeredSkillsNames.clear();
         registeredNamesSkills.clear();
         upgradeParsers.clear();
-        stateParsers.clear();
         stateCodecs.clear();
     }
 
@@ -219,59 +213,28 @@ public class SkillManager implements ServiceContainer {
     }
 
     /**
-     * Registers the typed {@link SkillState} parser for {@code skillClass}.
-     * Each skill may register at most one parser; the parser receives the
-     * per-skill NBT compound (the value stored under the skill's name in the
-     * aggregate {@code skillInfo}, not the aggregate itself) and returns the
-     * skill's typed state record.
-     *
-     * <p>Replaces the pre-4.0.0 raw-NBT escape hatch.
-     * Addons that store custom state on a {@link Skill} subclass register
-     * here once at plugin enable.
-     *
-     * @throws IllegalArgumentException if a parser is already registered for
-     *         {@code skillClass} (re-registration is a programming error,
-     *         not a hot-reload feature)
-     */
-    public <S extends Skill, T extends SkillState> void registerStateParser(
-            Class<S> skillClass, Class<T> stateClass, SkillStateParser<T> parser) {
-        if (stateParsers.containsKey(skillClass)) {
-            throw new IllegalArgumentException("A SkillStateParser is already registered for " + skillClass.getName());
-        }
-        stateParsers.put(skillClass, new SkillStateBinding<>(stateClass, parser));
-    }
-
-    /**
      * Parses {@code compound} into the typed {@link SkillState} for
-     * {@code skillClass}, or returns {@link Optional#empty()} if no parser/codec
-     * is registered, the registered state class doesn't match
-     * {@code stateClass}, or the parser declines the compound.
+     * {@code skillClass}, or returns {@link Optional#empty()} if no codec is
+     * registered, the registered state class doesn't match {@code stateClass},
+     * or the codec declines the compound.
      *
-     * <p>A registered {@link SkillStateCodec} wins over a legacy
-     * {@link SkillStateParser} for the same skill class. Called from
-     * {@code StoredPet#skillState} on the persisted-pet branch; addons should
-     * not call this directly.
+     * <p>Called from {@code StoredPet#skillState} on the persisted-pet branch;
+     * addons should not call this directly.
      */
     @SuppressWarnings("unchecked")
     public <S extends Skill, T extends SkillState> Optional<T> parseState(
             Class<S> skillClass, Class<T> stateClass, CompoundBinaryTag compound) {
         SkillStateCodecBinding<?> codecBinding = stateCodecs.get(skillClass);
-        if (codecBinding != null && stateClass.equals(codecBinding.stateClass())) {
-            return ((SkillStateCodecBinding<T>) codecBinding).codec().read(compound);
-        }
-        SkillStateBinding<?> binding = stateParsers.get(skillClass);
-        if (binding == null || !stateClass.equals(binding.stateClass())) {
+        if (codecBinding == null || !stateClass.equals(codecBinding.stateClass())) {
             return Optional.empty();
         }
-        return ((SkillStateBinding<T>) binding).parser().parse(compound);
+        return ((SkillStateCodecBinding<T>) codecBinding).codec().read(compound);
     }
 
     /**
      * Registers a typed {@link SkillStateCodec} for {@code skillClass}. The
      * codec owns both directions of the NBT round-trip for the skill's
-     * persisted state and supersedes any legacy
-     * {@link #registerStateParser(Class, Class, SkillStateParser) parser} for
-     * the same skill class at read time.
+     * persisted state.
      *
      * <p>Each skill class may register at most one codec; re-registration is
      * a programming error.
@@ -288,38 +251,25 @@ public class SkillManager implements ServiceContainer {
     }
 
     /**
-     * Serializes a skill's runtime state into NBT. Prefers a registered
-     * {@link SkillStateCodec} (driven by {@link Skill#getState()}); falls
-     * back to {@link NBTStorage#save()} if the skill implements that legacy
-     * contract. Returns {@code null} if neither path produces a compound.
+     * Serializes a skill's runtime state into NBT via its registered
+     * {@link SkillStateCodec} (driven by {@link Skill#getState()}). Returns
+     * {@code null} if no codec is registered or the codec declines to
+     * produce a compound.
      *
      * <p>Centralized so every save site (active pet info, repository
      * serialization, pet-type change) goes through the same dispatch.
      */
     public CompoundBinaryTag saveSkillState(Skill skill) {
-        CompoundBinaryTag codecResult = saveViaCodec(skill);
-        if (codecResult != null) {
-            return codecResult;
-        }
-        if (skill instanceof NBTStorage storageSkill) {
-            return storageSkill.save();
-        }
-        return null;
+        return saveViaCodec(skill);
     }
 
     /**
-     * Restores a skill's runtime state from NBT. Prefers a registered
-     * {@link SkillStateCodec} (read then {@link Skill#applyState(SkillState)});
-     * falls back to {@link NBTStorage#load(CompoundBinaryTag)} if the skill
-     * implements that legacy contract.
+     * Restores a skill's runtime state from NBT via its registered
+     * {@link SkillStateCodec} (read, then {@link Skill#applyState(SkillState)}).
+     * No-op if no codec is registered for the skill.
      */
     public void loadSkillState(Skill skill, CompoundBinaryTag compound) {
-        if (loadViaCodec(skill, compound)) {
-            return;
-        }
-        if (skill instanceof NBTStorage storageSkill) {
-            storageSkill.load(compound);
-        }
+        loadViaCodec(skill, compound);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

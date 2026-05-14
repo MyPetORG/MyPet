@@ -27,10 +27,8 @@ import java.util.Optional;
 
 /**
  * Bundles the write and read halves of a skill's persisted state into one
- * object. Replaces the older pattern of implementing {@code NBTStorage} on the
- * live skill (write) and registering a separate {@link SkillStateParser}
- * (read): the two halves agreed on NBT keys only by convention, so a typo in
- * one silently broke persistence with no compiler check.
+ * object. Both directions share one set of NBT key/type literals — a typo
+ * in one cannot drift from the other.
  *
  * <p>With a codec, both directions share one set of key/type literals. The
  * codec is registered once per skill via
@@ -45,7 +43,7 @@ import java.util.Optional;
  *       hands the resulting state to {@link Skill#applyState(SkillState)} so
  *       the live skill can rebuild its mutable fields.</li>
  *   <li><b>Query a stored pet</b> — {@code StoredPet#skillState} consults the
- *       codec instead of a {@link SkillStateParser}.</li>
+ *       codec to materialize the typed state from the persisted compound.</li>
  * </ul>
  *
  * <p>{@link #read(CompoundBinaryTag)} should return {@link Optional#empty()}

@@ -24,7 +24,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.NBTStorage;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 import java.util.Collection;
@@ -157,11 +156,9 @@ public record PersistedPet(
     public PersistedPet withSkills(Collection<Skill> skills) {
         CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder().put(skillInfo);
         for (Skill skill : skills) {
-            if (skill instanceof NBTStorage storageSkill) {
-                CompoundBinaryTag s = storageSkill.save();
-                if (s != null) {
-                    builder.put(skill.getName(), s);
-                }
+            CompoundBinaryTag s = MyPetApi.getSkillManager().saveSkillState(skill);
+            if (s != null) {
+                builder.put(skill.getName(), s);
             }
         }
         return withSkillInfo(builder.build());

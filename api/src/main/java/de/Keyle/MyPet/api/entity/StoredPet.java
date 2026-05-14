@@ -113,8 +113,8 @@ public sealed interface StoredPet permits PersistedPet, Pet {
      *
      * <p>Dispatches over the sealed permits:
      * <ul>
-     *   <li>{@link PersistedPet}: looks up the {@code SkillStateParser}
-     *       registered for {@code skillClass} and parses the per-skill
+     *   <li>{@link PersistedPet}: looks up the {@code SkillStateCodec}
+     *       registered for {@code skillClass} and reads the per-skill
      *       compound from {@code skillInfo}.</li>
      *   <li>{@link Pet} (live): asks the live {@link Skill} instance for
      *       its current state via {@link Skill#getState()}.</li>
@@ -122,11 +122,11 @@ public sealed interface StoredPet permits PersistedPet, Pet {
      *
      * <p>Returns {@link Optional#empty()} if the skill isn't registered
      * with the pet, the skill has no state to expose, or (persisted only)
-     * no parser is registered for {@code skillClass}.
+     * no codec is registered for {@code skillClass}.
      *
      * @param skillClass the skill api type, e.g. {@code Backpack.class}
      * @param stateClass the skill's nested {@code State} class — must
-     *                   match what the skill's parser / {@code getState}
+     *                   match what the skill's codec / {@code getState}
      *                   produces, otherwise returns empty
      */
     default <S extends Skill, T extends SkillState> Optional<T> skillState(

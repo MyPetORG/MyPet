@@ -118,11 +118,10 @@ public interface Skill {
      * <p>Implementations should construct a fresh, immutable record each
      * call from their current fields. Used by {@code StoredPet#skillState}
      * on the live-pet branch (the persisted-pet branch consults the
-     * registered {@code SkillStateCodec} or {@code SkillStateParser}
-     * instead). A skill that registers a
-     * {@link de.Keyle.MyPet.api.skill.SkillStateCodec} must also implement
-     * this method — MyPet calls {@code getState()} to obtain the state the
-     * codec serializes to NBT.
+     * registered {@link de.Keyle.MyPet.api.skill.SkillStateCodec} instead).
+     * A skill that registers a codec must also implement this method —
+     * MyPet calls {@code getState()} to obtain the state the codec
+     * serializes to NBT.
      */
     default Optional<? extends SkillState> getState() {
         return Optional.empty();
@@ -135,10 +134,9 @@ public interface Skill {
      * registered for this skill — the codec produces the state from NBT, this
      * method writes it onto the skill instance.
      *
-     * <p>The default is a no-op so the legacy
-     * {@link de.Keyle.MyPet.api.util.NBTStorage} pathway keeps working
-     * unchanged. Codec-using skills should narrow {@code state} to their
-     * registered state type and apply it.
+     * <p>Codec-using skills should narrow {@code state} to their registered
+     * state type and apply it. The default is a no-op so skills that don't
+     * persist mutable runtime state can ignore it entirely.
      */
     default void applyState(SkillState state) {
     }

@@ -24,8 +24,8 @@ package de.Keyle.MyPet.api.skill;
  * Marker interface for the typed, immutable state record exposed by a
  * {@link de.Keyle.MyPet.api.skill.skilltree.Skill}. Each stateful skill defines
  * its own nested {@code record State(...) implements SkillState} and
- * registers a {@link SkillStateParser} via
- * {@link SkillManager#registerStateParser} so persisted pets can hand callers
+ * registers a {@link SkillStateCodec} via
+ * {@link SkillManager#registerCodec} so persisted pets can hand callers
  * a typed snapshot without parsing raw NBT.
  *
  * <p>Replaces the pre-4.0.0 {@code StoredPet.getSkillInfo()} escape hatch:
