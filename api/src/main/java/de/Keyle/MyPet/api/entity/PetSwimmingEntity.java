@@ -42,9 +42,8 @@ import de.Keyle.MyPet.api.Configuration;
  * row is auto-registered for every type that implements this marker — adding
  * a new swimming pet only requires implementing one of the sub-markers.
  *
- * <p>Mirrors the {@link PetGlidingEntity} / {@link PetFlyingEntity}
- * split for airborne pets: a swim-base (this) plus a stricter sub-marker
- * for the survival-affecting variant.
+ * <p>Provides a swim-base (this) plus a stricter {@link PetAquaticEntity}
+ * sub-marker for the survival-affecting variant.
  */
 public interface PetSwimmingEntity extends Pet {
 

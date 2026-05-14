@@ -32,7 +32,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT_SEEDS})
-public class PetChicken extends PetImpl implements PetBaby, PetGlidingEntity, PetNaturalDrop {
+public class PetChicken extends PetImpl implements PetBaby, PetNaturalDrop {
 
     public PetChicken(MyPetPlayer petOwner) {
         super(petOwner);

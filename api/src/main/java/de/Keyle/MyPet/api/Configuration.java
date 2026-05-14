@@ -197,8 +197,7 @@ public class Configuration {
         // Dynamic per-type maps populated by ConfigurationLoader after pet types
         // register, all keyed by PetType.name(). Adding a new pet only requires
         // implementing the appropriate marker:
-        //   PetFlyingEntity     → CanFly + CanGlide rows + CAN_FLY/CAN_GLIDE entries
-        //   PetGlidingEntity    → CanGlide row + CAN_GLIDE entry
+        //   PetFlyingEntity     → CanFly row + CAN_FLY entry
         //   PetSwimmingEntity   → CanSwim row + CAN_SWIM entry (covers both
         //                            PetAquaticEntity + PetAmphibiousEntity)
         //   PetAquaticEntity    → adds PreventSuffocation row + PREVENT_SUFFOCATION entry
@@ -207,7 +206,6 @@ public class Configuration {
         //   PetBaby             → GrowUpItem row + GROW_UP_ITEMS entry (default
         //                            comes from @DefaultInfo#growUpItem())
         private static final Map<String, Boolean> CAN_FLY = new HashMap<>();
-        private static final Map<String, Boolean> CAN_GLIDE = new HashMap<>();
         private static final Map<String, Boolean> CAN_SWIM = new HashMap<>();
         private static final Map<String, Boolean> ALLOW_ZOMBIFICATION = new HashMap<>();
         private static final Map<String, Boolean> PREVENT_DAYLIGHT_BURN = new HashMap<>();
@@ -220,14 +218,6 @@ public class Configuration {
 
         public static void setCanFly(String typeName, boolean value) {
             CAN_FLY.put(typeName, value);
-        }
-
-        public static boolean canGlide(PetType type) {
-            return CAN_GLIDE.getOrDefault(type.name(), true);
-        }
-
-        public static void setCanGlide(String typeName, boolean value) {
-            CAN_GLIDE.put(typeName, value);
         }
 
         public static boolean canSwim(PetType type) {

@@ -33,30 +33,26 @@ import java.io.File;
 import java.util.logging.Logger;
 
 /**
- * Splits the pre-4.x single {@code CanGlide} key on flying pets into the new
- * {@code CanFly} (free upward thrust) and {@code CanGlide} (slow-fall) pair.
+ * Renames the pre-4.x {@code CanGlide} key on flying pets to {@code CanFly}.
  *
  * <p>Old configs used one boolean per flying pet — labelled {@code CanGlide}
- * — to mean "can fly". v4 separates the two capabilities because a rider on a
- * flight-disabled pet still needs the pet to slow-fall, otherwise both pet
- * and rider plummet. For each pet that now implements {@link PetFlyingEntity},
- * this migration:
+ * — to mean "can fly". v4 renamed that key to {@code CanFly} for clarity. For
+ * each pet that now implements {@link PetFlyingEntity}, this migration:
  *
  * <ol>
  *   <li>Reads the legacy {@code CanGlide} value (if present) from
  *       {@code pet-config.yml}</li>
  *   <li>Writes it as {@code CanFly} (preserving the admin's "no flight" intent)</li>
- *   <li>Deletes the legacy {@code CanGlide} entry so the next
- *       {@code ConfigurationLoader.setDefault()} writes the new {@code CanGlide:
- *       true} default for that pet</li>
- *   <li>Updates the in-memory {@link Configuration.MyPet} maps so the current
- *       boot reflects the migrated state without requiring a restart</li>
+ *   <li>Deletes the legacy {@code CanGlide} entry</li>
+ *   <li>Updates the in-memory {@link Configuration.MyPet} CAN_FLY map so the
+ *       current boot reflects the migrated state without requiring a restart</li>
  * </ol>
  *
  * <p>Idempotent: once the legacy key is gone for a flying pet, this migration
- * is a no-op for that pet on subsequent runs. Chicken's {@code CanGlide} is
- * intentionally untouched — that key was always a glide-only toggle and keeps
- * its meaning under the new model.
+ * is a no-op for that pet on subsequent runs. Non-flying pets that previously
+ * had a {@code CanGlide} row (e.g., Chicken) keep that orphan key in their
+ * YAML — Bukkit ignores unknown keys, and removing it would be a pure
+ * deletion that doesn't warrant a migration.
  */
 @Migration(
         version = "4.0.0",
@@ -92,11 +88,10 @@ public class MigrateFlyingPetsCanGlideToCanFly implements ConfigMigration {
             config.set(newKey, legacyValue);
             config.set(legacyKey, null);
 
-            // Sync the runtime maps so the change takes effect without a restart.
-            // setDefault/loadConfiguration already populated these from the pre-migration
-            // file state; overwrite with the authoritative migrated values.
+            // Sync the runtime map so the change takes effect without a restart.
+            // setDefault/loadConfiguration already populated this from the pre-migration
+            // file state; overwrite with the authoritative migrated value.
             Configuration.MyPet.setCanFly(type.name(), legacyValue);
-            Configuration.MyPet.setCanGlide(type.name(), true);
 
             changed = true;
             converted++;
