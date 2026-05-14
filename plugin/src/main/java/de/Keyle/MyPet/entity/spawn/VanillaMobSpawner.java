@@ -267,6 +267,13 @@ public final class VanillaMobSpawner {
         mob.setRemoveWhenFarAway(false);
         mob.setAI(true);
         mob.setCanPickupItems(false);
+        // Clear residual fire ticks on every spawn. Pets that die while
+        // burning otherwise come back with the burn timer intact (vanilla
+        // NBT round-trips the Fire tag through PetEntitySnapshot), and a
+        // low-max-HP pet can re-die before the timer decays — death loop.
+        // The cost of clearing unconditionally is purely cosmetic: a pet
+        // that was burning when its chunk unloaded reappears not burning.
+        mob.setFireTicks(0);
         PetEntityMarker.mark(mob);
 
         AttributeInstance health = mob.getAttribute(PetAttributes.MAX_HEALTH);

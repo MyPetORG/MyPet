@@ -165,6 +165,13 @@ public final class PetEntitySnapshot {
         }
         mob.setPersistent(false);
         mob.setRemoveWhenFarAway(false);
+        // Fire ticks are intentionally NOT carried across restore even though
+        // the captured NBT contains the vanilla Fire tag. A pet that died
+        // while burning would otherwise come back still burning, and a
+        // low-max-HP pet can re-die before the timer decays (death loop).
+        // VanillaMobSpawner.configureMob also clears this — kept here as
+        // defense-in-depth for any future caller that uses restore directly.
+        mob.setFireTicks(0);
         return mob;
     }
 
