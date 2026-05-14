@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.entity.leashing;
 
+import de.Keyle.MyPet.api.util.AnnotationLookup;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -75,26 +76,7 @@ public class LeashFlagManager implements ServiceContainer {
      * annotation is found before reaching {@code Object}.
      */
     public String getLeashFlagName(Class<?> clazz) {
-        if (clazz == Object.class) {
-            return null;
-        }
-        if (LeashFlag.class.isAssignableFrom(clazz)) {
-            LeashFlagName flagName = clazz.getAnnotation(LeashFlagName.class);
-            if (flagName != null) {
-                return flagName.value();
-            }
-        }
-        String flagName = getLeashFlagName(clazz.getSuperclass());
-        if (flagName != null) {
-            return flagName;
-        }
-        for (Class<?> c : clazz.getInterfaces()) {
-            flagName = getLeashFlagName(c);
-            if (flagName != null) {
-                return flagName;
-            }
-        }
-        return null;
+        return AnnotationLookup.findName(clazz, LeashFlagName.class, LeashFlag.class, LeashFlagName::value);
     }
 
     /** Removes a flag by its config name (case-sensitive). */

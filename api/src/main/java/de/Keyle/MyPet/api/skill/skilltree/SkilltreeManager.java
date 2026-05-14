@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.Requirement;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.RequirementName;
+import de.Keyle.MyPet.api.util.AnnotationLookup;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -165,26 +166,7 @@ public class SkilltreeManager implements ServiceContainer {
      * @return the annotated requirement name, or {@code null} if not found
      */
     public String getRequirementName(Class<?> clazz) {
-        if (clazz == Object.class) {
-            return null;
-        }
-        if (Requirement.class.isAssignableFrom(clazz)) {
-            RequirementName requirementName = clazz.getAnnotation(RequirementName.class);
-            if (requirementName != null) {
-                return requirementName.value();
-            }
-        }
-        String requirementName = getRequirementName(clazz.getSuperclass());
-        if (requirementName != null) {
-            return requirementName;
-        }
-        for (Class<?> c : clazz.getInterfaces()) {
-            requirementName = getRequirementName(c);
-            if (requirementName != null) {
-                return requirementName;
-            }
-        }
-        return null;
+        return AnnotationLookup.findName(clazz, RequirementName.class, Requirement.class, RequirementName::value);
     }
 
     /** Unregisters a requirement by name. */

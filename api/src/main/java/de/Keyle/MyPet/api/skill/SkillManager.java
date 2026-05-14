@@ -23,6 +23,7 @@ package de.Keyle.MyPet.api.skill;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.util.AnnotationLookup;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.service.Load;
@@ -147,26 +148,7 @@ public class SkillManager implements ServiceContainer {
      * @return the skill name, or {@code null} if not annotated
      */
     public String getSkillName(Class<?> clazz) {
-        if (clazz == Object.class) {
-            return null;
-        }
-        if (Skill.class.isAssignableFrom(clazz)) {
-            SkillName sn = clazz.getAnnotation(SkillName.class);
-            if (sn != null) {
-                return sn.value();
-            }
-        }
-        String skillName = getSkillName(clazz.getSuperclass());
-        if (skillName != null) {
-            return skillName;
-        }
-        for (Class<?> c : clazz.getInterfaces()) {
-            skillName = getSkillName(c);
-            if (skillName != null) {
-                return skillName;
-            }
-        }
-        return null;
+        return AnnotationLookup.findName(clazz, SkillName.class, Skill.class, SkillName::value);
     }
 
     /**
