@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.api.entity.Pet;
-import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -52,7 +51,7 @@ import org.jspecify.annotations.NonNull;
 public class PetStatusEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     @Getter
-    private final StoredPet pet;
+    private final Pet pet;
     @Getter
     private final Pet.PetState state;
 
