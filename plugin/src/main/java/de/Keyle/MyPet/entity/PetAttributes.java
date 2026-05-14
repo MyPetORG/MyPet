@@ -44,6 +44,7 @@ public final class PetAttributes {
 
     public static final Attribute MAX_HEALTH = resolve("max_health", "generic.max_health");
     public static final Attribute MOVEMENT_SPEED = resolve("movement_speed", "generic.movement_speed");
+    public static final Attribute KNOCKBACK_RESISTANCE = resolve("knockback_resistance", "generic.knockback_resistance");
 
     private PetAttributes() {
     }

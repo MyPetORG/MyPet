@@ -23,11 +23,15 @@ package de.Keyle.MyPet.entity.ai.attack;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Mob;
+import org.bukkit.util.Vector;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
@@ -281,6 +285,7 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
             builder = builder.withCausingEntity(owner);
         }
 
+        double healthBefore = target.getHealth();
         try {
             target.damage(damage, builder.build());
         } catch (IllegalStateException ignored) {
@@ -290,5 +295,27 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
             target.damage(damage, mob);
         }
         mob.swingMainHand();
+
+        // Toss-up for IronGolem pets. Vanilla applies this inside
+        // IronGolem#doHurtTarget, but we bypass that by calling
+        // target.damage(...) directly — the defender's hurt path doesn't carry
+        // attacker-specific knockback. Health-drop check approximates vanilla's
+        // "only on a successful hit" guard (skips canceled events and i-frames).
+        if (mob instanceof IronGolem && Configuration.MyPet.IronGolem.CAN_TOSS_UP
+                && target.getHealth() < healthBefore) {
+            applyIronGolemTossUp(target);
+        }
+    }
+
+    private static void applyIronGolemTossUp(LivingEntity target) {
+        double knockbackResistance = 0.0;
+        AttributeInstance attribute = target.getAttribute(PetAttributes.KNOCKBACK_RESISTANCE);
+        if (attribute != null) {
+            knockbackResistance = attribute.getValue();
+        }
+        double scale = Math.max(0.0, 1.0 - knockbackResistance);
+        if (scale <= 0.0) return;
+        Vector velocity = target.getVelocity();
+        target.setVelocity(velocity.setY(velocity.getY() + 0.4 * scale));
     }
 }
