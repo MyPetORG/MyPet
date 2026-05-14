@@ -24,12 +24,13 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetLightningConvertible;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.CARROT})
-public class PetPig extends PetImpl implements PetBaby {
+public class PetPig extends PetImpl implements PetBaby, PetLightningConvertible {
 
     public PetPig(MyPetPlayer petOwner) {
         super(petOwner);

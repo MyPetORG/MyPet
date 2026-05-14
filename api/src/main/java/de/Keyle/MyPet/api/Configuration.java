@@ -202,12 +202,14 @@ public class Configuration {
         //                            PetAquaticEntity + PetAmphibiousEntity)
         //   PetAquaticEntity    → adds PreventSuffocation row + PREVENT_SUFFOCATION entry
         //   PetZombifiable      → AllowZombification row + ALLOW_ZOMBIFICATION entry
+        //   PetLightningConvertible → AllowLightningConversion row + ALLOW_LIGHTNING_CONVERSION entry
         //   PetSunSensitive     → PreventDaylightBurn row + PREVENT_DAYLIGHT_BURN entry
         //   PetBaby             → GrowUpItem row + GROW_UP_ITEMS entry (default
         //                            comes from @DefaultInfo#growUpItem())
         private static final Map<String, Boolean> CAN_FLY = new HashMap<>();
         private static final Map<String, Boolean> CAN_SWIM = new HashMap<>();
         private static final Map<String, Boolean> ALLOW_ZOMBIFICATION = new HashMap<>();
+        private static final Map<String, Boolean> ALLOW_LIGHTNING_CONVERSION = new HashMap<>();
         private static final Map<String, Boolean> PREVENT_DAYLIGHT_BURN = new HashMap<>();
         private static final Map<String, Boolean> PREVENT_SUFFOCATION = new HashMap<>();
         private static final Map<String, ConfigItem> GROW_UP_ITEMS = new HashMap<>();
@@ -234,6 +236,14 @@ public class Configuration {
 
         public static void setAllowZombification(String typeName, boolean value) {
             ALLOW_ZOMBIFICATION.put(typeName, value);
+        }
+
+        public static boolean allowLightningConversion(PetType type) {
+            return ALLOW_LIGHTNING_CONVERSION.getOrDefault(type.name(), false);
+        }
+
+        public static void setAllowLightningConversion(String typeName, boolean value) {
+            ALLOW_LIGHTNING_CONVERSION.put(typeName, value);
         }
 
         public static boolean preventDaylightBurn(PetType type) {
@@ -316,6 +326,17 @@ public class Configuration {
              * {@code EntityExplodeEvent} cancellation.
              */
             public static boolean ALLOW_EXPLOSION_ENTITY_DAMAGE = false;
+
+            /**
+             * If {@code true}, a lightning bolt that strikes a Creeper pet may
+             * permanently charge it (vanilla's "powered creeper" state), with
+             * the charge persisting across despawn/respawn via the standard
+             * variant snapshot. If {@code false}, {@code PetLightningStrikeListener}
+             * cancels the {@code CreeperPowerEvent} for marked pets, so the
+             * lightning still deals damage but the pet stays uncharged.
+             * Default {@code false}.
+             */
+            public static boolean ALLOW_LIGHTNING_POWER = false;
         }
 
         public static class EnderDragon {
@@ -388,6 +409,17 @@ public class Configuration {
         public static class Mooshroom {
 
             public static boolean CAN_GIVE_SOUP;
+
+            /**
+             * If {@code true}, a lightning bolt striking a Mooshroom pet flips
+             * its variant (RED ↔ BROWN). The new variant is applied directly
+             * to the existing entity via Bukkit's {@code setVariant} API rather
+             * than letting vanilla's discard-and-respawn path run, so the pet's
+             * identity is preserved and the standard snapshot captures the new
+             * variant on the next despawn. If {@code false}, the variant flip
+             * is suppressed entirely. Default {@code false}.
+             */
+            public static boolean ALLOW_LIGHTNING_VARIANT_FLIP = false;
         }
 
         public static class Panda {

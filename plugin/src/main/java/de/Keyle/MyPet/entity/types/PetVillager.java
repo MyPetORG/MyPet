@@ -28,13 +28,14 @@ import org.bukkit.inventory.ItemStack;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetLightningConvertible;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.APPLE})
-public class PetVillager extends PetImpl implements PetBaby, PetEquipment {
+public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLightningConvertible {
 
     public PetVillager(MyPetPlayer petOwner) {
         super(petOwner);

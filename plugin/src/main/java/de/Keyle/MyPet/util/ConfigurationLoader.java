@@ -246,12 +246,12 @@ public class ConfigurationLoader {
 
 
         // Dynamic per-type CanFly / CanSwim / AllowZombification /
-        // PreventDaylightBurn / PreventSuffocation rows. Adding a new flying,
-        // swimming, zombifiable, sun-sensitive, or water-breathing pet
-        // requires no edit here — implement the appropriate marker interface
-        // and the YAML row appears. Migration of pre-4.x configs (single
-        // CanGlide key on flying pets) is handled by
-        // MigrateFlyingPetsCanGlideToCanFly.
+        // AllowLightningConversion / PreventDaylightBurn / PreventSuffocation
+        // rows. Adding a new flying, swimming, zombifiable, lightning-
+        // convertible, sun-sensitive, or water-breathing pet requires no
+        // edit here — implement the appropriate marker interface and the
+        // YAML row appears. Migration of pre-4.x configs (single CanGlide key
+        // on flying pets) is handled by MigrateFlyingPetsCanGlideToCanFly.
         for (PetType type : PetType.values()) {
             String base = "MyPet.Pets." + type.name();
             if (PetFlyingEntity.class.isAssignableFrom(type.getPetClass())) {
@@ -262,6 +262,9 @@ public class ConfigurationLoader {
             }
             if (PetZombifiable.class.isAssignableFrom(type.getPetClass())) {
                 config.addDefault(base + ".AllowZombification", false);
+            }
+            if (PetLightningConvertible.class.isAssignableFrom(type.getPetClass())) {
+                config.addDefault(base + ".AllowLightningConversion", false);
             }
             if (PetSunSensitive.class.isAssignableFrom(type.getPetClass())) {
                 config.addDefault(base + ".PreventDaylightBurn", true);
@@ -280,6 +283,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.Creeper.AllowNonOwnerFlintAndSteel", MyPet.Creeper.ALLOW_NON_OWNER_FLINT_AND_STEEL);
         config.addDefault("MyPet.Pets.Creeper.AllowExplosionBlockDamage", MyPet.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE);
         config.addDefault("MyPet.Pets.Creeper.AllowExplosionEntityDamage", MyPet.Creeper.ALLOW_EXPLOSION_ENTITY_DAMAGE);
+        config.addDefault("MyPet.Pets.Creeper.AllowLightningPower", MyPet.Creeper.ALLOW_LIGHTNING_POWER);
         config.addDefault("MyPet.Pets.EnderDragon.GrantEndAdvancementOnKill", MyPet.EnderDragon.GRANT_END_ADVANCEMENT_ON_KILL);
         config.addDefault("MyPet.Pets.EnderDragon.AllowBlockDamage", MyPet.EnderDragon.ALLOW_BLOCK_DAMAGE);
         config.addDefault("MyPet.Pets.EnderDragon.AllowPlayerContactDamage", MyPet.EnderDragon.ALLOW_PLAYER_CONTACT_DAMAGE);
@@ -290,6 +294,7 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.Pets.SnowGolem.DisableSnowTrack", MyPet.SnowGolem.DISABLE_SNOW_TRACK);
         config.addDefault("MyPet.Pets.MagmaCube.CanHurtPlayersOnContact", MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT);
         config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
+        config.addDefault("MyPet.Pets.Mooshroom.AllowLightningVariantFlip", MyPet.Mooshroom.ALLOW_LIGHTNING_VARIANT_FLIP);
         config.addDefault("MyPet.Pets.Panda.CanDropSlimeball", MyPet.Panda.CAN_DROP_SLIMEBALL);
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
         config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
@@ -479,6 +484,7 @@ public class ConfigurationLoader {
         MyPet.Creeper.ALLOW_NON_OWNER_FLINT_AND_STEEL = config.getBoolean("MyPet.Pets.Creeper.AllowNonOwnerFlintAndSteel", false);
         MyPet.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE = config.getBoolean("MyPet.Pets.Creeper.AllowExplosionBlockDamage", false);
         MyPet.Creeper.ALLOW_EXPLOSION_ENTITY_DAMAGE = config.getBoolean("MyPet.Pets.Creeper.AllowExplosionEntityDamage", false);
+        MyPet.Creeper.ALLOW_LIGHTNING_POWER = config.getBoolean("MyPet.Pets.Creeper.AllowLightningPower", false);
         MyPet.EnderDragon.GRANT_END_ADVANCEMENT_ON_KILL = config.getBoolean("MyPet.Pets.EnderDragon.GrantEndAdvancementOnKill", false);
         MyPet.EnderDragon.ALLOW_BLOCK_DAMAGE = config.getBoolean("MyPet.Pets.EnderDragon.AllowBlockDamage", false);
         MyPet.EnderDragon.ALLOW_PLAYER_CONTACT_DAMAGE = config.getBoolean("MyPet.Pets.EnderDragon.AllowPlayerContactDamage", false);
@@ -491,13 +497,15 @@ public class ConfigurationLoader {
         MyPet.SnowGolem.DISABLE_SNOW_TRACK = config.getBoolean("MyPet.Pets.SnowGolem.DisableSnowTrack", true);
         MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT = config.getBoolean("MyPet.Pets.MagmaCube.CanHurtPlayersOnContact", false);
         MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
+        MyPet.Mooshroom.ALLOW_LIGHTNING_VARIANT_FLIP = config.getBoolean("MyPet.Pets.Mooshroom.AllowLightningVariantFlip", false);
         MyPet.Panda.CAN_DROP_SLIMEBALL = config.getBoolean("MyPet.Pets.Panda.CanDropSlimeball", true);
         MyPet.Slime.CAN_HURT_PLAYERS_ON_CONTACT = config.getBoolean("MyPet.Pets.Slime.CanHurtPlayersOnContact", false);
         MyPet.Sniffer.CAN_DIG_SEEDS = config.getBoolean("MyPet.Pets.Sniffer.CanDigSeeds", true);
 
         // Dynamic per-type CanFly / CanSwim / AllowZombification /
-        // PreventDaylightBurn / PreventSuffocation load. Reads the
-        // MyPet.Pets.<Type>.{CanFly,CanSwim,AllowZombification,PreventDaylightBurn,PreventSuffocation}
+        // AllowLightningConversion / PreventDaylightBurn / PreventSuffocation
+        // load. Reads the
+        // MyPet.Pets.<Type>.{CanFly,CanSwim,AllowZombification,AllowLightningConversion,PreventDaylightBurn,PreventSuffocation}
         // keys populated by setDefault().
         for (PetType type : PetType.values()) {
             String base = "MyPet.Pets." + type.name();
@@ -509,6 +517,9 @@ public class ConfigurationLoader {
             }
             if (PetZombifiable.class.isAssignableFrom(type.getPetClass())) {
                 MyPet.setAllowZombification(type.name(), config.getBoolean(base + ".AllowZombification", false));
+            }
+            if (PetLightningConvertible.class.isAssignableFrom(type.getPetClass())) {
+                MyPet.setAllowLightningConversion(type.name(), config.getBoolean(base + ".AllowLightningConversion", false));
             }
             if (PetSunSensitive.class.isAssignableFrom(type.getPetClass())) {
                 MyPet.setPreventDaylightBurn(type.name(), config.getBoolean(base + ".PreventDaylightBurn", true));
