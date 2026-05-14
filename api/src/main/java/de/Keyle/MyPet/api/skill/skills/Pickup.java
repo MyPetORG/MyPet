@@ -23,9 +23,9 @@ package de.Keyle.MyPet.api.skill.skills;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.SkillState;
+import de.Keyle.MyPet.api.skill.SkillStateCodec;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 
 /**
@@ -34,13 +34,13 @@ import de.Keyle.MyPet.api.util.Scheduler;
  * The owner can toggle automatic pickup on or off via {@link ActiveSkill#activate()}.
  *
  * <p>The skill ticks via {@link Scheduler} to scan for nearby collectibles and persists
- * its active/inactive toggle via {@link NBTStorage}.
+ * its active/inactive toggle via a registered {@link SkillStateCodec}.
  *
  * @see ActiveSkill#activate()
  * @see Scheduler
  */
 @SkillName(value = "Pickup", translationNode = "Name.Skill.Pickup")
-public interface Pickup extends Skill, Scheduler, NBTStorage, ActiveSkill {
+public interface Pickup extends Skill, Scheduler, ActiveSkill {
 
     /** Returns the upgrade computer controlling the pickup radius in blocks. */
     UpgradeComputer<Number> getRange();

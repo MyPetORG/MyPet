@@ -23,9 +23,9 @@ package de.Keyle.MyPet.api.skill.skills;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.SkillState;
+import de.Keyle.MyPet.api.skill.SkillStateCodec;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 
 /**
@@ -42,14 +42,14 @@ import de.Keyle.MyPet.api.util.Scheduler;
  *
  * <p>Which modes are available depends on the pet's skilltree level; each mode is
  * individually unlocked via its own {@link UpgradeComputer}{@code <Boolean>}. The
- * selected mode is persisted via {@link NBTStorage} and ticks via {@link Scheduler}
- * to reset mode if needed.
+ * selected mode is persisted via a registered {@link SkillStateCodec} and ticks
+ * via {@link Scheduler} to reset mode if needed.
  *
  * @see BehaviorMode
  * @see ActiveSkill#activate()
  */
 @SkillName(value = "Behavior", translationNode = "Name.Skill.Behavior")
-public interface Behavior extends Skill, Scheduler, ActiveSkill, NBTStorage {
+public interface Behavior extends Skill, Scheduler, ActiveSkill {
 
     /** Returns the pet's currently active behavior mode. */
     BehaviorMode getBehavior();

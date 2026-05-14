@@ -50,7 +50,7 @@ import de.Keyle.MyPet.repository.RepositoryFactory;
 import de.Keyle.MyPet.services.BuiltInServices;
 import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
 import de.Keyle.MyPet.entity.types.BuiltInPetTypes;
-import de.Keyle.MyPet.skill.skills.BuiltInSkillStateParsers;
+import de.Keyle.MyPet.skill.skills.BuiltInSkillStateCodecs;
 import de.Keyle.MyPet.skill.skills.BuiltInSkills;
 import de.Keyle.MyPet.skill.upgrades.BuiltInUpgradeParsers;
 import de.Keyle.MyPet.skill.skilltree.requirements.BuiltInRequirements;
@@ -338,7 +338,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         BuiltInSkills.register();
         BuiltInUpgradeParsers.register(MyPetApi.getSkillManager());
-        BuiltInSkillStateParsers.register(MyPetApi.getSkillManager());
+        BuiltInSkillStateCodecs.register(MyPetApi.getSkillManager());
 
         // create folders
         File skilltreeFolder = new File(getDataFolder().getPath(), "skilltrees");

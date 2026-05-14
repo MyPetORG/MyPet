@@ -23,9 +23,9 @@ package de.Keyle.MyPet.api.skill.skills;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.SkillState;
+import de.Keyle.MyPet.api.skill.SkillStateCodec;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.Scheduler;
 import lombok.Getter;
 import org.bukkit.potion.PotionEffectType;
@@ -41,14 +41,15 @@ import java.util.Map;
  *
  * <p>The number of simultaneously active buffs, effect duration, and range all scale with
  * the pet's skilltree level via {@link UpgradeComputer} values. The skill ticks via
- * {@link Scheduler} to reapply effects and persists selected buffs via {@link NBTStorage}.
+ * {@link Scheduler} to reapply effects and persists selected buffs via a registered
+ * {@link SkillStateCodec}.
  *
  * @see ActiveSkill#activate()
  * @see Buff
  * @see BuffReceiver
  */
 @SkillName(value = "Beacon", translationNode = "Name.Skill.Beacon")
-public interface Beacon extends Skill, Scheduler, NBTStorage, ActiveSkill {
+public interface Beacon extends Skill, Scheduler, ActiveSkill {
 
     /** Returns the upgrade computer controlling the potion-effect duration in ticks. */
     UpgradeComputer<Integer> getDuration();

@@ -26,11 +26,11 @@ import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
 import de.Keyle.MyPet.api.event.PetPickupItemEvent;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Pickup;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -174,14 +174,11 @@ public class PickupImpl implements Pickup {
         }
     }
 
-    public void load(CompoundBinaryTag compound) {
-        pickup = compound.getBoolean("Active");
-    }
-
-    public CompoundBinaryTag save() {
-        return CompoundBinaryTag.builder()
-                .putBoolean("Active", pickup)
-                .build();
+    @Override
+    public void applyState(SkillState state) {
+        if (state instanceof State picked) {
+            pickup = picked.active();
+        }
     }
 
     public UpgradeComputer<Number> getRange() {

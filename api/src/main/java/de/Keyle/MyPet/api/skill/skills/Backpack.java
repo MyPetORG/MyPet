@@ -23,9 +23,9 @@ package de.Keyle.MyPet.api.skill.skills;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.SkillState;
+import de.Keyle.MyPet.api.skill.SkillStateCodec;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 
 /**
@@ -33,15 +33,15 @@ import de.Keyle.MyPet.api.util.inventory.CustomInventory;
  * to store and retrieve items. The number of available inventory rows scales with
  * the pet's skilltree level. Activating the skill opens the backpack GUI for the owner.
  *
- * <p>This skill persists its inventory contents via {@link NBTStorage} and supports
- * an optional "drop on death" mechanic where all stored items are dropped when the
- * pet dies.
+ * <p>This skill persists its inventory contents via a registered {@link SkillStateCodec}
+ * and supports an optional "drop on death" mechanic where all stored items are dropped
+ * when the pet dies.
  *
  * @see ActiveSkill#activate()
  * @see CustomInventory
  */
 @SkillName(value = "Backpack", translationNode = "Name.Skill.Inventory")
-public interface Backpack extends Skill, NBTStorage, ActiveSkill {
+public interface Backpack extends Skill, ActiveSkill {
 
     /** Returns the pet's backpack inventory instance. */
     CustomInventory getInventory();

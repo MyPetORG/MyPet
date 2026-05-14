@@ -26,13 +26,10 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.gui.IconMenu;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
+import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Beacon;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import net.kyori.adventure.nbt.BinaryTagTypes;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
-import net.kyori.adventure.nbt.ListBinaryTag;
-import net.kyori.adventure.nbt.StringBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -636,35 +633,12 @@ public class BeaconImpl implements Beacon {
     }
 
     @Override
-    public CompoundBinaryTag save() {
-        ListBinaryTag.Builder<StringBinaryTag> buffsBuilder = ListBinaryTag.builder(BinaryTagTypes.STRING);
-        for (Buff buff : selectedBuffs) {
-            buffsBuilder.add(StringBinaryTag.stringBinaryTag(buff.getName()));
-        }
-        return CompoundBinaryTag.builder()
-                .put("Buffs", buffsBuilder.build())
-                .putBoolean("Active", this.active)
-                .putString("Receiver", this.receiver.name())
-                .build();
-    }
-
-    @Override
-    public void load(CompoundBinaryTag compound) {
-        if (compound.keySet().contains("Buffs")) {
-            ListBinaryTag buffsList = compound.getList("Buffs");
-            for (int i = 0; i < buffsList.size(); i++) {
-                String buffName = buffsList.getString(i);
-                Buff selectedBuff = Buff.getByName(buffName);
-                if (selectedBuff != null) {
-                    this.selectedBuffs.add(selectedBuff);
-                }
-            }
-        }
-        if (compound.keySet().contains("Active")) {
-            this.active = compound.getBoolean("Active");
-        }
-        if (compound.keySet().contains("Receiver")) {
-            this.receiver = BuffReceiver.valueOf(compound.getString("Receiver"));
+    public void applyState(SkillState state) {
+        if (state instanceof State s) {
+            selectedBuffs.clear();
+            selectedBuffs.addAll(s.buffs());
+            this.active = s.active();
+            this.receiver = s.receiver();
         }
     }
 

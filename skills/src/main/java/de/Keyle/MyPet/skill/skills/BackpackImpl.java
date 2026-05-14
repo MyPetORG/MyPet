@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
@@ -197,26 +198,6 @@ public class BackpackImpl implements Backpack {
     }
 
     /**
-     * Restores the inventory state from the provided NBT tag.
-     *
-     * @param tag the tag to load from
-     */
-    public void load(CompoundBinaryTag tag) {
-        // Ensure the underlying inventory exists with correct capacity before loading items
-        inventory.setSize(rows.getValue().intValue() * 9);
-        inventory.load(tag);
-    }
-
-    /**
-     * Serializes the current inventory state into a new NBT tag.
-     *
-     * @return an NBT tag containing the inventory contents and metadata
-     */
-    public CompoundBinaryTag save() {
-        return inventory.save(CompoundBinaryTag.empty());
-    }
-
-    /**
      * Indicates whether this skill is currently usable (i.e., at least one row
      * is available).
      *
@@ -239,5 +220,20 @@ public class BackpackImpl implements Backpack {
     @Override
     public Optional<State> getState() {
         return Optional.of(new State(inventory));
+    }
+
+    /**
+     * Absorbs a previously saved inventory back into the live skill. The codec
+     * builds an intermediate {@link CustomInventory} sized to fit the saved
+     * items; this method realigns to the live {@code rows*9} capacity and then
+     * re-loads the items, matching the pre-codec {@code load(CompoundBinaryTag)}
+     * semantics exactly.
+     */
+    @Override
+    public void applyState(SkillState state) {
+        if (state instanceof State bp) {
+            inventory.setSize(rows.getValue().intValue() * 9);
+            inventory.load(bp.inventory().save(CompoundBinaryTag.empty()));
+        }
     }
 }

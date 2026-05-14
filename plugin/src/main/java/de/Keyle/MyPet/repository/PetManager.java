@@ -29,9 +29,9 @@ import de.Keyle.MyPet.api.event.PetActivatedEvent;
 import de.Keyle.MyPet.api.event.PetLoadEvent;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.skill.SkillManager;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.PetInfoAccess;
@@ -117,11 +117,10 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
         Collection<Skill> skills = pet.getSkills().all();
         if (!skills.isEmpty()) {
             CompoundBinaryTag skillInfo = PetInfoAccess.readSkillInfo(storedPet);
+            SkillManager mgr = MyPetApi.getSkillManager();
             for (Skill skill : skills) {
-                if (skill instanceof NBTStorage storageSkill) {
-                    if (skillInfo.keySet().contains(skill.getName())) {
-                        storageSkill.load(skillInfo.getCompound(skill.getName()));
-                    }
+                if (skillInfo.keySet().contains(skill.getName())) {
+                    mgr.loadSkillState(skill, skillInfo.getCompound(skill.getName()));
                 }
             }
         }
@@ -218,10 +217,10 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
         Collection<Skill> newSkills = newPet.getSkills().all();
         if (!newSkills.isEmpty()) {
             CompoundBinaryTag skillInfo = PetInfoAccess.readSkillInfo(oldPet);
+            SkillManager mgr = MyPetApi.getSkillManager();
             for (Skill skill : newSkills) {
-                if (skill instanceof NBTStorage storageSkill
-                        && skillInfo.keySet().contains(skill.getName())) {
-                    storageSkill.load(skillInfo.getCompound(skill.getName()));
+                if (skillInfo.keySet().contains(skill.getName())) {
+                    mgr.loadSkillState(skill, skillInfo.getCompound(skill.getName()));
                 }
             }
         }

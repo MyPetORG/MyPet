@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.event.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.PetExperience;
+import de.Keyle.MyPet.api.skill.SkillManager;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -691,15 +692,11 @@ public abstract class PetImpl implements Pet, NBTStorage {
 
     public CompoundBinaryTag getSkillInfo() {
         CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
-        Collection<Skill> skillList = this.getSkills().all();
-        if (!skillList.isEmpty()) {
-            for (Skill skill : skillList) {
-                if (skill instanceof NBTStorage storageSkill) {
-                    CompoundBinaryTag s = storageSkill.save();
-                    if (s != null) {
-                        builder.put(skill.getName(), s);
-                    }
-                }
+        SkillManager mgr = MyPetApi.getSkillManager();
+        for (Skill skill : this.getSkills().all()) {
+            CompoundBinaryTag s = mgr.saveSkillState(skill);
+            if (s != null) {
+                builder.put(skill.getName(), s);
             }
         }
         return builder.build();
@@ -1085,15 +1082,11 @@ public abstract class PetImpl implements Pet, NBTStorage {
         }
 
         CompoundBinaryTag.Builder skillsBuilder = CompoundBinaryTag.builder();
-        Collection<Skill> skillList = this.getSkills().all();
-        if (!skillList.isEmpty()) {
-            for (Skill skill : skillList) {
-                if (skill instanceof NBTStorage storageSkill) {
-                    CompoundBinaryTag s = storageSkill.save();
-                    if (s != null) {
-                        skillsBuilder.put(skill.getName(), s);
-                    }
-                }
+        SkillManager mgr = MyPetApi.getSkillManager();
+        for (Skill skill : this.getSkills().all()) {
+            CompoundBinaryTag s = mgr.saveSkillState(skill);
+            if (s != null) {
+                skillsBuilder.put(skill.getName(), s);
             }
         }
         petNBT.put("Skills", skillsBuilder.build());

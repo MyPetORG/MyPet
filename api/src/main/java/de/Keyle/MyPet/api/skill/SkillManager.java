@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ErrorUtil;
+import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceName;
@@ -61,9 +62,13 @@ public class SkillManager implements ServiceContainer {
     private final Map<String, Class<? extends Skill>> registeredNamesSkills = new HashMap<>();
     private final Map<String, UpgradeParser<?>> upgradeParsers = new HashMap<>();
     private final Map<Class<? extends Skill>, SkillStateBinding<?>> stateParsers = new HashMap<>();
+    private final Map<Class<? extends Skill>, SkillStateCodecBinding<?>> stateCodecs = new HashMap<>();
 
     /** Pairs the registered state class with its parser so {@link #parseState} can do a typed lookup keyed only on the skill class. */
     private record SkillStateBinding<T extends SkillState>(Class<T> stateClass, SkillStateParser<T> parser) {}
+
+    /** Pairs the registered state class with its codec so save/load/parse can dispatch on skill class alone. */
+    private record SkillStateCodecBinding<T extends SkillState>(Class<T> stateClass, SkillStateCodec<T> codec) {}
 
     @Override
     public void onDisable() {
@@ -71,6 +76,7 @@ public class SkillManager implements ServiceContainer {
         registeredNamesSkills.clear();
         upgradeParsers.clear();
         stateParsers.clear();
+        stateCodecs.clear();
     }
 
     /**
@@ -257,20 +263,123 @@ public class SkillManager implements ServiceContainer {
 
     /**
      * Parses {@code compound} into the typed {@link SkillState} for
-     * {@code skillClass}, or returns {@link Optional#empty()} if no parser
+     * {@code skillClass}, or returns {@link Optional#empty()} if no parser/codec
      * is registered, the registered state class doesn't match
      * {@code stateClass}, or the parser declines the compound.
      *
-     * <p>Called from {@code StoredPet#skillState} on the persisted-pet
-     * branch; addons should not call this directly.
+     * <p>A registered {@link SkillStateCodec} wins over a legacy
+     * {@link SkillStateParser} for the same skill class. Called from
+     * {@code StoredPet#skillState} on the persisted-pet branch; addons should
+     * not call this directly.
      */
     @SuppressWarnings("unchecked")
     public <S extends Skill, T extends SkillState> Optional<T> parseState(
             Class<S> skillClass, Class<T> stateClass, CompoundBinaryTag compound) {
+        SkillStateCodecBinding<?> codecBinding = stateCodecs.get(skillClass);
+        if (codecBinding != null && stateClass.equals(codecBinding.stateClass())) {
+            return ((SkillStateCodecBinding<T>) codecBinding).codec().read(compound);
+        }
         SkillStateBinding<?> binding = stateParsers.get(skillClass);
         if (binding == null || !stateClass.equals(binding.stateClass())) {
             return Optional.empty();
         }
         return ((SkillStateBinding<T>) binding).parser().parse(compound);
+    }
+
+    /**
+     * Registers a typed {@link SkillStateCodec} for {@code skillClass}. The
+     * codec owns both directions of the NBT round-trip for the skill's
+     * persisted state and supersedes any legacy
+     * {@link #registerStateParser(Class, Class, SkillStateParser) parser} for
+     * the same skill class at read time.
+     *
+     * <p>Each skill class may register at most one codec; re-registration is
+     * a programming error.
+     *
+     * @throws IllegalArgumentException if a codec is already registered for
+     *         {@code skillClass}
+     */
+    public <S extends Skill, T extends SkillState> void registerCodec(
+            Class<S> skillClass, Class<T> stateClass, SkillStateCodec<T> codec) {
+        if (stateCodecs.containsKey(skillClass)) {
+            throw new IllegalArgumentException("A SkillStateCodec is already registered for " + skillClass.getName());
+        }
+        stateCodecs.put(skillClass, new SkillStateCodecBinding<>(stateClass, codec));
+    }
+
+    /**
+     * Serializes a skill's runtime state into NBT. Prefers a registered
+     * {@link SkillStateCodec} (driven by {@link Skill#getState()}); falls
+     * back to {@link NBTStorage#save()} if the skill implements that legacy
+     * contract. Returns {@code null} if neither path produces a compound.
+     *
+     * <p>Centralized so every save site (active pet info, repository
+     * serialization, pet-type change) goes through the same dispatch.
+     */
+    public CompoundBinaryTag saveSkillState(Skill skill) {
+        CompoundBinaryTag codecResult = saveViaCodec(skill);
+        if (codecResult != null) {
+            return codecResult;
+        }
+        if (skill instanceof NBTStorage storageSkill) {
+            return storageSkill.save();
+        }
+        return null;
+    }
+
+    /**
+     * Restores a skill's runtime state from NBT. Prefers a registered
+     * {@link SkillStateCodec} (read then {@link Skill#applyState(SkillState)});
+     * falls back to {@link NBTStorage#load(CompoundBinaryTag)} if the skill
+     * implements that legacy contract.
+     */
+    public void loadSkillState(Skill skill, CompoundBinaryTag compound) {
+        if (loadViaCodec(skill, compound)) {
+            return;
+        }
+        if (skill instanceof NBTStorage storageSkill) {
+            storageSkill.load(compound);
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private CompoundBinaryTag saveViaCodec(Skill skill) {
+        SkillStateCodecBinding<?> binding = stateCodecs.get(findCodecKey(skill.getClass()));
+        if (binding == null) {
+            return null;
+        }
+        Optional<? extends SkillState> state = skill.getState();
+        if (state.isEmpty() || !binding.stateClass().isInstance(state.get())) {
+            return null;
+        }
+        return ((SkillStateCodec) binding.codec()).write(state.get());
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean loadViaCodec(Skill skill, CompoundBinaryTag compound) {
+        Class<? extends Skill> key = findCodecKey(skill.getClass());
+        SkillStateCodecBinding<?> binding = stateCodecs.get(key);
+        if (binding == null) {
+            return false;
+        }
+        Optional<? extends SkillState> state =
+                ((SkillStateCodecBinding<SkillState>) binding).codec().read(compound);
+        state.ifPresent(skill::applyState);
+        return true;
+    }
+
+    private Class<? extends Skill> findCodecKey(Class<?> clazz) {
+        while (clazz != null && clazz != Object.class) {
+            if (Skill.class.isAssignableFrom(clazz) && stateCodecs.containsKey(clazz)) {
+                return clazz.asSubclass(Skill.class);
+            }
+            for (Class<?> iface : clazz.getInterfaces()) {
+                if (Skill.class.isAssignableFrom(iface) && stateCodecs.containsKey(iface)) {
+                    return iface.asSubclass(Skill.class);
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return null;
     }
 }

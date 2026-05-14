@@ -23,11 +23,11 @@ package de.Keyle.MyPet.skill.skills;
 import com.google.common.collect.Iterables;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import lombok.Getter;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Particle;
@@ -291,42 +291,21 @@ public class BehaviorImpl implements Behavior {
         }
     }
 
-    /**
-     * Serializes the current state of this skill to NBT.
-     * <p>
-     * Currently stores only the name of the selected behavior under the key "selectedBehavior".
-     *
-     * @return a compound tag with this skill's persisted data (never null)
-     */
-    @Override
-    public @NotNull CompoundBinaryTag save() {
-        return CompoundBinaryTag.builder()
-                .putString("selectedBehavior", this.selectedBehavior.name())
-                .build();
-    }
-
-    /**
-     * Deserializes the saved state from NBT and restores the selected behavior.
-     * <p>
-     * Unknown or currently unavailable modes are mapped to Normal to guarantee a valid state.
-     *
-     * @param compound the NBT data for this skill (must not be null)
-     */
-    @Override
-    public void load(@NotNull CompoundBinaryTag compound) {
-        if (compound.keySet().contains("selectedBehavior")) {
-            BehaviorMode mode;
-            try {
-                mode = BehaviorMode.valueOf(compound.getString("selectedBehavior"));
-            } catch (IllegalArgumentException e) {
-                mode = Normal;
-            }
-            setBehavior(mode);
-        }
-    }
-
     @Override
     public Optional<State> getState() {
         return Optional.of(new State(selectedBehavior));
+    }
+
+    /**
+     * Restores the selected behavior from a {@link State} produced by the
+     * registered {@link de.Keyle.MyPet.api.skill.SkillStateCodec}. Goes through
+     * {@link #setBehavior} so unknown or currently unavailable modes fall back
+     * to Normal — same guarantee the old NBT-load pathway provided.
+     */
+    @Override
+    public void applyState(SkillState state) {
+        if (state instanceof State s) {
+            setBehavior(s.mode());
+        }
     }
 }
