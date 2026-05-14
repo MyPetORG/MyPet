@@ -57,6 +57,10 @@ public class LeashFlagManager implements ServiceContainer {
      */
     public void registerLeashFlag(LeashFlag leashFlag) {
         String flagName = getLeashFlagName(leashFlag.getClass());
+        if (flagName == null) {
+            throw new IllegalArgumentException(
+                    leashFlag.getClass().getName() + " is not annotated with @LeashFlagName");
+        }
         leashFlags.put(flagName.toLowerCase(), leashFlag);
     }
 

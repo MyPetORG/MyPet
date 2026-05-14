@@ -99,25 +99,26 @@ public class PluginHookManager {
      * @param hookClass the hook class
      */
     public void registerHook(Class<? extends PluginHook> hookClass) {
-        if (hookClass.isAnnotationPresent(PluginHookName.class)) {
-            PluginHookName hookNameAnnotation = hookClass.getAnnotation(PluginHookName.class);
-
-            String pluginName = hookNameAnnotation.value();
-            if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
-                if (!isPluginAvailable(pluginName, hookNameAnnotation.classPath())) {
-                    return;
-                }
-            } else {
-                if (!isPluginAvailable(pluginName)) {
-                    return;
-                }
+        PluginHookName hookNameAnnotation = hookClass.getAnnotation(PluginHookName.class);
+        if (hookNameAnnotation == null) {
+            throw new IllegalArgumentException(
+                    hookClass.getName() + " is not annotated with @PluginHookName");
+        }
+        String pluginName = hookNameAnnotation.value();
+        if (!hookNameAnnotation.classPath().isEmpty()) {
+            if (!isPluginAvailable(pluginName, hookNameAnnotation.classPath())) {
+                return;
             }
-            try {
+        } else {
+            if (!isPluginAvailable(pluginName)) {
+                return;
+            }
+        }
+        try {
             PluginHook hook = hookClass.getDeclaredConstructor().newInstance();
-                registeredHooks.add(hook);
-            } catch (Throwable e) {
-                ErrorUtil.report("Error occured while enabling " + pluginName + " (" + getPluginVersion(pluginName) + ") hook.", e);
-            }
+            registeredHooks.add(hook);
+        } catch (Throwable e) {
+            ErrorUtil.report("Error occured while enabling " + pluginName + " (" + getPluginVersion(pluginName) + ") hook.", e);
         }
     }
 

@@ -89,24 +89,22 @@ public class SkillManager implements ServiceContainer {
      */
     public void registerSkill(Class<? extends Skill> clazz) {
         if (!Skill.class.isAssignableFrom(clazz)) {
-            MyPetApi.getLogger().warning(clazz.getName() + " doesn't implements Skill!");
-            return;
+            throw new IllegalArgumentException(clazz.getName() + " does not implement Skill");
         }
-        try {
-            String skillName = getSkillName(clazz);
-            if (skillName != null) {
-                if (!registeredNamesSkills.containsKey(skillName) && !registeredSkillsNames.containsKey(clazz)) {
-                    registeredSkillsNames.put(clazz, skillName);
-                    registeredNamesSkills.put(skillName, clazz);
-                } else {
-                    MyPetApi.getLogger().warning("There is already a skill registered with the the name " + skillName);
-                }
-                return;
-            }
-            MyPetApi.getLogger().warning(clazz.getName() + " is not annotated with @SkillName!");
-        } catch (Exception e) {
-            MyPetApi.getLogger().warning(clazz.getName() + " is not a valid skill!");
+        String skillName = getSkillName(clazz);
+        if (skillName == null) {
+            throw new IllegalArgumentException(clazz.getName() + " is not annotated with @SkillName");
         }
+        if (registeredNamesSkills.containsKey(skillName)) {
+            throw new IllegalArgumentException(
+                    "A skill is already registered under the name '" + skillName + "' (was: "
+                            + registeredNamesSkills.get(skillName).getName() + ", attempted: " + clazz.getName() + ")");
+        }
+        if (registeredSkillsNames.containsKey(clazz)) {
+            throw new IllegalArgumentException(clazz.getName() + " is already registered");
+        }
+        registeredSkillsNames.put(clazz, skillName);
+        registeredNamesSkills.put(skillName, clazz);
     }
 
     /** Returns the set of all registered skill implementation classes. */

@@ -142,6 +142,10 @@ public class SkilltreeManager implements ServiceContainer {
      */
     public void registerRequirement(Requirement Requirement) {
         String requirementName = getRequirementName(Requirement.getClass());
+        if (requirementName == null) {
+            throw new IllegalArgumentException(
+                    Requirement.getClass().getName() + " is not annotated with @RequirementName");
+        }
         requirements.put(requirementName.toLowerCase(), Requirement);
     }
 
