@@ -275,6 +275,11 @@ public class Configuration {
             public static boolean CAN_SHED_SCUTE = true;
         }
 
+        public static class Axolotl {
+
+            public static boolean PREVENT_DRY_OUT = true;
+        }
+
         public static class Chicken {
 
             public static boolean CAN_LAY_EGGS = true;

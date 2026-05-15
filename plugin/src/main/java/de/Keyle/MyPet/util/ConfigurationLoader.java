@@ -274,6 +274,7 @@ public class ConfigurationLoader {
             }
         }
         config.addDefault("MyPet.Pets.Armadillo.CanShedScute", MyPet.Armadillo.CAN_SHED_SCUTE);
+        config.addDefault("MyPet.Pets.Axolotl.PreventDryOut", MyPet.Axolotl.PREVENT_DRY_OUT);
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
         if (PetType.byNameOrNull("CopperGolem") != null) {
             config.addDefault("MyPet.Pets.CopperGolem.CanOxidize", true);
@@ -477,6 +478,7 @@ public class ConfigurationLoader {
             }
         }
         MyPet.Armadillo.CAN_SHED_SCUTE = config.getBoolean("MyPet.Pets.Armadillo.CanShedScute", true);
+        MyPet.Axolotl.PREVENT_DRY_OUT = config.getBoolean("MyPet.Pets.Axolotl.PreventDryOut", true);
         MyPet.Chicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         MyPet.CopperGolem.CAN_OXIDIZE = config.getBoolean("MyPet.Pets.CopperGolem.CanOxidize", true);
         MyPet.Cow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
