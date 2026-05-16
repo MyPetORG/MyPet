@@ -27,6 +27,7 @@ import org.bukkit.entity.Camel;
 import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
@@ -35,6 +36,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.CACTUS})
+@CreationOptions({"saddle"})
 public class PetCamel extends PetImpl implements PetBaby, PetEquipment {
 
     public PetCamel(MyPetPlayer petOwner) {

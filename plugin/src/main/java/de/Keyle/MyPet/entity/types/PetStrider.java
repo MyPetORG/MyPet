@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
@@ -30,6 +31,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WARPED_FUNGUS})
+@CreationOptions({"saddle"})
 public class PetStrider extends PetImpl implements PetBaby, PetLavaEntity {
 
     public PetStrider(MyPetPlayer petOwner) {

@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
@@ -33,6 +34,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
+@CreationOptions({"variant:"})
 public class PetCow extends PetImpl implements PetBaby, PetInteractionGate {
 
     public PetCow(MyPetPlayer petOwner) {

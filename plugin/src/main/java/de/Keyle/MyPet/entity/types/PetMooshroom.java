@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -33,6 +34,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
+@CreationOptions({"type:brown", "type:red"})
 public class PetMooshroom extends PetImpl implements PetBaby, PetInteractionGate {
 
     public PetMooshroom(MyPetPlayer petOwner) {

@@ -27,13 +27,14 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
-import de.Keyle.MyPet.commands.CommandOptionCreator;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
@@ -76,7 +77,9 @@ import java.util.*;
  *
  * <p>Requires the {@code MyPet.admin} permission.</p>
  *
- * @see CommandOptionCreator helper used to build per-type option lists
+ * <p>Per-type tab-completion options live on each {@code Pet<Type>} class via the
+ * {@link CreationOptions} annotation; the {@code baby} option is auto-contributed for
+ * any class implementing {@link PetBaby}.</p>
  */
 public class CommandOptionCreate {
 
@@ -96,302 +99,48 @@ public class CommandOptionCreate {
             });
 
     /**
-     * Maps lowercase pet type names (with underscores removed, e.g. {@code "zombievillager"}) to
-     * the list of type-specific option strings available for that pet. Used by {@link #suggestOptions}
-     * to provide context-aware tab-completion. Populated in the static initializer block below.
+     * Options common to all pet types, appended to every suggestion list.
      */
-    private static final Map<String, List<String>> petTypeOptionMap = new HashMap<>();
+    private static final List<String> COMMON_OPTIONS = List.of("skilltree:", "name:");
 
     /**
-     * Options common to all pet types, appended to every suggestion list. Currently includes
-     * {@code skilltree:} and {@code name:}.
+     * Returns the option strings accepted by {@code petType}. Composed from the
+     * {@link CreationOptions} annotation on the {@code Pet<Type>} class (if
+     * present) plus the {@code "baby"} option auto-contributed for every class
+     * that implements {@link PetBaby}. Returns an empty list for types with
+     * neither.
      */
-    private static final List<String> commonTypeOptionList = new ArrayList<>();
-
-    /* Populates petTypeOptionMap and commonTypeOptionList with all known pet types and their options. */
-    static {
-        commonTypeOptionList.add("skilltree:");
-        commonTypeOptionList.add("name:");
-
-        petTypeOptionMap.put("axolotl", new CommandOptionCreator()
-                .add("baby")
-                .add("variant:")
-                .get());
-
-        petTypeOptionMap.put("armadillo", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("bee", new CommandOptionCreator()
-                .add("baby")
-                .add("angry")
-                .add("has-stung")
-                .add("has-nectar")
-                .get());
-
-        petTypeOptionMap.put("blaze", new CommandOptionCreator()
-                .add("fire")
-                .get());
-
-        petTypeOptionMap.put("bogged", new CommandOptionCreator()
-                .get());
-
-        petTypeOptionMap.put("breeze", new CommandOptionCreator()
-                .get());
-
-        petTypeOptionMap.put("chicken", new CommandOptionCreator()
-                .add("baby")
-                .add("1.21.5", "variant:")
-                .get());
-
-        petTypeOptionMap.put("camel", new CommandOptionCreator()
-                .add("baby")
-                .add("saddle")
-                .get());
-
-        petTypeOptionMap.put("cat", new CommandOptionCreator()
-                .add("baby")
-                .add("type:")
-                .add("collar:")
-                .add("tamed")
-                .get());
-
-        petTypeOptionMap.put("cow", new CommandOptionCreator()
-                .add("baby")
-                .add("1.21.5", "variant:")
-                .get());
-
-        petTypeOptionMap.put("creeper", new CommandOptionCreator()
-                .add("powered")
-                .get());
-
-        petTypeOptionMap.put("donkey", new CommandOptionCreator()
-                .add("baby")
-                .add("saddle")
-                .add("chest")
-                .get());
-
-        petTypeOptionMap.put("drowned", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("enderman", new CommandOptionCreator()
-                .add("block:")
-                .add("screaming")
-                .get());
-
-        petTypeOptionMap.put("frog", new CommandOptionCreator()
-                .add("variant:")
-                .get());
-
-        petTypeOptionMap.put("fox", new CommandOptionCreator()
-                .add("baby")
-                .add("type:red")
-                .add("type:white")
-                .get());
-
-        petTypeOptionMap.put("goat", new CommandOptionCreator()
-                .add("baby")
-                .add("screaming")
-                .add("noLeftHorn")
-                .add("noRightHorn")
-                .get());
-
-        petTypeOptionMap.put("glowsquid", new CommandOptionCreator()
-                .get());
-
-        petTypeOptionMap.put("guardian", new CommandOptionCreator()
-                .get());
-
-        petTypeOptionMap.put("hoglin", new CommandOptionCreator()
-                .add("baby")
-                .add("noshake")
-                .get());
-
-        petTypeOptionMap.put("horse", new CommandOptionCreator()
-                .add("baby")
-                .add("saddle")
-                .add("variant:")
-                .get());
-
-        petTypeOptionMap.put("husk", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("llama", new CommandOptionCreator()
-                .add("baby")
-                .add("chest")
-                .add("variant:")
-                //.add("decor:")
-                .get());
-
-        petTypeOptionMap.put("magmacube", new CommandOptionCreator()
-                .add("size:")
-                .get());
-
-        petTypeOptionMap.put("mooshroom", new CommandOptionCreator()
-                .add("baby")
-                .add("type:brown")
-                .add("type:red")
-                .get());
-
-        petTypeOptionMap.put("mule", new CommandOptionCreator()
-                .add("baby")
-                .add("saddle")
-                .add("chest")
-                .get());
-
-        petTypeOptionMap.put("ocelot", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("panda", new CommandOptionCreator()
-                .add("baby")
-                .add("main-gene:lazy")
-                .add("main-gene:worried")
-                .add("main-gene:playful")
-                .add("main-gene:aggressive")
-                .add("main-gene:weak")
-                .add("main-gene:brown")
-                .add("main-gene:normal")
-                .add("hidden-gene:lazy")
-                .add("hidden-gene:worried")
-                .add("hidden-gene:playful")
-                .add("hidden-gene:aggressive")
-                .add("hidden-gene:weak")
-                .add("hidden-gene:brown")
-                .add("hidden-gene:normal")
-                .get());
-
-        petTypeOptionMap.put("parrot", new CommandOptionCreator()
-                .add("variant:")
-                .get());
-
-        petTypeOptionMap.put("phantom", new CommandOptionCreator()
-                .add("size:")
-                .get());
-
-        petTypeOptionMap.put("pig", new CommandOptionCreator()
-                .add("baby")
-                .add("saddle")
-                .add("1.21.5", "variant:")
-                .get());
-
-        petTypeOptionMap.put("piglin", new CommandOptionCreator()
-                .add("baby")
-                .add("noshake")
-                .get());
-
-        petTypeOptionMap.put("piglinbrute", new CommandOptionCreator()
-                .add("noshake")
-                .get());
-
-        petTypeOptionMap.put("polarbear", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("pufferfish", new CommandOptionCreator()
-                .add("puff:none")
-                .add("puff:semi")
-                .add("puff:fully")
-                .get());
-
-        petTypeOptionMap.put("rabbit", new CommandOptionCreator()
-                .add("baby")
-                .add("variant:")
-                .get());
-
-        petTypeOptionMap.put("sheep", new CommandOptionCreator()
-                .add("baby")
-                .add("color:")
-                .add("sheared")
-                .get());
-
-        petTypeOptionMap.put("skeleton", new CommandOptionCreator()
-                .get());
-
-        petTypeOptionMap.put("skeletonhorse", new CommandOptionCreator()
-                .add("baby")
-                .add("saddle")
-                .get());
-
-        petTypeOptionMap.put("slime", new CommandOptionCreator()
-                .add("size:")
-                .get());
-
-        petTypeOptionMap.put("sniffer", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("snowgolem", new CommandOptionCreator()
-                .add("sheared")
-                .get());
-
-        petTypeOptionMap.put("strider", new CommandOptionCreator()
-                .add("saddle")
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("traderllama", new CommandOptionCreator()
-                .add("baby")
-                .add("chest")
-                .add("variant:")
-                //.add("decor:")
-                .get());
-
-        petTypeOptionMap.put("tropicalfish", new CommandOptionCreator()
-                .add("variant:")
-                .get());
-
-        petTypeOptionMap.put("turtle", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("vex", new CommandOptionCreator()
-                .add("glowing")
-                .get());
-
-        petTypeOptionMap.put("villager", new CommandOptionCreator()
-                .add("baby")
-                .add("profession:")
-                .add("type:")
-                .get());
-
-        petTypeOptionMap.put("wither", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("wolf", new CommandOptionCreator()
-                .add("baby")
-                .add("angry")
-                .add("tamed")
-                .add("collar:")
-                .add("variant:")
-                .get());
-
-        petTypeOptionMap.put("zombie", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("zombiehorse", new CommandOptionCreator()
-                .add("baby")
-                .add("saddle")
-                .get());
-
-        petTypeOptionMap.put("zombievillager", new CommandOptionCreator()
-                .add("baby")
-                .add("profession:")
-                .add("type:")
-                .get());
-
-        petTypeOptionMap.put("zombifiedpiglin", new CommandOptionCreator()
-                .add("baby")
-                .get());
-
-        petTypeOptionMap.put("zoglin", new CommandOptionCreator()
-                .add("baby")
-                .get());
+    private static List<String> optionsFor(PetType petType) {
+        Class<? extends Pet> cls = petType.getPetClass();
+        List<String> opts = new ArrayList<>();
+        if (PetBaby.class.isAssignableFrom(cls)) {
+            opts.add("baby");
+        }
+        CreationOptions annot = cls.getAnnotation(CreationOptions.class);
+        if (annot != null) {
+            Collections.addAll(opts, annot.value());
+        }
+        return opts;
     }
+
+    /**
+     * Matches a single raw command-input token (e.g. {@code "minecraft:snow_golem"},
+     * {@code "snow_golem"}, {@code "SnowGolem"}) to a registered {@link PetType},
+     * or {@code null} if no match.
+     */
+    private static PetType matchPetType(String token) {
+        String stripped = token.startsWith("minecraft:")
+                ? token.substring("minecraft:".length())
+                : token;
+        String key = stripped.toLowerCase().replace("_", "");
+        for (PetType type : PetType.values()) {
+            if (type.name().toLowerCase().equals(key)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Builds the Brigadier command tree for the {@code create} subcommand.
@@ -479,32 +228,30 @@ public class CommandOptionCreate {
     /**
      * Populates Brigadier tab-completion suggestions for the trailing {@code options} argument.
      *
-     * <p>The method inspects the full command input to determine the pet type being created, then
-     * combines the common options ({@code skilltree:}, {@code name:}) with the type-specific options
-     * from {@link #petTypeOptionMap}. Options already present in the input are excluded from suggestions.
-     * Only the last whitespace-delimited word is used for prefix matching.</p>
+     * <p>Combines the common options ({@code skilltree:}, {@code name:}) with the type-specific
+     * options for the pet type found in the command input. Per-type options come from
+     * {@link #optionsFor} (which consults the {@link CreationOptions} annotation on the
+     * {@code Pet<Type>} class plus the {@link PetBaby} marker). Options already present in
+     * the input are excluded; only the last whitespace-delimited word is prefix-matched.</p>
      *
      * @param input   the full raw command input string from the Brigadier context
      * @param builder the suggestions builder to populate with matching completions
      */
     private void suggestOptions(String input, com.mojang.brigadier.suggestion.SuggestionsBuilder builder) {
-        // Extract the pet type from the full command input to provide type-specific suggestions
         String[] parts = input.split(" ");
 
-        // Find pet type in the command parts — match minecraft:zombie or zombie format
-        String petTypeLower = null;
+        PetType matchedType = null;
         for (String part : parts) {
-            String stripped = part.startsWith("minecraft:") ? part.substring("minecraft:".length()) : part;
-            String key = stripped.toLowerCase().replace("_", "");
-            if (petTypeOptionMap.containsKey(key)) {
-                petTypeLower = key;
+            PetType candidate = matchPetType(part);
+            if (candidate != null) {
+                matchedType = candidate;
                 break;
             }
         }
 
-        List<String> options = new ArrayList<>(commonTypeOptionList);
-        if (petTypeLower != null && petTypeOptionMap.containsKey(petTypeLower)) {
-            options.addAll(petTypeOptionMap.get(petTypeLower));
+        List<String> options = new ArrayList<>(COMMON_OPTIONS);
+        if (matchedType != null) {
+            options.addAll(optionsFor(matchedType));
         }
 
         // Collect already-entered options so we don't suggest them again

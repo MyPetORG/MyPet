@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.PetNaturalDrop;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
@@ -33,6 +34,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.BAMBOO})
+@CreationOptions({"main-gene:lazy", "main-gene:worried", "main-gene:playful", "main-gene:aggressive", "main-gene:weak", "main-gene:brown", "main-gene:normal", "hidden-gene:lazy", "hidden-gene:worried", "hidden-gene:playful", "hidden-gene:aggressive", "hidden-gene:weak", "hidden-gene:brown", "hidden-gene:normal"})
 public class PetPanda extends PetImpl implements PetBaby, PetNaturalDrop {
 
     public PetPanda(MyPetPlayer petOwner) {

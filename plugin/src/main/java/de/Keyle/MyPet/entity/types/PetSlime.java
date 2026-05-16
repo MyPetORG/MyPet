@@ -22,12 +22,14 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo(options = {"size:2"})
 @DefaultInfo(food = {Material.SUGAR})
+@CreationOptions({"size:"})
 public class PetSlime extends PetImpl {
 
     public PetSlime(MyPetPlayer petOwner) {

@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
@@ -31,6 +32,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.GOLD_NUGGET})
+@CreationOptions({"noshake"})
 public class PetPiglin extends PetImpl implements PetEquipment, PetBaby, PetZombifiable {
 
     public PetPiglin(MyPetPlayer petOwner) {

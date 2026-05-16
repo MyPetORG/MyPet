@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -30,6 +31,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.GUNPOWDER})
+@CreationOptions({"fire"})
 public class PetBlaze extends PetImpl implements PetFlyingEntity, PetLavaEntity {
 
     public PetBlaze(MyPetPlayer petOwner) {

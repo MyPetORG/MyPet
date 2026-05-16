@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
@@ -31,6 +32,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.APPLE})
+@CreationOptions({"glowing"})
 public class PetVex extends PetImpl implements PetEquipment, PetFlyingEntity {
 
     public PetVex(MyPetPlayer petOwner) {

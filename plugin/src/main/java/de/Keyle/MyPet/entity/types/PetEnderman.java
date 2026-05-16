@@ -25,12 +25,14 @@ import de.Keyle.MyPet.entity.PetImpl;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Enderman;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 
 @Getter
 @ShopInfo
 @DefaultInfo(food = {Material.SOUL_SAND})
+@CreationOptions({"block:", "screaming"})
 public class PetEnderman extends PetImpl {
 
     /**

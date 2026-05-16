@@ -29,12 +29,14 @@ import org.bukkit.entity.ZombieHorse;
 import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
 
 @ShopInfo(displayName = "Zombie Horse")
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
+@CreationOptions({"saddle"})
 public class PetZombieHorse extends PetImpl implements PetBaby, PetEquipment {
 
     public PetZombieHorse(MyPetPlayer petOwner) {

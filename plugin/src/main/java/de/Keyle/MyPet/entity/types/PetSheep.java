@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
@@ -33,6 +34,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
+@CreationOptions({"color:", "sheared"})
 public class PetSheep extends PetImpl implements PetBaby, PetInteractionGate {
 
     public PetSheep(MyPetPlayer petOwner) {

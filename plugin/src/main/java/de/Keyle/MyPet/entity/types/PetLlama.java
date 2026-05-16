@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.entity.Llama;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.LlamaInventory;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -32,6 +33,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT}, leashFlags = {"Tamed"})
+@CreationOptions({"chest", "variant:"})
 public class PetLlama extends PetImpl implements PetBaby {
 
     public PetLlama(MyPetPlayer petOwner) {

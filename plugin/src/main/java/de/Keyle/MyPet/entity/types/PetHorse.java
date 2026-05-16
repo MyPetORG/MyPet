@@ -27,6 +27,7 @@ import org.bukkit.entity.Horse;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
@@ -35,6 +36,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SUGAR, Material.WHEAT, Material.APPLE}, leashFlags = {"Tamed"}, growUpItem = Material.BREAD)
+@CreationOptions({"saddle", "variant:"})
 public class PetHorse extends PetImpl implements PetBaby, PetEquipment {
 
     public PetHorse(MyPetPlayer petOwner) {

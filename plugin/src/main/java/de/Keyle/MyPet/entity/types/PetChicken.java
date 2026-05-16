@@ -32,6 +32,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT_SEEDS})
+@CreationOptions({"variant:"})
 public class PetChicken extends PetImpl implements PetBaby, PetNaturalDrop {
 
     public PetChicken(MyPetPlayer petOwner) {

@@ -28,6 +28,7 @@ import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -35,6 +36,7 @@ import java.util.Set;
 
 @ShopInfo(displayName = "Skeleton Horse")
 @DefaultInfo(food = {Material.BONE})
+@CreationOptions({"saddle"})
 public class PetSkeletonHorse extends PetImpl implements PetBaby, PetEquipment {
 
     public PetSkeletonHorse(MyPetPlayer petOwner) {

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -44,6 +45,7 @@ import org.bukkit.Material;
         Material.LILY_OF_THE_VALLEY,
         Material.WITHER_ROSE,
 })
+@CreationOptions({"angry", "has-stung", "has-nectar"})
 public class PetBee extends PetImpl implements PetBaby, PetFlyingEntity {
 
     public PetBee(MyPetPlayer petOwner) {

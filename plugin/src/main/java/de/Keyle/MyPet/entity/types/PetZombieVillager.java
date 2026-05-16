@@ -29,6 +29,7 @@ import org.bukkit.Material;
 
 @ShopInfo(displayName = "Zombie Villager")
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
+@CreationOptions({"profession:", "type:"})
 public class PetZombieVillager extends PetImpl implements PetEquipment, PetBaby, PetSunSensitive {
 
     public PetZombieVillager(MyPetPlayer petOwner) {

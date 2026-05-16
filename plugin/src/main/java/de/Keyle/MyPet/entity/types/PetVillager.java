@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
@@ -35,6 +36,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.APPLE})
+@CreationOptions({"profession:", "type:"})
 public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLightningConvertible {
 
     public PetVillager(MyPetPlayer petOwner) {

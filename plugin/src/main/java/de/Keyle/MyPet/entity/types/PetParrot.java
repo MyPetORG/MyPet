@@ -23,12 +23,14 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.COOKIE, Material.SWEET_BERRIES}, leashFlags = {"Tamed"})
+@CreationOptions({"variant:"})
 public class PetParrot extends PetImpl implements PetFlyingEntity {
 
     public PetParrot(MyPetPlayer petOwner) {

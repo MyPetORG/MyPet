@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
@@ -34,6 +35,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
+@CreationOptions({"screaming", "noLeftHorn", "noRightHorn"})
 public class PetGoat extends PetImpl implements PetBaby, PetNaturalDrop, PetInteractionGate {
 
     public PetGoat(MyPetPlayer petOwner) {

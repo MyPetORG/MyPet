@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -29,6 +30,7 @@ import org.bukkit.Material;
 
 @ShopInfo(options = {"tamed"})
 @DefaultInfo(food = {Material.COD}, leashFlags = {"Tamed"})
+@CreationOptions({"type:", "collar:", "tamed"})
 public class PetCat extends PetImpl implements PetBaby {
 
     public PetCat(MyPetPlayer petOwner) {

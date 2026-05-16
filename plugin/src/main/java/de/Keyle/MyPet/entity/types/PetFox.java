@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
@@ -33,6 +34,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SWEET_BERRIES})
+@CreationOptions({"type:red", "type:white"})
 public class PetFox extends PetImpl implements PetBaby, PetEquipment {
 
     public PetFox(MyPetPlayer petOwner) {
