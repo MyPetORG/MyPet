@@ -28,11 +28,12 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
+import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.services.EggIconService;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +64,13 @@ public class ShopPet {
     protected double exp = 0;
     protected PetType petType = PetType.byName("Wolf");
     protected Skilltree skilltree = null;
-    protected CompoundBinaryTag NBTextendetInfo = CompoundBinaryTag.empty();
+    /**
+     * Option strings parsed from {@code Options:} in pet-shops.yml — applied to
+     * a detached Bukkit mob at {@link #toPersisted(MyPetPlayer) checkout} time,
+     * not at config load (worlds may not yet be loaded). See Cluster L in
+     * {@code docs/pet-type-issue-tracker.md} for the design.
+     */
+    protected String[] options = new String[0];
 
     public ShopPet(String name) {
         this.name = name;
@@ -121,6 +128,14 @@ public class ShopPet {
      * Mints a {@link PersistedPet} for the given buyer using this template's
      * seed data. Health is left to the record's compact constructor (which
      * seeds it from the pet type's start HP via the builder).
+     *
+     * <p>Per-type options are applied here, not at YAML load: each purchase
+     * obtains a detached Bukkit mob via {@code World#createEntity} in the
+     * buyer's world, runs {@link CommandOptionCreate#applyOptions} against it,
+     * captures vanilla NBT via {@link PetEntitySnapshot#capture}, and stores
+     * the captured compound on {@code PersistedPet.info}. The detached mob
+     * never enters the world (no {@code CreatureSpawnEvent}, no spawn packet,
+     * no Folia region scheduling) and is GC'd after capture.
      */
     public PersistedPet toPersisted(MyPetPlayer buyer) {
         return PersistedPet.builder(buyer)
@@ -129,8 +144,28 @@ public class ShopPet {
                 .worldGroup(worldGroup)
                 .exp(exp)
                 .skilltree(skilltree)
-                .info(NBTextendetInfo)
+                .info(materializeInfo(buyer))
                 .build();
+    }
+
+    /**
+     * Builds the vanilla-NBT envelope for {@link PersistedPet#info()} via
+     * {@link PetEntitySnapshot#captureForOptions} in the buyer's world. Returns
+     * an empty compound on any failure (offline buyer, unknown Bukkit class,
+     * etc.) — the pet is still purchasable, just without per-type options.
+     */
+    private CompoundBinaryTag materializeInfo(MyPetPlayer buyer) {
+        Player player = buyer.getPlayer();
+        if (player == null) {
+            if (options.length > 0) {
+                MyPetApi.getLogger().warning("ShopPet: buyer " + buyer.getName()
+                        + " is offline at checkout — " + petType.name()
+                        + " purchased without per-type options.");
+            }
+            return CompoundBinaryTag.empty();
+        }
+        return PetEntitySnapshot.captureForOptions(petType, options,
+                player.getWorld(), player.getLocation());
     }
 
     public void load(ConfigurationSection config) {
@@ -151,12 +186,9 @@ public class ShopPet {
         for (String line : config.getStringList("Description")) {
             icon.addLoreLine(Util.SANITIZED_MINIMESSAGE.deserialize(line));
         }
-        List<String> options = config.getStringList("Options");
-        if (options != null && !options.isEmpty()) {
-            CompoundBinaryTag.Builder builder = CompoundBinaryTag.builder();
-            String[] optionsArray = options.toArray(new String[0]);
-            CommandOptionCreate.createInfo(petType, optionsArray, builder);
-            this.NBTextendetInfo = builder.build();
+        List<String> rawOptions = config.getStringList("Options");
+        if (rawOptions != null && !rawOptions.isEmpty()) {
+            this.options = rawOptions.toArray(new String[0]);
         }
     }
 

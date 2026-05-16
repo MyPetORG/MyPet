@@ -20,10 +20,14 @@
 
 package de.Keyle.MyPet.entity.visual;
 
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.PetType;
+import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
 import de.Keyle.MyPet.util.NbtUtil;
 import io.papermc.paper.entity.EntitySerializationFlag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
@@ -173,6 +177,68 @@ public final class PetEntitySnapshot {
         // defense-in-depth for any future caller that uses restore directly.
         mob.setFireTicks(0);
         return mob;
+    }
+
+    /**
+     * Builds a vanilla-NBT snapshot for a pet about to be created, by applying
+     * MyPet creation-option strings (e.g. {@code "baby"}, {@code "variant:2"},
+     * {@code "type:brown"}) to a detached Bukkit mob obtained via Paper's
+     * {@code World#createEntity}. The entity is <b>never</b> added to the
+     * world's entity list — no {@code CreatureSpawnEvent} fires, no spawn
+     * packet is sent, no plugin can cancel it, no Folia region scheduling is
+     * required.
+     *
+     * <p>Called by petshop checkout ({@code ShopPet.toPersisted}) and admin pet
+     * creation ({@code CommandOptionCreate.executeCreate}). Both previously
+     * produced legacy flat-key NBT compounds that the spawn pipeline silently
+     * dropped — see Cluster L in {@code docs/pet-type-issue-tracker.md} for
+     * the structural history.
+     *
+     * <p>On any failure (empty options, unknown Bukkit class, {@code createEntity}
+     * throwing, {@code applyOptions}/{@code capture} throwing) the method logs a
+     * warning and returns an empty compound, so the caller can still build a
+     * usable {@code PersistedPet} without per-type state.
+     *
+     * @param petType the {@link PetType} being created
+     * @param options the creation-option strings (e.g., as parsed from
+     *                pet-shops.yml or as the trailing args of {@code /petadmin create})
+     * @param world   any loaded world — used only as the {@code createEntity}
+     *                context, not as the spawn location
+     * @param loc     location passed to {@code createEntity}; never spawned at
+     * @return vanilla NBT compound for {@code PersistedPet.info()}, or an empty
+     *         compound on failure
+     */
+    public static CompoundBinaryTag captureForOptions(PetType petType, String[] options,
+                                                       World world, Location loc) {
+        if (options == null || options.length == 0) {
+            return CompoundBinaryTag.empty();
+        }
+        if (world == null || loc == null) {
+            return CompoundBinaryTag.empty();
+        }
+        Class<? extends Mob> mobClass = petType.getBukkitEntityClass();
+        if (mobClass == null) {
+            return CompoundBinaryTag.empty();
+        }
+        Entity detached;
+        try {
+            detached = world.createEntity(loc, mobClass);
+        } catch (Throwable t) {
+            MyPetApi.getLogger().warning("PetEntitySnapshot.captureForOptions: createEntity failed for "
+                    + petType.name() + ": " + t.getMessage());
+            return CompoundBinaryTag.empty();
+        }
+        if (!(detached instanceof Mob mob)) {
+            return CompoundBinaryTag.empty();
+        }
+        try {
+            CommandOptionCreate.applyOptions(petType, options, mob);
+            return capture(mob);
+        } catch (Throwable t) {
+            MyPetApi.getLogger().warning("PetEntitySnapshot.captureForOptions: applyOptions/capture failed for "
+                    + petType.name() + ": " + t.getMessage());
+            return CompoundBinaryTag.empty();
+        }
     }
 
 }

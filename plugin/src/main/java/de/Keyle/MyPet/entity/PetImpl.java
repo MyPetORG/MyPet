@@ -431,6 +431,15 @@ public abstract class PetImpl implements Pet, NBTStorage {
 
     public void setInfo(CompoundBinaryTag info) {
         this.pendingSnapshot = (info != null && !info.keySet().isEmpty()) ? info : null;
+        // Sync the domain-side baby flag from the vanilla Age field if present.
+        // Vanilla uses negative Age for babies (typically -24000 — the 20-minute
+        // growth timer Ageable#setBaby writes; legacy data may carry -1).
+        // Without this sync, PetVisualSyncer's setAdult call would clobber the
+        // restored baby state, since pet.isBaby() defaults to false and only
+        // ever gets toggled by the live grow-up interaction (PetImpl.tick:356).
+        if (this instanceof PetBaby baby && pendingSnapshot != null && pendingSnapshot.keySet().contains("Age")) {
+            baby.setBaby(pendingSnapshot.getInt("Age") < 0);
+        }
     }
 
     @Override

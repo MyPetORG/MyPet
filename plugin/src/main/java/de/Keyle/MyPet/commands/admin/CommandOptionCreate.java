@@ -37,6 +37,7 @@ import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
+import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -50,15 +51,59 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
+import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Axolotl;
+import org.bukkit.entity.Bee;
+import org.bukkit.entity.Blaze;
+import org.bukkit.entity.Camel;
+import org.bukkit.entity.Cat;
+import org.bukkit.entity.ChestedHorse;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Enderman;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fox;
+import org.bukkit.entity.Frog;
+import org.bukkit.entity.Goat;
+import org.bukkit.entity.Hoglin;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Llama;
+import org.bukkit.entity.Mob;
+import org.bukkit.entity.MushroomCow;
+import org.bukkit.entity.Panda;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Phantom;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.PiglinAbstract;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.PufferFish;
+import org.bukkit.entity.Rabbit;
+import org.bukkit.entity.Salmon;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Snowman;
+import org.bukkit.entity.Strider;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.TropicalFish;
+import org.bukkit.entity.Vex;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.ZombieVillager;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -328,9 +373,18 @@ public class CommandOptionCreate {
                     newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);
                 }
 
+                // Apply per-type creation options (baby, variant:, type:, etc.)
+                // via the same detached-mob bridge the petshop uses. Without
+                // this, executeCreate silently drops every option except
+                // skilltree: and name: (which updateData handles below) — the
+                // mirror of the petshop bug fixed in Cluster L.
+                CompoundBinaryTag optionsInfo = PetEntitySnapshot.captureForOptions(
+                        petType, options, owner.getWorld(), owner.getLocation());
+
                 PersistedPet base = PersistedPet.builder(newOwner)
                         .petType(petType)
                         .petName(PetDefaultNameResolver.resolve(petType, newOwner))
+                        .info(optionsInfo)
                         .build();
                 final WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
                 final PersistedPet inactivePet = updateData(base, options).withWorldGroup(wg.getName());
@@ -401,224 +455,311 @@ public class CommandOptionCreate {
     }
 
     /**
-     * Parses the option strings and writes type-specific NBT data into the provided builder.
+     * Applies the option strings to a freshly-constructed Bukkit {@link Mob} by
+     * calling per-type Bukkit setters directly. The caller is responsible for
+     * supplying a mob of the type that matches {@code petType} (typically
+     * obtained via {@code World#createEntity}, so the entity is detached from
+     * the world's entity list — see Cluster L in
+     * {@code docs/pet-type-issue-tracker.md}).
      *
-     * <p>Handles boolean flags (e.g. {@code baby}, {@code saddle}, {@code powered}), numeric
-     * values (e.g. {@code size:}, {@code variant:}, {@code color:}), string identifiers
-     * (e.g. {@code block:}, wolf/cow/chicken/pig string variants), and composite keys
-     * (e.g. {@code puff:semi}, {@code main-gene:lazy}, {@code type:red}).</p>
+     * <p>Options that don't match {@code mob}'s actual Bukkit type are silently
+     * skipped (an admin's {@code variant:} on a type that has no variant just
+     * does nothing). Per-option exceptions are logged and swallowed so a bad
+     * single option doesn't prevent the rest from applying.
      *
-     * <p>Pet-type-specific validation is applied where appropriate (e.g. clamping horse variant
-     * to 0-1030, rabbit variant to 0-5 or 99, llama variant to 0-3).</p>
-     *
-     * @param petType the {@link PetType} being created, used for type-specific variant handling
-     * @param args    the option strings to parse
-     * @param builder the NBT compound builder to populate with parsed data
+     * @param petType the {@link PetType} being created — used to disambiguate
+     *                option semantics where the same option string maps to
+     *                different setters per type (e.g. {@code variant:} for
+     *                Horse vs. Llama vs. TropicalFish)
+     * @param args    the option strings to apply
+     * @param mob     the target Bukkit mob — typically detached from any world
      */
-    public static void createInfo(PetType petType, String[] args, CompoundBinaryTag.Builder builder) {
+    public static void applyOptions(PetType petType, String[] args, Mob mob) {
         for (String arg : args) {
-            if (arg.equalsIgnoreCase("baby")) {
-                builder.putBoolean("Baby", true);
-            } else if (arg.equalsIgnoreCase("fire")) {
-                builder.putBoolean("Fire", true);
-            } else if (arg.equalsIgnoreCase("noshake")) {
-                builder.putBoolean("ShakeImmune", true);
-            } else if (arg.equalsIgnoreCase("powered")) {
-                builder.putBoolean("Powered", true);
-            } else if (arg.equalsIgnoreCase("screaming")) {
-                builder.putBoolean("Screaming", true);
-            } else if (arg.equalsIgnoreCase("noLeftHorn")) {
-                builder.putBoolean("LeftHorn", false);
-            } else if (arg.equalsIgnoreCase("noRightHorn")) {
-                builder.putBoolean("RightHorn", false);
-            } else if (arg.equalsIgnoreCase("saddle")) {
-                builder.putBoolean("Saddle", true);
-            } else if (arg.equalsIgnoreCase("sheared")) {
-                builder.putBoolean("Sheared", true);
-            } else if (arg.equalsIgnoreCase("tamed")) {
-                builder.putBoolean("Tamed", true);
-            } else if (arg.equalsIgnoreCase("angry")) {
-                builder.putBoolean("Angry", true);
-            } else if (arg.equalsIgnoreCase("villager")) {
-                builder.putBoolean("Villager", true);
-            } else if (arg.equalsIgnoreCase("chest")) {
-                builder.putBoolean("Chest", true);
-            } else if (arg.equalsIgnoreCase("glowing")) {
-                builder.putBoolean("Glowing", true);
-            } else if (arg.equalsIgnoreCase("has-stung")) {
-                builder.putBoolean("HasStung", true);
-            } else if (arg.equalsIgnoreCase("has-nectar")) {
-                builder.putBoolean("HasNectar", true);
-            } else if (arg.startsWith("size:")) {
-                String size = arg.replace("size:", "");
-                if (Util.isInt(size)) {
-                    builder.putInt("Size", Integer.parseInt(size));
-                }
-            } else if (arg.startsWith("variant:")) {
-                String variantString = arg.replace("variant:", "");
-                if (Util.isInt(variantString)) {
-                    int variant = Integer.parseInt(variantString);
-                    if (petType.equals(PetType.byName("Horse"))) {
-                        variant = Math.min(Math.max(0, variant), 1030);
-                        builder.putInt("Variant", variant);
-                    } else if (petType.equals(PetType.byName("Rabbit"))) {
-                        if (variant != 99 && (variant > 5 || variant < 0)) {
-                            variant = 0;
-                        }
-                        builder.putByte("Variant", (byte) variant);
-                    } else if (petType.equals(PetType.byName("Llama")) || petType.equals(PetType.byName("TraderLlama"))) {
-                        if (variant > 3 || variant < 0) {
-                            variant = 0;
-                        }
-                        builder.putInt("Variant", variant);
-                    } else if (petType.equals(PetType.byName("Parrot"))) {
-                        builder.putInt("Variant", variant);
-                    } else if (petType.equals(PetType.byName("Axolotl"))) {
-                        builder.putInt("Variant", variant);
-                    } else if (petType.equals(PetType.byName("Frog"))) {
-                        builder.putInt("FrogType", variant);
-                    } else if (petType.equals(PetType.byName("TropicalFish"))) {
-                        builder.putInt("Variant", variant);
-                    }
-                } else if (petType.equals(PetType.byName("Wolf"))) {
-                    // Wolf Variants are handled as (lowercase) Strings.
-                    builder.putString("Variant", variantString.toLowerCase());
-                } else if (petType.equals(PetType.byName("Cow")) || petType.equals(PetType.byName("Chicken")) || petType.equals(PetType.byName("Pig"))) {
-                    // Cow/chicken/pig Variants are handled as (lowercase) Strings.
-                    builder.putString("Variant", variantString.toLowerCase());
-                }
-            } else if (arg.startsWith("heartattack") && petType.equals(PetType.byName("Warden"))) {
-                builder.putBoolean("HeartAttack", true);
-            } else if (arg.startsWith("profession:")) {
-                String professionString = arg.replace("profession:", "");
-                if (Util.isInt(professionString)) {
-                    int profession = Integer.parseInt(professionString);
-                    profession = Math.min(Math.max(0, profession), 14);
-                    if (petType.equals(PetType.byName("Villager"))) {
-                        builder.putInt("Profession", profession);
-                        builder.putInt("VillagerLevel", 1);
-                    } else if (petType.equals(PetType.byName("Zombie")) || petType.equals(PetType.byName("ZombieVillager"))) {
-                        builder.putBoolean("Villager", true);
-                        builder.putInt("Profession", profession);
-                        builder.putInt("TradingLevel", 1);
-                    }
-                }
-            } else if (arg.startsWith("color:")) {
-                String colorString = arg.replace("color:", "");
-                if (isByte(colorString)) {
-                    byte color = Byte.parseByte(colorString);
-                    color = color > 15 ? 15 : color < 0 ? 0 : color;
-                    builder.putByte("Color", color);
-                }
-            } else if (arg.startsWith("collar:")) {
-                String colorString = arg.replace("collar:", "");
-                if (isByte(colorString)) {
-                    byte color = Byte.parseByte(colorString);
-                    color = color > 15 ? 15 : color < 0 ? 0 : color;
-                    builder.putByte("CollarColor", color);
-                }
-            } else if (arg.startsWith("block:")) {
-                String block = arg.replace("block:", "");
-                if (Material.matchMaterial(block) != null) {
-                    builder.putString("BlockName", block.toLowerCase());
-                }
-            } else if (arg.startsWith("puff:")) {
-                switch (arg) {
-                    case "puff:none":
-                        builder.putInt("PuffState", 0);
-                        break;
-                    case "puff:semi":
-                        builder.putInt("PuffState", 1);
-                        break;
-                    case "puff:fully":
-                        builder.putInt("PuffState", 2);
-                        break;
-                }
-            } else if (arg.startsWith("main-gene:") || arg.startsWith("hidden-gene:")) {
-                String gene;
-                String key;
-                if (arg.startsWith("main-gene:")) {
-                    key = "MainGene";
-                    gene = arg.substring(10);
-                } else {
-                    key = "HiddenGene";
-                    gene = arg.substring(12);
-                }
-                switch (gene.toLowerCase()) {
-                    case "normal":
-                        builder.putInt(key, 0);
-                        break;
-                    case "lazy":
-                        builder.putInt(key, 1);
-                        break;
-                    case "worried":
-                        builder.putInt(key, 2);
-                        break;
-                    case "playful":
-                        builder.putInt(key, 3);
-                        break;
-                    case "brown":
-                        builder.putInt(key, 4);
-                        break;
-                    case "weak":
-                        builder.putInt(key, 5);
-                        break;
-                    case "aggressive":
-                        builder.putInt(key, 6);
-                        break;
-                }
-            } else if (arg.startsWith("type:")) {
-                switch (petType.name()) {
-                    case "Fox":
-                        switch (arg) {
-                            case "type:white":
-                                builder.putInt("FoxType", 1);
-                                break;
-                            case "type:red":
-                            default:
-                                builder.putInt("FoxType", 0);
-                                break;
-                        }
-                        break;
-                    case "Mooshroom":
-                        switch (arg) {
-                            case "type:brown":
-                                builder.putInt("CowType", 1);
-                                break;
-                            case "type:red":
-                            default:
-                                builder.putInt("CowType", 0);
-                                break;
-                        }
-                        break;
-                    case "Cat":
-                        String catTypeString = arg.replace("type:", "");
-                        if (Util.isInt(catTypeString)) {
-                            int catType = Integer.parseInt(catTypeString);
-                            catType = Util.clamp(catType, 0, 10);
-                            builder.putInt("CatType", catType);
-                        }
-                        break;
-                    case "Villager":
-                    case "ZombieVillager":
-                        String villagerTypeString = arg.replace("type:", "");
-                        if (Util.isInt(villagerTypeString)) {
-                            int villagerType = Integer.parseInt(villagerTypeString);
-                            villagerType = Util.clamp(villagerType, 0, 6);
-                            builder.putInt("VillagerType", villagerType);
-                        }
-                        break;
-                }
+            try {
+                applyOption(petType, arg, mob);
+            } catch (Throwable t) {
+                MyPetApi.getLogger().warning("CommandOptionCreate.applyOptions: option '"
+                        + arg + "' for " + petType.name() + " threw "
+                        + t.getClass().getSimpleName() + ": " + t.getMessage());
             }
         }
     }
 
-    private static boolean isByte(String number) {
+    private static void applyOption(PetType petType, String arg, Mob mob) {
+        // Universal markers
+        if (arg.equalsIgnoreCase("baby")) {
+            if (mob instanceof Ageable a) a.setBaby();
+            return;
+        }
+        if (arg.equalsIgnoreCase("tamed")) {
+            if (mob instanceof Tameable t) t.setTamed(true);
+            return;
+        }
+        // Type-narrowed booleans
+        if (arg.equalsIgnoreCase("fire")) {
+            if (mob instanceof Blaze) mob.setVisualFire(true);
+            return;
+        }
+        if (arg.equalsIgnoreCase("noshake")) {
+            if (mob instanceof Hoglin h) h.setImmuneToZombification(true);
+            else if (mob instanceof PiglinAbstract p) p.setImmuneToZombification(true);
+            return;
+        }
+        if (arg.equalsIgnoreCase("powered")) {
+            if (mob instanceof Creeper c) c.setPowered(true);
+            return;
+        }
+        if (arg.equalsIgnoreCase("screaming")) {
+            if (mob instanceof Goat g) g.setScreaming(true);
+            else if (mob instanceof Enderman e) e.setScreaming(true);
+            return;
+        }
+        if (arg.equalsIgnoreCase("noLeftHorn")) {
+            if (mob instanceof Goat g) g.setLeftHorn(false);
+            return;
+        }
+        if (arg.equalsIgnoreCase("noRightHorn")) {
+            if (mob instanceof Goat g) g.setRightHorn(false);
+            return;
+        }
+        if (arg.equalsIgnoreCase("saddle")) {
+            applySaddle(mob);
+            return;
+        }
+        if (arg.equalsIgnoreCase("sheared")) {
+            if (mob instanceof Sheep s) s.setSheared(true);
+            else if (mob instanceof Snowman s) s.setDerp(true);
+            return;
+        }
+        if (arg.equalsIgnoreCase("angry")) {
+            if (mob instanceof Wolf w) w.setAngry(true);
+            else if (mob instanceof Bee b) b.setAnger(400);
+            return;
+        }
+        if (arg.equalsIgnoreCase("chest")) {
+            if (mob instanceof ChestedHorse h) h.setCarryingChest(true);
+            return;
+        }
+        if (arg.equalsIgnoreCase("glowing")) {
+            if (mob instanceof Vex v) v.setCharging(true);
+            return;
+        }
+        if (arg.equalsIgnoreCase("has-stung")) {
+            if (mob instanceof Bee b) b.setHasStung(true);
+            return;
+        }
+        if (arg.equalsIgnoreCase("has-nectar")) {
+            if (mob instanceof Bee b) b.setHasNectar(true);
+            return;
+        }
+        // Key:value options
+        if (arg.startsWith("size:")) {
+            applySize(arg.substring("size:".length()), mob);
+        } else if (arg.startsWith("variant:")) {
+            applyVariant(petType, arg.substring("variant:".length()), mob);
+        } else if (arg.startsWith("profession:")) {
+            applyProfession(arg.substring("profession:".length()), mob);
+        } else if (arg.startsWith("color:")) {
+            applyColor(arg.substring("color:".length()), mob);
+        } else if (arg.startsWith("collar:")) {
+            applyCollar(arg.substring("collar:".length()), mob);
+        } else if (arg.startsWith("block:")) {
+            applyBlock(arg.substring("block:".length()), mob);
+        } else if (arg.startsWith("puff:")) {
+            applyPuff(arg, mob);
+        } else if (arg.startsWith("main-gene:") || arg.startsWith("hidden-gene:")) {
+            applyPandaGene(arg, mob);
+        } else if (arg.startsWith("type:")) {
+            applyType(arg.substring("type:".length()), mob);
+        }
+    }
+
+    private static void applySaddle(Mob mob) {
+        if (mob instanceof Pig p) p.setSaddle(true);
+        else if (mob instanceof Strider s) s.setSaddle(true);
+        else if (mob instanceof AbstractHorse h) h.getInventory().setSaddle(new ItemStack(Material.SADDLE));
+        else if (mob instanceof Camel c) c.getInventory().setSaddle(new ItemStack(Material.SADDLE));
+    }
+
+    private static void applySize(String s, Mob mob) {
+        if (!Util.isInt(s)) return;
+        int n = Integer.parseInt(s);
+        if (mob instanceof Slime slime) slime.setSize(Math.max(1, Math.min(8, n)));
+        else if (mob instanceof Phantom phantom) phantom.setSize(Math.max(1, Math.min(64, n)));
+    }
+
+    /**
+     * Applies the {@code variant:} option. The value is either an integer (most
+     * variant-capable mobs use ordinal indices) or a registry key string
+     * (Wolf / Cow / Chicken / Pig in 1.21.5+).
+     */
+    private static void applyVariant(PetType petType, String value, Mob mob) {
+        if (Util.isInt(value)) {
+            int n = Integer.parseInt(value);
+            if (mob instanceof Axolotl axolotl) {
+                Axolotl.Variant[] vals = Axolotl.Variant.values();
+                axolotl.setVariant(vals[Math.floorMod(n, vals.length)]);
+            } else if (mob instanceof Frog frog) {
+                Frog.Variant[] vals = Frog.Variant.values();
+                frog.setVariant(vals[Math.floorMod(n, vals.length)]);
+            } else if (mob instanceof Parrot parrot) {
+                Parrot.Variant[] vals = Parrot.Variant.values();
+                parrot.setVariant(vals[Math.floorMod(n, vals.length)]);
+            } else if (mob instanceof Rabbit rabbit) {
+                if (n == 99) {
+                    rabbit.setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
+                } else {
+                    Rabbit.Type[] vals = Rabbit.Type.values();
+                    int idx = (n >= 0 && n < vals.length) ? n : 0;
+                    rabbit.setRabbitType(vals[idx]);
+                }
+            } else if (mob instanceof Horse horse) {
+                int packed = Math.max(0, Math.min(1030, n));
+                Horse.Color[] colors = Horse.Color.values();
+                Horse.Style[] styles = Horse.Style.values();
+                horse.setColor(colors[Math.floorMod(packed & 0xFF, colors.length)]);
+                horse.setStyle(styles[Math.floorMod((packed >> 8) & 0xFF, styles.length)]);
+            } else if (mob instanceof Llama llama) {
+                Llama.Color[] vals = Llama.Color.values();
+                int idx = (n >= 0 && n < vals.length) ? n : 0;
+                llama.setColor(vals[idx]);
+            } else if (mob instanceof TropicalFish fish) {
+                TropicalFish.Pattern[] patterns = TropicalFish.Pattern.values();
+                fish.setPattern(patterns[Math.floorMod((n >> 8) & 0xFF, patterns.length)]);
+            } else if (mob instanceof Salmon salmon) {
+                // Salmon.Variant + setVariant were added in 1.21.2; on older
+                // Paper the reference fails with LinkageError.
+                try {
+                    Salmon.Variant[] vals = Salmon.Variant.values();
+                    salmon.setVariant(vals[Math.floorMod(n, vals.length)]);
+                } catch (LinkageError ignored) {}
+            }
+            return;
+        }
+        // String form — Wolf via legacy Registry; Cow / Chicken / Pig via
+        // 1.21.5+ Paper RegistryAccess. Calling the 1.21.5+ APIs on older
+        // runtimes fails with LinkageError, which we swallow.
+        String name = value.toLowerCase();
+        if (mob instanceof Wolf wolf) {
+            try {
+                Wolf.Variant v = Registry.WOLF_VARIANT.get(NamespacedKey.minecraft(name));
+                if (v != null) wolf.setVariant(v);
+            } catch (Throwable ignored) {}
+        } else if (mob instanceof Cow cow) {
+            try {
+                Cow.Variant v = RegistryAccess.registryAccess()
+                        .getRegistry(RegistryKey.COW_VARIANT)
+                        .get(Key.key("minecraft", name));
+                if (v != null) cow.setVariant(v);
+            } catch (LinkageError ignored) {}
+        } else if (mob instanceof Chicken chicken) {
+            try {
+                Chicken.Variant v = RegistryAccess.registryAccess()
+                        .getRegistry(RegistryKey.CHICKEN_VARIANT)
+                        .get(Key.key("minecraft", name));
+                if (v != null) chicken.setVariant(v);
+            } catch (LinkageError ignored) {}
+        } else if (mob instanceof Pig pig) {
+            try {
+                Pig.Variant v = RegistryAccess.registryAccess()
+                        .getRegistry(RegistryKey.PIG_VARIANT)
+                        .get(Key.key("minecraft", name));
+                if (v != null) pig.setVariant(v);
+            } catch (LinkageError ignored) {}
+        }
+    }
+
+    private static void applyProfession(String s, Mob mob) {
+        if (!Util.isInt(s)) return;
+        int n = Math.max(0, Math.min(14, Integer.parseInt(s)));
+        Villager.Profession[] profs = Villager.Profession.values();
+        Villager.Profession prof = profs[Math.floorMod(n, profs.length)];
+        if (mob instanceof Villager villager) {
+            villager.setProfession(prof);
+            villager.setVillagerLevel(1);
+        } else if (mob instanceof ZombieVillager zv) {
+            zv.setVillagerProfession(prof);
+        }
+    }
+
+    private static void applyColor(String s, Mob mob) {
+        if (!Util.isInt(s)) return;
+        int n = Math.max(0, Math.min(15, Integer.parseInt(s)));
+        DyeColor color = DyeColor.values()[n];
+        if (mob instanceof Sheep sheep) sheep.setColor(color);
+    }
+
+    private static void applyCollar(String s, Mob mob) {
+        if (!Util.isInt(s)) return;
+        int n = Math.max(0, Math.min(15, Integer.parseInt(s)));
+        DyeColor color = DyeColor.values()[n];
+        if (mob instanceof Cat cat) cat.setCollarColor(color);
+        else if (mob instanceof Wolf wolf) wolf.setCollarColor(color);
+    }
+
+    private static void applyBlock(String s, Mob mob) {
+        if (!(mob instanceof Enderman enderman)) return;
+        Material material = Material.matchMaterial(s);
+        if (material == null) return;
         try {
-            Byte.parseByte(number);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
+            enderman.setCarriedBlock(material.createBlockData());
+        } catch (Throwable ignored) {}
+    }
+
+    private static void applyPuff(String arg, Mob mob) {
+        if (!(mob instanceof PufferFish puffer)) return;
+        switch (arg) {
+            case "puff:none" -> puffer.setPuffState(0);
+            case "puff:semi" -> puffer.setPuffState(1);
+            case "puff:fully" -> puffer.setPuffState(2);
+        }
+    }
+
+    private static void applyPandaGene(String arg, Mob mob) {
+        if (!(mob instanceof Panda panda)) return;
+        boolean isMain = arg.startsWith("main-gene:");
+        String geneName = arg.substring(isMain ? "main-gene:".length() : "hidden-gene:".length()).toLowerCase();
+        Panda.Gene gene = switch (geneName) {
+            case "normal" -> Panda.Gene.NORMAL;
+            case "lazy" -> Panda.Gene.LAZY;
+            case "worried" -> Panda.Gene.WORRIED;
+            case "playful" -> Panda.Gene.PLAYFUL;
+            case "brown" -> Panda.Gene.BROWN;
+            case "weak" -> Panda.Gene.WEAK;
+            case "aggressive" -> Panda.Gene.AGGRESSIVE;
+            default -> null;
+        };
+        if (gene == null) return;
+        if (isMain) panda.setMainGene(gene);
+        else panda.setHiddenGene(gene);
+    }
+
+    /**
+     * Applies the {@code type:} option. Semantics vary by pet type:
+     * {@code type:brown|red} for Mooshroom maps to {@link MushroomCow.Variant};
+     * {@code type:red|white} for Fox maps to {@link Fox.Type}; {@code type:N}
+     * (ordinal int) for Cat / Villager / ZombieVillager maps to their respective
+     * type enums.
+     */
+    private static void applyType(String value, Mob mob) {
+        String lower = value.toLowerCase();
+        if (mob instanceof MushroomCow mooshroom) {
+            mooshroom.setVariant(lower.equals("brown") ? MushroomCow.Variant.BROWN : MushroomCow.Variant.RED);
+        } else if (mob instanceof Fox fox) {
+            fox.setFoxType(lower.equals("white") ? Fox.Type.SNOW : Fox.Type.RED);
+        } else if (mob instanceof Cat cat && Util.isInt(value)) {
+            int n = Util.clamp(Integer.parseInt(value), 0, 10);
+            Cat.Type[] vals = Cat.Type.values();
+            cat.setCatType(vals[Math.floorMod(n, vals.length)]);
+        } else if (mob instanceof Villager villager && Util.isInt(value)) {
+            int n = Util.clamp(Integer.parseInt(value), 0, 6);
+            Villager.Type[] vals = Villager.Type.values();
+            villager.setVillagerType(vals[Math.floorMod(n, vals.length)]);
+        } else if (mob instanceof ZombieVillager zv && Util.isInt(value)) {
+            int n = Util.clamp(Integer.parseInt(value), 0, 6);
+            Villager.Type[] vals = Villager.Type.values();
+            zv.setVillagerType(vals[Math.floorMod(n, vals.length)]);
         }
     }
 }
