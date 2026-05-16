@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -29,6 +30,7 @@ import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SEAGRASS})
+@CreationOptions({"variant:"})
 public class PetSalmon extends PetImpl implements PetAquaticEntity {
 
     public PetSalmon(MyPetPlayer petOwner) {

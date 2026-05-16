@@ -53,6 +53,7 @@ import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
+import io.papermc.paper.world.WeatheringCopperState;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
@@ -72,6 +73,7 @@ import org.bukkit.entity.Camel;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Chicken;
+import org.bukkit.entity.CopperGolem;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Enderman;
@@ -553,6 +555,12 @@ public class CommandOptionCreate {
             if (mob instanceof Bee b) b.setHasNectar(true);
             return;
         }
+        if (arg.equalsIgnoreCase("waxed")) {
+            if (mob instanceof CopperGolem golem) {
+                golem.setOxidizing(CopperGolem.Oxidizing.waxed());
+            }
+            return;
+        }
         // Key:value options
         if (arg.startsWith("size:")) {
             applySize(arg.substring("size:".length()), mob);
@@ -566,6 +574,8 @@ public class CommandOptionCreate {
             applyCollar(arg.substring("collar:".length()), mob);
         } else if (arg.startsWith("block:")) {
             applyBlock(arg.substring("block:".length()), mob);
+        } else if (arg.startsWith("oxidation:")) {
+            applyOxidation(arg.substring("oxidation:".length()), mob);
         } else if (arg.startsWith("puff:")) {
             applyPuff(arg, mob);
         } else if (arg.startsWith("main-gene:") || arg.startsWith("hidden-gene:")) {
@@ -704,6 +714,14 @@ public class CommandOptionCreate {
         if (material == null) return;
         try {
             enderman.setCarriedBlock(material.createBlockData());
+        } catch (Throwable ignored) {}
+    }
+
+    private static void applyOxidation(String s, Mob mob) {
+        if (!(mob instanceof CopperGolem golem)) return;
+        try {
+            WeatheringCopperState state = WeatheringCopperState.valueOf(s.toUpperCase());
+            golem.setWeatheringState(state);
         } catch (Throwable ignored) {}
     }
 

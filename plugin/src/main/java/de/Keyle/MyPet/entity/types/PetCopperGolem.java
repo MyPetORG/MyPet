@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
@@ -28,6 +29,7 @@ import org.bukkit.Material;
 
 @ShopInfo(displayName = "Copper Golem")
 @DefaultInfo(food = {Material.COPPER_INGOT}, leashFlags = {"UserCreated"})
+@CreationOptions({"oxidation:unaffected", "oxidation:exposed", "oxidation:weathered", "oxidation:oxidized", "waxed"})
 public class PetCopperGolem extends PetImpl {
 
     public PetCopperGolem(MyPetPlayer petOwner) {
