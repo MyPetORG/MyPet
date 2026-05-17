@@ -20,18 +20,27 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.CreationOptions;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
+import org.bukkit.entity.Salmon;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SEAGRASS})
-@CreationOptions({"variant:"})
 public class PetSalmon extends PetImpl implements PetAquaticEntity {
+
+    // Salmon.Variant + setVariant landed in 1.21.2. On older Paper the
+    // spec factory throws LinkageError and is silently dropped by specs().
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("variant", Salmon.class, Salmon.Variant.class, Salmon::setVariant)
+    );
 
     public PetSalmon(MyPetPlayer petOwner) {
         super(petOwner);

@@ -20,24 +20,35 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
-
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.entity.PetLightningConvertible;
 import de.Keyle.MyPet.api.entity.ShopInfo;
-import java.util.Set;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Material;
+import org.bukkit.entity.Villager;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.APPLE})
-@CreationOptions({"profession:", "type:"})
 public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLightningConvertible {
+
+    // Villager also gets its trade level reset alongside the profession change —
+    // matches the legacy behavior (fresh-profession villagers have no trades).
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofRegistry("profession", Villager.class, RegistryKey.VILLAGER_PROFESSION,
+                    (Villager v, Villager.Profession p) -> { v.setProfession(p); v.setVillagerLevel(1); }),
+            () -> OptionSpec.ofRegistry("type",       Villager.class, RegistryKey.VILLAGER_TYPE,       Villager::setVillagerType)
+    );
 
     public PetVillager(MyPetPlayer petOwner) {
         super(petOwner);

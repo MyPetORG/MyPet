@@ -20,18 +20,28 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.entity.TropicalFish;
+
+import java.util.List;
 
 @ShopInfo(displayName = "Tropical Fish")
 @DefaultInfo(food = {Material.SEAGRASS})
-@CreationOptions({"variant:"})
 public class PetTropicalFish extends PetImpl implements PetAquaticEntity {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("pattern",       TropicalFish.class, TropicalFish.Pattern.class, TropicalFish::setPattern),
+            () -> OptionSpec.ofEnum("body-color",    TropicalFish.class, DyeColor.class,             TropicalFish::setBodyColor),
+            () -> OptionSpec.ofEnum("pattern-color", TropicalFish.class, DyeColor.class,             TropicalFish::setPatternColor)
+    );
 
     public PetTropicalFish(MyPetPlayer petOwner) {
         super(petOwner);

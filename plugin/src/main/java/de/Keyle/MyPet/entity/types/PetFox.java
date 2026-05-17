@@ -20,22 +20,29 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import org.bukkit.Material;
+import org.bukkit.entity.Fox;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import de.Keyle.MyPet.api.entity.CreationOptions;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.ShopInfo;
+
+import java.util.List;
 import java.util.Set;
-import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SWEET_BERRIES})
-@CreationOptions({"type:red", "type:white"})
 public class PetFox extends PetImpl implements PetBaby, PetEquipment {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("type", Fox.class, Fox.Type.class, Fox::setFoxType)
+    );
 
     public PetFox(MyPetPlayer petOwner) {
         super(petOwner);

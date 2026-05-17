@@ -20,24 +20,33 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetSaddleable;
+import de.Keyle.MyPet.api.entity.PetTameable;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
 import org.bukkit.entity.Horse;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
-import de.Keyle.MyPet.api.entity.CreationOptions;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.PetBaby;
-import de.Keyle.MyPet.api.entity.PetEquipment;
-import de.Keyle.MyPet.api.entity.ShopInfo;
+
+import java.util.List;
 import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SUGAR, Material.WHEAT, Material.APPLE}, leashFlags = {"Tamed"}, growUpItem = Material.BREAD)
-@CreationOptions({"saddle", "variant:"})
-public class PetHorse extends PetImpl implements PetBaby, PetEquipment {
+public class PetHorse extends PetImpl implements PetBaby, PetEquipment, PetSaddleable, PetTameable {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("color", Horse.class, Horse.Color.class, Horse::setColor),
+            () -> OptionSpec.ofEnum("style", Horse.class, Horse.Style.class, Horse::setStyle)
+    );
 
     public PetHorse(MyPetPlayer petOwner) {
         super(petOwner);

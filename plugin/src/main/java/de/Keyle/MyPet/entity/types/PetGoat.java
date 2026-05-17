@@ -20,23 +20,31 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
 import de.Keyle.MyPet.api.entity.PetNaturalDrop;
 import de.Keyle.MyPet.api.entity.ShopInfo;
-import java.util.Set;
-
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
+import org.bukkit.entity.Goat;
+
+import java.util.List;
+import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
-@CreationOptions({"screaming", "noLeftHorn", "noRightHorn"})
 public class PetGoat extends PetImpl implements PetBaby, PetNaturalDrop, PetInteractionGate {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofFlag("screaming",   Goat.class, g -> g.setScreaming(true)),
+            () -> OptionSpec.ofFlag("noLeftHorn",  Goat.class, g -> g.setLeftHorn(false)),
+            () -> OptionSpec.ofFlag("noRightHorn", Goat.class, g -> g.setRightHorn(false))
+    );
 
     public PetGoat(MyPetPlayer petOwner) {
         super(petOwner);

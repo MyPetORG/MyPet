@@ -20,19 +20,28 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
+import org.bukkit.entity.Strider;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WARPED_FUNGUS})
-@CreationOptions({"saddle"})
 public class PetStrider extends PetImpl implements PetBaby, PetLavaEntity {
+
+    // Strider uses setSaddle(boolean), not the AbstractHorse inventory path,
+    // so it can't share the PetSaddleable marker (which targets AbstractHorse).
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofFlag("saddle", Strider.class, s -> s.setSaddle(true))
+    );
 
     public PetStrider(MyPetPlayer petOwner) {
         super(petOwner);

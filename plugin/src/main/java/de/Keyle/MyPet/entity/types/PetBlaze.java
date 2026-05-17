@@ -20,19 +20,27 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.CreationOptions;
-import de.Keyle.MyPet.api.entity.PetFlyingEntity;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import net.kyori.adventure.util.TriState;
 import org.bukkit.Material;
+import org.bukkit.entity.Blaze;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.GUNPOWDER})
-@CreationOptions({"fire"})
 public class PetBlaze extends PetImpl implements PetFlyingEntity, PetLavaEntity {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofFlag("fire", Blaze.class, b -> b.setVisualFire(TriState.TRUE))
+    );
 
     public PetBlaze(MyPetPlayer petOwner) {
         super(petOwner);

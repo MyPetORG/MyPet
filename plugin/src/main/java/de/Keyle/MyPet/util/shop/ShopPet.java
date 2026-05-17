@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.services.EggIconService;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -131,7 +132,7 @@ public class ShopPet {
      *
      * <p>Per-type options are applied here, not at YAML load: each purchase
      * obtains a detached Bukkit mob via {@code World#createEntity} in the
-     * buyer's world, runs {@link CommandOptionCreate#applyOptions} against it,
+     * buyer's world, runs {@link PetCreationOptions#applyOptions} against it,
      * captures vanilla NBT via {@link PetEntitySnapshot#capture}, and stores
      * the captured compound on {@code PersistedPet.info}. The detached mob
      * never enters the world (no {@code CreatureSpawnEvent}, no spawn packet,
@@ -164,8 +165,15 @@ public class ShopPet {
             }
             return CompoundBinaryTag.empty();
         }
-        return PetEntitySnapshot.captureForOptions(petType, options,
-                player.getWorld(), player.getLocation());
+        PetEntitySnapshot.Result captured = PetEntitySnapshot.captureForOptions(
+                petType, options, player.getWorld(), player.getLocation());
+        // Log per-option validation errors but proceed — config-driven shops
+        // shouldn't abort a purchase on a stale Options: entry, and the admin
+        // sees the warning in the server log either way.
+        for (String err : captured.errors()) {
+            MyPetApi.getLogger().warning("ShopPet '" + name + "' (" + petType.name() + "): " + err);
+        }
+        return captured.info();
     }
 
     public void load(ConfigurationSection config) {

@@ -20,19 +20,26 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.PetSunSensitive;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
+import de.Keyle.MyPet.api.entity.PetSunSensitive;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
+import org.bukkit.entity.Phantom;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
-@CreationOptions({"size:"})
 public class PetPhantom extends PetImpl implements PetFlyingEntity, PetSunSensitive {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            PetCreationOptions.sizeSpec(Phantom.class, 64, Phantom::setSize)
+    );
 
     public PetPhantom(MyPetPlayer petOwner) {
         super(petOwner);

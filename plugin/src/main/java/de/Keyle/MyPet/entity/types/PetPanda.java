@@ -20,22 +20,29 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetNaturalDrop;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.CreationOptions;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.ShopInfo;
-import java.util.Set;
-
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
+import org.bukkit.entity.Panda;
+
+import java.util.List;
+import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.BAMBOO})
-@CreationOptions({"main-gene:lazy", "main-gene:worried", "main-gene:playful", "main-gene:aggressive", "main-gene:weak", "main-gene:brown", "main-gene:normal", "hidden-gene:lazy", "hidden-gene:worried", "hidden-gene:playful", "hidden-gene:aggressive", "hidden-gene:weak", "hidden-gene:brown", "hidden-gene:normal"})
 public class PetPanda extends PetImpl implements PetBaby, PetNaturalDrop {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("main-gene",   Panda.class, Panda.Gene.class, Panda::setMainGene),
+            () -> OptionSpec.ofEnum("hidden-gene", Panda.class, Panda.Gene.class, Panda::setHiddenGene)
+    );
 
     public PetPanda(MyPetPlayer petOwner) {
         super(petOwner);

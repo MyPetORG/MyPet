@@ -21,21 +21,30 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.CreationOptions;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Material;
+import org.bukkit.entity.Cow;
 
+import java.util.List;
 import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
-@CreationOptions({"variant:"})
 public class PetCow extends PetImpl implements PetBaby, PetInteractionGate {
+
+    // Cow.Variant + RegistryKey.COW_VARIANT landed in 1.21.5. On older
+    // Paper the spec factory throws LinkageError and is silently dropped.
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofRegistry("variant", Cow.class, RegistryKey.COW_VARIANT, Cow::setVariant)
+    );
 
     public PetCow(MyPetPlayer petOwner) {
         super(petOwner);

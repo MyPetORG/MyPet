@@ -20,14 +20,18 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.CreationOptions;
-import de.Keyle.MyPet.api.entity.PetFlyingEntity;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
+import org.bukkit.entity.Bee;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {
@@ -45,8 +49,13 @@ import org.bukkit.Material;
         Material.LILY_OF_THE_VALLEY,
         Material.WITHER_ROSE,
 })
-@CreationOptions({"angry", "has-stung", "has-nectar"})
 public class PetBee extends PetImpl implements PetBaby, PetFlyingEntity {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofFlag("angry",      Bee.class, b -> b.setAnger(400)),
+            () -> OptionSpec.ofFlag("has-stung",  Bee.class, b -> b.setHasStung(true)),
+            () -> OptionSpec.ofFlag("has-nectar", Bee.class, b -> b.setHasNectar(true))
+    );
 
     public PetBee(MyPetPlayer petOwner) {
         super(petOwner);

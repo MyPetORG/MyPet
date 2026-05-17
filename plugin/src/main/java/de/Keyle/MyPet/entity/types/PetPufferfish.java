@@ -20,18 +20,25 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
+import org.bukkit.entity.PufferFish;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SEAGRASS})
-@CreationOptions({"puff:none", "puff:semi", "puff:fully"})
 public class PetPufferfish extends PetImpl implements PetAquaticEntity {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            PetCreationOptions.puffSpec(PufferFish.class)
+    );
 
     public PetPufferfish(MyPetPlayer petOwner) {
         super(petOwner);

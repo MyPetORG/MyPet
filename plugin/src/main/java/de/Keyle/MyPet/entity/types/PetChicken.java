@@ -20,20 +20,31 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.*;
+import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetNaturalDrop;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.entity.PetNaturalDrop;
-
-import java.util.Set;
-
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Material;
+import org.bukkit.entity.Chicken;
+
+import java.util.List;
+import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT_SEEDS})
-@CreationOptions({"variant:"})
 public class PetChicken extends PetImpl implements PetBaby, PetNaturalDrop {
+
+    // Chicken.Variant + RegistryKey.CHICKEN_VARIANT landed in 1.21.5. On
+    // older Paper the spec factory throws LinkageError and is dropped.
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofRegistry("variant", Chicken.class, RegistryKey.CHICKEN_VARIANT, Chicken::setVariant)
+    );
 
     public PetChicken(MyPetPlayer petOwner) {
         super(petOwner);

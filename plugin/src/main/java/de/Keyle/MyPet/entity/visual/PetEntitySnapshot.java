@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.PetType;
-import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.util.NbtUtil;
 import io.papermc.paper.entity.EntitySerializationFlag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -34,6 +34,7 @@ import org.bukkit.entity.Mob;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.List;
 
 /**
  * Captures and restores a pet's full vanilla state via Paper's
@@ -196,8 +197,13 @@ public final class PetEntitySnapshot {
      *
      * <p>On any failure (empty options, unknown Bukkit class, {@code createEntity}
      * throwing, {@code applyOptions}/{@code capture} throwing) the method logs a
-     * warning and returns an empty compound, so the caller can still build a
+     * warning and returns an empty result, so the caller can still build a
      * usable {@code PersistedPet} without per-type state.
+     *
+     * <p>Per-option validation errors (e.g. {@code variant:nonexistent}) are
+     * returned in {@link Result#errors()} for the caller to surface — the
+     * admin command aborts and prints them; the petshop logs them and
+     * proceeds.
      *
      * @param petType the {@link PetType} being created
      * @param options the creation-option strings (e.g., as parsed from
@@ -205,20 +211,20 @@ public final class PetEntitySnapshot {
      * @param world   any loaded world — used only as the {@code createEntity}
      *                context, not as the spawn location
      * @param loc     location passed to {@code createEntity}; never spawned at
-     * @return vanilla NBT compound for {@code PersistedPet.info()}, or an empty
-     *         compound on failure
+     * @return a {@link Result} carrying the captured NBT and per-option
+     *         validation errors; empty result on infrastructural failure
      */
-    public static CompoundBinaryTag captureForOptions(PetType petType, String[] options,
-                                                       World world, Location loc) {
+    public static Result captureForOptions(PetType petType, String[] options,
+                                           World world, Location loc) {
         if (options == null || options.length == 0) {
-            return CompoundBinaryTag.empty();
+            return Result.empty();
         }
         if (world == null || loc == null) {
-            return CompoundBinaryTag.empty();
+            return Result.empty();
         }
         Class<? extends Mob> mobClass = petType.getBukkitEntityClass();
         if (mobClass == null) {
-            return CompoundBinaryTag.empty();
+            return Result.empty();
         }
         Entity detached;
         try {
@@ -226,18 +232,29 @@ public final class PetEntitySnapshot {
         } catch (Throwable t) {
             MyPetApi.getLogger().warning("PetEntitySnapshot.captureForOptions: createEntity failed for "
                     + petType.name() + ": " + t.getMessage());
-            return CompoundBinaryTag.empty();
+            return Result.empty();
         }
         if (!(detached instanceof Mob mob)) {
-            return CompoundBinaryTag.empty();
+            return Result.empty();
         }
         try {
-            CommandOptionCreate.applyOptions(petType, options, mob);
-            return capture(mob);
+            List<String> errors = PetCreationOptions.applyOptions(petType, options, mob);
+            return new Result(capture(mob), errors);
         } catch (Throwable t) {
             MyPetApi.getLogger().warning("PetEntitySnapshot.captureForOptions: applyOptions/capture failed for "
                     + petType.name() + ": " + t.getMessage());
-            return CompoundBinaryTag.empty();
+            return Result.empty();
+        }
+    }
+
+    /**
+     * Combined return type for {@link #captureForOptions}: the captured vanilla
+     * NBT plus any per-option validation errors. Callers either abort and
+     * report errors (admin command) or log and proceed (petshop checkout).
+     */
+    public record Result(CompoundBinaryTag info, List<String> errors) {
+        public static Result empty() {
+            return new Result(CompoundBinaryTag.empty(), List.of());
         }
     }
 

@@ -20,17 +20,31 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.*;
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetSunSensitive;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
-
-import de.Keyle.MyPet.api.entity.PetSunSensitive;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Material;
+import org.bukkit.entity.ZombieVillager;
+
+import java.util.List;
 
 @ShopInfo(displayName = "Zombie Villager")
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
-@CreationOptions({"profession:", "type:"})
 public class PetZombieVillager extends PetImpl implements PetEquipment, PetBaby, PetSunSensitive {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofRegistry("profession", ZombieVillager.class, RegistryKey.VILLAGER_PROFESSION,
+                    ZombieVillager::setVillagerProfession),
+            () -> OptionSpec.ofRegistry("type",       ZombieVillager.class, RegistryKey.VILLAGER_TYPE,
+                    ZombieVillager::setVillagerType)
+    );
 
     public PetZombieVillager(MyPetPlayer petOwner) {
         super(petOwner);

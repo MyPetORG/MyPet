@@ -21,21 +21,29 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Sheep;
 
+import java.util.List;
 import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
-@CreationOptions({"color:", "sheared"})
 public class PetSheep extends PetImpl implements PetBaby, PetInteractionGate {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("color",   Sheep.class, DyeColor.class, Sheep::setColor),
+            () -> OptionSpec.ofFlag("sheared", Sheep.class,                 s -> s.setSheared(true))
+    );
 
     public PetSheep(MyPetPlayer petOwner) {
         super(petOwner);

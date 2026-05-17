@@ -20,17 +20,26 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.CreationOptions;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import io.papermc.paper.world.WeatheringCopperState;
 import org.bukkit.Material;
+import org.bukkit.entity.CopperGolem;
+
+import java.util.List;
 
 @ShopInfo(displayName = "Copper Golem")
 @DefaultInfo(food = {Material.COPPER_INGOT}, leashFlags = {"UserCreated"})
-@CreationOptions({"oxidation:unaffected", "oxidation:exposed", "oxidation:weathered", "oxidation:oxidized", "waxed"})
 public class PetCopperGolem extends PetImpl {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("oxidation", CopperGolem.class, WeatheringCopperState.class, CopperGolem::setWeatheringState),
+            () -> OptionSpec.ofFlag("waxed",     CopperGolem.class,                              g -> g.setOxidizing(CopperGolem.Oxidizing.waxed()))
+    );
 
     public PetCopperGolem(MyPetPlayer petOwner) {
         super(petOwner);

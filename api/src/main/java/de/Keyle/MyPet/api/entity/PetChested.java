@@ -18,23 +18,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types;
+package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.PetBaby;
-import de.Keyle.MyPet.api.entity.PetEquipment;
-import de.Keyle.MyPet.api.entity.PetZombifiable;
-import de.Keyle.MyPet.api.entity.ShopInfo;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import org.bukkit.Material;
-
-@ShopInfo
-@DefaultInfo(food = {Material.GOLD_NUGGET})
-public class PetPiglin extends PetImpl implements PetEquipment, PetBaby, PetZombifiable {
-
-    public PetPiglin(MyPetPlayer petOwner) {
-        super(petOwner);
-    }
-
+/**
+ * Marker for pets that expose the {@code chest} creation flag (gives the
+ * underlying mob a carried chest at spawn via
+ * {@link org.bukkit.entity.ChestedHorse#setCarryingChest(boolean)}). The
+ * pet's Bukkit class must implement
+ * {@link org.bukkit.entity.ChestedHorse}; otherwise the marker is a no-op.
+ *
+ * <p>{@code PetCreationOptions} auto-generates a {@code chest} flag spec
+ * for every pet that implements this marker, so no per-pet
+ * {@code CREATION_SPECS} row is needed.
+ */
+public interface PetChested {
 }

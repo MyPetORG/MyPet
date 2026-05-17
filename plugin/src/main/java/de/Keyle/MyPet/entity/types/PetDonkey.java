@@ -28,16 +28,17 @@ import org.bukkit.entity.Donkey;
 import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.PetChested;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetSaddleable;
+import de.Keyle.MyPet.api.entity.PetTameable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SUGAR, Material.WHEAT, Material.APPLE}, leashFlags = {"Tamed"})
-@CreationOptions({"saddle", "chest"})
-public class PetDonkey extends PetImpl implements PetBaby, PetEquipment {
+public class PetDonkey extends PetImpl implements PetBaby, PetEquipment, PetChested, PetSaddleable, PetTameable {
 
     public PetDonkey(MyPetPlayer petOwner) {
         super(petOwner);

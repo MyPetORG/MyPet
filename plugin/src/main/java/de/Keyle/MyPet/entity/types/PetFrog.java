@@ -20,18 +20,26 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Material;
+import org.bukkit.entity.Frog;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SLIME_BALL})
-@CreationOptions({"variant:"})
 public class PetFrog extends PetImpl implements PetAmphibiousEntity {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofRegistry("variant", Frog.class, RegistryKey.FROG_VARIANT, Frog::setVariant)
+    );
 
     public PetFrog(MyPetPlayer petOwner) {
         super(petOwner);

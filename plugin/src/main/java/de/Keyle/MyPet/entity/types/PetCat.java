@@ -20,18 +20,29 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetTameable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import io.papermc.paper.registry.RegistryKey;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Cat;
+
+import java.util.List;
 
 @ShopInfo(options = {"tamed"})
 @DefaultInfo(food = {Material.COD}, leashFlags = {"Tamed"})
-@CreationOptions({"type:", "collar:", "tamed"})
-public class PetCat extends PetImpl implements PetBaby {
+public class PetCat extends PetImpl implements PetBaby, PetTameable {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofRegistry("variant", Cat.class, RegistryKey.CAT_VARIANT, Cat::setCatType),
+            () -> OptionSpec.ofEnum    ("collar",  Cat.class, DyeColor.class,          Cat::setCollarColor)
+    );
 
     public PetCat(MyPetPlayer petOwner) {
         super(petOwner);

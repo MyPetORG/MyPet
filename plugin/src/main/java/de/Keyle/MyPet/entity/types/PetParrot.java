@@ -20,18 +20,26 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
+import de.Keyle.MyPet.api.entity.PetTameable;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.CreationOptions;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
+import org.bukkit.entity.Parrot;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.COOKIE, Material.SWEET_BERRIES}, leashFlags = {"Tamed"})
-@CreationOptions({"variant:"})
-public class PetParrot extends PetImpl implements PetFlyingEntity {
+public class PetParrot extends PetImpl implements PetFlyingEntity, PetTameable {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("variant", Parrot.class, Parrot.Variant.class, Parrot::setVariant)
+    );
 
     public PetParrot(MyPetPlayer petOwner) {
         super(petOwner);

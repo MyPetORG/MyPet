@@ -18,23 +18,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types;
+package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.PetBaby;
-import de.Keyle.MyPet.api.entity.PetEquipment;
-import de.Keyle.MyPet.api.entity.PetZombifiable;
-import de.Keyle.MyPet.api.entity.ShopInfo;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import org.bukkit.Material;
-
-@ShopInfo
-@DefaultInfo(food = {Material.GOLD_NUGGET})
-public class PetPiglin extends PetImpl implements PetEquipment, PetBaby, PetZombifiable {
-
-    public PetPiglin(MyPetPlayer petOwner) {
-        super(petOwner);
-    }
-
+/**
+ * Marker for {@link org.bukkit.entity.AbstractHorse}-based pets that
+ * expose the {@code saddle} creation flag (puts a saddle in the mob's
+ * inventory at spawn). The pet's Bukkit class must extend
+ * {@link org.bukkit.entity.AbstractHorse}; otherwise the marker is a no-op.
+ *
+ * <p>{@code PetCreationOptions} auto-generates a {@code saddle} flag spec
+ * for every pet that implements this marker.
+ *
+ * <p>Pig and Strider use a different saddle setter
+ * ({@code setSaddle(boolean)} vs {@code getInventory().setSaddle(...)})
+ * and don't go through this marker — they declare a per-pet
+ * {@code saddle} flag spec in their {@code CREATION_SPECS} field instead.
+ */
+public interface PetSaddleable {
 }

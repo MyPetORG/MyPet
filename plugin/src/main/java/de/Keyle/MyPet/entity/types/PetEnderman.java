@@ -20,20 +20,27 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Enderman;
-import de.Keyle.MyPet.api.entity.CreationOptions;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.ShopInfo;
+
+import java.util.List;
 
 @Getter
 @ShopInfo
 @DefaultInfo(food = {Material.SOUL_SAND})
-@CreationOptions({"block:", "screaming"})
 public class PetEnderman extends PetImpl {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofFlag("screaming", Enderman.class, e -> e.setScreaming(true)),
+            PetCreationOptions.blockSpec(Enderman.class)
+    );
 
     /**
      * Pet-only override: vanilla {@link Enderman} screaming is AI-driven and

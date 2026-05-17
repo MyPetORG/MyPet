@@ -20,21 +20,29 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetChested;
+import de.Keyle.MyPet.api.entity.PetTameable;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import org.bukkit.Material;
 import org.bukkit.entity.Llama;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.LlamaInventory;
-import de.Keyle.MyPet.api.entity.CreationOptions;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.PetBaby;
-import de.Keyle.MyPet.api.entity.ShopInfo;
-import org.bukkit.Material;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT}, leashFlags = {"Tamed"})
-@CreationOptions({"chest", "variant:"})
-public class PetLlama extends PetImpl implements PetBaby {
+public class PetLlama extends PetImpl implements PetBaby, PetChested, PetTameable {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("variant", Llama.class, Llama.Color.class, Llama::setColor)
+    );
 
     public PetLlama(MyPetPlayer petOwner) {
         super(petOwner);

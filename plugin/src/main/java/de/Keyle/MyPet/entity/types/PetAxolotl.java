@@ -20,19 +20,26 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.PetBaby;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.CreationOptions;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
+import org.bukkit.entity.Axolotl;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.TROPICAL_FISH})
-@CreationOptions({"variant:"})
 public class PetAxolotl extends PetImpl implements PetBaby, PetAmphibiousEntity {
+
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("variant", Axolotl.class, Axolotl.Variant.class, Axolotl::setVariant)
+    );
 
     public PetAxolotl(MyPetPlayer petOwner) {
         super(petOwner);
