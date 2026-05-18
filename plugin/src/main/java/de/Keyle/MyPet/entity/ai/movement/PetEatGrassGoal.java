@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
@@ -44,7 +43,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * <p>Activates only when <em>all</em> of the following are true:
  * <ul>
- *   <li>{@code PetConfigKeys.Sheep.CAN_REGROW_WOOL}
+ *   <li>{@code PetSheep.CAN_REGROW_WOOL}
  *       is enabled in config.yml.</li>
  *   <li>The underlying {@link PetSheep} is currently sheared.</li>
  *   <li>A random 1-in-1000 roll succeeds (matches vanilla frequency).</li>
@@ -80,7 +79,7 @@ public class PetEatGrassGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        if (!PetConfigKeys.Sheep.CAN_REGROW_WOOL.get()) {
+        if (!PetSheep.CAN_REGROW_WOOL.get()) {
             return false;
         }
         if (!(pet instanceof PetSheep) || !(mob instanceof Sheep sheep) || !sheep.isSheared()) {

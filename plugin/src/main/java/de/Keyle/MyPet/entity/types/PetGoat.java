@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
@@ -40,6 +41,10 @@ import java.util.Set;
 @DefaultInfo(food = {Material.WHEAT})
 public class PetGoat extends PetImpl implements PetBaby, PetNaturalDrop, PetInteractionGate {
 
+    public static final ConfigKey<Boolean> CAN_DROP_HORN = ConfigKey.bool("Goat", "CanDropHorn", true);
+    public static final ConfigKey<Boolean> CAN_GIVE_MILK = ConfigKey.bool("Goat", "CanGiveMilk", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Goat", "experience_bottle");
+
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofFlag("screaming",   Goat.class, g -> g.setScreaming(true)),
@@ -58,7 +63,7 @@ public class PetGoat extends PetImpl implements PetBaby, PetNaturalDrop, PetInte
 
     @Override
     public boolean isNaturalDropSuppressed() {
-        return !PetConfigKeys.Goat.CAN_DROP_HORN.get();
+        return !PetGoat.CAN_DROP_HORN.get();
     }
 
     @Override
@@ -68,6 +73,6 @@ public class PetGoat extends PetImpl implements PetBaby, PetNaturalDrop, PetInte
 
     @Override
     public boolean isInteractionSuppressed() {
-        return !PetConfigKeys.Goat.CAN_GIVE_MILK.get();
+        return !PetGoat.CAN_GIVE_MILK.get();
     }
 }

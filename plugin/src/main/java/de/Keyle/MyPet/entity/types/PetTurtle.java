@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.PetBaby;
@@ -33,6 +35,9 @@ import org.bukkit.Material;
 @ShopInfo
 @DefaultInfo(food = {Material.SEAGRASS})
 public class PetTurtle extends PetImpl implements PetBaby, PetAmphibiousEntity {
+
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Turtle", "CanSwim", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Turtle", "experience_bottle");
 
 
     public PetTurtle(MyPetPlayer petOwner) {

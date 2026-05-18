@@ -20,8 +20,11 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.behavior.PetBehaviorDispatcher;
 import de.Keyle.MyPet.entity.ai.attack.PetProjectileHitListener;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
+import de.Keyle.MyPet.entity.types.PetCreaking;
+import de.Keyle.MyPet.entity.types.PetEnderDragon;
 import de.Keyle.MyPet.util.CompatUtil;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -61,11 +64,8 @@ public final class PetListeners {
             PetInteractionListener::new,
             PetInteractionGateListener::new,
             PetEnvironmentListener::new,
-            PetCreeperListener::new,
             PetLightningStrikeListener::new,
-            PetEnderDragonAdvancementListener::new,
-            PetEnderDragonBlockDamageListener::new,
-            PetEnderDragonContactDamageListener::new,
+            PetEnderDragon.AdvancementListener::new,
             PetZombificationListener::new,
             PetInfoOnLeashListener::new,
             PetSurvivalListener::new,
@@ -83,7 +83,7 @@ public final class PetListeners {
     /**
      * Constructs a fresh instance of each listener and registers it with the plugin's
      * {@link PluginManager}. After the unconditional listeners,
-     * {@link CreakingHeartListener} is registered when running on Minecraft 1.21.4 or
+     * {@link PetCreaking.HeartListener} is registered when running on Minecraft 1.21.4 or
      * newer (the version that introduced the Creaking Heart block).
      *
      * @param plugin the plugin to associate registrations with; events fire only while this
@@ -94,12 +94,16 @@ public final class PetListeners {
         for (Supplier<Listener> listener : LISTENERS) {
             pm.registerEvents(listener.get(), plugin);
         }
-        // CreakingHeartListener registers last. Bukkit invokes handlers in registration order
+        // PetCreaking.HeartListener registers last. Bukkit invokes handlers in registration order
         // within the same EventPriority; if a new listener handles BlockBreakEvent (HIGH),
         // PlayerInteractEvent (MONITOR), or PlayerJoinEvent (MONITOR), confirm whether it
-        // should run before or after CreakingHeartListener and reorder accordingly.
+        // should run before or after PetCreaking.HeartListener and reorder accordingly.
         if (CompatUtil.minecraftVersionEqualsOrAbove("1.21.4")) {
-            pm.registerEvents(new CreakingHeartListener(), plugin);
+            pm.registerEvents(new PetCreaking.HeartListener(), plugin);
         }
+        // PetBehaviorDispatcher registers one Bukkit executor per PetBehavior declared
+        // on individual PetXxx classes. Runs after the static listeners so individual @EventHandler
+        // methods preserve their relative ordering; per-pet behaviors fire alongside.
+        PetBehaviorDispatcher.registerAll(plugin);
     }
 }

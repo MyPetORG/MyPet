@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -30,6 +31,8 @@ import org.bukkit.Material;
 @ShopInfo
 @DefaultInfo(food = {Material.GUNPOWDER})
 public class PetBreeze extends PetImpl implements PetFlyingEntity {
+
+    public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Breeze", "CanFly", true);
 
 
     public PetBreeze(MyPetPlayer petOwner) {

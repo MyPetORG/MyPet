@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
@@ -36,6 +38,8 @@ import java.util.List;
 @ShopInfo
 @DefaultInfo(food = {Material.WARPED_FUNGUS})
 public class PetStrider extends PetImpl implements PetBaby, PetLavaEntity {
+
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Strider", "experience_bottle");
 
 
     // Strider uses setSaddle(boolean), not the AbstractHorse inventory path,

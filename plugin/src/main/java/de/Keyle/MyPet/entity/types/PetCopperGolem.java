@@ -20,8 +20,11 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
@@ -29,6 +32,7 @@ import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import io.papermc.paper.world.WeatheringCopperState;
 import org.bukkit.Material;
 import org.bukkit.entity.CopperGolem;
+import org.bukkit.entity.Mob;
 
 import java.util.List;
 
@@ -36,14 +40,42 @@ import java.util.List;
 @DefaultInfo(food = {Material.COPPER_INGOT}, leashFlags = {"UserCreated"})
 public class PetCopperGolem extends PetImpl {
 
+    public static final ConfigKey<Boolean> CAN_OXIDIZE = ConfigKey.bool("CopperGolem", "CanOxidize", true);
+
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("oxidation", CopperGolem.class, WeatheringCopperState.class, CopperGolem::setWeatheringState),
             () -> OptionSpec.ofFlag("waxed",     CopperGolem.class,                              g -> g.setOxidizing(CopperGolem.Oxidizing.waxed()))
     );
 
+    /**
+     * Overrides vanilla's oxidation schedule with {@code Oxidizing.waxed()}
+     * at spawn time when {@link #CAN_OXIDIZE} is disabled, freezing the
+     * weathering state for the pet's lifetime. The snapshot envelope round-
+     * trips the vanilla {@code Oxidizing} NBT verbatim, so without this
+     * override an admin's {@code CanOxidize: false} would silently be ignored
+     * after the legacy migration window. Toggling the flag takes effect on
+     * the next spawn (despawn/recall or restart).
+     */
+    public static final PetLifecycleHook LIFECYCLE_HOOK = new PetLifecycleHook(
+            "CopperGolem",
+            PetCopperGolem::applyOxidationSuppress,
+            pet -> {}
+    );
+
     public PetCopperGolem(MyPetPlayer petOwner) {
         super(petOwner);
+    }
+
+    private static void applyOxidationSuppress(Pet pet) {
+        if (CAN_OXIDIZE.get()) return;
+        Mob mob = pet.getBukkitEntity();
+        if (mob instanceof CopperGolem golem) {
+            try {
+                golem.setOxidizing(CopperGolem.Oxidizing.waxed());
+            } catch (Throwable ignored) {
+            }
+        }
     }
 
 }

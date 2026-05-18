@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
@@ -37,6 +38,8 @@ import java.util.Set;
 @ShopInfo
 @DefaultInfo(food = {Material.APPLE})
 public class PetVex extends PetImpl implements PetEquipment, PetFlyingEntity {
+
+    public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Vex", "CanFly", true);
 
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

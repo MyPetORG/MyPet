@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.PetEquipment;
@@ -37,6 +38,8 @@ import java.util.Set;
 @ShopInfo
 @DefaultInfo(food = {Material.NAUTILUS_SHELL}, leashFlags = {"Tamed"})
 public class PetNautilus extends PetImpl implements PetEquipment, PetAmphibiousEntity {
+
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Nautilus", "CanSwim", true);
 
 
     public PetNautilus(MyPetPlayer petOwner) {

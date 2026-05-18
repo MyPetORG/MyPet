@@ -181,7 +181,7 @@ public class EntityListener implements Listener {
         }
     }
 
-    // Belt-and-suspenders for Wither pets: WitherAutonomousAttackSuppressor clears
+    // Belt-and-suspenders for Wither pets: PetWither.AutonomousAttackSuppressor clears
     // the three head targets every tick so WitherBoss#customServerAiStep's fire loop
     // finds nothing to shoot at, but there is a narrow intra-tick race on scan ticks
     // (the side-head scan runs inside the same tick as the fire loop, after our

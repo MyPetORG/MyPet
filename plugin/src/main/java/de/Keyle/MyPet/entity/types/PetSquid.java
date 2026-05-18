@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.PetBaby;
@@ -31,6 +33,10 @@ import org.bukkit.Material;
 @ShopInfo
 @DefaultInfo(food = {Material.COD})
 public class PetSquid extends PetImpl implements PetBaby, PetAquaticEntity {
+
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Squid", "CanSwim", true);
+    public static final ConfigKey<Boolean> PREVENT_SUFFOCATION = ConfigKey.bool("Squid", "PreventSuffocation", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Squid", "experience_bottle");
 
 
     public PetSquid(MyPetPlayer petOwner) {

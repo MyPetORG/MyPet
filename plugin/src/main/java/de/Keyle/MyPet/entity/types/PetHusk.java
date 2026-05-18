@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
@@ -31,6 +33,8 @@ import org.bukkit.Material;
 @ShopInfo
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
 public class PetHusk extends PetImpl implements PetEquipment, PetBaby {
+
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Husk", "experience_bottle");
 
 
     public PetHusk(MyPetPlayer petOwner) {

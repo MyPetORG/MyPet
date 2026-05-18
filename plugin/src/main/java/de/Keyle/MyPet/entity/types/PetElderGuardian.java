@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -30,6 +31,9 @@ import org.bukkit.Material;
 @ShopInfo(displayName = "Elder Guardian")
 @DefaultInfo(food = {Material.SUGAR})
 public class PetElderGuardian extends PetImpl implements PetAquaticEntity {
+
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("ElderGuardian", "CanSwim", true);
+    public static final ConfigKey<Boolean> PREVENT_SUFFOCATION = ConfigKey.bool("ElderGuardian", "PreventSuffocation", true);
 
 
     public PetElderGuardian(MyPetPlayer petOwner) {

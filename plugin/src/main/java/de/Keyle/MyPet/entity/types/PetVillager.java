@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
@@ -41,6 +43,9 @@ import java.util.Set;
 @ShopInfo
 @DefaultInfo(food = {Material.APPLE})
 public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLightningConvertible {
+
+    public static final ConfigKey<Boolean> ALLOW_LIGHTNING_CONVERSION = ConfigKey.bool("Villager", "AllowLightningConversion", false);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Villager", "experience_bottle");
 
 
     // Villager also gets its trade level reset alongside the profession change —

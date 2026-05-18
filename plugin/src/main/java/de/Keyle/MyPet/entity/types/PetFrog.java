@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -36,6 +37,8 @@ import java.util.List;
 @ShopInfo
 @DefaultInfo(food = {Material.SLIME_BALL})
 public class PetFrog extends PetImpl implements PetAmphibiousEntity {
+
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Frog", "CanSwim", true);
 
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
@@ -40,6 +41,10 @@ import java.util.Set;
 @DefaultInfo(food = {Material.WHEAT})
 public class PetSheep extends PetImpl implements PetBaby, PetInteractionGate {
 
+    public static final ConfigKey<Boolean> CAN_BE_SHEARED = ConfigKey.bool("Sheep", "CanBeSheared", true);
+    public static final ConfigKey<Boolean> CAN_REGROW_WOOL = ConfigKey.bool("Sheep", "CanRegrowWool", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Sheep", "experience_bottle");
+
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("color",   Sheep.class, DyeColor.class, Sheep::setColor),
@@ -57,6 +62,6 @@ public class PetSheep extends PetImpl implements PetBaby, PetInteractionGate {
 
     @Override
     public boolean isInteractionSuppressed() {
-        return !PetConfigKeys.Sheep.CAN_BE_SHEARED.get();
+        return !PetSheep.CAN_BE_SHEARED.get();
     }
 }

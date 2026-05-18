@@ -20,13 +20,11 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
@@ -34,7 +32,11 @@ import org.bukkit.event.entity.EntityPortalEvent;
 /**
  * Vanilla-environment overrides for pet entities: spawn uncancel, portal
  * cancel, block-interaction cancel (farmland trampling, turtle egg
- * crushing), and snow-track suppression for SnowGolem pets.
+ * crushing).
+ *
+ * <p>These handlers are cross-pet (apply to every marked pet regardless of
+ * type), so they live in a shared listener. SnowGolem-specific snow-track
+ * suppression lives on {@code PetSnowGolem.SNOW_TRACK_SUPPRESS}.
  *
  * <p>These handlers have no dependencies on pet state, hooks, or skills —
  * they only need to know whether the entity is a pet via
@@ -75,24 +77,4 @@ public class PetEnvironmentListener implements Listener {
         }
     }
 
-    /**
-     * Cancels snow-block placement by SnowGolem pets when
-     * {@code MyPet.Pets.SnowGolem.DisableSnowTrack} is on. Vanilla
-     * {@code SnowGolem#aiStep} places top-snow on grass/dirt in cold biomes
-     * via {@code level().setBlockAndUpdate(...)}, which fires this event —
-     * SnowGolem is the only vanilla mob that uses
-     * {@link EntityBlockFormEvent}, so the marker check alone is sufficient.
-     * The block-type guard is defensive in case Mojang ever extends the
-     * event to other entities.
-     */
-    @EventHandler(ignoreCancelled = true)
-    public void onEntityBlockForm(EntityBlockFormEvent event) {
-        if (!PetEntityMarker.isMarked(event.getEntity())) {
-            return;
-        }
-        if (event.getNewState().getType() == Material.SNOW
-                && PetConfigKeys.SnowGolem.DISABLE_SNOW_TRACK.get()) {
-            event.setCancelled(true);
-        }
-    }
 }

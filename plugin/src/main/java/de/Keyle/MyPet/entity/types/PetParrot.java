@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetTameable;
@@ -36,6 +37,8 @@ import java.util.List;
 @ShopInfo
 @DefaultInfo(food = {Material.COOKIE, Material.SWEET_BERRIES}, leashFlags = {"Tamed"})
 public class PetParrot extends PetImpl implements PetFlyingEntity, PetTameable {
+
+    public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Parrot", "CanFly", true);
 
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

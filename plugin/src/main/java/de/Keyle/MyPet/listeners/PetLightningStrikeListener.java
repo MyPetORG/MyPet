@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetLightningConvertible;
@@ -87,19 +86,6 @@ import org.bukkit.event.entity.EntityTransformEvent;
 public class PetLightningStrikeListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onPetCreeperPower(CreeperPowerEvent event) {
-        if (event.getCause() != CreeperPowerEvent.PowerCause.LIGHTNING) {
-            return;
-        }
-        if (!PetEntityMarker.isMarked(event.getEntity())) {
-            return;
-        }
-        if (!PetConfigKeys.Creeper.ALLOW_LIGHTNING_POWER.get()) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPetLightningTransform(EntityTransformEvent event) {
         if (event.getTransformReason() != EntityTransformEvent.TransformReason.LIGHTNING) {
             return;
@@ -117,19 +103,10 @@ public class PetLightningStrikeListener implements Listener {
             return;
         }
 
-        if (event.getEntity() instanceof MushroomCow cow) {
-            event.setCancelled(true);
-            if (PetConfigKeys.Mooshroom.ALLOW_LIGHTNING_VARIANT_FLIP.get()) {
-                cow.setVariant(cow.getVariant() == MushroomCow.Variant.RED
-                        ? MushroomCow.Variant.BROWN
-                        : MushroomCow.Variant.RED);
-            }
-            return;
-        }
-
-        // Unknown lightning-transform path on a marked pet. Suppress by
-        // default so a future Mojang conversion mob doesn't orphan a wild
-        // copy or destroy the pet's entity binding.
+        // Anything else (Mooshroom included): suppress by default so vanilla
+        // doesn't discard + respawn the entity. Mooshroom's optional variant
+        // flip then runs as a MONITOR behavior on the same event, mutating
+        // the (now-undisturbed) cow's variant manually if the config flag is on.
         event.setCancelled(true);
     }
 

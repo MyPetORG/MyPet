@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetZombifiable;
@@ -31,6 +33,9 @@ import org.bukkit.Material;
 @ShopInfo
 @DefaultInfo(food = {Material.CRIMSON_FUNGUS})
 public class PetHoglin extends PetImpl implements PetBaby, PetZombifiable {
+
+    public static final ConfigKey<Boolean> ALLOW_ZOMBIFICATION = ConfigKey.bool("Hoglin", "AllowZombification", false);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Hoglin", "experience_bottle");
 
 
     public PetHoglin(MyPetPlayer petOwner) {

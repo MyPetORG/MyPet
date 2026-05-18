@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
@@ -28,7 +27,6 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetSunSensitive;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import org.bukkit.entity.Axolotl;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,8 +48,6 @@ import org.bukkit.potion.PotionEffectType;
  *       the per-type {@code PreventDaylightBurn} flag is on</li>
  *   <li>Out-of-water suffocation suppression for {@link PetAquaticEntity}
  *       pets when the per-type {@code PreventSuffocation} flag is on</li>
- *   <li>Dry-out (out-of-water) suppression for Axolotl pets when
- *       {@code MyPet.Pets.Axolotl.PreventDryOut} is on</li>
  * </ul>
  */
 public class PetSurvivalListener implements Listener {
@@ -86,16 +82,6 @@ public class PetSurvivalListener implements Listener {
         if (event.getCause() == DamageCause.DROWNING
                 && pet instanceof PetAquaticEntity aquatic
                 && aquatic.preventSuffocation()) {
-            event.setCancelled(true);
-            return;
-        }
-
-        // Vanilla Axolotls take DRYOUT damage while on land — the only mob
-        // that emits this cause. Entity-type check is defensive in case Mojang
-        // extends DRYOUT to additional mobs in a future MC version.
-        if (event.getCause() == DamageCause.DRYOUT
-                && bukkitEntity instanceof Axolotl
-                && PetConfigKeys.Axolotl.PREVENT_DRY_OUT.get()) {
             event.setCancelled(true);
             return;
         }

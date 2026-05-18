@@ -41,16 +41,14 @@ import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.ai.navigation.PaperNavigation;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
+import de.Keyle.MyPet.api.lifecycle.PetLifecycleHookRegistry;
 import de.Keyle.MyPet.entity.types.PetHappyGhast;
 import de.Keyle.MyPet.util.NameFilter;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
-import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
-import de.Keyle.MyPet.entity.visual.PetEnderDragonHoverController;
 import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
-import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
@@ -222,9 +220,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
         PetSitParticleController.stopForPet(this);
         PetPotionParticleController.stopForPet(this);
         RideSkillFlightController.stopForPet(this);
-        CreakingActivationSuppressor.stopForPet(this);
-        WitherAutonomousAttackSuppressor.stopForPet(this);
-        PetEnderDragonHoverController.stopForPet(this);
+        PetLifecycleHookRegistry.forPet(this).forEach(hook -> hook.onDespawn(this));
         PetNoPushSuppressor.stopForPet(this);
         if (bukkitEntity != null) {
             bukkitEntity.remove();
@@ -928,9 +924,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 PetSitParticleController.stopForPet(this);
                 PetPotionParticleController.stopForPet(this);
                 RideSkillFlightController.stopForPet(this);
-                CreakingActivationSuppressor.stopForPet(this);
-                WitherAutonomousAttackSuppressor.stopForPet(this);
-                PetEnderDragonHoverController.stopForPet(this);
+                PetLifecycleHookRegistry.forPet(this).forEach(hook -> hook.onDespawn(this));
                 PetNoPushSuppressor.stopForPet(this);
                 bukkitEntity = null;
 

@@ -24,7 +24,6 @@ import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration.*;
 import de.Keyle.MyPet.api.config.ConfigKeyRegistry;
-import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
@@ -243,13 +242,14 @@ public class ConfigurationLoader {
         }
 
         // Per-pet ConfigKey defaults — every static ConfigKey<?> field declared
-        // on a PetConfigKeys.<Pet> nested class self-registers with
+        // a PetXxx class (PetCreeper.ALLOW_LIGHTNING_POWER, etc.) self-registers with
         // ConfigKeyRegistry on first reference. ensureLoaded() forces all
         // nested classes to initialize so the registry walk below sees every
         // key. Covers CanFly, CanSwim, AllowZombification,
         // AllowLightningConversion, PreventDaylightBurn, PreventSuffocation,
         // GrowUpItem, and every per-pet feature flag.
-        PetConfigKeys.ensureLoaded();
+        // ConfigKeyRegistry methods force-load every pet class on first call,
+        // so all per-pet ConfigKey static fields are registered before iteration.
         ConfigKeyRegistry.writeDefaults(config);
 
         config.options().copyDefaults(true);
@@ -432,7 +432,8 @@ public class ConfigurationLoader {
         // feature flags plus the marker-derived keys (CanFly, CanSwim,
         // AllowZombification, AllowLightningConversion, PreventDaylightBurn,
         // PreventSuffocation, GrowUpItem). Hot-reloadable.
-        PetConfigKeys.ensureLoaded();
+        // ConfigKeyRegistry methods force-load every pet class on first call,
+        // so all per-pet ConfigKey static fields are registered before iteration.
         ConfigKeyRegistry.loadFromYaml(config);
     }
 

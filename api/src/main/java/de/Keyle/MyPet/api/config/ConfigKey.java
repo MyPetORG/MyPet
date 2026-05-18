@@ -26,8 +26,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.function.BiFunction;
 
 /**
- * A per-pet config value, declared as a {@code public static final} field on
- * a nested class of {@link PetConfigKeys}. Each declaration self-registers
+ * A per-pet config value, declared as a {@code public static final} field
+ * on the matching {@code PetXxx} pet class — the pet class is the single
+ * source of truth for its species' config. Each declaration self-registers
  * with {@link ConfigKeyRegistry} so plugin-side YAML loading and default
  * writing can iterate every key without further wiring.
  *

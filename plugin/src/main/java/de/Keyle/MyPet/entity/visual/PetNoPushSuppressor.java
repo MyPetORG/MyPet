@@ -45,10 +45,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * for bows / tridents. The team-based mechanism only affects push physics
  * and leaves projectile collision intact.
  *
- * <p>{@link CreakingActivationSuppressor} owns its own team
- * ({@code mypet_creaking_allies}) for AI-suppression purposes, and a UUID
- * can only belong to one Bukkit team at a time — so Creaking pets are
- * deliberately skipped here. They remain solid for now; cross-team push
+ * <p>{@link de.Keyle.MyPet.entity.types.PetCreaking.ActivationSuppressor} owns
+ * its own team ({@code mypet_creaking_allies}) for AI-suppression purposes,
+ * and a UUID can only belong to one Bukkit team at a time — so Creaking pets
+ * are deliberately skipped here. They remain solid for now; cross-team push
  * suppression for Creaking pets is a separate concern.
  *
  * <h2>Folia safety</h2>
@@ -70,7 +70,7 @@ public final class PetNoPushSuppressor {
     public static void startForPet(Pet pet) {
         Mob mob = pet.getBukkitEntity();
         if (mob == null) return;
-        // Creaking pets are owned by CreakingActivationSuppressor's team.
+        // Creaking pets are owned by PetCreaking.ActivationSuppressor's team.
         // Bukkit team membership is exclusive (addEntry removes from prior
         // team), so adding them here would clobber AI suppression.
         if (CreakingHelper.isCreaking(mob)) return;

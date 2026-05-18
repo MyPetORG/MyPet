@@ -39,7 +39,7 @@ import org.jspecify.annotations.NonNull;
  *   <li>{@code CommandTrade} — pet ownership transfer.</li>
  *   <li>{@code CommandOptionClone} — admin pet clone.</li>
  *   <li>{@code CommandOptionCreate} — admin pet creation.</li>
- *   <li>{@code EntityListener}, {@code CreakingHeartListener} — leash creation
+ *   <li>{@code EntityListener}, {@code PetCreaking.HeartListener} — leash creation
  *       paths (alongside the corresponding {@link PetCreateEvent}).</li>
  * </ul>
  *

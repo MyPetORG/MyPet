@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -28,6 +30,10 @@ import org.bukkit.Material;
 @ShopInfo
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
 public class PetDrowned extends PetImpl implements PetEquipment, PetBaby, PetAmphibiousEntity, PetSunSensitive {
+
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Drowned", "CanSwim", true);
+    public static final ConfigKey<Boolean> PREVENT_DAYLIGHT_BURN = ConfigKey.bool("Drowned", "PreventDaylightBurn", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Drowned", "experience_bottle");
 
 
     public PetDrowned(MyPetPlayer petOwner) {

@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -35,6 +37,8 @@ import java.util.List;
 @ShopInfo
 @DefaultInfo(food = {Material.CARROT})
 public class PetRabbit extends PetImpl implements PetBaby {
+
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Rabbit", "experience_bottle");
 
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

@@ -89,7 +89,7 @@ public class RideSkillFlightController {
         if (mob.getPassengers().isEmpty()) return;
         // EnderDragon's vanilla aiStep applies ~0.8 horizontal friction to
         // setVelocity calls every tick, so velocity-based control feels
-        // unresponsive. PetEnderDragonHoverController owns dragon ride
+        // unresponsive. PetEnderDragon.HoverController owns dragon ride
         // movement via teleport, which overrides aiStep cleanly.
         if (mob instanceof EnderDragon) return;
 

@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetNaturalDrop;
@@ -40,6 +41,9 @@ import java.util.Set;
 @DefaultInfo(food = {Material.WHEAT_SEEDS})
 public class PetChicken extends PetImpl implements PetBaby, PetNaturalDrop {
 
+    public static final ConfigKey<Boolean> CAN_LAY_EGGS = ConfigKey.bool("Chicken", "CanLayEggs", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Chicken", "experience_bottle");
+
 
     // Chicken.Variant + RegistryKey.CHICKEN_VARIANT landed in 1.21.5. On
     // older Paper the spec factory throws LinkageError and is dropped.
@@ -58,6 +62,6 @@ public class PetChicken extends PetImpl implements PetBaby, PetNaturalDrop {
 
     @Override
     public boolean isNaturalDropSuppressed() {
-        return !PetConfigKeys.Chicken.CAN_LAY_EGGS.get();
+        return !PetChicken.CAN_LAY_EGGS.get();
     }
 }

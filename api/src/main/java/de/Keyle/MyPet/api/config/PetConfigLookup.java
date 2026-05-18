@@ -26,15 +26,15 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 /**
  * Resolves per-pet config values from a runtime {@code Class<? extends Pet>}
  * reference — the form marker interfaces ({@code PetFlyingEntity.canFly},
- * {@code PetSwimmingEntity.canSwim}, etc.) need. Most callers should prefer
- * direct references to {@link PetConfigKeys} constants, which give compile-time
- * autocomplete and skip the class-name parsing.
+ * {@code PetSwimmingEntity.canSwim}, etc.) need. Callers with a compile-time
+ * dependency on plugin pet classes should prefer the direct field reference
+ * (e.g. {@code PetCreeper.ALLOW_LIGHTNING_POWER.get()}) which gives typed
+ * access and skips the class-name parsing.
  *
  * <p>This class converts the pet class to its pet-type name (stripping the
  * {@code "Pet"} prefix from the simple name) and delegates to
- * {@link ConfigKeyRegistry}. {@link PetConfigKeys#ensureLoaded()} should be
- * invoked once during plugin startup so all keys are registered before any
- * marker default method fires.
+ * {@link ConfigKeyRegistry}, which transitively loads every pet class on
+ * first call so all keys are registered before any read.
  */
 public final class PetConfigLookup {
 

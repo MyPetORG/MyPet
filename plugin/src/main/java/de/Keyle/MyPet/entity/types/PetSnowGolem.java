@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.behavior.PetBehavior;
+import de.Keyle.MyPet.api.behavior.PetBehaviorHelpers;
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -28,6 +31,7 @@ import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
 import org.bukkit.entity.Snowman;
+import org.bukkit.event.block.EntityBlockFormEvent;
 
 import java.util.List;
 
@@ -35,6 +39,23 @@ import java.util.List;
 @DefaultInfo(food = {Material.CARROT, Material.SNOWBALL})
 public class PetSnowGolem extends PetImpl {
 
+    public static final ConfigKey<Boolean> DISABLE_SNOW_TRACK = ConfigKey.bool("SnowGolem", "DisableSnowTrack", true);
+
+    /**
+     * Cancels snow-block placement by SnowGolem pets when
+     * {@link #DISABLE_SNOW_TRACK} is on. Vanilla {@code SnowGolem#aiStep}
+     * places top-snow on grass/dirt in cold biomes; SnowGolem is the only
+     * vanilla mob that uses {@link EntityBlockFormEvent}, so the marker
+     * check (via the dispatcher) is sufficient. The block-type guard is
+     * defensive in case Mojang ever extends the event to other entities.
+     */
+    public static final PetBehavior<EntityBlockFormEvent> SNOW_TRACK_SUPPRESS =
+            PetBehaviorHelpers.onPetBlockForm("SnowGolem", (event, pet, mob) -> {
+                if (event.getNewState().getType() == Material.SNOW
+                        && DISABLE_SNOW_TRACK.get()) {
+                    event.setCancelled(true);
+                }
+            });
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofFlag("derp", Snowman.class, s -> s.setDerp(true))

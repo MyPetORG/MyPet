@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -36,6 +37,9 @@ import java.util.List;
 @ShopInfo(displayName = "Tropical Fish")
 @DefaultInfo(food = {Material.SEAGRASS})
 public class PetTropicalFish extends PetImpl implements PetAquaticEntity {
+
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("TropicalFish", "CanSwim", true);
+    public static final ConfigKey<Boolean> PREVENT_SUFFOCATION = ConfigKey.bool("TropicalFish", "PreventSuffocation", true);
 
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

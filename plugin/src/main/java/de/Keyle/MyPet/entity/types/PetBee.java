@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
@@ -50,6 +52,9 @@ import java.util.List;
         Material.WITHER_ROSE,
 })
 public class PetBee extends PetImpl implements PetBaby, PetFlyingEntity {
+
+    public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Bee", "CanFly", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Bee", "experience_bottle");
 
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

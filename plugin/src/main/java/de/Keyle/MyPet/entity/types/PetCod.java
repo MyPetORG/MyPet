@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -30,6 +31,9 @@ import org.bukkit.Material;
 @ShopInfo
 @DefaultInfo(food = {Material.SEAGRASS})
 public class PetCod extends PetImpl implements PetAquaticEntity {
+
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Cod", "CanSwim", true);
+    public static final ConfigKey<Boolean> PREVENT_SUFFOCATION = ConfigKey.bool("Cod", "PreventSuffocation", true);
 
 
     public PetCod(MyPetPlayer petOwner) {

@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -30,6 +32,8 @@ import org.bukkit.Material;
 @ShopInfo(displayName = "Polar Bear")
 @DefaultInfo(food = {Material.COD})
 public class PetPolarBear extends PetImpl implements PetBaby {
+
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("PolarBear", "experience_bottle");
 
 
     public PetPolarBear(MyPetPlayer petOwner) {

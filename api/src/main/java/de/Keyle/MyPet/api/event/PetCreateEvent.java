@@ -36,7 +36,7 @@ import org.jspecify.annotations.NonNull;
  * {@link Source#PET_SHOP} (PetShop integration purchase), {@link Source#OTHER}
  * (third-party plugins).
  *
- * <p>Fires from {@code EntityListener} (leash path), {@code CreakingHeartListener}
+ * <p>Fires from {@code EntityListener} (leash path), {@code PetCreaking.HeartListener}
  * (Creaking-specific leash path), {@code CommandOptionCreate}, and the
  * {@code PetShop} integration.
  *

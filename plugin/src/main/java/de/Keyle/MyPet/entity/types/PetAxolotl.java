@@ -20,16 +20,22 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.behavior.PetBehavior;
+import de.Keyle.MyPet.api.behavior.PetBehaviorHelpers;
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
 import org.bukkit.entity.Axolotl;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import java.util.List;
 
@@ -37,6 +43,24 @@ import java.util.List;
 @DefaultInfo(food = {Material.TROPICAL_FISH})
 public class PetAxolotl extends PetImpl implements PetBaby, PetAmphibiousEntity {
 
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Axolotl", "CanSwim", true);
+    public static final ConfigKey<Boolean> PREVENT_DRY_OUT = ConfigKey.bool("Axolotl", "PreventDryOut", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Axolotl", "experience_bottle");
+
+    /**
+     * Suppresses {@code DRYOUT} damage on Axolotl pets when
+     * {@link #PREVENT_DRY_OUT} is on. Vanilla Axolotls take DRYOUT damage
+     * while on land; this lets admins keep pet Axolotls alive when their
+     * owner takes them out of water.
+     */
+    public static final PetBehavior<EntityDamageEvent> DRYOUT_SUPPRESS =
+            PetBehaviorHelpers.onPetDamaged("Axolotl", (event, pet, mob) -> {
+                if (event.getCause() != DamageCause.DRYOUT) return;
+                if (!(mob instanceof Axolotl)) return;
+                if (PREVENT_DRY_OUT.get()) {
+                    event.setCancelled(true);
+                }
+            });
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("variant", Axolotl.class, Axolotl.Variant.class, Axolotl::setVariant)

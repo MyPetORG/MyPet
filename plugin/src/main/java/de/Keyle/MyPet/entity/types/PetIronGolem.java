@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -29,6 +30,8 @@ import org.bukkit.Material;
 @ShopInfo(displayName = "Iron Golem")
 @DefaultInfo(food = {Material.IRON_INGOT}, leashFlags = {"UserCreated"})
 public class PetIronGolem extends PetImpl {
+
+    public static final ConfigKey<Boolean> CAN_TOSS_UP = ConfigKey.bool("IronGolem", "CanTossUp", true);
 
 
     public PetIronGolem(MyPetPlayer petOwner) {

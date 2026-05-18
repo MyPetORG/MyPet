@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -28,6 +30,8 @@ import org.bukkit.Material;
 @ShopInfo(displayName = "Zombified Piglin")
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
 public class PetZombifiedPiglin extends PetImpl implements PetEquipment, PetBaby, PetLavaEntity {
+
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("ZombifiedPiglin", "experience_bottle");
 
 
     public PetZombifiedPiglin(MyPetPlayer petOwner) {

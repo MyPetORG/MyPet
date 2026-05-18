@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.entity.PetZombifiable;
@@ -31,6 +32,8 @@ import org.bukkit.Material;
 @ShopInfo(displayName = "Piglin Brute")
 @DefaultInfo(food = {Material.GOLD_NUGGET})
 public class PetPiglinBrute extends PetImpl implements PetEquipment, PetZombifiable {
+
+    public static final ConfigKey<Boolean> ALLOW_ZOMBIFICATION = ConfigKey.bool("PiglinBrute", "AllowZombification", false);
 
 
     public PetPiglinBrute(MyPetPlayer petOwner) {

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -35,6 +36,9 @@ import java.util.List;
 @ShopInfo
 @DefaultInfo(food = {Material.SEAGRASS})
 public class PetSalmon extends PetImpl implements PetAquaticEntity {
+
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Salmon", "CanSwim", true);
+    public static final ConfigKey<Boolean> PREVENT_SUFFOCATION = ConfigKey.bool("Salmon", "PreventSuffocation", true);
 
 
     // Salmon.Variant + setVariant landed in 1.21.2. On older Paper the

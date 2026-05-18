@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetNaturalDrop;
@@ -39,6 +40,9 @@ import java.util.Set;
 @DefaultInfo(food = {Material.BAMBOO})
 public class PetPanda extends PetImpl implements PetBaby, PetNaturalDrop {
 
+    public static final ConfigKey<Boolean> CAN_DROP_SLIMEBALL = ConfigKey.bool("Panda", "CanDropSlimeball", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Panda", "experience_bottle");
+
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("main-gene",   Panda.class, Panda.Gene.class, Panda::setMainGene),
@@ -56,6 +60,6 @@ public class PetPanda extends PetImpl implements PetBaby, PetNaturalDrop {
 
     @Override
     public boolean isNaturalDropSuppressed() {
-        return !PetConfigKeys.Panda.CAN_DROP_SLIMEBALL.get();
+        return !PetPanda.CAN_DROP_SLIMEBALL.get();
     }
 }

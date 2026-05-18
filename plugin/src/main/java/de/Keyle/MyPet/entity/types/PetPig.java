@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetLightningConvertible;
@@ -37,6 +39,9 @@ import java.util.List;
 @ShopInfo
 @DefaultInfo(food = {Material.CARROT})
 public class PetPig extends PetImpl implements PetBaby, PetLightningConvertible {
+
+    public static final ConfigKey<Boolean> ALLOW_LIGHTNING_CONVERSION = ConfigKey.bool("Pig", "AllowLightningConversion", false);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Pig", "experience_bottle");
 
 
     // Pig.Variant + RegistryKey.PIG_VARIANT landed in 1.21.5. On older

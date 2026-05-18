@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetSunSensitive;
@@ -36,6 +37,9 @@ import java.util.List;
 @ShopInfo
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
 public class PetPhantom extends PetImpl implements PetFlyingEntity, PetSunSensitive {
+
+    public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Phantom", "CanFly", true);
+    public static final ConfigKey<Boolean> PREVENT_DAYLIGHT_BURN = ConfigKey.bool("Phantom", "PreventDaylightBurn", true);
 
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

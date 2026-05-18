@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.behavior.PetBehavior;
+import de.Keyle.MyPet.api.behavior.PetBehaviorHelpers;
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -27,7 +30,9 @@ import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.List;
 
@@ -35,6 +40,22 @@ import java.util.List;
 @DefaultInfo(food = {Material.SUGAR})
 public class PetSlime extends PetImpl {
 
+    public static final ConfigKey<Boolean> CAN_HURT_PLAYERS_ON_CONTACT = ConfigKey.bool("Slime", "CanHurtPlayersOnContact", false);
+
+    /** See {@code PetMagmaCube.CUBE_CONTACT_DAMAGE_GATE} — same logic, Slime variant. */
+    public static final PetBehavior<EntityDamageByEntityEvent> CUBE_CONTACT_DAMAGE_GATE =
+            PetBehaviorHelpers.onPetDamages("Slime", (event, pet, mob) -> {
+                if (!(event.getEntity() instanceof Player victim)) return;
+                if (pet.getPetTarget() == victim) return;
+                Player owner = pet.getOwner() != null ? pet.getOwner().getPlayer() : null;
+                if (owner != null && owner.equals(victim)) {
+                    event.setCancelled(true);
+                    return;
+                }
+                if (!CAN_HURT_PLAYERS_ON_CONTACT.get()) {
+                    event.setCancelled(true);
+                }
+            });
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             PetCreationOptions.sizeSpec(Slime.class, 8, Slime::setSize)

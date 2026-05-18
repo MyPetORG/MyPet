@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetNaturalDrop;
@@ -35,6 +36,9 @@ import java.util.Set;
 @DefaultInfo(food = {Material.TORCHFLOWER_SEEDS}, leashFlags = {"Tamed"})
 public class PetSniffer extends PetImpl implements PetBaby, PetNaturalDrop {
 
+    public static final ConfigKey<Boolean> CAN_DIG_SEEDS = ConfigKey.bool("Sniffer", "CanDigSeeds", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Sniffer", "experience_bottle");
+
 
     public PetSniffer(MyPetPlayer petOwner) {
         super(petOwner);
@@ -48,6 +52,6 @@ public class PetSniffer extends PetImpl implements PetBaby, PetNaturalDrop {
 
     @Override
     public boolean isNaturalDropSuppressed() {
-        return !PetConfigKeys.Sniffer.CAN_DIG_SEEDS.get();
+        return !PetSniffer.CAN_DIG_SEEDS.get();
     }
 }

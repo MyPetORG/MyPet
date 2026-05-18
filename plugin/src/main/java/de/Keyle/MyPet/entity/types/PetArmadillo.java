@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetNaturalDrop;
@@ -37,6 +38,9 @@ import java.util.Set;
 @ShopInfo
 @DefaultInfo(food = {Material.SPIDER_EYE})
 public class PetArmadillo extends PetImpl implements PetBaby, PetNaturalDrop {
+
+    public static final ConfigKey<Boolean> CAN_SHED_SCUTE = ConfigKey.bool("Armadillo", "CanShedScute", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Armadillo", "experience_bottle");
 
 
     // Paper 1.21.5+ exposes Armadillo#getState() returning an Armadillo.State enum
@@ -101,6 +105,6 @@ public class PetArmadillo extends PetImpl implements PetBaby, PetNaturalDrop {
 
     @Override
     public boolean isNaturalDropSuppressed() {
-        return !PetConfigKeys.Armadillo.CAN_SHED_SCUTE.get();
+        return !PetArmadillo.CAN_SHED_SCUTE.get();
     }
 }

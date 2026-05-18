@@ -36,13 +36,11 @@ import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
+import de.Keyle.MyPet.api.lifecycle.PetLifecycleHookRegistry;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
-import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
-import de.Keyle.MyPet.entity.visual.PetEnderDragonHoverController;
 import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
-import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
 import de.Keyle.MyPet.util.Timer;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -235,9 +233,7 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
         PetSitParticleController.stopForPet(oldPet);
         PetPotionParticleController.stopForPet(oldPet);
         RideSkillFlightController.stopForPet(oldPet);
-        CreakingActivationSuppressor.stopForPet(oldPet);
-        WitherAutonomousAttackSuppressor.stopForPet(oldPet);
-        PetEnderDragonHoverController.stopForPet(oldPet);
+        PetLifecycleHookRegistry.forPet(oldPet).forEach(hook -> hook.onDespawn(oldPet));
         PetNoPushSuppressor.stopForPet(oldPet);
         Timer.stopPetTicking(oldPet);
         if (oldEntityUuid != null) {

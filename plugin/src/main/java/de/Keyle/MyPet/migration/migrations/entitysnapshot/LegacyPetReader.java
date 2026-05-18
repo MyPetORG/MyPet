@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.migration.migrations.entitysnapshot;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.PetType;
 import io.papermc.paper.registry.RegistryAccess;
@@ -80,6 +79,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Locale;
+import de.Keyle.MyPet.entity.types.PetCopperGolem;
 
 /**
  * Single entry point for applying a legacy (pre-EntitySnapshot) pet info
@@ -263,7 +263,7 @@ public final class LegacyPetReader {
         // so legacy data preserves oxidation progress; fall through to Unset on
         // a fresh tame so vanilla picks its own first schedule.
         CopperGolem.Oxidizing oxidizing;
-        if (waxed || !PetConfigKeys.CopperGolem.CAN_OXIDIZE.get()) {
+        if (waxed || !PetCopperGolem.CAN_OXIDIZE.get()) {
             oxidizing = CopperGolem.Oxidizing.waxed();
         } else if (remaining > 0) {
             oxidizing = CopperGolem.Oxidizing.atTime(golem.getWorld().getFullTime() + remaining);

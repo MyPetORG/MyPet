@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.PetEquipment;
@@ -38,6 +39,9 @@ import java.util.Set;
 @ShopInfo
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
 public class PetZombieNautilus extends PetImpl implements PetEquipment, PetAmphibiousEntity, PetSunSensitive {
+
+    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("ZombieNautilus", "CanSwim", true);
+    public static final ConfigKey<Boolean> PREVENT_DAYLIGHT_BURN = ConfigKey.bool("ZombieNautilus", "PreventDaylightBurn", true);
 
 
     public PetZombieNautilus(MyPetPlayer petOwner) {

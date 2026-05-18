@@ -29,10 +29,11 @@ import de.Keyle.MyPet.api.config.PetConfigLookup;
  * {@link PetType#isFlyingPet()} via {@code Class.isAssignableFrom}.
  *
  * <p>The {@link #canFly()} default reads the per-pet preference from
- * {@code PetConfigKeys.<Pet>.CAN_FLY}, loaded from
- * {@code MyPet.Pets.<Type>.CanFly} in {@code pet-config.yml}. Adding a
- * new flying pet means implementing this interface <em>and</em> adding a
- * {@code CAN_FLY} entry to the matching {@code PetConfigKeys} nested class.
+ * the {@code CAN_FLY} static field on the matching {@code PetXxx} class,
+ * loaded from {@code MyPet.Pets.<Type>.CanFly} in {@code pet-config.yml}.
+ * Adding a new flying pet means implementing this interface <em>and</em>
+ * declaring a {@code public static final ConfigKey<Boolean> CAN_FLY = ...}
+ * field on the pet class.
  */
 public interface PetFlyingEntity extends Pet {
 

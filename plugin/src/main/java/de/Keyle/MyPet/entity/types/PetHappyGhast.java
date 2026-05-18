@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
@@ -31,6 +33,9 @@ import org.bukkit.Material;
 @ShopInfo
 @DefaultInfo(food = {Material.GHAST_TEAR}, leashFlags = {"Tamed"})
 public class PetHappyGhast extends PetImpl implements PetFlyingEntity, PetBaby {
+
+    public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("HappyGhast", "CanFly", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("HappyGhast", "experience_bottle");
 
 
     public PetHappyGhast(MyPetPlayer petOwner) {

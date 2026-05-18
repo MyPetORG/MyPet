@@ -18,25 +18,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types;
+package de.Keyle.MyPet.api.behavior;
 
-import de.Keyle.MyPet.api.config.ConfigKey;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.PetAquaticEntity;
-import de.Keyle.MyPet.api.entity.ShopInfo;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import org.bukkit.Material;
+import de.Keyle.MyPet.api.entity.Pet;
+import org.bukkit.entity.Mob;
+import org.bukkit.event.Event;
 
-@ShopInfo
-@DefaultInfo(food = {Material.SLIME_BALL})
-public class PetTadpole extends PetImpl implements PetAquaticEntity {
-
-    public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Tadpole", "CanSwim", true);
-    public static final ConfigKey<Boolean> PREVENT_SUFFOCATION = ConfigKey.bool("Tadpole", "PreventSuffocation", true);
-
-
-    public PetTadpole(MyPetPlayer petOwner) {
-        super(petOwner);
-    }
+/**
+ * Functional handler invoked by the central dispatcher when a {@link Event}
+ * fires on a pet whose type matches a registered {@link PetBehavior}.
+ *
+ * <p>The handler receives the typed event plus the already-matched pet and
+ * its live Bukkit {@link Mob} — no {@code instanceof PetEntityMarker} check,
+ * no {@code MyPetApi.getPetManager().getPetFromEntity(...)} call, no class
+ * cast. The dispatcher does all of that before invocation.
+ */
+@FunctionalInterface
+public interface PetEventHandler<E extends Event> {
+    void accept(E event, Pet pet, Mob mob);
 }

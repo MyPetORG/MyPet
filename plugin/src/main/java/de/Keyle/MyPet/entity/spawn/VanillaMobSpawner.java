@@ -26,15 +26,13 @@ import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
+import de.Keyle.MyPet.api.lifecycle.PetLifecycleHookRegistry;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
-import de.Keyle.MyPet.entity.visual.CreakingActivationSuppressor;
-import de.Keyle.MyPet.entity.visual.PetEnderDragonHoverController;
 import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
 import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
-import de.Keyle.MyPet.entity.visual.WitherAutonomousAttackSuppressor;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -209,9 +207,7 @@ public final class VanillaMobSpawner {
         PetSitParticleController.stopForPet(pet);
         PetPotionParticleController.stopForPet(pet);
         RideSkillFlightController.stopForPet(pet);
-        CreakingActivationSuppressor.stopForPet(pet);
-        WitherAutonomousAttackSuppressor.stopForPet(pet);
-        PetEnderDragonHoverController.stopForPet(pet);
+        PetLifecycleHookRegistry.forPet(pet).forEach(hook -> hook.onDespawn(pet));
         pet.setBukkitEntity(null);
 
         // Safe to destroy the old mob now — MyPet already released the reference.
@@ -316,9 +312,7 @@ public final class VanillaMobSpawner {
         PetSitParticleController.startForPet(pet);
         PetPotionParticleController.startForPet(pet);
         RideSkillFlightController.startForPet(pet);
-        CreakingActivationSuppressor.startForPet(pet);
-        WitherAutonomousAttackSuppressor.startForPet(pet);
-        PetEnderDragonHoverController.startForPet(pet);
+        PetLifecycleHookRegistry.forPet(pet).forEach(hook -> hook.onSpawn(pet));
         PetNoPushSuppressor.startForPet(pet);
     }
 

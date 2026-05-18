@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.config.PetConfigKeys;
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
@@ -40,6 +41,9 @@ import java.util.Set;
 @DefaultInfo(food = {Material.WHEAT})
 public class PetCow extends PetImpl implements PetBaby, PetInteractionGate {
 
+    public static final ConfigKey<Boolean> CAN_GIVE_MILK = ConfigKey.bool("Cow", "CanGiveMilk", true);
+    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Cow", "experience_bottle");
+
 
     // Cow.Variant + RegistryKey.COW_VARIANT landed in 1.21.5. On older
     // Paper the spec factory throws LinkageError and is silently dropped.
@@ -58,6 +62,6 @@ public class PetCow extends PetImpl implements PetBaby, PetInteractionGate {
 
     @Override
     public boolean isInteractionSuppressed() {
-        return !PetConfigKeys.Cow.CAN_GIVE_MILK.get();
+        return !PetCow.CAN_GIVE_MILK.get();
     }
 }

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.entity.PetSunSensitive;
@@ -31,6 +32,8 @@ import org.bukkit.Material;
 @ShopInfo
 @DefaultInfo(food = {Material.BONE})
 public class PetBogged extends PetImpl implements PetEquipment, PetSunSensitive {
+
+    public static final ConfigKey<Boolean> PREVENT_DAYLIGHT_BURN = ConfigKey.bool("Bogged", "PreventDaylightBurn", true);
 
 
     public PetBogged(MyPetPlayer petOwner) {
