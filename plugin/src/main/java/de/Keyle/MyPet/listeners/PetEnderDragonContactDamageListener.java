@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
@@ -52,8 +52,8 @@ public class PetEnderDragonContactDamageListener implements Listener {
 
         boolean victimIsPlayer = event.getEntity() instanceof Player;
         if (victimIsPlayer
-                ? Configuration.MyPet.EnderDragon.ALLOW_PLAYER_CONTACT_DAMAGE
-                : Configuration.MyPet.EnderDragon.ALLOW_ENTITY_CONTACT_DAMAGE) {
+                ? PetConfigKeys.EnderDragon.ALLOW_PLAYER_CONTACT_DAMAGE.get()
+                : PetConfigKeys.EnderDragon.ALLOW_ENTITY_CONTACT_DAMAGE.get()) {
             return;
         }
         event.setCancelled(true);

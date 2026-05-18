@@ -35,6 +35,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.GUNPOWDER})
 public class PetCreeper extends PetImpl {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofFlag("powered", Creeper.class, c -> c.setPowered(true))
     );

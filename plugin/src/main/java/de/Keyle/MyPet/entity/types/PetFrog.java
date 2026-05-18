@@ -37,6 +37,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.SLIME_BALL})
 public class PetFrog extends PetImpl implements PetAmphibiousEntity {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofRegistry("variant", Frog.class, RegistryKey.FROG_VARIANT, Frog::setVariant)
     );

@@ -40,6 +40,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.WHEAT}, leashFlags = {"Tamed"})
 public class PetLlama extends PetImpl implements PetBaby, PetChested, PetTameable {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("variant", Llama.class, Llama.Color.class, Llama::setColor)
     );

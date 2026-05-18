@@ -37,6 +37,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.SEAGRASS})
 public class PetTropicalFish extends PetImpl implements PetAquaticEntity {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("pattern",       TropicalFish.class, TropicalFish.Pattern.class, TropicalFish::setPattern),
             () -> OptionSpec.ofEnum("body-color",    TropicalFish.class, DyeColor.class,             TropicalFish::setBodyColor),

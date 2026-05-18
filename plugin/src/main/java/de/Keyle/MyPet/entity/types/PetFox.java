@@ -40,6 +40,7 @@ import java.util.Set;
 @DefaultInfo(food = {Material.SWEET_BERRIES})
 public class PetFox extends PetImpl implements PetBaby, PetEquipment {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("type", Fox.class, Fox.Type.class, Fox::setFoxType)
     );

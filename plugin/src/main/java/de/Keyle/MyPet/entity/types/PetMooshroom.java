@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
@@ -39,6 +39,7 @@ import java.util.Set;
 @DefaultInfo(food = {Material.WHEAT})
 public class PetMooshroom extends PetImpl implements PetBaby, PetInteractionGate {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("type", MushroomCow.class, MushroomCow.Variant.class, MushroomCow::setVariant)
     );
@@ -54,6 +55,6 @@ public class PetMooshroom extends PetImpl implements PetBaby, PetInteractionGate
 
     @Override
     public boolean isInteractionSuppressed() {
-        return !Configuration.MyPet.Mooshroom.CAN_GIVE_SOUP;
+        return !PetConfigKeys.Mooshroom.CAN_GIVE_STEW.get();
     }
 }

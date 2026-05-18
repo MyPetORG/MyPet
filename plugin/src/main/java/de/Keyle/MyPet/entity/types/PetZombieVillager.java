@@ -39,6 +39,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
 public class PetZombieVillager extends PetImpl implements PetEquipment, PetBaby, PetSunSensitive {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofRegistry("profession", ZombieVillager.class, RegistryKey.VILLAGER_PROFESSION,
                     ZombieVillager::setVillagerProfession),

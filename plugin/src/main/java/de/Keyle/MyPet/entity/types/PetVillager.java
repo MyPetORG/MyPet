@@ -42,6 +42,7 @@ import java.util.Set;
 @DefaultInfo(food = {Material.APPLE})
 public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLightningConvertible {
 
+
     // Villager also gets its trade level reset alongside the profession change —
     // matches the legacy behavior (fresh-profession villagers have no trades).
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

@@ -37,6 +37,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.WARPED_FUNGUS})
 public class PetStrider extends PetImpl implements PetBaby, PetLavaEntity {
 
+
     // Strider uses setSaddle(boolean), not the AbstractHorse inventory path,
     // so it can't share the PetSaddleable marker (which targets AbstractHorse).
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
@@ -40,6 +40,7 @@ import java.util.Set;
 @DefaultInfo(food = {Material.WHEAT})
 public class PetGoat extends PetImpl implements PetBaby, PetNaturalDrop, PetInteractionGate {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofFlag("screaming",   Goat.class, g -> g.setScreaming(true)),
             () -> OptionSpec.ofFlag("noLeftHorn",  Goat.class, g -> g.setLeftHorn(false)),
@@ -57,7 +58,7 @@ public class PetGoat extends PetImpl implements PetBaby, PetNaturalDrop, PetInte
 
     @Override
     public boolean isNaturalDropSuppressed() {
-        return !Configuration.MyPet.Goat.CAN_DROP_HORN;
+        return !PetConfigKeys.Goat.CAN_DROP_HORN.get();
     }
 
     @Override
@@ -67,6 +68,6 @@ public class PetGoat extends PetImpl implements PetBaby, PetNaturalDrop, PetInte
 
     @Override
     public boolean isInteractionSuppressed() {
-        return !Configuration.MyPet.Goat.CAN_GIVE_MILK;
+        return !PetConfigKeys.Goat.CAN_GIVE_MILK.get();
     }
 }

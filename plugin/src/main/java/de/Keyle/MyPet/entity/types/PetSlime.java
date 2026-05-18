@@ -35,6 +35,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.SUGAR})
 public class PetSlime extends PetImpl {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             PetCreationOptions.sizeSpec(Slime.class, 8, Slime::setSize)
     );

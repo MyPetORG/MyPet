@@ -20,9 +20,9 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EnderDragon;
@@ -67,9 +67,9 @@ import java.util.concurrent.ConcurrentHashMap;
  *   in the recent-killer set.</li>
  * </ol>
  *
- * <p>The {@link Configuration.MyPet.EnderDragon#GRANT_END_ADVANCEMENT_ON_KILL}
- * flag is checked at both event handlers — when {@code true}, both bail
- * early so vanilla behavior is preserved.
+ * <p>The {@link PetEnderDragon#GRANT_END_ADVANCEMENT_ON_KILL} flag is checked
+ * at both event handlers — when {@code true}, both bail early so vanilla
+ * behavior is preserved.
  */
 public class PetEnderDragonAdvancementListener implements Listener {
 
@@ -79,7 +79,7 @@ public class PetEnderDragonAdvancementListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPetDragonDamage(EntityDamageByEntityEvent event) {
-        if (Configuration.MyPet.EnderDragon.GRANT_END_ADVANCEMENT_ON_KILL) return;
+        if (PetConfigKeys.EnderDragon.GRANT_END_ADVANCEMENT_ON_KILL.get()) return;
         if (!(event.getEntity() instanceof EnderDragon)) return;
         if (!PetEntityMarker.isMarked(event.getEntity())) return;
 
@@ -96,7 +96,7 @@ public class PetEnderDragonAdvancementListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onCriterionGrant(PlayerAdvancementCriterionGrantEvent event) {
-        if (Configuration.MyPet.EnderDragon.GRANT_END_ADVANCEMENT_ON_KILL) return;
+        if (PetConfigKeys.EnderDragon.GRANT_END_ADVANCEMENT_ON_KILL.get()) return;
         if (!END_KILL_DRAGON.equals(event.getAdvancement().getKey())) return;
         if (!recentPetDragonKillers.contains(event.getPlayer().getUniqueId())) return;
         event.setCancelled(true);

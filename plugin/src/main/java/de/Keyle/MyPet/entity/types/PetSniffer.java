@@ -20,20 +20,21 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.PetBaby;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetNaturalDrop;
 import de.Keyle.MyPet.api.entity.ShopInfo;
-import java.util.Set;
-
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
+
+import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.TORCHFLOWER_SEEDS}, leashFlags = {"Tamed"})
 public class PetSniffer extends PetImpl implements PetBaby, PetNaturalDrop {
+
 
     public PetSniffer(MyPetPlayer petOwner) {
         super(petOwner);
@@ -47,6 +48,6 @@ public class PetSniffer extends PetImpl implements PetBaby, PetNaturalDrop {
 
     @Override
     public boolean isNaturalDropSuppressed() {
-        return !Configuration.MyPet.Sniffer.CAN_DIG_SEEDS;
+        return !PetConfigKeys.Sniffer.CAN_DIG_SEEDS.get();
     }
 }

@@ -38,6 +38,7 @@ import java.util.Set;
 @DefaultInfo(food = {Material.NAUTILUS_SHELL}, leashFlags = {"Tamed"})
 public class PetNautilus extends PetImpl implements PetEquipment, PetAmphibiousEntity {
 
+
     public PetNautilus(MyPetPlayer petOwner) {
         super(petOwner);
     }

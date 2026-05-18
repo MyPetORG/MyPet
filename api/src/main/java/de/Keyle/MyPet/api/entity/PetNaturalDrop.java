@@ -37,14 +37,13 @@ import java.util.Set;
  *       this pet may periodically drop. Most pets drop a single material;
  *       sniffers drop two (torchflower seed and pitcher pod).</li>
  *   <li>{@link #isNaturalDropSuppressed()} — reads the implementer's own
- *       per-pet config flag (e.g. {@code Configuration.MyPet.Chicken.CAN_LAY_EGGS}).
+ *       per-pet config flag (e.g. {@code PetChicken.CAN_LAY_EGGS}).
  *       Returns {@code true} when the admin has disabled the drop.</li>
  * </ol>
  *
  * <p>Per-pet flag names stay semantically rich ({@code CanLayEggs},
  * {@code CanShedScute}, {@code CanDigSeeds}) because each implementer reads
- * its own {@code Configuration.MyPet.<Type>.*} field. The listener never
- * names them.
+ * its own {@code ConfigKey} static field. The listener never names them.
  */
 public interface PetNaturalDrop extends Pet {
 

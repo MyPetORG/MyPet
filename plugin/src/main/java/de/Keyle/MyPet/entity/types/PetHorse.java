@@ -43,6 +43,7 @@ import java.util.Set;
 @DefaultInfo(food = {Material.SUGAR, Material.WHEAT, Material.APPLE}, leashFlags = {"Tamed"}, growUpItem = Material.BREAD)
 public class PetHorse extends PetImpl implements PetBaby, PetEquipment, PetSaddleable, PetTameable {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("color", Horse.class, Horse.Color.class, Horse::setColor),
             () -> OptionSpec.ofEnum("style", Horse.class, Horse.Style.class, Horse::setStyle)

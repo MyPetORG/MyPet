@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.Pet;
@@ -70,13 +71,13 @@ public class PetCreeperListener implements Listener {
         ItemStack item = event.getPlayer().getInventory().getItem(event.getHand());
         if (item == null || item.getType() != Material.FLINT_AND_STEEL) return;
 
-        if (!Configuration.MyPet.Creeper.ALLOW_FLINT_AND_STEEL_EXPLODE) {
+        if (!PetConfigKeys.Creeper.ALLOW_FLINT_AND_STEEL_EXPLODE.get()) {
             event.setCancelled(true);
             return;
         }
         Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getRightClicked());
         if (pet != null
-                && !Configuration.MyPet.Creeper.ALLOW_NON_OWNER_FLINT_AND_STEEL
+                && !PetConfigKeys.Creeper.ALLOW_NON_OWNER_FLINT_AND_STEEL.get()
                 && !isOwner(event.getPlayer(), pet)) {
             event.setCancelled(true);
         }
@@ -95,7 +96,7 @@ public class PetCreeperListener implements Listener {
         if (petOpt.isEmpty()) return;
         Pet pet = petOpt.get();
 
-        if (!Configuration.MyPet.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE) {
+        if (!PetConfigKeys.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE.get()) {
             event.blockList().clear();
             event.setYield(0f);
         }
@@ -140,7 +141,7 @@ public class PetCreeperListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPetExplosionSplashDamage(EntityDamageByEntityEvent event) {
-        if (Configuration.MyPet.Creeper.ALLOW_EXPLOSION_ENTITY_DAMAGE) return;
+        if (PetConfigKeys.Creeper.ALLOW_EXPLOSION_ENTITY_DAMAGE.get()) return;
         if (event.getCause() != DamageCause.ENTITY_EXPLOSION) return;
         if (!(event.getDamager() instanceof Creeper)) return;
         if (!PetEntityMarker.isMarked(event.getDamager())) return;

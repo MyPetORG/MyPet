@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.migration.migrations;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.ConfigKey;
+import de.Keyle.MyPet.api.config.ConfigKeyRegistry;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.migration.ConfigMigration;
@@ -44,7 +45,7 @@ import java.util.logging.Logger;
  *       {@code pet-config.yml}</li>
  *   <li>Writes it as {@code CanFly} (preserving the admin's "no flight" intent)</li>
  *   <li>Deletes the legacy {@code CanGlide} entry</li>
- *   <li>Updates the in-memory {@link Configuration.MyPet} CAN_FLY map so the
+ *   <li>Updates each flying pet's {@code CAN_FLY} {@link ConfigKey} so the
  *       current boot reflects the migrated state without requiring a restart</li>
  * </ol>
  *
@@ -88,10 +89,16 @@ public class MigrateFlyingPetsCanGlideToCanFly implements ConfigMigration {
             config.set(newKey, legacyValue);
             config.set(legacyKey, null);
 
-            // Sync the runtime map so the change takes effect without a restart.
-            // setDefault/loadConfiguration already populated this from the pre-migration
-            // file state; overwrite with the authoritative migrated value.
-            Configuration.MyPet.setCanFly(type.name(), legacyValue);
+            // Sync the in-memory ConfigKey so the change takes effect without a
+            // restart. ConfigKeyRegistry.loadFromYaml already ran during
+            // loadConfiguration against the pre-migration file state; overwrite
+            // with the authoritative migrated value via the key's update path.
+            ConfigKey<?> ck = ConfigKeyRegistry.lookup(type.name(), "CanFly");
+            if (ck != null && ck.defaultValue() instanceof Boolean) {
+                @SuppressWarnings("unchecked")
+                ConfigKey<Boolean> boolKey = (ConfigKey<Boolean>) ck;
+                boolKey.update(legacyValue);
+            }
 
             changed = true;
             converted++;

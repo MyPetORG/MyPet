@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigLookup;
 
 /**
  * Marker for pet types whose underlying vanilla mob combusts in direct
@@ -44,6 +44,6 @@ import de.Keyle.MyPet.api.Configuration;
 public interface PetSunSensitive extends Pet {
 
     default boolean preventDaylightBurn() {
-        return Configuration.MyPet.preventDaylightBurn(getPetType());
+        return PetConfigLookup.boolValue(getClass(), "PreventDaylightBurn", true);
     }
 }

@@ -23,7 +23,8 @@ package de.Keyle.MyPet.util;
 import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration.*;
-import de.Keyle.MyPet.api.Configuration.MyPet;
+import de.Keyle.MyPet.api.config.ConfigKeyRegistry;
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
@@ -239,68 +240,17 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", "lead");
             config.addDefault("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false);
             config.addDefault("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false);
-            if (PetBaby.class.isAssignableFrom(petType.getPetClass())) {
-                config.addDefault("MyPet.Pets." + petType.name() + ".GrowUpItem", pi.growUpItem().name().toLowerCase());
-            }
         }
 
-
-        // Dynamic per-type CanFly / CanSwim / AllowZombification /
-        // AllowLightningConversion / PreventDaylightBurn / PreventSuffocation
-        // rows. Adding a new flying, swimming, zombifiable, lightning-
-        // convertible, sun-sensitive, or water-breathing pet requires no
-        // edit here — implement the appropriate marker interface and the
-        // YAML row appears. Migration of pre-4.x configs (single CanGlide key
-        // on flying pets) is handled by MigrateFlyingPetsCanGlideToCanFly.
-        for (PetType type : PetType.values()) {
-            String base = "MyPet.Pets." + type.name();
-            if (PetFlyingEntity.class.isAssignableFrom(type.getPetClass())) {
-                config.addDefault(base + ".CanFly", true);
-            }
-            if (PetSwimmingEntity.class.isAssignableFrom(type.getPetClass())) {
-                config.addDefault(base + ".CanSwim", true);
-            }
-            if (PetZombifiable.class.isAssignableFrom(type.getPetClass())) {
-                config.addDefault(base + ".AllowZombification", false);
-            }
-            if (PetLightningConvertible.class.isAssignableFrom(type.getPetClass())) {
-                config.addDefault(base + ".AllowLightningConversion", false);
-            }
-            if (PetSunSensitive.class.isAssignableFrom(type.getPetClass())) {
-                config.addDefault(base + ".PreventDaylightBurn", true);
-            }
-            if (PetAquaticEntity.class.isAssignableFrom(type.getPetClass())) {
-                config.addDefault(base + ".PreventSuffocation", true);
-            }
-        }
-        config.addDefault("MyPet.Pets.Armadillo.CanShedScute", MyPet.Armadillo.CAN_SHED_SCUTE);
-        config.addDefault("MyPet.Pets.Axolotl.PreventDryOut", MyPet.Axolotl.PREVENT_DRY_OUT);
-        config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyPet.Chicken.CAN_LAY_EGGS);
-        if (PetType.byNameOrNull("CopperGolem") != null) {
-            config.addDefault("MyPet.Pets.CopperGolem.CanOxidize", true);
-        }
-        config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyPet.Cow.CAN_GIVE_MILK);
-        config.addDefault("MyPet.Pets.Creeper.AllowFlintAndSteelExplode", MyPet.Creeper.ALLOW_FLINT_AND_STEEL_EXPLODE);
-        config.addDefault("MyPet.Pets.Creeper.AllowNonOwnerFlintAndSteel", MyPet.Creeper.ALLOW_NON_OWNER_FLINT_AND_STEEL);
-        config.addDefault("MyPet.Pets.Creeper.AllowExplosionBlockDamage", MyPet.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE);
-        config.addDefault("MyPet.Pets.Creeper.AllowExplosionEntityDamage", MyPet.Creeper.ALLOW_EXPLOSION_ENTITY_DAMAGE);
-        config.addDefault("MyPet.Pets.Creeper.AllowLightningPower", MyPet.Creeper.ALLOW_LIGHTNING_POWER);
-        config.addDefault("MyPet.Pets.EnderDragon.GrantEndAdvancementOnKill", MyPet.EnderDragon.GRANT_END_ADVANCEMENT_ON_KILL);
-        config.addDefault("MyPet.Pets.EnderDragon.AllowBlockDamage", MyPet.EnderDragon.ALLOW_BLOCK_DAMAGE);
-        config.addDefault("MyPet.Pets.EnderDragon.AllowPlayerContactDamage", MyPet.EnderDragon.ALLOW_PLAYER_CONTACT_DAMAGE);
-        config.addDefault("MyPet.Pets.EnderDragon.AllowEntityContactDamage", MyPet.EnderDragon.ALLOW_ENTITY_CONTACT_DAMAGE);
-        config.addDefault("MyPet.Pets.Goat.CanDropHorn", MyPet.Goat.CAN_DROP_HORN);
-        config.addDefault("MyPet.Pets.Goat.CanGiveMilk", MyPet.Goat.CAN_GIVE_MILK);
-        config.addDefault("MyPet.Pets.IronGolem.CanTossUp", MyPet.IronGolem.CAN_TOSS_UP);
-        config.addDefault("MyPet.Pets.SnowGolem.DisableSnowTrack", MyPet.SnowGolem.DISABLE_SNOW_TRACK);
-        config.addDefault("MyPet.Pets.MagmaCube.CanHurtPlayersOnContact", MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT);
-        config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyPet.Mooshroom.CAN_GIVE_SOUP);
-        config.addDefault("MyPet.Pets.Mooshroom.AllowLightningVariantFlip", MyPet.Mooshroom.ALLOW_LIGHTNING_VARIANT_FLIP);
-        config.addDefault("MyPet.Pets.Panda.CanDropSlimeball", MyPet.Panda.CAN_DROP_SLIMEBALL);
-        config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MyPet.Sheep.CAN_BE_SHEARED);
-        config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MyPet.Sheep.CAN_REGROW_WOOL);
-        config.addDefault("MyPet.Pets.Slime.CanHurtPlayersOnContact", MyPet.Slime.CAN_HURT_PLAYERS_ON_CONTACT);
-        config.addDefault("MyPet.Pets.Sniffer.CanDigSeeds", MyPet.Sniffer.CAN_DIG_SEEDS);
+        // Per-pet ConfigKey defaults — every static ConfigKey<?> field declared
+        // on a PetConfigKeys.<Pet> nested class self-registers with
+        // ConfigKeyRegistry on first reference. ensureLoaded() forces all
+        // nested classes to initialize so the registry walk below sees every
+        // key. Covers CanFly, CanSwim, AllowZombification,
+        // AllowLightningConversion, PreventDaylightBurn, PreventSuffocation,
+        // GrowUpItem, and every per-pet feature flag.
+        PetConfigKeys.ensureLoaded();
+        ConfigKeyRegistry.writeDefaults(config);
 
         config.options().copyDefaults(true);
         try {
@@ -477,59 +427,13 @@ public class ConfigurationLoader {
                 MyPetApi.getLogger().warning("There was an error while loading pet-config.yml");
             }
         }
-        MyPet.Armadillo.CAN_SHED_SCUTE = config.getBoolean("MyPet.Pets.Armadillo.CanShedScute", true);
-        MyPet.Axolotl.PREVENT_DRY_OUT = config.getBoolean("MyPet.Pets.Axolotl.PreventDryOut", true);
-        MyPet.Chicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
-        MyPet.CopperGolem.CAN_OXIDIZE = config.getBoolean("MyPet.Pets.CopperGolem.CanOxidize", true);
-        MyPet.Cow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
-        MyPet.Creeper.ALLOW_FLINT_AND_STEEL_EXPLODE = config.getBoolean("MyPet.Pets.Creeper.AllowFlintAndSteelExplode", false);
-        MyPet.Creeper.ALLOW_NON_OWNER_FLINT_AND_STEEL = config.getBoolean("MyPet.Pets.Creeper.AllowNonOwnerFlintAndSteel", false);
-        MyPet.Creeper.ALLOW_EXPLOSION_BLOCK_DAMAGE = config.getBoolean("MyPet.Pets.Creeper.AllowExplosionBlockDamage", false);
-        MyPet.Creeper.ALLOW_EXPLOSION_ENTITY_DAMAGE = config.getBoolean("MyPet.Pets.Creeper.AllowExplosionEntityDamage", false);
-        MyPet.Creeper.ALLOW_LIGHTNING_POWER = config.getBoolean("MyPet.Pets.Creeper.AllowLightningPower", false);
-        MyPet.EnderDragon.GRANT_END_ADVANCEMENT_ON_KILL = config.getBoolean("MyPet.Pets.EnderDragon.GrantEndAdvancementOnKill", false);
-        MyPet.EnderDragon.ALLOW_BLOCK_DAMAGE = config.getBoolean("MyPet.Pets.EnderDragon.AllowBlockDamage", false);
-        MyPet.EnderDragon.ALLOW_PLAYER_CONTACT_DAMAGE = config.getBoolean("MyPet.Pets.EnderDragon.AllowPlayerContactDamage", false);
-        MyPet.EnderDragon.ALLOW_ENTITY_CONTACT_DAMAGE = config.getBoolean("MyPet.Pets.EnderDragon.AllowEntityContactDamage", false);
-        MyPet.Goat.CAN_DROP_HORN = config.getBoolean("MyPet.Pets.Goat.CanDropHorn", true);
-        MyPet.Goat.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Goat.CanGiveMilk", true);
-        MyPet.Sheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
-        MyPet.Sheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
-        MyPet.IronGolem.CAN_TOSS_UP = config.getBoolean("MyPet.Pets.IronGolem.CanTossUp", true);
-        MyPet.SnowGolem.DISABLE_SNOW_TRACK = config.getBoolean("MyPet.Pets.SnowGolem.DisableSnowTrack", true);
-        MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT = config.getBoolean("MyPet.Pets.MagmaCube.CanHurtPlayersOnContact", false);
-        MyPet.Mooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
-        MyPet.Mooshroom.ALLOW_LIGHTNING_VARIANT_FLIP = config.getBoolean("MyPet.Pets.Mooshroom.AllowLightningVariantFlip", false);
-        MyPet.Panda.CAN_DROP_SLIMEBALL = config.getBoolean("MyPet.Pets.Panda.CanDropSlimeball", true);
-        MyPet.Slime.CAN_HURT_PLAYERS_ON_CONTACT = config.getBoolean("MyPet.Pets.Slime.CanHurtPlayersOnContact", false);
-        MyPet.Sniffer.CAN_DIG_SEEDS = config.getBoolean("MyPet.Pets.Sniffer.CanDigSeeds", true);
-
-        // Dynamic per-type CanFly / CanSwim / AllowZombification /
-        // AllowLightningConversion / PreventDaylightBurn / PreventSuffocation
-        // load. Reads the
-        // MyPet.Pets.<Type>.{CanFly,CanSwim,AllowZombification,AllowLightningConversion,PreventDaylightBurn,PreventSuffocation}
-        // keys populated by setDefault().
-        for (PetType type : PetType.values()) {
-            String base = "MyPet.Pets." + type.name();
-            if (PetFlyingEntity.class.isAssignableFrom(type.getPetClass())) {
-                MyPet.setCanFly(type.name(), config.getBoolean(base + ".CanFly", true));
-            }
-            if (PetSwimmingEntity.class.isAssignableFrom(type.getPetClass())) {
-                MyPet.setCanSwim(type.name(), config.getBoolean(base + ".CanSwim", true));
-            }
-            if (PetZombifiable.class.isAssignableFrom(type.getPetClass())) {
-                MyPet.setAllowZombification(type.name(), config.getBoolean(base + ".AllowZombification", false));
-            }
-            if (PetLightningConvertible.class.isAssignableFrom(type.getPetClass())) {
-                MyPet.setAllowLightningConversion(type.name(), config.getBoolean(base + ".AllowLightningConversion", false));
-            }
-            if (PetSunSensitive.class.isAssignableFrom(type.getPetClass())) {
-                MyPet.setPreventDaylightBurn(type.name(), config.getBoolean(base + ".PreventDaylightBurn", true));
-            }
-            if (PetAquaticEntity.class.isAssignableFrom(type.getPetClass())) {
-                MyPet.setPreventSuffocation(type.name(), config.getBoolean(base + ".PreventSuffocation", true));
-            }
-        }
+        // Every per-pet ConfigKey reads its MyPet.Pets.<Type>.<Key> entry and
+        // publishes the new value via volatile write — covers all per-pet
+        // feature flags plus the marker-derived keys (CanFly, CanSwim,
+        // AllowZombification, AllowLightningConversion, PreventDaylightBurn,
+        // PreventSuffocation, GrowUpItem). Hot-reloadable.
+        PetConfigKeys.ensureLoaded();
+        ConfigKeyRegistry.loadFromYaml(config);
     }
 
     public static void loadCompatConfiguration() {
@@ -576,11 +480,8 @@ public class ConfigurationLoader {
             MyPetApi.getPetInfo().setReleaseOnDeath(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false));
             MyPetApi.getPetInfo().setRemoveAfterRelease(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false));
             MyPetApi.getPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "lead")));
-            if (PetBaby.class.isAssignableFrom(petType.getPetClass())) {
-                String growUp = config.getString("MyPet.Pets." + petType.name() + ".GrowUpItem", pi.growUpItem().name().toLowerCase());
-                MyPet.setGrowUpItem(petType.name(), ConfigItem.createConfigItem(growUp));
-            }
         }
+        // GrowUpItem is now loaded by ConfigKeyRegistry.loadFromYaml in loadConfiguration().
     }
 
     public static void upgradeConfig() {

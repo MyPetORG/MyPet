@@ -39,14 +39,14 @@ import java.util.Set;
  *       pets gate one material; some (e.g., mooshroom: bowl and shears) may
  *       eventually gate two.</li>
  *   <li>{@link #isInteractionSuppressed()} — reads the implementer's own
- *       per-pet config flag (e.g. {@code Configuration.MyPet.Cow.CAN_GIVE_MILK}).
+ *       per-pet config flag (e.g. {@code PetCow.CAN_GIVE_MILK}).
  *       Returns {@code true} when the admin has disabled the interaction.</li>
  * </ol>
  *
  * <p>Per-pet flag names stay semantically rich ({@code CanGiveMilk},
  * {@code CanBeSheared}, {@code CanGiveStew}) because each implementer reads
- * its own {@code Configuration.MyPet.<Type>.*} field. The listener never
- * names them. Mirrors {@link PetNaturalDrop} for the drop-event family.
+ * its own {@code ConfigKey} static field. The listener never names them.
+ * Mirrors {@link PetNaturalDrop} for the drop-event family.
  */
 public interface PetInteractionGate extends Pet {
 

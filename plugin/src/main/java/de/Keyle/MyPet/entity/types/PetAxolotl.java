@@ -37,6 +37,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.TROPICAL_FISH})
 public class PetAxolotl extends PetImpl implements PetBaby, PetAmphibiousEntity {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("variant", Axolotl.class, Axolotl.Variant.class, Axolotl::setVariant)
     );

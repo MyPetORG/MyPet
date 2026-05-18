@@ -39,6 +39,7 @@ import java.util.Set;
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
 public class PetZombieNautilus extends PetImpl implements PetEquipment, PetAmphibiousEntity, PetSunSensitive {
 
+
     public PetZombieNautilus(MyPetPlayer petOwner) {
         super(petOwner);
     }

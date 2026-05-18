@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigLookup;
 
 /**
  * Marker for pet types whose underlying vanilla mob can swim — implies
@@ -48,6 +48,6 @@ import de.Keyle.MyPet.api.Configuration;
 public interface PetSwimmingEntity extends Pet {
 
     default boolean canSwim() {
-        return Configuration.MyPet.canSwim(getPetType());
+        return PetConfigLookup.boolValue(getClass(), "CanSwim", true);
     }
 }

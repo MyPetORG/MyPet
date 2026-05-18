@@ -36,6 +36,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.REDSTONE})
 public class PetMagmaCube extends PetImpl implements PetLavaEntity {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             PetCreationOptions.sizeSpec(MagmaCube.class, 8, MagmaCube::setSize)
     );

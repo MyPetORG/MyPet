@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigLookup;
 
 /**
  * Marker for nether-native pet types that vanilla converts to a zombified
@@ -37,6 +37,6 @@ import de.Keyle.MyPet.api.Configuration;
 public interface PetZombifiable extends Pet {
 
     default boolean allowZombification() {
-        return Configuration.MyPet.allowZombification(getPetType());
+        return PetConfigLookup.boolValue(getClass(), "AllowZombification", false);
     }
 }

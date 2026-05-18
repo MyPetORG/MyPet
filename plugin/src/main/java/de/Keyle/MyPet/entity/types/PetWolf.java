@@ -39,6 +39,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.BEEF, Material.MUTTON}, leashFlags = {"Tamed"})
 public class PetWolf extends PetImpl implements PetBaby, PetTameable {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofRegistry("variant", Wolf.class, RegistryKey.WOLF_VARIANT, Wolf::setVariant),
             () -> OptionSpec.ofEnum    ("collar",  Wolf.class, DyeColor.class,           Wolf::setCollarColor),

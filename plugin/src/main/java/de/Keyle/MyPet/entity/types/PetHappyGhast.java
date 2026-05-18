@@ -32,6 +32,7 @@ import org.bukkit.Material;
 @DefaultInfo(food = {Material.GHAST_TEAR}, leashFlags = {"Tamed"})
 public class PetHappyGhast extends PetImpl implements PetFlyingEntity, PetBaby {
 
+
     public PetHappyGhast(MyPetPlayer petOwner) {
         super(petOwner);
     }

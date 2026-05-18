@@ -38,6 +38,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.GUNPOWDER})
 public class PetBlaze extends PetImpl implements PetFlyingEntity, PetLavaEntity {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofFlag("fire", Blaze.class, b -> b.setVisualFire(TriState.TRUE))
     );

@@ -38,6 +38,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.CARROT})
 public class PetPig extends PetImpl implements PetBaby, PetLightningConvertible {
 
+
     // Pig.Variant + RegistryKey.PIG_VARIANT landed in 1.21.5. On older
     // Paper the variant spec factory throws LinkageError and is dropped.
     //

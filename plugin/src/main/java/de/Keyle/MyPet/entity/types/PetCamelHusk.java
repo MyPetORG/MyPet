@@ -37,6 +37,7 @@ import java.util.Set;
 @DefaultInfo(food = {Material.CACTUS})
 public class PetCamelHusk extends PetImpl implements PetBaby, PetEquipment {
 
+
     public PetCamelHusk(MyPetPlayer petOwner) {
         super(petOwner);
     }

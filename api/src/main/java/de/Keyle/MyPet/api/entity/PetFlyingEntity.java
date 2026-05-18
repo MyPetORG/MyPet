@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigLookup;
 
 /**
  * Marker for pet types whose underlying vanilla mob naturally flies — implies
@@ -28,14 +28,15 @@ import de.Keyle.MyPet.api.Configuration;
  * flight pathing, no float goal). Read at runtime by
  * {@link PetType#isFlyingPet()} via {@code Class.isAssignableFrom}.
  *
- * <p>The {@link #canFly()} default consults the per-pet preference loaded
- * from {@code MyPet.Pets.<Type>.CanFly} in {@code pet-config.yml}. The YAML
- * row is auto-registered for every type that implements this marker — adding
- * a new flying pet only requires implementing this interface.
+ * <p>The {@link #canFly()} default reads the per-pet preference from
+ * {@code PetConfigKeys.<Pet>.CAN_FLY}, loaded from
+ * {@code MyPet.Pets.<Type>.CanFly} in {@code pet-config.yml}. Adding a
+ * new flying pet means implementing this interface <em>and</em> adding a
+ * {@code CAN_FLY} entry to the matching {@code PetConfigKeys} nested class.
  */
 public interface PetFlyingEntity extends Pet {
 
     default boolean canFly() {
-        return Configuration.MyPet.canFly(getPetType());
+        return PetConfigLookup.boolValue(getClass(), "CanFly", true);
     }
 }

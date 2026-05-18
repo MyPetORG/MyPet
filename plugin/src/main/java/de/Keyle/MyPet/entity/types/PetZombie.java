@@ -23,12 +23,12 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.PetBaby;
 import org.bukkit.Material;
 
 @ShopInfo
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
 public class PetZombie extends PetImpl implements PetEquipment, PetBaby, PetSunSensitive {
+
 
     public PetZombie(MyPetPlayer petOwner) {
         super(petOwner);

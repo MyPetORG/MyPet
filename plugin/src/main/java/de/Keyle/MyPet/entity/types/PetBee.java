@@ -51,6 +51,7 @@ import java.util.List;
 })
 public class PetBee extends PetImpl implements PetBaby, PetFlyingEntity {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofFlag("angry",      Bee.class, b -> b.setAnger(400)),
             () -> OptionSpec.ofFlag("has-stung",  Bee.class, b -> b.setHasStung(true)),

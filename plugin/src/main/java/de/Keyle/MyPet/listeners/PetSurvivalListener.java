@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.Pet;
@@ -95,7 +95,7 @@ public class PetSurvivalListener implements Listener {
         // extends DRYOUT to additional mobs in a future MC version.
         if (event.getCause() == DamageCause.DRYOUT
                 && bukkitEntity instanceof Axolotl
-                && Configuration.MyPet.Axolotl.PREVENT_DRY_OUT) {
+                && PetConfigKeys.Axolotl.PREVENT_DRY_OUT.get()) {
             event.setCancelled(true);
             return;
         }

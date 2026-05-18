@@ -20,15 +20,16 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @DefaultInfo(food = {Material.END_STONE}, leashFlags = {"Impossible"})
 public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingEntity {
+
 
     public PetEnderDragon(MyPetPlayer petOwner) {
         super(petOwner);

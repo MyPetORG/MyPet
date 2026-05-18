@@ -38,6 +38,7 @@ import java.util.Set;
 @DefaultInfo(food = {Material.APPLE})
 public class PetVex extends PetImpl implements PetEquipment, PetFlyingEntity {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofFlag("glowing", Vex.class, v -> v.setCharging(true))
     );

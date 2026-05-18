@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.entity.ai.attack;
 
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -314,7 +314,7 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
         // target.damage(...) directly — the defender's hurt path doesn't carry
         // attacker-specific knockback. Health-drop check approximates vanilla's
         // "only on a successful hit" guard (skips canceled events and i-frames).
-        if (mob instanceof IronGolem && Configuration.MyPet.IronGolem.CAN_TOSS_UP
+        if (mob instanceof IronGolem && PetConfigKeys.IronGolem.CAN_TOSS_UP.get()
                 && target.getHealth() < healthBefore) {
             applyIronGolemTossUp(target);
         }

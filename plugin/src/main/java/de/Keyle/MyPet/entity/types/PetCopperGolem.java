@@ -36,6 +36,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.COPPER_INGOT}, leashFlags = {"UserCreated"})
 public class PetCopperGolem extends PetImpl {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("oxidation", CopperGolem.class, WeatheringCopperState.class, CopperGolem::setWeatheringState),
             () -> OptionSpec.ofFlag("waxed",     CopperGolem.class,                              g -> g.setOxidizing(CopperGolem.Oxidizing.waxed()))

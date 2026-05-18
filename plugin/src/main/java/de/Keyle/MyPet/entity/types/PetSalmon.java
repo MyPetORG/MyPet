@@ -36,6 +36,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.SEAGRASS})
 public class PetSalmon extends PetImpl implements PetAquaticEntity {
 
+
     // Salmon.Variant + setVariant landed in 1.21.2. On older Paper the
     // spec factory throws LinkageError and is silently dropped by specs().
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

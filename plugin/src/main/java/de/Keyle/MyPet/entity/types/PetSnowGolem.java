@@ -35,6 +35,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.CARROT, Material.SNOWBALL})
 public class PetSnowGolem extends PetImpl {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofFlag("derp", Snowman.class, s -> s.setDerp(true))
     );

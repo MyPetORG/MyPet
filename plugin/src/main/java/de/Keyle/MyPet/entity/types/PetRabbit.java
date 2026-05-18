@@ -36,6 +36,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.CARROT})
 public class PetRabbit extends PetImpl implements PetBaby {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("variant", Rabbit.class, Rabbit.Type.class, Rabbit::setRabbitType)
     );

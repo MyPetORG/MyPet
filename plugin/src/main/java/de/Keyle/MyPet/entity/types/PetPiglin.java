@@ -33,6 +33,7 @@ import org.bukkit.Material;
 @DefaultInfo(food = {Material.GOLD_NUGGET})
 public class PetPiglin extends PetImpl implements PetEquipment, PetBaby, PetZombifiable {
 
+
     public PetPiglin(MyPetPlayer petOwner) {
         super(petOwner);
     }

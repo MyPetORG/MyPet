@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.event.EventHandler;
@@ -39,8 +39,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
  * candidate blocks into a list and fires
  * {@link EntityExplodeEvent} with the dragon as source — cancelling the event
  * causes Paper to {@code return} without removing any block, which is exactly
- * what we want when {@link Configuration.MyPet.EnderDragon#ALLOW_BLOCK_DAMAGE}
- * is {@code false}.
+ * what we want when {@link PetEnderDragon#ALLOW_BLOCK_DAMAGE} is {@code false}.
  *
  * <p>Pet-scoped via {@link PetEntityMarker#isMarked} so vanilla End-fight
  * dragons (and anything else summoning an EnderDragon) keep their normal
@@ -50,7 +49,7 @@ public class PetEnderDragonBlockDamageListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPetDragonBrushDestruction(EntityExplodeEvent event) {
-        if (Configuration.MyPet.EnderDragon.ALLOW_BLOCK_DAMAGE) return;
+        if (PetConfigKeys.EnderDragon.ALLOW_BLOCK_DAMAGE.get()) return;
         if (!(event.getEntity() instanceof EnderDragon)) return;
         if (!PetEntityMarker.isMarked(event.getEntity())) return;
         event.setCancelled(true);

@@ -20,8 +20,12 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetSaddleable;
+import de.Keyle.MyPet.api.entity.PetTameable;
+import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
@@ -29,15 +33,13 @@ import org.bukkit.entity.ZombieHorse;
 import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.PetSaddleable;
-import de.Keyle.MyPet.api.entity.PetTameable;
-import de.Keyle.MyPet.api.entity.ShopInfo;
+
 import java.util.Set;
 
 @ShopInfo(displayName = "Zombie Horse")
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
 public class PetZombieHorse extends PetImpl implements PetBaby, PetEquipment, PetSaddleable, PetTameable {
+
 
     public PetZombieHorse(MyPetPlayer petOwner) {
         super(petOwner);

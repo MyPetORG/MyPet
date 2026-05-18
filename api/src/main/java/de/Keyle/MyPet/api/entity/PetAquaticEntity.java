@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigLookup;
 
 /**
  * Marker for pet types whose underlying vanilla mob is a strict water-breather
@@ -45,6 +45,6 @@ import de.Keyle.MyPet.api.Configuration;
 public interface PetAquaticEntity extends PetSwimmingEntity {
 
     default boolean preventSuffocation() {
-        return Configuration.MyPet.preventSuffocation(getPetType());
+        return PetConfigLookup.boolValue(getClass(), "PreventSuffocation", true);
     }
 }

@@ -32,6 +32,7 @@ import org.bukkit.Material;
 @DefaultInfo(food = {Material.CRIMSON_FUNGUS})
 public class PetHoglin extends PetImpl implements PetBaby, PetZombifiable {
 
+
     public PetHoglin(MyPetPlayer petOwner) {
         super(petOwner);
     }

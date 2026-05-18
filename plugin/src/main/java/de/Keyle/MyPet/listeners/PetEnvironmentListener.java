@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -91,7 +91,7 @@ public class PetEnvironmentListener implements Listener {
             return;
         }
         if (event.getNewState().getType() == Material.SNOW
-                && Configuration.MyPet.SnowGolem.DISABLE_SNOW_TRACK) {
+                && PetConfigKeys.SnowGolem.DISABLE_SNOW_TRACK.get()) {
             event.setCancelled(true);
         }
     }

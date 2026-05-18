@@ -36,6 +36,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.SEAGRASS})
 public class PetPufferfish extends PetImpl implements PetAquaticEntity {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             PetCreationOptions.puffSpec(PufferFish.class)
     );

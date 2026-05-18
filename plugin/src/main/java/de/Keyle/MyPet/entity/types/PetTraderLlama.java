@@ -20,22 +20,23 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.entity.PetBaby;
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import org.bukkit.entity.TraderLlama;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.LlamaInventory;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetChested;
 import de.Keyle.MyPet.api.entity.PetTameable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
+import org.bukkit.entity.TraderLlama;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.LlamaInventory;
 
 // variant: auto-derived via the Llama.class spec on PetLlama (TraderLlama extends Llama).
 @ShopInfo(displayName = "Trader Llama")
 @DefaultInfo(food = {Material.WHEAT}, leashFlags = {"Tamed"})
 public class PetTraderLlama extends PetImpl implements PetBaby, PetChested, PetTameable {
+
 
     public PetTraderLlama(MyPetPlayer petOwner) {
         super(petOwner);

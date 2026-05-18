@@ -37,6 +37,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.COOKIE, Material.SWEET_BERRIES}, leashFlags = {"Tamed"})
 public class PetParrot extends PetImpl implements PetFlyingEntity, PetTameable {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofEnum("variant", Parrot.class, Parrot.Variant.class, Parrot::setVariant)
     );

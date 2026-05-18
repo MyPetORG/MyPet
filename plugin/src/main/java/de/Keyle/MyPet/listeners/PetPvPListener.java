@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.WorldGroup;
@@ -161,8 +162,8 @@ public class PetPvPListener implements Listener {
         }
 
         boolean allowed = damagerSlime instanceof MagmaCube
-                ? Configuration.MyPet.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT
-                : Configuration.MyPet.Slime.CAN_HURT_PLAYERS_ON_CONTACT;
+                ? PetConfigKeys.MagmaCube.CAN_HURT_PLAYERS_ON_CONTACT.get()
+                : PetConfigKeys.Slime.CAN_HURT_PLAYERS_ON_CONTACT.get();
         if (!allowed) event.setCancelled(true);
     }
 }

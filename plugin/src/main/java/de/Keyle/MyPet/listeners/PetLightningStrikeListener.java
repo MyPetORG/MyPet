@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.api.config.PetConfigKeys;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetLightningConvertible;
 import de.Keyle.MyPet.api.entity.PetType;
@@ -56,8 +56,8 @@ import org.bukkit.event.entity.EntityTransformEvent;
  *       {@code PowerCause.LIGHTNING}): vanilla mutates the {@code dataPowered}
  *       flag on the same entity. {@code PetEntitySnapshot} captures that
  *       state, so when admins opt in via
- *       {@code Configuration.MyPet.Creeper.ALLOW_LIGHTNING_POWER}, no rebind
- *       is needed — let the event proceed.</li>
+ *       {@link PetCreeper#ALLOW_LIGHTNING_POWER}, no rebind is needed —
+ *       let the event proceed.</li>
  *
  *   <li><b>Pig / Villager type conversion</b> ({@link EntityTransformEvent}
  *       with {@code TransformReason.LIGHTNING}): vanilla discards the source
@@ -74,10 +74,10 @@ import org.bukkit.event.entity.EntityTransformEvent;
  *       convertPetType} short-circuits on equal types, so the variant flip
  *       is replicated manually via {@code MushroomCow#setVariant} on the
  *       existing entity. Admins opt in via
- *       {@code Configuration.MyPet.Mooshroom.ALLOW_LIGHTNING_VARIANT_FLIP};
- *       the event is cancelled either way (the vanilla discard-and-respawn
- *       path is never desirable for a pet — we just optionally apply its
- *       observable effect).</li>
+ *       {@link PetMooshroom#ALLOW_LIGHTNING_VARIANT_FLIP}; the event is
+ *       cancelled either way (the vanilla discard-and-respawn path is never
+ *       desirable for a pet — we just optionally apply its observable
+ *       effect).</li>
  * </ul>
  *
  * <p>For any future lightning-conversion entity Mojang adds that doesn't
@@ -94,7 +94,7 @@ public class PetLightningStrikeListener implements Listener {
         if (!PetEntityMarker.isMarked(event.getEntity())) {
             return;
         }
-        if (!Configuration.MyPet.Creeper.ALLOW_LIGHTNING_POWER) {
+        if (!PetConfigKeys.Creeper.ALLOW_LIGHTNING_POWER.get()) {
             event.setCancelled(true);
         }
     }
@@ -119,7 +119,7 @@ public class PetLightningStrikeListener implements Listener {
 
         if (event.getEntity() instanceof MushroomCow cow) {
             event.setCancelled(true);
-            if (Configuration.MyPet.Mooshroom.ALLOW_LIGHTNING_VARIANT_FLIP) {
+            if (PetConfigKeys.Mooshroom.ALLOW_LIGHTNING_VARIANT_FLIP.get()) {
                 cow.setVariant(cow.getVariant() == MushroomCow.Variant.RED
                         ? MushroomCow.Variant.BROWN
                         : MushroomCow.Variant.RED);

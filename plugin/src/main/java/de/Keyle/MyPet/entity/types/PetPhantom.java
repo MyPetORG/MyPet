@@ -37,6 +37,7 @@ import java.util.List;
 @DefaultInfo(food = {Material.ROTTEN_FLESH})
 public class PetPhantom extends PetImpl implements PetFlyingEntity, PetSunSensitive {
 
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             PetCreationOptions.sizeSpec(Phantom.class, 64, Phantom::setSize)
     );

@@ -32,6 +32,7 @@ import org.bukkit.Material;
 @DefaultInfo(food = {Material.COD, Material.SALMON})
 public class PetOcelot extends PetImpl implements PetBaby, PetTameable {
 
+
     public PetOcelot(MyPetPlayer petOwner) {
         super(petOwner);
     }

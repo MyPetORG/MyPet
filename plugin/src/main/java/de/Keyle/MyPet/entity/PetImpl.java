@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
+import de.Keyle.MyPet.api.config.PetConfigLookup;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
@@ -348,7 +349,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
         // types that actually have an Ageable Bukkit counterpart — matches the
         // ConfigurationLoader gate that writes the GrowUpItem row.
         if (this instanceof PetBaby baby && baby.isBaby()) {
-            ConfigItem growUpItem = Configuration.MyPet.getGrowUpItem(getPetType());
+            ConfigItem growUpItem = PetConfigLookup.configItemValue(getClass(), "GrowUpItem");
             if (growUpItem != null && growUpItem.compare(item)) {
                 if (player.getGameMode() != GameMode.CREATIVE) {
                     item.setAmount(item.getAmount() - 1);

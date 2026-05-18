@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.config.PetConfigLookup;
 
 /**
  * Marker for pet types that vanilla converts to a different species when struck
@@ -43,6 +43,6 @@ import de.Keyle.MyPet.api.Configuration;
 public interface PetLightningConvertible extends Pet {
 
     default boolean allowLightningConversion() {
-        return Configuration.MyPet.allowLightningConversion(getPetType());
+        return PetConfigLookup.boolValue(getClass(), "AllowLightningConversion", false);
     }
 }
