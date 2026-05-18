@@ -36,7 +36,7 @@ import org.bukkit.event.block.EntityBlockFormEvent;
 import java.util.List;
 
 @ShopInfo
-@DefaultInfo(food = {Material.CARROT, Material.SNOWBALL})
+@DefaultInfo(food = {Material.CARROT, Material.SNOWBALL}, fallbackIconMaterial = "PUMPKIN")
 public class PetSnowGolem extends PetImpl {
 
     public static final ConfigKey<Boolean> DISABLE_SNOW_TRACK = ConfigKey.bool("SnowGolem", "DisableSnowTrack", true);

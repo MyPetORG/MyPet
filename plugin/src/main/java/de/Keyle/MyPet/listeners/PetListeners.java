@@ -20,33 +20,41 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.behavior.PetBehaviorDispatcher;
 import de.Keyle.MyPet.entity.ai.attack.PetProjectileHitListener;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
-import de.Keyle.MyPet.entity.types.PetCreaking;
-import de.Keyle.MyPet.entity.types.PetEnderDragon;
-import de.Keyle.MyPet.util.CompatUtil;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
  * Registers MyPet's bundled Bukkit event listeners with Paper's plugin manager.
  *
- * <p>Listeners are split between generic player/world bookkeeping
- * (e.g. {@link PlayerListener}, {@link WorldListener}) and pet-specific behavior
- * (e.g. {@link PetInteractionListener}, {@link PetDeathListener}). Both groups share the
- * same registration sweep — Bukkit handler dispatch is driven by {@code @EventHandler}
- * priority, not source-package.</p>
+ * <p>Two sources are wired:
+ * <ul>
+ *   <li>The static {@link #LISTENERS} list — cross-cutting listeners that
+ *       apply to every pet (PvP gating, despawn cleanup, leash flags, etc.).</li>
+ *   <li>{@link PetListenerRegistry#all()} — pet-nested {@link Listener}s
+ *       declared as {@code public static final Supplier<Listener>} fields
+ *       on individual {@code PetXxx} classes. Each pet type owns its own
+ *       species-specific event handling.</li>
+ * </ul>
  *
- * <p><b>Order matters within an {@link org.bukkit.event.EventPriority} bucket.</b> Bukkit
- * invokes handlers in registration order when priorities are equal; the list below preserves
- * the historical ordering used before this class was extracted. New listeners should be
- * appended unless they intentionally need to interpose at a specific point.</p>
+ * <p><b>Order matters within an {@link org.bukkit.event.EventPriority} bucket.</b>
+ * Bukkit invokes handlers in registration order when priorities are equal; the
+ * {@link #LISTENERS} list preserves the historical ordering. Pet-nested
+ * listeners register after the static list in {@link PetListenerRegistry}
+ * registration order (deterministic via {@code PetType.values()} iteration).
+ * After the initial sweep, a dispatch hook is installed so late
+ * registrations (third-party pet types declared in their own {@code onEnable})
+ * get wired without a refresh call.</p>
  *
  * <p>Invoked once during plugin enable, after all services have been activated.</p>
  */
@@ -65,7 +73,6 @@ public final class PetListeners {
             PetInteractionGateListener::new,
             PetEnvironmentListener::new,
             PetLightningStrikeListener::new,
-            PetEnderDragon.AdvancementListener::new,
             PetZombificationListener::new,
             PetInfoOnLeashListener::new,
             PetSurvivalListener::new,
@@ -81,10 +88,11 @@ public final class PetListeners {
     }
 
     /**
-     * Constructs a fresh instance of each listener and registers it with the plugin's
-     * {@link PluginManager}. After the unconditional listeners,
-     * {@link PetCreaking.HeartListener} is registered when running on Minecraft 1.21.4 or
-     * newer (the version that introduced the Creaking Heart block).
+     * Wires every cross-cutting listener from {@link #LISTENERS}, then every
+     * pet-nested listener from {@link PetListenerRegistry}. Installs a
+     * dispatch hook so suppliers registered after this call (third-party
+     * pet types declared in their own {@code onEnable}) are wired
+     * automatically.
      *
      * @param plugin the plugin to associate registrations with; events fire only while this
      *               plugin is enabled
@@ -94,16 +102,25 @@ public final class PetListeners {
         for (Supplier<Listener> listener : LISTENERS) {
             pm.registerEvents(listener.get(), plugin);
         }
-        // PetCreaking.HeartListener registers last. Bukkit invokes handlers in registration order
-        // within the same EventPriority; if a new listener handles BlockBreakEvent (HIGH),
-        // PlayerInteractEvent (MONITOR), or PlayerJoinEvent (MONITOR), confirm whether it
-        // should run before or after PetCreaking.HeartListener and reorder accordingly.
-        if (CompatUtil.minecraftVersionEqualsOrAbove("1.21.4")) {
-            pm.registerEvents(new PetCreaking.HeartListener(), plugin);
+        // Dedup set covers the narrow race between the initial sweep and any
+        // late registration that fires the dispatch hook concurrently.
+        Set<Supplier<Listener>> wired = ConcurrentHashMap.newKeySet();
+        PetListenerRegistry.setDispatchHook(supplier -> {
+            if (wired.add(supplier)) {
+                Listener instance = supplier.get();
+                if (instance != null) pm.registerEvents(instance, plugin);
+            }
+        });
+        for (Supplier<Listener> supplier : PetListenerRegistry.all()) {
+            if (wired.add(supplier)) {
+                Listener instance = supplier.get();
+                if (instance != null) pm.registerEvents(instance, plugin);
+            }
         }
         // PetBehaviorDispatcher registers one Bukkit executor per PetBehavior declared
-        // on individual PetXxx classes. Runs after the static listeners so individual @EventHandler
-        // methods preserve their relative ordering; per-pet behaviors fire alongside.
+        // on individual PetXxx classes. Runs after the static + nested listeners so
+        // @EventHandler methods preserve their relative ordering; per-pet behaviors
+        // fire alongside.
         PetBehaviorDispatcher.registerAll(plugin);
     }
 }

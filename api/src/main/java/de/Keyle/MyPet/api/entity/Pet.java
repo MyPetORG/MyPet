@@ -242,6 +242,16 @@ public non-sealed interface Pet extends StoredPet, Scheduler {
     }
 
     /**
+     * Hook fired by {@code PetMeleeAttackGoal} immediately after a successful
+     * melee hit (one that reduced the target's health). Default no-op;
+     * pet implementations override to apply post-hit effects that vanilla
+     * normally runs inside the mob's {@code doHurtTarget} (e.g., IronGolem
+     * toss-up).
+     */
+    default void onMeleeHitLanded(LivingEntity target) {
+    }
+
+    /**
      * Ticks the respawn countdown for a dead pet. Must be invoked from the owner's
      * scheduler (not the pet entity's), because the dead Bukkit mob is removed from
      * the world shortly after death and its per-entity scheduler stops firing.

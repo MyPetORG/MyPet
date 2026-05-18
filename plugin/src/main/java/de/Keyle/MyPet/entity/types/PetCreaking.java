@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
+import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
@@ -42,7 +43,6 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
-import de.Keyle.MyPet.util.CompatUtil;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -73,6 +73,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 @ShopInfo
 @DefaultInfo(food = {Material.RESIN_CLUMP}, leashFlags = {"HeartLinked"})
@@ -83,6 +84,9 @@ public class PetCreaking extends PetImpl {
             ActivationSuppressor::startForPet,
             ActivationSuppressor::stopForPet
     );
+
+    public static final Supplier<Listener> HEART_LISTENER =
+            PetListenerRegistry.register(HeartListener::new);
 
     public PetCreaking(MyPetPlayer petOwner) {
         super(petOwner);
@@ -467,12 +471,6 @@ public class PetCreaking extends PetImpl {
      * captured at entity-region call time — the global-region tasks never
      * dereference live entities or players.
      *
-     * <h2>Version isolation</h2>
-     *
-     * <p>All {@code org.bukkit.entity.Creaking} references are kept inside
-     * {@link CreakingHelper}; the outer class short-circuits on pre-1.21.4
-     * servers before the inner class is ever referenced, so {@code Creaking.class}
-     * is never loaded on versions that don't ship it.
      */
     public static final class ActivationSuppressor {
 
@@ -481,17 +479,12 @@ public class PetCreaking extends PetImpl {
         private static final Map<UUID, String> registrations = new ConcurrentHashMap<>();
         private static final AtomicInteger activePetCount = new AtomicInteger(0);
 
-        private static final boolean SUPPORTED =
-                CompatUtil.minecraftVersionEqualsOrAbove("1.21.4");
-
         private ActivationSuppressor() {
         }
 
         public static void startForPet(Pet pet) {
-            if (!SUPPORTED) return;
             Mob mob = pet.getBukkitEntity();
-            if (mob == null) return;
-            if (!CreakingHelper.isCreaking(mob)) return;
+            if (!(mob instanceof Creaking)) return;
 
             Plugin plugin = MyPetApi.getPlugin();
             UUID petKey = pet.getUUID();
@@ -517,7 +510,6 @@ public class PetCreaking extends PetImpl {
             String mobUuidEntry = registrations.remove(petKey);
             if (mobUuidEntry == null) return;
 
-            if (!SUPPORTED) return;
             activePetCount.decrementAndGet();
 
             Plugin plugin = MyPetApi.getPlugin();
@@ -538,7 +530,6 @@ public class PetCreaking extends PetImpl {
          * {@code PlayerJoinEvent} handler.
          */
         public static void onPlayerJoin(Player player) {
-            if (!SUPPORTED) return;
             if (activePetCount.get() <= 0) return;
 
             String name = player.getName();
@@ -561,12 +552,6 @@ public class PetCreaking extends PetImpl {
                 team.setCanSeeFriendlyInvisibles(false);
             }
             return team;
-        }
-
-        private static final class CreakingHelper {
-            static boolean isCreaking(Mob mob) {
-                return mob instanceof org.bukkit.entity.Creaking;
-            }
         }
     }
 }

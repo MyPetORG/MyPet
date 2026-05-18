@@ -67,8 +67,6 @@ public final class PetGoalKey {
     public static final GoalKey<Mob> DUEL_TARGET = GoalKey.of(Mob.class, new NamespacedKey("mypet", "duel_target"));
     /** Lifts the pet to the water / lava surface when submerged. */
     public static final GoalKey<Mob> FLOAT = GoalKey.of(Mob.class, new NamespacedKey("mypet", "float"));
-    /** Makes sheared sheep pets eat grass blocks to regrow their wool. */
-    public static final GoalKey<Mob> EAT_GRASS = GoalKey.of(Mob.class, new NamespacedKey("mypet", "eat_grass"));
     /** Walks up to the current target and performs melee attacks on cooldown. */
     public static final GoalKey<Mob> MELEE_ATTACK = GoalKey.of(Mob.class, new NamespacedKey("mypet", "melee_attack"));
     /** Keeps distance from the current target and fires projectiles on cooldown. */

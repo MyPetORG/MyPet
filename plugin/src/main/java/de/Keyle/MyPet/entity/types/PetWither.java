@@ -28,20 +28,30 @@ import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
+import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Wither;
+import org.bukkit.entity.WitherSkull;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
-@DefaultInfo(food = {Material.BONE}, leashFlags = {"Impossible"})
+@DefaultInfo(food = {Material.BONE}, leashFlags = {"Impossible"}, fallbackIconMaterial = "ENDERMITE_SPAWN_EGG", fallbackIconGlow = true)
 public class PetWither extends PetImpl implements PetBaby, PetLavaEntity, PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Wither", "CanFly", true);
@@ -52,6 +62,9 @@ public class PetWither extends PetImpl implements PetBaby, PetLavaEntity, PetFly
             AutonomousAttackSuppressor::startForPet,
             AutonomousAttackSuppressor::stopForPet
     );
+
+    public static final Supplier<Listener> AUTONOMOUS_SKULL_SUPPRESSOR =
+            PetListenerRegistry.register(AutonomousSkullSuppressor::new);
 
     public PetWither(MyPetPlayer petOwner) {
         super(petOwner);
@@ -129,6 +142,32 @@ public class PetWither extends PetImpl implements PetBaby, PetLavaEntity, PetFly
             if (wither.getTarget(head) != null) {
                 wither.setTarget(head, null);
             }
+        }
+    }
+
+    /**
+     * Backup for {@link AutonomousAttackSuppressor}: cancels any wither skull
+     * launched by a pet Wither that wasn't tagged by {@link PetRangedAttackGoal}.
+     *
+     * <p>The per-tick target-clear in {@code AutonomousAttackSuppressor} loses
+     * a narrow intra-tick race on scan ticks — the side-head scan runs inside
+     * the same tick as the fire loop, after our target-clear runs. Any skull
+     * that does slip through is silently canceled here so it never lands a
+     * hit. Skulls fired via {@link PetRangedAttackGoal} always tag
+     * {@code PROJECTILE_DAMAGE_KEY}; an untagged skull from a marked pet
+     * shooter is necessarily from the autonomous code path.
+     */
+    public static final class AutonomousSkullSuppressor implements Listener {
+
+        @EventHandler
+        public void onPetAutonomousWitherSkull(ProjectileLaunchEvent event) {
+            if (!(event.getEntity() instanceof WitherSkull skull)) return;
+            if (!(skull.getShooter() instanceof LivingEntity shooter)) return;
+            if (!PetEntityMarker.isMarked(shooter)) return;
+            if (skull.getPersistentDataContainer().has(PetRangedAttackGoal.PROJECTILE_DAMAGE_KEY, PersistentDataType.FLOAT)) {
+                return;
+            }
+            event.setCancelled(true);
         }
     }
 }

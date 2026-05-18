@@ -166,6 +166,23 @@ public final class PetType {
         return BY_NAME.get(name.toUpperCase());
     }
 
+    /**
+     * Returns the first registered pet type in insertion order — used as a
+     * deterministic fallback when callers need a non-null default and have
+     * no better choice (e.g. {@code PersistedPet} builder initial state,
+     * {@code ShopPet} field default). Whatever pet ends up first in
+     * registration order serves as the default; no specific species is
+     * privileged.
+     *
+     * @throws PetTypeNotFoundException if no pet types are registered
+     */
+    public static PetType getDefault() {
+        for (PetType type : BY_NAME.values()) {
+            return type;
+        }
+        throw new PetTypeNotFoundException("no pet types registered");
+    }
+
     /** CamelCase display name (e.g. {@code "ZombieVillager"}). */
     public String name() {
         return name;

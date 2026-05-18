@@ -18,20 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types;
+package de.Keyle.MyPet.api.entity;
 
-import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.api.entity.DefaultInfo;
-import de.Keyle.MyPet.api.entity.PetEquipment;
-import de.Keyle.MyPet.api.entity.ShopInfo;
-import org.bukkit.Material;
-
-@ShopInfo
-@DefaultInfo(food = {Material.ROTTEN_FLESH}, fallbackIconMaterial = "ZOMBIE_SPAWN_EGG")
-public class PetGiant extends PetImpl implements PetEquipment {
-
-    public PetGiant(MyPetPlayer petOwner) {
-        super(petOwner);
-    }
+/**
+ * Marker for pet types whose underlying vanilla mob has a sit animation
+ * — Wolf, Cat, Camel, Panda, Fox. {@code PetSitGoal} activates only on
+ * pets implementing this marker so non-sittable pets' sit commands fall
+ * through to nothing rather than showing a broken pose.
+ */
+public interface PetSittable extends Pet {
 }

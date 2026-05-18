@@ -20,17 +20,27 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Getter
 @ShopInfo
@@ -41,6 +51,9 @@ public class PetEnderman extends PetImpl {
             () -> OptionSpec.ofFlag("screaming", Enderman.class, e -> e.setScreaming(true)),
             PetCreationOptions.blockSpec(Enderman.class)
     );
+
+    public static final Supplier<Listener> DAMAGED_SCREAMING_SYNC =
+            PetListenerRegistry.register(DamagedScreamingSync::new);
 
     /**
      * Pet-only override: vanilla {@link Enderman} screaming is AI-driven and
@@ -65,6 +78,29 @@ public class PetEnderman extends PetImpl {
         super.updateVisuals();
         if (permaScreaming && getBukkitEntity() instanceof Enderman enderman) {
             enderman.setScreaming(true);
+        }
+    }
+
+    /**
+     * Re-asserts the configured {@link #permaScreaming} state after the
+     * Enderman is damaged. Vanilla Enderman AI flips on screaming when the
+     * mob takes damage; this listener counter-asserts the pet's desired
+     * state — forcing {@code true} when perma-screaming is on, or clearing
+     * the AI-induced scream when it's off.
+     */
+    public static final class DamagedScreamingSync implements Listener {
+
+        @EventHandler(priority = EventPriority.MONITOR)
+        public void onPetEndermanDamaged(EntityDamageByEntityEvent event) {
+            @SuppressWarnings("ConstantConditions")
+            Entity damagedEntity = event.getEntity();
+            if (damagedEntity == null) return;
+            if (!(damagedEntity instanceof Enderman enderman)) return;
+            if (!PetEntityMarker.isMarked(damagedEntity)) return;
+            Pet pet = MyPetApi.getPetManager().getPetFromEntity(damagedEntity);
+            if (pet instanceof PetEnderman petEnderman) {
+                enderman.setScreaming(petEnderman.isPermaScreaming());
+            }
         }
     }
 

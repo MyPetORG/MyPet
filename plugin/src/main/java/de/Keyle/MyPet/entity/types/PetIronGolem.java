@@ -24,11 +24,15 @@ import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.Vector;
 
 @ShopInfo(displayName = "Iron Golem")
-@DefaultInfo(food = {Material.IRON_INGOT}, leashFlags = {"UserCreated"})
+@DefaultInfo(food = {Material.IRON_INGOT}, leashFlags = {"UserCreated"}, fallbackIconMaterial = "SKELETON_SPAWN_EGG", fallbackIconGlow = true)
 public class PetIronGolem extends PetImpl {
 
     public static final ConfigKey<Boolean> CAN_TOSS_UP = ConfigKey.bool("IronGolem", "CanTossUp", true);
@@ -36,5 +40,26 @@ public class PetIronGolem extends PetImpl {
 
     public PetIronGolem(MyPetPlayer petOwner) {
         super(petOwner);
+    }
+
+    /**
+     * Applies vanilla IronGolem toss-up after a successful melee hit.
+     * Vanilla applies this inside {@code IronGolem#doHurtTarget}, but
+     * MyPet's melee path calls {@code target.damage(...)} directly to
+     * bypass attacker-specific knockback, so we re-apply the upward
+     * impulse here scaled by the victim's KNOCKBACK_RESISTANCE.
+     */
+    @Override
+    public void onMeleeHitLanded(LivingEntity target) {
+        if (!CAN_TOSS_UP.get()) return;
+        double knockbackResistance = 0.0;
+        AttributeInstance attribute = target.getAttribute(PetAttributes.KNOCKBACK_RESISTANCE);
+        if (attribute != null) {
+            knockbackResistance = attribute.getValue();
+        }
+        double scale = Math.max(0.0, 1.0 - knockbackResistance);
+        if (scale <= 0.0) return;
+        Vector velocity = target.getVelocity();
+        target.setVelocity(velocity.setY(velocity.getY() + 0.4 * scale));
     }
 }

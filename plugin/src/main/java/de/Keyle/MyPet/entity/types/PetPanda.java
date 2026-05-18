@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetNaturalDrop;
+import de.Keyle.MyPet.api.entity.PetSittable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -38,7 +39,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.BAMBOO})
-public class PetPanda extends PetImpl implements PetBaby, PetNaturalDrop {
+public class PetPanda extends PetImpl implements PetBaby, PetNaturalDrop, PetSittable {
 
     public static final ConfigKey<Boolean> CAN_DROP_SLIMEBALL = ConfigKey.bool("Panda", "CanDropSlimeball", true);
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Panda", "experience_bottle");

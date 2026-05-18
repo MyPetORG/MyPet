@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetSittable;
 import de.Keyle.MyPet.api.entity.PetTameable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -39,7 +40,7 @@ import java.util.List;
 
 @ShopInfo(options = {"tamed"})
 @DefaultInfo(food = {Material.COD}, leashFlags = {"Tamed"})
-public class PetCat extends PetImpl implements PetBaby, PetTameable {
+public class PetCat extends PetImpl implements PetBaby, PetSittable, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Cat", "experience_bottle");
 

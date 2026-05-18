@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.api.skill.PetExperience;
 import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.entity.types.PetEnderman;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -45,7 +44,6 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.api.entity.PersistedPet;
-import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
@@ -66,7 +64,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.*;
@@ -181,24 +178,6 @@ public class EntityListener implements Listener {
         }
     }
 
-    // Belt-and-suspenders for Wither pets: PetWither.AutonomousAttackSuppressor clears
-    // the three head targets every tick so WitherBoss#customServerAiStep's fire loop
-    // finds nothing to shoot at, but there is a narrow intra-tick race on scan ticks
-    // (the side-head scan runs inside the same tick as the fire loop, after our
-    // target-clear runs). Any skull that does slip through is silently cancelled
-    // here so it never lands a hit. Skulls fired via PetRangedAttackGoal always tag
-    // PROJECTILE_DAMAGE_KEY; an untagged skull from a marked pet shooter is
-    // necessarily from the autonomous code path.
-    @EventHandler
-    public void onPetAutonomousWitherSkull(ProjectileLaunchEvent event) {
-        if (!(event.getEntity() instanceof WitherSkull skull)) return;
-        if (!(skull.getShooter() instanceof LivingEntity shooter)) return;
-        if (!PetEntityMarker.isMarked(shooter)) return;
-        if (skull.getPersistentDataContainer().has(PetRangedAttackGoal.PROJECTILE_DAMAGE_KEY, PersistentDataType.FLOAT)) {
-            return;
-        }
-        event.setCancelled(true);
-    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(final EntityDamageByEntityEvent event) {
@@ -453,23 +432,6 @@ public class EntityListener implements Listener {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onEntityDamageByEntityResult(final EntityDamageByEntityEvent event) {
-        //noinspection ConstantConditions
-        if (event.getEntity() == null) {
-            // catch invalid events (i.e. EnchantmentAPI)
-            return;
-        }
-        Entity damagedEntity = event.getEntity();
-        // -- fix unwanted screaming of Endermen --
-        if (damagedEntity instanceof Enderman enderman && PetEntityMarker.isMarked(damagedEntity)) {
-            Pet pet = getPetManager().getPetFromEntity(damagedEntity);
-            if (pet instanceof PetEnderman petEnderman) {
-                enderman.setScreaming(petEnderman.isPermaScreaming());
             }
         }
     }

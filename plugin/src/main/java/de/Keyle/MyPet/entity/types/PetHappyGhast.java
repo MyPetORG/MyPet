@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 @ShopInfo
 @DefaultInfo(food = {Material.GHAST_TEAR}, leashFlags = {"Tamed"})
@@ -45,5 +46,15 @@ public class PetHappyGhast extends PetImpl implements PetFlyingEntity, PetBaby {
     @Override
     public double getYSpawnOffset() {
         return 4;
+    }
+
+    /**
+     * Vanilla shift-right-click on a Happy Ghast attaches the player's
+     * leashed mob to it. Defer to vanilla so the leash-transfer can happen
+     * instead of consuming the gesture for sit-toggle.
+     */
+    @Override
+    protected boolean defersSneakInteractToVanilla(Player player) {
+        return hasLeashedEntity(player);
     }
 }

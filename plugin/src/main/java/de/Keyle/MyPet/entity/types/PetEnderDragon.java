@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
+import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -51,6 +52,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.plugin.Plugin;
+
+import java.util.function.Supplier;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
@@ -59,7 +62,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@DefaultInfo(food = {Material.END_STONE}, leashFlags = {"Impossible"})
+@DefaultInfo(food = {Material.END_STONE}, leashFlags = {"Impossible"}, fallbackIconMaterial = "DRAGON_EGG")
 public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("EnderDragon", "CanFly", true);
@@ -108,6 +111,9 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
             HoverController::startForPet,
             HoverController::stopForPet
     );
+
+    public static final Supplier<Listener> ADVANCEMENT_LISTENER =
+            PetListenerRegistry.register(AdvancementListener::new);
 
     public PetEnderDragon(MyPetPlayer petOwner) {
         super(petOwner);

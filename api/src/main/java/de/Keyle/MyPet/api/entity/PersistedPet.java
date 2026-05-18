@@ -67,7 +67,7 @@ public record PersistedPet(
     public PersistedPet {
         if (owner == null) throw new IllegalArgumentException("Owner must not be null.");
         if (uuid == null) uuid = UUID.randomUUID();
-        if (petType == null) petType = PetType.byName("Wolf");
+        if (petType == null) petType = PetType.getDefault();
         if (petName == null) petName = "";
         if (worldGroup == null) worldGroup = "";
         if (Double.isNaN(saturation) || Double.isInfinite(saturation)) {
@@ -200,7 +200,7 @@ public record PersistedPet(
     public static final class Builder {
         private UUID uuid;
         private final MyPetPlayer owner;
-        private PetType petType = PetType.byName("Wolf");
+        private PetType petType = PetType.getDefault();
         private String petName = "";
         private String worldGroup = "";
         private double exp = 0;

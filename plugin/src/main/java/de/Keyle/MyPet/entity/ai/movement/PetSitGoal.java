@@ -24,19 +24,19 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetSittable;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
-import java.util.Set;
 
 /**
  * Paper {@link Goal} that holds a sit-capable pet seated until its owner
  * explicitly toggles sitting off.
  *
- * <p>The {@link #SITTABLE_TYPES} allowlist enforces that only the vanilla
+ * <p>The {@link PetSittable} marker enforces that only the vanilla
  * pet species that actually have a sit animation (wolf, cat, camel, panda,
  * fox) can enter the goal — other pets' sit commands fall through to
  * nothing rather than showing a broken pose.
@@ -59,8 +59,6 @@ import java.util.Set;
  */
 public class PetSitGoal implements Goal<Mob> {
 
-    private static final Set<String> SITTABLE_TYPES = Set.of("Wolf", "Cat", "Camel", "Panda", "Fox");
-
     private final Pet pet;
     private final Mob mob;
 
@@ -77,7 +75,7 @@ public class PetSitGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        if (!SITTABLE_TYPES.contains(pet.getPetType().name())) {
+        if (!(pet instanceof PetSittable)) {
             return false;
         }
         if (mob.isInWater()) {

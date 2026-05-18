@@ -63,7 +63,7 @@ public class ShopPet {
     protected String petName = "";
     protected String worldGroup = "";
     protected double exp = 0;
-    protected PetType petType = PetType.byName("Wolf");
+    protected PetType petType = PetType.getDefault();
     protected Skilltree skilltree = null;
     /**
      * Option strings parsed from {@code Options:} in pet-shops.yml — applied to
@@ -182,7 +182,9 @@ public class ShopPet {
         }
         price = config.getDouble("Price", 0);
         position = config.getInt("Position", -1);
-        PetType type = PetType.byNameOrNull(config.getString("PetType", "Pig"));
+        String configuredType = config.getString("PetType");
+        if (configuredType == null) return;
+        PetType type = PetType.byNameOrNull(configuredType);
         if (type == null) return;
         petType = type;
         exp = config.getDouble("EXP");

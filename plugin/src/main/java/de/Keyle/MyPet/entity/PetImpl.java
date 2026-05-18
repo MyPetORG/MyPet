@@ -42,7 +42,6 @@ import de.Keyle.MyPet.entity.ai.navigation.PaperNavigation;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHookRegistry;
-import de.Keyle.MyPet.entity.types.PetHappyGhast;
 import de.Keyle.MyPet.util.NameFilter;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
@@ -291,11 +290,10 @@ public abstract class PetImpl implements Pet, NBTStorage {
         // Empty hand: sneak-toggle sit
         if (item == null || item.getType().isAir()) {
             if (player.isSneaking()) {
-                // Vanilla shift-right-click on a Happy Ghast attaches the
-                // player's leashed mob to it. Defer to vanilla so the
-                // leash-transfer can happen instead of consuming the gesture
-                // for sit-toggle.
-                if (this instanceof PetHappyGhast && hasLeashedEntity(player)) {
+                // Pet types whose underlying mob has a vanilla shift-right-click
+                // gesture (e.g., Happy Ghast leash-transfer) can opt out so the
+                // gesture isn't consumed by sit-toggle.
+                if (defersSneakInteractToVanilla(player)) {
                     return false;
                 }
                 boolean willSit = !isSitting();
@@ -1146,7 +1144,17 @@ public abstract class PetImpl implements Pet, NBTStorage {
         }
     }
 
-    private static boolean hasLeashedEntity(Player player) {
+    /**
+     * Hook for pet subclasses whose underlying vanilla mob has its own
+     * shift-right-click gesture (e.g. Happy Ghast's leash-transfer). Default
+     * {@code false}: the empty-hand sneak click toggles sit. Subclasses that
+     * return {@code true} let the click fall through to vanilla.
+     */
+    protected boolean defersSneakInteractToVanilla(Player player) {
+        return false;
+    }
+
+    protected static boolean hasLeashedEntity(Player player) {
         for (Entity nearby : player.getWorld().getNearbyEntities(player.getLocation(), 16, 16, 16)) {
             if (nearby instanceof LivingEntity living
                     && living.isLeashed()

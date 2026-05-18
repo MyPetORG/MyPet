@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.services;
 
+import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
@@ -36,41 +37,29 @@ public class EggIconService implements ServiceContainer {
     public void updateIcon(PetType type, IconMenuItem icon) {
         icon.setGlowing(false);
 
-        String upperSnake = toUpperSnake(type.name());
-        String matName = upperSnake + "_SPAWN_EGG";
-
+        String matName = toUpperSnake(type.name()) + "_SPAWN_EGG";
         Material material = Material.matchMaterial(matName);
+        if (material != null) {
+            icon.setMaterial(material);
+            return;
+        }
 
-        if (material == null) {
-            switch (type.name()) {
-                case "EnderDragon":
-                    material = Material.DRAGON_EGG;
-                    break;
-                case "SnowGolem":
-                    material = Material.PUMPKIN;
-                    break;
-                case "Giant":
-                    material = Material.ZOMBIE_SPAWN_EGG;
-                    break;
-                case "Illusioner":
-                    material = Material.SQUID_SPAWN_EGG;
-                    icon.setGlowing(true);
-                    break;
-                case "IronGolem":
-                    material = Material.SKELETON_SPAWN_EGG;
-                    icon.setGlowing(true);
-                    break;
-                case "Wither":
-                    material = Material.ENDERMITE_SPAWN_EGG;
-                    icon.setGlowing(true);
-                    break;
-                default:
-                    material = Material.BARRIER;
-                    icon.setGlowing(true);
-                    break;
+        // No vanilla spawn-egg item — consult the pet class's @DefaultInfo
+        // fallback so each PetXxx declares its own icon. Falls through to a
+        // glowing BARRIER when no fallback is specified.
+        DefaultInfo info = type.getPetClass() != null
+                ? type.getPetClass().getAnnotation(DefaultInfo.class)
+                : null;
+        if (info != null && !info.fallbackIconMaterial().isEmpty()) {
+            Material fallback = Material.matchMaterial(info.fallbackIconMaterial());
+            if (fallback != null) {
+                icon.setMaterial(fallback);
+                icon.setGlowing(info.fallbackIconGlow());
+                return;
             }
         }
 
-        icon.setMaterial(material);
+        icon.setMaterial(Material.EGG);
+        icon.setGlowing(true);
     }
 }

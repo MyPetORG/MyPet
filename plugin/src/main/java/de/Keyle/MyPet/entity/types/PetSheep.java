@@ -21,21 +21,27 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.api.config.ConfigKey;
-import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetInteractionGate;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Sheep;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 @ShopInfo
 @DefaultInfo(food = {Material.WHEAT})
@@ -51,6 +57,9 @@ public class PetSheep extends PetImpl implements PetBaby, PetInteractionGate {
             () -> OptionSpec.ofFlag("sheared", Sheep.class,                 s -> s.setSheared(true))
     );
 
+    public static final Supplier<Listener> GRASS_EATING_SUPPRESSOR =
+            PetListenerRegistry.register(GrassEatingSuppressor::new);
+
     public PetSheep(MyPetPlayer petOwner) {
         super(petOwner);
     }
@@ -63,5 +72,28 @@ public class PetSheep extends PetImpl implements PetBaby, PetInteractionGate {
     @Override
     public boolean isInteractionSuppressed() {
         return !PetSheep.CAN_BE_SHEARED.get();
+    }
+
+    /**
+     * Suppresses vanilla grass-eating for sheep pets when admins disable
+     * {@link #CAN_REGROW_WOOL}. Since v4 pets are real vanilla mobs, the
+     * vanilla {@code EatBlockGoal} runs on pet sheep and converts
+     * SHORT_GRASS to AIR / GRASS_BLOCK to DIRT around the pet while
+     * regrowing sheared wool.
+     *
+     * <p>Default {@code true}: vanilla behavior is preserved. Admins who
+     * set {@code CanRegrowWool: false} get the suppressor — grass stays
+     * intact and wool regrowth has to go through the player-driven
+     * interaction path (gated by {@link #CAN_BE_SHEARED}).
+     */
+    public static final class GrassEatingSuppressor implements Listener {
+
+        @EventHandler(ignoreCancelled = true)
+        public void onPetSheepEatGrass(EntityChangeBlockEvent event) {
+            if (CAN_REGROW_WOOL.get()) return;
+            if (!(event.getEntity() instanceof Sheep)) return;
+            if (!PetEntityMarker.isMarked(event.getEntity())) return;
+            event.setCancelled(true);
+        }
     }
 }

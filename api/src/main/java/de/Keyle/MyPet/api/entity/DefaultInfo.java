@@ -59,4 +59,18 @@ public @interface DefaultInfo {
 
     /** Item that forces a baby pet to grow up when right-clicked. */
     Material growUpItem() default Material.EXPERIENCE_BOTTLE;
+
+    /**
+     * Material name used by the selection-GUI egg-icon service when the
+     * standard {@code <TYPE>_SPAWN_EGG} doesn't exist for this pet
+     * (e.g., EnderDragon, SnowGolem, Wither). Empty falls through to a
+     * glowing BARRIER icon.
+     */
+    String fallbackIconMaterial() default "";
+
+    /**
+     * Whether the fallback icon should glow. Ignored if
+     * {@link #fallbackIconMaterial()} is empty.
+     */
+    boolean fallbackIconGlow() default false;
 }
