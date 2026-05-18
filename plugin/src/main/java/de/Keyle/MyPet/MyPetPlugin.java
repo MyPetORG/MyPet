@@ -244,6 +244,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     public void onLoad() {
         MyPetApi.setPlugin(this);
         BuiltInPetTypes.register();
+        PetPermissions.registerAll();
         getDataFolder().mkdirs();
 
         VersionUtil.reset();
