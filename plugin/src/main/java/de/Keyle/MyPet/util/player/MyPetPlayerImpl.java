@@ -614,7 +614,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         } else {
             parsed = parsed.append(MyPetApi.getPlugin().getMiniMessage().deserialize(
                     "<dead>",
-                    Placeholder.unparsed("dead", Locale.getString("Name.Dead", pet.getOwner()))));
+                    Placeholder.component("dead", Locale.getComponent("Name.Dead", pet.getOwner()))));
         }
         return parsed;
     }

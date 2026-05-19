@@ -115,7 +115,7 @@ public class ShopPet {
         if (petName != null && !petName.isEmpty()) {
             return petName;
         }
-        return Locale.getString("Name." + petType.name(), buyer);
+        return Locale.renderPlain("Name." + petType.name(), buyer.getLanguage());
     }
 
     public Component getDisplayName() {

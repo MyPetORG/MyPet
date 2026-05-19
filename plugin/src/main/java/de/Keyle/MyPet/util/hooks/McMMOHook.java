@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -104,14 +105,16 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
 
         @Override
         public Component getMissingMessage(Player player, LivingEntity entity, double damage, Settings settings) {
-            List<String> skills = new ArrayList<>();
+            List<Component> skills = new ArrayList<>();
             for (PrimarySkillType skillType : PrimarySkillType.values()) {
                 OptionalInt requiredLevel = settings.getInt(skillType.getName());
                 if (requiredLevel.isPresent()) {
-                    skills.add(skillType.getName() + ": " + Locale.getString("Name.Level", player) + " " + requiredLevel.getAsInt());
+                    skills.add(Component.text(skillType.getName() + ": ")
+                            .append(Locale.getComponent("Name.Level", player))
+                            .append(Component.text(" " + requiredLevel.getAsInt())));
                 }
             }
-            return Component.text("mcMMO: " + String.join(", ", skills));
+            return Component.text("mcMMO: ").append(Component.join(JoinConfiguration.commas(true), skills));
         }
     }
 }

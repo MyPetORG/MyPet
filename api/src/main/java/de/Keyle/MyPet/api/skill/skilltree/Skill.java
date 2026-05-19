@@ -61,27 +61,17 @@ public interface Skill {
      * Returns the localized display name of this skill for the given locale.
      *
      * <p>If the skill's {@link SkillName} annotation specifies a {@code translationNode},
-     * the localized string for that node is returned. Falls back to the annotation's
-     * {@code value()} if translation is unavailable or no node is defined.
+     * the localized component for that node is returned. Falls back to the annotation's
+     * {@code value()} if no node is defined.
      *
      * @param locale the locale code to translate into
-     * @return the display name, or {@code null} if the annotation is missing
+     * @return the display name component, or {@code null} if the annotation is missing
      */
-    default String getName(String locale) {
+    default Component getName(String locale) {
         SkillName sn = Util.getClassAnnotation(this.getClass(), SkillName.class);
-        if (sn != null) {
-            if (sn.translationNode().equalsIgnoreCase("")) {
-                return sn.value();
-            } else {
-                String translatedName = Locale.getString(sn.translationNode(), locale);
-                if (translatedName.equals(sn.translationNode())) {
-                    return sn.value();
-                } else {
-                    return translatedName;
-                }
-            }
-        }
-        return null;
+        if (sn == null) return null;
+        if (sn.translationNode().isEmpty()) return Component.text(sn.value());
+        return Locale.getComponent(sn.translationNode(), locale);
     }
 
     /** Returns the pet that owns this skill instance. */

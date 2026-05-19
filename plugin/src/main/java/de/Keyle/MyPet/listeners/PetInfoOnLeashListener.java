@@ -167,8 +167,10 @@ public class PetInfoOnLeashListener implements Listener {
         if (rank != ContributorCheck.ContributorRank.None) {
             infoShown = true;
             String icon = rank.getDefaultIcon();
-            String title = Locale.getString("Name.Title." + rank.name(), damager);
-            damager.sendMessage(Component.text("   " + icon + " " + title + " " + icon).color(NamedTextColor.GOLD));
+            Component title = Locale.getComponent("Name.Title." + rank.name(), damager);
+            damager.sendMessage(Component.text("   " + icon + " ").color(NamedTextColor.GOLD)
+                    .append(title)
+                    .append(Component.text(" " + icon).color(NamedTextColor.GOLD)));
         }
 
         if (!infoShown) {

@@ -140,7 +140,7 @@ public class CommandSkill {
                 if (skill.isActive()) {
                     sender.sendMessage(Component.text()
                             .append(Component.text("  "))
-                            .append(Component.text(skill.getName(locale)).color(NamedTextColor.GREEN))
+                            .append(skill.getName(locale).color(NamedTextColor.GREEN))
                             .append(Component.space())
                             .append(skill.toPrettyComponent(locale))
                             .build());

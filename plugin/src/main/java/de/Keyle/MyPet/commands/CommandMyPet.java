@@ -33,6 +33,7 @@ import de.Keyle.MyPet.commands.mypet.CommandOptionUpdate;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -193,9 +194,8 @@ public class CommandMyPet {
      * @param isPlayer {@code true} if the sender is a player (used for permission filtering)
      */
     private void showCategoryListing(CommandSender sender, Player player, boolean isPlayer) {
-        String helpText = Locale.getString("Name.Help", sender);
         Component titleComponent = Component.text("MyPet - ").append(Locale.getComponent("Name.Help", sender));
-        sender.sendMessage(buildSeparator("MyPet - " + helpText, titleComponent));
+        sender.sendMessage(buildSeparator(titleComponent));
         sender.sendMessage(Component.text("Use ").append(Component.text("/mypet help <category>").color(NamedTextColor.GOLD)).append(Component.text(" to see commands.")));
         sender.sendMessage("");
 
@@ -250,12 +250,10 @@ public class CommandMyPet {
             if (!first) {
                 sender.sendMessage("");
             }
-            String plainTitle = "MyPet - " + Locale.getString("Name.Help", sender)
-                    + " - " + category.getDisplayName();
             Component titleComp = Component.text("MyPet - ")
                     .append(Locale.getComponent("Name.Help", sender))
                     .append(Component.text(" - " + category.getDisplayName()));
-            sender.sendMessage(buildSeparator(plainTitle, titleComp));
+            sender.sendMessage(buildSeparator(titleComp));
             for (HelpEntry entry : entries) {
                 sender.sendMessage(Component.text("  ").append(
                         Locale.getFormattedComponent(entry.translationKey(), sender,
@@ -297,16 +295,14 @@ public class CommandMyPet {
     }
 
     /**
-     * Builds a centered separator line with a gold-coloured title flanked by dashes.
+     * Builds a centered separator line with a gold-colored title flanked by dashes.
+     * Width is computed from the plain-text serialization of {@code titleComponent}.
      *
-     * <p>The plain-text title is used to calculate the character width so that the
-     * dashes on each side are evenly distributed within {@link #SEPARATOR_WIDTH}.</p>
-     *
-     * @param plainTitle     the unformatted title string (used for width measurement)
      * @param titleComponent the styled Adventure {@link Component} to render as the title
      * @return a {@link Component} of the form {@code "--- Title ---"}
      */
-    private static Component buildSeparator(String plainTitle, Component titleComponent) {
+    private static Component buildSeparator(Component titleComponent) {
+        String plainTitle = PlainTextComponentSerializer.plainText().serialize(titleComponent);
         int contentWidth = plainTitle.length() + 2;
         int remaining = SEPARATOR_WIDTH - contentWidth;
         int side = Math.max(0, remaining / 2);

@@ -309,7 +309,7 @@ public class EntityListener implements Listener {
 
                         final PersistedPet inactivePet = PersistedPet.builder(owner)
                                 .petType(petType)
-                                .petName(Locale.getString("Name." + petType.name(), owner))
+                                .petName(Locale.renderPlain("Name." + petType.name(), owner.getLanguage()))
                                 .worldGroup(worldGroup.getName())
                                 .info(snapshot)
                                 .build();

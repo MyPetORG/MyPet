@@ -25,12 +25,20 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.kyori.adventure.translation.GlobalTranslator;
+import net.kyori.adventure.translation.Translator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +46,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,17 +57,58 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Locale {
-    private static Locale instance = null;
+/**
+ * MyPet's translation facility. Combines two roles:
+ *
+ * <ul>
+ *   <li><b>Static facade</b> — {@code getComponent}, {@code getFormattedComponent},
+ *       {@code renderPlain}, etc. that callers across the codebase use to look up
+ *       a translation for a player, command sender, or explicit locale tag.</li>
+ *   <li><b>Adventure {@link Translator} implementation</b> — a single instance is
+ *       registered with {@link GlobalTranslator} on {@link #init()}, so that any
+ *       {@link Component#translatable(String) Component.translatable(...)} created
+ *       with a MyPet key resolves through this class regardless of where in the
+ *       codebase it is rendered.</li>
+ * </ul>
+ *
+ * <p>Bundles are loaded from {@code locale/MyPet_<tag>.properties} entries inside
+ * the plugin JAR, with sparse per-key overlay from {@code plugins/MyPet/locale/}
+ * files of the same name. Values may contain MiniMessage tags and
+ * {@code {0}}/{@code {1}}-style placeholders that are substituted with the
+ * arguments passed via {@link TranslatableComponent#arguments()}.</p>
+ */
+public final class Locale implements Translator {
 
-    private final Map<String, Language> languages = new HashMap<>();
+    private static final Key NAME = Key.key("mypet", "messages");
+    private static final MiniMessage MINI = MiniMessage.miniMessage();
+    private static final Pattern BUNDLE_FILENAME = Pattern.compile("MyPet_([a-zA-Z0-9_\\-]+)\\.properties");
+    private static final Pattern PLACEHOLDER = Pattern.compile("\\{(\\d+)}");
+
+    /** Single instance — created and registered by {@link #init()}. */
+    private static Locale instance;
+
+    /** Outer key = locale tag like "en", "en_us", "de_de" (lowercased). Inner key = translation key (lowercased). */
+    private final Map<String, Map<String, Component>> bundles = new HashMap<>();
 
     private Locale() {
     }
 
+    /**
+     * Loads all translation bundles and registers this class as a translation source
+     * with {@link GlobalTranslator}. Idempotent — safe to call from both
+     * {@code MyPetPlugin.onEnable} and {@code /mypet reload}; an existing registration
+     * is removed before a fresh one is added.
+     */
     public static void init() {
+        if (instance != null) {
+            GlobalTranslator.translator().removeSource(instance);
+        }
         instance = new Locale();
+        instance.loadAllBundles();
+        GlobalTranslator.translator().addSource(instance);
     }
+
+    // ========== Bukkit locale extractors ==========
 
     /**
      * Resolves a player's client locale, falling back to {@code "en_us"} when
@@ -84,419 +134,253 @@ public class Locale {
         return "en";
     }
 
-    public static String getString(String key, Player player) {
-        if (player == null) {
-            return key;
-        }
+    // ========== Static facade — what callers use ==========
 
-        return getString(key, getPlayerLanguage(player));
-    }
-
-    public static String getString(String key, CommandSender sender) {
-        if (sender == null) {
-            return key;
-        }
-        if (sender instanceof Player p) {
-            return getString(key, p);
-        }
-
-        return getString(key, "en");
-    }
-
-    public static String getString(String key, MyPetPlayer player) {
-        if (player == null) {
-            return key;
-        }
-
-        return getString(key, player.getLanguage());
-    }
-
-    public static String getString(String key, String localeString) {
-        if (instance == null) {
-            return key;
-        }
-        if (!Configuration.Misc.OVERWRITE_LANGUAGE.equalsIgnoreCase("")) {
-            localeString = Configuration.Misc.OVERWRITE_LANGUAGE;
-        }
-
-        return instance.getText(key, localeString);
-    }
-
-    // ========== Component-Based Translation Methods (Adventure API) ==========
-
-    /**
-     * Gets translation as an Adventure Component for a Player.
-     * Respects player's client language setting.
-     *
-     * @param key    Translation key
-     * @param player The player whose language to use
-     * @return Translation as Component with colors applied
-     */
     public static Component getComponent(String key, Player player) {
         if (player == null) {
             return Component.text(key);
         }
-
         return getComponent(key, getPlayerLanguage(player));
     }
 
-    /**
-     * Gets translation as an Adventure Component for a CommandSender.
-     * For Players, respects their language. For console, defaults to English.
-     *
-     * @param key    Translation key
-     * @param sender The command sender
-     * @return Translation as Component with colors applied
-     */
     public static Component getComponent(String key, CommandSender sender) {
-        if (sender == null) {
-            return Component.text(key);
-        }
-        if (sender instanceof Player p) {
-            return getComponent(key, p);
-        }
-
-        return getComponent(key, "en");
+        if (sender == null) return Component.text(key);
+        return getComponent(key, getCommandSenderLanguage(sender));
     }
 
-    /**
-     * Gets translation as an Adventure Component for a MyPetPlayer.
-     * Uses the stored player language preference.
-     *
-     * @param key    Translation key
-     * @param player The MyPet player whose language to use
-     * @return Translation as Component with colors applied
-     */
     public static Component getComponent(String key, MyPetPlayer player) {
         if (player == null) {
             return Component.text(key);
         }
-
         return getComponent(key, player.getLanguage());
     }
 
-    /**
-     * Gets translation as an Adventure Component for a specific locale.
-     * This is the base method that all other Component methods delegate to.
-     *
-     * @param key          Translation key
-     * @param localeString Locale string (e.g., "en", "de_DE", "fr")
-     * @return Translation as Component with colors applied
-     */
     public static Component getComponent(String key, String localeString) {
-        if (instance == null) {
-            return Component.text(key);
-        }
-        if (!Configuration.Misc.OVERWRITE_LANGUAGE.equalsIgnoreCase("")) {
-            localeString = Configuration.Misc.OVERWRITE_LANGUAGE;
-        }
-
-        return instance.getComponentText(key, localeString);
+        return renderTranslatable(key, localeString);
     }
 
-    // ========== Formatted Component Methods (Translation + Placeholder Substitution) ==========
-
-    /**
-     * Gets a translated Component and replaces placeholders {0}, {1}, etc. with provided arguments.
-     * Arguments can be Components (inserted directly) or Objects (deserialized via SANITIZED_MINIMESSAGE).
-     *
-     * @param key    Translation key
-     * @param player Player for language detection
-     * @param values Arguments to replace placeholders
-     * @return Formatted Component
-     */
     public static Component getFormattedComponent(String key, Player player, Object... values) {
-        return formatComponent(getComponent(key, player), values);
+        if (player == null) return Component.text(key);
+        return getFormattedComponent(key, getPlayerLanguage(player), values);
     }
 
-    /**
-     * Gets a translated and formatted Component for a CommandSender.
-     */
     public static Component getFormattedComponent(String key, CommandSender sender, Object... values) {
-        return formatComponent(getComponent(key, sender), values);
+        if (sender == null) return Component.text(key);
+        return getFormattedComponent(key, getCommandSenderLanguage(sender), values);
     }
 
-    /**
-     * Gets a translated and formatted Component for a MyPetPlayer.
-     */
     public static Component getFormattedComponent(String key, MyPetPlayer player, Object... values) {
-        return formatComponent(getComponent(key, player), values);
+        if (player == null) return Component.text(key);
+        return getFormattedComponent(key, player.getLanguage(), values);
     }
 
-    /**
-     * Gets a translated and formatted Component for a specific locale.
-     */
     public static Component getFormattedComponent(String key, String localeString, Object... values) {
-        return formatComponent(getComponent(key, localeString), values);
+        return renderTranslatable(key, localeString, toComponentLikes(values));
     }
 
-    // ========== Component Placeholder Substitution ==========
-
     /**
-     * Formats a Component by replacing placeholders {0}, {1}, {2}... with provided arguments.
-     * Arguments can be Components (inserted with their styling) or Objects (converted via SANITIZED_MINIMESSAGE).
+     * Renders a translation key to plain text against the given locale. Used by call sites
+     * that must materialize a translation into a String for storage (e.g. persisted pet names).
+     * All styling tags in the translation value are stripped.
      */
-    private static Component formatComponent(Component component, Object... values) {
-        if (component == null || values == null || values.length == 0) {
-            return component != null ? component : Component.empty();
+    public static String renderPlain(String key, String localeString) {
+        return PlainTextComponentSerializer.plainText().serialize(renderTranslatable(key, localeString));
+    }
+
+    private static Component renderTranslatable(String key, String localeString, ComponentLike... args) {
+        java.util.Locale loc = parseJdkLocale(localeString);
+        return GlobalTranslator.render(Component.translatable(key.toLowerCase(), args), loc);
+    }
+
+    // ========== Translator SPI — what Adventure calls ==========
+
+    @Override
+    public @NotNull Key name() {
+        return NAME;
+    }
+
+    @Override
+    public @Nullable MessageFormat translate(@NotNull String key, @NotNull java.util.Locale locale) {
+        // Not used — we override the Component-returning translate() instead so we can
+        // emit pre-styled MiniMessage trees. Returning null tells Adventure to fall back.
+        return null;
+    }
+
+    @Override
+    public @Nullable Component translate(@NotNull TranslatableComponent component, @NotNull java.util.Locale locale) {
+        java.util.Locale effective = locale;
+        if (!Configuration.Misc.OVERWRITE_LANGUAGE.isEmpty()) {
+            effective = parseJdkLocale(Configuration.Misc.OVERWRITE_LANGUAGE);
         }
-        return replaceInComponent(component, values);
+
+        String key = component.key().toLowerCase(java.util.Locale.ROOT);
+        Component raw = lookup(key, effective);
+        if (raw == null) {
+            return null; // Let Adventure fall through to other sources.
+        }
+
+        List<? extends ComponentLike> args = component.arguments();
+        if (args.isEmpty()) {
+            return raw;
+        }
+        Object[] valueArray = new Object[args.size()];
+        for (int i = 0; i < args.size(); i++) {
+            valueArray[i] = args.get(i).asComponent();
+        }
+        return replaceInComponent(raw, valueArray);
+    }
+
+    // ========== Bundle loading ==========
+
+    private void loadAllBundles() {
+        try (JarFile jarFile = new JarFile(MyPetApi.getPlugin().getFile())) {
+            var entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                String name = entry.getName();
+                if (!name.startsWith("locale/")) continue;
+                Matcher m = BUNDLE_FILENAME.matcher(name.substring("locale/".length()));
+                if (!m.matches()) continue;
+                try (Reader r = new InputStreamReader(jarFile.getInputStream(entry), StandardCharsets.UTF_8)) {
+                    loadBundle(m.group(1), r);
+                }
+            }
+        } catch (IOException e) {
+            ErrorUtil.report(e);
+        }
+
+        File dataDir = new File(MyPetApi.getPlugin().getDataFolder(), "locale");
+        File[] files = dataDir.listFiles();
+        if (files != null) {
+            for (File f : files) {
+                Matcher m = BUNDLE_FILENAME.matcher(f.getName());
+                if (!m.matches()) continue;
+                try (Reader r = new InputStreamReader(Files.newInputStream(f.toPath()), StandardCharsets.UTF_8)) {
+                    loadBundle(m.group(1), r);
+                } catch (IOException e) {
+                    ErrorUtil.report(e);
+                }
+            }
+        }
+
+        MyPetApi.getLogger().info("Loaded " + bundles.size() + " MyPet translation bundles: " + bundles.keySet());
     }
 
     /**
-     * Recursively processes a Component tree to replace placeholders.
+     * Loads keys from one {@code .properties} reader and merges them into the bundle
+     * for {@code localeTag}. Sparse overlay: only the keys present in the reader are
+     * overwritten — any pre-existing keys in the bundle (e.g. from an earlier JAR load
+     * of the same tag) are preserved. A bad MiniMessage entry is skipped, not fatal.
      */
+    private void loadBundle(String localeTag, Reader reader) {
+        Properties props = new Properties();
+        try {
+            props.load(reader);
+        } catch (IOException e) {
+            ErrorUtil.report(e);
+            return;
+        }
+        String tag = localeTag.toLowerCase(java.util.Locale.ROOT);
+        Map<String, Component> bundle = bundles.computeIfAbsent(tag, k -> new HashMap<>());
+        for (Object rawKey : props.keySet()) {
+            String key = rawKey.toString().toLowerCase(java.util.Locale.ROOT);
+            String value = props.get(rawKey).toString();
+            try {
+                bundle.put(key, MINI.deserialize(value));
+            } catch (Exception e) {
+                ErrorUtil.report(e);
+            }
+        }
+    }
+
+    private @Nullable Component lookup(String key, java.util.Locale locale) {
+        Component hit;
+        if (!locale.getCountry().isEmpty()) {
+            hit = lookupIn(locale.getLanguage() + "_" + locale.getCountry().toLowerCase(java.util.Locale.ROOT), key);
+            if (hit != null) return hit;
+        }
+        hit = lookupIn(locale.getLanguage().toLowerCase(java.util.Locale.ROOT), key);
+        if (hit != null) return hit;
+        return "en".equals(locale.getLanguage()) ? null : lookupIn("en", key);
+    }
+
+    private @Nullable Component lookupIn(String tag, String key) {
+        Map<String, Component> bundle = bundles.get(tag);
+        return bundle == null ? null : bundle.get(key);
+    }
+
+    // ========== Private helpers ==========
+
+    private static java.util.Locale parseJdkLocale(String tag) {
+        if (tag == null || tag.isEmpty()) return java.util.Locale.US;
+        String[] parts = tag.toLowerCase(java.util.Locale.ROOT).split("[_\\-]");
+        if (parts.length >= 2) return java.util.Locale.of(parts[0], parts[1].toUpperCase(java.util.Locale.ROOT));
+        return java.util.Locale.of(parts[0]);
+    }
+
+    private static ComponentLike[] toComponentLikes(Object[] values) {
+        if (values == null || values.length == 0) return new ComponentLike[0];
+        ComponentLike[] out = new ComponentLike[values.length];
+        for (int i = 0; i < values.length; i++) {
+            Object v = values[i];
+            if (v == null) {
+                out[i] = Component.empty();
+            } else if (v instanceof ComponentLike c) {
+                out[i] = c;
+            } else {
+                out[i] = Util.SANITIZED_MINIMESSAGE.deserialize(v.toString());
+            }
+        }
+        return out;
+    }
+
     private static Component replaceInComponent(Component component, Object[] values) {
-        if (component == null) {
-            return Component.empty();
-        }
-
-        TextComponent.Builder builder = Component.text().style(component.style());
-
         if (component instanceof TextComponent textComponent) {
+            TextComponent.Builder builder = Component.text().style(component.style());
             String content = textComponent.content();
             List<Component> replacedContent = replacePlaceholders(content, textComponent.style(), values);
             for (Component part : replacedContent) {
                 builder.append(part);
             }
-        } else {
-            builder.append(component);
+            for (Component child : component.children()) {
+                builder.append(replaceInComponent(child, values));
+            }
+            return builder.build();
         }
 
-        for (Component child : component.children()) {
-            builder.append(replaceInComponent(child, values));
-        }
-
-        return builder.build();
+        // Non-TextComponent nodes (e.g. TranslatableComponent) carry their children inside
+        // themselves — re-iterating component.children() would double-emit them.
+        return component;
     }
 
-    /**
-     * Replaces placeholders in a text string and returns a list of Components.
-     */
     private static List<Component> replacePlaceholders(String text, Style style, Object[] values) {
         List<Component> result = new ArrayList<>();
-
-        if (text == null || text.isEmpty()) {
-            return result;
-        }
+        if (text == null || text.isEmpty()) return result;
 
         int lastIndex = 0;
-        Pattern pattern = Pattern.compile("\\{(\\d+)}");
-        Matcher matcher = pattern.matcher(text);
+        Matcher matcher = PLACEHOLDER.matcher(text);
 
         while (matcher.find()) {
             if (matcher.start() > lastIndex) {
                 result.add(Component.text(text.substring(lastIndex, matcher.start())).style(style));
             }
-
             int index = Integer.parseInt(matcher.group(1));
-
             if (index < values.length && values[index] != null) {
                 Object value = values[index];
-                if (value instanceof Component) {
-                    result.add((Component) value);
+                if (value instanceof Component c) {
+                    result.add(c);
                 } else {
                     result.add(Util.SANITIZED_MINIMESSAGE.deserialize(value.toString()));
                 }
             } else {
                 result.add(Component.text(matcher.group()).style(style));
             }
-
             lastIndex = matcher.end();
         }
 
         if (lastIndex < text.length()) {
             result.add(Component.text(text.substring(lastIndex)).style(style));
         }
-
-        if (result.isEmpty()) {
-            result.add(Component.text(text).style(style));
-        }
-
         return result;
-    }
-
-    // ========== Core translation + placeholder normalization ==========
-
-    /**
-     * Normalizes common placeholder / tag mistakes from existing locale files so they
-     * work correctly with MiniMessage and the colorizers.
-     */
-    private static String normalizePlaceholders(String input) {
-        if (input == null || input.isEmpty()) {
-            return input;
-        }
-
-        String fixed = input;
-
-        // Fix legacy/broken reset tag used in older locale files.
-        fixed = fixed.replace("<r>", "<reset>");
-
-        // Locale files use camelCase color names but MiniMessage requires
-        // underscore-separated names.
-        fixed = fixed.replace("<darkblue>", "<dark_blue>");
-        fixed = fixed.replace("<darkgreen>", "<dark_green>");
-        fixed = fixed.replace("<darkaqua>", "<dark_aqua>");
-        fixed = fixed.replace("<darkred>", "<dark_red>");
-        fixed = fixed.replace("<darkpurple>", "<dark_purple>");
-        fixed = fixed.replace("<darkgray>", "<dark_gray>");
-        fixed = fixed.replace("<lightpurple>", "<light_purple>");
-
-        return fixed;
-    }
-
-    /**
-     * Loads a locale bundle from the plugin JAR and the data folder.
-     */
-    private static TranslationBundle loadLocale(String localeString) {
-        TranslationBundle newLocale = new TranslationBundle();
-
-        try (JarFile jarFile = new JarFile(MyPetApi.getPlugin().getFile())) {
-            JarEntry jarEntry = jarFile.getJarEntry("locale/MyPet_" + localeString + ".properties");
-            if (jarEntry != null) {
-                newLocale.load(new InputStreamReader(jarFile.getInputStream(jarEntry), StandardCharsets.UTF_8));
-            }
-        } catch (IOException ignored) {
-        }
-
-        File localeFile = new File(MyPetApi.getPlugin().getDataFolder() + File.separator + "locale" + File.separator + "MyPet_" + localeString + ".properties");
-        if (localeFile.exists()) {
-            try {
-                newLocale.load(new InputStreamReader(Files.newInputStream(localeFile.toPath()), StandardCharsets.UTF_8));
-            } catch (IOException e) {
-                ErrorUtil.report(e);
-            }
-        }
-
-        normalizeBundlePlaceholders(newLocale);
-
-        return newLocale;
-    }
-
-    private static void normalizeBundlePlaceholders(TranslationBundle bundle) {
-        for (Map.Entry<String, String> entry : bundle.translations.entrySet()) {
-            String value = entry.getValue();
-            if (value != null) {
-                String fixed = normalizePlaceholders(value);
-                if (!fixed.equals(value)) {
-                    entry.setValue(fixed);
-                }
-            }
-        }
-    }
-
-    private String getRawText(String key, String localeString) {
-        String[] codes = localeString.toLowerCase().split("_");
-
-        String languageCode = codes[0];
-
-        if (!languages.containsKey(languageCode)) {
-            languages.put(languageCode, new Language(languageCode));
-        }
-
-        Language language = languages.get(languageCode);
-
-        String translatedPhrase = key;
-        if (codes.length >= 2) {
-            translatedPhrase = language.translate(key, codes[1]);
-        }
-        if (translatedPhrase.equals(key)) {
-            translatedPhrase = language.translate(key);
-        }
-        if (translatedPhrase.equals(key) && !languageCode.equals("en")) {
-            translatedPhrase = getRawText(key, "en");
-        }
-
-        return normalizePlaceholders(translatedPhrase);
-    }
-
-    /**
-     * Retrieves translation text with raw {@code <COLOR>} tags preserved.
-     * Callers that display to players should use {@link #getComponent} instead.
-     */
-    public String getText(String key, String localeString) {
-        return getRawText(key, localeString);
-    }
-
-    private Component getComponentText(String key, String localeString) {
-        return MiniMessage.miniMessage().deserialize(getRawText(key, localeString));
-    }
-
-    // ========== Locale fallback hierarchy ==========
-
-    /** Per-language root (e.g. "en"), with its own bundle and per-country children. */
-    private static class Language {
-        private final String code;
-        private final Map<String, Country> countries = new HashMap<>();
-        private final TranslationBundle translations;
-
-        Language(String code) {
-            this.code = code;
-            this.translations = loadLocale(code);
-        }
-
-        String translate(String key, String country) {
-            if (!countries.containsKey(country)) {
-                countries.put(country, new Country(this, country));
-            }
-
-            String translated = countries.get(country).translate(key);
-            if (!translated.equals(key)) {
-                return translated;
-            }
-
-            if (translations != null && translations.containsKey(key)) {
-                translated = translations.getString(key);
-            }
-            return translated;
-        }
-
-        String translate(String key) {
-            if (translations != null && translations.containsKey(key)) {
-                return translations.getString(key);
-            }
-            return key;
-        }
-    }
-
-    /** Country-specific bundle (e.g. "en_us") under a parent {@link Language}. */
-    private static class Country {
-        private final TranslationBundle translations;
-
-        Country(Language language, String code) {
-            this.translations = loadLocale(language.code + "_" + code);
-        }
-
-        String translate(String key) {
-            if (translations.containsKey(key)) {
-                return translations.getString(key);
-            }
-            return key;
-        }
-    }
-
-    /** A loaded {@code .properties} bundle. */
-    private static class TranslationBundle {
-        final HashMap<String, String> translations = new HashMap<>();
-
-        void load(Reader reader) {
-            Properties properties = new Properties();
-            try {
-                properties.load(reader);
-            } catch (IOException e) {
-                ErrorUtil.report(e);
-            }
-            for (Object o : properties.keySet()) {
-                translations.put(o.toString().toLowerCase(), properties.get(o).toString());
-            }
-        }
-
-        boolean containsKey(String key) {
-            return translations.containsKey(key.toLowerCase());
-        }
-
-        String getString(String key) {
-            return translations.get(key.toLowerCase());
-        }
     }
 }
