@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.entity.leashing.WildAngerCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
@@ -55,6 +56,9 @@ public class PetBee extends PetImpl implements PetBaby, PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Bee", "CanFly", true);
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Bee", "experience_bottle");
+
+    public static final WildAngerCheck<Bee> ANGER_CHECK =
+            new WildAngerCheck<>(Bee.class, bee -> bee.getAnger() > 0);
 
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

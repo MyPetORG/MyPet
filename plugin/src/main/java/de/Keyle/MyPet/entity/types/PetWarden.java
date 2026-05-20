@@ -25,11 +25,16 @@ import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.entity.leashing.WildAngerCheck;
 import org.bukkit.Material;
+import org.bukkit.entity.Warden;
 
 @ShopInfo
 @DefaultInfo(food = {Material.BONE})
 public class PetWarden extends PetImpl implements PetLavaEntity {
+
+    public static final WildAngerCheck<Warden> ANGER_CHECK =
+            new WildAngerCheck<>(Warden.class, warden -> warden.getAngerLevel() != Warden.AngerLevel.CALM);
 
     public PetWarden(MyPetPlayer petOwner) {
         super(petOwner);

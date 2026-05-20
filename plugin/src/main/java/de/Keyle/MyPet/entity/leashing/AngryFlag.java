@@ -22,21 +22,20 @@ package de.Keyle.MyPet.entity.leashing;
 
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
+import de.Keyle.MyPet.api.entity.leashing.WildAngerCheckRegistry;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
 
 @LeashFlagName("Angry")
 public class AngryFlag implements LeashFlag {
     @Override
     public boolean check(Player player, LivingEntity entity, double damage, Settings settings) {
-        if (entity instanceof Wolf) {
-            return ((Wolf) entity).isAngry();
-        }
-        return true;
+        return WildAngerCheckRegistry.forEntity(entity)
+                .map(check -> check.test(entity))
+                .orElse(true);
     }
 
     @Override

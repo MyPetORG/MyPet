@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetSittable;
 import de.Keyle.MyPet.api.entity.PetTameable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.entity.leashing.WildAngerCheck;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
@@ -43,6 +44,9 @@ import java.util.List;
 public class PetWolf extends PetImpl implements PetBaby, PetSittable, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Wolf", "experience_bottle");
+
+    public static final WildAngerCheck<Wolf> ANGER_CHECK =
+            new WildAngerCheck<>(Wolf.class, Wolf::isAngry);
 
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
