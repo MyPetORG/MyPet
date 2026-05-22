@@ -76,7 +76,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 @ShopInfo
-@DefaultInfo(food = {Material.RESIN_CLUMP}, leashFlags = {"HeartLinked"})
+@DefaultInfo(food = {Material.RESIN_CLUMP}, leashFlags = {"HeartLinked"}, flySpeed = 0.8811D)
 public class PetCreaking extends PetImpl {
 
     public static final PetLifecycleHook LIFECYCLE_HOOK = new PetLifecycleHook(

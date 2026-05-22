@@ -36,7 +36,7 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.SPIDER_EYE})
+@DefaultInfo(food = {Material.SPIDER_EYE}, flySpeed = 0.3084D)
 public class PetArmadillo extends PetImpl implements PetBaby, PetNaturalDrop {
 
     public static final ConfigKey<Boolean> CAN_SHED_SCUTE = ConfigKey.bool("Armadillo", "CanShedScute", true);

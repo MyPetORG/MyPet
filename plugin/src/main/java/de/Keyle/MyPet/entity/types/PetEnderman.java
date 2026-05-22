@@ -44,7 +44,7 @@ import java.util.function.Supplier;
 
 @Getter
 @ShopInfo
-@DefaultInfo(food = {Material.SOUL_SAND})
+@DefaultInfo(food = {Material.SOUL_SAND}, flySpeed = 0.6608D)
 public class PetEnderman extends PetImpl {
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(

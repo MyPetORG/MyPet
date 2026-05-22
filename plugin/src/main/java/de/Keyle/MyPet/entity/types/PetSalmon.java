@@ -34,7 +34,7 @@ import org.bukkit.entity.Salmon;
 import java.util.List;
 
 @ShopInfo
-@DefaultInfo(food = {Material.SEAGRASS})
+@DefaultInfo(food = {Material.SEAGRASS}, flySpeed = 1.5419D)
 public class PetSalmon extends PetImpl implements PetAquaticEntity {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Salmon", "CanSwim", true);

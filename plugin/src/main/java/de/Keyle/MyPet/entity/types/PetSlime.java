@@ -37,7 +37,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import java.util.List;
 
 @ShopInfo(options = {"size:2"})
-@DefaultInfo(food = {Material.SUGAR})
+@DefaultInfo(food = {Material.SUGAR}, flySpeed = 1.5419D)
 public class PetSlime extends PetImpl {
 
     public static final ConfigKey<Boolean> CAN_HURT_PLAYERS_ON_CONTACT = ConfigKey.bool("Slime", "CanHurtPlayersOnContact", false);

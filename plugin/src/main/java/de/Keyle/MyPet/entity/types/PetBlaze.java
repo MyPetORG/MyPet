@@ -36,7 +36,7 @@ import org.bukkit.entity.Blaze;
 import java.util.List;
 
 @ShopInfo
-@DefaultInfo(food = {Material.GUNPOWDER})
+@DefaultInfo(food = {Material.GUNPOWDER}, flySpeed = 0.5066D)
 public class PetBlaze extends PetImpl implements PetFlyingEntity, PetLavaEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Blaze", "CanFly", true);

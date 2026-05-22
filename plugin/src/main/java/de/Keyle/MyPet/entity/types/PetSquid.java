@@ -31,7 +31,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.COD})
+@DefaultInfo(food = {Material.COD}, flySpeed = 1.5419D)
 public class PetSquid extends PetImpl implements PetBaby, PetAquaticEntity {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Squid", "CanSwim", true);

@@ -30,7 +30,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Warden;
 
 @ShopInfo
-@DefaultInfo(food = {Material.BONE})
+@DefaultInfo(food = {Material.BONE}, flySpeed = 0.6608D)
 public class PetWarden extends PetImpl implements PetLavaEntity {
 
     public static final WildAngerCheck<Warden> ANGER_CHECK =

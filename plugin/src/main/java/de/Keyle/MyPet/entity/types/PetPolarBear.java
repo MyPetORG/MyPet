@@ -30,7 +30,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @ShopInfo(displayName = "Polar Bear")
-@DefaultInfo(food = {Material.COD})
+@DefaultInfo(food = {Material.COD}, flySpeed = 0.5507D)
 public class PetPolarBear extends PetImpl implements PetBaby {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("PolarBear", "experience_bottle");

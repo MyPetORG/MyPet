@@ -23,8 +23,10 @@ package de.Keyle.MyPet.entity.ride;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skills.Ride;
+import de.Keyle.MyPet.entity.PetAttributes;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Input;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
@@ -48,6 +50,52 @@ public class RideSkillFlightController {
 
     private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
     private static final Map<UUID, RideSkillFlightController> controllers = new ConcurrentHashMap<>();
+
+    /**
+     * Air friction in vanilla's leaky-integrator travel pipeline
+     * ({@code LivingEntity#travel} for in-air motion). Per tick vanilla does
+     * {@code v += input × flyingSpeed; v ×= friction;}, so steady-state velocity
+     * is {@code flyingSpeed / (1 - friction)}.
+     */
+    private static final double VANILLA_AIR_FRICTION = 0.91;
+
+    /**
+     * Effective ground friction in vanilla's walk-travel integrator.
+     * Vanilla {@code LivingEntity#travel} on the ground multiplies the block's
+     * static friction (default {@code 0.6} for stone/dirt/etc.) by the same
+     * {@code 0.91} scalar used in-air, giving an effective ground friction
+     * of {@code 0.546}. Terminal walking velocity in vanilla is therefore
+     * {@code movementSpeed / (1 - 0.546)}.
+     */
+    private static final double VANILLA_GROUND_FRICTION = 0.6 * 0.91;
+
+    /**
+     * Multiplier that maps a vanilla {@code FLYING_SPEED} attribute value
+     * (a per-tick force coefficient applied through the air integrator) to
+     * the direct-per-tick velocity that would equal vanilla's steady-state
+     * terminal velocity for that input. Derived as
+     * {@code 1 / (1 - VANILLA_AIR_FRICTION) ≈ 11.11}.
+     *
+     * <p>Applied at the attribute read site in {@link #resolveBaseSpeed} so
+     * that third-party plugins setting vanilla {@code FLYING_SPEED}
+     * (baseValue or modifiers) drive ride speed without needing a MyPet API
+     * dependency — they tune the vanilla number; we translate units on read.
+     */
+    private static final double FLYING_SPEED_TO_DIRECT_VELOCITY = 1.0 / (1.0 - VANILLA_AIR_FRICTION);
+
+    /**
+     * Multiplier that maps a vanilla {@code MOVEMENT_SPEED} attribute value
+     * (a per-tick force coefficient applied through the ground integrator)
+     * to the direct-per-tick velocity equivalent. Derived as
+     * {@code 1 / (1 - VANILLA_GROUND_FRICTION) ≈ 2.20}.
+     *
+     * <p>Distinct from {@link #FLYING_SPEED_TO_DIRECT_VELOCITY} because
+     * vanilla applies different friction in the on-ground vs in-air paths —
+     * using the air factor on walking-speed values turns a typical Pig's
+     * {@code 0.25} into {@code 2.78 b/t (~55 m/s)} of ridden motion, which
+     * was the regression that prompted splitting these constants.
+     */
+    private static final double MOVEMENT_SPEED_TO_DIRECT_VELOCITY = 1.0 / (1.0 - VANILLA_GROUND_FRICTION);
 
     /** Fuel remaining (ticks) for this pet. */
     private double fuelTicks = -1;
@@ -81,6 +129,46 @@ public class RideSkillFlightController {
             }
         }
         controllers.remove(key);
+    }
+
+    /**
+     * Resolves the base per-tick ride speed for a pet/mob pair using this
+     * resolution chain:
+     * <ol>
+     *   <li>If {@link de.Keyle.MyPet.api.entity.PetInfo#isOverrideFlySpeed}
+     *       is {@code true} for this pet type, return
+     *       {@link de.Keyle.MyPet.api.entity.PetInfo#getFlySpeed} verbatim
+     *       (direct-per-tick-velocity units, no scaling);</li>
+     *   <li>Otherwise, live {@code FLYING_SPEED} attribute on the mob
+     *       (naturally-flying species) multiplied by
+     *       {@link #FLYING_SPEED_TO_DIRECT_VELOCITY} to convert from
+     *       vanilla's air-integrator force-coefficient units;</li>
+     *   <li>Otherwise, live {@code MOVEMENT_SPEED} attribute (ground/aquatic
+     *       pets that gained flight via the Ride skilltree's {@code CanFly}
+     *       upgrade) multiplied by {@link #MOVEMENT_SPEED_TO_DIRECT_VELOCITY}
+     *       to convert from vanilla's ground-integrator force-coefficient
+     *       units (a different friction constant than the air path, hence a
+     *       different multiplier);</li>
+     *   <li>Final fallback {@code 0.6} for pets with neither attribute
+     *       registered.</li>
+     * </ol>
+     *
+     * <p>Called from {@link #tickPet} and from {@code PetEnderDragon.HoverController.tickRide}
+     * so both controllers stay in sync on the resolution policy.
+     */
+    public static double resolveBaseSpeed(Pet pet, Mob mob) {
+        if (MyPetApi.getPetInfo().isOverrideFlySpeed(pet.getPetType())) {
+            return MyPetApi.getPetInfo().getFlySpeed(pet.getPetType());
+        }
+        AttributeInstance flyAttr = mob.getAttribute(PetAttributes.FLYING_SPEED);
+        if (flyAttr != null) {
+            return flyAttr.getValue() * FLYING_SPEED_TO_DIRECT_VELOCITY;
+        }
+        AttributeInstance walkAttr = mob.getAttribute(PetAttributes.MOVEMENT_SPEED);
+        if (walkAttr != null) {
+            return walkAttr.getValue() * MOVEMENT_SPEED_TO_DIRECT_VELOCITY;
+        }
+        return 0.6;
     }
 
     private void tickPet(Pet pet) {
@@ -125,7 +213,7 @@ public class RideSkillFlightController {
         float pitch = rider.getLocation().getPitch();
         mob.setRotation(yaw, 0);
 
-        double baseSpeed = 0.22;
+        double baseSpeed = resolveBaseSpeed(pet, mob);
         int speedIncrease = rideSkill.getSpeedIncrease() != null && rideSkill.getSpeedIncrease().getValue() != null
                 ? rideSkill.getSpeedIncrease().getValue() : 0;
         double speed = baseSpeed * (1.0 + speedIncrease / 100.0);

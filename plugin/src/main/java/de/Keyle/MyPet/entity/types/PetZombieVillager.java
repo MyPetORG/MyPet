@@ -38,7 +38,7 @@ import org.bukkit.entity.ZombieVillager;
 import java.util.List;
 
 @ShopInfo(displayName = "Zombie Villager")
-@DefaultInfo(food = {Material.ROTTEN_FLESH})
+@DefaultInfo(food = {Material.ROTTEN_FLESH}, flySpeed = 0.5066D)
 public class PetZombieVillager extends PetImpl implements PetEquipment, PetBaby, PetSunSensitive {
 
     public static final ConfigKey<Boolean> PREVENT_DAYLIGHT_BURN = ConfigKey.bool("ZombieVillager", "PreventDaylightBurn", true);

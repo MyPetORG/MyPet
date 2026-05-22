@@ -34,7 +34,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.APPLE})
+@DefaultInfo(food = {Material.APPLE}, flySpeed = 1.1111D)
 public class PetAllay extends PetImpl implements PetEquipment, PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Allay", "CanFly", true);

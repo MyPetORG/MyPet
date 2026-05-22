@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.APPLE})
+@DefaultInfo(food = {Material.APPLE}, flySpeed = 1.5419D)
 public class PetVex extends PetImpl implements PetEquipment, PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Vex", "CanFly", true);

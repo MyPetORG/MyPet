@@ -34,6 +34,7 @@ import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Input;
@@ -62,7 +63,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@DefaultInfo(food = {Material.END_STONE}, leashFlags = {"Impossible"}, fallbackIconMaterial = "DRAGON_EGG")
+@DefaultInfo(food = {Material.END_STONE}, leashFlags = {"Impossible"}, fallbackIconMaterial = "DRAGON_EGG", flySpeed = 1.5419D)
 public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("EnderDragon", "CanFly", true);
@@ -252,9 +253,6 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
         /** Per-tick lerp step toward the desired pose (blocks/tick). */
         private static final double LERP_STEP = 0.6;
 
-        /** Base per-tick teleport step while ridden, before Ride-skill speed bonus. */
-        private static final double RIDE_BASE_STEP = 0.6;
-
         /** Vertical step (blocks/tick) when the rider holds jump/sneak while flying. */
         private static final double RIDE_VERTICAL_STEP = 0.5;
 
@@ -388,7 +386,8 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
             int speedIncrease = rideSkill.getSpeedIncrease() != null
                     && rideSkill.getSpeedIncrease().getValue() != null
                     ? rideSkill.getSpeedIncrease().getValue() : 0;
-            double step = RIDE_BASE_STEP * (1.0 + speedIncrease / 100.0);
+            double baseStep = RideSkillFlightController.resolveBaseSpeed(pet, dragon);
+            double step = baseStep * (1.0 + speedIncrease / 100.0);
 
             float yaw = rider.getLocation().getYaw();
             float pitch = rider.getLocation().getPitch();
@@ -429,8 +428,9 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
 
         /**
          * Teleport guarded by a destination-column collision check. Per-tick
-         * movement is bounded (LERP_STEP / RIDE_BASE_STEP ≈ 0.6-1 blocks), well
-         * below 1, so a destination check is sufficient — there's no path-skipping
+         * movement is bounded (LERP_STEP and the per-pet fly-speed step are
+         * typically under one block/tick), so a destination check is
+         * sufficient — there's no path-skipping
          * to worry about. If the destination column contains a solid block, the
          * positional component is dropped and only rotation is applied; the dragon
          * still turns to face where it would have moved, but doesn't phase

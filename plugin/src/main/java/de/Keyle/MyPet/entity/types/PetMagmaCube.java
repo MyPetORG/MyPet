@@ -38,7 +38,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import java.util.List;
 
 @ShopInfo(displayName = "Magma Cube", options = {"size:2"})
-@DefaultInfo(food = {Material.REDSTONE})
+@DefaultInfo(food = {Material.REDSTONE}, flySpeed = 0.4405D)
 public class PetMagmaCube extends PetImpl implements PetLavaEntity {
 
     public static final ConfigKey<Boolean> CAN_HURT_PLAYERS_ON_CONTACT = ConfigKey.bool("MagmaCube", "CanHurtPlayersOnContact", false);

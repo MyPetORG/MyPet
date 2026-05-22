@@ -31,7 +31,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.ROTTEN_FLESH})
+@DefaultInfo(food = {Material.ROTTEN_FLESH}, flySpeed = 0.5066D)
 public class PetHusk extends PetImpl implements PetEquipment, PetBaby {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Husk", "experience_bottle");

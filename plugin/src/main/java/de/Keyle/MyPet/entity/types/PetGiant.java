@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.ROTTEN_FLESH}, fallbackIconMaterial = "ZOMBIE_SPAWN_EGG")
+@DefaultInfo(food = {Material.ROTTEN_FLESH}, fallbackIconMaterial = "ZOMBIE_SPAWN_EGG", flySpeed = 1.1013D)
 public class PetGiant extends PetImpl implements PetEquipment {
 
     public PetGiant(MyPetPlayer petOwner) {

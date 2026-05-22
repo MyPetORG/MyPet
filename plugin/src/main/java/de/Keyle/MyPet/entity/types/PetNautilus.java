@@ -36,7 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.NAUTILUS_SHELL}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {Material.NAUTILUS_SHELL}, leashFlags = {"Tamed"}, flySpeed = 2.2026D)
 public class PetNautilus extends PetImpl implements PetEquipment, PetAmphibiousEntity {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Nautilus", "CanSwim", true);

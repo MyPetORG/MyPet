@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.SUGAR, Material.WHEAT, Material.APPLE}, leashFlags = {"Tamed"}, growUpItem = Material.BREAD)
+@DefaultInfo(food = {Material.SUGAR, Material.WHEAT, Material.APPLE}, leashFlags = {"Tamed"}, growUpItem = Material.BREAD, flySpeed = 0.4956D)
 public class PetHorse extends PetImpl implements PetBaby, PetEquipment, PetSaddleable, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Horse", "bread");

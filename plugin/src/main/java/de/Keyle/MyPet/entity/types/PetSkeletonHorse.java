@@ -39,7 +39,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Set;
 
 @ShopInfo(displayName = "Skeleton Horse")
-@DefaultInfo(food = {Material.BONE})
+@DefaultInfo(food = {Material.BONE}, flySpeed = 0.4405D)
 public class PetSkeletonHorse extends PetImpl implements PetBaby, PetEquipment, PetSaddleable, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("SkeletonHorse", "experience_bottle");

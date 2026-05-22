@@ -30,7 +30,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @ShopInfo(displayName = "Piglin Brute")
-@DefaultInfo(food = {Material.GOLD_NUGGET})
+@DefaultInfo(food = {Material.GOLD_NUGGET}, flySpeed = 0.7709D)
 public class PetPiglinBrute extends PetImpl implements PetEquipment, PetZombifiable {
 
     public static final ConfigKey<Boolean> ALLOW_ZOMBIFICATION = ConfigKey.bool("PiglinBrute", "AllowZombification", false);

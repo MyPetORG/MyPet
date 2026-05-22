@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.WHEAT})
+@DefaultInfo(food = {Material.WHEAT}, flySpeed = 0.4405D)
 public class PetGoat extends PetImpl implements PetBaby, PetNaturalDrop, PetInteractionGate {
 
     public static final ConfigKey<Boolean> CAN_DROP_HORN = ConfigKey.bool("Goat", "CanDropHorn", true);

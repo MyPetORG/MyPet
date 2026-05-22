@@ -36,7 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.CACTUS})
+@DefaultInfo(food = {Material.CACTUS}, flySpeed = 0.1982D)
 public class PetCamelHusk extends PetImpl implements PetBaby, PetEquipment {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("CamelHusk", "experience_bottle");

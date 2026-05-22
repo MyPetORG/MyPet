@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.APPLE})
+@DefaultInfo(food = {Material.APPLE}, flySpeed = 1.1013D)
 public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLightningConvertible {
 
     public static final ConfigKey<Boolean> ALLOW_LIGHTNING_CONVERSION = ConfigKey.bool("Villager", "AllowLightningConversion", false);

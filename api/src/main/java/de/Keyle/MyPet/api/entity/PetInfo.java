@@ -44,6 +44,8 @@ public abstract class PetInfo {
 
     private final Map<PetType, Double> startHP = new HashMap<>();
     private final Map<PetType, Double> startSpeed = new HashMap<>();
+    private final Map<PetType, Boolean> overrideFlySpeed = new HashMap<>();
+    private final Map<PetType, Double> startFlySpeed = new HashMap<>();
     private final ArrayListMultimap<PetType, ConfigItem> food = ArrayListMultimap.create();
     private final ArrayListMultimap<PetType, Settings> leashFlagSettings = ArrayListMultimap.create();
     private final Map<PetType, Integer> customRespawnTimeFactor = new HashMap<>();
@@ -147,6 +149,47 @@ public abstract class PetInfo {
 
     public void setSpeed(PetType type, double speed) {
         startSpeed.put(type, speed);
+    }
+
+    /**
+     * Per-pet toggle controlling whether the Ride skill's flight controller
+     * uses {@link #getFlySpeed(PetType)} verbatim or derives ride speed
+     * from the mob's vanilla {@code FLYING_SPEED} / {@code MOVEMENT_SPEED}
+     * attribute. Default is {@code false} (derive from vanilla); set
+     * {@code true} via {@link #setOverrideFlySpeed(PetType, boolean)} (or
+     * the {@code MyPet.Pets.<Type>.OverrideFlySpeed} YAML key, or the
+     * {@code @DefaultInfo#overrideFlySpeed} annotation field) to lock the
+     * ride speed to the configured {@code FlySpeed} value.
+     */
+    public boolean isOverrideFlySpeed(PetType petType) {
+        if (petType == null) {
+            return false;
+        }
+        return overrideFlySpeed.getOrDefault(petType, false);
+    }
+
+    public void setOverrideFlySpeed(PetType type, boolean override) {
+        overrideFlySpeed.put(type, override);
+    }
+
+    /**
+     * Per-pet fly-speed value used by the Ride skill's flight controller
+     * when {@link #isOverrideFlySpeed(PetType)} returns {@code true}.
+     * Authored in direct-per-tick-velocity units. When the toggle is
+     * {@code false}, this value is ignored and the controller derives
+     * speed from the live Bukkit mob's {@code FLYING_SPEED} /
+     * {@code MOVEMENT_SPEED} attribute. Falls back to {@code 0.6} if
+     * no override is configured.
+     */
+    public double getFlySpeed(PetType petType) {
+        if (petType == null) {
+            return 0.6;
+        }
+        return startFlySpeed.getOrDefault(petType, 0.6);
+    }
+
+    public void setFlySpeed(PetType type, double flySpeed) {
+        startFlySpeed.put(type, flySpeed);
     }
 
     /**

@@ -32,7 +32,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 @ShopInfo
-@DefaultInfo(food = {Material.GHAST_TEAR}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {Material.GHAST_TEAR}, leashFlags = {"Tamed"}, flySpeed = 0.5556D)
 public class PetHappyGhast extends PetImpl implements PetFlyingEntity, PetBaby {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("HappyGhast", "CanFly", true);

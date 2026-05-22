@@ -35,7 +35,7 @@ import org.bukkit.entity.Phantom;
 import java.util.List;
 
 @ShopInfo
-@DefaultInfo(food = {Material.ROTTEN_FLESH})
+@DefaultInfo(food = {Material.ROTTEN_FLESH}, flySpeed = 1.5419D)
 public class PetPhantom extends PetImpl implements PetFlyingEntity, PetSunSensitive {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Phantom", "CanFly", true);

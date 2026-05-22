@@ -57,6 +57,37 @@ public @interface DefaultInfo {
     /** Base movement speed (Bukkit MOVEMENT_SPEED attribute value). */
     double walkSpeed() default 0.30D;
 
+    /**
+     * If {@code true}, the Ride skill's flight controller uses
+     * {@link #flySpeed()} verbatim as the base ride speed for this pet,
+     * skipping vanilla-attribute derivation entirely. If {@code false}
+     * (the default), the controller reads the mob's {@code FLYING_SPEED}
+     * attribute (naturally-flying species) or {@code MOVEMENT_SPEED}
+     * attribute (ground/aquatic pets that gained flight via the Ride
+     * skilltree's {@code CanFly} upgrade) and scales it into
+     * direct-velocity units — third-party plugins setting either attribute
+     * propagate to ride speed automatically.
+     * <p>
+     * Use the override when a specific pet type's vanilla attribute value
+     * produces a feel that's wrong for ridden flight — e.g. naturally
+     * aggressive flyers like Phantom whose vanilla {@code FLYING_SPEED}
+     * is high enough to feel uncontrollable when scaled.
+     */
+    boolean overrideFlySpeed() default false;
+
+    /**
+     * Base ride speed (blocks per tick, direct-velocity units) used by the
+     * Ride skill's flight controller when {@link #overrideFlySpeed()} is
+     * {@code true}. Ignored when {@code overrideFlySpeed} is {@code false}
+     * — in that case the controller derives speed from the live Bukkit
+     * mob's {@code FLYING_SPEED} / {@code MOVEMENT_SPEED} attribute
+     * scaled by vanilla-physics conversion factors.
+     * <p>
+     * Authored in direct-per-tick-velocity units, NOT vanilla's
+     * force-coefficient units — e.g. {@code 0.6} ≈ creative-fly cruise.
+     */
+    double flySpeed() default 0.6D;
+
     /** Item that forces a baby pet to grow up when right-clicked. */
     Material growUpItem() default Material.EXPERIENCE_BOTTLE;
 

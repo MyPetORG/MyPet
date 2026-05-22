@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.ROTTEN_FLESH})
+@DefaultInfo(food = {Material.ROTTEN_FLESH}, flySpeed = 0.6608D)
 public class PetSpider extends PetImpl {
 
     public PetSpider(MyPetPlayer petOwner) {

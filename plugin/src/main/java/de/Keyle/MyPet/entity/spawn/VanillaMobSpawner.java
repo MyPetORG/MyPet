@@ -283,6 +283,14 @@ public final class VanillaMobSpawner {
             speed.setBaseValue(MyPetApi.getPetInfo().getSpeed(pet.getPetType()));
         }
 
+        // FLYING_SPEED attribute is intentionally left at vanilla's baseValue.
+        // The Ride controller (RideSkillFlightController.resolveBaseSpeed)
+        // either reads the live attribute (scaled by vanilla-physics
+        // conversion) or uses PetInfo.getFlySpeed verbatim when
+        // isOverrideFlySpeed is true — either way, third-party plugins
+        // tuning the FLYING_SPEED attribute see no MyPet-side interference,
+        // and the MyPet override stays inside MyPet's own resolution chain.
+
         // Initial visual state — applied inside the spawn consumer so the
         // correct colour/variant/profession/etc. lands in the initial spawn
         // packet (no default-flash). Goes through pet.updateVisuals() rather

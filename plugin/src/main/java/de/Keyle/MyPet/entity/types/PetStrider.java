@@ -36,7 +36,7 @@ import org.bukkit.entity.Strider;
 import java.util.List;
 
 @ShopInfo
-@DefaultInfo(food = {Material.WARPED_FUNGUS})
+@DefaultInfo(food = {Material.WARPED_FUNGUS}, flySpeed = 0.3855D)
 public class PetStrider extends PetImpl implements PetBaby, PetLavaEntity {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Strider", "experience_bottle");

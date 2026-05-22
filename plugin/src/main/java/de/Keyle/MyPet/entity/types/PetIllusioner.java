@@ -31,7 +31,7 @@ import java.util.Set;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.APPLE}, fallbackIconMaterial = "SQUID_SPAWN_EGG", fallbackIconGlow = true)
+@DefaultInfo(food = {Material.APPLE}, fallbackIconMaterial = "SQUID_SPAWN_EGG", fallbackIconGlow = true, flySpeed = 1.1013D)
 public class PetIllusioner extends PetImpl implements PetEquipment {
 
     public PetIllusioner(MyPetPlayer petOwner) {

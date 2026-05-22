@@ -37,7 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.ROTTEN_FLESH})
+@DefaultInfo(food = {Material.ROTTEN_FLESH}, flySpeed = 2.4229D)
 public class PetZombieNautilus extends PetImpl implements PetEquipment, PetAmphibiousEntity, PetSunSensitive {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("ZombieNautilus", "CanSwim", true);

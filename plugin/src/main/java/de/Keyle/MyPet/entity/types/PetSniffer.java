@@ -33,7 +33,7 @@ import org.bukkit.Material;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.TORCHFLOWER_SEEDS}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {Material.TORCHFLOWER_SEEDS}, leashFlags = {"Tamed"}, flySpeed = 0.2203D)
 public class PetSniffer extends PetImpl implements PetBaby, PetNaturalDrop {
 
     public static final ConfigKey<Boolean> CAN_DIG_SEEDS = ConfigKey.bool("Sniffer", "CanDigSeeds", true);

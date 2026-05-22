@@ -28,7 +28,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.BONE})
+@DefaultInfo(food = {Material.BONE}, flySpeed = 0.5507D)
 public class PetParched extends PetImpl implements PetEquipment {
 
     public PetParched(MyPetPlayer petOwner) {

@@ -30,7 +30,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.PigZombie;
 
 @ShopInfo(displayName = "Zombified Piglin")
-@DefaultInfo(food = {Material.ROTTEN_FLESH})
+@DefaultInfo(food = {Material.ROTTEN_FLESH}, flySpeed = 0.5066D)
 public class PetZombifiedPiglin extends PetImpl implements PetEquipment, PetBaby, PetLavaEntity {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("ZombifiedPiglin", "experience_bottle");

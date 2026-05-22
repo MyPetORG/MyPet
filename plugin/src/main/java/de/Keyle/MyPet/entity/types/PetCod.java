@@ -29,7 +29,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.SEAGRASS})
+@DefaultInfo(food = {Material.SEAGRASS}, flySpeed = 1.5419D)
 public class PetCod extends PetImpl implements PetAquaticEntity {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Cod", "CanSwim", true);

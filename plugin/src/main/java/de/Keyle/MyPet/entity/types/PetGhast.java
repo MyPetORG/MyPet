@@ -30,7 +30,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.GUNPOWDER}, leashFlags = {"Impossible"})
+@DefaultInfo(food = {Material.GUNPOWDER}, leashFlags = {"Impossible"}, flySpeed = 0.6667D)
 public class PetGhast extends PetImpl implements PetLavaEntity, PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Ghast", "CanFly", true);

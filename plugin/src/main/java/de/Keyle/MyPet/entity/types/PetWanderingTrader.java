@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo(displayName = "Wandering Trader")
-@DefaultInfo(food = {Material.APPLE})
+@DefaultInfo(food = {Material.APPLE}, flySpeed = 1.5419D)
 public class PetWanderingTrader extends PetImpl {
 
     public PetWanderingTrader(MyPetPlayer petOwner) {

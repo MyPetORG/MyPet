@@ -35,7 +35,7 @@ import org.bukkit.entity.Parrot;
 import java.util.List;
 
 @ShopInfo
-@DefaultInfo(food = {Material.COOKIE, Material.SWEET_BERRIES}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {Material.COOKIE, Material.SWEET_BERRIES}, leashFlags = {"Tamed"}, overrideFlySpeed = true, flySpeed = 0.6D)
 public class PetParrot extends PetImpl implements PetFlyingEntity, PetTameable {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Parrot", "CanFly", true);

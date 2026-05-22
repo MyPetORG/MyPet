@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo(displayName = "Wither Skeleton")
-@DefaultInfo(food = {Material.BONE})
+@DefaultInfo(food = {Material.BONE}, flySpeed = 0.5507D)
 public class PetWitherSkeleton extends PetImpl implements PetEquipment, PetLavaEntity {
 
     public PetWitherSkeleton(MyPetPlayer petOwner) {

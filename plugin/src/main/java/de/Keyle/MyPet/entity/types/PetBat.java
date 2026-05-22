@@ -29,7 +29,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.SPIDER_EYE})
+@DefaultInfo(food = {Material.SPIDER_EYE}, flySpeed = 1.5419D)
 public class PetBat extends PetImpl implements PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Bat", "CanFly", true);

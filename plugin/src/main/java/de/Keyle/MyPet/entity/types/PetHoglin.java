@@ -31,7 +31,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.CRIMSON_FUNGUS})
+@DefaultInfo(food = {Material.CRIMSON_FUNGUS}, flySpeed = 0.6608D)
 public class PetHoglin extends PetImpl implements PetBaby, PetZombifiable {
 
     public static final ConfigKey<Boolean> ALLOW_ZOMBIFICATION = ConfigKey.bool("Hoglin", "AllowZombification", false);

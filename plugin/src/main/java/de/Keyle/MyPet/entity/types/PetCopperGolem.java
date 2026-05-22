@@ -37,7 +37,7 @@ import org.bukkit.entity.Mob;
 import java.util.List;
 
 @ShopInfo(displayName = "Copper Golem")
-@DefaultInfo(food = {Material.COPPER_INGOT}, leashFlags = {"UserCreated"})
+@DefaultInfo(food = {Material.COPPER_INGOT}, leashFlags = {"UserCreated"}, flySpeed = 0.4405D)
 public class PetCopperGolem extends PetImpl {
 
     public static final ConfigKey<Boolean> CAN_OXIDIZE = ConfigKey.bool("CopperGolem", "CanOxidize", true);

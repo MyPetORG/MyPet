@@ -39,7 +39,7 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.CACTUS})
+@DefaultInfo(food = {Material.CACTUS}, flySpeed = 0.1982D)
 public class PetCamel extends PetImpl implements PetBaby, PetEquipment, PetSaddleable, PetSittable, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Camel", "experience_bottle");

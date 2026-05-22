@@ -32,7 +32,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 @ShopInfo(displayName = "Iron Golem")
-@DefaultInfo(food = {Material.IRON_INGOT}, leashFlags = {"UserCreated"}, fallbackIconMaterial = "SKELETON_SPAWN_EGG", fallbackIconGlow = true)
+@DefaultInfo(food = {Material.IRON_INGOT}, leashFlags = {"UserCreated"}, fallbackIconMaterial = "SKELETON_SPAWN_EGG", fallbackIconGlow = true, flySpeed = 0.5507D)
 public class PetIronGolem extends PetImpl {
 
     public static final ConfigKey<Boolean> CAN_TOSS_UP = ConfigKey.bool("IronGolem", "CanTossUp", true);

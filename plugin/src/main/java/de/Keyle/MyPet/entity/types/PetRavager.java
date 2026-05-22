@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.BEEF, Material.MUTTON})
+@DefaultInfo(food = {Material.BEEF, Material.MUTTON}, flySpeed = 0.6608D)
 public class PetRavager extends PetImpl {
 
     public PetRavager(MyPetPlayer petOwner) {

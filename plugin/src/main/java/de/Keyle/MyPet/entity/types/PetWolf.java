@@ -40,7 +40,7 @@ import org.bukkit.entity.Wolf;
 import java.util.List;
 
 @ShopInfo(options = {"tamed"})
-@DefaultInfo(food = {Material.BEEF, Material.MUTTON}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {Material.BEEF, Material.MUTTON}, leashFlags = {"Tamed"}, flySpeed = 0.6608D)
 public class PetWolf extends PetImpl implements PetBaby, PetSittable, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Wolf", "experience_bottle");

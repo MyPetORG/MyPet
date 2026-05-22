@@ -40,7 +40,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import java.util.List;
 
 @ShopInfo
-@DefaultInfo(food = {Material.TROPICAL_FISH})
+@DefaultInfo(food = {Material.TROPICAL_FISH}, flySpeed = 2.2026D)
 public class PetAxolotl extends PetImpl implements PetBaby, PetAmphibiousEntity {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Axolotl", "CanSwim", true);

@@ -39,7 +39,7 @@ import org.bukkit.inventory.LlamaInventory;
 import java.util.List;
 
 @ShopInfo
-@DefaultInfo(food = {Material.WHEAT}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {Material.WHEAT}, leashFlags = {"Tamed"}, flySpeed = 0.3855D)
 public class PetLlama extends PetImpl implements PetBaby, PetChested, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Llama", "experience_bottle");

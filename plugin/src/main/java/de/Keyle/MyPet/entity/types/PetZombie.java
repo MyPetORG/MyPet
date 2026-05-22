@@ -28,7 +28,7 @@ import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.ROTTEN_FLESH})
+@DefaultInfo(food = {Material.ROTTEN_FLESH}, flySpeed = 0.5066D)
 public class PetZombie extends PetImpl implements PetEquipment, PetBaby, PetSunSensitive {
 
     public static final ConfigKey<Boolean> PREVENT_DAYLIGHT_BURN = ConfigKey.bool("Zombie", "PreventDaylightBurn", true);

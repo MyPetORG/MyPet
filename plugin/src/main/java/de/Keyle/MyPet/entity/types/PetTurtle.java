@@ -33,7 +33,7 @@ import org.bukkit.Material;
 
 @Getter
 @ShopInfo
-@DefaultInfo(food = {Material.SEAGRASS})
+@DefaultInfo(food = {Material.SEAGRASS}, flySpeed = 0.5507D)
 public class PetTurtle extends PetImpl implements PetBaby, PetAmphibiousEntity {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Turtle", "CanSwim", true);

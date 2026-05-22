@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.BAMBOO})
+@DefaultInfo(food = {Material.BAMBOO}, flySpeed = 0.3304D)
 public class PetPanda extends PetImpl implements PetBaby, PetNaturalDrop, PetSittable {
 
     public static final ConfigKey<Boolean> CAN_DROP_SLIMEBALL = ConfigKey.bool("Panda", "CanDropSlimeball", true);

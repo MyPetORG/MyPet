@@ -35,7 +35,7 @@ import org.bukkit.entity.Rabbit;
 import java.util.List;
 
 @ShopInfo
-@DefaultInfo(food = {Material.CARROT})
+@DefaultInfo(food = {Material.CARROT}, flySpeed = 0.6608D)
 public class PetRabbit extends PetImpl implements PetBaby {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Rabbit", "experience_bottle");

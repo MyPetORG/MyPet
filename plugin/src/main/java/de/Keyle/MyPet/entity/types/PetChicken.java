@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.WHEAT_SEEDS})
+@DefaultInfo(food = {Material.WHEAT_SEEDS}, flySpeed = 0.5507D)
 public class PetChicken extends PetImpl implements PetBaby, PetNaturalDrop {
 
     public static final ConfigKey<Boolean> CAN_LAY_EGGS = ConfigKey.bool("Chicken", "CanLayEggs", true);

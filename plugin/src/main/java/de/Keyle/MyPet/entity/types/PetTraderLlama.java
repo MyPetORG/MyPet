@@ -36,7 +36,7 @@ import org.bukkit.inventory.LlamaInventory;
 
 // variant: auto-derived via the Llama.class spec on PetLlama (TraderLlama extends Llama).
 @ShopInfo(displayName = "Trader Llama")
-@DefaultInfo(food = {Material.WHEAT}, leashFlags = {"Tamed"})
+@DefaultInfo(food = {Material.WHEAT}, leashFlags = {"Tamed"}, flySpeed = 0.3855D)
 public class PetTraderLlama extends PetImpl implements PetBaby, PetChested, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("TraderLlama", "experience_bottle");

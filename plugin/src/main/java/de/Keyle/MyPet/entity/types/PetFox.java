@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.SWEET_BERRIES})
+@DefaultInfo(food = {Material.SWEET_BERRIES}, flySpeed = 0.6608D)
 public class PetFox extends PetImpl implements PetBaby, PetEquipment, PetSittable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Fox", "experience_bottle");

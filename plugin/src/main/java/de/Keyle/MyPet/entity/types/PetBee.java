@@ -51,7 +51,7 @@ import java.util.List;
         Material.CORNFLOWER,
         Material.LILY_OF_THE_VALLEY,
         Material.WITHER_ROSE,
-})
+}, overrideFlySpeed = true, flySpeed = 0.7D)
 public class PetBee extends PetImpl implements PetBaby, PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Bee", "CanFly", true);

@@ -44,7 +44,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 @ShopInfo
-@DefaultInfo(food = {Material.WHEAT})
+@DefaultInfo(food = {Material.WHEAT}, flySpeed = 0.5066D)
 public class PetSheep extends PetImpl implements PetBaby, PetInteractionGate {
 
     public static final ConfigKey<Boolean> CAN_BE_SHEARED = ConfigKey.bool("Sheep", "CanBeSheared", true);

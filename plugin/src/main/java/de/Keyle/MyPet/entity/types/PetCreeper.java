@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.UUID;
 
 @ShopInfo
-@DefaultInfo(food = {Material.GUNPOWDER})
+@DefaultInfo(food = {Material.GUNPOWDER}, flySpeed = 0.5507D)
 public class PetCreeper extends PetImpl {
 
     public static final ConfigKey<Boolean> ALLOW_FLINT_AND_STEEL_EXPLODE = ConfigKey.bool("Creeper", "AllowFlintAndSteelExplode", false);

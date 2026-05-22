@@ -465,6 +465,8 @@ public class ConfigurationLoader {
 
             MyPetApi.getPetInfo().setStartHP(petType, config.getDouble("MyPet.Pets." + petType.name() + ".HP", pi.hp()));
             MyPetApi.getPetInfo().setSpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".Speed", pi.walkSpeed()));
+            MyPetApi.getPetInfo().setOverrideFlySpeed(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".OverrideFlySpeed", pi.overrideFlySpeed()));
+            MyPetApi.getPetInfo().setFlySpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".FlySpeed", pi.flySpeed()));
             MyPetApi.getPetInfo().clearFood(petType);
             if (config.get("MyPet.Pets." + petType.name() + ".Food") instanceof ArrayList) {
                 List<String> foodList = config.getStringList("MyPet.Pets." + petType.name() + ".Food");

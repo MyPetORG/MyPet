@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Set;
 
 @ShopInfo
-@DefaultInfo(food = {Material.WHEAT})
+@DefaultInfo(food = {Material.WHEAT}, flySpeed = 0.4405D)
 public class PetMooshroom extends PetImpl implements PetBaby, PetInteractionGate {
 
     public static final ConfigKey<Boolean> CAN_GIVE_STEW = ConfigKey.bool("Mooshroom", "CanGiveStew", false);

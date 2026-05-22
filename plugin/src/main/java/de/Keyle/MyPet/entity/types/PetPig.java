@@ -37,7 +37,7 @@ import org.bukkit.entity.Pig;
 import java.util.List;
 
 @ShopInfo
-@DefaultInfo(food = {Material.CARROT})
+@DefaultInfo(food = {Material.CARROT}, flySpeed = 0.5507D)
 public class PetPig extends PetImpl implements PetBaby, PetLightningConvertible {
 
     public static final ConfigKey<Boolean> ALLOW_LIGHTNING_CONVERSION = ConfigKey.bool("Pig", "AllowLightningConversion", false);

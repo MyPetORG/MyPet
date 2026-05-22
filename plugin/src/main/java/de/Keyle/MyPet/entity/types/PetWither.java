@@ -51,7 +51,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-@DefaultInfo(food = {Material.BONE}, leashFlags = {"Impossible"}, fallbackIconMaterial = "ENDERMITE_SPAWN_EGG", fallbackIconGlow = true)
+@DefaultInfo(food = {Material.BONE}, leashFlags = {"Impossible"}, fallbackIconMaterial = "ENDERMITE_SPAWN_EGG", fallbackIconGlow = true, overrideFlySpeed = true, flySpeed = 0.9D)
 public class PetWither extends PetImpl implements PetBaby, PetLavaEntity, PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Wither", "CanFly", true);

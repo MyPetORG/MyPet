@@ -31,7 +31,7 @@ import java.util.Set;
 import org.bukkit.Material;
 
 @ShopInfo
-@DefaultInfo(food = {Material.APPLE})
+@DefaultInfo(food = {Material.APPLE}, flySpeed = 0.7709D)
 public class PetPillager extends PetImpl implements PetEquipment {
 
     public PetPillager(MyPetPlayer petOwner) {
