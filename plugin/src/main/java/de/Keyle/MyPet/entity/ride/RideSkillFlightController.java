@@ -246,6 +246,12 @@ public class RideSkillFlightController {
         }
 
         double worldY = mob.getVelocity().getY();
+        // Tracks whether worldY was actually written by rider intent this
+        // tick (jump-driven lift, or pitch-driven climb/dive). When false,
+        // worldY is just the pre-existing gravity-affected velocity — vanilla
+        // is driving vertical motion, not the rider, so fallDistance should
+        // continue to accumulate normally.
+        boolean riderDroveY = false;
 
         boolean unlimitedFuel = flyLimitSeconds <= 0;
         if (input.isJump()) {
@@ -253,8 +259,10 @@ public class RideSkillFlightController {
                 double jumpHeight = rideSkill.getJumpHeight() != null && rideSkill.getJumpHeight().getValue() != null
                         ? rideSkill.getJumpHeight().getValue().doubleValue() : 0.5;
                 worldY = Math.max(0.42, jumpHeight * 0.2);
+                riderDroveY = true;
             } else if (canFly && (unlimitedFuel || fuelTicks > 0)) {
                 worldY = 0.35;
+                riderDroveY = true;
                 if (!unlimitedFuel) {
                     fuelTicks = Math.max(0, fuelTicks - 1);
                 }
@@ -270,6 +278,7 @@ public class RideSkillFlightController {
             // a falling pet at 0 Y velocity mid-air).
             if (fx != 0 && canFly) {
                 worldY = pitchInducedY;
+                riderDroveY = true;
             }
             if (flyLimitSeconds > 0) {
                 double maxFuel = flyLimitSeconds * 20.0;
@@ -279,5 +288,15 @@ public class RideSkillFlightController {
         }
 
         mob.setVelocity(new Vector(worldX, worldY, worldZ));
+        // Reset fallDistance only when the rider actually drove vertical
+        // motion this tick. Vanilla's accumulator would otherwise treat a
+        // rider-controlled descent as a free-fall and apply fall damage on
+        // landing equal to the full drop. When the rider stops driving Y
+        // (no jump, no W/S, or W/S without canFly), worldY is just the
+        // pre-existing gravity velocity — let vanilla accumulate so a pet
+        // the rider abandons mid-air still takes legitimate fall damage.
+        if (riderDroveY) {
+            mob.setFallDistance(0f);
+        }
     }
 }
