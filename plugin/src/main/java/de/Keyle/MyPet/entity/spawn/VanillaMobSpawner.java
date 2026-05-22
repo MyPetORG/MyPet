@@ -44,6 +44,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.UUID;
 
@@ -263,13 +264,21 @@ public final class VanillaMobSpawner {
         mob.setRemoveWhenFarAway(false);
         mob.setAI(true);
         mob.setCanPickupItems(false);
-        // Clear residual fire ticks on every spawn. Pets that die while
-        // burning otherwise come back with the burn timer intact (vanilla
-        // NBT round-trips the Fire tag through PetEntitySnapshot), and a
-        // low-max-HP pet can re-die before the timer decays — death loop.
-        // The cost of clearing unconditionally is purely cosmetic: a pet
-        // that was burning when its chunk unloaded reappears not burning.
+        // Scrub vanilla state that, if carried across death/respawn via
+        // PetEntitySnapshot's full-NBT round-trip, would re-apply lethal
+        // damage on the next tick and trap the pet in a death loop:
+        //   - Fire tag                  → fire damage tick
+        //   - FallDistance + Motion.y   → fall damage tick
+        //   - TicksFrozen               → freeze damage tick
+        // Clearing unconditionally is intentional: a pet whose chunk
+        // unloaded mid-burn / mid-fall / mid-freeze reappears in the clean
+        // state, which is a purely cosmetic trade-off for a barely-observable
+        // edge case — well worth avoiding a spawner-side
+        // death-vs-reload discriminator.
         mob.setFireTicks(0);
+        mob.setFallDistance(0f);
+        mob.setVelocity(new Vector(0, 0, 0));
+        mob.setFreezeTicks(0);
         PetEntityMarker.mark(mob);
 
         AttributeInstance health = mob.getAttribute(PetAttributes.MAX_HEALTH);

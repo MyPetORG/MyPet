@@ -31,6 +31,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
+import org.bukkit.util.Vector;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -170,13 +171,17 @@ public final class PetEntitySnapshot {
         }
         mob.setPersistent(false);
         mob.setRemoveWhenFarAway(false);
-        // Fire ticks are intentionally NOT carried across restore even though
-        // the captured NBT contains the vanilla Fire tag. A pet that died
-        // while burning would otherwise come back still burning, and a
-        // low-max-HP pet can re-die before the timer decays (death loop).
-        // VanillaMobSpawner.configureMob also clears this — kept here as
-        // defense-in-depth for any future caller that uses restore directly.
+        // Lethal-state scrub. The captured NBT contains the vanilla Fire,
+        // FallDistance, Motion, and TicksFrozen tags; carrying any of them
+        // across restore can re-apply the killing damage on the next tick
+        // and trap the pet in a death loop (a low-max-HP pet re-dies
+        // before the timer/distance decays). VanillaMobSpawner.configureMob
+        // also clears these — kept here as defense-in-depth for any future
+        // caller that uses restore directly.
         mob.setFireTicks(0);
+        mob.setFallDistance(0f);
+        mob.setVelocity(new Vector(0, 0, 0));
+        mob.setFreezeTicks(0);
         return mob;
     }
 
