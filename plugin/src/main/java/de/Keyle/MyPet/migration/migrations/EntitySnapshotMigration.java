@@ -35,8 +35,8 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -53,11 +53,13 @@ import java.util.logging.Logger;
  * always has it, legacy curated NBT (per-pet-type keys at root) does
  * not.
  *
- * <p>Per-pet conversion: spawn a transient mob at a high-altitude hidden
- * location, apply the legacy compound via
- * {@link LegacyPetReader#applyToMob}, capture vanilla NBT via
- * {@link PetEntitySnapshot#capture}, write the envelope back through the
- * repository, remove the transient mob.
+ * <p>Per-pet conversion: obtain a detached mob via Paper's
+ * {@code World#createEntity(Location, Class)} (never added to the world,
+ * no CreatureSpawnEvent fires, no spawn packet sent), apply the legacy
+ * compound via {@link LegacyPetReader#applyToMob}, capture vanilla NBT
+ * via {@link PetEntitySnapshot#capture}, write the envelope back through
+ * the repository. The detached mob is GC'd after capture — no removal
+ * step needed.
  *
  * <p><b>Threading.</b> Integrates with {@code MigrationService} via the
  * {@link PetDataMigration} interface. {@code migrateSql} runs synchronously
@@ -183,42 +185,13 @@ public final class EntitySnapshotMigration implements PetDataMigration {
                 return false;
             }
 
-            Mob transientMob = world.spawn(hiddenLoc, mobClass,
-                    CreatureSpawnEvent.SpawnReason.CUSTOM, m -> {
-                        m.setPersistent(false);
-                        m.setRemoveWhenFarAway(false);
-                        m.setAI(false);
-                        m.setSilent(true);
-                        m.setInvulnerable(true);
-                        m.setInvisible(true);
-                    });
-            if (transientMob == null) {
-                // Another plugin (e.g. WorldGuard) cancelled the CreatureSpawnEvent.
-                // The original legacy compound is left untouched in the DB so a
-                // subsequent migration attempt (after disabling the blocker) can
-                // still convert this pet.
-                logger.warning("EntitySnapshot: pet " + pet.getUUID()
-                        + " (" + pet.getPetType().name() + ") transient spawn was cancelled; "
-                        + "skipping. Disable spawn-blocking plugins for the migration boot.");
-                return false;
-            }
+            Mob mob = world.createEntity(hiddenLoc, mobClass);
 
-            try {
-                LegacyPetReader.applyToMob(transientMob, pet.getPetType(), PetInfoAccess.read(pet));
-                // Strip the migration-only protective flags before capture: Paper's
-                // serializeEntity persists Silent / Invulnerable / Invisible into the
-                // envelope, and configureMob does not reset them on restore — so
-                // leaving them on would produce silent, invulnerable, invisible pets.
-                transientMob.setSilent(false);
-                transientMob.setInvulnerable(false);
-                transientMob.setInvisible(false);
-                // Narrow UPDATE — must not round-trip through the wide updatePet, which
-                // would null the skilltree column (SkilltreeManager loads after migrations).
-                repository.updatePetInfo(pet.getUUID(), PetEntitySnapshot.capture(transientMob)).join();
-                return true;
-            } finally {
-                transientMob.remove();
-            }
+            LegacyPetReader.applyToMob(mob, pet.getPetType(), PetInfoAccess.read(pet));
+            // Narrow UPDATE — must not round-trip through the wide updatePet, which
+            // would null the skilltree column (SkilltreeManager loads after migrations).
+            repository.updatePetInfo(pet.getUUID(), PetEntitySnapshot.capture(mob)).join();
+            return true;
         } catch (Throwable t) {
             logger.warning("EntitySnapshot: pet " + pet.getUUID()
                     + " (" + pet.getPetType().name() + ") failed: " + t.getMessage());
