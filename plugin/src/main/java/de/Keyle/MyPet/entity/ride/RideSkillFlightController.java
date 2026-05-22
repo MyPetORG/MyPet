@@ -262,8 +262,13 @@ public class RideSkillFlightController {
         } else {
             // Pitch-driven vertical motion: only kicks in while the rider is
             // pressing forward/backward, so a stationary look-around doesn't
-            // bob the pet up and down.
-            if (fx != 0) {
+            // bob the pet up and down. Gated on canFly - without flight,
+            // looking up while pressing W would otherwise lift the pet off
+            // the ground. Looking up while falling would halt the fall
+            // (the pitchInducedY write replaces the gravity-derived velocity
+            // wholesale, so even clamping to non-positive would still suspend
+            // a falling pet at 0 Y velocity mid-air).
+            if (fx != 0 && canFly) {
                 worldY = pitchInducedY;
             }
             if (flyLimitSeconds > 0) {
