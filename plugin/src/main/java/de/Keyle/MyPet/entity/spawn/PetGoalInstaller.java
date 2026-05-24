@@ -86,15 +86,22 @@ public final class PetGoalInstaller {
                     Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F, flying, swimming));
         }
 
-        if (!flying) {
-            PetControlGoal controlGoal = new PetControlGoal(pet, mob, 0.1F);
+        // Control + melee install for ground and flying pets (swimming pets
+        // excluded — that's tracked under the Frog/amphibian workstream). The
+        // higher walkSpeedModifier for flying pets (0.8F control, 0.7F melee
+        // vs 0.1F ground) matches the pre-NMS EntityMyFlyingPet#setPathfinder
+        // values: flying movement needs a steeper modifier to close on the
+        // steered/melee target. Without these, on-hit skills (Fire, Poison,
+        // Bleed, etc.) silently no-op on flying pets because melee never lands.
+        if (!swimming) {
+            PetControlGoal controlGoal = new PetControlGoal(pet, mob, flying ? 0.8F : 0.1F);
             goals.addGoal(mob, 2, controlGoal);
             PetControlTargetGoal controlTargetGoal = new PetControlTargetGoal(pet, mob, (float) mob.getWidth() + 2.5F);
             controlTargetGoal.setControlGoal(controlGoal);
             goals.addGoal(mob, 12, controlTargetGoal);
+            goals.addGoal(mob, 5, new PetMeleeAttackGoal(pet, mob, flying ? 0.7F : 0.1F, mob.getWidth() + 1.3, 20));
         }
         if (!swimming && !flying) {
-            goals.addGoal(mob, 5, new PetMeleeAttackGoal(pet, mob, 0.1F, mob.getWidth() + 1.3, 20));
             goals.addGoal(mob, 7, new PetRandomStrollGoal(pet, mob));
         }
         if (flying) {
