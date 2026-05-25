@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.ShopInfo;
+import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
 import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -32,12 +33,15 @@ import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Mob;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -47,13 +51,39 @@ import java.util.function.Supplier;
 @DefaultInfo(food = {Material.SOUL_SAND}, flySpeed = 0.6608D)
 public class PetEnderman extends PetImpl {
 
+    /**
+     * PDC flag persisting the "always angry" intent across despawn/respawn.
+     * Vanilla NBT round-trips PDC under the {@code BukkitValues} tag, so
+     * this survives the entity-snapshot envelope without extra wiring.
+     */
+    private static final NamespacedKey PERMA_SCREAMING_KEY = new NamespacedKey("mypet", "perma_screaming");
+
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
-            () -> OptionSpec.ofFlag("screaming", Enderman.class, e -> e.setScreaming(true)),
+            () -> OptionSpec.ofFlag("screaming", Enderman.class, e ->
+                    e.getPersistentDataContainer().set(PERMA_SCREAMING_KEY, PersistentDataType.BOOLEAN, true)),
             PetCreationOptions.blockSpec(Enderman.class)
+    );
+
+    /** Reads {@link #PERMA_SCREAMING_KEY} at spawn and restores {@link #permaScreaming}. */
+    public static final PetLifecycleHook LIFECYCLE_HOOK = new PetLifecycleHook(
+            "Enderman",
+            PetEnderman::restorePermaScreaming,
+            pet -> {}
     );
 
     public static final Supplier<Listener> DAMAGED_SCREAMING_SYNC =
             PetListenerRegistry.register(DamagedScreamingSync::new);
+
+    private static void restorePermaScreaming(Pet pet) {
+        Mob mob = pet.getBukkitEntity();
+        if (!(mob instanceof Enderman enderman)) return;
+        if (!(pet instanceof PetEnderman petEnderman)) return;
+        Boolean perma = enderman.getPersistentDataContainer()
+                .get(PERMA_SCREAMING_KEY, PersistentDataType.BOOLEAN);
+        if (perma != null && perma) {
+            petEnderman.setPermaScreaming(true);
+        }
+    }
 
     /**
      * Pet-only override: vanilla {@link Enderman} screaming is AI-driven and
