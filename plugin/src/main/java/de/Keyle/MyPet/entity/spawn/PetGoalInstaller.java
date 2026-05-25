@@ -21,9 +21,11 @@
 package de.Keyle.MyPet.entity.spawn;
 
 import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemovalRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetSwimmingEntity;
+import de.Keyle.MyPet.entity.ai.BrainAccess;
 import de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetFlyingMovementGoal;
@@ -62,6 +64,7 @@ public final class PetGoalInstaller {
 
     public static void install(Pet pet, Mob mob) {
         Bukkit.getMobGoals().removeAllGoals(mob);
+        BrainAccess.removeBehaviorsByClassName(mob, PetBrainBehaviorRemovalRegistry.behaviorNamesFor(pet));
 
         boolean flying = pet instanceof PetFlyingEntity flyer && flyer.canFly();
         boolean swimming = pet instanceof PetSwimmingEntity swimmer && swimmer.canSwim();

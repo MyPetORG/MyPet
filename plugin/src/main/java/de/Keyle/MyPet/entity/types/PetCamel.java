@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
 import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.entity.ai.BrainMemoryAccess;
+import de.Keyle.MyPet.entity.ai.BrainAccess;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import io.papermc.paper.event.entity.EntityToggleSitEvent;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
@@ -219,7 +219,7 @@ public class PetCamel extends PetImpl implements PetBaby, PetEquipment, PetMulti
      * so disabling brain movement always doesn't take anything away.
      *
      * <p>Why memory-clear, not behavior-removal: see the class-level
-     * Javadoc on {@link BrainMemoryAccess}.
+     * Javadoc on {@link BrainAccess}.
      *
      * <p>Why this doesn't interfere with the rider: the Ride skill and
      * vanilla mount-control write the entity's velocity directly rather
@@ -254,7 +254,7 @@ public class PetCamel extends PetImpl implements PetBaby, PetEquipment, PetMulti
             ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> {
                 try {
                     if (camel.isDead()) return;
-                    BrainMemoryAccess.clearWalkTarget(camel);
+                    BrainAccess.clearWalkTarget(camel);
                 } catch (Throwable ignored) {
                 }
             }, null, 1L, 1L);

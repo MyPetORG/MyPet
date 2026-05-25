@@ -29,7 +29,7 @@ import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
-import de.Keyle.MyPet.entity.ai.BrainMemoryAccess;
+import de.Keyle.MyPet.entity.ai.BrainAccess;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Material;
 import org.bukkit.entity.Breeze;
@@ -84,7 +84,7 @@ public class PetBreeze extends PetImpl implements PetFlyingEntity {
      * scan-and-fire path, which is why the Wither has a launch-side
      * backup and Breeze does not).
      *
-     * <p>If {@link BrainMemoryAccess} ever becomes unavailable (NMS rename
+     * <p>If {@link BrainAccess} ever becomes unavailable (NMS rename
      * in a future MC version, etc.), the helper logs a single startup
      * warning and {@code clearAttackTarget} becomes a no-op. Wind charges
      * would then fire normally — same failure mode as
@@ -115,7 +115,7 @@ public class PetBreeze extends PetImpl implements PetFlyingEntity {
             ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> {
                 try {
                     if (breeze.isDead()) return;
-                    BrainMemoryAccess.clearAttackTarget(breeze);
+                    BrainAccess.clearAttackTarget(breeze);
                 } catch (Throwable ignored) {
                 }
             }, null, 1L, 1L);

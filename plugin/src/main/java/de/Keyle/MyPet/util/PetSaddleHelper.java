@@ -48,7 +48,7 @@ import org.bukkit.inventory.SaddledMountInventory;
  * equipment-slot consolidation. If a live HappyGhast pet with an equipped
  * harness reports {@code isSaddled() == false}, switch to
  * {@code EquipmentSlot.BODY} or add a reflective {@code HappyGhastHarnessAccess}
- * helper modeled on {@code BrainMemoryAccess}.
+ * helper modeled on {@code BrainAccess}.
  */
 public final class PetSaddleHelper {
 

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval;
 import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.Pet;
@@ -63,6 +64,26 @@ public class PetCopperGolem extends PetImpl {
             pet -> {}
     );
 
+    /**
+     * Strip the vanilla brain behaviors that drive autonomous item logistics
+     * — the {@code TransportItemsBetweenContainers} behavior in
+     * {@code CopperGolemAi}'s {@code IDLE} activity. Without removal, a pet
+     * copper golem will walk to copper chests to pick items out of them and
+     * to standard chests to deposit them. The transfer itself happens via direct
+     * {@code container.setItem(...)} — no Bukkit event fires for third-party
+     * plugins to cancel — so strip-at-spawn is the only clean intervention.
+     *
+     * <p>Other behaviors registered on the brain ({@code MoveToTargetSink},
+     * {@code LookAtTargetSink}, {@code AnimalPanic}, cooldown countdowns,
+     * etc.) are left in place — they're either consumers of memories MyPet
+     * goals don't write (harmless) or cosmetic glances, and removing them
+     * piecemeal isn't needed to fix the reported bug.
+     */
+    public static final PetBrainBehaviorRemoval BRAIN_BEHAVIOR_REMOVAL = new PetBrainBehaviorRemoval(
+            "CopperGolem",
+            "TransportItemsBetweenContainers"
+    );
+
     public PetCopperGolem(MyPetPlayer petOwner) {
         super(petOwner);
     }
@@ -77,5 +98,4 @@ public class PetCopperGolem extends PetImpl {
             }
         }
     }
-
 }
