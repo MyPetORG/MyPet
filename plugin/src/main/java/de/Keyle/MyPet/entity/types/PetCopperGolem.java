@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval;
 import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
@@ -30,12 +31,17 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import io.papermc.paper.world.WeatheringCopperState;
 import org.bukkit.Material;
 import org.bukkit.entity.CopperGolem;
 import org.bukkit.entity.Mob;
+import org.bukkit.plugin.Plugin;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @ShopInfo(displayName = "Copper Golem")
 @DefaultInfo(food = {Material.COPPER_INGOT}, leashFlags = {"UserCreated"}, flySpeed = 0.4405D)
@@ -49,19 +55,11 @@ public class PetCopperGolem extends PetImpl {
             () -> OptionSpec.ofFlag("waxed",     CopperGolem.class,                              g -> g.setOxidizing(CopperGolem.Oxidizing.waxed()))
     );
 
-    /**
-     * Overrides vanilla's oxidation schedule with {@code Oxidizing.waxed()}
-     * at spawn time when {@link #CAN_OXIDIZE} is disabled, freezing the
-     * weathering state for the pet's lifetime. The snapshot envelope round-
-     * trips the vanilla {@code Oxidizing} NBT verbatim, so without this
-     * override an admin's {@code CanOxidize: false} would silently be ignored
-     * after the legacy migration window. Toggling the flag takes effect on
-     * the next spawn (despawn/recall or restart).
-     */
+    /** Wires {@link OxidationManager} for cap-at-WEATHERED + CanOxidize freeze. */
     public static final PetLifecycleHook LIFECYCLE_HOOK = new PetLifecycleHook(
             "CopperGolem",
-            PetCopperGolem::applyOxidationSuppress,
-            pet -> {}
+            OxidationManager::startForPet,
+            OxidationManager::stopForPet
     );
 
     /**
@@ -88,12 +86,65 @@ public class PetCopperGolem extends PetImpl {
         super(petOwner);
     }
 
-    private static void applyOxidationSuppress(Pet pet) {
-        if (CAN_OXIDIZE.get()) return;
-        Mob mob = pet.getBukkitEntity();
-        if (mob instanceof CopperGolem golem) {
+    /**
+     * Per-second check that caps oxidation at {@code WEATHERED} (and
+     * downgrades from {@code OXIDIZED} defensively to avoid vanilla's
+     * {@code turnToStatue()} entity→block swap), or freezes at the current
+     * state when {@link #CAN_OXIDIZE} is disabled.
+     */
+    public static final class OxidationManager {
+
+        private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
+
+        private OxidationManager() {
+        }
+
+        public static void startForPet(Pet pet) {
+            Mob mob = pet.getBukkitEntity();
+            if (!(mob instanceof CopperGolem golem)) return;
+
+            Plugin plugin = MyPetApi.getPlugin();
+            UUID key = pet.getUUID();
+            stopForPet(pet);
+
+            enforce(golem);
+            ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> {
+                try {
+                    if (golem.isDead()) return;
+                    enforce(golem);
+                } catch (Throwable ignored) {
+                }
+            }, null, 20L, 20L);
+            if (task != null) {
+                tasks.put(key, task);
+            }
+        }
+
+        public static void stopForPet(Pet pet) {
+            ScheduledTask task = tasks.remove(pet.getUUID());
+            if (task != null) {
+                try {
+                    task.cancel();
+                } catch (Exception ignored) {
+                }
+            }
+        }
+
+        private static void enforce(CopperGolem golem) {
             try {
-                golem.setOxidizing(CopperGolem.Oxidizing.waxed());
+                if (!CAN_OXIDIZE.get()) {
+                    if (!(golem.getOxidizing() instanceof CopperGolem.Oxidizing.Waxed)) {
+                        golem.setOxidizing(CopperGolem.Oxidizing.waxed());
+                    }
+                    return;
+                }
+                if (golem.getWeatheringState() == WeatheringCopperState.OXIDIZED) {
+                    golem.setWeatheringState(WeatheringCopperState.WEATHERED);
+                }
+                if (golem.getWeatheringState() == WeatheringCopperState.WEATHERED
+                        && !(golem.getOxidizing() instanceof CopperGolem.Oxidizing.Waxed)) {
+                    golem.setOxidizing(CopperGolem.Oxidizing.waxed());
+                }
             } catch (Throwable ignored) {
             }
         }
