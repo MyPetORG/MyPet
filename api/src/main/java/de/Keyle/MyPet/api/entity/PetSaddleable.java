@@ -21,18 +21,42 @@
 package de.Keyle.MyPet.api.entity;
 
 /**
- * Marker for {@link org.bukkit.entity.AbstractHorse}-based pets that
- * expose the {@code saddle} creation flag (puts a saddle in the mob's
- * inventory at spawn). The pet's Bukkit class must extend
- * {@link org.bukkit.entity.AbstractHorse}; otherwise the marker is a no-op.
+ * Marker for pets that can be saddled in vanilla Minecraft, via any of
+ * the three Bukkit-API saddle shapes:
  *
- * <p>{@code PetCreationOptions} auto-generates a {@code saddle} flag spec
- * for every pet that implements this marker.
+ * <ul>
+ *   <li>{@link org.bukkit.inventory.SaddledMountInventory} — inventory
+ *       saddle slot (Horse, Donkey, Mule, SkeletonHorse, ZombieHorse,
+ *       Camel, CamelHusk via {@link org.bukkit.inventory.AbstractHorseInventory};
+ *       Nautilus, ZombieNautilus via {@link org.bukkit.inventory.ArmoredSaddledMountInventory})</li>
+ *   <li>{@link org.bukkit.entity.Steerable} — boolean saddle flag
+ *       (Pig, Strider). Saddle item not stored — vanilla consumes
+ *       the right-clicked item and tracks only a boolean state.</li>
+ *   <li>{@link org.bukkit.inventory.EquipmentSlot#SADDLE} — equipment-slot
+ *       saddle/harness (HappyGhast harness, also the standard backing for
+ *       the inventory-based saddle types above).</li>
+ * </ul>
  *
- * <p>Pig and Strider use a different saddle setter
- * ({@code setSaddle(boolean)} vs {@code getInventory().setSaddle(...)})
- * and don't go through this marker — they declare a per-pet
- * {@code saddle} flag spec in their {@code CREATION_SPECS} field instead.
+ * <p>The runtime listener calls {@code PetSaddleHelper.isSaddled} /
+ * {@code applySaddle} / {@code removeSaddle} to abstract over these
+ * shapes; callers never need to switch on the underlying Bukkit class.
+ *
+ * <p>Drives two pieces of MyPet machinery:
+ *
+ * <ul>
+ *   <li>{@code PetCreationOptions} auto-generates a {@code saddle} flag
+ *       creation option for each implementer where {@code PetSaddleHelper.getDefaultSaddleStack}
+ *       returns a non-null default. (HappyGhast returns {@code null} —
+ *       its harness goes through a separate per-pet {@code harness:<color>}
+ *       creation option.)</li>
+ *   <li>{@code ConfigurationLoader} auto-registers
+ *       {@code RequireSaddle} (default {@code false}) and
+ *       {@code AllowNonOwnerSaddle} (default {@code false}) per-pet
+ *       config flags for each implementer.</li>
+ * </ul>
+ *
+ * <p>Excluded by design: Llama / TraderLlama (vanilla wears a decorative
+ * carpet, not a saddle — there's no rider gating to apply).
  */
 public interface PetSaddleable {
 }

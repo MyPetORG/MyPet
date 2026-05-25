@@ -67,6 +67,8 @@ public final class PetListeners {
             LevelListener::new,
             WorldListener::new,
             RideInteractListener::new,
+            PetMountGateListener::new,
+            PetSaddleGateListener::new,
             PetDamageTracker::new,
             PetProjectileHitListener::new,
             PetInteractionListener::new,

@@ -23,9 +23,7 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.Pet;
-import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.skill.skills.Ride;
-import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -36,7 +34,26 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 /**
- * Handles riding pets when players interact with them using the configured ride item.
+ * Handles the saddle-on-rideable-mob {@code mobInteract} flow for mounting
+ * MyPet rideable pets. Catches {@link PlayerInteractEntityEvent} at
+ * {@link EventPriority#HIGHEST} and routes every branch — owner vs non-owner,
+ * primary vs secondary seat — through {@link RideGate#evaluate} so the gate
+ * logic stays in a single place and is reused by {@link PetMountGateListener}.
+ *
+ * <p><b>Cancellation discipline:</b> every rejection branch cancels the event
+ * before returning, so vanilla's {@code mobInteract} handler does not run.
+ * This closes the v4 NMS-elimination regression where vanilla's saddle-mount
+ * logic was silently running alongside MyPet's gating.
+ *
+ * <p>Approved mounts call {@link RideGate#approve} (not {@code mob.addPassenger}
+ * directly) so the synchronously-fired {@code EntityMountEvent} side effect
+ * is detectable by {@link PetMountGateListener} via {@code RideGate.isInsideApproval()}.
+ *
+ * <p>The owner mount path additionally requires the configured
+ * {@code Skilltree.Skill.Ride.RIDE_ITEM} to be held — preserving the legacy
+ * explicit-trigger contract. Non-owners are not subject to the RIDE_ITEM
+ * check; their mount attempts are evaluated whenever they right-click a
+ * marked rideable pet.
  */
 public class RideInteractListener implements Listener {
 
@@ -50,64 +67,70 @@ public class RideInteractListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (!PetEntityMarker.isMarked(event.getRightClicked())) {
-            return;
-        }
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
+        if (!PetEntityMarker.isMarked(event.getRightClicked())) {
+            return;
+        }
 
-        final Player player = event.getPlayer();
         Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getRightClicked());
-        if (pet == null) return;
-
-        if (!isOwner(player, pet)) {
+        if (pet == null) {
             return;
         }
-
-        if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM != null && !Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(player.getInventory().getItemInMainHand())) {
-            return;
-        }
-
-        if (!pet.canMove() || !pet.getSkills().isActive(Ride.class)) {
-            return;
-        }
-        if (!Permissions.hasExtended(player, "MyPet.extended.ride")) {
-            pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", pet.getOwner()), 2000);
+        if (!(pet instanceof PetNaturallyRideable)) {
             return;
         }
 
         Mob mob = pet.getBukkitEntity();
-        if (mob == null) return;
-        if (!mob.getPassengers().contains(player)) {
-            boolean mounted = mob.addPassenger(player);
-            if (mounted) {
-                event.setCancelled(true);
-            }
+        if (mob == null) {
+            return;
         }
-    }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onMonitorRideFinisher(PlayerInteractEntityEvent event) {
-        if (!PetEntityMarker.isMarked(event.getRightClicked())) {
+        Player player = event.getPlayer();
+        if (mob.getPassengers().contains(player)) {
+            // Already on board — nothing to do.
             return;
         }
-        if (event.getHand() != EquipmentSlot.HAND) {
+
+        boolean owner = isOwner(player, pet);
+        boolean isDriverSeat = mob.getPassengers().isEmpty();
+
+        if (!pet.canMove()) {
+            // Sitting / disabled — RideInteractListener doesn't engage. Return
+            // without cancelling for everyone so other listeners (saddle gate,
+            // interaction gate) and vanilla can still handle non-mount actions
+            // on the sitting pet (saddle placement, food, inventory access).
+            // Vanilla won't mount a sitting/disabled mount anyway, so there's
+            // no bypass to close; if any future mob does allow it,
+            // PetMountGateListener's EntityMountEvent backstop catches it.
             return;
         }
-        Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getRightClicked());
-        if (pet == null) return;
-        final Player player = event.getPlayer();
-        if (!isOwner(player, pet)) {
+
+        // Only engage when the player is holding the configured RIDE_ITEM —
+        // for both owners and non-owners. The held-item gate scopes this
+        // listener to the "explicit MyPet ride trigger" path. Other vanilla
+        // interactions on the pet (saddle placement, inventory, food) get
+        // to proceed to PetSaddleGateListener / vanilla mobInteract / etc.
+        //
+        // The mount bypass is still closed by PetMountGateListener's
+        // EntityMountEvent backstop: if vanilla mobInteract proceeds to
+        // actually addPassenger (e.g., empty-hand right-click on a saddled
+        // mount), the backstop catches it and gates via the same
+        // RideGate.evaluate chain we'd otherwise run here.
+        if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM != null
+                && !Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(player.getInventory().getItemInMainHand())) {
             return;
         }
-        if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM != null && !Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(player.getInventory().getItemInMainHand())) {
+
+        RideGate.Rejection rejection = RideGate.evaluate(pet, mob, player, owner, isDriverSeat);
+        if (rejection != null) {
+            RideGate.sendRejectionMessage(pet, player, rejection, owner);
+            event.setCancelled(true);
             return;
         }
-        Mob mob = pet.getBukkitEntity();
-        if (mob == null) return;
-        if (event.isCancelled() && !mob.getPassengers().contains(player)) {
-            event.setCancelled(false);
-        }
+
+        RideGate.approve(mob, player);
+        event.setCancelled(true);
     }
 }

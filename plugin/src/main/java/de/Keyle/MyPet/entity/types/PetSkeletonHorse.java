@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
 import de.Keyle.MyPet.api.entity.PetSaddleable;
 import de.Keyle.MyPet.api.entity.PetTameable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -40,7 +41,7 @@ import java.util.Set;
 
 @ShopInfo(displayName = "Skeleton Horse")
 @DefaultInfo(food = {Material.BONE}, flySpeed = 0.4405D)
-public class PetSkeletonHorse extends PetImpl implements PetBaby, PetEquipment, PetSaddleable, PetTameable {
+public class PetSkeletonHorse extends PetImpl implements PetBaby, PetEquipment, PetNaturallyRideable, PetSaddleable, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("SkeletonHorse", "experience_bottle");
 

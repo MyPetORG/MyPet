@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util;
 import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration.*;
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.config.ConfigKeyRegistry;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.PetType;
@@ -239,6 +240,39 @@ public class ConfigurationLoader {
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", "lead");
             config.addDefault("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false);
             config.addDefault("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false);
+        }
+
+        // Rideable-pet config flags — register one ConfigKey per (pet type, flag)
+        // for every Pet class that implements the matching marker. Materializes
+        // YAML rows under MyPet.Pets.<Type>.<Flag> on first boot.
+        //
+        // PetNaturallyRideable -> RequireRideSkill (true), AllowNonOwnerPrimaryMount (false)
+        // PetMultiPassenger    -> AllowNonOwnerSecondaryMount (true)
+        // PetSaddleable        -> RequireSaddle (false), AllowNonOwnerSaddle (false)
+        //
+        // ConfigKey.bool self-registers with ConfigKeyRegistry on each call.
+        // setDefault() runs once per plugin enable, so duplicate-registration
+        // warnings would only fire on a Bukkit /reload — which also resets the
+        // plugin classloader and clears the registry, so they don't fire then either.
+        for (PetType petType : PetType.values()) {
+            if (!petType.checkMinecraftVersion()) {
+                continue;
+            }
+            Class<?> petClass = petType.getPetClass();
+            String name = petType.name();
+
+            if (PetNaturallyRideable.class.isAssignableFrom(petClass)) {
+                ConfigKey.bool(name, "RequireRideSkill", true);
+                ConfigKey.bool(name, "RequireRideItem", true);
+                ConfigKey.bool(name, "AllowNonOwnerPrimaryMount", false);
+            }
+            if (PetMultiPassenger.class.isAssignableFrom(petClass)) {
+                ConfigKey.bool(name, "AllowNonOwnerSecondaryMount", true);
+            }
+            if (PetSaddleable.class.isAssignableFrom(petClass)) {
+                ConfigKey.bool(name, "RequireSaddle", false);
+                ConfigKey.bool(name, "AllowNonOwnerSaddle", false);
+            }
         }
 
         // Per-pet ConfigKey defaults — every static ConfigKey<?> field declared

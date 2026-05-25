@@ -28,12 +28,12 @@ import de.Keyle.MyPet.api.entity.PetChested;
 import de.Keyle.MyPet.api.entity.PetSaddleable;
 import de.Keyle.MyPet.api.entity.PetTameable;
 import de.Keyle.MyPet.api.entity.PetType;
+import de.Keyle.MyPet.util.PetSaddleHelper;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.key.Key;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
-import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Enderman;
@@ -383,11 +383,14 @@ public final class PetCreationOptions {
             Class<ChestedHorse> typedMob = (Class<ChestedHorse>) mobClass.asSubclass(ChestedHorse.class);
             SPECS.add(OptionSpec.ofFlag("chest", typedMob, h -> h.setCarryingChest(true)));
         }
-        if (PetSaddleable.class.isAssignableFrom(petClass) && AbstractHorse.class.isAssignableFrom(mobClass)) {
-            @SuppressWarnings("unchecked")
-            Class<AbstractHorse> typedMob = (Class<AbstractHorse>) mobClass.asSubclass(AbstractHorse.class);
-            SPECS.add(OptionSpec.ofFlag("saddle", typedMob,
-                    h -> h.getInventory().setSaddle(new ItemStack(Material.SADDLE))));
+        if (PetSaddleable.class.isAssignableFrom(petClass)) {
+            ItemStack defaultStack = PetSaddleHelper.getDefaultSaddleStack(petClass);
+            if (defaultStack != null) {
+                @SuppressWarnings("unchecked")
+                Class<Mob> typedMob = (Class<Mob>) mobClass.asSubclass(Mob.class);
+                SPECS.add(OptionSpec.ofFlag("saddle", typedMob,
+                        m -> PetSaddleHelper.applySaddle(m, defaultStack)));
+            }
         }
     }
 

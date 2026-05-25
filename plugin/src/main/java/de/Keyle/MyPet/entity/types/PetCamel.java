@@ -32,6 +32,8 @@ import org.bukkit.inventory.ItemStack;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetMultiPassenger;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
 import de.Keyle.MyPet.api.entity.PetSaddleable;
 import de.Keyle.MyPet.api.entity.PetSittable;
 import de.Keyle.MyPet.api.entity.PetTameable;
@@ -40,7 +42,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.CACTUS}, flySpeed = 0.1982D)
-public class PetCamel extends PetImpl implements PetBaby, PetEquipment, PetSaddleable, PetSittable, PetTameable {
+public class PetCamel extends PetImpl implements PetBaby, PetEquipment, PetMultiPassenger, PetNaturallyRideable, PetSaddleable, PetSittable, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Camel", "experience_bottle");
 

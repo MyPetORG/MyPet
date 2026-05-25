@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetChested;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
 import de.Keyle.MyPet.api.entity.PetSaddleable;
 import de.Keyle.MyPet.api.entity.PetTameable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -41,7 +42,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SUGAR, Material.WHEAT, Material.APPLE}, leashFlags = {"Tamed"}, flySpeed = 0.3855D)
-public class PetDonkey extends PetImpl implements PetBaby, PetEquipment, PetChested, PetSaddleable, PetTameable {
+public class PetDonkey extends PetImpl implements PetBaby, PetChested, PetEquipment, PetNaturallyRideable, PetSaddleable, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Donkey", "experience_bottle");
 

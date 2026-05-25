@@ -25,6 +25,9 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetMultiPassenger;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
+import de.Keyle.MyPet.api.entity.PetSaddleable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -37,7 +40,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.CACTUS}, flySpeed = 0.1982D)
-public class PetCamelHusk extends PetImpl implements PetBaby, PetEquipment {
+public class PetCamelHusk extends PetImpl implements PetBaby, PetEquipment, PetMultiPassenger, PetNaturallyRideable, PetSaddleable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("CamelHusk", "experience_bottle");
 

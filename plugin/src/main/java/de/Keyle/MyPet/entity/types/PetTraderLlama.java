@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetChested;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
 import de.Keyle.MyPet.api.entity.PetTameable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -37,7 +38,7 @@ import org.bukkit.inventory.LlamaInventory;
 // variant: auto-derived via the Llama.class spec on PetLlama (TraderLlama extends Llama).
 @ShopInfo(displayName = "Trader Llama")
 @DefaultInfo(food = {Material.WHEAT}, leashFlags = {"Tamed"}, flySpeed = 0.3855D)
-public class PetTraderLlama extends PetImpl implements PetBaby, PetChested, PetTameable {
+public class PetTraderLlama extends PetImpl implements PetBaby, PetChested, PetNaturallyRideable, PetTameable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("TraderLlama", "experience_bottle");
 

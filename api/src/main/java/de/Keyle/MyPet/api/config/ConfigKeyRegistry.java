@@ -121,6 +121,24 @@ public final class ConfigKeyRegistry {
     }
 
     /**
+     * Typed-bool convenience wrapper around {@link #lookup}. Returns the
+     * current boolean value of the registered key, or {@code fallback} if
+     * no key is registered for {@code (petType, key)} or the registered
+     * key's value type isn't {@code Boolean}.
+     *
+     * <p>Used by the rideable-pet gating listeners — they look up
+     * dynamically-registered flags ({@code RequireRideSkill},
+     * {@code AllowNonOwnerPrimaryMount}, etc.) that have no static field
+     * accessor on a specific Pet class.
+     */
+    public static boolean readBool(String petType, String key, boolean fallback) {
+        ConfigKey<?> ck = lookup(petType, key);
+        if (ck == null) return fallback;
+        Object value = ck.get();
+        return value instanceof Boolean b ? b : fallback;
+    }
+
+    /**
      * Returns a snapshot of every registered key. Iteration order matches
      * registration order (so YAML output is stable across boots given the
      * same declarations).

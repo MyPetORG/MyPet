@@ -25,19 +25,46 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
+import de.Keyle.MyPet.api.entity.PetMultiPassenger;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
+import de.Keyle.MyPet.api.entity.PetSaddleable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.options.PetCreationOptions;
+import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import de.Keyle.MyPet.util.PetSaddleHelper;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.entity.HappyGhast;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.GHAST_TEAR}, leashFlags = {"Tamed"}, flySpeed = 0.5556D)
-public class PetHappyGhast extends PetImpl implements PetFlyingEntity, PetBaby {
+public class PetHappyGhast extends PetImpl implements PetBaby, PetFlyingEntity, PetMultiPassenger, PetNaturallyRideable, PetSaddleable {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("HappyGhast", "CanFly", true);
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("HappyGhast", "experience_bottle");
 
+    /**
+     * Per-pet creation option spec — admins use
+     * {@code /petadmin create <owner> HappyGhast harness:<color>} to spawn a
+     * HappyGhast with the matching {@code <COLOR>_HARNESS} material equipped.
+     * Sixteen valid colors — any {@link DyeColor} enum value.
+     *
+     * <p>HappyGhast does not get a generic {@code saddle:} flag from the
+     * {@code PetSaddleable} auto-gen because {@code PetSaddleHelper.getDefaultSaddleStack}
+     * returns {@code null} for this class — the {@link Material#SADDLE} item
+     * isn't accepted by HappyGhast (only {@code *_HARNESS} variants are).
+     */
+    public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
+            () -> OptionSpec.ofEnum("harness", HappyGhast.class, DyeColor.class,
+                    (mob, color) -> PetSaddleHelper.applySaddle(mob,
+                            new ItemStack(Material.valueOf(color.name() + "_HARNESS"))))
+    );
 
     public PetHappyGhast(MyPetPlayer petOwner) {
         super(petOwner);

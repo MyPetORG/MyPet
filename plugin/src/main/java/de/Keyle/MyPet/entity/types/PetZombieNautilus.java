@@ -24,6 +24,8 @@ import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
+import de.Keyle.MyPet.api.entity.PetSaddleable;
 import de.Keyle.MyPet.api.entity.PetSunSensitive;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -38,7 +40,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.ROTTEN_FLESH}, flySpeed = 2.4229D)
-public class PetZombieNautilus extends PetImpl implements PetEquipment, PetAmphibiousEntity, PetSunSensitive {
+public class PetZombieNautilus extends PetImpl implements PetAmphibiousEntity, PetEquipment, PetNaturallyRideable, PetSaddleable, PetSunSensitive {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("ZombieNautilus", "CanSwim", true);
     public static final ConfigKey<Boolean> PREVENT_DAYLIGHT_BURN = ConfigKey.bool("ZombieNautilus", "PreventDaylightBurn", true);

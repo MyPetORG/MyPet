@@ -45,6 +45,7 @@ public final class BuiltInCommands {
             (c, h) -> new CommandAdmin().register(c, h),
             (c, h) -> new CommandCall().register(c, h),
             (c, h) -> new CommandStop().register(c, h),
+            (c, h) -> new CommandPetRide().register(c, h),
             (c, h) -> new CommandSendAway().register(c, h),
             (c, h) -> new CommandPickup().register(c, h),
             (c, h) -> new CommandCaptureHelper().register(c, h),

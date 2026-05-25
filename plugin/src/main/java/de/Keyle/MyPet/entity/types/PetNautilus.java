@@ -24,6 +24,8 @@ import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
+import de.Keyle.MyPet.api.entity.PetSaddleable;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -37,7 +39,7 @@ import java.util.Set;
 
 @ShopInfo
 @DefaultInfo(food = {Material.NAUTILUS_SHELL}, leashFlags = {"Tamed"}, flySpeed = 2.2026D)
-public class PetNautilus extends PetImpl implements PetEquipment, PetAmphibiousEntity {
+public class PetNautilus extends PetImpl implements PetAmphibiousEntity, PetEquipment, PetNaturallyRideable, PetSaddleable {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Nautilus", "CanSwim", true);
 
