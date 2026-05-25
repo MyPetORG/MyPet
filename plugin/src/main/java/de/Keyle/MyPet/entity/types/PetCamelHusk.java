@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval;
 import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
@@ -43,6 +44,12 @@ import java.util.Set;
 public class PetCamelHusk extends PetImpl implements PetBaby, PetEquipment, PetMultiPassenger, PetNaturallyRideable, PetSaddleable {
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("CamelHusk", "experience_bottle");
+
+    /** Mirrors {@link PetCamel#BRAIN_BEHAVIOR_REMOVAL} — CamelHusk shares the camel brain. */
+    public static final PetBrainBehaviorRemoval BRAIN_BEHAVIOR_REMOVAL = new PetBrainBehaviorRemoval(
+            "CamelHusk",
+            "RandomSitting"
+    );
 
 
     public PetCamelHusk(MyPetPlayer petOwner) {

@@ -25,6 +25,7 @@ import org.bukkit.entity.LivingEntity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -87,6 +88,10 @@ public final class BrainAccess {
     private static volatile Method getBrainMethod;
     private static volatile Method eraseMemoryMethod;
     private static volatile Field availableBehaviorsByPriorityField;
+    private static volatile Class<?> gateBehaviorClass;
+    private static volatile Field gateBehaviorBehaviorsField;
+    private static volatile Field shufflingListEntriesField;
+    private static volatile Method weightedEntryGetDataMethod;
     private static volatile Object attackTargetMemoryType;
     private static volatile Object walkTargetMemoryType;
 
@@ -117,6 +122,25 @@ public final class BrainAccess {
                 MyPetApi.getLogger().warning(
                         "BrainAccess: 'availableBehaviorsByPriority' field not found on Brain — vanilla brain-behavior removal disabled for this server (memory-clearing still works). PetBrainBehaviorRemoval declarations will be silently ignored until the field-name lookup is updated.");
                 availableBehaviorsByPriorityField = null;
+            }
+
+            try {
+                gateBehaviorClass = Class.forName("net.minecraft.world.entity.ai.behavior.GateBehavior");
+                Field gateBehaviors = gateBehaviorClass.getDeclaredField("behaviors");
+                gateBehaviors.setAccessible(true);
+                gateBehaviorBehaviorsField = gateBehaviors;
+
+                Class<?> shufflingList = Class.forName("net.minecraft.world.entity.ai.behavior.ShufflingList");
+                Field entries = shufflingList.getDeclaredField("entries");
+                entries.setAccessible(true);
+                shufflingListEntriesField = entries;
+
+                Class<?> weightedEntry = Class.forName("net.minecraft.world.entity.ai.behavior.ShufflingList$WeightedEntry");
+                weightedEntryGetDataMethod = weightedEntry.getMethod("getData");
+            } catch (Throwable composites) {
+                MyPetApi.getLogger().warning(
+                        "BrainAccess: composite-behavior reflection setup failed — behaviors nested inside RunOne / GateBehavior subclasses cannot be stripped (top-level behaviors still work). Cause: " + composites);
+                gateBehaviorClass = null;
             }
 
             available = true;
@@ -198,13 +222,23 @@ public final class BrainAccess {
      * {@code removeAllGoals} sweep, driven by the per-pet
      * {@link de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval} declarations.
      *
-     * <p>Iterates the brain's {@code availableBehaviorsByPriority} schedule:
+     * <p>Walks the brain's {@code availableBehaviorsByPriority} schedule:
      * {@code Map<Integer, Map<Activity, Set<BehaviorControl>>>}. For every
      * behavior set at every priority and activity, removes the entries
-     * whose simple class name matches. Activities and priorities are left
-     * intact — only the specific behaviors are extracted, so the brain's
-     * structure (running activities, schedule slots) keeps working for any
-     * behaviors we don't strip.
+     * whose simple class name matches, then recurses into any remaining
+     * {@code GateBehavior} composite (the parent class of {@code RunOne},
+     * {@code RunSometimes}, etc.) and strips matches from its inner
+     * {@code ShufflingList} of child behaviors. Vanilla nests behaviors
+     * inside {@code RunOne} routinely (e.g., {@code CamelAi$RandomSitting}
+     * sits inside a {@code RunOne} alongside {@code RandomStroll}), so
+     * without the recursion only top-level registrations would match.
+     *
+     * <p>Activities and priorities are left intact — only the specific
+     * behaviors are extracted, so the brain's structure (running
+     * activities, schedule slots) keeps working for any behaviors we
+     * don't strip. A {@code RunOne} that ends up with fewer children
+     * after a strip simply picks from the remaining options; if it ends
+     * up empty its {@code tryStart} naturally fails.
      *
      * <p>Simple-name matching is deliberate: Mojang occasionally moves
      * classes between packages (e.g.,
@@ -214,13 +248,14 @@ public final class BrainAccess {
      * without tracking package paths.
      *
      * <p>Empty input is a no-op (no reflection performed). If the brain's
-     * behavior-schedule field couldn't be located at init (Mojang rename),
-     * this also no-ops silently — the startup warning told the operator
-     * what's going on. Per-pet damage/movement guards aren't affected;
-     * the strip is purely an optimization on autonomous-behavior side.
+     * behavior-schedule field or the {@code GateBehavior} composite
+     * reflection couldn't be located at init (Mojang rename), the
+     * affected layer no-ops silently — the startup warnings told the
+     * operator what's going on. Per-pet damage/movement guards aren't
+     * affected.
      *
-     * <p>Safe to call on goal-only mobs: their brain is empty so the inner
-     * iteration is a no-op, and the cost is one reflective field read.
+     * <p>Safe to call on goal-only mobs: their brain is empty so the
+     * inner iteration is a no-op.
      */
     public static void removeBehaviorsByClassName(LivingEntity entity, Set<String> simpleClassNames) {
         if (simpleClassNames.isEmpty()) return;
@@ -238,6 +273,43 @@ public final class BrainAccess {
                     if (!(behaviorSet instanceof Set<?> set)) continue;
                     set.removeIf(behavior -> behavior != null
                             && simpleClassNames.contains(behavior.getClass().getSimpleName()));
+                    for (Object remaining : set) {
+                        stripFromComposite(remaining, simpleClassNames);
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            // Don't spam logs — drop silently after a successful init.
+        }
+    }
+
+    /**
+     * Recursively removes behaviors matching {@code simpleClassNames} from
+     * a {@code GateBehavior} composite's inner {@code ShufflingList}. No-op
+     * if {@code behavior} isn't a {@code GateBehavior} or if composite
+     * reflection isn't available.
+     */
+    private static void stripFromComposite(Object behavior, Set<String> simpleClassNames) {
+        if (behavior == null) return;
+        if (gateBehaviorClass == null || !gateBehaviorClass.isInstance(behavior)) return;
+        try {
+            Object shufflingList = gateBehaviorBehaviorsField.get(behavior);
+            if (shufflingList == null) return;
+            Object entries = shufflingListEntriesField.get(shufflingList);
+            if (!(entries instanceof List<?> list)) return;
+            list.removeIf(entry -> {
+                try {
+                    Object data = weightedEntryGetDataMethod.invoke(entry);
+                    return data != null && simpleClassNames.contains(data.getClass().getSimpleName());
+                } catch (Throwable t) {
+                    return false;
+                }
+            });
+            for (Object entry : list) {
+                try {
+                    Object data = weightedEntryGetDataMethod.invoke(entry);
+                    stripFromComposite(data, simpleClassNames);
+                } catch (Throwable ignored) {
                 }
             }
         } catch (Throwable t) {
