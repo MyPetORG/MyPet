@@ -32,15 +32,15 @@ import java.util.concurrent.TimeUnit;
 public class ContributorCheck {
     private static final Map<String, Character> contributorMap = new ConcurrentHashMap<>();
     private static volatile boolean contributorMapLoaded = false;
-    private static final long REFRESH_INTERVAL_MINUTES = 10L;
+    private static final long REFRESH_INTERVAL_HOURS = 12L;
 
     public static void startRefreshTask() {
         Bukkit.getServer().getAsyncScheduler().runAtFixedRate(
                 MyPetApi.getPlugin(),
                 t -> refreshContributorMap(),
-                REFRESH_INTERVAL_MINUTES,
-                REFRESH_INTERVAL_MINUTES,
-                TimeUnit.MINUTES
+                REFRESH_INTERVAL_HOURS,
+                REFRESH_INTERVAL_HOURS,
+                TimeUnit.HOURS
         );
     }
 
