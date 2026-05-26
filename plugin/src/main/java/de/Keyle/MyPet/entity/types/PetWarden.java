@@ -25,14 +25,26 @@ import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.entity.leashing.WildAngerCheck;
+import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.entity.EntityTickAccess;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Warden;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
+
+import java.util.function.Supplier;
 
 @ShopInfo
 @DefaultInfo(food = {Material.BONE}, flySpeed = 0.6608D)
 public class PetWarden extends PetImpl implements PetLavaEntity {
+
+    private static final int DARKNESS_RADIUS = 20;
+    private static final int DARKNESS_INTERVAL = 120;
 
     public static final WildAngerCheck<Warden> ANGER_CHECK =
             new WildAngerCheck<>(Warden.class, warden -> warden.getAngerLevel() != Warden.AngerLevel.CALM);
@@ -66,7 +78,64 @@ public class PetWarden extends PetImpl implements PetLavaEntity {
             "Digging"
     );
 
+    public static final Supplier<Listener> DARKNESS_EFFECT_SUPPRESSOR =
+            PetListenerRegistry.register(DarknessEffectSuppressor::new);
+
     public PetWarden(MyPetPlayer petOwner) {
         super(petOwner);
+    }
+
+    /**
+     * Suppresses the Warden's signature darkness pulse when the source is
+     * a pet. Vanilla applies darkness from {@code Warden#tickServer} every
+     * 120 ticks ({@code applyDarknessAround}) — an entity-tick path, not a
+     * brain behavior, so the {@link #BRAIN_BEHAVIOR_REMOVAL} strip above
+     * doesn't reach it. Bukkit exposes the apply call as
+     * {@code EntityPotionEffectEvent} with {@code Cause.WARDEN}, but the
+     * event doesn't carry the source Warden.
+     *
+     * <p>Attribution uses the same tick-rhythm formula vanilla uses to
+     * decide when to apply: {@code (warden.tickCount + warden.id) % 120 == 0}.
+     * Two Wardens collide on that formula only if their entity IDs differ
+     * by an exact multiple of 120 — astronomically unlikely on a real
+     * server, so at any given tick at most one nearby Warden is firing the
+     * apply call. We read each candidate Warden's NMS {@code tickCount}
+     * via {@link EntityTickAccess} (Bukkit's {@code getTicksLived()}
+     * returns the load-time-frozen {@code totalEntityAge} field, not the
+     * active per-tick counter) and pick the one whose modulo matches.
+     *
+     * <p>If reflection isn't available ({@code getTickCount} returns
+     * {@code -1}), we fall back to "all nearby Wardens are pets → cancel"
+     * — conservative, may over-suppress wild Warden darkness in mixed
+     * scenarios but matches the user's expectation that the owner's
+     * pet should never apply darkness.
+     */
+    public static final class DarknessEffectSuppressor implements Listener {
+
+        @EventHandler(ignoreCancelled = true)
+        public void onWardenAppliesDarkness(EntityPotionEffectEvent event) {
+            if (event.getCause() != EntityPotionEffectEvent.Cause.WARDEN) return;
+            Entity victim = event.getEntity();
+            var nearbyWardens = victim.getWorld().getNearbyEntities(
+                    victim.getLocation(), DARKNESS_RADIUS, DARKNESS_RADIUS, DARKNESS_RADIUS,
+                    e -> e instanceof Warden);
+            if (nearbyWardens.isEmpty()) return;
+            for (var nearby : nearbyWardens) {
+                int tickCount = EntityTickAccess.getTickCount(nearby);
+                if (tickCount < 0) {
+                    // Reflection unavailable — fall back to all-pets rule.
+                    if (nearbyWardens.stream().allMatch(PetEntityMarker::isMarked)) {
+                        event.setCancelled(true);
+                    }
+                    return;
+                }
+                if ((tickCount + nearby.getEntityId()) % DARKNESS_INTERVAL == 0) {
+                    if (PetEntityMarker.isMarked(nearby)) {
+                        event.setCancelled(true);
+                    }
+                    return;
+                }
+            }
+        }
     }
 }
