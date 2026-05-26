@@ -20,23 +20,33 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.entity.leashing.WildAngerCheck;
+import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
 import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.EntityTickAccess;
 import de.Keyle.MyPet.entity.PetImpl;
+import de.Keyle.MyPet.entity.ai.BrainAccess;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Warden;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
+import org.bukkit.plugin.Plugin;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 @ShopInfo
@@ -50,23 +60,9 @@ public class PetWarden extends PetImpl implements PetLavaEntity {
             new WildAngerCheck<>(Warden.class, warden -> warden.getAngerLevel() != Warden.AngerLevel.CALM);
 
     /**
-     * Strips Warden brain behaviors that autonomously target and attack
-     * entities (including the owner). Vanilla Warden uses Brain not Goals,
-     * so {@code PetGoalInstaller}'s {@code removeAllGoals} sweep leaves all
-     * of vibration-driven anger management, sniff/roar/sonic-boom, and the
-     * emerge/dig spawn-and-despawn animations intact.
-     *
-     * <p>Load-bearing entry: {@code SetRoarTarget} is the only behavior
-     * that copies {@code AngerManagement} state into a memory the FIGHT
-     * activity can act on ({@code ROAR_TARGET} → {@code Roar} →
-     * {@code ATTACK_TARGET}). Stripping it breaks the targeting chain at
-     * its root. The FIGHT-activity strips ({@code Roar}, {@code SonicBoom},
-     * {@code MeleeAttack}) are belt-and-suspenders against any future
-     * Mojang behavior that writes {@code ATTACK_TARGET} directly.
-     *
-     * <p>{@code Emerging} and {@code Digging} are quality-of-life strips:
-     * without them, the pet would play a multi-second emergence animation
-     * on spawn and periodically burrow into the ground when idle.
+     * Strips the brain behaviors that drive autonomous targeting / attacks
+     * ({@code SetRoarTarget} is the load-bearing one) and the emerge/dig
+     * spawn-and-despawn animations.
      */
     public static final PetBrainBehaviorRemoval BRAIN_BEHAVIOR_REMOVAL = new PetBrainBehaviorRemoval(
             "Warden",
@@ -81,34 +77,67 @@ public class PetWarden extends PetImpl implements PetLavaEntity {
     public static final Supplier<Listener> DARKNESS_EFFECT_SUPPRESSOR =
             PetListenerRegistry.register(DarknessEffectSuppressor::new);
 
+    public static final PetLifecycleHook LIFECYCLE_HOOK = new PetLifecycleHook(
+            "Warden",
+            OwnerRetaliationSuppressor::startForPet,
+            OwnerRetaliationSuppressor::stopForPet
+    );
+
     public PetWarden(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     /**
-     * Suppresses the Warden's signature darkness pulse when the source is
-     * a pet. Vanilla applies darkness from {@code Warden#tickServer} every
-     * 120 ticks ({@code applyDarknessAround}) — an entity-tick path, not a
-     * brain behavior, so the {@link #BRAIN_BEHAVIOR_REMOVAL} strip above
-     * doesn't reach it. Bukkit exposes the apply call as
-     * {@code EntityPotionEffectEvent} with {@code Cause.WARDEN}, but the
-     * event doesn't carry the source Warden.
-     *
-     * <p>Attribution uses the same tick-rhythm formula vanilla uses to
-     * decide when to apply: {@code (warden.tickCount + warden.id) % 120 == 0}.
-     * Two Wardens collide on that formula only if their entity IDs differ
-     * by an exact multiple of 120 — astronomically unlikely on a real
-     * server, so at any given tick at most one nearby Warden is firing the
-     * apply call. We read each candidate Warden's NMS {@code tickCount}
-     * via {@link EntityTickAccess} (Bukkit's {@code getTicksLived()}
-     * returns the load-time-frozen {@code totalEntityAge} field, not the
-     * active per-tick counter) and pick the one whose modulo matches.
-     *
-     * <p>If reflection isn't available ({@code getTickCount} returns
-     * {@code -1}), we fall back to "all nearby Wardens are pets → cancel"
-     * — conservative, may over-suppress wild Warden darkness in mixed
-     * scenarios but matches the user's expectation that the owner's
-     * pet should never apply darkness.
+     * Per-tick {@code ATTACK_TARGET} clear so the brain can't enter FIGHT
+     * after the Warden takes damage (vanilla {@code Warden#hurt} writes
+     * the attacker to {@code AngerManagement}, which {@code WardenSensor}
+     * — a Sensor, not strippable — copies into {@code ATTACK_TARGET}).
+     * Same shape as {@code PetBreeze.AutonomousAttackSuppressor}.
+     */
+    public static final class OwnerRetaliationSuppressor {
+
+        private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
+
+        private OwnerRetaliationSuppressor() {
+        }
+
+        public static void startForPet(Pet pet) {
+            Mob mob = pet.getBukkitEntity();
+            if (!(mob instanceof Warden warden)) return;
+
+            Plugin plugin = MyPetApi.getPlugin();
+            UUID key = pet.getUUID();
+            stopForPet(pet);
+
+            ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> {
+                try {
+                    if (warden.isDead()) return;
+                    BrainAccess.clearAttackTarget(warden);
+                } catch (Throwable ignored) {
+                }
+            }, null, 1L, 1L);
+            if (task != null) {
+                tasks.put(key, task);
+            }
+        }
+
+        public static void stopForPet(Pet pet) {
+            ScheduledTask task = tasks.remove(pet.getUUID());
+            if (task != null) {
+                try {
+                    task.cancel();
+                } catch (Exception ignored) {
+                }
+            }
+        }
+    }
+
+    /**
+     * Cancels the entity-tick darkness pulse when the source is a pet.
+     * Attributes the {@code EntityPotionEffectEvent} via vanilla's apply
+     * formula {@code (tickCount + id) % 120 == 0}, with a fallback to
+     * "all nearby Wardens are pets" when {@link EntityTickAccess} can't
+     * read {@code tickCount}.
      */
     public static final class DarknessEffectSuppressor implements Listener {
 
