@@ -81,7 +81,7 @@ public class Util {
     }
 
     /**
-     * Fetches the content of a URL as a string using a default timeout of 2000ms.
+     * Fetches the content of a URL as a string using a default timeout of 10000ms.
      *
      * @param address the URL to fetch
      * @return the response body as a string
@@ -89,7 +89,7 @@ public class Util {
      * @see #readUrlContent(String, int)
      */
     public static String readUrlContent(String address) throws IOException {
-        return readUrlContent(address, 2000);
+        return readUrlContent(address, 10000);
     }
 
     /**
