@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -53,6 +54,30 @@ public class BeaconImpl implements Beacon {
 
     private static final Set<Buff> BOOLEAN_BUFFS = EnumSet.of(
             Buff.FireResistance, Buff.WaterBreathing, Buff.Invisibility, Buff.NightVision, Buff.Luck);
+
+    // INSTANT_EFFECT requires a Particle.Spell data object on Paper 1.21.9+,
+    // but the class doesn't exist on 1.20.5-1.21.8. Declared as Object so
+    // class loading of BeaconImpl doesn't fail on older versions.
+    private static final Object INSTANT_EFFECT_DATA = createInstantEffectData();
+
+    private static Object createInstantEffectData() {
+        try {
+            Class<?> spellClass = Class.forName("org.bukkit.Particle$Spell");
+            return spellClass.getConstructor(Color.class, float.class)
+                    .newInstance(Color.WHITE, 1.0F);
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    private static void spawnBeaconParticle(Player player) {
+        Location loc = player.getLocation().add(0, 1, 0);
+        if (INSTANT_EFFECT_DATA != null) {
+            player.getWorld().spawnParticle(Particle.INSTANT_EFFECT, loc, 5, 0.2F, 0.2F, 0.2F, 0.1F, INSTANT_EFFECT_DATA);
+        } else {
+            player.getWorld().spawnParticle(Particle.INSTANT_EFFECT, loc, 5, 0.2F, 0.2F, 0.2F, 0.1F);
+        }
+    }
 
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
     protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
@@ -565,7 +590,7 @@ public class BeaconImpl implements Beacon {
                                 player.addPotionEffect(effect, true);
                             }
                             if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                                player.getWorld().spawnParticle(Particle.INSTANT_EFFECT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
+                                spawnBeaconParticle(player);
                             }
                             break targetLoop;
                         }
@@ -574,7 +599,7 @@ public class BeaconImpl implements Beacon {
                             player.addPotionEffect(effect, true);
                         }
                         if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                            player.getWorld().spawnParticle(Particle.INSTANT_EFFECT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
+                            spawnBeaconParticle(player);
                         }
                         break;
                     case Party:
@@ -584,7 +609,7 @@ public class BeaconImpl implements Beacon {
                                     player.addPotionEffect(effect, true);
                                 }
                                 if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                                    player.getWorld().spawnParticle(Particle.INSTANT_EFFECT, player.getLocation().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
+                                    spawnBeaconParticle(player);
                                 }
                             }
                             break;
