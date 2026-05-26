@@ -196,6 +196,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     public void onDisable() {
         isDisabling = true;
 
+        // Interrupt any in-flight vanilla translation download so it cannot mutate the
+        // JVM-singleton GlobalTranslator after this plugin instance is gone.
+        VanillaTranslationLoader.cancelLoad();
+
         if (isReady) {
             for (Pet pet : petManager.getAllActivePets()) {
                 if (pet.getStatus() == Pet.PetState.Here) {
