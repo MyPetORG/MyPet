@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -154,7 +155,7 @@ public class CommandRelease implements CommandTabCompleter {
 
                     hoverText.addExtra("\n");
                     TextComponent typeLabel = new TextComponent(Translation.getString("Name.Type", petOwner) + ": ");
-                    TextComponent typeVal = new TextComponent(Translation.getString("Name." + myPet.getPetType().name(), petOwner));
+                    TextComponent typeVal = new TextComponent(PetDefaultNameResolver.resolve(myPet.getPetType(), petOwner));
                     typeVal.setColor(net.md_5.bungee.api.ChatColor.GOLD);
                     typeLabel.addExtra(typeVal);
                     hoverText.addExtra(typeLabel);

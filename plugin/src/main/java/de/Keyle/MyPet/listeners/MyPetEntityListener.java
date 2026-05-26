@@ -58,6 +58,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
+import de.Keyle.MyPet.util.translation.VanillaTranslationLoader;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
@@ -599,7 +601,7 @@ public class MyPetEntityListener implements Listener {
                     }
                 } else if (e.getDamager().getType() == EntityType.WOLF) {
                     Wolf w = (Wolf) e.getDamager();
-                    killer = Translation.getString("Name.Wolf", myPet.getOwner());
+                    killer = PetDefaultNameResolver.resolve(MyPetType.Wolf, myPet.getOwner());
                     if (w.isTamed()) {
                         killer += " (" + w.getOwner().getName() + ')';
                     }
@@ -608,7 +610,7 @@ public class MyPetEntityListener implements Listener {
                     killer = ChatColor.AQUA + craftMyPet.getMyPet().getPetName() + ChatColor.RESET + " (" + craftMyPet.getOwner().getName() + ')';
                 } else if (e.getDamager() instanceof Projectile) {
                     Projectile projectile = (Projectile) e.getDamager();
-                    killer = Translation.getString("Name." + Util.capitalizeName(projectile.getType().name()), myPet.getOwner()) + " (";
+                    killer = VanillaTranslationLoader.resolveEntityName(projectile.getType().name(), myPet.getOwner().getLanguage()) + " (";
                     if (projectile.getShooter() instanceof Player) {
                         if (projectile.getShooter() == myPet.getOwner().getPlayer()) {
                             killer += Translation.getString("Name.You", myPet.getOwner());
@@ -617,9 +619,9 @@ public class MyPetEntityListener implements Listener {
                         }
                     } else {
                         if (MyPetApi.getMyPetInfo().isLeashableEntityType(e.getDamager().getType())) {
-                            killer += Translation.getString("Name." + Util.capitalizeName(MyPetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
+                            killer += PetDefaultNameResolver.resolve(MyPetType.byEntityTypeName(e.getDamager().getType().name()), myPet.getOwner());
                         } else if (e.getDamager().getType().getName() != null) {
-                            killer += Translation.getString("Name." + Util.capitalizeName(e.getDamager().getType().getName()), myPet.getOwner());
+                            killer += VanillaTranslationLoader.resolveEntityName(e.getDamager().getType().name(), myPet.getOwner().getLanguage());
                         } else {
                             killer += Translation.getString("Name.Unknow", myPet.getOwner());
                         }
@@ -627,10 +629,10 @@ public class MyPetEntityListener implements Listener {
                     killer += ")";
                 } else {
                     if (MyPetApi.getMyPetInfo().isLeashableEntityType(e.getDamager().getType())) {
-                        killer = Translation.getString("Name." + Util.capitalizeName(MyPetType.byEntityTypeName(e.getDamager().getType().name()).name()), myPet.getOwner());
+                        killer = PetDefaultNameResolver.resolve(MyPetType.byEntityTypeName(e.getDamager().getType().name()), myPet.getOwner());
                     } else {
                         if (e.getDamager().getType().getName() != null) {
-                            killer = Translation.getString("Name." + Util.capitalizeName(e.getDamager().getType().getName()), myPet.getOwner());
+                            killer = VanillaTranslationLoader.resolveEntityName(e.getDamager().getType().name(), myPet.getOwner().getLanguage());
                         } else {
                             killer = Translation.getString("Name.Unknow", myPet.getOwner());
                         }

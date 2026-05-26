@@ -46,6 +46,7 @@ import de.Keyle.MyPet.api.util.Colorizer;
 import de.Keyle.MyPet.api.util.EnumSelector;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 
@@ -147,7 +148,7 @@ public class MyPetAdminSelectionGui {
                 if (!levelFound) {
                     lore.add(RESET + Translation.getString("Name.Exp", admin) + ": " + GOLD + String.format("%1.2f", mypet.getExp()));
                 }
-                lore.add(RESET + Translation.getString("Name.Type", admin) + ": " + GOLD + Translation.getString("Name." + mypet.getPetType().name(), admin));
+                lore.add(RESET + Translation.getString("Name.Type", admin) + ": " + GOLD + PetDefaultNameResolver.resolve(mypet.getPetType(), admin));
                 lore.add(RESET + Translation.getString("Name.Skilltree", admin) + ": " + GOLD + Colorizer.setColors(mypet.getSkilltree() != null ? mypet.getSkilltree().getDisplayName() : "-"));
 
                 IconMenuItem icon = new IconMenuItem();

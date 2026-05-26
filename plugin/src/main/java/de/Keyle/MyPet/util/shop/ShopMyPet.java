@@ -32,6 +32,7 @@ import de.Keyle.MyPet.api.util.NotImplemented;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EggIconService;
 import de.Keyle.MyPet.commands.admin.CommandOptionCreate;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.keyle.knbt.TagCompound;
 
 import org.bukkit.Bukkit;
@@ -142,7 +143,7 @@ public class ShopMyPet implements StoredMyPet {
             return Colorizer.setColors(petName);
         }
         if (petOwner != null) {
-            return Colorizer.setColors(Translation.getString("Name." + petType.name(), petOwner));
+            return Colorizer.setColors(PetDefaultNameResolver.resolve(petType, petOwner));
         }
         return "MyPet";
     }

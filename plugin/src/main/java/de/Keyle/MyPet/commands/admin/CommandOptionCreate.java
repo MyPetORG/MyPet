@@ -40,6 +40,7 @@ import de.Keyle.MyPet.api.util.inventory.material.MaterialHolder;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.RepositoryMyPetConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
@@ -416,7 +417,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
 
                 final InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
                 inactiveMyPet.setPetType(myPetType);
-                inactiveMyPet.setPetName(Translation.getString("Name." + inactiveMyPet.getPetType().name(), inactiveMyPet.getOwner()));
+                inactiveMyPet.setPetName(PetDefaultNameResolver.resolve(inactiveMyPet.getPetType(), inactiveMyPet.getOwner()));
 
                 TagCompound compound = inactiveMyPet.getInfo();
                 createInfo(myPetType, Arrays.copyOfRange(args, 2 + forceOffset, args.length), compound);

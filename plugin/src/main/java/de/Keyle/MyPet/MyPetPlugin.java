@@ -64,6 +64,7 @@ import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import de.Keyle.MyPet.util.shop.ShopManager;
+import de.Keyle.MyPet.util.translation.VanillaTranslationLoader;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -100,6 +101,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
     public void onDisable() {
         isDisabling = true;
+
+        // Interrupt any in-flight vanilla translation download so it cannot publish a stale
+        // translation map to the shared static field after the plugin instance is gone.
+        VanillaTranslationLoader.cancelLoad();
 
         if (isReady) {
             for (MyPet myPet : myPetManager.getAllActiveMyPets()) {
@@ -201,6 +206,11 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         DebugLogHandler.setup(getLogger());
 
         compatManager.enable();
+
+        // Fetch Mojang's vanilla translations from the official asset CDN so we can
+        // give freshly-created pets a real localized default name instead of literal
+        // "Name.HappyGhast"-style keys when MyPet's own locale files have no row.
+        VanillaTranslationLoader.loadAsync(this);
 
         ConfigurationLoader.loadCompatConfiguration();
 
