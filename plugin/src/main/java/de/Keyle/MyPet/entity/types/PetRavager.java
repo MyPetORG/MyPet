@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.behavior.PetBehavior;
+import de.Keyle.MyPet.api.behavior.PetBehaviorHelpers;
 import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.ShopInfo;
@@ -33,6 +35,7 @@ import org.bukkit.entity.Ravager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.function.Supplier;
 
@@ -44,6 +47,20 @@ public class PetRavager extends PetImpl {
 
     public static final Supplier<Listener> LEAF_DESTRUCTION_SUPPRESSOR =
             PetListenerRegistry.register(LeafDestructionSuppressor::new);
+
+    /**
+     * Plays the Ravager's forward-lunge attack animation on every successful
+     * pet hit. {@code PetMeleeAttackGoal} calls {@code mob.swingMainHand()},
+     * which is a no-op on the armless Ravager model. Vanilla drives the lunge
+     * via an internal {@code attackTick} field, exposed on Bukkit's
+     * {@code Ravager} interface as {@code setAttackTicks(int)}.
+     */
+    public static final PetBehavior<EntityDamageByEntityEvent> ATTACK_ANIMATION =
+            PetBehaviorHelpers.onPetDamages("Ravager", (event, pet, mob) -> {
+                if (mob instanceof Ravager ravager) {
+                    ravager.setAttackTicks(10);
+                }
+            });
 
     public PetRavager(MyPetPlayer petOwner) {
         super(petOwner);
