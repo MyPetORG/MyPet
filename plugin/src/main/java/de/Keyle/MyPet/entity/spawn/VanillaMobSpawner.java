@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.PetAttributes;
+import de.Keyle.MyPet.entity.ai.BrainAccess;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHookRegistry;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
@@ -32,20 +33,28 @@ import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
-import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Mob;
+import org.bukkit.entity.Sittable;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.Wither;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -141,19 +150,39 @@ public final class VanillaMobSpawner {
      * The only working path is to ask Minecraft to build a brand-new mob via
      * {@link org.bukkit.World#spawn}.
      *
-     * <p>State preserved across the respawn:
+     * <p>State preserved automatically via {@link PetEntitySnapshot}'s vanilla
+     * NBT round-trip:
      * <ul>
+     *   <li>All per-type visual state (Villager profession/type/level/XP,
+     *       Cat collar + variant, Wolf collar + variant, Sheep colour +
+     *       sheared state, Mooshroom variant, Frog / Axolotl / Salmon /
+     *       TropicalFish / Cow / Chicken / Pig / Panda / Fox per-type flags,
+     *       Horse coat + style + armor + saddle, Llama strength + decor,
+     *       Camel decor, Bee nectar + pollination cooldowns, Goat horns,
+     *       Fox sleeping state, CopperGolem oxidation state, Allay inventory,
+     *       Villager / Piglin inventories, etc.)</li>
+     *   <li>Equipment in every slot</li>
+     *   <li>Baby/adult</li>
      *   <li>Location (exact)</li>
-     *   <li>Visual state applied via {@link PetVisualSyncer#sync(Pet, Mob, boolean)}
-     *       with {@code applyTameable=false} — colour, variant, profession,
-     *       baby/adult, etc., but NOT tamed/owner (the mob is wild) and NOT
-     *       sit pose (a released mob should not spawn sitting)</li>
-     *   <li>Equipment (items in all {@link EquipmentSlot}s)</li>
      * </ul>
      *
-     * <p>State deliberately dropped: custom name/nametag visibility,
-     * MyPet PDC marker, pet-scale MAX_HEALTH, pet-scale MOVEMENT_SPEED,
-     * {@code setPersistent(false)} / {@code removeWhenFarAway(false)}.
+     * <p>State stripped from the restored entity ({@link #stripPetCustomizations}):
+     * <ul>
+     *   <li>Custom name + nametag visibility</li>
+     *   <li>All {@code mypet}-namespace PDC keys (the {@code PetEntityMarker}
+     *       marker plus any per-pet flags like Enderman's perma-screaming)</li>
+     *   <li>Tameable / owner state, sitting pose</li>
+     *   <li>Wither boss-bar visibility (pet hides it; wild should show)</li>
+     *   <li>All attribute modifiers + attribute base values reset to vanilla
+     *       defaults (Life skill MAX_HEALTH, Sprint MOVEMENT_SPEED, Damage
+     *       skill ATTACK_DAMAGE, etc. all disappear)</li>
+     *   <li>Health clamped to the post-reset max</li>
+     *   <li>Persistence / removeWhenFarAway / AI / canPickupItems flags
+     *       reset to vanilla defaults</li>
+     *   <li>Brain {@code WALK_TARGET} and {@code ATTACK_TARGET} memories
+     *       (so a released villager doesn't keep targeting the owner's bed
+     *       or a still-cached attack target)</li>
+     * </ul>
      *
      * <p>Ownership of the {@link Pet}'s {@code bukkitEntity} reference is
      * transferred away (set to {@code null}) so a subsequent
@@ -186,23 +215,22 @@ public final class VanillaMobSpawner {
             return;
         }
 
-        // Capture equipment from the old mob BEFORE removing it.
-        EntityEquipment oldEq = oldMob.getEquipment();
-        ItemStack[] capturedEquipment = null;
-        if (oldEq != null) {
-            EquipmentSlot[] slots = EquipmentSlot.values();
-            capturedEquipment = new ItemStack[slots.length];
-            for (int i = 0; i < slots.length; i++) {
-                capturedEquipment[i] = oldEq.getItem(slots[i]);
-            }
+        // Capture the old mob's full vanilla NBT BEFORE removing it. The
+        // snapshot carries every per-type field Mojang has ever defined for
+        // this entity, plus equipment, plus per-mob runtime state — so the
+        // restored mob is byte-identical to the pet at release time, modulo
+        // the strip below.
+        CompoundBinaryTag snapshot;
+        try {
+            snapshot = PetEntitySnapshot.capture(oldMob);
+        } catch (Throwable t) {
+            MyPetApi.getLogger().warning("releaseToWild: failed to capture entity snapshot for "
+                    + pet.getPetType().name() + " — falling back to fresh-spawn (per-type state lost). "
+                    + t.getClass().getSimpleName() + ": " + t.getMessage());
+            snapshot = null;
         }
 
         // Detach Pet state BEFORE any potentially-throwing operation below.
-        // If world.spawn() throws (plugin-cancelled CreatureSpawnEvent,
-        // world-unloaded races, etc.), the Pet domain object is already in
-        // a consistent "detached" state, so the caller's exception handler
-        // just needs to finish the repository/worldgroup cleanup — it does
-        // not inherit a dead entity reference.
         PetDamageTracker.cleanup(oldUuid);
         Timer.stopPetTicking(pet);
         PetSitParticleController.stopForPet(pet);
@@ -214,30 +242,108 @@ public final class VanillaMobSpawner {
         // Safe to destroy the old mob now — MyPet already released the reference.
         oldMob.remove();
 
-        // Spawn a fresh vanilla mob at the same location — this runs Minecraft's
-        // native Mob#registerGoals() and gives the new entity a full set of
-        // vanilla goals.
-        Mob newMob = world.spawn(loc, mobClass, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        Mob newMob = null;
+        if (snapshot != null) {
+            try {
+                Mob restored = PetEntitySnapshot.restore(snapshot, world);
+                if (mobClass.isInstance(restored)
+                        && restored.spawnAt(loc, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
+                    newMob = restored;
+                } else {
+                    MyPetApi.getLogger().warning("releaseToWild: snapshot restore refused for "
+                            + pet.getPetType().name() + " — falling back to fresh-spawn (per-type state lost).");
+                }
+            } catch (Throwable t) {
+                MyPetApi.getLogger().warning("releaseToWild: snapshot restore threw for "
+                        + pet.getPetType().name() + " — falling back to fresh-spawn (per-type state lost). "
+                        + t.getClass().getSimpleName() + ": " + t.getMessage());
+            }
+        }
+        if (newMob == null) {
+            // Fresh-spawn fallback: vanilla mob with vanilla defaults, no
+            // per-type state preserved. Better than throwing on the caller.
+            newMob = world.spawn(loc, mobClass, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        }
 
-        // Apply visual state (colour, variant, profession, baby/adult) but NOT
-        // tamed/owner and NOT sit pose — the released mob is wild.
-        PetVisualSyncer.sync(pet, newMob, false);
+        stripPetCustomizations(newMob);
+    }
 
-        // Drop the custom nametag.
+    /**
+     * Removes everything MyPet adds on top of a vanilla mob, so a snapshot-
+     * restored entity is indistinguishable from a wild spawn. Called from
+     * {@link #releaseToWild} after the new mob is in the world.
+     */
+    private static void stripPetCustomizations(Mob newMob) {
+        // Custom name / nametag visibility.
         newMob.customName(null);
         newMob.setCustomNameVisible(false);
 
-        // Transfer equipment from the old mob to the new one.
-        if (capturedEquipment != null && newMob.getEquipment() != null) {
-            EntityEquipment newEq = newMob.getEquipment();
-            EquipmentSlot[] slots = EquipmentSlot.values();
-            for (int i = 0; i < slots.length; i++) {
-                ItemStack item = capturedEquipment[i];
-                if (item != null && !item.getType().isAir()) {
-                    newEq.setItem(slots[i], item);
-                }
+        // All mypet:* PDC keys (pet marker, perma-screaming flag, future
+        // per-pet flags). Snapshotting collects PDC into BukkitValues, so
+        // every MyPet PDC key the pet had is on the restored mob.
+        PersistentDataContainer pdc = newMob.getPersistentDataContainer();
+        List<NamespacedKey> mypetKeys = new ArrayList<>();
+        for (NamespacedKey key : pdc.getKeys()) {
+            if ("mypet".equals(key.getNamespace())) {
+                mypetKeys.add(key);
             }
         }
+        for (NamespacedKey key : mypetKeys) {
+            pdc.remove(key);
+        }
+
+        // Tameable / owner.
+        if (newMob instanceof Tameable tameable) {
+            tameable.setOwner(null);
+            tameable.setTamed(false);
+        }
+        // Sit pose (released mob should not spawn sitting).
+        if (newMob instanceof Sittable sittable) {
+            sittable.setSitting(false);
+        }
+        // Wither boss bar — pet hides it via PetVisualSyncer; wild should show.
+        if (newMob instanceof Wither wither) {
+            try {
+                wither.getBossBar().setVisible(true);
+            } catch (Throwable ignored) {
+            }
+        }
+
+        // Reset every attribute on the mob: drop all modifiers (Life skill
+        // MAX_HEALTH boost, Sprint MOVEMENT_SPEED boost, Damage ATTACK_DAMAGE
+        // boost, etc.) and snap the base value back to the vanilla default.
+        for (Attribute attribute : Registry.ATTRIBUTE) {
+            AttributeInstance inst = newMob.getAttribute(attribute);
+            if (inst == null) continue;
+            for (AttributeModifier mod : inst.getModifiers()) {
+                try {
+                    inst.removeModifier(mod);
+                } catch (Throwable ignored) {
+                }
+            }
+            try {
+                inst.setBaseValue(inst.getDefaultValue());
+            } catch (Throwable ignored) {
+            }
+        }
+        // Clamp current health to the new (vanilla) max in case attribute
+        // reset shrank max-HP below current health.
+        newMob.setHealth(Math.min(newMob.getHealth(), newMob.getMaxHealth()));
+
+        // Wild defaults for persistence / AI flags. PetEntitySnapshot.restore
+        // pre-applies setPersistent(false) + setRemoveWhenFarAway(false) for
+        // pet-side use; reverse them here so the wild mob is treated like
+        // any naturally-spawned mob.
+        newMob.setPersistent(true);
+        newMob.setRemoveWhenFarAway(true);
+        newMob.setAI(true);
+        newMob.setCanPickupItems(true);
+
+        // Clear brain memories that may have leaked from the pet's state —
+        // a released villager shouldn't keep pathing toward the owner's bed,
+        // a released breeze shouldn't keep the owner as an attack target.
+        BrainAccess.clearAttackTarget(newMob);
+        BrainAccess.clearWalkTarget(newMob);
     }
 
     /**
