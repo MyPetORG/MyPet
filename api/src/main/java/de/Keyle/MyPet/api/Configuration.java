@@ -50,11 +50,6 @@ public class Configuration {
         public static double MYPET_FOLLOW_START_DISTANCE = 7.0F;
     }
 
-    public static class Log {
-
-        public static String LEVEL = "INFO";
-    }
-
     public static class Update {
 
         public static boolean ASYNC = false;

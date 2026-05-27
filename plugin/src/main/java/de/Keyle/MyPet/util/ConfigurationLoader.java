@@ -72,7 +72,6 @@ public class ConfigurationLoader {
         config.addDefault("MyPet.PetKillsGivePlayerRewards", Misc.PET_KILLS_GIVE_PLAYER_REWARDS);
         config.addDefault("MyPet.RetainEquipmentOnTame", Misc.RETAIN_EQUIPMENT_ON_TAME);
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", Misc.INVISIBLE_LIKE_OWNER);
-        config.addDefault("MyPet.Log.Level", Log.LEVEL);
         config.addDefault("MyPet.Log.Report-Errors", true);
         config.addDefault("MyPet.Log.Unique-ID", SentryErrorReporter.getServerUUID().toString());
         config.addDefault("MyPet.Max-Stored-Pet-Count", Misc.MAX_STORED_PET_COUNT);
@@ -354,8 +353,6 @@ public class ConfigurationLoader {
         Misc.OVERWRITE_LANGUAGE = config.getString("MyPet.OverwriteLanguages", "");
         LevelSystem.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
         Entity.MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.Entity.FollowStartDistance", 7.0D);
-
-        Log.LEVEL = config.getString("MyPet.Log.Level", Log.LEVEL);
 
         NameFilter.NAME_FILTER.clear();
         for (Object o : config.getList("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"))) {

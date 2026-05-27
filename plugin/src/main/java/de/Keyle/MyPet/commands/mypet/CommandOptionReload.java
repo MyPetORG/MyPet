@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.service.RequiresPlugin;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.MessageUtil;
 import de.Keyle.MyPet.util.shop.ShopManager;
@@ -129,7 +128,6 @@ public class CommandOptionReload {
      * <ol>
      *   <li>Reloads the main configuration and version-specific compatibility config via
      *       {@link ConfigurationLoader}</li>
-     *   <li>Updates the debug log level</li>
      *   <li>Re-initializes the translation/locale system</li>
      *   <li>Adjusts {@code MyPet.petstorage.limit.*} permissions if the maximum stored
      *       pet count changed (registers new permissions or removes excess ones)</li>
@@ -144,8 +142,6 @@ public class CommandOptionReload {
         int oldMaxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
         ConfigurationLoader.loadConfiguration();
         ConfigurationLoader.loadCompatConfiguration();
-
-        DebugLogHandler.updateLogLevel();
 
         Locale.init();
 

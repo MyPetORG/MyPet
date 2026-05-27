@@ -32,7 +32,6 @@ import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.util.translation.VanillaTranslationLoader;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
@@ -202,8 +201,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         Bukkit.getServer().getGlobalRegionScheduler().cancelTasks(this);
         Bukkit.getServer().getAsyncScheduler().cancelTasks(this);
 
-        DebugLogHandler.disable(getLogger());
-
         if (serviceManager != null) {
             serviceManager.disableServices();
         }
@@ -274,7 +271,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
      * <p>initialization proceeds in roughly this order, with each phase building on the
      * previous:</p>
      * <ol>
-     *   <li>Splash screen, debug logger, compat-config layer</li>
+     *   <li>Splash screen, compat-config layer</li>
      *   <li>Leash flags, skilltree requirements, JS experience calculator</li>
      *   <li>Bukkit listeners ({@link PetListeners}), Brigadier commands ({@link BuiltInCommands})</li>
      *   <li>World groups, built-in skills, default skilltree files, storage permissions</li>
@@ -302,8 +299,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager.activate(Load.State.OnEnable);
 
         VanillaTranslationLoader.loadAsync(this);
-
-        DebugLogHandler.setup(getLogger());
 
         ConfigurationLoader.loadCompatConfiguration();
 
@@ -336,7 +331,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         getDataFolder().mkdirs();
         boolean createdSkilltreeFolder = skilltreeFolder.mkdirs();
         boolean createdLocaleFolder = new File(getDataFolder(), "locale").mkdirs();
-        new File(getDataFolder(), "logs").mkdirs();
 
         DefaultSkilltreeProvisioner.copyDefaultsIfFolderCreated(skilltreeFolder, createdSkilltreeFolder, this);
 

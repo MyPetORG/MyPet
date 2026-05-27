@@ -86,7 +86,6 @@ public class CommandOptionTicket {
                         addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "pets.db"), out, "");
                         addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "worldgroups.yml"), out, "");
                         addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "skilltrees"), out, "");
-                        addFileToZip(new File(MyPetApi.getPlugin().getDataFolder(), "logs" + File.separator + "MyPet.log"), out, "");
                         addFileToZip(new File(MyPetApi.getPlugin().getDataFolder().getParentFile().getParentFile(), "logs" + File.separator + "latest.log"), out, "");
                         writeStreamToZip(new ByteArrayInputStream(accumulatePermissions().getBytes()), "permissions.txt", out);
 
