@@ -30,17 +30,22 @@ import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.entity.PetLightningConvertible;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
+import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.ai.BrainAccess;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.entity.options.PetCreationOptions.OptionSpec;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Material;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Villager;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.VillagerCareerChangeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -50,12 +55,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 @ShopInfo
 @DefaultInfo(food = {Material.APPLE}, flySpeed = 1.1013D)
 public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLightningConvertible {
 
     public static final ConfigKey<Boolean> ALLOW_LIGHTNING_CONVERSION = ConfigKey.bool("Villager", "AllowLightningConversion", false);
+    public static final ConfigKey<Boolean> PREVENT_PROFESSION_CHANGE = ConfigKey.bool("Villager", "PreventProfessionChange", true);
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Villager", "experience_bottle");
 
     /**
@@ -76,6 +83,9 @@ public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLi
             WanderSuppressor::startForPet,
             WanderSuppressor::stopForPet
     );
+
+    public static final Supplier<Listener> CAREER_CHANGE_SUPPRESSOR =
+            PetListenerRegistry.register(CareerChangeSuppressor::new);
 
 
     // Villager also gets its trade level reset alongside the profession change —
@@ -99,6 +109,24 @@ public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLi
     @Override
     public Set<String> getAllowedSlotNames() {
         return Set.of("HAND");
+    }
+
+    /**
+     * Cancels {@link VillagerCareerChangeEvent} for marked Villager pets when
+     * {@link #PREVENT_PROFESSION_CHANGE} is on (default {@code true}) — makes
+     * the admin-set profession sticky against vanilla's employment (job-site
+     * interaction) and demotion (LOSING_JOB) paths. The {@code profession:}
+     * creation option calls {@code Villager#setProfession} directly, which
+     * doesn't fire this event, so admin sets are unaffected.
+     */
+    public static final class CareerChangeSuppressor implements Listener {
+
+        @EventHandler(ignoreCancelled = true)
+        public void onPetVillagerCareerChange(VillagerCareerChangeEvent event) {
+            if (!PREVENT_PROFESSION_CHANGE.get()) return;
+            if (!PetEntityMarker.isMarked(event.getEntity())) return;
+            event.setCancelled(true);
+        }
     }
 
     /**
