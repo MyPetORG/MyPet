@@ -25,7 +25,9 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.FlyHook;
 import de.Keyle.MyPet.api.util.hooks.types.MountInsideHook;
@@ -41,15 +43,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityInteractEvent;
 
-@PluginHookName("Residence")
+@ServiceName("Residence")
+@RequiresPlugin("Residence")
+@Load(Load.State.Hooks)
 public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, MountInsideHook, AllowedHook {
 
     Residence residence;
 
     @Override
     public boolean onEnable() {
-        if (MyPetApi.getPluginHookManager().getConfig().getConfig().getBoolean("Residence.Enabled")) {
-            residence = MyPetApi.getPluginHookManager().getPluginInstance(Residence.class).get();
+        if (MyPetApi.getServiceManager().getConfig().getConfig().getBoolean("Residence.Enabled")) {
+            residence = (Residence) Bukkit.getPluginManager().getPlugin("Residence");
 
             FlagPermissions.addFlag("mypet-fly");
             FlagPermissions.addFlag("mypet-damage");

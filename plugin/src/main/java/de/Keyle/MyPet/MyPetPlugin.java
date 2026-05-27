@@ -31,7 +31,6 @@ import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.util.translation.VanillaTranslationLoader;
@@ -55,7 +54,6 @@ import de.Keyle.MyPet.skill.skills.BuiltInSkillStateCodecs;
 import de.Keyle.MyPet.skill.skills.BuiltInSkills;
 import de.Keyle.MyPet.skill.upgrades.BuiltInUpgradeParsers;
 import de.Keyle.MyPet.skill.skilltree.requirements.BuiltInRequirements;
-import de.Keyle.MyPet.util.hooks.BuiltInHooks;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import de.Keyle.MyPet.util.shop.ShopConfigGenerator;
 import de.Keyle.MyPet.util.shop.ShopManager;
@@ -153,14 +151,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     private HookHelper hookHelper;
 
     /**
-     * Hook lifecycle manager. Hooks are registered into it during {@link #onLoad()}; they
-     * remain dormant until {@link PluginHookManager#enableHooks()} is invoked from
-     * {@link #onEnable()}, after the repository is up.
-     */
-    @Getter
-    private PluginHookManager pluginHookManager;
-
-    /**
      * Central service registry. Populated in {@link #onLoad()}; services activate in phases
      * via {@link ServiceManager#activate(Load.State)} as {@link #onEnable()} progresses.
      */
@@ -214,9 +204,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         DebugLogHandler.disable(getLogger());
 
-        if (pluginHookManager != null) {
-            pluginHookManager.disableHooks();
-        }
         if (serviceManager != null) {
             serviceManager.disableServices();
         }
@@ -235,11 +222,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
      *   <li>Construct {@link SentryErrorReporter}, optionally enabling its uplink based on
      *       {@code MyPet.Log.Report-Errors} in config</li>
      *   <li>Load configuration</li>
-     *   <li>Construct {@link ServiceManager} and {@link PluginHookManager}</li>
+     *   <li>Construct {@link ServiceManager}</li>
      *   <li>Populate every cached service-handle field except {@code repository},
      *       {@code miniMessage}, and {@code helpRegistry} (those wait for {@link #onEnable()})</li>
      *   <li>Register all built-in services and the {@code OnLoad}-state slice activates</li>
-     *   <li>Register all third-party plugin hooks (they remain dormant until enable)</li>
      * </ol>
      *
      * <p>This phase does not interact with the world or other plugins and so cannot fail
@@ -270,7 +256,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         ConfigurationLoader.loadConfiguration();
 
         serviceManager = new ServiceManager();
-        pluginHookManager = new PluginHookManager();
 
         petInfo = new PetInfoImpl();
         petManager = new de.Keyle.MyPet.repository.PetManager();
@@ -280,8 +265,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         BuiltInServices.register(serviceManager);
         serviceManager.registerService(EggIconService.class);
         serviceManager.activate(Load.State.OnLoad);
-
-        BuiltInHooks.register(pluginHookManager);
     }
 
     /**
@@ -398,8 +381,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         updater.waitForDownload();
 
-        pluginHookManager.enableHooks();
-        serviceManager.activate(Load.State.AfterHooks);
+        serviceManager.activate(Load.State.Hooks);
 
         MyPetMetrics.register(this, petManager, errorReporter);
 

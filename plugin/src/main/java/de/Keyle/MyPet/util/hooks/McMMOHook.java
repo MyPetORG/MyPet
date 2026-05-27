@@ -28,7 +28,9 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -41,7 +43,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
 
-@PluginHookName("mcMMO")
+@ServiceName("mcMMO")
+@RequiresPlugin("mcMMO")
+@Load(Load.State.Hooks)
 public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
 
     @Override

@@ -25,7 +25,9 @@ import com.songoda.skyblock.api.SkyBlockAPI;
 import com.songoda.skyblock.config.FileManager;
 import com.songoda.skyblock.island.IslandManager;
 import com.songoda.skyblock.island.IslandRole;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,7 +36,9 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 
-@PluginHookName("FabledSkyBlock")
+@ServiceName("FabledSkyBlock")
+@RequiresPlugin("FabledSkyBlock")
+@Load(Load.State.Hooks)
 public class FabledSkyBlockHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook {
 
     SkyBlock skyblock;

@@ -29,7 +29,6 @@ import de.Keyle.MyPet.api.skill.SkillManager;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeManager;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 
@@ -123,14 +122,7 @@ public class MyPetApi {
     }
 
     /**
-     * @return instance of the plugin hook manager
-     */
-    public static PluginHookManager getPluginHookManager() {
-        return requirePlugin().getPluginHookManager();
-    }
-
-    /**
-     * @return instance of the plugin hook manager
+     * @return instance of the service manager
      */
     public static ServiceManager getServiceManager() {
         return requirePlugin().getServiceManager();

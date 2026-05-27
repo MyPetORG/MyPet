@@ -21,7 +21,9 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import me.angeschossen.lands.api.integration.LandsIntegration;
@@ -31,7 +33,9 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-@PluginHookName("Lands")
+@ServiceName("Lands")
+@RequiresPlugin("Lands")
+@Load(Load.State.Hooks)
 public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
 
     private LandsIntegration landsAddon;

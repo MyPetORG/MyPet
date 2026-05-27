@@ -21,13 +21,17 @@
 package de.Keyle.MyPet.util.hooks;
 
 import com.kirelcodes.miniaturepets.api.APIUtils;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-@PluginHookName("MiniaturePets")
+@ServiceName("MiniaturePets")
+@RequiresPlugin("MiniaturePets")
+@Load(Load.State.Hooks)
 public class MiniaturePetsHook implements PlayerVersusEntityHook, LeashHook {
 
     public boolean canHurt(Player attacker, Entity defender) {

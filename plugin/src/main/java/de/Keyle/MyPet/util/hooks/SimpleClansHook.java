@@ -21,21 +21,26 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-@PluginHookName("SimpleClans")
+@ServiceName("SimpleClans")
+@RequiresPlugin("SimpleClans")
+@Load(Load.State.Hooks)
 public class SimpleClansHook implements PlayerVersusPlayerHook {
 
     SimpleClans simpleClans;
 
     @Override
     public boolean onEnable() {
-        simpleClans = MyPetApi.getPluginHookManager().getPluginInstance(SimpleClans.class).get();
+        simpleClans = (SimpleClans) Bukkit.getPluginManager().getPlugin("SimpleClans");
         return true;
     }
 

@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.api.util.hooks.types;
 
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import org.bukkit.Location;
 
 /**
  * This interface defines hooks that control beacon skill behavior in regions
  */
-public interface BeaconHook extends PluginHook {
+public interface BeaconHook extends ServiceContainer {
 
     /**
      * Returns if beacon effects can be activated at a certain location

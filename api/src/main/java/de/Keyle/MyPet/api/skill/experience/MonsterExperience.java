@@ -220,7 +220,7 @@ public class MonsterExperience {
                 ? PlainTextComponentSerializer.plainText().serialize(customName)
                 : null;
 
-        List<MonsterExperienceHook> hooks = MyPetApi.getPluginHookManager().getHooks(MonsterExperienceHook.class);
+        List<MonsterExperienceHook> hooks = MyPetApi.getServiceManager().getServices(MonsterExperienceHook.class);
         for (MonsterExperienceHook hook : hooks) {
             MonsterExperience monsterExperience = hook.getMonsterExperience(entity);
             if (monsterExperience != null) {

@@ -29,7 +29,8 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.logger.DebugLogHandler;
 import de.Keyle.MyPet.util.ConfigurationLoader;
@@ -133,7 +134,7 @@ public class CommandOptionReload {
      *   <li>Adjusts {@code MyPet.petstorage.limit.*} permissions if the maximum stored
      *       pet count changed (registers new permissions or removes excess ones)</li>
      *   <li>Switches the experience calculator to match the configured calculation mode</li>
-     *   <li>Reloads configuration for all registered {@link PluginHook} integrations</li>
+     *   <li>Reloads configuration for all registered {@link ServiceContainer} integrations</li>
      * </ol>
      *
      * @param sender the command sender to receive a confirmation message (console senders
@@ -167,10 +168,12 @@ public class CommandOptionReload {
         ExperienceCalculatorManager calculatorManager = MyPetApi.getServiceManager().getService(ExperienceCalculatorManager.class).get();
         calculatorManager.switchCalculator(Configuration.LevelSystem.CALCULATION_MODE);
 
-        MyPetApi.getPluginHookManager().getConfig().loadConfig();
+        MyPetApi.getServiceManager().getConfig().loadConfig();
 
-        for (PluginHook hook : MyPetApi.getPluginHookManager().getHooks()) {
-            ConfigurationSection pluginSection = MyPetApi.getPluginHookManager().getConfig().getConfig().getConfigurationSection(hook.getPluginName());
+        for (ServiceContainer hook : MyPetApi.getServiceManager().getServices(ServiceContainer.class).stream()
+                .filter(s -> s.getClass().isAnnotationPresent(RequiresPlugin.class))
+                .toList()) {
+            ConfigurationSection pluginSection = MyPetApi.getServiceManager().getConfig().getConfig().getConfigurationSection(hook.getServiceName());
             if (pluginSection != null) {
                 hook.loadConfig(pluginSection);
             }

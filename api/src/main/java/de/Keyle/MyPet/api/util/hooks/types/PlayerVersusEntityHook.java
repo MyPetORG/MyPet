@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.api.util.hooks.types;
 
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 /**
  * This interface defines that the hook checks if players can attack an entity
  */
-public interface PlayerVersusEntityHook extends PluginHook {
+public interface PlayerVersusEntityHook extends ServiceContainer {
     boolean canHurt(Player attacker, Entity defender);
 }

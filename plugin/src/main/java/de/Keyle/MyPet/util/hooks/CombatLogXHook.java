@@ -24,8 +24,10 @@ import com.SirBlobman.combatlogx.config.ConfigOptions;
 import com.SirBlobman.combatlogx.utility.CombatUtil;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Bukkit;
@@ -44,8 +46,10 @@ import static com.SirBlobman.combatlogx.event.PlayerTagEvent.TagReason;
 import static com.SirBlobman.combatlogx.event.PlayerTagEvent.TagType;
 import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
-@PluginHookName("CombatLogX")
-public class CombatLogXHook implements PluginHook {
+@ServiceName("CombatLogX")
+@RequiresPlugin("CombatLogX")
+@Load(Load.State.Hooks)
+public class CombatLogXHook implements ServiceContainer {
 
     public static boolean IGNORE_PLUGIN_SETTINGS = false;
 

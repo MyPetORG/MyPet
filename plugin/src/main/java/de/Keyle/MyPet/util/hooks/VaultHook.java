@@ -26,7 +26,9 @@ import de.Keyle.MyPet.api.entity.leashing.LeashFlagName;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.EconomyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PermissionGroupHook;
 import net.milkbowl.vault.economy.Economy;
@@ -40,7 +42,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.UUID;
 
-@PluginHookName("Vault")
+@ServiceName("Vault")
+@RequiresPlugin("Vault")
+@Load(Load.State.Hooks)
 public class VaultHook implements EconomyHook, PermissionGroupHook {
 
     public static boolean USE_ECONOMY = true;

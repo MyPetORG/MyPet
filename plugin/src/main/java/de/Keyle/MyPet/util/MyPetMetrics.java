@@ -25,7 +25,8 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.repository.PetManager;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -96,8 +97,10 @@ public final class MyPetMetrics {
 
     private static Map<String, Integer> activatedHooks() {
         Map<String, Integer> hooks = new HashMap<>();
-        for (PluginHook hook : MyPetApi.getPluginHookManager().getHooks()) {
-            hooks.put(hook.getPluginName(), 1);
+        for (ServiceContainer hook : MyPetApi.getServiceManager().getServices(ServiceContainer.class).stream()
+                .filter(s -> s.getClass().isAnnotationPresent(RequiresPlugin.class))
+                .toList()) {
+            hooks.put(hook.getServiceName(), 1);
         }
         return hooks;
     }

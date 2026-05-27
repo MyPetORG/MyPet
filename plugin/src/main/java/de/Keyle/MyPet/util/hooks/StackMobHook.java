@@ -21,21 +21,26 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import uk.antiperson.stackmob.StackMob;
 import uk.antiperson.stackmob.entity.EntityManager;
 import uk.antiperson.stackmob.entity.StackEntity;
 
-@PluginHookName("StackMob")
+@ServiceName("StackMob")
+@RequiresPlugin("StackMob")
+@Load(Load.State.Hooks)
 public class StackMobHook implements LeashEntityHook {
 
     protected EntityManager entityManager;
 
     @Override
     public boolean onEnable() {
-        StackMob sm = (StackMob) MyPetApi.getPluginHookManager().getPluginInstance("StackMob").get();
+        StackMob sm = (StackMob) Bukkit.getPluginManager().getPlugin("StackMob");
         this.entityManager = new EntityManager(sm);
         return true;
     }

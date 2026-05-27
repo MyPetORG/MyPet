@@ -105,7 +105,7 @@ public class ShopManager implements ShopService {
         if (defaultShop != null) {
             open(defaultShop, player);
         } else {
-            if (!MyPetApi.getPluginHookManager().isHookActive(VaultHook.class)) {
+            if (!MyPetApi.getServiceManager().isServiceActive(VaultHook.class)) {
                 player.sendMessage(Locale.getComponent("Message.No.Economy", player));
                 return;
             }

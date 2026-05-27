@@ -57,7 +57,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
             if (defender.getGameMode() == GameMode.CREATIVE) {
                 return false;
             }
-            List<PlayerVersusPlayerHook> pvpHooks = MyPetApi.getPluginHookManager().getHooks(PlayerVersusPlayerHook.class);
+            List<PlayerVersusPlayerHook> pvpHooks = MyPetApi.getServiceManager().getServices(PlayerVersusPlayerHook.class);
             for (PlayerVersusPlayerHook hook : pvpHooks) {
                 if (!hook.canHurt(attacker, defender)) {
                     return false;
@@ -77,7 +77,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
             return false;
         }
         if (attacker != null && defender != null && attacker != defender) {
-            List<PlayerVersusEntityHook> pveHooks = MyPetApi.getPluginHookManager().getHooks(PlayerVersusEntityHook.class);
+            List<PlayerVersusEntityHook> pveHooks = MyPetApi.getServiceManager().getServices(PlayerVersusEntityHook.class);
             for (PlayerVersusEntityHook hook : pveHooks) {
                 if (!hook.canHurt(attacker, defender)) {
                     return false;
@@ -89,7 +89,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     }
 
     public boolean isPetAllowed(MyPetPlayer player) {
-        List<AllowedHook> allowedHooks = MyPetApi.getPluginHookManager().getHooks(AllowedHook.class);
+        List<AllowedHook> allowedHooks = MyPetApi.getServiceManager().getServices(AllowedHook.class);
         for (AllowedHook hook : allowedHooks) {
             if (!hook.isPetAllowed(player)) {
                 return false;
@@ -100,7 +100,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public boolean canPetFlyAt(Location location) {
-        List<FlyHook> flyHooks = MyPetApi.getPluginHookManager().getHooks(FlyHook.class);
+        List<FlyHook> flyHooks = MyPetApi.getServiceManager().getServices(FlyHook.class);
         for (FlyHook hook : flyHooks) {
             if (!hook.canFly(location)) {
                 return false;
@@ -111,7 +111,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public boolean isInParty(Player player) {
-        List<PartyHook> partyHooks = MyPetApi.getPluginHookManager().getHooks(PartyHook.class);
+        List<PartyHook> partyHooks = MyPetApi.getServiceManager().getServices(PartyHook.class);
         for (PartyHook hook : partyHooks) {
             if (!hook.isInParty(player)) {
                 return false;
@@ -122,7 +122,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public List<Player> getPartyMembers(Player player) {
-        List<PartyHook> partyHooks = MyPetApi.getPluginHookManager().getHooks(PartyHook.class);
+        List<PartyHook> partyHooks = MyPetApi.getServiceManager().getServices(PartyHook.class);
         for (PartyHook hook : partyHooks) {
             List<Player> members = hook.getPartyMembers(player);
             if (members != null) {
@@ -141,7 +141,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
             }
         }
         // allow hooks to vanish players too
-        List<VanishedHook> vanishedHooks = MyPetApi.getPluginHookManager().getHooks(VanishedHook.class);
+        List<VanishedHook> vanishedHooks = MyPetApi.getServiceManager().getServices(VanishedHook.class);
         for (VanishedHook hook : vanishedHooks) {
             if (hook.isVanished(player)) {
                 return true;
@@ -151,7 +151,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     }
 
     public EconomyHook getEconomy() {
-        List<EconomyHook> economyHooks = MyPetApi.getPluginHookManager().getHooks(EconomyHook.class);
+        List<EconomyHook> economyHooks = MyPetApi.getServiceManager().getServices(EconomyHook.class);
         return economyHooks.stream().findFirst().orElse(null);
     }
 
@@ -164,7 +164,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public boolean isBeaconAllowed(Location location) {
-        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        List<BeaconHook> beaconHooks = MyPetApi.getServiceManager().getServices(BeaconHook.class);
         for (BeaconHook hook : beaconHooks) {
             if (!hook.isBeaconAllowed(location)) {
                 return false;
@@ -175,7 +175,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public boolean isBeaconShareAllowed(Location location) {
-        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        List<BeaconHook> beaconHooks = MyPetApi.getServiceManager().getServices(BeaconHook.class);
         for (BeaconHook hook : beaconHooks) {
             if (!hook.isBeaconShareAllowed(location)) {
                 return false;
@@ -186,7 +186,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public boolean isBeaconSelfAllowed(Location location) {
-        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        List<BeaconHook> beaconHooks = MyPetApi.getServiceManager().getServices(BeaconHook.class);
         for (BeaconHook hook : beaconHooks) {
             if (!hook.isBeaconSelfAllowed(location)) {
                 return false;
@@ -198,7 +198,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     @Override
     public double getBeaconRangeMultiplier(Location location) {
         double multiplier = 1.0;
-        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        List<BeaconHook> beaconHooks = MyPetApi.getServiceManager().getServices(BeaconHook.class);
         for (BeaconHook hook : beaconHooks) {
             multiplier *= hook.getBeaconRangeMultiplier(location);
         }
@@ -208,7 +208,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     @Override
     public double getBeaconDurationMultiplier(Location location) {
         double multiplier = 1.0;
-        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        List<BeaconHook> beaconHooks = MyPetApi.getServiceManager().getServices(BeaconHook.class);
         for (BeaconHook hook : beaconHooks) {
             multiplier *= hook.getBeaconDurationMultiplier(location);
         }
@@ -218,7 +218,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
     @Override
     public int getBeaconAmplifierModifier(Location location) {
         int modifier = 0;
-        List<BeaconHook> beaconHooks = MyPetApi.getPluginHookManager().getHooks(BeaconHook.class);
+        List<BeaconHook> beaconHooks = MyPetApi.getServiceManager().getServices(BeaconHook.class);
         for (BeaconHook hook : beaconHooks) {
             modifier += hook.getBeaconAmplifierModifier(location);
         }

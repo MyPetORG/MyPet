@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.repository.PetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
-import de.Keyle.MyPet.api.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
@@ -56,9 +55,6 @@ public interface MyPetPlugin extends Plugin {
 
     /** Returns the utility for querying third-party hook state. */
     HookHelper getHookHelper();
-
-    /** Returns the registry for third-party plugin integrations (WorldGuard, Vault, etc.). */
-    PluginHookManager getPluginHookManager();
 
     /** Returns the central service registry for lifecycle-managed services. */
     ServiceManager getServiceManager();

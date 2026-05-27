@@ -24,8 +24,10 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
 import de.Keyle.MyPet.util.player.ContributorCheck.ContributorRank;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
@@ -38,8 +40,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@PluginHookName("PlaceholderAPI")
-public class PlaceholderApiHook implements PluginHook {
+@ServiceName("PlaceholderAPI")
+@RequiresPlugin("PlaceholderAPI")
+@Load(Load.State.Hooks)
+public class PlaceholderApiHook implements ServiceContainer {
 
     Map<String, PlaceHolder<?>> placeHolders = new HashMap<>();
     PlaceholderExpansion myPetExpansion;

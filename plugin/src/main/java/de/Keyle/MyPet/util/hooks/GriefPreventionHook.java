@@ -21,7 +21,9 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.MountInsideHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -30,7 +32,9 @@ import org.bukkit.entity.*;
 
 import java.util.UUID;
 
-@PluginHookName("GriefPrevention")
+@ServiceName("GriefPrevention")
+@RequiresPlugin("GriefPrevention")
+@Load(Load.State.Hooks)
 public class GriefPreventionHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook, MountInsideHook {
 
     protected GriefPrevention griefPrevention;

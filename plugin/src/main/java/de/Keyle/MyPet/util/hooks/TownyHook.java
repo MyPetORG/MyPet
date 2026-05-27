@@ -23,20 +23,25 @@ package de.Keyle.MyPet.util.hooks;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-@PluginHookName("Towny")
+@ServiceName("Towny")
+@RequiresPlugin("Towny")
+@Load(Load.State.Hooks)
 public class TownyHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
 
     Towny towny;
 
     @Override
     public boolean onEnable() {
-        towny = MyPetApi.getPluginHookManager().getPluginInstance(Towny.class).get();
+        towny = (Towny) Bukkit.getPluginManager().getPlugin("Towny");
         return true;
     }
 

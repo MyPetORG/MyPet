@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.api.util.hooks.types;
 
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import org.bukkit.entity.LivingEntity;
 
 /**
  * This interface defines that the hook checks if the leashed entity will be removed
  */
-public interface LeashEntityHook extends PluginHook {
+public interface LeashEntityHook extends ServiceContainer {
 
     boolean prepare(LivingEntity leashedEntity);
 }

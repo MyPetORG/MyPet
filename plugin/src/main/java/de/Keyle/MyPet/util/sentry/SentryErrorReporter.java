@@ -24,7 +24,8 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.api.util.ErrorReporter;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import io.sentry.Breadcrumb;
 import io.sentry.Sentry;
 import io.sentry.SentryLevel;
@@ -310,16 +311,17 @@ public class SentryErrorReporter implements ErrorReporter {
     }
 
     protected void addPluginHooks() {
-        if (MyPetApi.getPluginHookManager() == null || MyPetApi.getPluginHookManager().getHooks() == null) {
+        if (MyPetApi.getServiceManager() == null) {
             return;
         }
-        String hooks = MyPetApi.getPluginHookManager().getHooks().stream()
+        String hooks = MyPetApi.getServiceManager().getServices(ServiceContainer.class).stream()
+                .filter(s -> s.getClass().isAnnotationPresent(RequiresPlugin.class))
                 .map(hook -> {
-                    PluginHookName hookNameAnnotation = hook.getClass().getAnnotation(PluginHookName.class);
-                    String message = hook.getPluginName();
-                    message += " (" + Bukkit.getPluginManager().getPlugin(hook.getPluginName()).getDescription().getVersion() + ")";
-                    if (!hookNameAnnotation.classPath().equalsIgnoreCase("")) {
-                        message += " (" + hookNameAnnotation.classPath() + ")";
+                    RequiresPlugin requiresPlugin = hook.getClass().getAnnotation(RequiresPlugin.class);
+                    String message = hook.getServiceName();
+                    message += " (" + Bukkit.getPluginManager().getPlugin(hook.getServiceName()).getDescription().getVersion() + ")";
+                    if (!requiresPlugin.classPath().equalsIgnoreCase("")) {
+                        message += " (" + requiresPlugin.classPath() + ")";
                     }
                     message += hook.getActivationMessage();
                     return message;

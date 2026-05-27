@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.util.service;
 
 import de.Keyle.MyPet.api.Util;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 
 /**
@@ -53,5 +54,19 @@ public interface ServiceContainer extends Listener {
             return sn.value();
         }
         return getClass().getName();
+    }
+
+    /**
+     * Optional per-service YAML config block, loaded before {@link #onEnable()}.
+     * Only invoked for services tagged with {@link RequiresPlugin}.
+     */
+    default void loadConfig(ConfigurationSection config) {
+    }
+
+    /**
+     * Optional suffix appended to the activation log line.
+     */
+    default String getActivationMessage() {
+        return "";
     }
 }

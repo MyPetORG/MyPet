@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.api.util.hooks.types;
 
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import org.bukkit.Location;
 
 /**
  * This interface defines that the hook checks if a player can fly his pet at a certain location
  */
-public interface FlyHook extends PluginHook {
+public interface FlyHook extends ServiceContainer {
     /**
      * Returns if a players can fly their pets at a certain location
      *

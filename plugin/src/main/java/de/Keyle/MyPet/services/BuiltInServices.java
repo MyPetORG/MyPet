@@ -29,6 +29,37 @@ import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.migration.MigrationService;
+import de.Keyle.MyPet.util.hooks.BattleArenaHook;
+import de.Keyle.MyPet.util.hooks.CitizensHook;
+import de.Keyle.MyPet.util.hooks.CombatLogXHook;
+import de.Keyle.MyPet.util.hooks.FabledSkyBlockHook;
+import de.Keyle.MyPet.util.hooks.FactionsUUIDHook;
+import de.Keyle.MyPet.util.hooks.GangsPlusHook;
+import de.Keyle.MyPet.util.hooks.GriefPreventionHook;
+import de.Keyle.MyPet.util.hooks.GuildsHook;
+import de.Keyle.MyPet.util.hooks.HeroesHook;
+import de.Keyle.MyPet.util.hooks.KingdomsHook;
+import de.Keyle.MyPet.util.hooks.LandsHook;
+import de.Keyle.MyPet.util.hooks.McMMOHook;
+import de.Keyle.MyPet.util.hooks.MiniaturePetsHook;
+import de.Keyle.MyPet.util.hooks.MobArenaHook;
+import de.Keyle.MyPet.util.hooks.MythicMobsHook;
+import de.Keyle.MyPet.util.hooks.NoCheatPlusHook;
+import de.Keyle.MyPet.util.hooks.PlaceholderApiHook;
+import de.Keyle.MyPet.util.hooks.PlotSquaredHook;
+import de.Keyle.MyPet.util.hooks.PremiumVanishHook;
+import de.Keyle.MyPet.util.hooks.PvPArenaHook;
+import de.Keyle.MyPet.util.hooks.PvPManagerHook;
+import de.Keyle.MyPet.util.hooks.RedProtectHook;
+import de.Keyle.MyPet.util.hooks.ResidenceHook;
+import de.Keyle.MyPet.util.hooks.SimpleClansHook;
+import de.Keyle.MyPet.util.hooks.StackMobHook;
+import de.Keyle.MyPet.util.hooks.SuperVanishHook;
+import de.Keyle.MyPet.util.hooks.SurvivalGamesHook;
+import de.Keyle.MyPet.util.hooks.TownyHook;
+import de.Keyle.MyPet.util.hooks.UltimateSurvivalGamesHook;
+import de.Keyle.MyPet.util.hooks.VaultHook;
+import de.Keyle.MyPet.util.hooks.WorldGuardHook;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,7 +89,39 @@ public final class BuiltInServices {
             SkilltreeManager.class,
             ShopManager.class,
             DefaultCreakingService.class,
-            MigrationService.class
+            MigrationService.class,
+            // ---- third-party plugin hooks (gated via @RequiresPlugin) ----
+            BattleArenaHook.class,
+            CitizensHook.class,
+            CombatLogXHook.class,
+            FabledSkyBlockHook.class,
+            FactionsUUIDHook.class,
+            GangsPlusHook.class,
+            GriefPreventionHook.class,
+            GuildsHook.class,
+            HeroesHook.class,
+            KingdomsHook.class,
+            LandsHook.class,
+            McMMOHook.class,
+            MiniaturePetsHook.class,
+            MobArenaHook.class,
+            MythicMobsHook.class,
+            NoCheatPlusHook.class,
+            PlaceholderApiHook.class,
+            PlotSquaredHook.class,
+            PremiumVanishHook.class,
+            PvPArenaHook.class,
+            PvPManagerHook.class,
+            RedProtectHook.class,
+            ResidenceHook.class,
+            SimpleClansHook.class,
+            StackMobHook.class,
+            SuperVanishHook.class,
+            SurvivalGamesHook.class,
+            TownyHook.class,
+            UltimateSurvivalGamesHook.class,
+            VaultHook.class,
+            WorldGuardHook.class
     );
 
     private BuiltInServices() {

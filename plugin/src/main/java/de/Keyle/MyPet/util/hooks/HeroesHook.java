@@ -24,22 +24,27 @@ import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.party.HeroParty;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PartyHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@PluginHookName("Heroes")
+@ServiceName("Heroes")
+@RequiresPlugin("Heroes")
+@Load(Load.State.Hooks)
 public class HeroesHook implements PlayerVersusPlayerHook, PartyHook {
 
     protected Heroes heroes;
 
     @Override
     public boolean onEnable() {
-        heroes = MyPetApi.getPluginHookManager().getPluginInstance(Heroes.class).get();
+        heroes = (Heroes) Bukkit.getPluginManager().getPlugin("Heroes");
         return true;
     }
 

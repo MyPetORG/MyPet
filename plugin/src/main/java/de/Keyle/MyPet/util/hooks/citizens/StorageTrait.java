@@ -182,7 +182,7 @@ public class StorageTrait extends Trait {
                                     .setData(5)
                                     .setTitle(Locale.getComponent("Name.Yes", myPetPlayer).color(NamedTextColor.GREEN));
                             yesIcon.addLoreLine(Locale.getFormattedComponent("Message.Npc.YesHandOver", myPetPlayer, myPetPlayer.getPet().getDisplayName()));
-                            if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && npc.hasTrait(WalletTrait.class) && storageCosts > 0) {
+                            if (MyPetApi.getServiceManager().isServiceActive(VaultHook.class) && npc.hasTrait(WalletTrait.class) && storageCosts > 0) {
                                 NamedTextColor canPay = MyPetApi.getHookHelper().getEconomy().canPay(myPetPlayer, storageCosts) ? NamedTextColor.GREEN : NamedTextColor.RED;
                                 yesIcon.addLoreLine(Component.empty());
                                 yesIcon.addLoreLine(Component.text()

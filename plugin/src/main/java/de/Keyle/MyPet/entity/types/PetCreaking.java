@@ -167,7 +167,7 @@ public class PetCreaking extends PetImpl {
             }
 
             // Run LeashHook checks
-            for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
+            for (LeashHook hook : MyPetApi.getServiceManager().getServices(LeashHook.class)) {
                 if (!hook.canLeash(player, linkedCreaking)) {
                     return;
                 }
@@ -238,7 +238,7 @@ public class PetCreaking extends PetImpl {
 
             // Run LeashEntityHook.prepare() and remove entity before breaking heart
             // to prevent vanilla death effects
-            for (LeashEntityHook hook : MyPetApi.getPluginHookManager().getHooks(LeashEntityHook.class)) {
+            for (LeashEntityHook hook : MyPetApi.getServiceManager().getServices(LeashEntityHook.class)) {
                 hook.prepare(linkedCreaking);
             }
             linkedCreaking.remove();
@@ -351,7 +351,7 @@ public class PetCreaking extends PetImpl {
             }
 
             // Run LeashHook checks
-            for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
+            for (LeashHook hook : MyPetApi.getServiceManager().getServices(LeashHook.class)) {
                 if (!hook.canLeash(player, linkedCreaking)) {
                     return;
                 }

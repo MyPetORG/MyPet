@@ -27,7 +27,9 @@ import de.Keyle.MyPet.api.event.PetDamageEvent;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.hooks.types.MonsterExperienceHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
@@ -47,7 +49,9 @@ import org.bukkit.event.Listener;
 import java.util.HashSet;
 import java.util.Set;
 
-@PluginHookName("MythicMobs")
+@ServiceName("MythicMobs")
+@RequiresPlugin("MythicMobs")
+@Load(Load.State.Hooks)
 public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, MonsterExperienceHook, Listener {
 
     public static boolean DISABLE_MYTHIC_MOB_LEASHING = true;

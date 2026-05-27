@@ -53,7 +53,7 @@ public class CommandOptionNpc {
      */
     public LiteralCommandNode<CommandSourceStack> buildNode(HelpRegistry helpRegistry) {
         return Commands.literal("npc")
-                .requires(ctx -> MyPetApi.getPluginHookManager().isHookActive("Citizens"))
+                .requires(ctx -> MyPetApi.getServiceManager().isServiceActive("Citizens"))
                 .then(new CommandOptionShop().buildNode(helpRegistry))
                 .then(new CommandOptionWallet().buildNode(helpRegistry))
                 .build();

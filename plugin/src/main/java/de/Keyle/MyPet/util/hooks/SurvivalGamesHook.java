@@ -25,14 +25,18 @@ import com.thundergemios10.survivalgames.api.PlayerJoinArenaEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 
-@PluginHookName(value = "SurvivalGames", classPath = "com.thundergemios10.survivalgames.SurvivalGames")
+@ServiceName("SurvivalGames")
+@RequiresPlugin(value = "SurvivalGames", classPath = "com.thundergemios10.survivalgames.SurvivalGames")
+@Load(Load.State.Hooks)
 public class SurvivalGamesHook implements AllowedHook {
 
     @Override

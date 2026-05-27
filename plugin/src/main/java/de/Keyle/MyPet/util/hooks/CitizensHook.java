@@ -21,7 +21,9 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
@@ -37,7 +39,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-@PluginHookName("Citizens")
+@ServiceName("Citizens")
+@RequiresPlugin("Citizens")
+@Load(Load.State.Hooks)
 public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook, LeashHook {
 
     public static double NPC_STORAGE_COSTS_FIXED = 5;

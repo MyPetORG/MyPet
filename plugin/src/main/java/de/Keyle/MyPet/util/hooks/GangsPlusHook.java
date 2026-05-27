@@ -21,9 +21,12 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import net.brcdev.gangs.GangsPlugin;
+import org.bukkit.Bukkit;
 import net.brcdev.gangs.GangsPlusApi;
 import net.brcdev.gangs.config.Settings;
 import net.brcdev.gangs.gang.Gang;
@@ -31,14 +34,16 @@ import org.bukkit.entity.Player;
 
 import java.util.Objects;
 
-@PluginHookName("GangsPlus")
+@ServiceName("GangsPlus")
+@RequiresPlugin("GangsPlus")
+@Load(Load.State.Hooks)
 public class GangsPlusHook implements PlayerVersusPlayerHook {
 
     GangsPlugin plugin;
 
     @Override
     public boolean onEnable() {
-        plugin = MyPetApi.getPluginHookManager().getPluginInstance(GangsPlugin.class).get();
+        plugin = (GangsPlugin) Bukkit.getPluginManager().getPlugin("GangsPlus");
         return true;
     }
 

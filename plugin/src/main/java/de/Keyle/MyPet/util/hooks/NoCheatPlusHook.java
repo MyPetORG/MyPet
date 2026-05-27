@@ -20,8 +20,10 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.checks.access.IViolationInfo;
@@ -33,8 +35,10 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-@PluginHookName("NoCheatPlus")
-public class NoCheatPlusHook implements PluginHook {
+@ServiceName("NoCheatPlus")
+@RequiresPlugin("NoCheatPlus")
+@Load(Load.State.Hooks)
+public class NoCheatPlusHook implements ServiceContainer {
 
     List<Integer> hookIds = new ArrayList<>();
 

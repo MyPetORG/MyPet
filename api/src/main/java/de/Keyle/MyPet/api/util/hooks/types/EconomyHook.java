@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.util.hooks.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import org.bukkit.OfflinePlayer;
 
 import java.util.UUID;
@@ -29,7 +29,7 @@ import java.util.UUID;
 /**
  * This interface defines that the hook handles economy interactions
  */
-public interface EconomyHook extends PluginHook {
+public interface EconomyHook extends ServiceContainer {
     boolean canPay(MyPetPlayer petOwner, double costs);
 
     boolean canPay(UUID playerUUID, double costs);

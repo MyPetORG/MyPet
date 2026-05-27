@@ -20,12 +20,16 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import dev.kitteh.factions.protection.Protection;
 import org.bukkit.entity.Player;
 
-@PluginHookName("FactionsUUID")
+@ServiceName("FactionsUUID")
+@RequiresPlugin("FactionsUUID")
+@Load(Load.State.Hooks)
 public class FactionsUUIDHook implements PlayerVersusPlayerHook {
 
     @Override

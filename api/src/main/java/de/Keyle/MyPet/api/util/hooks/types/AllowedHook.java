@@ -21,12 +21,12 @@
 package de.Keyle.MyPet.api.util.hooks.types;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 
 /**
  * This interface defines that the hook checks if a player is in any a place where he is allowed to have a pet
  */
-public interface AllowedHook extends PluginHook {
+public interface AllowedHook extends ServiceContainer {
     /**
      * Return if a MyPet player is in any a place where he is allowed to have a pet
      *

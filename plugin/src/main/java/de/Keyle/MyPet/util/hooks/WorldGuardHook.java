@@ -40,7 +40,9 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.experience.modifier.ExperienceModifier;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.*;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -64,7 +66,9 @@ import java.util.Map;
 
 import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
-@PluginHookName("WorldGuard")
+@ServiceName("WorldGuard")
+@RequiresPlugin("WorldGuard")
+@Load(Load.State.Hooks)
 public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntityHook, FlyHook, AllowedHook, MountInsideHook, BeaconHook {
 
     public static final StateFlag FLY_FLAG = new StateFlag("mypet-fly", false);
@@ -89,8 +93,8 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     protected Map<String, Boolean> missingEntityTypeFixValue = new HashMap<>();
 
     public WorldGuardHook() {
-        if (MyPetApi.getPluginHookManager().getConfig().getConfig().getBoolean("WorldGuard.Enabled")) {
-            wgp = MyPetApi.getPluginHookManager().getPluginInstance(WorldGuardPlugin.class).get();
+        if (MyPetApi.getServiceManager().getConfig().getConfig().getBoolean("WorldGuard.Enabled")) {
+            wgp = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
 
             try {
                 FlagRegistry flagRegistry = WorldGuard.getInstance().getFlagRegistry();

@@ -462,7 +462,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         continue;
                     }
                     if (MyPetApi.getPetInfo().isLeashableEntityType(entity.getType())) {
-                        for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
+                        for (LeashHook hook : MyPetApi.getServiceManager().getServices(LeashHook.class)) {
                             if (!hook.canLeash(p, entity)) {
                                 continue entityLoop;
                             }
@@ -526,7 +526,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                     }
 
                     boolean canLeash = true;
-                    for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
+                    for (LeashHook hook : MyPetApi.getServiceManager().getServices(LeashHook.class)) {
                         if (!hook.canLeash(p, entity)) {
                             canLeash = false;
                             break;

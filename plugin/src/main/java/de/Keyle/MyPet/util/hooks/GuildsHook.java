@@ -20,7 +20,9 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import me.glaremasters.guilds.Guilds;
 import me.glaremasters.guilds.guild.Guild;
@@ -29,7 +31,9 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-@PluginHookName("Guilds")
+@ServiceName("Guilds")
+@RequiresPlugin("Guilds")
+@Load(Load.State.Hooks)
 public class GuildsHook implements PlayerVersusPlayerHook {
 
     @Override

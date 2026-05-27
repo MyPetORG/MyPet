@@ -22,7 +22,9 @@ package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -33,7 +35,9 @@ import org.bukkit.event.HandlerList;
 
 import static me.maker56.survivalgames.SurvivalGames.getUserManager;
 
-@PluginHookName(value = "SurvivalGames", classPath = "me.maker56.survivalgames.SurvivalGames")
+@ServiceName("SurvivalGames")
+@RequiresPlugin(value = "SurvivalGames", classPath = "me.maker56.survivalgames.SurvivalGames")
+@Load(Load.State.Hooks)
 public class UltimateSurvivalGamesHook implements AllowedHook {
 
     @Override

@@ -24,7 +24,15 @@ import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorUtil;
+import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
+import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -38,6 +46,25 @@ public class ServiceManager {
 
     final ArrayListMultimap<Load.State, ServiceContainer> registeredServices = ArrayListMultimap.create();
 
+    @Getter
+    private ConfigurationYAML config;
+
+    private ConfigurationYAML getOrInitConfig() {
+        if (config == null) {
+            File hookConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "hooks-config.yml");
+            config = new ConfigurationYAML(hookConfigFile);
+            config.getConfig().options().setHeader(java.util.List.of(
+                    "#######################################################################",
+                    "          This is the hook/service configuration of MyPet           #",
+                    "                 You can find more info on the wiki:                  #",
+                    "  https://wiki.mypet-plugin.de/setup/configurations/hooks-config.yml  #",
+                    "#######################################################################"
+            ));
+            config.getConfig().options().copyDefaults(true);
+        }
+        return config;
+    }
+
     public void listServices() {
         MyPetApi.getLogger().info("Loaded services: " + serviceByName.keySet());
     }
@@ -48,6 +75,17 @@ public class ServiceManager {
      * @param serviceClass the service class
      */
     public void registerService(Class<? extends ServiceContainer> serviceClass) {
+        RequiresPlugin requires = serviceClass.getAnnotation(RequiresPlugin.class);
+        if (requires != null) {
+            if (!requires.classPath().isEmpty()) {
+                if (!isPluginAvailable(requires.value(), requires.classPath())) {
+                    return;
+                }
+            } else if (!isPluginAvailable(requires.value())) {
+                return;
+            }
+        }
+
         Load.State loadingState = Load.State.OnEnable;
         if (serviceClass.isAnnotationPresent(Load.class)) {
             loadingState = serviceClass.getAnnotation(Load.class).value();
@@ -56,7 +94,7 @@ public class ServiceManager {
             ServiceContainer service = serviceClass.getDeclaredConstructor().newInstance();
             registeredServices.put(loadingState, service);
         } catch (Throwable e) {
-            ErrorUtil.report("Error occured while creating the " + serviceClass.getName() + " service.", e);
+            ErrorUtil.report("Error occurred while creating the " + serviceClass.getName() + " service.", e);
         }
     }
 
@@ -86,9 +124,52 @@ public class ServiceManager {
         List<ServiceContainer> services = registeredServices.get(state);
 
         for (ServiceContainer service : services) {
-            if (service.onEnable()) {
-                registerService(service);
+            RequiresPlugin requires = service.getClass().getAnnotation(RequiresPlugin.class);
+
+            if (requires != null) {
+                if (!requires.classPath().isEmpty()) {
+                    if (!isPluginUsable(requires.value(), requires.classPath())) {
+                        continue;
+                    }
+                } else if (!isPluginUsable(requires.value())) {
+                    continue;
+                }
+
+                FileConfiguration cfg = getOrInitConfig().getConfig();
+                if (cfg.contains(requires.value())) {
+                    if (!cfg.getBoolean(requires.value() + ".Enabled", true)) {
+                        continue;
+                    }
+                } else {
+                    cfg.addDefault(requires.value() + ".Enabled", true);
+                }
+                ConfigurationSection pluginSection = cfg.getConfigurationSection(requires.value());
+                if (pluginSection != null) {
+                    service.loadConfig(pluginSection);
+                }
             }
+
+            try {
+                if (service.onEnable()) {
+                    registerService(service);
+                    if (requires != null) {
+                        String version = getPluginVersion(requires.value());
+                        String msg = requires.value() + " (" + version + ")";
+                        if (!requires.classPath().isEmpty()) {
+                            msg += " (" + requires.classPath() + ")";
+                        }
+                        msg += service.getActivationMessage();
+                        MyPetApi.getLogger().info(msg + " hook activated.");
+                    }
+                }
+            } catch (Throwable e) {
+                String label = requires != null ? requires.value() : service.getClass().getSimpleName();
+                ErrorUtil.report("Error occurred while enabling " + label + " service.", e);
+            }
+        }
+
+        if (config != null) {
+            config.saveConfig();
         }
 
         registeredServices.removeAll(state);
@@ -171,5 +252,31 @@ public class ServiceManager {
      */
     public boolean isServiceActive(Class<? extends ServiceContainer> serviceClass) {
         return services.containsKey(serviceClass);
+    }
+
+    private static String getPluginVersion(String pluginName) {
+        Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
+        if (plugin == null) return "unknown";
+        return plugin.getPluginMeta().getVersion();
+    }
+
+    public boolean isPluginUsable(String pluginName, String className) {
+        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
+        return plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className);
+    }
+
+    public boolean isPluginAvailable(String pluginName, String className) {
+        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
+        return plugin != null && plugin.getClass().getName().equals(className);
+    }
+
+    public boolean isPluginUsable(String pluginName) {
+        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
+        return plugin != null && plugin.isEnabled();
+    }
+
+    public boolean isPluginAvailable(String pluginName) {
+        JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin(pluginName);
+        return plugin != null;
     }
 }

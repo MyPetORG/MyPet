@@ -21,13 +21,13 @@
 package de.Keyle.MyPet.api.util.hooks.types;
 
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import org.bukkit.entity.Entity;
 
 /**
  * This interface defines that the hook handles custom exp values from mobs of other plugins
  */
-public interface MonsterExperienceHook extends PluginHook {
+public interface MonsterExperienceHook extends ServiceContainer {
 
     MonsterExperience getMonsterExperience(Entity entity);
 }

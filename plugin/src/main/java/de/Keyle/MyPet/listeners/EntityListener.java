@@ -251,7 +251,7 @@ public class EntityListener implements Listener {
                             usedArrow = true;
                         }
                     }
-                    for (LeashHook hook : MyPetApi.getPluginHookManager().getHooks(LeashHook.class)) {
+                    for (LeashHook hook : MyPetApi.getServiceManager().getServices(LeashHook.class)) {
                         if (!hook.canLeash(player, leashTarget)) {
                             return;
                         }
@@ -320,7 +320,7 @@ public class EntityListener implements Listener {
                         final Mob capturedMob = (Mob) leashTarget;
 
                         boolean remove = false; // Keep the original mob — converted in-place below
-                        for (LeashEntityHook hook : MyPetApi.getPluginHookManager().getHooks(LeashEntityHook.class)) {
+                        for (LeashEntityHook hook : MyPetApi.getServiceManager().getServices(LeashEntityHook.class)) {
                             if (!hook.prepare(leashTarget)) {
                                 remove = false;
                             }

@@ -25,7 +25,9 @@ import com.garbagemule.MobArena.events.ArenaPlayerJoinEvent;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -42,7 +44,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
-@PluginHookName(value = "MobArena", classPath = "com.garbagemule.MobArena.MobArena")
+@ServiceName("MobArena")
+@RequiresPlugin(value = "MobArena", classPath = "com.garbagemule.MobArena.MobArena")
+@Load(Load.State.Hooks)
 public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
 
     public static boolean ENABLED = true;

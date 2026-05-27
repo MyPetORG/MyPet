@@ -21,14 +21,18 @@
 package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import me.NoChance.PvPManager.PvPlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-@PluginHookName("PvPManager")
+@ServiceName("PvPManager")
+@RequiresPlugin("PvPManager")
+@Load(Load.State.Hooks)
 public class PvPManagerHook implements PlayerVersusPlayerHook, AllowedHook {
 
     public static boolean PREVENT_DAMAGE_IN_COMBAT = false;

@@ -34,6 +34,6 @@ public @interface Load {
     State value() default State.OnEnable;
 
     enum State {
-        OnLoad, OnEnable, Migration, AfterHooks, OnReady
+        OnLoad, OnEnable, Migration, Hooks, OnReady
     }
 }

@@ -848,7 +848,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 loc.setPitch(0);
                 loc.setYaw(0);
 
-                WorldGuardHook wgHook = MyPetApi.getPluginHookManager().getHook(WorldGuardHook.class);
+                WorldGuardHook wgHook = MyPetApi.getServiceManager().getService(WorldGuardHook.class).orElse(null);
                 if (wgHook != null) {
                     wgHook.fixMissingEntityType(loc.getWorld(), true);
                 }
@@ -1008,9 +1008,9 @@ public abstract class PetImpl implements Pet, NBTStorage {
         }
         if (respawnTime <= 0) {
             respawnPet();
-        } else if (MyPetApi.getPluginHookManager().isHookActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime <= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
+        } else if (MyPetApi.getServiceManager().isServiceActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime <= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
             double cost = respawnTime * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
-            VaultHook vaultHook = MyPetApi.getPluginHookManager().getHook(VaultHook.class);
+            VaultHook vaultHook = MyPetApi.getServiceManager().getService(VaultHook.class).orElseThrow();
             if (vaultHook.canPay(getOwner().getPlayer(), cost)) {
                 vaultHook.pay(getOwner().getPlayer(), cost);
                 getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Paid", petOwner.getLanguage(), getDisplayName(), cost + " " + vaultHook.currencyNameSingular()));

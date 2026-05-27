@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.util.hooks;
+package de.Keyle.MyPet.api.util.service;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -26,18 +26,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to add name information to the {@link PluginHook} class
+ * Marks a {@link ServiceContainer} that bridges to a specific third-party Bukkit plugin.
+ * The {@link ServiceManager} only instantiates the service if {@link #value()} is installed
+ * on the server, and only registers it if the per-plugin {@code <name>.Enabled} flag in
+ * {@code hooks-config.yml} is {@code true}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface PluginHookName {
+public @interface RequiresPlugin {
     /**
-     * @return the name of the plugin
+     * @return the Bukkit plugin name to gate on
      */
     String value();
 
     /**
-     * @return the classpath of the plugin when multiple plugins use the same name
+     * @return optional fully-qualified main-class name; if non-empty, the installed plugin
+     *         must match this class. Used when multiple plugins share a name.
      */
     String classPath() default "";
 }

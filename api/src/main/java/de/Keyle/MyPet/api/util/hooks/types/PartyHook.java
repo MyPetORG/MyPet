@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.util.hooks.types;
 
-import de.Keyle.MyPet.api.util.hooks.PluginHook;
+import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * This interface defines that the hook handles party checks
  */
-public interface PartyHook extends PluginHook {
+public interface PartyHook extends ServiceContainer {
     /**
      * Returns if a player is in a party (Ancient, mcMMO, Heroes)
      *

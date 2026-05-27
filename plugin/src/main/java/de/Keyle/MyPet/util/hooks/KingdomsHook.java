@@ -20,7 +20,9 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import de.Keyle.MyPet.api.util.hooks.PluginHookName;
+import de.Keyle.MyPet.api.util.service.Load;
+import de.Keyle.MyPet.api.util.service.RequiresPlugin;
+import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.Player;
 import org.kingdoms.constants.land.Land;
@@ -28,7 +30,9 @@ import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
-@PluginHookName("Kingdoms")
+@ServiceName("Kingdoms")
+@RequiresPlugin("Kingdoms")
+@Load(Load.State.Hooks)
 public class KingdomsHook implements PlayerVersusPlayerHook {
 
     @Override
