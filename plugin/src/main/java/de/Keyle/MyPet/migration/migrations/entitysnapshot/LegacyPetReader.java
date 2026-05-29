@@ -22,6 +22,7 @@ package de.Keyle.MyPet.migration.migrations.entitysnapshot;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.PetType;
+import de.Keyle.MyPet.util.CompatUtil;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.key.Key;
@@ -249,33 +250,44 @@ public final class LegacyPetReader {
     }
 
     private static void applyCopperGolem(Mob mob, CompoundBinaryTag info) {
-        if (!(mob instanceof CopperGolem golem)) return;
-        if (info.keySet().contains("OxidationState")) {
-            try {
-                golem.setWeatheringState(WeatheringCopperState.valueOf(info.getString("OxidationState")));
-            } catch (Throwable ignored) {}
-        }
-        boolean waxed = info.keySet().contains("Waxed") && info.getBoolean("Waxed");
-        long remaining = info.keySet().contains("OxidationRemainingTicks")
-                ? Math.max(0L, info.getLong("OxidationRemainingTicks")) : 0L;
-        // Suppress vanilla's natural oxidation tick when waxed or admin-disabled.
-        // Otherwise resume the saved schedule (atTime offset by remaining ticks)
-        // so legacy data preserves oxidation progress; fall through to Unset on
-        // a fresh tame so vanilla picks its own first schedule.
-        CopperGolem.Oxidizing oxidizing;
-        if (waxed || !PetCopperGolem.CAN_OXIDIZE.get()) {
-            oxidizing = CopperGolem.Oxidizing.waxed();
-        } else if (remaining > 0) {
-            oxidizing = CopperGolem.Oxidizing.atTime(golem.getWorld().getFullTime() + remaining);
-        } else {
-            oxidizing = CopperGolem.Oxidizing.unset();
-        }
-        golem.setOxidizing(oxidizing);
-        if (info.keySet().contains("Poppy")) {
-            try {
-                ItemStack stack = LegacyNbtItemDecoder.decode(info.getCompound("Poppy"));
-                if (stack != null) golem.getEquipment().setItem(EquipmentSlot.HAND, stack);
-            } catch (Exception ignored) {}
+        if (!CompatUtil.minecraftVersionEqualsOrAbove("1.21.9")) return;
+        // CopperGolem.Oxidizing lives in the nested class, not here: the migration
+        // scanner force-loads LegacyPetReader (Class.forName initialize=true), which
+        // verifies every method. Keeping the typed refs out of this class's bytecode
+        // lets it load on pre-1.21.9 servers; the nested class only links when called.
+        CopperGolemApplier.apply(mob, info);
+    }
+
+    private static final class CopperGolemApplier {
+        private static void apply(Mob mob, CompoundBinaryTag info) {
+            if (!(mob instanceof CopperGolem golem)) return;
+            if (info.keySet().contains("OxidationState")) {
+                try {
+                    golem.setWeatheringState(WeatheringCopperState.valueOf(info.getString("OxidationState")));
+                } catch (Throwable ignored) {}
+            }
+            boolean waxed = info.keySet().contains("Waxed") && info.getBoolean("Waxed");
+            long remaining = info.keySet().contains("OxidationRemainingTicks")
+                    ? Math.max(0L, info.getLong("OxidationRemainingTicks")) : 0L;
+            // Suppress vanilla's natural oxidation tick when waxed or admin-disabled.
+            // Otherwise resume the saved schedule (atTime offset by remaining ticks)
+            // so legacy data preserves oxidation progress; fall through to Unset on
+            // a fresh tame so vanilla picks its own first schedule.
+            CopperGolem.Oxidizing oxidizing;
+            if (waxed || !PetCopperGolem.CAN_OXIDIZE.get()) {
+                oxidizing = CopperGolem.Oxidizing.waxed();
+            } else if (remaining > 0) {
+                oxidizing = CopperGolem.Oxidizing.atTime(golem.getWorld().getFullTime() + remaining);
+            } else {
+                oxidizing = CopperGolem.Oxidizing.unset();
+            }
+            golem.setOxidizing(oxidizing);
+            if (info.keySet().contains("Poppy")) {
+                try {
+                    ItemStack stack = LegacyNbtItemDecoder.decode(info.getCompound("Poppy"));
+                    if (stack != null) golem.getEquipment().setItem(EquipmentSlot.HAND, stack);
+                } catch (Exception ignored) {}
+            }
         }
     }
 
