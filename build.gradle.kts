@@ -168,7 +168,7 @@ dependencies {
     add("shade", project(path = ":skills", configuration = "runtimeElements"))
 
     // External libs to be shaded
-    add("shade", "org.bstats:bstats-bukkit:1.7")
+    add("shade", "org.bstats:bstats-bukkit:3.2.1")
     add("shade", "net.kyori:adventure-nbt:4.17.0")
 }
 

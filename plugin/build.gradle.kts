@@ -85,7 +85,7 @@ dependencies {
     compileOnly("net.kyori:adventure-text-serializer-legacy:4.17.0")
     compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0")
 
-    compileOnly("org.bstats:bstats-bukkit:1.7")
+    compileOnly("org.bstats:bstats-bukkit:3.2.1")
 
     compileOnly("io.sentry:sentry:8.22.0")
     compileOnly("org.apache.logging.log4j:log4j-core:2.17.1")
