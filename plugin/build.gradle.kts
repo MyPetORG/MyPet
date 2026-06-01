@@ -55,7 +55,7 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
         isTransitive = false
     }
-    compileOnly("com.gmail.nossr50:mcMMO:2.1.0")
+    compileOnly("com.gmail.nossr50.mcMMO:mcMMO:2.2.052-SNAPSHOT")
 
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
