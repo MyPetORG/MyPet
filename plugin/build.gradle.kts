@@ -50,7 +50,7 @@ dependencies {
         isTransitive = false
     }
 
-    compileOnly("io.lumine:Mythic-Dist:5.0.1-SNAPSHOT")
+    compileOnly("io.lumine:Mythic-Dist:5.12.1")
 
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
         isTransitive = false

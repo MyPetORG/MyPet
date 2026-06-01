@@ -68,6 +68,7 @@ subprojects {
         maven { url = uri("https://nexus.neetgames.com/repository/maven-public/") } // mcMMO
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://repo.mypet-plugin.de/") }
+        maven { url = uri("https://mvn.lumine.io/repository/maven-public/") } // MythicMobs
     }
 
     // Use lazy task configuration for better configuration performance
