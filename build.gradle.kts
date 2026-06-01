@@ -66,6 +66,7 @@ subprojects {
         maven { url = uri("https://dependency.download/releases") } // FactionsUUID
         maven { url = uri("https://maven.citizensnpcs.co/repo") } // Citizens
         maven { url = uri("https://nexus.neetgames.com/repository/maven-public/") } // mcMMO
+        maven { url = uri("https://repo.codemc.io/repository/maven-public/") } // NoCheatPlus, StackMob
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://repo.mypet-plugin.de/") }
         maven { url = uri("https://mvn.lumine.io/repository/maven-public/") } // MythicMobs

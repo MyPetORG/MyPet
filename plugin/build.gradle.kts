@@ -75,7 +75,7 @@ dependencies {
     compileOnly("org.kingdoms:kingdoms:13.3.40")
     compileOnly("com.herocraftonline.heroes:Heroes:1.5.5.7")
     compileOnly("me.clip:placeholderapi:2.12.2")
-    compileOnly("fr.neatmonster:nocheatplus:3.16.0")
+    compileOnly("fr.neatmonster:nocheatplus:3.16.1-SNAPSHOT")
     compileOnly("de.myzelyam:supervanish:6.1.0")
     compileOnly("com.kirelcodes.miniaturepets:miniaturepets-api:1.5.4")
     compileOnly("com.SirBlobman.combatlogx:CombatLogX-Plugin:9.7.1.2")
