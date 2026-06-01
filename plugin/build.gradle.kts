@@ -61,7 +61,7 @@ dependencies {
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
 
     compileOnly("dev.kitteh:factions:4.4.0")
-    compileOnly("com.garbagemule:MobArena:0.103")
+    compileOnly("com.github.garbagemule:MobArena:0.109")
     compileOnly("mc.alk:BattleArena:3.9.9.10.5")
     compileOnly("net.slipcor:pvparena:1.3.4.298")
     compileOnly("me.maker56.survivalgames:SurvivalGames:1.9.4")
