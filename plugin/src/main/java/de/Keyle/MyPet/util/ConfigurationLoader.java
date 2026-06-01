@@ -508,7 +508,7 @@ public class ConfigurationLoader {
                     }
                 }
             }
-            loadLeashFlags(petType, config.getStringList("MyPet.Pets." + petType + ".LeashRequirements"));
+            loadLeashFlags(petType, config.getStringList("MyPet.Pets." + petType.name() + ".LeashRequirements"));
             MyPetApi.getPetInfo().setCustomRespawnTimeFactor(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0));
             MyPetApi.getPetInfo().setCustomRespawnTimeFixed(petType, config.getInt("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0));
             MyPetApi.getPetInfo().setReleaseOnDeath(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false));
