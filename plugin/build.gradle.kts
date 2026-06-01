@@ -75,7 +75,7 @@ dependencies {
     compileOnly("org.kingdoms:kingdoms:13.3.40")
     compileOnly("com.herocraftonline.heroes:Heroes:1.5.5.7")
     compileOnly("me.clip:placeholderapi:2.12.2")
-    compileOnly("de.myzelyam:supervanish:6.1.0")
+    compileOnly("com.github.LeonMangler:SuperVanish:6.2.18-3")
     compileOnly("com.kirelcodes.miniaturepets:miniaturepets-api:1.5.4")
     compileOnly("com.SirBlobman.combatlogx:CombatLogX-Plugin:9.7.1.2")
     compileOnly("uk.antiperson:StackMob:5.0.2")
