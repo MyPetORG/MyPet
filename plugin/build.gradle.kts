@@ -52,7 +52,9 @@ dependencies {
 
     compileOnly("io.lumine:Mythic-Dist:5.0.1-SNAPSHOT")
 
-    compileOnly("org.natrolite:vault-api:1.7")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
+        isTransitive = false
+    }
     compileOnly("com.gmail.nossr50:mcMMO:2.1.0")
 
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
