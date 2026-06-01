@@ -58,9 +58,6 @@ dependencies {
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
 
-    compileOnly("com.mewin:WGCustomFlags:1.9") {
-        exclude(group = "org.bukkit", module = "bukkit")
-    }
     compileOnly("dev.kitteh:factions:4.4.0")
     compileOnly("com.garbagemule:MobArena:0.103")
     compileOnly("mc.alk:BattleArena:3.9.9.10.5")
@@ -75,7 +72,6 @@ dependencies {
     compileOnly("me.NoChance.PvPManager:PvPManager:3.4")
     compileOnly("org.kingdoms:kingdoms:13.3.40")
     compileOnly("com.herocraftonline.heroes:Heroes:1.5.5.7")
-    compileOnly("net.dmulloy2:ProtocolLib:5.3.0")
     compileOnly("me.clip:placeholderapi:2.12.2")
     compileOnly("fr.neatmonster:nocheatplus:3.16.0")
     compileOnly("de.myzelyam:supervanish:6.1.0")
@@ -92,8 +88,6 @@ dependencies {
     compileOnly("org.bstats:bstats-bukkit:1.7")
 
     compileOnly("io.sentry:sentry:8.22.0")
-    compileOnly("ch.qos.logback:logback-classic:1.2.11")
-    compileOnly("org.slf4j:slf4j-api:1.7.36")
     compileOnly("org.apache.logging.log4j:log4j-core:2.17.1")
 
 }

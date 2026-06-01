@@ -76,10 +76,7 @@ public abstract class PetManager {
     public Pet getPetFromEntity(Entity entity) {
         if (entity == null) return null;
         // Subparts of a ComplexLivingEntity (EnderDragon head/neck/body/tail/
-        // wings) carry their own entity ID and UUID server-side. The PDC marker
-        // and the active-pet UUID match the parent only — resolve, so callers
-        // (interaction listeners, AI goals, third-party hooks) work without
-        // ProtocolLib's USE_ENTITY rewrite.
+        // wings) carry their own entity ID and UUID server-side.
         if (entity instanceof ComplexEntityPart part) {
             entity = part.getParent();
         }
