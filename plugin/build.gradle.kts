@@ -41,7 +41,7 @@ dependencies {
     compileOnly("org.mozilla:rhino:1.8.0")
     compileOnly("com.mojang:brigadier:1.0.18")
 
-    compileOnly("net.citizensnpcs:citizensapi:2.0.24")
+    compileOnly("net.citizensnpcs:citizensapi:2.0.42-SNAPSHOT")
     // PlotSquared V6+ (note: 6.11.2 has broken Maven deployment, use 6.11.1)
     compileOnly("com.plotsquared:PlotSquared-Core:6.11.1") {
         isTransitive = false

@@ -64,6 +64,7 @@ subprojects {
         maven { url = uri("https://hub.spigotmc.org/nexus/content/groups/public/") }
         maven { url = uri("https://repo.md-5.net/content/repositories/public") }
         maven { url = uri("https://dependency.download/releases") } // FactionsUUID
+        maven { url = uri("https://maven.citizensnpcs.co/repo") } // Citizens
         maven { url = uri("https://nexus.neetgames.com/repository/maven-public/") } // mcMMO
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://repo.mypet-plugin.de/") }
