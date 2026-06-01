@@ -44,7 +44,6 @@ import de.Keyle.MyPet.util.hooks.McMMOHook;
 import de.Keyle.MyPet.util.hooks.MiniaturePetsHook;
 import de.Keyle.MyPet.util.hooks.MobArenaHook;
 import de.Keyle.MyPet.util.hooks.MythicMobsHook;
-import de.Keyle.MyPet.util.hooks.NoCheatPlusHook;
 import de.Keyle.MyPet.util.hooks.PlaceholderApiHook;
 import de.Keyle.MyPet.util.hooks.PlotSquaredHook;
 import de.Keyle.MyPet.util.hooks.PremiumVanishHook;
@@ -106,7 +105,6 @@ public final class BuiltInServices {
             MiniaturePetsHook.class,
             MobArenaHook.class,
             MythicMobsHook.class,
-            NoCheatPlusHook.class,
             PlaceholderApiHook.class,
             PlotSquaredHook.class,
             PremiumVanishHook.class,
