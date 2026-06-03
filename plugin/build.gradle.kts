@@ -69,7 +69,7 @@ dependencies {
     compileOnly("com.github.Zrips:Residence:6.0.0.1")
     compileOnly("com.palmergames.bukkit.towny:towny:0.103.0.2")
     compileOnly("net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.19.2")
-    compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect:7.5.5")
+    compileOnly("io.github.fabiozumbi12.RedProtect:RedProtect-Spigot:8.1.2")
     compileOnly("com.github.TechFortress:GriefPrevention:16.18")
     compileOnly("me.NoChance.PvPManager:pvpmanager:3.19.10")
     compileOnly("org.kingdoms:kingdoms:13.3.40")
