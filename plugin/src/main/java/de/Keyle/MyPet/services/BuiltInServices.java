@@ -34,7 +34,6 @@ import de.Keyle.MyPet.util.hooks.CitizensHook;
 import de.Keyle.MyPet.util.hooks.CombatLogXHook;
 import de.Keyle.MyPet.util.hooks.FabledSkyBlockHook;
 import de.Keyle.MyPet.util.hooks.FactionsUUIDHook;
-import de.Keyle.MyPet.util.hooks.GangsPlusHook;
 import de.Keyle.MyPet.util.hooks.GriefPreventionHook;
 import de.Keyle.MyPet.util.hooks.GuildsHook;
 import de.Keyle.MyPet.util.hooks.HeroesHook;
@@ -95,7 +94,6 @@ public final class BuiltInServices {
             CombatLogXHook.class,
             FabledSkyBlockHook.class,
             FactionsUUIDHook.class,
-            GangsPlusHook.class,
             GriefPreventionHook.class,
             GuildsHook.class,
             HeroesHook.class,
