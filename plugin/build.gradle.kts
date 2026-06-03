@@ -72,7 +72,9 @@ dependencies {
     compileOnly("io.github.fabiozumbi12.RedProtect:RedProtect-Spigot:8.1.2")
     compileOnly("com.github.TechFortress:GriefPrevention:16.18")
     compileOnly("me.NoChance.PvPManager:pvpmanager:3.19.10")
-    compileOnly("org.kingdoms:kingdoms:13.3.40")
+    compileOnly("com.github.cryptomorin:kingdoms:1.17.18.1-BETA") {
+        isTransitive = false
+    }
     compileOnly("com.herocraftonline.heroes:Heroes:1.10.7-RELEASE")
     compileOnly("me.clip:placeholderapi:2.12.2")
     compileOnly("com.github.LeonMangler:SuperVanish:6.2.18-3")

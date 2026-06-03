@@ -25,38 +25,30 @@ import de.Keyle.MyPet.api.util.service.RequiresPlugin;
 import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import org.bukkit.entity.Player;
-import org.kingdoms.constants.land.Land;
+import org.kingdoms.constants.group.Kingdom;
+import org.kingdoms.constants.group.model.relationships.KingdomRelation;
 import org.kingdoms.constants.player.KingdomPlayer;
-import org.kingdoms.main.Kingdoms;
-import org.kingdoms.manager.game.GameManagement;
 
-@ServiceName("Kingdoms")
-@RequiresPlugin("Kingdoms")
+@ServiceName("KingdomsX")
+@RequiresPlugin("KingdomsX")
 @Load(Load.State.Hooks)
-public class KingdomsHook implements PlayerVersusPlayerHook {
+public class KingdomsXHook implements PlayerVersusPlayerHook {
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
-            KingdomPlayer attacked = GameManagement.getPlayerManager().getSession(attacker);
-            if (attacked == null) {
+            KingdomPlayer attacked = KingdomPlayer.getKingdomPlayer(attacker);
+            if (attacked.isAdmin()) {
                 return true;
             }
-            if (attacked.isAdminMode()) {
-                return true;
-            }
-            if (attacked.getKingdom() == null) {
+            Kingdom attackerKingdom = attacked.getKingdom();
+            if (attackerKingdom == null) {
                 return true;
             }
 
-            KingdomPlayer damaged = GameManagement.getPlayerManager().getSession(defender);
-            if (Kingdoms.config.freePvPInWarZone) {
-                Land att = GameManagement.getLandManager().getOrLoadLand(damaged.getLoc());
-                if (att.getOwner() != null && att.getOwner().equals("WarZone")) {
-                    return true;
-                }
-            }
-            return damaged.getKingdom() == null || !attacked.getKingdom().isAllianceWith(damaged.getKingdom());
+            Kingdom defenderKingdom = KingdomPlayer.getKingdomPlayer(defender).getKingdom();
+            return defenderKingdom == null
+                    || attackerKingdom.getRelationWith(defenderKingdom) != KingdomRelation.ALLY;
         } catch (Throwable ignored) {
         }
         return true;

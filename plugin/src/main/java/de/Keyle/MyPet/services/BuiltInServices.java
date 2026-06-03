@@ -38,7 +38,7 @@ import de.Keyle.MyPet.util.hooks.GangsPlusHook;
 import de.Keyle.MyPet.util.hooks.GriefPreventionHook;
 import de.Keyle.MyPet.util.hooks.GuildsHook;
 import de.Keyle.MyPet.util.hooks.HeroesHook;
-import de.Keyle.MyPet.util.hooks.KingdomsHook;
+import de.Keyle.MyPet.util.hooks.KingdomsXHook;
 import de.Keyle.MyPet.util.hooks.LandsHook;
 import de.Keyle.MyPet.util.hooks.McMMOHook;
 import de.Keyle.MyPet.util.hooks.MiniaturePetsHook;
@@ -99,7 +99,7 @@ public final class BuiltInServices {
             GriefPreventionHook.class,
             GuildsHook.class,
             HeroesHook.class,
-            KingdomsHook.class,
+            KingdomsXHook.class,
             LandsHook.class,
             McMMOHook.class,
             MiniaturePetsHook.class,
