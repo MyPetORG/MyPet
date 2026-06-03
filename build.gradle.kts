@@ -28,8 +28,6 @@ val minecraftVersion by extra("1.21.11")
 
 repositories {
     mavenCentral()
-    maven("https://hub.spigotmc.org/nexus/content/groups/public/")
-    maven("https://repo.mypet-plugin.de/")
 }
 
 subprojects {

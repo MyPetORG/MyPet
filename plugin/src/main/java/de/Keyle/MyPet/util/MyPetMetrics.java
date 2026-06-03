@@ -29,6 +29,9 @@ import de.Keyle.MyPet.api.util.service.RequiresPlugin;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.AdvancedPie;
+import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,17 +75,19 @@ public final class MyPetMetrics {
                                 @NotNull PetManager petManager,
                                 @NotNull SentryErrorReporter errorReporter) {
         try {
-            Metrics metrics = new Metrics(plugin, BSTATS_PLUGIN_ID);
-            if (!metrics.isEnabled() || VersionUtil.isLocalBuild()) {
+            if (VersionUtil.isLocalBuild()) {
                 return;
             }
-            metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", petManager::countActivePets));
-            metrics.addCustomChart(new Metrics.SimplePie("build", VersionUtil::getBuild));
-            metrics.addCustomChart(new Metrics.SimplePie("update_mode", MyPetMetrics::updateMode));
-            metrics.addCustomChart(new Metrics.AdvancedPie("hooks", MyPetMetrics::activatedHooks));
-            metrics.addCustomChart(new Metrics.AdvancedPie("pet_types", () -> petTypes(petManager)));
-            metrics.addCustomChart(new Metrics.SimplePie("database_type", MyPetMetrics::databaseType));
-            metrics.addCustomChart(new Metrics.AdvancedPie("active_skills", () -> activeSkills(petManager)));
+            // bStats 3.x has no isEnabled(); the Metrics object respects the global bStats
+            // opt-out internally, so charts can be registered unconditionally.
+            Metrics metrics = new Metrics(plugin, BSTATS_PLUGIN_ID);
+            metrics.addCustomChart(new SingleLineChart("active_pets", petManager::countActivePets));
+            metrics.addCustomChart(new SimplePie("build", VersionUtil::getBuild));
+            metrics.addCustomChart(new SimplePie("update_mode", MyPetMetrics::updateMode));
+            metrics.addCustomChart(new AdvancedPie("hooks", MyPetMetrics::activatedHooks));
+            metrics.addCustomChart(new AdvancedPie("pet_types", () -> petTypes(petManager)));
+            metrics.addCustomChart(new SimplePie("database_type", MyPetMetrics::databaseType));
+            metrics.addCustomChart(new AdvancedPie("active_skills", () -> activeSkills(petManager)));
         } catch (Throwable e) {
             errorReporter.sendError(e, "Init Metrics failed");
         }

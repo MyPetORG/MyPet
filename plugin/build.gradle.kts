@@ -35,6 +35,10 @@ dependencies {
     compileOnly(project(":api"))
     compileOnly(project(":skills"))
 
+    // Declared first so the real gson wins classpath order over the OLD gson that the
+    // Guilds plugin jar bundles unrelocated (which otherwise shadows it and breaks JsonObject.keySet() etc.)
+    compileOnly("com.google.code.gson:gson:2.11.0")
+
     compileOnly("com.zaxxer:HikariCP:3.4.2")
     compileOnly("net.kyori:adventure-nbt:4.17.0")
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
@@ -63,7 +67,9 @@ dependencies {
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
 
     compileOnly("dev.kitteh:factions:4.4.0")
-    compileOnly("com.github.garbagemule:MobArena:0.109")
+    // @jar: jitpack's Gradle module metadata has empty apiElements/runtimeElements variants
+    // (the jar is only in shadowRuntimeElements); artifact-only notation fetches the jar directly.
+    compileOnly("com.github.garbagemule:MobArena:0.109@jar")
     compileOnly("org.battleplugins:arena:4.0.3-SNAPSHOT")
     compileOnly("net.slipcor:pvparena:1.3.4.298")
     compileOnly("me.maker56.survivalgames:SurvivalGames:1.9.4")
