@@ -70,6 +70,7 @@ subprojects {
         maven { url = uri("https://repo.glaremasters.me/repository/towny/") } // Towny
         maven { url = uri("https://repo.glaremasters.me/repository/public/") } // Guilds
         maven { url = uri("https://repo.roinujnosde.me/releases/") } // SimpleClans
+        maven { url = uri("https://nexus.hc.to/content/repositories/pub_releases/") } // Heroes
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://repo.mypet-plugin.de/") }
         maven { url = uri("https://mvn.lumine.io/repository/maven-public/") } // MythicMobs

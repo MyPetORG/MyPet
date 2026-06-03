@@ -73,7 +73,7 @@ dependencies {
     compileOnly("com.github.TechFortress:GriefPrevention:16.18")
     compileOnly("me.NoChance.PvPManager:pvpmanager:3.19.10")
     compileOnly("org.kingdoms:kingdoms:13.3.40")
-    compileOnly("com.herocraftonline.heroes:Heroes:1.5.5.7")
+    compileOnly("com.herocraftonline.heroes:Heroes:1.10.7-RELEASE")
     compileOnly("me.clip:placeholderapi:2.12.2")
     compileOnly("com.github.LeonMangler:SuperVanish:6.2.18-3")
     compileOnly("com.kirelcodes.miniaturepets:miniaturepets-api:1.5.4")
