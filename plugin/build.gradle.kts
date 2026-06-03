@@ -62,7 +62,7 @@ dependencies {
 
     compileOnly("dev.kitteh:factions:4.4.0")
     compileOnly("com.github.garbagemule:MobArena:0.109")
-    compileOnly("mc.alk:BattleArena:3.9.9.10.5")
+    compileOnly("org.battleplugins:arena:4.0.3-SNAPSHOT")
     compileOnly("net.slipcor:pvparena:1.3.4.298")
     compileOnly("me.maker56.survivalgames:SurvivalGames:1.9.4")
     compileOnly("org.mcsg:survivalgames:0.6.7")

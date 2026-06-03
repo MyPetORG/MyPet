@@ -28,7 +28,8 @@ import de.Keyle.MyPet.api.util.service.RequiresPlugin;
 import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.AllowedHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import mc.alk.arena.events.players.ArenaPlayerEnterEvent;
+import org.battleplugins.arena.ArenaPlayer;
+import org.battleplugins.arena.event.player.ArenaJoinEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,16 +55,17 @@ public class BattleArenaHook implements AllowedHook {
     public boolean isPetAllowed(MyPetPlayer owner) {
         try {
             Player p = owner.getPlayer();
-            return !(mc.alk.arena.BattleArena.inArena(p) && mc.alk.arena.BattleArena.inCompetition(p));
+            return ArenaPlayer.arenaPlayer(p).isEmpty();
         } catch (Throwable ignored) {
         }
         return true;
     }
 
     @EventHandler
-    public void onJoinBattleArena(ArenaPlayerEnterEvent event) {
-        if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer().getName())) {
-            MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer().getPlayer());
+    public void onJoinBattleArena(ArenaJoinEvent event) {
+        Player joined = event.getArenaPlayer().getPlayer();
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(joined.getName())) {
+            MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(joined);
             if (player.hasPet() && player.getPet().getStatus() == Pet.PetState.Here) {
                 player.getPet().removePet();
                 player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player.getPlayer()));
