@@ -68,7 +68,7 @@ dependencies {
     compileOnly("org.mcsg:survivalgames:0.6.7")
     compileOnly("com.github.Zrips:Residence:6.0.0.1")
     compileOnly("com.palmergames.bukkit.towny:towny:0.103.0.2")
-    compileOnly("net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.7.11")
+    compileOnly("net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.19.2")
     compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect:7.5.5")
     compileOnly("com.github.TechFortress:GriefPrevention:16.18")
     compileOnly("me.NoChance.PvPManager:pvpmanager:3.19.10")

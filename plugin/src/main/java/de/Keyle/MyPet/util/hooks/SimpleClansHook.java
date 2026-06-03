@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
+import net.sacredlabyrinth.phaed.simpleclans.managers.SettingsManager.ConfigField;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -47,7 +48,7 @@ public class SimpleClansHook implements PlayerVersusPlayerHook {
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
-            if (simpleClans.getSettingsManager().isBlacklistedWorld(defender.getLocation().getWorld().getName())) {
+            if (simpleClans.getSettingsManager().getStringList(ConfigField.BLACKLISTED_WORLDS).contains(defender.getLocation().getWorld().getName())) {
                 return true;
             }
 
@@ -56,7 +57,7 @@ public class SimpleClansHook implements PlayerVersusPlayerHook {
 
             Clan vclan = vcp == null ? null : vcp.getClan();
             Clan aclan = acp == null ? null : acp.getClan();
-            if (simpleClans.getSettingsManager().isPvpOnlywhileInWar()) {
+            if (simpleClans.getSettingsManager().is(ConfigField.PVP_ONLY_WHILE_IN_WAR)) {
                 if ((aclan == null) || (vclan == null)) {
                     return false;
                 }
@@ -75,7 +76,7 @@ public class SimpleClansHook implements PlayerVersusPlayerHook {
                     if (vclan.isFriendlyFire()) {
                         return true;
                     }
-                    if (simpleClans.getSettingsManager().isGlobalff()) {
+                    if (simpleClans.getSettingsManager().is(ConfigField.GLOBAL_FRIENDLY_FIRE)) {
                         return true;
                     }
                     if (vclan.equals(aclan)) {
@@ -84,10 +85,10 @@ public class SimpleClansHook implements PlayerVersusPlayerHook {
                     if (vclan.isAlly(aclan.getTag())) {
                         return false;
                     }
-                } else if (simpleClans.getSettingsManager().getSafeCivilians()) {
+                } else if (simpleClans.getSettingsManager().is(ConfigField.SAFE_CIVILIANS)) {
                     return false;
                 }
-            } else if (simpleClans.getSettingsManager().getSafeCivilians()) {
+            } else if (simpleClans.getSettingsManager().is(ConfigField.SAFE_CIVILIANS)) {
                 return false;
             }
         } catch (Throwable ignored) {
