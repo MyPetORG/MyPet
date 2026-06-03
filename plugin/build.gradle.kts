@@ -71,7 +71,7 @@ dependencies {
     compileOnly("net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.7.11")
     compileOnly("br.net.fabiozumbi12.RedProtect:RedProtect:7.5.5")
     compileOnly("com.github.TechFortress:GriefPrevention:16.18")
-    compileOnly("me.NoChance.PvPManager:PvPManager:3.4")
+    compileOnly("me.NoChance.PvPManager:pvpmanager:3.19.10")
     compileOnly("org.kingdoms:kingdoms:13.3.40")
     compileOnly("com.herocraftonline.heroes:Heroes:1.5.5.7")
     compileOnly("me.clip:placeholderapi:2.12.2")
