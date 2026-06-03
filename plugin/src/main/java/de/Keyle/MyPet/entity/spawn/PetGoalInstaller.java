@@ -20,11 +20,14 @@
 
 package de.Keyle.MyPet.entity.spawn;
 
+import com.destroystokyo.paper.entity.ai.Goal;
+import com.destroystokyo.paper.entity.ai.MobGoals;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemovalRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetSwimmingEntity;
+import de.Keyle.MyPet.api.goal.PetGoalRetentionRegistry;
 import de.Keyle.MyPet.entity.ai.BrainAccess;
 import de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
@@ -49,6 +52,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Slime;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Strips vanilla AI from a Bukkit {@link Mob} and installs MyPet's AI goals.
  * Called from {@link VanillaMobSpawner} inside the {@code world.spawn()} setup
@@ -63,7 +70,7 @@ public final class PetGoalInstaller {
     }
 
     public static void install(Pet pet, Mob mob) {
-        Bukkit.getMobGoals().removeAllGoals(mob);
+        stripVanillaGoals(mob, PetGoalRetentionRegistry.goalNamesFor(pet));
         BrainAccess.removeBehaviorsByClassName(mob, PetBrainBehaviorRemovalRegistry.behaviorNamesFor(pet));
 
         boolean flying = pet instanceof PetFlyingEntity flyer && flyer.canFly();
@@ -117,5 +124,33 @@ public final class PetGoalInstaller {
         goals.addGoal(mob, 13, new PetAggressiveTargetGoal(pet, mob, 16));
         goals.addGoal(mob, 14, new PetFarmTargetGoal(pet, mob, 16));
         goals.addGoal(mob, 15, new PetDuelTargetGoal(pet, mob, 5));
+    }
+
+    /**
+     * Strips vanilla goals from the mob, keeping any whose key matches a name
+     * in {@code retain}. Empty {@code retain} → fast-path
+     * {@code removeAllGoals} (the default for pets that don't declare a
+     * {@link de.Keyle.MyPet.api.goal.PetGoalRetention}). Retained goals
+     * continue to tick alongside MyPet's installed goals; the per-pet
+     * declaration owns the responsibility for picking goals that compose
+     * cleanly with the MyPet movement / target stack.
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void stripVanillaGoals(Mob mob, Set<String> retain) {
+        MobGoals mobGoals = Bukkit.getMobGoals();
+        if (retain.isEmpty()) {
+            mobGoals.removeAllGoals(mob);
+            return;
+        }
+        // Snapshot first — removeGoal during iteration of the live collection
+        // would CME. Match by the path part of the GoalKey's NamespacedKey
+        // (e.g., "phantom_circle_around_anchor") so declarations stay readable.
+        List<Goal> current = new ArrayList<>(mobGoals.getAllGoals(mob));
+        for (Goal goal : current) {
+            String keyName = goal.getKey().getNamespacedKey().getKey();
+            if (!retain.contains(keyName)) {
+                mobGoals.removeGoal(mob, goal);
+            }
+        }
     }
 }
