@@ -67,6 +67,7 @@ subprojects {
         maven { url = uri("https://maven.citizensnpcs.co/repo") } // Citizens
         maven { url = uri("https://nexus.neetgames.com/repository/maven-public/") } // mcMMO
         maven { url = uri("https://repo.codemc.io/repository/maven-public/") } // StackMob
+        maven { url = uri("https://repo.glaremasters.me/repository/towny/") } // Towny
         maven { url = uri("https://jitpack.io") }
         maven { url = uri("https://repo.mypet-plugin.de/") }
         maven { url = uri("https://mvn.lumine.io/repository/maven-public/") } // MythicMobs

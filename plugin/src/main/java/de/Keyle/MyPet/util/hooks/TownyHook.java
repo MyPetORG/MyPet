@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.service.Load;
@@ -28,27 +27,24 @@ import de.Keyle.MyPet.api.util.service.RequiresPlugin;
 import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 @ServiceName("Towny")
 @RequiresPlugin("Towny")
 @Load(Load.State.Hooks)
 public class TownyHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
 
-    Towny towny;
-
     @Override
     public boolean onEnable() {
-        towny = (Towny) Bukkit.getPluginManager().getPlugin("Towny");
         return true;
     }
 
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
         try {
-            if (CombatUtil.preventDamageCall(towny, attacker, defender)) {
+            if (CombatUtil.preventDamageCall(attacker, defender, EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
                 return false;
             }
         } catch (Throwable ignored) {
