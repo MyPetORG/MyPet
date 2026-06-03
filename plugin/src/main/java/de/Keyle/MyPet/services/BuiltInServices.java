@@ -32,7 +32,6 @@ import de.Keyle.MyPet.migration.MigrationService;
 import de.Keyle.MyPet.util.hooks.BattleArenaHook;
 import de.Keyle.MyPet.util.hooks.CitizensHook;
 import de.Keyle.MyPet.util.hooks.CombatLogXHook;
-import de.Keyle.MyPet.util.hooks.FabledSkyBlockHook;
 import de.Keyle.MyPet.util.hooks.FactionsUUIDHook;
 import de.Keyle.MyPet.util.hooks.GriefPreventionHook;
 import de.Keyle.MyPet.util.hooks.GuildsHook;
@@ -92,7 +91,6 @@ public final class BuiltInServices {
             BattleArenaHook.class,
             CitizensHook.class,
             CombatLogXHook.class,
-            FabledSkyBlockHook.class,
             FactionsUUIDHook.class,
             GriefPreventionHook.class,
             GuildsHook.class,
