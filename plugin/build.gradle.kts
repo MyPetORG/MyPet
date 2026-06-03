@@ -79,7 +79,7 @@ dependencies {
     compileOnly("com.kirelcodes.miniaturepets:miniaturepets-api:1.5.4")
     compileOnly("com.SirBlobman.combatlogx:CombatLogX-Plugin:9.7.1.2")
     compileOnly("uk.antiperson.stackmob:StackMob:5.10.6")
-    compileOnly("me.glaremasters:Guilds:3.3")
+    compileOnly("me.glaremasters:guilds:3.5.7.0")
     compileOnly("com.github.Angeschossen:LandsAPI:4.5.2.0")
     compileOnly("de.keyle:mypet-premium-apis:1.0-SNAPSHOT")
     compileOnly("net.kyori:adventure-text-minimessage:4.17.0")

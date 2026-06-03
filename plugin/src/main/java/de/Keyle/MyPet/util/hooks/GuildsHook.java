@@ -25,11 +25,11 @@ import de.Keyle.MyPet.api.util.service.RequiresPlugin;
 import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusPlayerHook;
 import me.glaremasters.guilds.Guilds;
+import me.glaremasters.guilds.configuration.sections.GuildSettings;
 import me.glaremasters.guilds.guild.Guild;
-import me.glaremasters.guilds.utils.ConfigUtils;
+import me.glaremasters.guilds.libs.configme.SettingsManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 @ServiceName("Guilds")
 @RequiresPlugin("Guilds")
@@ -39,34 +39,22 @@ public class GuildsHook implements PlayerVersusPlayerHook {
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
-            Guild playerGuild = getGuild(defender.getUniqueId());
-            Guild damagerGuild = getGuild(attacker.getUniqueId());
+            Guild playerGuild = Guilds.getApi().getGuild(defender);
+            Guild damagerGuild = Guilds.getApi().getGuild(attacker);
             if (playerGuild == null || damagerGuild == null) {
                 return true;
             }
-            if (!ConfigUtils.getBoolean("allow-guild-damage") && playerGuild.equals(damagerGuild)) {
+            SettingsManager conf = ((Guilds) Bukkit.getPluginManager().getPlugin("Guilds"))
+                    .getSettingsHandler().getMainConf();
+            if (!conf.getProperty(GuildSettings.GUILD_DAMAGE) && playerGuild.equals(damagerGuild)) {
                 return false;
             }
-            if (!ConfigUtils.getBoolean("allow-ally-damage") && areAllies(playerGuild, damagerGuild)) {
+            if (!conf.getProperty(GuildSettings.ALLY_DAMAGE)
+                    && Guilds.getApi().getGuildHandler().isAlly(playerGuild, damagerGuild)) {
                 return false;
             }
         } catch (Throwable ignored) {
         }
         return true;
-    }
-
-    protected boolean areAllies(Guild guild1, Guild guild2) {
-        return guild1.getAllies().contains(guild2.getName());
-    }
-
-    protected Guild getGuild(UUID uuid) {
-        return Guilds.getGuilds()
-                .getGuildHandler()
-                .getGuilds()
-                .values()
-                .stream()
-                .filter(guild -> guild.getMembers().stream().anyMatch(member -> member.getUniqueId().equals(uuid)))
-                .findFirst()
-                .orElse(null);
     }
 }
