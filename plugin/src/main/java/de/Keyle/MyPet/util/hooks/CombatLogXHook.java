@@ -20,8 +20,9 @@
 
 package de.Keyle.MyPet.util.hooks;
 
-import com.SirBlobman.combatlogx.config.ConfigOptions;
-import com.SirBlobman.combatlogx.utility.CombatUtil;
+import com.github.sirblobman.combatlogx.api.ICombatLogX;
+import com.github.sirblobman.combatlogx.api.object.TagReason;
+import com.github.sirblobman.combatlogx.api.object.TagType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.util.service.Load;
@@ -42,8 +43,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import static com.SirBlobman.combatlogx.event.PlayerTagEvent.TagReason;
-import static com.SirBlobman.combatlogx.event.PlayerTagEvent.TagType;
 import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 @ServiceName("CombatLogX")
@@ -53,12 +52,16 @@ public class CombatLogXHook implements ServiceContainer {
 
     public static boolean IGNORE_PLUGIN_SETTINGS = false;
 
+    private ICombatLogX combatLogX;
+
     @Override
     public boolean onEnable() {
         try {
-            TagType.PLAYER.ordinal();
-            Class.forName("com.SirBlobman.combatlogx.config.ConfigOptions");
+            combatLogX = (ICombatLogX) Bukkit.getPluginManager().getPlugin("CombatLogX");
         } catch (Throwable e) {
+            return false;
+        }
+        if (combatLogX == null) {
             return false;
         }
         Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
@@ -87,7 +90,7 @@ public class CombatLogXHook implements ServiceContainer {
         // Replaces the legacy `instanceof CraftMyPetProjectile` check —
         // identification is now via the PDC owner tag that
         // PetRangedAttackGoal writes at launch time.
-        if (damager instanceof Projectile projectile && (ConfigOptions.OPTION_LINK_PROJECTILES || IGNORE_PLUGIN_SETTINGS)) {
+        if (damager instanceof Projectile projectile && (combatLogX.getConfiguration().isLinkProjectiles() || IGNORE_PLUGIN_SETTINGS)) {
             Pet sourcePet = PetRangedAttackGoal.getSourcePet(projectile);
             if (sourcePet != null) {
                 Mob shooterEntity = sourcePet.getBukkitEntity();
@@ -97,7 +100,7 @@ public class CombatLogXHook implements ServiceContainer {
             }
         }
 
-        if ((PetEntityMarker.isMarked(damager)) && (ConfigOptions.OPTION_LINK_PETS || IGNORE_PLUGIN_SETTINGS)) {
+        if ((PetEntityMarker.isMarked(damager)) && (combatLogX.getConfiguration().isLinkPets() || IGNORE_PLUGIN_SETTINGS)) {
             damager = getPetManager().getPetFromEntity(damager).getOwner().getPlayer();
         } else {
             return;
@@ -107,14 +110,14 @@ public class CombatLogXHook implements ServiceContainer {
             if (damaged instanceof Player p) {
                 LivingEntity enemy = (LivingEntity) damager;
                 TagReason reason = TagReason.ATTACKED;
-                CombatUtil.tag(p, enemy, TagType.PLAYER, reason);
+                combatLogX.getCombatManager().tag(p, enemy, TagType.PLAYER, reason);
             }
 
             Player p = (Player) damager;
             LivingEntity enemy = (LivingEntity) damaged;
             TagType type = damaged instanceof Player ? TagType.PLAYER : TagType.MOB;
             TagReason reason = TagReason.ATTACKER;
-            CombatUtil.tag(p, enemy, type, reason);
+            combatLogX.getCombatManager().tag(p, enemy, type, reason);
         }
     }
 }
