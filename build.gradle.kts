@@ -193,18 +193,6 @@ tasks.shadowJar {
 
     configurations = listOf(shade)
 
-    // Remove unused classes from shaded dependencies
-    minimize {
-        // Exclude packages that use reflection or are loaded dynamically
-        exclude(dependency("io.sentry:.*:.*"))
-        exclude(dependency("org.bstats:.*:.*"))
-        // Adventure API uses reflection for serializers - must exclude to prevent runtime errors
-        exclude(dependency("net.kyori:.*:.*"))
-        exclude(project(":plugin"))
-        exclude(project(":api"))
-        exclude(project(":skills"))
-    }
-
     relocate("org.bstats", "de.Keyle.MyPet.util.metrics")
 }
 
