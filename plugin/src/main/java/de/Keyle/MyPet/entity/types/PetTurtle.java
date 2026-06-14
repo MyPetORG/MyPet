@@ -25,22 +25,36 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.PetBaby;
+import de.Keyle.MyPet.api.entity.PetNaturalDrop;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import lombok.Getter;
 import org.bukkit.Material;
 
+import java.util.Set;
+
 @Getter
 @ShopInfo
 @DefaultInfo(food = {Material.SEAGRASS}, flySpeed = 0.5507D)
-public class PetTurtle extends PetImpl implements PetBaby, PetAmphibiousEntity {
+public class PetTurtle extends PetImpl implements PetBaby, PetAmphibiousEntity, PetNaturalDrop {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Turtle", "CanSwim", true);
+    public static final ConfigKey<Boolean> CAN_DROP_SCUTE = ConfigKey.bool("Turtle", "CanDropScute", true);
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Turtle", "experience_bottle");
 
 
     public PetTurtle(MyPetPlayer petOwner) {
         super(petOwner);
+    }
+
+    @Override
+    public Set<Material> naturalDropMaterials() {
+        return Set.of(Material.TURTLE_SCUTE);
+    }
+
+    @Override
+    public boolean isNaturalDropSuppressed() {
+        return !PetTurtle.CAN_DROP_SCUTE.get();
     }
 }
