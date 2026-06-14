@@ -105,6 +105,9 @@ public final class PetListeners {
         for (Supplier<Listener> listener : LISTENERS) {
             pm.registerEvents(listener.get(), plugin);
         }
+        // Golden-dandelion age-lock toggle (Paper 26.1+) is wired reflectively —
+        // its event class is absent from the 1.21.x API, so it self-skips there.
+        PetAgeLockListener.register(plugin);
         // Dedup set covers the narrow race between the initial sweep and any
         // late registration that fires the dispatch hook concurrently.
         Set<Supplier<Listener>> wired = ConcurrentHashMap.newKeySet();

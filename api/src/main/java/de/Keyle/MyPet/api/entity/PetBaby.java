@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.api.entity;
 
+import de.Keyle.MyPet.api.config.PetConfigLookup;
+
 /**
  * Marker for pet types whose underlying vanilla mob has a baby/adult
  * lifecycle (animals, zombies, piglins, etc.). Exposes the baby state
@@ -31,7 +33,7 @@ package de.Keyle.MyPet.api.entity;
  * {@link DefaultInfo#growUpItem()} interaction is only offered to types
  * that implement this interface.
  */
-public interface PetBaby {
+public interface PetBaby extends Pet {
 
     /** Returns {@code true} if this pet is currently in its baby form. */
     boolean isBaby();
@@ -42,4 +44,16 @@ public interface PetBaby {
      * tick.
      */
     void setBaby(boolean flag);
+
+    /**
+     * When {@code true} (the default), this pet type's vanilla aging timer is
+     * locked so it never grows up on its own; the grow-up item still matures it.
+     * When {@code false}, the pet ages naturally like a vanilla mob. An owner's
+     * per-pet golden-dandelion override (if set) takes precedence over this.
+     * Reads {@code MyPet.Pets.<Type>.PreventNaturalGrowup} (default {@code true}),
+     * registered for every {@code PetBaby} type in {@code ConfigurationLoader}.
+     */
+    default boolean preventNaturalGrowup() {
+        return PetConfigLookup.boolValue(getClass(), "PreventNaturalGrowup", true);
+    }
 }

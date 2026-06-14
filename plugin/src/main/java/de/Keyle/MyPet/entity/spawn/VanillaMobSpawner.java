@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.spawn;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.PetAttributes;
@@ -43,6 +44,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Sittable;
 import org.bukkit.entity.Tameable;
@@ -386,6 +388,16 @@ public final class VanillaMobSpawner {
         mob.setVelocity(new Vector(0, 0, 0));
         mob.setFreezeTicks(0);
         PetEntityMarker.mark(mob);
+
+        // Lock/unlock vanilla aging. A per-pet owner override (set in-game with a
+        // golden dandelion) wins; absent that, the per-type PreventNaturalGrowup
+        // config applies (default true → no auto-grow). The grow-up item is
+        // unaffected either way — it matures via setBaby(false) regardless.
+        if (pet instanceof PetBaby baby && mob instanceof Ageable ageable) {
+            Boolean override = PetGrowthLock.getOverride(mob);
+            boolean frozen = override != null ? override : baby.preventNaturalGrowup();
+            ageable.setAgeLock(frozen);
+        }
 
         AttributeInstance health = mob.getAttribute(PetAttributes.MAX_HEALTH);
         if (health != null) {

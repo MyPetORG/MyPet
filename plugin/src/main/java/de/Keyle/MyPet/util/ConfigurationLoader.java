@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.config.ConfigKeyRegistry;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.PetType;
+import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -271,6 +272,9 @@ public class ConfigurationLoader {
             if (PetSaddleable.class.isAssignableFrom(petClass)) {
                 ConfigKey.bool(name, "RequireSaddle", false);
                 ConfigKey.bool(name, "AllowNonOwnerSaddle", false);
+            }
+            if (PetBaby.class.isAssignableFrom(petClass)) {
+                ConfigKey.bool(name, "PreventNaturalGrowup", true);
             }
         }
 
