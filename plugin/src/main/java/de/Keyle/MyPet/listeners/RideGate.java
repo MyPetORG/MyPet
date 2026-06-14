@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.config.ConfigKeyRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetMultiPassenger;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
 import de.Keyle.MyPet.api.entity.PetSaddleable;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -319,6 +320,15 @@ public final class RideGate {
      * @param isDriverSeat  whether the next seat to be filled is the driver/primary
      *                      seat (i.e., {@code mob.getPassengers().isEmpty()})
      */
+    /**
+     * A pet is mountable if it is a naturally-rideable vanilla species or has
+     * the Ride skilltree skill active. Shared by every mount-eligibility gate
+     * so the predicate can't drift between call sites.
+     */
+    public static boolean isMountable(Pet pet) {
+        return pet instanceof PetNaturallyRideable || pet.getSkills().isActive(Ride.class);
+    }
+
     public static Rejection evaluate(Pet pet, Mob mob, Player player,
                                      boolean isOwner, boolean isDriverSeat) {
         String petType = pet.getPetType().name();

@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.entity.PetMultiPassenger;
 import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
-import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
@@ -148,7 +147,7 @@ public class CommandPetRide {
             petOwner.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", petOwner, pet.getDisplayName()));
             return null;
         }
-        if (!(pet instanceof PetNaturallyRideable) || !pet.getSkills().isActive(Ride.class)) {
+        if (!RideGate.isMountable(pet)) {
             petOwner.sendMessage(Locale.getFormattedComponent("Message.No.Skill", petOwner,
                     pet.getDisplayName(),
                     Locale.getComponent("Name.Skill.Ride", petOwner)));

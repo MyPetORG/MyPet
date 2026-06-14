@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
+import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.gui.MenuId;
 import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -82,8 +83,20 @@ public class PetInteractionListener implements Listener {
         // Naturally rideable pets are excluded so a bare-hand click still mounts
         // them (handled later by RideInteractListener / vanilla).
         boolean bareHand = item == null || item.getType().isAir();
+        // A skill-ride pet (not naturally rideable, Ride skill active) mounts on a
+        // right-click that holds the configured ride item. When the ride item is
+        // empty-hand (e.g. config "air"), that collides with the bare-hand menu
+        // open below — so suppress the menu for that case and let RideInteractListener
+        // mount. With a non-empty ride item, the bare hand is not a mount trigger,
+        // so the menu still opens (and the player mounts by holding the item).
+        boolean holdingRideItem = Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null
+                || Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(item);
+        boolean skillRideMountTrigger = !(pet instanceof PetNaturallyRideable)
+                && pet.getSkills().isActive(Ride.class)
+                && holdingRideItem;
         if (bareHand && !player.isSneaking() && isOwner(player, pet)
                 && !(pet instanceof PetNaturallyRideable)
+                && !skillRideMountTrigger
                 && Configuration.Misc.RIGHT_CLICK_COMMAND.isEmpty()) {
             event.setCancelled(true);
             openPetMenu(player, pet);

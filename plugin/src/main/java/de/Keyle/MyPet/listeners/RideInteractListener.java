@@ -23,7 +23,6 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.Pet;
-import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -78,7 +77,7 @@ public class RideInteractListener implements Listener {
         if (pet == null) {
             return;
         }
-        if (!(pet instanceof PetNaturallyRideable)) {
+        if (!RideGate.isMountable(pet)) {
             return;
         }
 
