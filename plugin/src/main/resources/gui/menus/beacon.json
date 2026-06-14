@@ -1,0 +1,50 @@
+{
+  "title": "<gold><lang:Gui.Beacon.Title></gold>",
+  "rows": 5,
+  "esc-supports-back": true,
+  "sound-on-open":  { "key": "minecraft:block.beacon.activate",   "volume": 0.4 },
+  "sound-on-close": { "key": "minecraft:block.beacon.deactivate", "volume": 0.4 },
+  "sections": {
+    "border": {
+      "type": "border",
+      "thickness": 1,
+      "item": { "material": "CYAN_STAINED_GLASS_PANE", "title": " " }
+    },
+    "buffs": {
+      "type": "paginated-list",
+      "region": { "col": 1, "row": 1, "width": 6, "height": 3 },
+      "template": {
+        "material": "POTION",
+        "title": "<buff_name>"
+      },
+      "sound-on-template-click": { "key": "minecraft:ui.button.click", "volume": 0.7, "pitch": { "min": 0.9, "max": 1.1 } }
+    },
+    "receiver": {
+      "type": "slot",
+      "position": { "col": 4, "row": 4 },
+      "default-state": "owner",
+      "states": {
+        "owner":    { "item": { "material": "PLAYER_HEAD", "head": "viewer", "title": "<yellow><receiver_label>: <white><lang:Gui.Beacon.Receiver.Owner></white>" } },
+        "party":    { "item": { "material": "PLAYER_HEAD", "head": "alex",   "title": "<yellow><receiver_label>: <white><lang:Gui.Beacon.Receiver.Party></white>" } },
+        "everyone": { "item": { "material": "PLAYER_HEAD", "head": "steve",  "title": "<yellow><receiver_label>: <white><lang:Gui.Beacon.Receiver.Everyone></white>" } }
+      },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "volume": 0.7 }
+    },
+    "toggle": {
+      "type": "slot",
+      "position": { "col": 0, "row": 2 },
+      "default-state": "off",
+      "states": {
+        "on":  { "item": { "material": "LIME_DYE", "title": "<green><lang:Gui.Beacon.Toggle.On></green>" } },
+        "off": { "item": { "material": "GRAY_DYE", "title": "<red><lang:Gui.Beacon.Toggle.Off></red>" } }
+      },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "volume": 0.7 }
+    },
+    "confirm": {
+      "type": "slot",
+      "position": { "col": 8, "row": 2 },
+      "item": { "material": "LIME_WOOL", "title": "<green><lang:Gui.Beacon.Confirm></green>" },
+      "sound-on-click": { "key": "minecraft:entity.experience_orb.pickup", "volume": 1.0 }
+    }
+  }
+}

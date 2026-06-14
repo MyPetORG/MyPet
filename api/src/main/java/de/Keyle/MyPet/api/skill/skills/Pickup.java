@@ -48,6 +48,12 @@ public interface Pickup extends Skill, Scheduler, ActiveSkill {
     /** Returns the upgrade computer controlling whether experience orb pickup is enabled. */
     UpgradeComputer<Boolean> getExpPickup();
 
+    /** True if the pickup auto-toggle is currently on. */
+    boolean isPickupEnabled();
+
+    /** Sets the pickup auto-toggle directly (skips the {@link #activate()} owner messaging). */
+    void setPickupEnabled(boolean enabled);
+
     /** Snapshot of the Pickup auto-toggle (persisted or live). */
     record State(boolean active) implements SkillState {}
 }

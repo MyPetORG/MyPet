@@ -29,16 +29,20 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
+import de.Keyle.MyPet.api.gui.MenuId;
+import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.gui.selectionmenu.PetSelectionGui;
+import de.Keyle.MyPet.gui.context.PetSelectionContext;
 import io.papermc.paper.command.brigadier.Commands;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Handles the {@code /petswitch} command (aliases: {@code /pswitch}, {@code /psw}).
@@ -72,7 +76,7 @@ public class CommandSwitch {
                 Commands.literal("petswitch")
                         .requires(ctx -> ctx.getSender() instanceof Player)
                         .executes(ctx -> {
-                            execute((Player) ctx.getSource().getSender());
+                            openSwitchMenu((Player) ctx.getSource().getSender());
                             return Command.SINGLE_SUCCESS;
                         })
                         .build(),
@@ -91,13 +95,10 @@ public class CommandSwitch {
     }
 
     /**
-     * Executes the petswitch command logic. Fetches all stored pets from the repository,
-     * opens the {@link PetSelectionGui}, and handles the pet activation callback
-     * including spawning the selected pet and reporting any spawn failures.
-     *
-     * @param player the player executing the command
+     * Executes the petswitch flow for the given player. Public so the {@code /pet}
+     * command can delegate here when the player has no active pet.
      */
-    private void execute(Player player) {
+    public static void openSwitchMenu(Player player) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
@@ -117,51 +118,48 @@ public class CommandSwitch {
                     }
                     if (owner.isOnline()) {
                         String worldGroup = WorldGroup.getGroupByWorld(owner.getPlayer().getWorld().getName()).getName();
-                        int inactivePetCount = getInactivePetCount(pets, worldGroup);
-                        int maxPetCount = getMaxPetCount(owner.getPlayer());
+                        final UUID activePetUUID = owner.hasPet() ? owner.getPet().getUUID() : null;
+                        List<StoredPet> selectablePets = pets.stream()
+                                .filter(p -> !p.getWorldGroup().isEmpty() && p.getWorldGroup().equals(worldGroup))
+                                .filter(p -> activePetUUID == null || !activePetUUID.equals(p.getUUID()))
+                                .collect(Collectors.toList());
 
-                        Component title;
-                        if (owner.hasPet()) {
-                            inactivePetCount--;
-                            title = Locale.getComponent("Message.Npc.SwitchTitle", owner);
-                        } else {
-                            title = Locale.getComponent("Message.SelectMyPet", owner);
-                        }
+                        MyPetApi.getGuiService().openMenu(
+                                owner.getPlayer(),
+                                (MenuId<PetSelectionContext>) (MenuId<?>) MenuIds.PET_SELECTION,
+                                new PetSelectionContext(owner.getPlayer(),
+                                        () -> CompletableFuture.completedFuture(selectablePets),
+                                        storedPet -> {
+                                            Optional<Pet> activePet = MyPetApi.getPetManager().activatePet(storedPet);
+                                            if (activePet.isPresent() && owner.isOnline()) {
+                                                Player ownerPlayer = owner.getPlayer();
+                                                activePet.get().getOwner().sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", owner, activePet.get().getDisplayName()));
+                                                WorldGroup wg = WorldGroup.getGroupByWorld(ownerPlayer.getWorld().getName());
+                                                owner.setPetForWorldGroup(wg, activePet.get().getUUID());
 
-                        Component stats = Component.text(" (" + inactivePetCount + "/" + maxPetCount + ")");
-
-                        final PetSelectionGui gui = new PetSelectionGui(owner, title.append(stats), 1);
-                        gui.open(pets, storedPet -> {
-                                Optional<Pet> activePet = MyPetApi.getPetManager().activatePet(storedPet);
-                                if (activePet.isPresent() && owner.isOnline()) {
-                                    Player ownerPlayer = owner.getPlayer();
-                                    activePet.get().getOwner().sendMessage(Locale.getFormattedComponent("Message.Npc.ChosenPet", owner, activePet.get().getDisplayName()));
-                                    WorldGroup wg = WorldGroup.getGroupByWorld(ownerPlayer.getWorld().getName());
-                                    owner.setPetForWorldGroup(wg, activePet.get().getUUID());
-
-                                    switch (activePet.get().createEntity()) {
-                                        case Canceled:
-                                            owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", owner, activePet.get().getDisplayName()));
-                                            break;
-                                        case NoSpace:
-                                            owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", owner, activePet.get().getDisplayName()));
-                                            break;
-                                        case NotAllowed:
-                                            owner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", owner, activePet.get().getDisplayName()));
-                                            break;
-                                        case Dead:
-                                            if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
-                                                owner.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", owner, activePet.get().getDisplayName()));
-                                            } else {
-                                                owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", owner, activePet.get().getDisplayName(), activePet.get().getRespawnTime()));
+                                                switch (activePet.get().createEntity()) {
+                                                    case Canceled:
+                                                        owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", owner, activePet.get().getDisplayName()));
+                                                        break;
+                                                    case NoSpace:
+                                                        owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", owner, activePet.get().getDisplayName()));
+                                                        break;
+                                                    case NotAllowed:
+                                                        owner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", owner, activePet.get().getDisplayName()));
+                                                        break;
+                                                    case Dead:
+                                                        if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                            owner.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", owner, activePet.get().getDisplayName()));
+                                                        } else {
+                                                            owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", owner, activePet.get().getDisplayName(), activePet.get().getRespawnTime()));
+                                                        }
+                                                        break;
+                                                    case Spectator:
+                                                        player.sendMessage(Locale.getFormattedComponent("Message.Spawn.Spectator", owner, activePet.get().getDisplayName()));
+                                                        break;
+                                                }
                                             }
-                                            break;
-                                        case Spectator:
-                                            player.sendMessage(Locale.getFormattedComponent("Message.Spawn.Spectator", owner, activePet.get().getDisplayName()));
-                                            break;
-                                    }
-                                }
-                        });
+                                        }));
                     }
             }, null));
         } else {
@@ -169,46 +167,4 @@ public class CommandSwitch {
         }
     }
 
-    /**
-     * Calculates the maximum number of pets the player is allowed to store.
-     * Admins receive {@link Configuration.Misc#MAX_STORED_PET_COUNT}. Other players
-     * are checked for {@code MyPet.petstorage.limit.<n>} permissions from highest to lowest.
-     *
-     * @param p the player to check
-     * @return the maximum number of stored pets allowed, or 0 if none
-     */
-    private int getMaxPetCount(Player p) {
-        int maxPetCount = 0;
-        if (Permissions.has(p, "MyPet.admin")) {
-            maxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
-        } else {
-            for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
-                if (Permissions.has(p, "MyPet.petstorage.limit." + i)) {
-                    maxPetCount = i;
-                    break;
-                }
-            }
-        }
-        return maxPetCount;
-    }
-
-    /**
-     * Counts the number of pets belonging to the given world group.
-     *
-     * @param pets       the list of all stored pets for the player
-     * @param worldGroup the world group name to filter by
-     * @return the number of pets in the specified world group
-     */
-    private int getInactivePetCount(List<StoredPet> pets, String worldGroup) {
-        int inactivePetCount = 0;
-
-        for (StoredPet pet : pets) {
-            if (!pet.getWorldGroup().equals(worldGroup)) {
-                continue;
-            }
-            inactivePetCount++;
-        }
-
-        return inactivePetCount;
-    }
 }

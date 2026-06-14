@@ -24,13 +24,16 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.Pet.PetState;
+import de.Keyle.MyPet.api.gui.MenuId;
+import de.Keyle.MyPet.api.gui.MenuIds;
+import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.entity.Pet;
-import de.Keyle.MyPet.api.entity.Pet.PetState;
-import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.gui.context.BackpackContext;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.Bukkit;
@@ -127,7 +130,15 @@ public class CommandInventory {
                 return;
             }
             if (pet.getSkills().has(BackpackImpl.class)) {
-                pet.getSkills().get(BackpackImpl.class).activate();
+                BackpackImpl bp = pet.getSkills().get(BackpackImpl.class);
+                if (bp.activate()) {
+                    int rows = Math.max(1, Math.min(6, bp.getRows().getValue().intValue()));
+                    MyPetApi.getGuiService().openMenu(
+                            player,
+                            (MenuId<BackpackContext>) (MenuId<?>) MenuIds.BACKPACK,
+                            new BackpackContext(player, pet, rows)
+                    );
+                }
             }
         } else {
             player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
@@ -157,7 +168,15 @@ public class CommandInventory {
         } else if (MyPetApi.getPetManager().hasActivePet(petOwner)) {
             Pet pet = MyPetApi.getPetManager().getPet(petOwner);
             if (pet.getSkills().isActive(BackpackImpl.class)) {
-                pet.getSkills().get(BackpackImpl.class).openInventory(player);
+                BackpackImpl bp = pet.getSkills().get(BackpackImpl.class);
+                if (bp.activate()) {
+                    int rows = Math.max(1, Math.min(6, bp.getRows().getValue().intValue()));
+                    MyPetApi.getGuiService().openMenu(
+                            player,
+                            (MenuId<BackpackContext>) (MenuId<?>) MenuIds.BACKPACK,
+                            new BackpackContext(player, pet, rows)
+                    );
+                }
             }
         }
     }

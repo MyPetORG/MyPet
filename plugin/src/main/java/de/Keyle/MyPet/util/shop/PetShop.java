@@ -22,28 +22,23 @@ package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PersistedPet;
-import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
-import de.Keyle.MyPet.api.gui.IconMenu;
-import de.Keyle.MyPet.api.gui.IconMenuItem;
+import de.Keyle.MyPet.api.gui.MenuId;
+import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.util.WalletType;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.gui.context.PetShopContext;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import lombok.Getter;
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -84,159 +79,81 @@ public class PetShop {
             player.sendMessage(Locale.getComponent("Message.No.Economy", player));
             return;
         }
+        MyPetApi.getGuiService().openMenu(
+                player,
+                (MenuId<PetShopContext>) (MenuId<?>) MenuIds.PET_SHOP,
+                new PetShopContext(player, getPets(), this::buy));
+    }
+
+    public void buy(final Player player, final ShopPet shopPet) {
+        if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
+            player.sendMessage(Locale.getComponent("Message.No.Economy", player));
+            return;
+        }
         VaultHook economyHook = (VaultHook) MyPetApi.getHookHelper().getEconomy();
 
-        IconMenu shop = new IconMenu(Util.SANITIZED_MINIMESSAGE.deserialize(displayName), event -> {
-            if (pets.containsKey(event.getPosition())) {
-                final ShopPet pet = pets.get(event.getPosition());
-                if (pet != null) {
-                    final Player p = event.getPlayer();
-                    final MyPetPlayer owner;
-                    if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
-                        owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
-
-                        // Race condition: player may have disconnected between isMyPetPlayer and getMyPetPlayer
-                        if (owner == null) {
-                            return;
-                        }
-
-                        if (owner.hasPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
-                            p.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.HasPet", player));
-                            return;
-                        }
-                    } else {
-                        owner = null;
-                    }
-
-                    final Runnable confirmRunner = () -> {
-                            IconMenu menu = new IconMenu(Locale.getFormattedComponent("Message.Shop.Confirm.Title", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())), event1 -> {
-                                if (event1.getPosition() == 3) {
-                                    if (pet.getPrice() > 0) {
-                                        if (economyHook.canPay(p.getUniqueId(), pet.getPrice())) {
-                                            if (economyHook.getEconomy().withdrawPlayer(p, pet.getPrice()).transactionSuccess()) {
-                                                switch (wallet) {
-                                                    case Bank:
-                                                        economyHook.getEconomy().bankDeposit(walletOwner, pet.getPrice());
-                                                        break;
-                                                    case Player:
-                                                        economyHook.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(walletOwner)), pet.getPrice());
-                                                    case Private:
-                                                        depositPrivate(pet.getPrice());
-                                                        break;
-                                                }
-                                            } else {
-                                                p.sendMessage(Locale.getComponent("Message.No.Money", player));
-                                                return;
-                                            }
-                                        } else {
-                                            p.sendMessage(Locale.getComponent("Message.Shop.NoMoney", player));
-                                            return;
-                                        }
-                                    }
-
-                                    final MyPetPlayer petOwner;
-                                    if (owner == null) {
-                                        petOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(player);
-                                    } else {
-                                        petOwner = owner;
-                                    }
-
-                                    final PersistedPet clonedPet = pet.toPersisted(petOwner)
-                                            .withWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName())
-                                            .withUuid(UUID.randomUUID());
-
-                                    MyPetPlugin.getInstance().getRepository().addPet(clonedPet).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
-                                            p.sendMessage(Locale.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
-                                            PetCreateEvent createEvent = new PetCreateEvent(clonedPet, PetCreateEvent.Source.PET_SHOP);
-                                            Bukkit.getServer().getPluginManager().callEvent(createEvent);
-                                            if (petOwner.hasPet()) {
-                                                p.sendMessage(Locale.getFormattedComponent("Message.Shop.SuccessStorage", player, clonedPet.getDisplayName()));
-                                            } else {
-                                                petOwner.setPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
-                                                MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(petOwner);
-                                                MyPetApi.getPetManager().activatePet(clonedPet).ifPresent(Pet::createEntity);
-                                            }
-                                    }, null));
-                                }
-                                event1.setWillClose(true);
-                                event1.setWillDestroy(true);
-                            }, MyPetApi.getPlugin());
-                            IconMenuItem icon = new IconMenuItem()
-                                    .setMaterial(Material.LIME_WOOL)
-                                    .setData(5)
-                                    .setTitle(Locale.getComponent("Name.Yes", player).color(NamedTextColor.GREEN));
-                            icon.addLoreLine(Locale.getFormattedComponent("Message.Shop.Confirm.Yes", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice())));
-                            if (owner != null && owner.hasPet()) {
-                                icon.addLoreLine(Component.empty()).addLoreLine(Locale.getComponent("Message.Shop.Confirm.SendStorage", player));
-                            }
-                            menu.setOption(3, icon);
-                            menu.setOption(5, new IconMenuItem()
-                                    .setMaterial(Material.RED_WOOL)
-                                    .setData(14)
-                                    .setTitle(Locale.getComponent("Name.No", player).color(NamedTextColor.RED))
-                                    .addLoreLine(Locale.getFormattedComponent("Message.Shop.Confirm.No", player, pet.getDisplayName(), economyHook.getEconomy().format(pet.getPrice()))));
-                            menu.open(player);
-                    };
-
-                    if (owner != null && owner.hasPet()) {
-                        MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(value -> p.getScheduler().run(MyPetApi.getPlugin(), pTask -> {
-                                int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
-                                int limit = getMaxPetCount(p);
-                                if (petCount >= limit) {
-                                    p.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Limit", player, limit));
-                                    return;
-                                }
-                                p.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> confirmRunner.run(), null, 5L);
-                        }, null));
-                    } else {
-                        p.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> confirmRunner.run(), null, 5L);
-                    }
-                }
+        final MyPetPlayer owner;
+        if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+            owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
+            if (owner == null) {
+                return;
             }
-        }, MyPetApi.getPlugin()).setPaginationIdentifier("PetShop");
-
-        double balance = economyHook.getBalance(player);
-        for (int pos : pets.keySet()) {
-            ShopPet pet = pets.get(pos);
-            IconMenuItem icon = pet.getIcon();
-            NamedTextColor canPay = balance >= pet.getPrice() ? NamedTextColor.GREEN : NamedTextColor.RED;
-            icon.addLoreLine(Component.text()
-                    .append(Locale.getComponent("Name.Price", player).color(NamedTextColor.BLUE))
-                    .append(Component.text(": "))
-                    .append(Component.text(economyHook.getEconomy().format(pet.getPrice())).color(canPay))
-                    .build());
-            shop.setOption(pos, icon);
-        }
-
-        shop.open(player);
-    }
-
-    public int getMaxPetCount(Player p) {
-        int maxPetCount = 0;
-        if (Permissions.has(p, "MyPet.admin")) {
-            maxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
+            if (owner.hasPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
+                player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.HasPet", player));
+                return;
+            }
         } else {
-            for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
-                if (Permissions.has(p, "MyPet.petstorage.limit." + i)) {
-                    maxPetCount = i;
-                    break;
+            owner = null;
+        }
+
+        if (shopPet.getPrice() > 0) {
+            if (economyHook.canPay(player.getUniqueId(), shopPet.getPrice())) {
+                if (economyHook.getEconomy().withdrawPlayer(player, shopPet.getPrice()).transactionSuccess()) {
+                    switch (wallet) {
+                        case Bank:
+                            economyHook.getEconomy().bankDeposit(walletOwner, shopPet.getPrice());
+                            break;
+                        case Player:
+                            economyHook.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(walletOwner)), shopPet.getPrice());
+                            break;
+                        case Private:
+                            depositPrivate(shopPet.getPrice());
+                            break;
+                    }
+                } else {
+                    player.sendMessage(Locale.getComponent("Message.No.Money", player));
+                    return;
                 }
+            } else {
+                player.sendMessage(Locale.getComponent("Message.Shop.NoMoney", player));
+                return;
             }
         }
-        return maxPetCount;
+
+        final MyPetPlayer petOwner = owner == null ? MyPetApi.getPlayerManager().registerMyPetPlayer(player) : owner;
+        final PersistedPet clonedPet = shopPet.toPersisted(petOwner)
+                .withWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName())
+                .withUuid(UUID.randomUUID());
+
+        MyPetPlugin.getInstance().getRepository().addPet(clonedPet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), addTask -> {
+                player.sendMessage(Locale.getFormattedComponent("Message.Shop.Success", player, clonedPet.getDisplayName(), economyHook.getEconomy().format(shopPet.getPrice())));
+                PetCreateEvent createEvent = new PetCreateEvent(clonedPet, PetCreateEvent.Source.PET_SHOP);
+                Bukkit.getServer().getPluginManager().callEvent(createEvent);
+                if (petOwner.hasPet()) {
+                    player.sendMessage(Locale.getFormattedComponent("Message.Shop.SuccessStorage", player, clonedPet.getDisplayName()));
+                } else {
+                    petOwner.setPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
+                    MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(petOwner);
+                    MyPetApi.getPetManager().activatePet(clonedPet).ifPresent(Pet::createEntity);
+                }
+        }, null));
     }
 
-    private int getInactivePetCount(List<StoredPet> pets, String worldGroup) {
-        int inactivePetCount = 0;
-
-        for (StoredPet pet : pets) {
-            if (!pet.getWorldGroup().equals(worldGroup)) {
-                continue;
-            }
-            inactivePetCount++;
-        }
-
-        return inactivePetCount;
+    public List<ShopPet> getPets() {
+        return pets.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(Map.Entry::getValue)
+                .collect(java.util.stream.Collectors.toList());
     }
 
     public void depositPrivate(double amount) {

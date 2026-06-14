@@ -1,0 +1,35 @@
+{
+  "title": "<gold><trade_confirm_title></gold>",
+  "rows": 3,
+  "esc-supports-back": true,
+  "sound-on-open":  { "key": "minecraft:block.note_block.bell", "volume": 0.4 },
+  "sound-on-close": { "key": "minecraft:block.chest.close", "volume": 0.5 },
+  "sections": {
+    "border": {
+      "type": "border",
+      "thickness": 1,
+      "item": { "material": "YELLOW_STAINED_GLASS_PANE", "title": " " }
+    },
+    "display": {
+      "type": "slot",
+      "position": { "col": 4, "row": 1 },
+      "item": {
+        "material": "BONE",
+        "title": "<gold><lang:Gui.PetMenu.Info.Title:'<pet_name>'></gold>",
+        "lore": ["Type: <gold><pet_type>"]
+      }
+    },
+    "yes": {
+      "type": "slot",
+      "position": { "col": 3, "row": 1 },
+      "item": { "material": "LIME_WOOL", "title": "<green><lang:Gui.PetTradeConfirm.Yes></green>" },
+      "sound-on-click": { "key": "minecraft:entity.experience_orb.pickup", "volume": 1.0 }
+    },
+    "no": {
+      "type": "slot",
+      "position": { "col": 5, "row": 1 },
+      "item": { "material": "RED_WOOL", "title": "<red><lang:gui.cancel></red>" },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "volume": 0.6, "pitch": 0.8 }
+    }
+  }
+}

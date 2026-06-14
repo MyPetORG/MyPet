@@ -1,0 +1,40 @@
+{
+  "title": "<gold><lang:Gui.PetShop.Title></gold>",
+  "rows": 6,
+  "esc-supports-back": false,
+  "sound-on-open":  { "key": "minecraft:block.chest.open",  "volume": 0.7 },
+  "sound-on-close": { "key": "minecraft:block.chest.close", "volume": 0.5 },
+  "sections": {
+    "border": {
+      "type": "border",
+      "thickness": 1,
+      "item": { "material": "YELLOW_STAINED_GLASS_PANE", "title": " " }
+    },
+    "entries": {
+      "type": "paginated-list",
+      "region": { "col": 1, "row": 1, "width": 7, "height": 4 },
+      "template": {
+        "material": "EMERALD",
+        "title": "<gold><lang:Gui.PetShop.Template.Title:'<entry_name>'></gold>",
+        "lore": [
+          "<gray><price_label>: <yellow><entry_price></yellow>",
+          "<yellow><lang:Gui.PetShop.Template.Lore.Click></yellow>"
+        ]
+      },
+      "previous-page-section": "previous-page",
+      "next-page-section": "next-page"
+    },
+    "previous-page": {
+      "type": "slot",
+      "position": { "col": 0, "row": 5 },
+      "item": { "material": "OAK_SIGN", "title": "<gray><lang:Gui.Page.Previous:'<target_page>'></gray>" },
+      "hide-at-boundary": true
+    },
+    "next-page": {
+      "type": "slot",
+      "position": { "col": 8, "row": 5 },
+      "item": { "material": "OAK_SIGN", "title": "<gray><lang:Gui.Page.Next:'<target_page>'></gray>" },
+      "hide-at-boundary": true
+    }
+  }
+}

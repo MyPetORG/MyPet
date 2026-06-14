@@ -33,7 +33,6 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
-import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.PetInfoAccess;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -79,8 +78,7 @@ public class PetDeathListener implements Listener {
             Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
             if (pet.getSkills().isActive(Backpack.class)) {
-                CustomInventory inv = pet.getSkills().get(Backpack.class).getInventory();
-                inv.dropContentAt(pet.getLocation().get());
+                pet.getSkills().get(BackpackImpl.class).dropContents(pet.getLocation().get());
             }
             if (pet instanceof PetEquipment) {
                 ((PetEquipment) pet).dropEquipment();
@@ -167,7 +165,7 @@ public class PetDeathListener implements Listener {
             BackpackImpl inventorySkill = pet.getSkills().get(BackpackImpl.class);
             inventorySkill.closeInventory();
             if (inventorySkill.getDropOnDeath().getValue() && !owner.isMyPetAdmin()) {
-                inventorySkill.getInventory().dropContentAt(pet.getLocation().get());
+                inventorySkill.dropContents(pet.getLocation().get());
             }
         }
 

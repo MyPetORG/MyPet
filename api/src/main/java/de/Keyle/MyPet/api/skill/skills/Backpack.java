@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.skill.SkillStateCodec;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Skill that grants the pet a portable inventory (backpack) which the owner can open
@@ -38,12 +39,14 @@ import de.Keyle.MyPet.api.util.inventory.CustomInventory;
  * when the pet dies.
  *
  * @see ActiveSkill#activate()
- * @see CustomInventory
  */
 @SkillName(value = "Backpack", translationNode = "Name.Skill.Inventory")
 public interface Backpack extends Skill, ActiveSkill {
 
-    /** Returns the pet's backpack inventory instance. */
+    /**
+     * Returns a transient {@link CustomInventory} view of the current contents,
+     * sized to the current row capacity. Used by drop-on-death and self-feeding.
+     */
     CustomInventory getInventory();
 
     /** Returns the upgrade computer controlling whether items drop when the pet dies. */
@@ -52,12 +55,6 @@ public interface Backpack extends Skill, ActiveSkill {
     /** Returns the upgrade computer controlling the number of inventory rows available. */
     UpgradeComputer<Number> getRows();
 
-    /**
-     * Snapshot of a Backpack skill's persisted or live contents. The
-     * {@link CustomInventory} is owned by the snapshot — for persisted
-     * pets it's a freshly materialized read-only view; for live pets it's
-     * the same instance the live skill exposes via {@link #getInventory()},
-     * so mutations write through.
-     */
-    record State(CustomInventory inventory) implements SkillState {}
+    /** Snapshot of a Backpack skill's persisted or live contents as a raw item array. */
+    record State(ItemStack[] contents) implements SkillState {}
 }

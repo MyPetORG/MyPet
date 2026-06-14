@@ -190,6 +190,16 @@ public class PickupImpl implements Pickup {
     }
 
     @Override
+    public boolean isPickupEnabled() {
+        return pickup;
+    }
+
+    @Override
+    public void setPickupEnabled(boolean enabled) {
+        pickup = enabled;
+    }
+
+    @Override
     public Optional<State> getState() {
         return Optional.of(new State(pickup));
     }

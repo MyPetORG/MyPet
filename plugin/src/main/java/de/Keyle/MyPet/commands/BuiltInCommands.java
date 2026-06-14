@@ -64,7 +64,8 @@ public final class BuiltInCommands {
             (c, h) -> new CommandStore().register(c, h),
             (c, h) -> new CommandInventory().register(c, h),
             (c, h) -> new CommandShop().register(c, h),
-            (c, h) -> new CommandMyPet().register(c, h)
+            (c, h) -> new CommandMyPet().register(c, h),
+            (c, h) -> new CommandPet().register(c, h)
     );
 
     private BuiltInCommands() {

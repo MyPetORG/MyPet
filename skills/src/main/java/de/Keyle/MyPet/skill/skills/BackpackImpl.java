@@ -30,13 +30,13 @@ import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import lombok.Getter;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 
@@ -45,14 +45,11 @@ import java.util.Optional;
  * <p>
  * This skill provides a per-Pet expandable inventory that can be opened by the
  * owner. The size of the inventory is driven by the number of configured rows
- * (each row represents 9 slots). Additional features include persisting the
- * inventory via NBT, reacting to environment and permission constraints when
- * opening the inventory, and optional drop behavior on player death.
- * <p>
- * Robustness: All open operations validate environmental constraints (sleeping,
- * creative-mode limitations, location restrictions) and honor plugin events so
- * other components can veto the action. The inventory size is automatically
- * recalculated when the row-upgrade changes via a callback.
+ * (each row represents 9 slots). Contents are stored as a raw {@code ItemStack[]}
+ * and exposed to the GUI layer via {@link #readContents(int)} and
+ * {@link #writeContents(ItemStack[])}. A transient {@link CustomInventory} view
+ * is available for drop-on-death and self-feeding integration points that have
+ * not yet been migrated to the new menu system.
  */
 public class BackpackImpl implements Backpack {
 
@@ -71,12 +68,11 @@ public class BackpackImpl implements Backpack {
     protected UpgradeComputer<Boolean> dropOnDeath = new UpgradeComputer<>(false);
 
     /**
-     * Backing inventory implementation using Paper's native ItemStack serialization.
-     * Returns CustomInventory for direct interactions (e.g., drop,
-     * set/get items, or querying the Bukkit inventory).
+     * Canonical persistent store for the backpack's items.
+     * The GUI layer reads and writes via {@link #readContents(int)} /
+     * {@link #writeContents(ItemStack[])}.
      */
-    @Getter
-    protected CustomInventory inventory;
+    protected ItemStack[] contents = new ItemStack[0];
 
     /**
      * The owning Pet.
@@ -85,21 +81,158 @@ public class BackpackImpl implements Backpack {
     protected Pet pet;
 
     /**
-     * Creates a new Backpack skill instance for the given Pet and wires the size
-     * callback so that inventory capacity follows the number of configured rows.
+     * Creates a new Backpack skill instance for the given Pet.
      *
      * @param pet owning Pet
      */
     public BackpackImpl(Pet pet) {
         this.pet = pet;
-        inventory = new CustomInventory();
-        // Ensure inventory reflects current row count immediately
-        if (rows.getValue().intValue() > 0) {
-            inventory.setSize(rows.getValue().intValue() * 9);
-        }
-        // Keep size in sync with future row changes (always register callback)
-        rows.addCallback((newValue, reason) -> this.inventory.setSize(newValue.intValue() * 9));
+        // Shrink the persisted array whenever the granted row count decreases.
+        // Items in newly-unreachable slots are packed into empty surviving slots;
+        // anything that can't fit is dropped at the pet's location (or the owner's).
+        //
+        // Skips when newValue == 0: PetImpl.setSkilltree() calls Skill::reset on
+        // every skill before re-applying the new tree, which transiently zeroes
+        // the row count. Acting on that would destroy the entire backpack on
+        // every skilltree switch. If rows actually settle at zero, items stay
+        // in the array (inaccessible via menu, restored if rows upgrade later).
+        rows.addCallback((newValue, reason) -> {
+            int rowCount = newValue.intValue();
+            if (rowCount <= 0) return;
+            int target = rowCount * 9;
+            if (contents.length <= target) return;
+            shrinkTo(rowCount, resolveDropLocation());
+        });
     }
+
+    private Location resolveDropLocation() {
+        Location petLoc = pet.getLocation().orElse(null);
+        if (petLoc != null) return petLoc;
+        if (pet.getOwner() != null && pet.getOwner().getPlayer() != null) {
+            return pet.getOwner().getPlayer().getLocation();
+        }
+        return null;
+    }
+
+    // -----------------------------------------------------------------------
+    // Menu-handler API
+    // -----------------------------------------------------------------------
+
+    /** Return up to {@code capacity} stacks for opening into a Backpack menu. */
+    public ItemStack[] readContents(int capacity) {
+        ItemStack[] out = new ItemStack[capacity];
+        for (int i = 0; i < capacity && i < contents.length; i++) out[i] = contents[i];
+        return out;
+    }
+
+    /** Persist the contents the player edited in the menu. */
+    public void writeContents(ItemStack[] newContents) {
+        this.contents = newContents.clone();
+    }
+
+    public int currentCapacity() { return contents.length; }
+
+    public void ensureCapacity(int capacity) {
+        if (contents.length < capacity) {
+            ItemStack[] resized = new ItemStack[capacity];
+            System.arraycopy(contents, 0, resized, 0, contents.length);
+            contents = resized;
+        }
+    }
+
+    /**
+     * Shrinks the backpack to {@code rows} rows. Items in now-unreachable slots
+     * are packed into empty slots in the remaining rows; whatever can't fit is
+     * dropped at {@code dropAt}. After the call {@link #contents} is exactly
+     * {@code rows * 9} long. No-op when the current array is already at or below
+     * the target size.
+     */
+    public void shrinkTo(int rows, Location dropAt) {
+        int target = Math.max(0, rows * 9);
+        if (contents.length <= target) return;
+
+        ItemStack[] kept = new ItemStack[target];
+        System.arraycopy(contents, 0, kept, 0, target);
+
+        World world = dropAt != null ? dropAt.getWorld() : null;
+        for (int i = target; i < contents.length; i++) {
+            ItemStack item = contents[i];
+            if (item == null || item.getType().isAir()) continue;
+            int empty = firstEmptySlot(kept);
+            if (empty >= 0) {
+                kept[empty] = item;
+            } else if (world != null) {
+                world.dropItem(dropAt, item);
+            }
+        }
+        contents = kept;
+    }
+
+    private static int firstEmptySlot(ItemStack[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == null || arr[i].getType().isAir()) return i;
+        }
+        return -1;
+    }
+
+    // -----------------------------------------------------------------------
+    // Legacy integration: transient CustomInventory view
+    // -----------------------------------------------------------------------
+
+    /**
+     * Returns a transient {@link CustomInventory} populated from the current
+     * {@link #contents} array. Used by drop-on-death and self-feeding code
+     * that has not yet been migrated to the new menu system.
+     * <p>
+     * Mutations to items inside this view (e.g., self-feeding decrementing
+     * a stack) are NOT automatically written back to {@link #contents}; callers
+     * that need write-back must call {@link #writeContents(ItemStack[])} after.
+     */
+    @Override
+    public CustomInventory getInventory() {
+        int capacity = Math.max(9, rows.getValue().intValue() * 9);
+        CustomInventory inv = new CustomInventory();
+        inv.setSize(capacity);
+        for (int i = 0; i < capacity && i < contents.length; i++) {
+            if (contents[i] != null) {
+                inv.setItem(i, contents[i]);
+            }
+        }
+        return inv;
+    }
+
+    /**
+     * Drops all non-null, non-air items from {@link #contents} at the given location
+     * and clears those slots. Callers should prefer this over
+     * {@code getInventory().dropContentAt(loc)} because that method operates on a
+     * transient view and does not write mutations back to {@link #contents}.
+     *
+     * @param loc the world location where items should be dropped
+     */
+    public void dropContents(Location loc) {
+        if (loc == null) return;
+        World world = loc.getWorld();
+        if (world == null) return;
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack item = contents[i];
+            if (item != null && !item.getType().isAir()) {
+                world.dropItem(loc, item);
+                contents[i] = null;
+            }
+        }
+    }
+
+    /**
+     * Closes the backpack. No-op in the new GUI system; open menus are managed
+     * by the GuiService / MenuDispatcher lifecycle.
+     */
+    public void closeInventory() {
+        // Menu lifecycle is now owned by GuiService; nothing to close here.
+    }
+
+    // -----------------------------------------------------------------------
+    // Skill interface
+    // -----------------------------------------------------------------------
 
     /**
      * Player-friendly string describing the number of rows, localized for the
@@ -130,16 +263,16 @@ public class BackpackImpl implements Backpack {
     }
 
     /**
-     * Tries to open the backpack for the owning player. This performs multiple
-     * checks:
-     * - The backpack must have at least one row.
-     * - The owner must not be sleeping.
-     * - Creative mode may be restricted by configuration/permissions.
-     * - The current location must allow opening (not inside liquid blocks).
-     * - Other plugins may cancel via PetInventoryActionEvent.
+     * Validates environmental constraints before the caller opens the backpack
+     * menu. Returns {@code true} if the conditions are met; the caller is then
+     * responsible for opening the menu via {@code GuiService.openMenu(...)}.
+     * <p>
+     * Guards: rows > 0, owner not sleeping, creative restrictions, and the
+     * {@link PetInventoryActionEvent} must not be cancelled.
      *
-     * @return true if the backpack was opened; false otherwise
+     * @return true if the backpack may be opened; false if a guard blocked it
      */
+    @Override
     public boolean activate() {
         if (rows.getValue().intValue() > 0) {
             if (pet.getOwner().getPlayer().isSleeping()) {
@@ -163,7 +296,6 @@ public class BackpackImpl implements Backpack {
                 // and allow opening — the "pet is swimming" guard is cosmetic, not a hard rule.
                 boolean inLiquid = Bukkit.isOwnedByCurrentRegion(petLoc) && petLoc.getBlock().isLiquid();
                 if (!inLiquid) {
-                    openInventory(pet.getOwner().getPlayer());
                     return true;
                 } else {
                     pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.Swimming", pet.getOwner(), pet.getDisplayName()));
@@ -177,24 +309,6 @@ public class BackpackImpl implements Backpack {
             pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Inventory.NotAvailable", pet.getOwner(), pet.getDisplayName()));
             return false;
         }
-    }
-
-    /**
-     * Opens the underlying inventory GUI for the given player, after setting the
-     * inventory title to the Pet's current name.
-     *
-     * @param p the player for whom to open the inventory
-     */
-    public void openInventory(Player p) {
-        inventory.setName(pet.getDisplayName());
-        inventory.open(p);
-    }
-
-    /**
-     * Closes the backpack inventory if it is currently open.
-     */
-    public void closeInventory() {
-        inventory.close();
     }
 
     /**
@@ -219,21 +333,13 @@ public class BackpackImpl implements Backpack {
 
     @Override
     public Optional<State> getState() {
-        return Optional.of(new State(inventory));
+        return Optional.of(new State(contents.clone()));
     }
 
-    /**
-     * Absorbs a previously saved inventory back into the live skill. The codec
-     * builds an intermediate {@link CustomInventory} sized to fit the saved
-     * items; this method realigns to the live {@code rows*9} capacity and then
-     * re-loads the items, matching the pre-codec {@code load(CompoundBinaryTag)}
-     * semantics exactly.
-     */
     @Override
     public void applyState(SkillState state) {
         if (state instanceof State bp) {
-            inventory.setSize(rows.getValue().intValue() * 9);
-            inventory.load(bp.inventory().save(CompoundBinaryTag.empty()));
+            contents = bp.contents() != null ? bp.contents().clone() : new ItemStack[0];
         }
     }
 }

@@ -72,7 +72,11 @@ import java.util.*;
  */
 public class CommandTrade {
 
-    protected HashMap<UUID, Offer> offers = new HashMap<>();
+    /**
+     * Shared offer table. Static so the GUI trade flow ({@code PetTradeService}) can
+     * reach the same accept/reject state the command uses.
+     */
+    static final HashMap<UUID, Offer> OFFERS = new HashMap<>();
 
     /**
      * Registers the {@code /pettrade} Brigadier command and its help entry.
@@ -142,19 +146,19 @@ public class CommandTrade {
             return;
         }
 
-        if (offers.containsKey(player.getUniqueId())) {
-            Offer offer = offers.get(player.getUniqueId());
+        if (OFFERS.containsKey(player.getUniqueId())) {
+            Offer offer = OFFERS.get(player.getUniqueId());
             Player owner = Bukkit.getServer().getPlayer(offer.owner());
             if (owner == null || !owner.isOnline()) {
                 player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
-                offers.remove(player.getUniqueId());
+                OFFERS.remove(player.getUniqueId());
                 return;
             }
 
             if (!Permissions.has(player, "MyPet.command.trade.receive." + offer.pet().getPetType().name())) {
                 player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.NoPermission", player));
                 owner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.pet().getDisplayName()));
-                offers.remove(player.getUniqueId());
+                OFFERS.remove(player.getUniqueId());
                 return;
             }
 
@@ -162,7 +166,7 @@ public class CommandTrade {
                 final MyPetPlayer oldOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
                 if (!oldOwner.hasPet() || oldOwner.getPet() != offer.pet()) {
                     player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
-                    offers.remove(player.getUniqueId());
+                    OFFERS.remove(player.getUniqueId());
                     return;
                 }
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(player) && MyPetApi.getPetManager().hasActivePet(player)) {
@@ -186,7 +190,7 @@ public class CommandTrade {
                     }
                 }
 
-                offers.remove(player.getUniqueId());
+                OFFERS.remove(player.getUniqueId());
 
                 final MyPetPlayer newOwner = MyPetApi.getPlayerManager().isMyPetPlayer(player) ? MyPetApi.getPlayerManager().getMyPetPlayer(player) : MyPetApi.getPlayerManager().registerMyPetPlayer(player);
                 final String worldGroup = offer.pet().getWorldGroup();
@@ -237,7 +241,7 @@ public class CommandTrade {
                 }, null));
             } else {
                 player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
-                offers.remove(player.getUniqueId());
+                OFFERS.remove(player.getUniqueId());
             }
         } else {
             player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.NoOffer", player));
@@ -256,14 +260,14 @@ public class CommandTrade {
             return;
         }
 
-        if (offers.containsKey(player.getUniqueId())) {
-            Offer offer = offers.get(player.getUniqueId());
+        if (OFFERS.containsKey(player.getUniqueId())) {
+            Offer offer = OFFERS.get(player.getUniqueId());
             Player owner = Bukkit.getServer().getPlayer(offer.owner());
             if (owner != null && owner.isOnline()) {
                 owner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Reject", owner, player.getName(), offer.pet().getDisplayName()));
             }
             player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Reject", player, offer.ownerName()));
-            offers.remove(player.getUniqueId());
+            OFFERS.remove(player.getUniqueId());
         } else {
             player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.NoOffer", player));
         }
@@ -282,9 +286,9 @@ public class CommandTrade {
         }
 
         UUID ownerUUID = player.getUniqueId();
-        for (Offer offer : offers.values()) {
+        for (Offer offer : OFFERS.values()) {
             if (offer.owner().equals(ownerUUID)) {
-                offers.remove(offer.receiver());
+                OFFERS.remove(offer.receiver());
                 player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Cancel", player, offer.receiverName()));
                 Player receiver = Bukkit.getPlayer(offer.receiver());
                 if (receiver != null && receiver.isOnline()) {
@@ -297,13 +301,8 @@ public class CommandTrade {
     }
 
     /**
-     * Handles {@code /pettrade <player> [price]}. Creates a new trade offer from this player's
-     * active pet to the specified target player, optionally with an economy price. The target
-     * receives a clickable message to accept the offer.
-     *
-     * @param player     the pet owner initiating the trade
-     * @param targetName the name of the online player to receive the trade offer
-     * @param price      the economy price for the trade ({@code 0} for a free trade)
+     * Handles {@code /pettrade <player> [price]}. Resolves the active pet and the target player,
+     * then delegates to {@link #beginTrade(Player, Player, Pet, double)}.
      */
     private void executeOffer(Player player, String targetName, double price) {
         if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
@@ -311,57 +310,65 @@ public class CommandTrade {
             return;
         }
 
-        if (MyPetApi.getPetManager().hasActivePet(player)) {
-            Pet pet = MyPetApi.getPetManager().getPet(player);
-
-            if (!Permissions.has(player, "MyPet.command.trade.offer." + pet.getPetType().name())) {
-                player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
-                return;
-            }
-
-            Player receiver = Bukkit.getPlayer(targetName);
-            if (receiver == null) {
-                player.sendMessage(Locale.getComponent("Message.No.PlayerOnline", player));
-                return;
-            }
-
-            if (offers.containsKey(receiver.getUniqueId())) {
-                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.OpenOffer", player, receiver.getName()));
-                return;
-            }
-
-            if (receiver.equals(player)) {
-                player.sendMessage(Locale.getComponent("Message.Command.Trade.Owner.Yourself", player));
-                return;
-            }
-
-            if (price > 0) {
-                if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
-                    player.sendMessage(Locale.getComponent("Message.No.Economy", player));
-                    return;
-                }
-            }
-
-            Offer offer = new Offer(price, pet, player.getUniqueId(), receiver.getUniqueId(), receiver.getName(), player.getName());
-            offers.put(receiver.getUniqueId(), offer);
-            if (price > 0) {
-                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Offer.Price", player, pet.getDisplayName(), receiver.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
-                receiver.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Offer.Price", receiver, player.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
-            } else {
-                player.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Offer", player, pet.getDisplayName(), receiver.getName()));
-                receiver.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Offer", receiver, player.getName()));
-            }
-
-            receiver.sendMessage(
-                    Component.text(" »» ").append(pet.getDisplayName())
-                            .hoverEvent(PetInfoBuilder.petToItemHover(pet, Locale.getPlayerLanguage(receiver)))
-                            .clickEvent(ClickEvent.runCommand("/pettrade accept"))
-            );
-        } else {
+        if (!MyPetApi.getPetManager().hasActivePet(player)) {
             player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
+            return;
         }
+
+        Player receiver = Bukkit.getPlayer(targetName);
+        if (receiver == null) {
+            player.sendMessage(Locale.getComponent("Message.No.PlayerOnline", player));
+            return;
+        }
+
+        beginTrade(player, receiver, MyPetApi.getPetManager().getPet(player), price);
     }
 
-    private record Offer(double price, Pet pet, UUID owner, UUID receiver, String receiverName, String ownerName) {
+    /**
+     * Canonical trade-offer entry point. Validates permissions, existing-offer/self-trade
+     * conflicts, and economy availability, then records the offer and prompts both players.
+     * Used by both {@code /pettrade} and the GUI trade flow.
+     */
+    public static void beginTrade(Player from, Player target, Pet pet, double price) {
+        if (!Permissions.has(from, "MyPet.command.trade.offer." + pet.getPetType().name())) {
+            from.sendMessage(Locale.getComponent("Message.No.Allowed", from));
+            return;
+        }
+
+        if (OFFERS.containsKey(target.getUniqueId())) {
+            from.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.OpenOffer", from, target.getName()));
+            return;
+        }
+
+        if (target.equals(from)) {
+            from.sendMessage(Locale.getComponent("Message.Command.Trade.Owner.Yourself", from));
+            return;
+        }
+
+        if (price > 0) {
+            if (!MyPetApi.getHookHelper().isEconomyEnabled()) {
+                from.sendMessage(Locale.getComponent("Message.No.Economy", from));
+                return;
+            }
+        }
+
+        Offer offer = new Offer(price, pet, from.getUniqueId(), target.getUniqueId(), target.getName(), from.getName());
+        OFFERS.put(target.getUniqueId(), offer);
+        if (price > 0) {
+            from.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Offer.Price", from, pet.getDisplayName(), target.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
+            target.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Offer.Price", target, from.getName(), MyPetApi.getHookHelper().getEconomy().format(price)));
+        } else {
+            from.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Offer", from, pet.getDisplayName(), target.getName()));
+            target.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Offer", target, from.getName()));
+        }
+
+        target.sendMessage(
+                Component.text(" »» ").append(pet.getDisplayName())
+                        .hoverEvent(PetInfoBuilder.petToItemHover(pet, Locale.getPlayerLanguage(target)))
+                        .clickEvent(ClickEvent.runCommand("/pettrade accept"))
+        );
+    }
+
+    record Offer(double price, Pet pet, UUID owner, UUID receiver, String receiverName, String ownerName) {
     }
 }

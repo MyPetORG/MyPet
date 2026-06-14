@@ -72,7 +72,6 @@ import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sittable;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -225,6 +224,19 @@ public abstract class PetImpl implements Pet, NBTStorage {
             bukkitEntity.remove();
         }
         bukkitEntity = null;
+    }
+
+    @Override
+    public SpawnFlags callToOwner() {
+        if (bukkitEntity != null) {
+            removePet(true);
+        }
+        return createEntity();
+    }
+
+    @Override
+    public void sendAway() {
+        removePet(false);
     }
 
     @Override
@@ -1123,21 +1135,27 @@ public abstract class PetImpl implements Pet, NBTStorage {
         if (!(foodSaturation + saturation <= 100))
             return;
 
-        Inventory bukkitInventory = getSkills().get(BackpackImpl.class).getInventory().getBukkitInventory();
-        if (bukkitInventory == null)
-            return;
-        //Check Inventory for food first, then get that food
+        BackpackImpl backpackSkill = getSkills().get(BackpackImpl.class);
+        ItemStack[] contents = backpackSkill.readContents(backpackSkill.currentCapacity());
+        //Check backpack contents for food, then consume it
         List<ConfigItem> foodList = MyPetApi.getPetInfo().getFood(getPetType());
         for (ConfigItem foodItem : foodList) {
-            if (bukkitInventory.contains(foodItem.getItem().getType())) {
-                ItemStack item = bukkitInventory.getItem(bukkitInventory.first(foodItem.getItem().getType()));
+            Material foodMat = foodItem.getItem().getType();
+            for (int i = 0; i < contents.length; i++) {
+                ItemStack stack = contents[i];
+                if (stack == null || stack.getType() != foodMat) continue;
 
-                PetFeedEvent feedEvent = new PetFeedEvent(this, item, foodSaturation, PetFeedEvent.Result.SELF_FEED);
+                PetFeedEvent feedEvent = new PetFeedEvent(this, stack, foodSaturation, PetFeedEvent.Result.SELF_FEED);
                 Bukkit.getPluginManager().callEvent(feedEvent);
                 if (!feedEvent.isCancelled()) {
                     foodSaturation = feedEvent.getSaturation();
                     setSaturation(getSaturation() + foodSaturation);
-                    item.setAmount(item.getAmount() - 1);
+                    if (stack.getAmount() <= 1) {
+                        contents[i] = null;
+                    } else {
+                        stack.setAmount(stack.getAmount() - 1);
+                    }
+                    backpackSkill.writeContents(contents);
                 }
                 return;
             }

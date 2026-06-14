@@ -29,11 +29,13 @@ import de.Keyle.MyPet.api.skill.skills.Beacon.BuffReceiver;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.skill.skills.Pickup;
-import de.Keyle.MyPet.api.util.inventory.CustomInventory;
+import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.BinaryTagTypes;
+import net.kyori.adventure.nbt.ByteArrayBinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.ListBinaryTag;
 import net.kyori.adventure.nbt.StringBinaryTag;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,26 +60,64 @@ public final class BuiltInSkillStateCodecs {
         skillManager.registerCodec(Backpack.class, Backpack.State.class, new SkillStateCodec<>() {
             @Override
             public CompoundBinaryTag write(Backpack.State state) {
-                return state.inventory().save(CompoundBinaryTag.empty());
+                ItemStack[] contents = state.contents();
+                ListBinaryTag.Builder<BinaryTag> builder = ListBinaryTag.builder();
+                for (int i = 0; i < contents.length; i++) {
+                    ItemStack stack = contents[i];
+                    if (stack == null || stack.getType().isAir()) {
+                        builder.add(ByteArrayBinaryTag.byteArrayBinaryTag(new byte[0]));
+                    } else {
+                        builder.add(ByteArrayBinaryTag.byteArrayBinaryTag(stack.serializeAsBytes()));
+                    }
+                }
+                return CompoundBinaryTag.builder().put("Items", builder.build()).build();
             }
 
             @Override
             public Optional<Backpack.State> read(CompoundBinaryTag compound) {
                 if (compound.keySet().isEmpty()) return Optional.empty();
-                ListBinaryTag items = compound.getList("Items", BinaryTagTypes.COMPOUND);
-                int maxSlot = -1;
-                for (int i = 0; i < items.size(); i++) {
-                    CompoundBinaryTag item = items.getCompound(i);
-                    if (item.keySet().contains("Slot")) {
-                        int slot = item.getByte("Slot") & 0xff;
-                        if (slot > maxSlot) maxSlot = slot;
+                // New format: flat byte-array list
+                if (compound.keySet().contains("Items")) {
+                    ListBinaryTag list = compound.getList("Items");
+                    // New format: each entry is a ByteArrayBinaryTag
+                    if (list.size() > 0 && list.get(0) instanceof ByteArrayBinaryTag) {
+                        ItemStack[] contents = new ItemStack[list.size()];
+                        for (int i = 0; i < list.size(); i++) {
+                            byte[] bytes = ((ByteArrayBinaryTag) list.get(i)).value();
+                            contents[i] = bytes.length == 0 ? null : ItemStack.deserializeBytes(bytes);
+                        }
+                        return Optional.of(new Backpack.State(contents));
+                    }
+                    // Legacy format: slot-indexed compound list (CustomInventory.save format)
+                    ListBinaryTag legacyItems = compound.getList("Items", BinaryTagTypes.COMPOUND);
+                    int maxSlot = -1;
+                    for (int i = 0; i < legacyItems.size(); i++) {
+                        CompoundBinaryTag item = legacyItems.getCompound(i);
+                        if (item.keySet().contains("Slot")) {
+                            int slot = item.getByte("Slot") & 0xff;
+                            if (slot > maxSlot) maxSlot = slot;
+                        }
+                    }
+                    if (maxSlot >= 0) {
+                        int size = Math.min(54, Math.max(9, ((maxSlot + 9) / 9) * 9));
+                        ItemStack[] contents = new ItemStack[size];
+                        for (int i = 0; i < legacyItems.size(); i++) {
+                            CompoundBinaryTag item = legacyItems.getCompound(i);
+                            if (!item.keySet().contains("Slot")) continue;
+                            int slot = item.getByte("Slot") & 0xff;
+                            if (slot >= size) continue;
+                            String paperData = item.getString("PaperItem");
+                            if (!paperData.isEmpty()) {
+                                try {
+                                    byte[] bytes = java.util.Base64.getDecoder().decode(paperData);
+                                    contents[slot] = ItemStack.deserializeBytes(bytes);
+                                } catch (Exception ignored) {}
+                            }
+                        }
+                        return Optional.of(new Backpack.State(contents));
                     }
                 }
-                int size = Math.min(54, Math.max(9, ((maxSlot + 9) / 9) * 9));
-                CustomInventory inv = new CustomInventory();
-                inv.setSize(size);
-                inv.load(compound);
-                return Optional.of(new Backpack.State(inv));
+                return Optional.empty();
             }
         });
 

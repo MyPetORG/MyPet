@@ -23,19 +23,17 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.gui.MenuId;
+import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.gui.IconMenu;
-import de.Keyle.MyPet.api.gui.IconMenuItem;
 import de.Keyle.MyPet.api.player.Permissions;
-import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.gui.context.PetShopSelectionContext;
 import de.Keyle.MyPet.util.shop.PetShop;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import io.papermc.paper.command.brigadier.Commands;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -121,23 +119,37 @@ public class CommandShop {
             return;
         }
 
-        final Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
-        if (shopManager.isPresent()) {
-            String shop = shopManager.get().getDefaultShopName();
-            if (shop != null) {
-                if (Permissions.has(player, "MyPet.shop.access." + shop) || Permissions.has(player, "MyPet.admin")) {
-                    shopManager.get().open(player);
-                    return;
-                }
-            } else {
-                final List<String> availableShops = getAvailablePetShops(player);
-                if (availableShops != null && !availableShops.isEmpty()) {
-                    openShopSelectionGui(player, shopManager.get(), availableShops);
-                    return;
-                }
+        Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
+        if (shopManager.isEmpty()) return;
+        ShopManager manager = shopManager.get();
+
+        // Always route through the selection menu when there are multiple accessible
+        // shops, even when one is marked Default — admins use the GUI to discover
+        // alternate shops, and a Default flag does not imply "skip selection."
+        // /petshop <name> remains the direct-open shortcut.
+        List<PetShop> accessible = new ArrayList<>();
+        List<String> names = getAvailablePetShops(player);
+        if (names != null) {
+            for (String name : names) {
+                PetShop shop = manager.getShop(name);
+                if (shop != null) accessible.add(shop);
             }
-            player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
         }
+
+        if (accessible.isEmpty()) {
+            player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
+            return;
+        }
+        if (accessible.size() == 1) {
+            accessible.get(0).open(player);
+            return;
+        }
+
+        MyPetApi.getGuiService().openMenu(
+            player,
+            (MenuId<PetShopSelectionContext>) (MenuId<?>) MenuIds.PET_SHOP_SELECTION,
+            new PetShopSelectionContext(player, accessible)
+        );
     }
 
     /**
@@ -165,74 +177,6 @@ public class CommandShop {
                 player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
             }
         }
-    }
-
-    /**
-     * Opens a paginated inventory GUI that lists all shops the player has access to.
-     * Clicking a shop icon opens that shop after a short delay.
-     *
-     * @param player         the player to show the selection GUI to
-     * @param shopManager    the {@link ShopManager} service instance
-     * @param availableShops the list of shop names the player is permitted to access
-     */
-    private void openShopSelectionGui(Player player, ShopManager shopManager, List<String> availableShops) {
-        Map<Integer, String> shops = new HashMap<>();
-        IconMenu menu = new IconMenu(Locale.getComponent("Message.Shop.Available", player), event -> {
-            String shopname = shops.get(event.getPosition());
-            if (shopname != null) {
-                final String finalShopname = shopname;
-                player.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> shopManager.open(finalShopname, player), null, 5L);
-
-                event.setWillClose(true);
-                event.setWillDestroy(true);
-            }
-        }, MyPetApi.getPlugin()).setPaginationIdentifier("AvailableShops");
-
-        Queue<PetShop> filler = new ArrayDeque<>();
-
-        for (String shopname : availableShops) {
-            PetShop s = shopManager.getShop(shopname);
-
-            int position = s.getPosition();
-
-            if (position < 0) {
-                filler.add(s);
-                continue;
-            }
-
-            menu.setOption(position, makeShopIcon(s));
-            shops.put(position, s.getName());
-        }
-
-        while (!filler.isEmpty()) {
-            PetShop s = filler.poll();
-
-            int position = menu.addOption(makeShopIcon(s));
-            shops.put(position, s.getName());
-        }
-
-        menu.open(player);
-    }
-
-    /**
-     * Creates an {@link IconMenuItem} representing a pet shop in the selection GUI,
-     * using the shop's configured display name, material, and glowing state.
-     *
-     * @param s the pet shop to create an icon for
-     * @return the constructed icon menu item
-     */
-    private IconMenuItem makeShopIcon(PetShop s) {
-        IconMenuItem icon = new IconMenuItem();
-        icon.setTitle(Util.SANITIZED_MINIMESSAGE.deserialize(s.getDisplayName()));
-
-        SkilltreeIcon si = s.getIcon();
-        Material material = Material.matchMaterial(si.getMaterial());
-        if (material == null) {
-            material = Material.CHEST;
-        }
-        icon.setMaterial(material).setGlowing(si.isGlowing());
-
-        return icon;
     }
 
     /**

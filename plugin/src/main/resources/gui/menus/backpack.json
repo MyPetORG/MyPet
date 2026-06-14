@@ -1,0 +1,14 @@
+{
+  "title": "<gold><backpack_title></gold>",
+  "rows": 6,
+  "esc-supports-back": true,
+  "sound-on-open":  { "key": "minecraft:block.barrel.open",  "volume": 0.7 },
+  "sound-on-close": { "key": "minecraft:block.barrel.close", "volume": 0.5 },
+  "sections": {
+    "storage": {
+      "type": "storage",
+      "region": { "col": 0, "row": 0, "width": 9, "height": 6 },
+      "storage-id": "pet-backpack"
+    }
+  }
+}

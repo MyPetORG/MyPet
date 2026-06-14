@@ -31,16 +31,13 @@ import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
-import de.Keyle.MyPet.api.gui.IconMenu;
-import de.Keyle.MyPet.api.gui.IconMenuItem;
+import de.Keyle.MyPet.api.gui.MenuId;
+import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.gui.context.ChooseSkilltreeContext;
 import io.papermc.paper.command.brigadier.Commands;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -128,10 +125,9 @@ public class CommandChooseSkilltree {
     /**
      * Opens the skilltree selection GUI for the given player.
      *
-     * <p>Builds an {@link IconMenu} displaying all skilltrees compatible with the pet's
-     * type and meeting the pet's requirements (e.g., level). Each entry shows the
-     * skilltree's icon, display name, required level (color-coded), and description.
-     * Clicking an entry applies the selected skilltree.</p>
+     * <p>Opens the choose-skilltree menu displaying all skilltrees compatible with the pet's
+     * type and meeting the pet's requirements (e.g., level). Clicking an entry applies
+     * the selected skilltree.</p>
      *
      * <p>If automatic skilltree assignment is enabled and the player is not an admin,
      * the pet is auto-assigned a skilltree and the GUI is not shown.</p>
@@ -169,63 +165,16 @@ public class CommandChooseSkilltree {
             return;
         }
 
-        final Map<Integer, Skilltree> skilltreeSlotMap = new HashMap<>();
-        IconMenu menu = new IconMenu(Locale.getFormattedComponent("Message.Skilltree.Available", myPetOwner, pet.getDisplayName()), event -> {
-            if (pet != myPetOwner.getPet()) {
-                event.setWillClose(true);
-                event.setWillDestroy(true);
-                return;
-            }
-            if (pet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !pet.getOwner().isMyPetAdmin()) {
-                player.sendMessage(Locale.getFormattedComponent("Message.Command.ChooseSkilltree.OnlyOnce", pet.getOwner(), pet.getDisplayName()));
-            } else if (skilltreeSlotMap.containsKey(event.getPosition())) {
-                Skilltree selectedSkilltree = skilltreeSlotMap.get(event.getPosition());
-                if (selectedSkilltree != null) {
-                    applySkilltree(pet, myPetOwner, selectedSkilltree);
-                }
-            }
-            event.setWillClose(true);
-            event.setWillDestroy(true);
-        }, MyPetApi.getPlugin()).setPaginationIdentifier("ChooseSkilltree");
-
-        for (int i = 0; i < availableSkilltrees.size(); i++) {
-            Skilltree addedSkilltree = availableSkilltrees.get(i);
-
-            SkilltreeIcon icon = addedSkilltree.getIcon();
-            Material material = Material.matchMaterial(icon.getMaterial());
-            if (material == null) {
-                material = Material.OAK_SAPLING;
-            }
-            IconMenuItem option = new IconMenuItem()
-                    .setMaterial(material)
-                    .setGlowing(icon.isGlowing())
-                    .setTitle(Component.text()
-                            .append(Component.text("❱❱❱  "))
-                            .append(Util.SANITIZED_MINIMESSAGE.deserialize(addedSkilltree.getDisplayName()).color(NamedTextColor.DARK_GREEN))
-                            .append(Component.text("  ❰❰❰"))
-                            .build());
-
-            boolean selectable = false;
-            int requiredLevel = addedSkilltree.getRequiredLevel();
-            if (requiredLevel > 1) {
-                selectable = pet.getExperience().getLevel() >= addedSkilltree.getRequiredLevel();
-            }
-
-            if (requiredLevel > 1) {
-                NamedTextColor levelColor = selectable ? NamedTextColor.GREEN : NamedTextColor.DARK_RED;
-                option.addLoreLine(Component.text()
-                        .append(Component.text("▶▶▶  "))
-                        .append(Locale.getFormattedComponent("Message.Skilltree.RequiresLevel.Item", myPetOwner.getLanguage(), requiredLevel).color(levelColor))
-                        .append(Component.text("  ◀◀◀"))
-                        .build());
-            }
-            for (String line : addedSkilltree.getDescription()) {
-                option.addLoreLine(Util.SANITIZED_MINIMESSAGE.deserialize(line));
-            }
-            menu.setOption(i, option);
-            skilltreeSlotMap.put(i, addedSkilltree);
-        }
-        menu.open(player);
+        MyPetApi.getGuiService().openMenu(
+                player,
+                (MenuId<ChooseSkilltreeContext>) (MenuId<?>) MenuIds.CHOOSE_SKILLTREE,
+                new ChooseSkilltreeContext(player, pet, availableSkilltrees, tree -> {
+                    if (pet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !pet.getOwner().isMyPetAdmin()) {
+                        player.sendMessage(Locale.getFormattedComponent("Message.Command.ChooseSkilltree.OnlyOnce", pet.getOwner(), pet.getDisplayName()));
+                        return;
+                    }
+                    applySkilltree(pet, myPetOwner, tree);
+                }));
     }
 
     /**

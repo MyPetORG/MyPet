@@ -1,0 +1,145 @@
+{
+  "title": "<gold><lang:Gui.PetMenu.Title> — <white><pet_name></white></gold>",
+  "rows": 6,
+  "esc-supports-back": false,
+  "sound-on-open":  { "key": "minecraft:block.chest.open",  "volume": 0.6 },
+  "sound-on-close": { "key": "minecraft:block.chest.close", "volume": 0.5 },
+  "sections": {
+    "rename": {
+      "type": "slot",
+      "position": { "col": 0, "row": 0 },
+      "item": { "material": "NAME_TAG", "title": "<yellow><lang:Gui.PetMenu.Rename.Title></yellow>", "lore": ["<gray><lang:Gui.PetMenu.Rename.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
+    },
+    "call": {
+      "type": "slot",
+      "position": { "col": 3, "row": 0 },
+      "item": { "material": "LEAD", "title": "<yellow><lang:Gui.PetMenu.Call.Title></yellow>", "lore": ["<gray><lang:Gui.PetMenu.Call.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:entity.experience_orb.pickup", "volume": 0.8 }
+    },
+    "info": {
+      "type": "slot",
+      "position": { "col": 4, "row": 0 },
+      "item": {
+        "material": "BONE",
+        "title": "<gold><info_title></gold>",
+        "lore": [
+          "<pet_hunger_line>",
+          "<pet_health_line>",
+          "<pet_progression_line>",
+          "<gray><info_type_label>: <gold><pet_type></gold>",
+          "<gray><info_skilltree_label>: <gold><pet_skilltree></gold>"
+        ]
+      }
+    },
+    "stay": {
+      "type": "slot",
+      "position": { "col": 5, "row": 0 },
+      "default-state": "following",
+      "states": {
+        "following": { "item": { "material": "RED_BED", "title": "<yellow><lang:Gui.PetMenu.Stay.Title></yellow>", "lore": [
+          "<gray><label>: <green><lang:Gui.PetMenu.Stay.Following.Value></green>",
+          "<yellow><lang:Gui.PetMenu.Stay.Following.Hint></yellow>"
+        ] } },
+        "staying":   { "item": { "material": "RED_BED", "title": "<yellow><lang:Gui.PetMenu.Stay.Title></yellow>", "lore": [
+          "<gray><label>: <gold><lang:Gui.PetMenu.Stay.Staying.Value></gold>",
+          "<yellow><lang:Gui.PetMenu.Stay.Staying.Hint></yellow>"
+        ], "glow": true } }
+      },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
+    },
+    "auto-respawn": {
+      "type": "slot",
+      "position": { "col": 8, "row": 0 },
+      "default-state": "off",
+      "states": {
+        "off": { "item": { "material": "TOTEM_OF_UNDYING", "title": "<yellow><lang:Gui.PetMenu.AutoRespawn.Title></yellow>", "lore": [
+          "<gray><label>: <red><lang:Gui.PetMenu.AutoRespawn.Off.Value></red>",
+          "<yellow><lang:Gui.PetMenu.AutoRespawn.Off.Hint></yellow>"
+        ] } },
+        "on":  { "item": { "material": "TOTEM_OF_UNDYING", "title": "<yellow><lang:Gui.PetMenu.AutoRespawn.Title></yellow>", "lore": [
+          "<gray><label>: <green><lang:Gui.PetMenu.AutoRespawn.On.Value></green>",
+          "<yellow><lang:Gui.PetMenu.AutoRespawn.On.Hint></yellow>"
+        ], "glow": true } }
+      },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
+    },
+    "send-away": {
+      "type": "slot",
+      "position": { "col": 2, "row": 2 },
+      "item": { "material": "ENDER_PEARL", "title": "<yellow><lang:Gui.PetMenu.SendAway.Title></yellow>", "lore": ["<gray><lang:Gui.PetMenu.SendAway.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:entity.enderman.teleport", "volume": 0.6 }
+    },
+    "store": {
+      "type": "slot",
+      "position": { "col": 3, "row": 2 },
+      "item": { "material": "ENDER_CHEST", "title": "<yellow><lang:Gui.PetMenu.Store.Title></yellow>", "lore": ["<gray><lang:Gui.PetMenu.Store.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:block.ender_chest.open", "volume": 0.6 }
+    },
+    "switch": {
+      "type": "slot",
+      "position": { "col": 4, "row": 2 },
+      "item": { "material": "COMPASS", "title": "<yellow><lang:Gui.PetMenu.Switch.Title></yellow>", "lore": ["<gray><lang:Gui.PetMenu.Switch.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:ui.button.click" }
+    },
+    "trade": {
+      "type": "slot",
+      "position": { "col": 5, "row": 2 },
+      "item": { "material": "EMERALD", "title": "<yellow><lang:Gui.PetMenu.Trade.Title></yellow>", "lore": ["<gray><lang:Gui.PetMenu.Trade.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:entity.villager.celebrate", "volume": 0.6 }
+    },
+    "release": {
+      "type": "slot",
+      "position": { "col": 6, "row": 2 },
+      "item": { "material": "BARRIER", "title": "<red><lang:Gui.PetMenu.Release.Title></red>", "lore": ["<gray><lang:Gui.PetMenu.Release.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": 0.6 }
+    },
+    "choose-skilltree": {
+      "type": "slot",
+      "position": { "col": 0, "row": 4 },
+      "item": { "material": "KNOWLEDGE_BOOK", "title": "<yellow><lang:Gui.PetMenu.ChooseSkilltree.Title></yellow>", "lore": ["<gray><lang:Gui.PetMenu.ChooseSkilltree.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:item.book.page_turn" }
+    },
+    "skill-menus": {
+      "type": "paginated-list",
+      "region": { "col": 0, "row": 5, "width": 5, "height": 1 },
+      "template": {
+        "material": "STONE",
+        "title": "<yellow><skill_menu_title></yellow>",
+        "lore": ["<gray><skill_menu_lore></gray>"]
+      },
+      "sound-on-template-click": { "key": "minecraft:ui.button.click", "volume": 0.7 }
+    },
+    "behavior": {
+      "type": "slot",
+      "position": { "col": 5, "row": 5 },
+      "item": { "material": "WOODEN_SWORD", "title": "<yellow><lang:Gui.PetMenu.Behavior.Title></yellow>", "lore": [
+        "<gray><label>: <gold><behavior_mode></gold>",
+        "<yellow><lang:Gui.PetMenu.Behavior.Hint></yellow>"
+      ] },
+      "sound-on-click": { "key": "minecraft:block.note_block.snare" }
+    },
+    "pickup": {
+      "type": "slot",
+      "position": { "col": 6, "row": 5 },
+      "default-state": "off",
+      "states": {
+        "off": { "item": { "material": "HOPPER", "title": "<yellow><lang:Gui.PetMenu.Pickup.Title></yellow>", "lore": [
+          "<gray><label>: <red><lang:Gui.PetMenu.Pickup.Off.Value></red>",
+          "<yellow><lang:Gui.PetMenu.Pickup.Off.Hint></yellow>"
+        ] } },
+        "on":  { "item": { "material": "HOPPER", "title": "<yellow><lang:Gui.PetMenu.Pickup.Title></yellow>", "lore": [
+          "<gray><label>: <green><lang:Gui.PetMenu.Pickup.On.Value></green>",
+          "<yellow><lang:Gui.PetMenu.Pickup.On.Hint></yellow>"
+        ], "glow": true } }
+      },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
+    },
+    "stop-attacking": {
+      "type": "slot",
+      "position": { "col": 7, "row": 5 },
+      "item": { "material": "SHIELD", "title": "<yellow><lang:Gui.PetMenu.StopAttacking.Title></yellow>", "lore": ["<gray><lang:Gui.PetMenu.StopAttacking.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:item.shield.block", "volume": 0.5 }
+    }
+  }
+}

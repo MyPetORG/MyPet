@@ -35,31 +35,40 @@ public class EggIconService implements ServiceContainer {
     }
 
     public void updateIcon(PetType type, IconMenuItem icon) {
-        icon.setGlowing(false);
+        Resolved r = resolve(type);
+        icon.setMaterial(r.material());
+        icon.setGlowing(r.glowing());
+    }
 
+    /**
+     * Resolve the icon for a {@link PetType} without depending on the legacy
+     * {@code IconMenuItem} container. Order of precedence:
+     * <ol>
+     *   <li>Vanilla spawn egg (e.g. {@code WOLF_SPAWN_EGG})</li>
+     *   <li>The pet class's {@code @DefaultInfo.fallbackIconMaterial}</li>
+     *   <li>Glowing {@link Material#EGG} as a last resort</li>
+     * </ol>
+     */
+    public Resolved resolve(PetType type) {
         String matName = toUpperSnake(type.name()) + "_SPAWN_EGG";
         Material material = Material.matchMaterial(matName);
         if (material != null) {
-            icon.setMaterial(material);
-            return;
+            return new Resolved(material, false);
         }
 
-        // No vanilla spawn-egg item — consult the pet class's @DefaultInfo
-        // fallback so each PetXxx declares its own icon. Falls through to a
-        // glowing BARRIER when no fallback is specified.
         DefaultInfo info = type.getPetClass() != null
                 ? type.getPetClass().getAnnotation(DefaultInfo.class)
                 : null;
         if (info != null && !info.fallbackIconMaterial().isEmpty()) {
             Material fallback = Material.matchMaterial(info.fallbackIconMaterial());
             if (fallback != null) {
-                icon.setMaterial(fallback);
-                icon.setGlowing(info.fallbackIconGlow());
-                return;
+                return new Resolved(fallback, info.fallbackIconGlow());
             }
         }
 
-        icon.setMaterial(Material.EGG);
-        icon.setGlowing(true);
+        return new Resolved(Material.EGG, true);
     }
+
+    /** Resolved icon for a pet type: a Bukkit material plus a glow hint. */
+    public record Resolved(Material material, boolean glowing) {}
 }

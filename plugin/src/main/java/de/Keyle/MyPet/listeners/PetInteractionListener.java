@@ -21,8 +21,14 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
+import de.Keyle.MyPet.api.gui.MenuId;
+import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import de.Keyle.MyPet.gui.context.PetMenuContext;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -61,10 +67,39 @@ public class PetInteractionListener implements Listener {
         }
 
         EquipmentSlot hand = event.getHand();
-        ItemStack item = event.getPlayer().getInventory().getItem(hand);
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItem(hand);
 
-        if (pet.onInteract(event.getPlayer(), item, hand)) {
+        if (pet.onInteract(player, item, hand)) {
             event.setCancelled(true);
+            return;
         }
+
+        // Fallback: a bare-hand, non-sneaking right-click by the owner opens the
+        // pet management menu. Sneak+empty toggles sit and a configured
+        // RIGHT_CLICK_COMMAND both run inside onInteract above, so they take
+        // precedence; this only fires when neither consumed the interaction.
+        // Naturally rideable pets are excluded so a bare-hand click still mounts
+        // them (handled later by RideInteractListener / vanilla).
+        boolean bareHand = item == null || item.getType().isAir();
+        if (bareHand && !player.isSneaking() && isOwner(player, pet)
+                && !(pet instanceof PetNaturallyRideable)
+                && Configuration.Misc.RIGHT_CLICK_COMMAND.isEmpty()) {
+            event.setCancelled(true);
+            openPetMenu(player, pet);
+        }
+    }
+
+    private static boolean isOwner(Player player, Pet pet) {
+        return pet.getOwner() != null && pet.getOwner().getPlayer() != null
+                && pet.getOwner().getPlayer().getUniqueId().equals(player.getUniqueId());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void openPetMenu(Player player, Pet pet) {
+        MyPetApi.getGuiService().openMenu(
+                player,
+                (MenuId<PetMenuContext>) (MenuId<?>) MenuIds.PET_MENU,
+                new PetMenuContext(player, pet));
     }
 }

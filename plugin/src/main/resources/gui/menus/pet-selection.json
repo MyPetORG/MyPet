@@ -1,0 +1,53 @@
+{
+  "title": "<gold><lang:Gui.PetSelection.Title></gold>",
+  "rows": 6,
+  "esc-supports-back": true,
+  "sound-on-open":  { "key": "minecraft:block.chest.open",  "volume": 0.7 },
+  "sound-on-close": { "key": "minecraft:block.chest.close", "volume": 0.5 },
+  "sections": {
+    "border": {
+      "type": "border",
+      "thickness": 1,
+      "item": { "material": "GRAY_STAINED_GLASS_PANE", "title": " " }
+    },
+    "pets": {
+      "type": "paginated-list",
+      "region": { "col": 1, "row": 1, "width": 7, "height": 4 },
+      "template": {
+        "material": "BONE",
+        "title": "<gold><lang:Gui.PetSelection.Template.Title:'<pet_name>'></gold>",
+        "lore": [
+          "<pet_hunger_line>",
+          "<pet_health_line>",
+          "<pet_progression_line>",
+          "<type_label>: <gold><pet_type></gold>",
+          "<skilltree_label>: <gold><pet_skilltree></gold>",
+          "<yellow><lang:Gui.PetSelection.Template.Lore.Click></yellow>"
+        ]
+      },
+      "previous-page-section": "previous-page",
+      "next-page-section": "next-page",
+      "sound-on-template-click": { "key": "entity.evoker.cast_spell", "volume": 0.8, "pitch": { "min": 0.75, "max": 1.25 } }
+    },
+    "previous-page": {
+      "type": "slot",
+      "position": { "col": 0, "row": 5 },
+      "item": {
+        "material": "OAK_SIGN",
+        "title": "<gray><lang:Gui.Page.Previous:'<target_page>'></gray>"
+      },
+      "hide-at-boundary": true,
+      "sound-on-click": { "key": "minecraft:item.book.page_turn", "pitch": { "min": 0.9, "max": 1.1 } }
+    },
+    "next-page": {
+      "type": "slot",
+      "position": { "col": 8, "row": 5 },
+      "item": {
+        "material": "OAK_SIGN",
+        "title": "<gray><lang:Gui.Page.Next:'<target_page>'></gray>"
+      },
+      "hide-at-boundary": true,
+      "sound-on-click": { "key": "minecraft:item.book.page_turn", "pitch": { "min": 0.9, "max": 1.1 } }
+    }
+  }
+}

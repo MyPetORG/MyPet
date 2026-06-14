@@ -33,8 +33,13 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.util.hooks.HookHelper;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.translation.VanillaTranslationLoader;
+import de.Keyle.MyPet.api.gui.GuiService;
+import de.Keyle.MyPet.api.gui.MenuId;
+import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
+import de.Keyle.MyPet.dialog.DialogServiceImpl;
+import de.Keyle.MyPet.gui.GuiServiceImpl;
 import de.Keyle.MyPet.services.EggIconService;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.commands.BuiltInCommands;
@@ -261,6 +266,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         BuiltInServices.register(serviceManager);
         serviceManager.registerService(EggIconService.class);
+        serviceManager.registerService(GuiServiceImpl.class);
+        serviceManager.registerService(DialogServiceImpl.class);
         serviceManager.activate(Load.State.OnLoad);
     }
 
@@ -297,6 +304,67 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         SplashScreen.print(updateStatus, Configuration.Repository.REPOSITORY_TYPE);
 
         serviceManager.activate(Load.State.OnEnable);
+
+        // Register the 8 built-in GUI menus and load their bundled JSON
+        GuiService gui = MyPetApi.getGuiService();
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.PetSelectionContext>) (MenuId<?>) MenuIds.PET_SELECTION,
+            new de.Keyle.MyPet.gui.menus.PetSelectionMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/pet-selection.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.PetAdminSelectionContext>) (MenuId<?>) MenuIds.PET_ADMIN_SELECTION,
+            new de.Keyle.MyPet.gui.menus.PetAdminSelectionMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/pet-admin-selection.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.PetShopSelectionContext>) (MenuId<?>) MenuIds.PET_SHOP_SELECTION,
+            new de.Keyle.MyPet.gui.menus.PetShopSelectionMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/pet-shop-selection.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.PetShopContext>) (MenuId<?>) MenuIds.PET_SHOP,
+            new de.Keyle.MyPet.gui.menus.PetShopMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/pet-shop.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.PetShopConfirmContext>) (MenuId<?>) MenuIds.PET_SHOP_CONFIRM,
+            new de.Keyle.MyPet.gui.menus.PetShopConfirmMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/pet-shop-confirm.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.ChooseSkilltreeContext>) (MenuId<?>) MenuIds.CHOOSE_SKILLTREE,
+            new de.Keyle.MyPet.gui.menus.ChooseSkilltreeMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/choose-skilltree.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.BeaconContext>) (MenuId<?>) MenuIds.BEACON,
+            new de.Keyle.MyPet.gui.menus.BeaconMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/beacon.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.BackpackContext>) (MenuId<?>) MenuIds.BACKPACK,
+            new de.Keyle.MyPet.gui.menus.BackpackMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/backpack.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.NpcStorageConfirmContext>) (MenuId<?>) MenuIds.NPC_STORAGE_CONFIRM,
+            new de.Keyle.MyPet.gui.menus.NpcStorageConfirmMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/npc-storage-confirm.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.PetReleaseConfirmContext>) (MenuId<?>) MenuIds.PET_RELEASE_CONFIRM,
+            new de.Keyle.MyPet.gui.menus.PetReleaseConfirmMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/pet-release-confirm.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.PetMenuContext>) (MenuId<?>) MenuIds.PET_MENU,
+            new de.Keyle.MyPet.gui.menus.PetMenuMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/pet-menu.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.PetTradeTargetContext>) (MenuId<?>) MenuIds.PET_TRADE_TARGET,
+            new de.Keyle.MyPet.gui.menus.PetTradeTargetMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/pet-trade-target.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.PetTradeConfirmContext>) (MenuId<?>) MenuIds.PET_TRADE_CONFIRM,
+            new de.Keyle.MyPet.gui.menus.PetTradeConfirmMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/pet-trade-confirm.json"));
+
+        // Initialize the DialogService once it's been OnEnable-activated.
+        ((DialogServiceImpl) MyPetApi.getDialogService()).init(this);
+
+        // Load the bundled+overlay JSON for all registered menus.
+        ((GuiServiceImpl) gui).reload();
 
         VanillaTranslationLoader.loadAsync(this);
 

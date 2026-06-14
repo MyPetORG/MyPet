@@ -20,8 +20,10 @@
 
 package de.Keyle.MyPet;
 
+import de.Keyle.MyPet.api.dialog.DialogService;
 import de.Keyle.MyPet.api.entity.PetInfo;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlagManager;
+import de.Keyle.MyPet.api.gui.GuiService;
 import de.Keyle.MyPet.api.plugin.MyPetPlugin;
 import de.Keyle.MyPet.api.repository.PetManager;
 import de.Keyle.MyPet.api.repository.PlayerManager;
@@ -147,5 +149,19 @@ public class MyPetApi {
      */
     public static LeashFlagManager getLeashFlagManager() {
         return requireService(LeashFlagManager.class);
+    }
+
+    /**
+     * @return instance of the GUI service
+     */
+    public static GuiService getGuiService() {
+        return requireService(GuiService.class);
+    }
+
+    /**
+     * @return instance of the dialog service
+     */
+    public static DialogService getDialogService() {
+        return requireService(DialogService.class);
     }
 }

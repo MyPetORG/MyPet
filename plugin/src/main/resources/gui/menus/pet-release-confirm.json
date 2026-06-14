@@ -1,0 +1,35 @@
+{
+  "title": "<dialog_title>",
+  "rows": 3,
+  "esc-supports-back": true,
+  "sound-on-open":  { "key": "minecraft:block.note_block.bell", "volume": 0.5, "pitch": 0.9 },
+  "sound-on-close": { "key": "minecraft:block.chest.close",     "volume": 0.5 },
+  "sections": {
+    "border": {
+      "type": "border",
+      "thickness": 1,
+      "item": { "material": "RED_STAINED_GLASS_PANE", "title": " " }
+    },
+    "display": {
+      "type": "slot",
+      "position": { "col": 4, "row": 1 },
+      "item": {
+        "material": "BARRIER",
+        "title": "<dialog_title>",
+        "lore": ["<dialog_message>"]
+      }
+    },
+    "yes": {
+      "type": "slot",
+      "position": { "col": 3, "row": 1 },
+      "item": { "material": "LIME_WOOL", "title": "<red><lang:Gui.PetReleaseConfirm.Yes></red>" },
+      "sound-on-click": { "key": "minecraft:entity.experience_orb.pickup", "volume": 1.0 }
+    },
+    "no": {
+      "type": "slot",
+      "position": { "col": 5, "row": 1 },
+      "item": { "material": "RED_WOOL", "title": "<green><lang:gui.cancel></green>" },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "volume": 0.6, "pitch": 0.8 }
+    }
+  }
+}

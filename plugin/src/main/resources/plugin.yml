@@ -40,7 +40,6 @@ softdepend:
   - SurvivalGames
   - Towny
   - Vault
-  - WGCustomFlags
   - WorldGuard
 permissions:
   MyPet.leash.*:

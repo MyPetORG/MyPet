@@ -233,6 +233,20 @@ public non-sealed interface Pet extends StoredPet, Scheduler {
      */
     void removeEntity();
 
+    /**
+     * Calls the pet to its owner. If the pet is already spawned, despawns
+     * it first (preserving auto-respawn intent) and then re-spawns at the
+     * owner's location. Returns the spawn result for the caller to handle.
+     */
+    SpawnFlags callToOwner();
+
+    /**
+     * Sends the pet away — equivalent to {@code removePet(false)}.
+     * The pet stays owned but will not auto-spawn on the next login or
+     * call until it is summoned again.
+     */
+    void sendAway();
+
     /** Re-renders the pet's name tag from the current state and config. */
     default void updateNameTag() {
     }
