@@ -73,6 +73,7 @@ public final class PetListeners {
             PetProjectileHitListener::new,
             PetInteractionListener::new,
             PetInteractionGateListener::new,
+            PetBucketGateListener::new,
             PetEnvironmentListener::new,
             PetLightningStrikeListener::new,
             PetZombificationListener::new,
