@@ -455,14 +455,14 @@ public final class VanillaMobSpawner {
      * Pre-spawn position search
      */
     private Location findValidSpawnLocation(Location origin, Class<? extends Mob> mobClass) {
-        if (origin != null && origin.getWorld() != null && origin.getBlock().isPassable()) {
+        if (origin != null && origin.getWorld() != null && canSpawnIn(origin.getBlock())) {
             return origin;
         }
         Location loc = origin.clone().subtract(1, 0, 1);
         for (double x = 0; x <= 2; x += 0.5) {
             for (double z = 0; z <= 2; z += 0.5) {
                 if (x != 1 && z != 1) {
-                    if (loc.getWorld() != null && loc.getBlock().isPassable()) {
+                    if (loc.getWorld() != null && canSpawnIn(loc.getBlock())) {
                         Block below = loc.getBlock().getRelative(BlockFace.DOWN);
                         if (below.getType().isSolid()) {
                             return loc;
@@ -475,5 +475,16 @@ public final class VanillaMobSpawner {
             loc.add(0.5, 0, 0);
         }
         return null;
+    }
+
+    /**
+     * Whether a pet can spawn inside this block without suffocating. Passable
+     * blocks (air, water, plants) qualify, and so do thin or partial blocks
+     * like carpet, snow layers and slabs — these report isPassable() == false
+     * only because of their slim collision box. Only full, vision-occluding
+     * blocks (stone, dirt, …) are rejected so pets never spawn trapped in terrain.
+     */
+    public static boolean canSpawnIn(Block block) {
+        return block.isPassable() || !block.getType().isOccluding();
     }
 }

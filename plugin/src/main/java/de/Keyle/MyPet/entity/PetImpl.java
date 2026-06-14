@@ -481,7 +481,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
     @Override
     public void setLocation(Location loc) {
         if (status == PetState.Here && bukkitEntity != null
-                && loc != null && loc.getWorld() != null && loc.getBlock().isPassable()) {
+                && loc != null && loc.getWorld() != null && VanillaMobSpawner.canSpawnIn(loc.getBlock())) {
             bukkitEntity.teleportAsync(loc);
         }
     }
