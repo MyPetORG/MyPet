@@ -24,13 +24,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.Pet;
-import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
 import de.Keyle.MyPet.api.listener.PetListenerRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -52,10 +50,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 @DefaultInfo(food = {Material.BONE}, leashFlags = {"Impossible"}, fallbackIconMaterial = "ENDERMITE_SPAWN_EGG", fallbackIconGlow = true, overrideFlySpeed = true, flySpeed = 0.9D)
-public class PetWither extends PetImpl implements PetBaby, PetLavaEntity, PetFlyingEntity {
+public class PetWither extends PetImpl implements PetLavaEntity, PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Wither", "CanFly", true);
-    public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Wither", "experience_bottle");
 
     public static final PetLifecycleHook LIFECYCLE_HOOK = new PetLifecycleHook(
             "Wither",
