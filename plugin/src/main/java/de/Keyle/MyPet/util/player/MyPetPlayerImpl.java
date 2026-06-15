@@ -64,7 +64,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     protected boolean autoRespawn = false;
     protected boolean showHealthBar = false;
     protected int autoRespawnMin = 1;
-    protected float petLivingSoundVolume = 1f;
+    protected volatile float petVolume = 1f;
 
     protected BiMap<String, UUID> petWorldUUID = HashBiMap.create();
     protected BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
@@ -97,7 +97,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             return true;
         } else if (showHealthBar) {
             return true;
-        } else return petLivingSoundVolume < 1f;
+        } else return petVolume < 1f;
     }
 
     // Custom Data -----------------------------------------------------------------
@@ -118,12 +118,12 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         autoRespawnMin = value;
     }
 
-    public float getPetLivingSoundVolume() {
-        return petLivingSoundVolume;
+    public float getPetVolume() {
+        return petVolume;
     }
 
-    public void setPetLivingSoundVolume(float volume) {
-        petLivingSoundVolume = Math.min(Math.max(volume, 0), 1f);
+    public void setPetVolume(float volume) {
+        petVolume = Math.min(Math.max(volume, 0), 1f);
     }
 
     public boolean isHealthBarActive() {
@@ -298,7 +298,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                 .putInt("AutoRespawnMin", getAutoRespawnMin())
                 .putBoolean("CaptureMode", isCaptureHelperActive())
                 .putBoolean("HealthBar", isHealthBarActive())
-                .putFloat("PetLivingSoundVolume", getPetLivingSoundVolume())
+                .putFloat("PetLivingSoundVolume", getPetVolume())
                 .build();
 
         CompoundBinaryTag.Builder uuidBuilder = CompoundBinaryTag.builder();
@@ -335,7 +335,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                 setHealthBarActive(settingsTag.getBoolean("HealthBar"));
             }
             if (settingsTag.keySet().contains("PetLivingSoundVolume")) {
-                setPetLivingSoundVolume(settingsTag.getFloat("PetLivingSoundVolume"));
+                setPetVolume(settingsTag.getFloat("PetLivingSoundVolume"));
             }
         } else {
             // Legacy fallback for old data format
@@ -360,7 +360,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                 setHealthBarActive(myplayerNBT.getBoolean("HealthBar"));
             }
             if (myplayerNBT.keySet().contains("PetLivingSoundVolume")) {
-                setPetLivingSoundVolume(myplayerNBT.getFloat("PetLivingSoundVolume"));
+                setPetVolume(myplayerNBT.getFloat("PetLivingSoundVolume"));
             }
         }
         if (myplayerNBT.keySet().contains("ExtendedInfo")) {

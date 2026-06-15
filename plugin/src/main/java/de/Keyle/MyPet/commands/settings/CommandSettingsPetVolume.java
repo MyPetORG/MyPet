@@ -24,49 +24,56 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.gui.MenuId;
+import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.gui.context.PetVolumeContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
 /**
- * Provides the {@code /petsettings idle-volume} subcommand, which allows players to
- * adjust the volume of their pet's ambient (idle/living) sounds.
+ * Provides the {@code /petsettings volume} subcommand, which allows players to
+ * adjust the volume of all sounds their pet emits.
  *
  * <h3>Usage</h3>
- * <p>{@code /petsettings idle-volume <amount>}</p>
+ * <p>{@code /petsettings volume <amount>}</p>
  *
  * <p>The {@code amount} parameter is an integer from 0 to 100, representing the volume
  * percentage. Preset suggestions of 100, 75, 50, 25, and 0 are offered via tab completion.
- * Setting the value to 0 effectively mutes the pet's idle sounds.</p>
+ * Setting the value to 0 effectively mutes the pet entirely.</p>
  *
  * <p>This is a player-only command with no additional permission requirement beyond
  * being a registered MyPet player.</p>
  */
-public class CommandSettingsPetLivingSound {
+public class CommandSettingsPetVolume {
 
     private static final List<Integer> PRESET_VOLUMES = List.of(100, 75, 50, 25, 0);
 
     /**
-     * Builds and returns the Brigadier {@code "idle-volume"} literal command node.
+     * Builds and returns the Brigadier {@code "volume"} literal command node.
      * This node is intended to be attached as a child of the {@code /petsettings} command tree.
      *
-     * @return the built {@link LiteralCommandNode} for the idle-volume subcommand
+     * @return the built {@link LiteralCommandNode} for the volume subcommand
      */
+    @SuppressWarnings("unchecked")
     public LiteralCommandNode<CommandSourceStack> buildNode() {
-        return Commands.literal("idle-volume")
+        return Commands.literal("volume")
                 .requires(ctx -> ctx.getSender() instanceof Player)
                 .executes(ctx -> {
                     Player player = (Player) ctx.getSource().getSender();
-                    player.sendMessage(Locale.getComponent("Message.Command.Help.MissingParameter", player));
-                    player.sendMessage(Component.text(" -> ")
-                            .append(Component.text("/petsettings idle-volume ").color(NamedTextColor.DARK_AQUA))
-                            .append(Component.text("<amount>").color(NamedTextColor.RED)));
+                    if (!MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
+                        player.sendMessage(Locale.getComponent("Message.Command.Fail", player));
+                        return Command.SINGLE_SUCCESS;
+                    }
+                    MyPetApi.getGuiService().openMenu(
+                            player,
+                            (MenuId<PetVolumeContext>) (MenuId<?>) MenuIds.PET_VOLUME,
+                            new PetVolumeContext(player)
+                    );
                     return Command.SINGLE_SUCCESS;
                 })
                 .then(Commands.argument("amount", IntegerArgumentType.integer(0, 100))
@@ -86,7 +93,7 @@ public class CommandSettingsPetLivingSound {
     }
 
     /**
-     * Sets the pet living sound volume for the given player. The amount is clamped to
+     * Sets the pet volume for the given player. The amount is clamped to
      * the range [0, 100] and converted to a float ratio (0.0 to 1.0) before being stored.
      *
      * @param player the player adjusting the setting
@@ -96,7 +103,7 @@ public class CommandSettingsPetLivingSound {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             float volume = Math.min(Math.max(amount, 0f), 100f) / 100f;
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
-            myPetPlayer.setPetLivingSoundVolume(volume);
+            myPetPlayer.setPetVolume(volume);
             player.sendMessage(Locale.getComponent("Message.Command.Success", player));
         } else {
             player.sendMessage(Locale.getComponent("Message.Command.Fail", player));

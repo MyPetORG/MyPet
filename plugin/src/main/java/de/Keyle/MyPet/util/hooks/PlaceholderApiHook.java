@@ -269,10 +269,10 @@ public class PlaceholderApiHook implements ServiceContainer {
             }
         });
 
-        placeHolders.put("idle_volume", new PlaceHolder<>(MyPetPlayer.class) {
+        placeHolders.put("volume", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {
-                return Math.round(player.getPetLivingSoundVolume() * 100f) + "%";
+                return Math.round(player.getPetVolume() * 100f) + "%";
             }
         });
     }

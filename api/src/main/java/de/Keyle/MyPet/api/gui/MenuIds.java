@@ -40,6 +40,7 @@ public final class MenuIds {
     public static final MenuId<?> PET_RELEASE_CONFIRM  = MenuId.of("pet-release-confirm",  contextType("PetReleaseConfirmContext"));
     public static final MenuId<?> PET_TRADE_TARGET     = MenuId.of("pet-trade-target",     contextType("PetTradeTargetContext"));
     public static final MenuId<?> PET_TRADE_CONFIRM    = MenuId.of("pet-trade-confirm",    contextType("PetTradeConfirmContext"));
+    public static final MenuId<?> PET_VOLUME           = MenuId.of("pet-volume",           contextType("PetVolumeContext"));
 
     private MenuIds() {}
 

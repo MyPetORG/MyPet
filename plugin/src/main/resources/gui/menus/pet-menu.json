@@ -140,6 +140,12 @@
       "position": { "col": 7, "row": 5 },
       "item": { "material": "SHIELD", "title": "<yellow><lang:Gui.PetMenu.StopAttacking.Title></yellow>", "lore": ["<gray><lang:Gui.PetMenu.StopAttacking.Lore></gray>"] },
       "sound-on-click": { "key": "minecraft:item.shield.block", "volume": 0.5 }
+    },
+    "volume": {
+      "type": "slot",
+      "position": { "col": 8, "row": 5 },
+      "item": { "material": "NOTE_BLOCK", "title": "<yellow><lang:Gui.PetMenu.Volume.Title></yellow>", "lore": ["<gray><lang:Gui.PetMenu.Volume.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:block.note_block.bit", "volume": 0.5 }
     }
   }
 }

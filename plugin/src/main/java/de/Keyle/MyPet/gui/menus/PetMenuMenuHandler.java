@@ -168,8 +168,18 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
                 }
             }
             case "stop-attacking" -> pet.forgetTarget();
+            case "volume" -> openVolumeMenu(viewer);
             default -> {}
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void openVolumeMenu(Player viewer) {
+        MyPetApi.getGuiService().openMenu(
+            viewer,
+            (MenuId<de.Keyle.MyPet.gui.context.PetVolumeContext>) (MenuId<?>) MenuIds.PET_VOLUME,
+            new de.Keyle.MyPet.gui.context.PetVolumeContext(viewer)
+        );
     }
 
     @Override

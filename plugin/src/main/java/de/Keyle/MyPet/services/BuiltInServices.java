@@ -42,9 +42,11 @@ import de.Keyle.MyPet.util.hooks.McMMOHook;
 import de.Keyle.MyPet.util.hooks.MiniaturePetsHook;
 import de.Keyle.MyPet.util.hooks.MobArenaHook;
 import de.Keyle.MyPet.util.hooks.MythicMobsHook;
+import de.Keyle.MyPet.util.hooks.PacketEventsSoundHook;
 import de.Keyle.MyPet.util.hooks.PlaceholderApiHook;
 import de.Keyle.MyPet.util.hooks.PlotSquaredHook;
 import de.Keyle.MyPet.util.hooks.PremiumVanishHook;
+import de.Keyle.MyPet.util.hooks.ProtocolLibSoundHook;
 import de.Keyle.MyPet.util.hooks.PvPArenaHook;
 import de.Keyle.MyPet.util.hooks.PvPManagerHook;
 import de.Keyle.MyPet.util.hooks.RedProtectHook;
@@ -101,9 +103,11 @@ public final class BuiltInServices {
             MiniaturePetsHook.class,
             MobArenaHook.class,
             MythicMobsHook.class,
+            PacketEventsSoundHook.class,
             PlaceholderApiHook.class,
             PlotSquaredHook.class,
             PremiumVanishHook.class,
+            ProtocolLibSoundHook.class,
             PvPArenaHook.class,
             PvPManagerHook.class,
             RedProtectHook.class,

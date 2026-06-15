@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,6 +50,7 @@ public final class PetLifecycleHookRegistry {
     private PetLifecycleHookRegistry() {}
 
     private static final Map<String, List<PetLifecycleHook>> HOOKS_BY_TYPE = new ConcurrentHashMap<>();
+    private static final List<PetLifecycleHook> GLOBAL_HOOKS = new CopyOnWriteArrayList<>();
     private static volatile boolean petsLoaded = false;
 
     /**
@@ -78,12 +80,27 @@ public final class PetLifecycleHookRegistry {
                 .add(hook);
     }
 
+    /** Adds a global hook (one that fires for every pet type). */
+    static void registerGlobal(PetLifecycleHook hook) {
+        GLOBAL_HOOKS.add(hook);
+    }
+
     /**
      * Returns every lifecycle hook registered for {@code pet}'s type, in
      * registration order. Returns an empty list when no hook is registered.
      */
     public static List<PetLifecycleHook> forPet(Pet pet) {
         ensurePetsLoaded();
-        return HOOKS_BY_TYPE.getOrDefault(pet.getPetType().name(), List.of());
+        List<PetLifecycleHook> perType = HOOKS_BY_TYPE.getOrDefault(pet.getPetType().name(), List.of());
+        if (GLOBAL_HOOKS.isEmpty()) {
+            return perType;
+        }
+        if (perType.isEmpty()) {
+            return GLOBAL_HOOKS;
+        }
+        List<PetLifecycleHook> combined = new ArrayList<>(perType.size() + GLOBAL_HOOKS.size());
+        combined.addAll(perType);
+        combined.addAll(GLOBAL_HOOKS);
+        return combined;
     }
 }

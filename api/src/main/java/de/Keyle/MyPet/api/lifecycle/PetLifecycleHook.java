@@ -57,6 +57,21 @@ public final class PetLifecycleHook {
         PetLifecycleHookRegistry.register(this);
     }
 
+    /**
+     * Builds a hook that fires for every pet, regardless of type. Useful for
+     * cross-cutting per-spawn/despawn behavior that is not specific to a species.
+     */
+    public static PetLifecycleHook global(Consumer<Pet> onSpawn, Consumer<Pet> onDespawn) {
+        return new PetLifecycleHook(onSpawn, onDespawn);
+    }
+
+    private PetLifecycleHook(Consumer<Pet> onSpawn, Consumer<Pet> onDespawn) {
+        this.petType = null;
+        this.onSpawn = onSpawn;
+        this.onDespawn = onDespawn;
+        PetLifecycleHookRegistry.registerGlobal(this);
+    }
+
     public String petType() {
         return petType;
     }

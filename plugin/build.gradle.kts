@@ -103,6 +103,9 @@ dependencies {
     compileOnly("net.kyori:adventure-text-serializer-legacy:4.17.0")
     compileOnly("net.kyori:adventure-text-serializer-ansi:4.17.0")
 
+    compileOnly("com.github.retrooper:packetevents-spigot:2.7.0")
+    compileOnly("net.dmulloy2:ProtocolLib:5.3.0")
+
     compileOnly("org.bstats:bstats-bukkit:3.2.1")
 
     compileOnly("io.sentry:sentry:8.22.0")

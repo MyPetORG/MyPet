@@ -644,7 +644,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 petPlayer.setAutoRespawnMin(rs.getInt("auto_respawn_min"));
                 petPlayer.setCaptureHelperActive(rs.getBoolean("capture_mode"));
                 petPlayer.setHealthBarActive(rs.getBoolean("health_bar"));
-                petPlayer.setPetLivingSoundVolume(rs.getFloat("pet_idle_volume"));
+                petPlayer.setPetVolume(rs.getFloat("pet_idle_volume"));
                 try {
                     byte[] extended = readBlob(rs, "extended_info");
                     petPlayer.setExtendedInfo(NbtUtil.readCompressed(extended));
@@ -877,7 +877,7 @@ public abstract class AbstractSqlRepository implements Repository {
             stmt.setInt(2, player.getAutoRespawnMin());
             stmt.setBoolean(3, player.isCaptureHelperActive());
             stmt.setBoolean(4, player.isHealthBarActive());
-            stmt.setFloat(5, player.getPetLivingSoundVolume());
+            stmt.setFloat(5, player.getPetVolume());
             bindBlob(stmt, 6, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
 
             JsonObject multiWorldObject = new JsonObject();
@@ -930,7 +930,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setInt(3, player.getAutoRespawnMin());
                 stmt.setBoolean(4, player.isCaptureHelperActive());
                 stmt.setBoolean(5, player.isHealthBarActive());
-                stmt.setFloat(6, player.getPetLivingSoundVolume());
+                stmt.setFloat(6, player.getPetVolume());
                 bindBlob(stmt, 7, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
                 JsonObject multiWorldObject = new JsonObject();
                 for (String g : player.getPetsForWorldGroups().keySet()) {
@@ -1072,7 +1072,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setInt(3, player.getAutoRespawnMin());
                 stmt.setBoolean(4, player.isCaptureHelperActive());
                 stmt.setBoolean(5, player.isHealthBarActive());
-                stmt.setFloat(6, player.getPetLivingSoundVolume());
+                stmt.setFloat(6, player.getPetVolume());
                 bindBlob(stmt, 7, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
                 JsonObject multiWorldObject = new JsonObject();
                 for (String g : player.getPetsForWorldGroups().keySet()) {

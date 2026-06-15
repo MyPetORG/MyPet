@@ -65,11 +65,11 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
     /** Sets the minimum respawn time (seconds) before auto-respawn fires. */
     void setAutoRespawnMin(int value);
 
-    /** Returns the volume multiplier for the pet's ambient living sounds. */
-    float getPetLivingSoundVolume();
+    /** Returns the volume multiplier for sounds the pet emits. */
+    float getPetVolume();
 
-    /** Sets the volume multiplier for the pet's ambient living sounds. */
-    void setPetLivingSoundVolume(float volume);
+    /** Sets the volume multiplier for sounds the pet emits. */
+    void setPetVolume(float volume);
 
     /** Returns {@code true} if the under-name health bar is displayed. */
     boolean isHealthBarActive();

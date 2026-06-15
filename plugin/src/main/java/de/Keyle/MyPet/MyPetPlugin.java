@@ -61,6 +61,7 @@ import de.Keyle.MyPet.skill.skilltree.requirements.BuiltInRequirements;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import de.Keyle.MyPet.util.shop.ShopConfigGenerator;
 import de.Keyle.MyPet.util.shop.ShopManager;
+import de.Keyle.MyPet.util.sound.PetSoundService;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -268,6 +269,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager.registerService(EggIconService.class);
         serviceManager.registerService(GuiServiceImpl.class);
         serviceManager.registerService(DialogServiceImpl.class);
+        serviceManager.registerService(PetSoundService.class);
         serviceManager.activate(Load.State.OnLoad);
     }
 
@@ -359,6 +361,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             (MenuId<de.Keyle.MyPet.gui.context.PetTradeConfirmContext>) (MenuId<?>) MenuIds.PET_TRADE_CONFIRM,
             new de.Keyle.MyPet.gui.menus.PetTradeConfirmMenuHandler(),
             () -> getClass().getResourceAsStream("/gui/menus/pet-trade-confirm.json"));
+        gui.registerMenu(
+            (MenuId<de.Keyle.MyPet.gui.context.PetVolumeContext>) (MenuId<?>) MenuIds.PET_VOLUME,
+            new de.Keyle.MyPet.gui.menus.PetVolumeMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/pet-volume.json"));
 
         // Initialize the DialogService once it's been OnEnable-activated.
         ((DialogServiceImpl) MyPetApi.getDialogService()).init(this);

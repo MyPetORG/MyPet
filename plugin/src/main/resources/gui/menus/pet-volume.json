@@ -1,0 +1,41 @@
+{
+  "title": "<gold><lang:Gui.PetVolume.Title></gold>",
+  "rows": 3,
+  "esc-supports-back": false,
+  "sound-on-open":  { "key": "minecraft:block.note_block.bit",   "volume": 0.5 },
+  "sound-on-close": { "key": "minecraft:block.note_block.hat",   "volume": 0.5 },
+  "sections": {
+    "frame": {
+      "type": "border",
+      "item": { "material": "GRAY_STAINED_GLASS_PANE", "title": " " }
+    },
+    "info": {
+      "type": "slot",
+      "position": { "col": 4, "row": 0 },
+      "item": {
+        "material": "JUKEBOX",
+        "title": "<gold><lang:Gui.PetVolume.Info.Title></gold>",
+        "lore": [
+          "<gray><lang:Gui.PetVolume.Info.Lore.Current>: <gold><volume_percent>%</gold>",
+          "<gray><lang:Gui.PetVolume.Info.Lore.Hint>"
+        ]
+      }
+    },
+    "volume": {
+      "type": "value-bar",
+      "region": { "col": 2, "row": 1, "width": 5 },
+      "low-item": {
+        "material": "GRAY_DYE",
+        "title": "<gray><percent>%</gray>",
+        "lore": ["<dark_gray><lang:Gui.PetVolume.Bar.SetTo> <gray><percent>%</gray></dark_gray>"]
+      },
+      "high-item": {
+        "material": "LIME_DYE",
+        "title": "<green><percent>%</green>",
+        "lore": ["<dark_gray><lang:Gui.PetVolume.Bar.SetTo> <green><percent>%</green></dark_gray>"],
+        "glow": true
+      },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
+    }
+  }
+}

@@ -24,7 +24,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.commands.settings.CommandSettingHealthbar;
-import de.Keyle.MyPet.commands.settings.CommandSettingsPetLivingSound;
+import de.Keyle.MyPet.commands.settings.CommandSettingsPetVolume;
 import io.papermc.paper.command.brigadier.Commands;
 
 import java.util.List;
@@ -36,11 +36,11 @@ import java.util.List;
  * <ul>
  *   <li>{@code /petsettings healthbar} — toggles the pet health bar display
  *       (see {@link CommandSettingHealthbar})</li>
- *   <li>{@code /petsettings idle-volume <amount>} — sets the pet's idle/living sound volume
- *       (0-100, see {@link CommandSettingsPetLivingSound})</li>
+ *   <li>{@code /petsettings volume <amount>} — sets the pet's sound volume
+ *       (0-100, see {@link CommandSettingsPetVolume})</li>
  * </ul>
  *
- * <p><b>Usage:</b> {@code /petsettings <healthbar|idle-volume>}</p>
+ * <p><b>Usage:</b> {@code /petsettings <healthbar|volume>}</p>
  * <p><b>Aliases:</b> {@code /po}, {@code /peto}, {@code /petoption}, {@code /petoptions},
  * {@code /psettings}</p>
  * <p><b>Help category:</b> {@link CommandCategory#PET PET} (priority 40)</p>
@@ -52,7 +52,7 @@ public class CommandSettings {
      *
      * <p>The command tree is composed of subcommand nodes built by
      * {@link CommandSettingHealthbar#buildNode()} and
-     * {@link CommandSettingsPetLivingSound#buildNode()}. No root-level executor is defined;
+     * {@link CommandSettingsPetVolume#buildNode()}. No root-level executor is defined;
      * one of the subcommands must be specified.</p>
      *
      * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
@@ -62,7 +62,7 @@ public class CommandSettings {
         commands.register(
                 Commands.literal("petsettings")
                         .then(new CommandSettingHealthbar().buildNode())
-                        .then(new CommandSettingsPetLivingSound().buildNode())
+                        .then(new CommandSettingsPetVolume().buildNode())
                         .build(),
                 "Pet settings",
                 List.of("po", "peto", "petoption", "petoptions", "psettings")
