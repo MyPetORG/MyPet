@@ -123,6 +123,15 @@ public final class MyPetGlobal {
     public static final class LevelSystem {
         public static final ConfigKey<String> CALCULATION_MODE = ConfigKey.globalString("MyPet.LevelSystem.CalculationMode", "Default");
 
+        /** Tunable parameters for the built-in {@code Linear}/{@code Power}/{@code Exponential} XP curves. */
+        public static final class Curve {
+            public static final ConfigKey<Double> LINEAR_BASE = ConfigKey.globalDouble("MyPet.LevelSystem.Curve.Linear.Base", 17.0);
+            public static final ConfigKey<Double> POWER_FACTOR = ConfigKey.globalDouble("MyPet.LevelSystem.Curve.Power.Factor", 7.0);
+            public static final ConfigKey<Double> POWER_EXPONENT = ConfigKey.globalDouble("MyPet.LevelSystem.Curve.Power.Exponent", 1.5);
+            public static final ConfigKey<Double> EXPONENTIAL_BASE = ConfigKey.globalDouble("MyPet.LevelSystem.Curve.Exponential.Base", 10.0);
+            public static final ConfigKey<Double> EXPONENTIAL_GROWTH = ConfigKey.globalDouble("MyPet.LevelSystem.Curve.Exponential.Growth", 1.1);
+        }
+
         public static final class Experience {
             public static final ConfigKey<Integer> LOSS_PERCENT = ConfigKey.globalInt("MyPet.Exp.Loss.Percent", 0);
             public static final ConfigKey<Double> LOSS_FIXED = ConfigKey.globalDouble("MyPet.Exp.Loss.Fixed", 0.0);
@@ -213,7 +222,7 @@ public final class MyPetGlobal {
                 Misc.class, Entity.class, Update.class,
                 Repository.class, Repository.MySQL.class,
                 Respawn.class, Name.class, Name.Tag.class, Permissions.class,
-                LevelSystem.class, LevelSystem.Experience.class, LevelSystem.Experience.Modifier.class,
+                LevelSystem.class, LevelSystem.Curve.class, LevelSystem.Experience.class, LevelSystem.Experience.Modifier.class,
                 HungerSystem.class,
                 Skilltree.class, Skilltree.Skill.class, Skilltree.Skill.Ride.class,
                 Skilltree.Skill.Beacon.class, Skilltree.Skill.Backpack.class

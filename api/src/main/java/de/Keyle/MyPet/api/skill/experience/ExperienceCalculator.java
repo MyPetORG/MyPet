@@ -26,9 +26,9 @@ import de.Keyle.MyPet.api.entity.Pet;
  * Strategy interface for computing the cumulative experience required at each pet level.
  *
  * <p>Implementations define the XP curve that determines how quickly a pet progresses
- * through levels. The plugin ships with {@link DefaultExperienceCalculator} as a built-in
- * implementation; server administrators can register custom calculators (for example,
- * Rhino-based JavaScript formulae) through the {@link ExperienceCalculatorManager}.
+ * through levels. The plugin ships with {@link DefaultExperienceCalculator} plus the
+ * config-tunable {@code Linear}/{@code Power}/{@code Exponential} curves; further calculators
+ * can be registered through the {@link ExperienceCalculatorManager}.
  *
  * <p>Each calculator is identified by a unique string ({@link #getIdentifier()}) and a
  * numeric version ({@link #getVersion()}). Together these allow the {@link ExperienceCache}
@@ -65,7 +65,7 @@ public interface ExperienceCalculator {
     boolean isUsable();
 
     /**
-     * Returns a unique identifier for this calculator (e.g. {@code "MyPet"}, {@code "JavaScript"}).
+     * Returns a unique identifier for this calculator (e.g. {@code "MyPet"}, {@code "Power"}).
      *
      * <p>Used alongside {@link #getVersion()} to key the experience cache.
      */

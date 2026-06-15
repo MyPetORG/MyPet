@@ -9,7 +9,6 @@ libraries:
   - net.kyori:adventure-text-minimessage:4.17.0
   - net.kyori:adventure-text-serializer-ansi:4.17.0
   - net.kyori:adventure-text-serializer-legacy:4.17.0
-  - org.mozilla:rhino:1.8.0
 website: https://mypet.plugin.de/
 softdepend:
   - BattleArena

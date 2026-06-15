@@ -52,7 +52,9 @@ import de.Keyle.MyPet.repository.OnlinePlayerPetLoader;
 import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.repository.RepositoryFactory;
 import de.Keyle.MyPet.services.BuiltInServices;
-import de.Keyle.MyPet.skill.experience.JavaScriptExperienceCalculator;
+import de.Keyle.MyPet.api.skill.experience.ExponentialExperienceCalculator;
+import de.Keyle.MyPet.api.skill.experience.LinearExperienceCalculator;
+import de.Keyle.MyPet.api.skill.experience.PowerExperienceCalculator;
 import de.Keyle.MyPet.entity.types.BuiltInPetTypes;
 import de.Keyle.MyPet.skill.skills.BuiltInSkillStateCodecs;
 import de.Keyle.MyPet.skill.skills.BuiltInSkills;
@@ -281,7 +283,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
      * previous:</p>
      * <ol>
      *   <li>Splash screen, compat-config layer</li>
-     *   <li>Leash flags, skilltree requirements, JS experience calculator</li>
+     *   <li>Leash flags, skilltree requirements, experience-curve calculators</li>
      *   <li>Bukkit listeners ({@link PetListeners}), Brigadier commands ({@link BuiltInCommands})</li>
      *   <li>World groups, built-in skills, default skilltree files, storage permissions</li>
      *   <li>Repository init via {@link RepositoryFactory#initWithFallback()} — early-exits via
@@ -379,12 +381,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         BuiltInLeashFlags.register();
         BuiltInRequirements.register();
 
-        if (!new File(getDataFolder(), "exp.js").exists()) {
-            ResourceUtil.copyResource(this, "exp.js", new File(getDataFolder(), "exp.js"));
-        }
         serviceManager.getService(ExperienceCalculatorManager.class).ifPresent(calculatorManager -> {
-            calculatorManager.registerCalculator("JS", JavaScriptExperienceCalculator.class);
-            calculatorManager.registerCalculator("JavaScript", JavaScriptExperienceCalculator.class);
+            calculatorManager.registerCalculator("Linear", LinearExperienceCalculator.class);
+            calculatorManager.registerCalculator("Power", PowerExperienceCalculator.class);
+            calculatorManager.registerCalculator("Exponential", ExponentialExperienceCalculator.class);
             calculatorManager.switchCalculator(MyPetGlobal.LevelSystem.CALCULATION_MODE.get().toLowerCase());
         });
 

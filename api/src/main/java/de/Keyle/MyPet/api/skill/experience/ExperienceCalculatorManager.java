@@ -58,6 +58,10 @@ public class ExperienceCalculatorManager implements ServiceContainer {
 
     @Override
     public boolean onEnable() {
+        // Register the built-in default curve under its identifier and the "Default" config alias
+        // so it lives in the same map as every other calculator (discoverable, no special-casing).
+        registerCalculator(defaultCalculator.getIdentifier(), DefaultExperienceCalculator.class);
+        registerCalculator("Default", DefaultExperienceCalculator.class);
         return MyPetApi.getServiceManager().getService(ExperienceCache.class)
                 .map(experienceCache -> {
                     cache = experienceCache;
@@ -93,6 +97,7 @@ public class ExperienceCalculatorManager implements ServiceContainer {
                     this.calculator = defaultCalculator;
                 }
             } else {
+                MyPetApi.getLogger().warning("Unknown experience CalculationMode '" + calculator + "'; using the default (MyPet) curve.");
                 this.calculator = defaultCalculator;
             }
         }
