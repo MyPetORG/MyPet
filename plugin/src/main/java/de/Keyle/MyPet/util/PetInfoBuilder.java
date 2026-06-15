@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
@@ -196,7 +196,7 @@ public class PetInfoBuilder {
      * @return Component with hunger info, or null if hunger system disabled
      */
     public static Component hungerLine(Pet pet, CommandSender sender) {
-        if (!Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
+        if (!MyPetGlobal.HungerSystem.USE_HUNGER_SYSTEM.get()) {
             return null;
         }
 
@@ -217,7 +217,7 @@ public class PetInfoBuilder {
      * @return Component with food list, or null if hunger system disabled or sender is not a player
      */
     public static Component foodLine(Pet pet, CommandSender sender) {
-        if (!Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
+        if (!MyPetGlobal.HungerSystem.USE_HUNGER_SYSTEM.get()) {
             return null;
         }
 
@@ -348,7 +348,7 @@ public class PetInfoBuilder {
     public static Component expLine(Pet pet, CommandSender sender) {
         int maxLevel = pet.getSkilltree() != null
                 ? pet.getSkilltree().getMaxLevel()
-                : Configuration.LevelSystem.Experience.LEVEL_CAP;
+                : MyPetGlobal.LevelSystem.Experience.LEVEL_CAP.get();
 
         if (pet.getExperience().getLevel() >= maxLevel) {
             return null;
@@ -509,7 +509,7 @@ public class PetInfoBuilder {
                 .append(Component.text(Math.round(pet.getSaturation())).color(NamedTextColor.GOLD))
                 .append(Component.newline());
 
-        if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+        if (!MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
             if (pet.getRespawnTime() > 0) {
                 builder.append(Locale.getComponent("Name.Respawntime", lang))
                         .append(Component.text(": "))
@@ -552,7 +552,7 @@ public class PetInfoBuilder {
                 .append(Util.SANITIZED_MINIMESSAGE.deserialize(pet.getSkilltree() != null ? pet.getSkilltree().getDisplayName() : "-")
                         .color(NamedTextColor.GOLD));
 
-        if (Configuration.Respawn.DISABLE_AUTO_RESPAWN && pet.getRespawnTime() > 0) {
+        if (MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get() && pet.getRespawnTime() > 0) {
             builder.append(Component.newline())
                     .append(Locale.getComponent("Name.Dead", lang).color(NamedTextColor.RED));
         }

@@ -26,7 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.bukkit.Bukkit;
@@ -87,7 +87,7 @@ public class Updater {
      * @return a status message, or null if update checking is disabled
      */
     public String update() {
-        if (!Configuration.Update.CHECK) {
+        if (!MyPetGlobal.Update.CHECK.get()) {
             return null;
         }
 
@@ -99,7 +99,7 @@ public class Updater {
         if (update.isPresent()) {
             latest = update.get();
 
-            if (Configuration.Update.DOWNLOAD) {
+            if (MyPetGlobal.Update.DOWNLOAD.get()) {
                 download();
             }
 
@@ -195,7 +195,7 @@ public class Updater {
 
     public void download() {
         File pluginFile;
-        if (Configuration.Update.REPLACE_OLD) {
+        if (MyPetGlobal.Update.REPLACE_OLD.get()) {
             pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/" + MyPetApi.getPlugin().getFile().getName());
         } else {
             pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/MyPet-" + latest.getVersion() + ".jar");
@@ -255,14 +255,14 @@ public class Updater {
             }
 
             String message = "Finished update download (verified).";
-            if (Configuration.Update.REPLACE_OLD || MyPetApi.getPlugin().getFile().getName().equals("MyPet-" + latest.getVersion() + ".jar")) {
+            if (MyPetGlobal.Update.REPLACE_OLD.get() || MyPetApi.getPlugin().getFile().getName().equals("MyPet-" + latest.getVersion() + ".jar")) {
                 message += " The update will be loaded on the next server start.";
             } else {
                 message += " The file was stored in the \"update\" folder.";
             }
             MyPetApi.getLogger().info(message);
         };
-        if (!Configuration.Update.ASYNC) {
+        if (!MyPetGlobal.Update.ASYNC.get()) {
             downloadRunner.run();
         } else {
             thread = new Thread(downloadRunner);
@@ -271,7 +271,7 @@ public class Updater {
     }
 
     public void waitForDownload() {
-        if (Configuration.Update.ASYNC && thread != null && thread.isAlive()) {
+        if (MyPetGlobal.Update.ASYNC.get() && thread != null && thread.isAlive()) {
             MyPetApi.getLogger().info("Wait for the update download to finish...");
             try {
                 thread.join();

@@ -303,7 +303,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         Updater updater = new Updater("MyPet");
         String updateStatus = updater.update();
-        SplashScreen.print(updateStatus, Configuration.Repository.REPOSITORY_TYPE);
+        SplashScreen.print(updateStatus, MyPetGlobal.Repository.REPOSITORY_TYPE.get());
 
         serviceManager.activate(Load.State.OnEnable);
 
@@ -385,7 +385,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         serviceManager.getService(ExperienceCalculatorManager.class).ifPresent(calculatorManager -> {
             calculatorManager.registerCalculator("JS", JavaScriptExperienceCalculator.class);
             calculatorManager.registerCalculator("JavaScript", JavaScriptExperienceCalculator.class);
-            calculatorManager.switchCalculator(Configuration.LevelSystem.CALCULATION_MODE.toLowerCase());
+            calculatorManager.switchCalculator(MyPetGlobal.LevelSystem.CALCULATION_MODE.get().toLowerCase());
         });
 
         PetListeners.registerAll(this);
@@ -408,7 +408,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         DefaultSkilltreeProvisioner.copyDefaultsIfFolderCreated(skilltreeFolder, createdSkilltreeFolder, this);
 
-        for (int i = 0; i <= Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
+        for (int i = 0; i <= MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get(); i++) {
             try {
                 Bukkit.getPluginManager().addPermission(new Permission("MyPet.petstorage.limit." + i));
             } catch (Exception ignored) {

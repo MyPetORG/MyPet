@@ -22,7 +22,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
@@ -127,7 +127,7 @@ public class PlayerListener implements Listener {
         if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
             return;
         }
-        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getInventory().getItemInMainHand()) && MyPetApi.getPetManager().hasActivePet(event.getPlayer())) {
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && MyPetGlobal.Skilltree.Skill.CONTROL_ITEM.get().compare(event.getPlayer().getInventory().getItemInMainHand()) && MyPetApi.getPetManager().hasActivePet(event.getPlayer())) {
             Pet pet = MyPetApi.getPetManager().getPet(event.getPlayer());
             if (pet.getStatus() == Pet.PetState.Here && pet.getBukkitEntity() != null && pet.canMove()) {
                 if (pet.getSkills().isActive(ControlImpl.class)) {
@@ -223,7 +223,7 @@ public class PlayerListener implements Listener {
         if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
             return;
         }
-        long delay = MyPetPlugin.getInstance().getRepository() instanceof SqLiteRepository ? 1L : Configuration.Repository.EXTERNAL_LOAD_DELAY;
+        long delay = MyPetPlugin.getInstance().getRepository() instanceof SqLiteRepository ? 1L : MyPetGlobal.Repository.EXTERNAL_LOAD_DELAY.get();
 
         final Player joinPlayer = event.getPlayer();
         joinPlayer.getScheduler().runDelayed(MyPetApi.getPlugin(), delayedTask -> {
@@ -260,7 +260,7 @@ public class PlayerListener implements Listener {
                                                 joinedPlayer.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", joinedPlayer, pet.getDisplayName()));
                                                 break;
                                             case Dead:
-                                                if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                if (MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
                                                     joinedPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", joinedPlayer, pet.getDisplayName()));
                                                 } else {
                                                     joinedPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", joinedPlayer, pet.getDisplayName(), pet.getRespawnTime()));
@@ -285,7 +285,7 @@ public class PlayerListener implements Listener {
             });
         }, null, Math.max(1L, delay));
 
-        if (Configuration.Update.SHOW_OP && event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
+        if (MyPetGlobal.Update.SHOW_OP.get() && event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
             String versionUrl = "https://modrinth.com/plugin/mypet/version/" + Updater.getLatest().getVersion();
             event.getPlayer().sendMessage(Component.text()
                     .append(Locale.getFormattedComponent("Message.Update.Available", event.getPlayer()))
@@ -412,7 +412,7 @@ public class PlayerListener implements Listener {
                             break;
                         case Dead:
                             if (runPet != pet) {
-                                if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                if (MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
                                     myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", runPet.getOwner(), runPet.getDisplayName()));
                                 } else {
                                     myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", runPet.getOwner(), runPet.getDisplayName(), runPet.getRespawnTime()));
@@ -481,7 +481,7 @@ public class PlayerListener implements Listener {
         if ((player.isInsideVehicle() && PetEntityMarker.isMarked(player.getVehicle())) ||
                 (player.isInsideVehicle() && player.getVehicle().isInsideVehicle() && PetEntityMarker.isMarked(player.getVehicle().getVehicle()))) {
             if (player.getLocation().getWorld() != event.getTo().getWorld() || event.getFrom().distance(event.getTo()) > 10) {
-                if (Configuration.Skilltree.Skill.Ride.PREVENT_TELEPORTATION) {
+                if (MyPetGlobal.Skilltree.Skill.Ride.PREVENT_TELEPORTATION.get()) {
                     event.setCancelled(true);
                     player.sendMessage(Locale.getComponent("Message.Skill.Ride.NoTeleport", player));
                     return;
@@ -552,7 +552,7 @@ public class PlayerListener implements Listener {
 
     private void checkBeaconZoneState(Player player, MyPetPlayer mpPlayer, Location to) {
         // Only process if zone messages are enabled
-        if (!Configuration.Skilltree.Skill.Beacon.ZONE_MESSAGES) {
+        if (!MyPetGlobal.Skilltree.Skill.Beacon.ZONE_MESSAGES.get()) {
             return;
         }
 
@@ -645,7 +645,7 @@ public class PlayerListener implements Listener {
             MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getEntity());
             if (myPetPlayer.hasPet()) {
                 final Pet pet = myPetPlayer.getPet();
-                if (pet.getStatus() == Pet.PetState.Here && Configuration.Skilltree.Skill.Backpack.DROP_WHEN_OWNER_DIES) {
+                if (pet.getStatus() == Pet.PetState.Here && MyPetGlobal.Skilltree.Skill.Backpack.DROP_WHEN_OWNER_DIES.get()) {
                     if (pet.getSkills().isActive(BackpackImpl.class)) {
                         CustomInventory inv = pet.getSkills().get(BackpackImpl.class).getInventory();
                         inv.dropContentAt(pet.getLocation().get());
@@ -681,7 +681,7 @@ public class PlayerListener implements Listener {
                                 break;
                             case Dead:
                                 if (runPet != pet) {
-                                    if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                    if (MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
                                         respawnedMyPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", respawnedMyPetPlayer, pet.getDisplayName()));
                                     } else {
                                         respawnedMyPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", respawnedMyPetPlayer, runPet.getDisplayName(), runPet.getRespawnTime()));

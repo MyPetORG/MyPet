@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
@@ -139,7 +139,7 @@ public class CommandRespawn {
             return;
         }
 
-        double costs = pet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
+        double costs = pet.getRespawnTime() * MyPetGlobal.Respawn.COSTS_FACTOR.get() + MyPetGlobal.Respawn.COSTS_FIXED.get();
         String costsString;
         if (pet.getStatus() != PetState.Dead) {
             costsString = "-";
@@ -173,7 +173,7 @@ public class CommandRespawn {
             return;
         }
 
-        double costs = pet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
+        double costs = pet.getRespawnTime() * MyPetGlobal.Respawn.COSTS_FACTOR.get() + MyPetGlobal.Respawn.COSTS_FIXED.get();
         if (pet.getStatus() == PetState.Dead) {
             if (MyPetApi.getHookHelper().getEconomy().canPay(pet.getOwner(), costs)) {
                 MyPetApi.getHookHelper().getEconomy().pay(pet.getOwner(), costs);

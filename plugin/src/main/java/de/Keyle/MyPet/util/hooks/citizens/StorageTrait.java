@@ -22,7 +22,7 @@ package de.Keyle.MyPet.util.hooks.citizens;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
@@ -46,7 +46,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static de.Keyle.MyPet.api.Configuration.Misc;
+import static de.Keyle.MyPet.api.MyPetGlobal.Misc;
 
 public class StorageTrait extends Trait {
 
@@ -89,14 +89,14 @@ public class StorageTrait extends Trait {
 
                         int maxPetCount = 0;
                         if (!Permissions.has(player, "MyPet.admin")) {
-                            for (int i = Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
+                            for (int i = Misc.MAX_STORED_PET_COUNT.get(); i > 0; i--) {
                                 if (Permissions.has(player, "MyPet.petstorage.limit." + i)) {
                                     maxPetCount = i;
                                     break;
                                 }
                             }
                         } else {
-                            maxPetCount = Misc.MAX_STORED_PET_COUNT;
+                            maxPetCount = Misc.MAX_STORED_PET_COUNT.get();
                         }
 
                         if (inactivePetCount == 0 && maxPetCount == 0) {
@@ -136,7 +136,7 @@ public class StorageTrait extends Trait {
                                                             myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", player, activePet.get().getDisplayName()));
                                                             break;
                                                         case Dead:
-                                                            if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                            if (MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
                                                                 myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", myPetPlayer, activePet.get().getDisplayName()));
                                                             } else {
                                                                 myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", myPetPlayer, activePet.get().getDisplayName(), activePet.get().getRespawnTime()));
@@ -216,7 +216,7 @@ public class StorageTrait extends Trait {
                                                             myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPetPlayer, pet.get().getDisplayName()));
                                                             break;
                                                         case Dead:
-                                                            if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                            if (MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
                                                                 myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", myPetPlayer, pet.get().getDisplayName()));
                                                             } else {
                                                                 myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Call.Dead.Respawn", myPetPlayer, pet.get().getDisplayName(), pet.get().getRespawnTime()));

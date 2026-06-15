@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.util.locale;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.ErrorUtil;
@@ -209,8 +209,8 @@ public final class Locale implements Translator {
     @Override
     public @Nullable Component translate(@NotNull TranslatableComponent component, @NotNull java.util.Locale locale) {
         java.util.Locale effective = locale;
-        if (!Configuration.Misc.OVERWRITE_LANGUAGE.isEmpty()) {
-            effective = parseJdkLocale(Configuration.Misc.OVERWRITE_LANGUAGE);
+        if (!MyPetGlobal.Misc.OVERWRITE_LANGUAGE.get().isEmpty()) {
+            effective = parseJdkLocale(MyPetGlobal.Misc.OVERWRITE_LANGUAGE.get());
         }
 
         String key = component.key().toLowerCase(java.util.Locale.ROOT);

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.config.PetConfigLookup;
 import de.Keyle.MyPet.api.WorldGroup;
@@ -135,7 +135,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
         this.petOwner = petOwner;
         skills = new Skills(this);
         experience = new PetExperience(this);
-        hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
+        hungerTime = MyPetGlobal.HungerSystem.HUNGER_SYSTEM_TIME.get();
         petName = PetDefaultNameResolver.resolve(getPetType(), petOwner);
     }
 
@@ -262,12 +262,12 @@ public abstract class PetImpl implements Pet, NBTStorage {
     }
 
     private void applyNameTag(Mob mob) {
-        if (!Configuration.Name.Tag.SHOW) {
+        if (!MyPetGlobal.Name.Tag.SHOW.get()) {
             mob.setCustomNameVisible(false);
             return;
         }
-        String prefix = resolveTagPlaceholders(Configuration.Name.Tag.PREFIX);
-        String suffix = resolveTagPlaceholders(Configuration.Name.Tag.SUFFIX);
+        String prefix = resolveTagPlaceholders(MyPetGlobal.Name.Tag.PREFIX.get());
+        String suffix = resolveTagPlaceholders(MyPetGlobal.Name.Tag.SUFFIX.get());
         String miniMessageString = prefix + petName + suffix;
         try {
             mob.customName(Util.SANITIZED_MINIMESSAGE.deserialize(miniMessageString));
@@ -334,8 +334,8 @@ public abstract class PetImpl implements Pet, NBTStorage {
             // Right-click command: owner-only, empty hand, not sneaking. Mirrors
             // the legacy EntityMyPet#mobInteract branch — runs a configured
             // command as the player after substituting per-pet placeholders.
-            if (!Configuration.Misc.RIGHT_CLICK_COMMAND.isEmpty()) {
-                String command = Configuration.Misc.RIGHT_CLICK_COMMAND
+            if (!MyPetGlobal.Misc.RIGHT_CLICK_COMMAND.get().isEmpty()) {
+                String command = MyPetGlobal.Misc.RIGHT_CLICK_COMMAND.get()
                         .replace("%pet_name%", getPetName())
                         .replace("%pet_owner%", getOwner().getName())
                         .replace("%pet_level%", Integer.toString(getExperience().getLevel()))
@@ -381,7 +381,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
         java.util.List<ConfigItem> foods = MyPetApi.getPetInfo().getFood(getPetType());
         for (ConfigItem food : foods) {
             if (food.compare(item)) {
-                double saturationPerFeed = Configuration.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED;
+                double saturationPerFeed = MyPetGlobal.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED.get();
                 PetFeedEvent feedEvent = new PetFeedEvent(
                         this, item, saturationPerFeed, PetFeedEvent.Result.EAT);
                 Bukkit.getPluginManager().callEvent(feedEvent);
@@ -614,7 +614,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
     }
 
     public double getSaturation() {
-        if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
+        if (MyPetGlobal.HungerSystem.USE_HUNGER_SYSTEM.get()) {
             return saturation;
         } else {
             return 100;
@@ -624,7 +624,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
     public void setSaturation(double value) {
         if (!Double.isNaN(value) && !Double.isInfinite(value)) {
             saturation = Math.max(1, Math.min(100, value));
-            hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
+            hungerTime = MyPetGlobal.HungerSystem.HUNGER_SYSTEM_TIME.get();
         } else {
             MyPetApi.getLogger().warning("Saturation was set to an invalid number!\n" + StackTraces.currentThread());
         }
@@ -652,7 +652,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
         }
         this.petName = newName;
         if (status == PetState.Here) {
-            if (Configuration.Name.Tag.SHOW) {
+            if (MyPetGlobal.Name.Tag.SHOW.get()) {
                 updateNameTag();
             }
         }
@@ -690,9 +690,9 @@ public abstract class PetImpl implements Pet, NBTStorage {
 
     public boolean autoAssignSkilltree() {
         if (skilltree == null && this.petOwner.isOnline()) {
-            if (Configuration.Skilltree.RANDOM_SKILLTREE_ASSIGNMENT) {
+            if (MyPetGlobal.Skilltree.RANDOM_SKILLTREE_ASSIGNMENT.get()) {
                 return setSkilltree(MyPetApi.getSkilltreeManager().getRandomSkilltree(this), PetSelectSkilltreeEvent.Source.AUTO);
-            } else if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT) {
+            } else if (MyPetGlobal.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT.get()) {
                 List<Skilltree> skilltrees = new ArrayList<>(MyPetApi.getSkilltreeManager().getOrderedSkilltrees());
 
                 for (Skilltree skilltree : skilltrees) {
@@ -796,7 +796,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
             worldGroup = "default";
         }
         this.worldGroup = worldGroup;
-        experience.setMaxLevel(Configuration.LevelSystem.Experience.LEVEL_CAP);
+        experience.setMaxLevel(MyPetGlobal.LevelSystem.Experience.LEVEL_CAP.get());
     }
 
     public SpawnFlags createEntity() {
@@ -989,7 +989,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
                     getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Flying", petOwner, getDisplayName()));
                     break;
             }
-            if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
+            if (MyPetGlobal.HungerSystem.USE_HUNGER_SYSTEM.get()) {
                 setHealth((int) Math.ceil(getMaxHealth() / 100. * (saturation + 1 - (saturation % 10))));
             } else {
                 setHealth(getMaxHealth());
@@ -1015,13 +1015,13 @@ public abstract class PetImpl implements Pet, NBTStorage {
         if (status != PetState.Dead || !getOwner().isOnline()) {
             return;
         }
-        if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+        if (!MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
             respawnTime--;
         }
         if (respawnTime <= 0) {
             respawnPet();
         } else if (MyPetApi.getServiceManager().isServiceActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime <= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
-            double cost = respawnTime * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
+            double cost = respawnTime * MyPetGlobal.Respawn.COSTS_FACTOR.get() + MyPetGlobal.Respawn.COSTS_FIXED.get();
             VaultHook vaultHook = MyPetApi.getServiceManager().getService(VaultHook.class).orElseThrow();
             if (vaultHook.canPay(getOwner().getPlayer(), cost)) {
                 vaultHook.pay(getOwner().getPlayer(), cost);
@@ -1040,9 +1040,9 @@ public abstract class PetImpl implements Pet, NBTStorage {
                     }
                 }
 
-                if (Configuration.HungerSystem.USE_HUNGER_SYSTEM) {
+                if (MyPetGlobal.HungerSystem.USE_HUNGER_SYSTEM.get()) {
                     if (saturation > 1 && --hungerTime <= 0) {
-                        hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
+                        hungerTime = MyPetGlobal.HungerSystem.HUNGER_SYSTEM_TIME.get();
                         PetExhaustionEvent event = new PetExhaustionEvent(this);
                         Bukkit.getServer().getPluginManager().callEvent(event);
                         trySelfFeeding();
@@ -1057,13 +1057,13 @@ public abstract class PetImpl implements Pet, NBTStorage {
                             }
                         }
                     }
-                    if (saturation == 1 && (getHealth() >= 2 || Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
+                    if (saturation == 1 && (getHealth() >= 2 || MyPetGlobal.HungerSystem.HUNGER_SYSTEM_CAN_KILL.get())
                             && this.bukkitEntity != null
-                            && this.bukkitEntity.getTicksLived() >= Configuration.HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE * 20) {
+                            && this.bukkitEntity.getTicksLived() >= MyPetGlobal.HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE.get() * 20) {
                         Mob entity = this.bukkitEntity;
-                        double leDamage = Configuration.HungerSystem.HUNGER_SYSTEM_FIXED +
-                                getMaxHealth() * Configuration.HungerSystem.HUNGER_SYSTEM_FACTOR;
-                        if (leDamage >= entity.getHealth() && !Configuration.HungerSystem.HUNGER_SYSTEM_CAN_KILL)
+                        double leDamage = MyPetGlobal.HungerSystem.HUNGER_SYSTEM_FIXED.get() +
+                                getMaxHealth() * MyPetGlobal.HungerSystem.HUNGER_SYSTEM_FACTOR.get();
+                        if (leDamage >= entity.getHealth() && !MyPetGlobal.HungerSystem.HUNGER_SYSTEM_CAN_KILL.get())
                             leDamage = entity.getHealth() - 1;
                         entity.damage(leDamage);
                     }
@@ -1129,9 +1129,9 @@ public abstract class PetImpl implements Pet, NBTStorage {
     public void trySelfFeeding() {
         if (!getSkills().has(BackpackImpl.class))
             return;
-        if (!Configuration.HungerSystem.FEED_FROM_INVENTORY)
+        if (!MyPetGlobal.HungerSystem.FEED_FROM_INVENTORY.get())
             return;
-        double foodSaturation = Configuration.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED;
+        double foodSaturation = MyPetGlobal.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED.get();
         if (!(foodSaturation + saturation <= 100))
             return;
 

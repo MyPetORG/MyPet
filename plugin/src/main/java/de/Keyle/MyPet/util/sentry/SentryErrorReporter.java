@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.util.sentry;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.service.RequiresPlugin;
@@ -117,7 +117,7 @@ public class SentryErrorReporter implements ErrorReporter {
                 }
 
                 // Add repository type tag (searchable)
-                String repoType = Configuration.Repository.REPOSITORY_TYPE;
+                String repoType = MyPetGlobal.Repository.REPOSITORY_TYPE.get();
                 if (repoType != null && !repoType.isEmpty()) {
                     event.setTag("repository_type", repoType);
                 }

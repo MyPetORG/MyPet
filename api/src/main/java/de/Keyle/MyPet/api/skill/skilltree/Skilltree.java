@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.skill.skilltree;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.skill.Upgrade;
@@ -136,7 +136,7 @@ public class Skilltree {
      * <p>If not explicitly set (or set to 0), falls back to the global level cap from configuration.
      */
     public int getMaxLevel() {
-        return maxLevel == 0 ? Configuration.LevelSystem.Experience.LEVEL_CAP : maxLevel;
+        return maxLevel == 0 ? MyPetGlobal.LevelSystem.Experience.LEVEL_CAP.get() : maxLevel;
     }
 
     /**
@@ -144,7 +144,7 @@ public class Skilltree {
      * A value of 0 or below means "use the global cap".
      */
     public void setMaxLevel(int maxLevel) {
-        this.maxLevel = maxLevel < 0 ? 0 : Math.min(maxLevel, Configuration.LevelSystem.Experience.LEVEL_CAP);
+        this.maxLevel = maxLevel < 0 ? 0 : Math.min(maxLevel, MyPetGlobal.LevelSystem.Experience.LEVEL_CAP.get());
     }
 
     /**

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.repository.types.AbstractSqlRepository;
@@ -34,22 +34,22 @@ import java.util.List;
 public class Converter {
 
     public static boolean convert() {
-        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase(Configuration.Repository.REPOSITORY_TYPE)) {
+        if (MyPetGlobal.Repository.CONVERT_FROM.get().equalsIgnoreCase(MyPetGlobal.Repository.REPOSITORY_TYPE.get())) {
             return false;
         }
 
         Repository fromRepo;
         Repository toRepo;
 
-        if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("MySQL")) {
+        if (MyPetGlobal.Repository.CONVERT_FROM.get().equalsIgnoreCase("MySQL")) {
             fromRepo = new MySqlRepository();
-        } else if (Configuration.Repository.CONVERT_FROM.equalsIgnoreCase("SQLite")) {
+        } else if (MyPetGlobal.Repository.CONVERT_FROM.get().equalsIgnoreCase("SQLite")) {
             fromRepo = new SqLiteRepository();
         } else {
             return false;
         }
 
-        MyPetApi.getLogger().info("Converting from " + Configuration.Repository.CONVERT_FROM + " to " + Configuration.Repository.REPOSITORY_TYPE + "...");
+        MyPetApi.getLogger().info("Converting from " + MyPetGlobal.Repository.CONVERT_FROM.get() + " to " + MyPetGlobal.Repository.REPOSITORY_TYPE.get() + "...");
 
         try {
             fromRepo.init();
@@ -75,7 +75,7 @@ public class Converter {
         MyPetApi.getPlugin().getConfig().set("MyPet.Repository.ConvertFrom", "-");
         MyPetApi.getPlugin().saveConfig();
 
-        MyPetApi.getLogger().info("Conversion from " + Configuration.Repository.CONVERT_FROM + " to " + Configuration.Repository.REPOSITORY_TYPE + " complete!");
+        MyPetApi.getLogger().info("Conversion from " + MyPetGlobal.Repository.CONVERT_FROM.get() + " to " + MyPetGlobal.Repository.REPOSITORY_TYPE.get() + " complete!");
 
         return true;
     }

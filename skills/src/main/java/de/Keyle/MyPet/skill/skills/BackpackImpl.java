@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -279,7 +279,7 @@ public class BackpackImpl implements Backpack {
                 pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", pet.getOwner()));
                 return false;
             }
-            if (pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(pet.getOwner().getPlayer(), "MyPet.admin")) {
+            if (pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !MyPetGlobal.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE.get() && !Permissions.has(pet.getOwner().getPlayer(), "MyPet.admin")) {
                 pet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Inventory.Creative", pet.getOwner()));
                 return false;
             }

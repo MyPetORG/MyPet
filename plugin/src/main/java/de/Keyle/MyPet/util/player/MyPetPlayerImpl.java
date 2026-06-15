@@ -23,7 +23,7 @@ package de.Keyle.MyPet.util.player;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
@@ -397,13 +397,13 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                         Mob petMob = pet.getBukkitEntity();
                         if (petMob != null) {
                             petMob.getScheduler().run(MyPetApi.getPlugin(), t -> {
-                                pet.removePet(Configuration.Misc.RECALL_PET_AFTER_DESPAWN);
+                                pet.removePet(MyPetGlobal.Misc.RECALL_PET_AFTER_DESPAWN.get());
                                 if (!p.isGliding()) {
                                     pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Despawn", pet.getOwner(), pet.getDisplayName()));
                                 }
                             }, null);
                         }
-                    } else if (!Configuration.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES && showHealthBar) {
+                    } else if (!MyPetGlobal.Misc.DISABLE_ALL_ACTIONBAR_MESSAGES.get() && showHealthBar) {
                         // Dispatch to the pet's scheduler to safely read health; sendActionBar is thread-safe.
                         Mob petMob = pet.getBukkitEntity();
                         if (petMob != null) {

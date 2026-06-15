@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
@@ -117,8 +117,8 @@ public class RideInteractListener implements Listener {
         // actually addPassenger (e.g., empty-hand right-click on a saddled
         // mount), the backstop catches it and gates via the same
         // RideGate.evaluate chain we'd otherwise run here.
-        if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM != null
-                && !Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(player.getInventory().getItemInMainHand())) {
+        if (MyPetGlobal.Skilltree.Skill.Ride.RIDE_ITEM.get() != null
+                && !MyPetGlobal.Skilltree.Skill.Ride.RIDE_ITEM.get().compare(player.getInventory().getItemInMainHand())) {
             return;
         }
 

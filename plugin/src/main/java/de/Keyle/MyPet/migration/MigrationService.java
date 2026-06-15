@@ -22,7 +22,7 @@ package de.Keyle.MyPet.migration;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.api.util.service.Load;
@@ -317,14 +317,14 @@ public class MigrationService implements ServiceContainer {
     // --- Discovery & configuration helpers ---
 
     private String getTablePrefix() {
-        if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
-            return Configuration.Repository.MySQL.PREFIX;
+        if (MyPetGlobal.Repository.REPOSITORY_TYPE.get().equalsIgnoreCase("MySQL")) {
+            return MyPetGlobal.Repository.MySQL.PREFIX.get();
         }
         return "";
     }
 
     private boolean isSqliteRepo() {
-        return !Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL");
+        return !MyPetGlobal.Repository.REPOSITORY_TYPE.get().equalsIgnoreCase("MySQL");
     }
 
     private MigrationDomain inferDomain(Class<?> clazz) {

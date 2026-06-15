@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.Pet;
@@ -252,7 +252,7 @@ public class PetCreaking extends PetImpl {
             }
 
             // Consume leash item
-            if (Configuration.Misc.CONSUME_LEASH_ITEM && player.getGameMode() != GameMode.CREATIVE && leashItem != null) {
+            if (MyPetGlobal.Misc.CONSUME_LEASH_ITEM.get() && player.getGameMode() != GameMode.CREATIVE && leashItem != null) {
                 if (leashItem.getAmount() > 1) {
                     leashItem.setAmount(leashItem.getAmount() - 1);
                 } else {

@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands.mypet;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
@@ -139,21 +139,21 @@ public class CommandOptionReload {
      *               receive only a log entry, not a chat message)
      */
     protected void reloadConfig(CommandSender sender) {
-        int oldMaxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
+        int oldMaxPetCount = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get();
         ConfigurationLoader.loadConfiguration();
         ConfigurationLoader.loadCompatConfiguration();
 
         Locale.init();
 
-        if (Configuration.Misc.MAX_STORED_PET_COUNT > oldMaxPetCount) {
-            for (int i = oldMaxPetCount + 1; i <= Configuration.Misc.MAX_STORED_PET_COUNT; i++) {
+        if (MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get() > oldMaxPetCount) {
+            for (int i = oldMaxPetCount + 1; i <= MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get(); i++) {
                 try {
                     Bukkit.getPluginManager().addPermission(new Permission("MyPet.petstorage.limit." + i));
                 } catch (Exception ignored) {
                 }
             }
-        } else if (oldMaxPetCount > Configuration.Misc.MAX_STORED_PET_COUNT) {
-            for (int i = oldMaxPetCount; i > Configuration.Misc.MAX_STORED_PET_COUNT; i--) {
+        } else if (oldMaxPetCount > MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get()) {
+            for (int i = oldMaxPetCount; i > MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get(); i--) {
                 try {
                     Bukkit.getPluginManager().removePermission("MyPet.petstorage.limit." + i);
                 } catch (Exception ignored) {
@@ -162,7 +162,7 @@ public class CommandOptionReload {
         }
 
         ExperienceCalculatorManager calculatorManager = MyPetApi.getServiceManager().getService(ExperienceCalculatorManager.class).get();
-        calculatorManager.switchCalculator(Configuration.LevelSystem.CALCULATION_MODE);
+        calculatorManager.switchCalculator(MyPetGlobal.LevelSystem.CALCULATION_MODE.get());
 
         MyPetApi.getServiceManager().getConfig().loadConfig();
 

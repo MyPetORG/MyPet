@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
@@ -148,7 +148,7 @@ public class CommandSwitch {
                                                         owner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", owner, activePet.get().getDisplayName()));
                                                         break;
                                                     case Dead:
-                                                        if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                                        if (MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
                                                             owner.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", owner, activePet.get().getDisplayName()));
                                                         } else {
                                                             owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", owner, activePet.get().getDisplayName(), activePet.get().getRespawnTime()));

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
@@ -147,7 +147,7 @@ public final class OnlinePlayerPetLoader {
                 owner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", owner, pet.getDisplayName()));
                 break;
             case Dead:
-                if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                if (MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
                     owner.sendMessage(Locale.getFormattedComponent("Message.Call.Dead", owner, pet.getDisplayName()));
                 } else {
                     owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", owner, pet.getDisplayName(), pet.getRespawnTime()));

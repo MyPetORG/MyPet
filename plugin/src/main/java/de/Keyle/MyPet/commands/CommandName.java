@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
@@ -63,7 +63,7 @@ import java.util.regex.Pattern;
  *   <li>A {@code <reset>} tag is auto-appended if the name contains any MiniMessage tags,
  *       preventing formatting from leaking into subsequent chat text</li>
  *   <li>The name (after stripping tags) must not exceed
- *       {@link Configuration.Name#MAX_LENGTH}</li>
+ *       {@link MyPetGlobal.Name#MAX_LENGTH}</li>
  * </ul>
  */
 public class CommandName {
@@ -150,7 +150,7 @@ public class CommandName {
 
         String nameWithoutColors = Util.SANITIZED_MINIMESSAGE.stripTags(name);
 
-        if (nameWithoutColors.length() <= Configuration.Name.MAX_LENGTH) {
+        if (nameWithoutColors.length() <= MyPetGlobal.Name.MAX_LENGTH.get()) {
             pet.setPetName(name);
             if (Permissions.has(petOwner, "MyPet.command.name.color")) {
                 petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Name.New", petOwner, name));
@@ -158,7 +158,7 @@ public class CommandName {
                 petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Name.New", petOwner, nameWithoutColors));
             }
         } else {
-            petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Name.ToLong", petOwner, name, Configuration.Name.MAX_LENGTH));
+            petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Name.ToLong", petOwner, name, MyPetGlobal.Name.MAX_LENGTH.get()));
         }
     }
 }

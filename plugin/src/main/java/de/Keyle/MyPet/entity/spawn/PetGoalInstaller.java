@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.spawn;
 
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.MobGoals;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemovalRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
@@ -90,10 +90,10 @@ public final class PetGoalInstaller {
         goals.addGoal(mob, 4, new PetRangedAttackGoal(pet, mob, -0.1F, 12.0F));
         if (mob instanceof Slime) {
             goals.addGoal(mob, 6, new PetCubeMobFollowOwnerGoal(pet, mob,
-                    Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F));
+                    MyPetGlobal.Entity.MYPET_FOLLOW_START_DISTANCE.get(), 2.0F, 16F));
         } else {
             goals.addGoal(mob, 6, new PetFollowOwnerGoal(pet, mob,
-                    Configuration.Entity.MYPET_FOLLOW_START_DISTANCE, 2.0F, 16F, flying, swimming));
+                    MyPetGlobal.Entity.MYPET_FOLLOW_START_DISTANCE.get(), 2.0F, 16F, flying, swimming));
         }
 
         // Control + melee install for ground and flying pets (swimming pets

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.skill.PetExperience;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -54,7 +54,7 @@ public class PetXpAttributionListener implements Listener {
         if (target instanceof Player) return;
         if (PetEntityMarker.isMarked(target)) return;
 
-        if (!Configuration.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION) return;
+        if (!MyPetGlobal.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION.get()) return;
 
         Entity source = event.getDamager();
         LivingEntity livingSource = null;

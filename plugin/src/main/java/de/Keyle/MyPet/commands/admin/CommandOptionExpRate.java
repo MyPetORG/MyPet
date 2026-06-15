@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import de.Keyle.MyPet.api.Configuration.LevelSystem.Experience.Modifier;
+import de.Keyle.MyPet.api.MyPetGlobal.LevelSystem.Experience.Modifier;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
@@ -84,16 +84,16 @@ public class CommandOptionExpRate {
                         .executes(ctx -> {
                             ctx.getSource().getSender().sendMessage(
                                     Component.text("Global Exp Rate: ")
-                                            .append(Component.text(String.valueOf(Modifier.GLOBAL)).color(NamedTextColor.DARK_AQUA)));
+                                            .append(Component.text(String.valueOf(Modifier.GLOBAL.get())).color(NamedTextColor.DARK_AQUA)));
                             return Command.SINGLE_SUCCESS;
                         })
                         .then(Commands.argument("rate", DoubleArgumentType.doubleArg(0))
                                 .executes(ctx -> {
                                     CommandSender sender = ctx.getSource().getSender();
-                                    Modifier.GLOBAL = DoubleArgumentType.getDouble(ctx, "rate");
+                                    Modifier.GLOBAL.update(DoubleArgumentType.getDouble(ctx, "rate"));
                                     sender.sendMessage(
                                             Component.text("Global Exp Rate set to: ")
-                                                    .append(Component.text(String.valueOf(Modifier.GLOBAL)).color(NamedTextColor.DARK_AQUA)));
+                                                    .append(Component.text(String.valueOf(Modifier.GLOBAL.get())).color(NamedTextColor.DARK_AQUA)));
                                     return Command.SINGLE_SUCCESS;
                                 })))
                 .build();

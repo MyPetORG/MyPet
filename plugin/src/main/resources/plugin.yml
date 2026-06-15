@@ -27,9 +27,11 @@ softdepend:
   - Multiverse-Core
   - My_Worlds
   - MythicMobs
+  - packetevents
   - PlaceholderAPI
   - PlotSquared
   - PremiumVanish
+  - ProtocolLib
   - pvparena
   - PvPManager
   - RedProtect

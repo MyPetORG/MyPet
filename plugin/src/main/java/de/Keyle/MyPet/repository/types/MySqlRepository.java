@@ -22,7 +22,7 @@ package de.Keyle.MyPet.repository.types;
 
 import com.zaxxer.hikari.HikariDataSource;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.repository.RepositoryInitException;
 import de.Keyle.MyPet.util.NbtUtil;
@@ -63,7 +63,7 @@ public class MySqlRepository extends AbstractSqlRepository {
 
     private boolean schemaExists(Connection c) throws SQLException {
         try (PreparedStatement stmt = c.prepareStatement(
-                "SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "info;");
+                "SELECT * FROM " + MyPetGlobal.Repository.MySQL.PREFIX.get() + "info;");
              ResultSet rs = stmt.executeQuery()) {
             return rs.next();
         } catch (SQLSyntaxErrorException e) {
@@ -73,7 +73,7 @@ public class MySqlRepository extends AbstractSqlRepository {
 
     @Override
     protected String qualifyTable(String baseName) {
-        return Configuration.Repository.MySQL.PREFIX + baseName;
+        return MyPetGlobal.Repository.MySQL.PREFIX.get() + baseName;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class MySqlRepository extends AbstractSqlRepository {
 
     @Override
     public void init() throws RepositoryInitException {
-        String prefix = Configuration.Repository.MySQL.PREFIX;
+        String prefix = MyPetGlobal.Repository.MySQL.PREFIX.get();
         if (!VALID_PREFIX.matcher(prefix).matches()) {
             throw new RepositoryInitException(new IllegalArgumentException(
                     "Invalid MySQL table prefix \"" + prefix + "\". "
@@ -125,16 +125,16 @@ public class MySqlRepository extends AbstractSqlRepository {
         }
         this.dataSource = new HikariDataSource();
         dataSource.setJdbcUrl("jdbc:mysql://" +
-                Configuration.Repository.MySQL.HOST + ":" + Configuration.Repository.MySQL.PORT + "/" +
-                Configuration.Repository.MySQL.DATABASE + (Configuration.Repository.MySQL.DATABASE.contains("?") ? "&" : "?") + "useUnicode=true&characterEncoding=" + Configuration.Repository.MySQL.CHARACTER_ENCODING);
-        dataSource.setUsername(Configuration.Repository.MySQL.USER);
-        dataSource.setPassword(Configuration.Repository.MySQL.PASSWORD);
-        dataSource.setMaximumPoolSize(Configuration.Repository.MySQL.POOL_SIZE);
+                MyPetGlobal.Repository.MySQL.HOST.get() + ":" + MyPetGlobal.Repository.MySQL.PORT.get() + "/" +
+                MyPetGlobal.Repository.MySQL.DATABASE.get() + (MyPetGlobal.Repository.MySQL.DATABASE.get().contains("?") ? "&" : "?") + "useUnicode=true&characterEncoding=" + MyPetGlobal.Repository.MySQL.CHARACTER_ENCODING.get());
+        dataSource.setUsername(MyPetGlobal.Repository.MySQL.USER.get());
+        dataSource.setPassword(MyPetGlobal.Repository.MySQL.PASSWORD.get());
+        dataSource.setMaximumPoolSize(MyPetGlobal.Repository.MySQL.POOL_SIZE.get());
         dataSource.addDataSourceProperty("cachePrepStmts", true);
         dataSource.setLeakDetectionThreshold(10000);
 
         this.executor = Executors.newFixedThreadPool(
-                Math.max(1, Configuration.Repository.MySQL.POOL_SIZE),
+                Math.max(1, MyPetGlobal.Repository.MySQL.POOL_SIZE.get()),
                 r -> {
                     Thread t = new Thread(r, "MyPet-MySQL");
                     t.setDaemon(true);
@@ -142,7 +142,7 @@ public class MySqlRepository extends AbstractSqlRepository {
                 });
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "info;");
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + MyPetGlobal.Repository.MySQL.PREFIX.get() + "info;");
              ResultSet resultSet = statement.executeQuery()) {
 
             if (resultSet.next()) {
@@ -161,7 +161,7 @@ public class MySqlRepository extends AbstractSqlRepository {
         try (Connection connection = dataSource.getConnection();
              Statement create = connection.createStatement()) {
 
-            create.executeUpdate("CREATE TABLE " + Configuration.Repository.MySQL.PREFIX + "pets (" +
+            create.executeUpdate("CREATE TABLE " + MyPetGlobal.Repository.MySQL.PREFIX.get() + "pets (" +
                     "uuid VARCHAR(36) NOT NULL UNIQUE, " +
                     "owner_uuid VARCHAR(36) NOT NULL , " +
                     "exp DOUBLE, " +
@@ -181,7 +181,7 @@ public class MySqlRepository extends AbstractSqlRepository {
                     "INDEX `owner_uuid` (`owner_uuid`)" +
                     ")");
 
-            create.executeUpdate("CREATE TABLE " + Configuration.Repository.MySQL.PREFIX + "players (" +
+            create.executeUpdate("CREATE TABLE " + MyPetGlobal.Repository.MySQL.PREFIX.get() + "players (" +
                     "uuid VARCHAR(36) NOT NULL, " +
                     "auto_respawn BOOLEAN, " +
                     "auto_respawn_min INTEGER , " +
@@ -194,13 +194,13 @@ public class MySqlRepository extends AbstractSqlRepository {
                     "PRIMARY KEY ( uuid )" +
                     ")");
 
-            create.executeUpdate("CREATE TABLE " + Configuration.Repository.MySQL.PREFIX + "info (" +
+            create.executeUpdate("CREATE TABLE " + MyPetGlobal.Repository.MySQL.PREFIX.get() + "info (" +
                     "mypet_version VARCHAR(20), " +
                     "mypet_build VARCHAR(20), " +
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
                     ")");
 
-            try (PreparedStatement insert = connection.prepareStatement("INSERT INTO " + Configuration.Repository.MySQL.PREFIX + "info (mypet_version, mypet_build) VALUES (?,?);")) {
+            try (PreparedStatement insert = connection.prepareStatement("INSERT INTO " + MyPetGlobal.Repository.MySQL.PREFIX.get() + "info (mypet_version, mypet_build) VALUES (?,?);")) {
                 insert.setString(1, VersionUtil.getVersion());
                 insert.setString(2, VersionUtil.getBuild());
                 insert.executeUpdate();

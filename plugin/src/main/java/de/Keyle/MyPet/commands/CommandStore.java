@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.HelpEntry;
@@ -141,7 +141,7 @@ public class CommandStore {
 
     /**
      * Calculates the maximum number of pets the player is allowed to store.
-     * Admins receive {@link Configuration.Misc#MAX_STORED_PET_COUNT}. Other players
+     * Admins receive {@link MyPetGlobal.Misc#MAX_STORED_PET_COUNT}. Other players
      * are checked for {@code MyPet.petstorage.limit.<n>} permissions from highest to lowest.
      *
      * @param p the player to check
@@ -150,9 +150,9 @@ public class CommandStore {
     private int getMaxPetCount(Player p) {
         int maxPetCount = 0;
         if (Permissions.has(p, "MyPet.admin")) {
-            maxPetCount = Configuration.Misc.MAX_STORED_PET_COUNT;
+            maxPetCount = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get();
         } else {
-            for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
+            for (int i = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get(); i > 0; i--) {
                 if (Permissions.has(p, "MyPet.petstorage.limit." + i)) {
                     maxPetCount = i;
                     break;

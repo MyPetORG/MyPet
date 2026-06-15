@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.behavior.PetBehavior;
 import de.Keyle.MyPet.api.behavior.PetBehaviorHelpers;
 import de.Keyle.MyPet.api.config.ConfigKey;
@@ -130,10 +130,10 @@ public class PetCreeper extends PetImpl {
                                             + " with default live-entity state. " + t.getMessage());
                         }
                         pet.setRespawnTime(
-                                (Configuration.Respawn.TIME_FIXED
+                                (MyPetGlobal.Respawn.TIME_FIXED.get()
                                         + MyPetApi.getPetInfo().getCustomRespawnTimeFixed(pet.getPetType()))
                                         + (pet.getExperience().getLevel()
-                                        * (Configuration.Respawn.TIME_FACTOR
+                                        * (MyPetGlobal.Respawn.TIME_FACTOR.get()
                                         + MyPetApi.getPetInfo().getCustomRespawnTimeFactor(pet.getPetType())))
                         );
                         pet.setStatus(PetState.Dead);

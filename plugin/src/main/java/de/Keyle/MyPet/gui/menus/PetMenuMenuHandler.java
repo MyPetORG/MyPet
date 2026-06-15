@@ -22,7 +22,7 @@ package de.Keyle.MyPet.gui.menus;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.dialog.ConfirmPromptSpec;
@@ -249,7 +249,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
 
         if ("info".equals(sectionId)) {
             String locale = Locale.getPlayerLanguage(context.viewer());
-            String hunger = Configuration.HungerSystem.USE_HUNGER_SYSTEM
+            String hunger = MyPetGlobal.HungerSystem.USE_HUNGER_SYSTEM.get()
                 ? Locale.renderPlain("Name.Hunger", locale) + ": <gold>" + Math.round(pet.getSaturation())
                 : "";
             String healthLine = pet.getRespawnTime() > 0
@@ -445,7 +445,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
             Locale.getFormattedComponent("Gui.PetMenu.Rename.Dialog.Prompt", viewer, pet.getPetName()),
             // Prefill with the raw name (MiniMessage tags intact) so the player can edit them.
             pet.getPetName(),
-            Configuration.Name.MAX_LENGTH
+            MyPetGlobal.Name.MAX_LENGTH.get()
         );
         MyPetApi.getDialogService().promptText(
             viewer, spec,
@@ -475,9 +475,9 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
             }
         }
         String stripped = Util.SANITIZED_MINIMESSAGE.stripTags(name);
-        if (stripped.length() > Configuration.Name.MAX_LENGTH) {
+        if (stripped.length() > MyPetGlobal.Name.MAX_LENGTH.get()) {
             viewer.sendMessage(Locale.getFormattedComponent(
-                "Message.Command.Name.ToLong", viewer, name, Configuration.Name.MAX_LENGTH));
+                "Message.Command.Name.ToLong", viewer, name, MyPetGlobal.Name.MAX_LENGTH.get()));
             return;
         }
         pet.setPetName(name);
@@ -636,7 +636,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
     /** Opens the existing choose-skilltree menu (Task 11: choose-skilltree). */
     @SuppressWarnings("unchecked")
     private void openChooseSkilltreeMenu(Player viewer, Pet pet) {
-        if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !pet.getOwner().isMyPetAdmin()) {
+        if (MyPetGlobal.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT.get() && !pet.getOwner().isMyPetAdmin()) {
             pet.autoAssignSkilltree();
             viewer.sendMessage(Locale.getComponent(
                 "Message.Command.ChooseSkilltree.AutomaticSkilltreeAssignment", pet.getOwner()));
@@ -658,7 +658,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
             (MenuId<ChooseSkilltreeContext>) (MenuId<?>) MenuIds.CHOOSE_SKILLTREE,
             new ChooseSkilltreeContext(viewer, pet, available, chosen -> {
                 if (pet.getSkilltree() != null
-                    && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE
+                    && MyPetGlobal.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE.get()
                     && !pet.getOwner().isMyPetAdmin()) {
                     viewer.sendMessage(Locale.getFormattedComponent(
                         "Message.Command.ChooseSkilltree.OnlyOnce", pet.getOwner(), pet.getDisplayName()));
@@ -719,9 +719,9 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
     private static int computeMaxPetCount(Player viewer) {
         int max = 0;
         if (viewer.hasPermission("MyPet.admin")) {
-            max = Configuration.Misc.MAX_STORED_PET_COUNT;
+            max = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get();
         } else {
-            for (int i = Configuration.Misc.MAX_STORED_PET_COUNT; i > 0; i--) {
+            for (int i = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get(); i > 0; i--) {
                 if (viewer.hasPermission("MyPet.petstorage.limit." + i)) {
                     max = i;
                     break;

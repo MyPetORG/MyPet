@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.gui.MenuId;
@@ -86,7 +86,7 @@ public class BeaconImpl implements Beacon {
 
     public BeaconImpl(Pet pet) {
         this.pet = pet;
-        hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
+        hungerDecreaseTimer = MyPetGlobal.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME.get();
 
         for (Buff buff : Buff.values()) {
             if (BOOLEAN_BUFFS.contains(buff)) {
@@ -158,7 +158,7 @@ public class BeaconImpl implements Beacon {
         selectedBuffs.clear();
         buffLevel.values().forEach(UpgradeComputer::removeAllUpgrades);
         beaconTimer = 0;
-        hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
+        hungerDecreaseTimer = MyPetGlobal.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME.get();
         receiver = BuffReceiver.Owner;
         active = false;
     }
@@ -320,7 +320,7 @@ public class BeaconImpl implements Beacon {
 
             double range = this.range.getValue().doubleValue();
 
-            if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.HungerSystem.AFFECT_BEACON_RANGE) {
+            if (MyPetGlobal.HungerSystem.USE_HUNGER_SYSTEM.get() && MyPetGlobal.HungerSystem.AFFECT_BEACON_RANGE.get()) {
                 range *= (Math.log10(pet.getSaturation()) / 2);
             }
 
@@ -342,7 +342,7 @@ public class BeaconImpl implements Beacon {
             petLocation.getWorld().spawnParticle(Particle.WITCH, petLocation.clone().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
 
             List<Player> members = null;
-            if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && receiver == BuffReceiver.Party) {
+            if (MyPetGlobal.Skilltree.Skill.Beacon.PARTY_SUPPORT.get() && receiver == BuffReceiver.Party) {
                 members = MyPetApi.getHookHelper().getPartyMembers(getPet().getOwner().getPlayer());
             }
 
@@ -406,7 +406,7 @@ public class BeaconImpl implements Beacon {
                         }
                         break;
                     case Party:
-                        if (Configuration.Skilltree.Skill.Beacon.PARTY_SUPPORT && members != null) {
+                        if (MyPetGlobal.Skilltree.Skill.Beacon.PARTY_SUPPORT.get() && members != null) {
                             if (members.contains(player)) {
                                 for (PotionEffect effect : potionEffects) {
                                     player.addPotionEffect(effect, true);
@@ -423,9 +423,9 @@ public class BeaconImpl implements Beacon {
                 }
             }
 
-            if (Configuration.HungerSystem.USE_HUNGER_SYSTEM && Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME > 0 && hungerDecreaseTimer-- < 0) {
+            if (MyPetGlobal.HungerSystem.USE_HUNGER_SYSTEM.get() && MyPetGlobal.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME.get() > 0 && hungerDecreaseTimer-- < 0) {
                 pet.decreaseSaturation(1);
-                hungerDecreaseTimer = Configuration.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME;
+                hungerDecreaseTimer = MyPetGlobal.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME.get();
             }
         }
     }

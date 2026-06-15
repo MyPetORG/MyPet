@@ -22,7 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
@@ -160,7 +160,7 @@ public class CommandCall {
                     ));
                     break;
                 case Dead:
-                    if (Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                    if (MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
                         petOwner.sendMessage(MessageUtil.info(
                                 Locale.getFormattedComponent(
                                         "Message.Call.Dead",

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
@@ -72,7 +72,7 @@ public class PetPvPListener implements Listener {
         Pet pet = getPetManager().getPetFromEntity(event.getEntity());
         if (pet == null) return;
 
-        if (pet.getOwner().equals(damager) && !Configuration.Misc.OWNER_CAN_ATTACK_PET) {
+        if (pet.getOwner().equals(damager) && !MyPetGlobal.Misc.OWNER_CAN_ATTACK_PET.get()) {
             event.setCancelled(true);
         } else if (!pet.getOwner().equals(damager) && !MyPetApi.getHookHelper().canHurt(damager, pet.getOwner().getPlayer(), true)) {
             event.setCancelled(true);
@@ -93,7 +93,7 @@ public class PetPvPListener implements Listener {
             } else {
                 damager = (Player) event.getDamager();
             }
-            if (pet.getOwner().equals(damager) && (!Configuration.Misc.OWNER_CAN_ATTACK_PET)) {
+            if (pet.getOwner().equals(damager) && (!MyPetGlobal.Misc.OWNER_CAN_ATTACK_PET.get())) {
                 event.setCancelled(true);
             } else if (!pet.getOwner().equals(damager) && !MyPetApi.getHookHelper().canHurt(damager, pet.getOwner().getPlayer(), true)) {
                 event.setCancelled(true);

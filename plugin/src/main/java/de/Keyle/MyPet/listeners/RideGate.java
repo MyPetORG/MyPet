@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.config.ConfigKeyRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetMultiPassenger;
@@ -285,7 +285,7 @@ public final class RideGate {
     }
 
     /**
-     * Returns the configured {@code Configuration.Skilltree.Skill.Ride.RIDE_ITEM}
+     * Returns the configured {@code MyPetGlobal.Skilltree.Skill.Ride.RIDE_ITEM.get()}
      * as a translatable {@link Component} so chat rendering uses the player's
      * client locale (e.g., "Lead" in English, "Leine" in German) without MyPet
      * shipping its own item-name translations.
@@ -295,10 +295,10 @@ public final class RideGate {
      * is only emitted when the configured item is non-null in the first place.
      */
     private static Component rideItemName() {
-        if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null) {
+        if (MyPetGlobal.Skilltree.Skill.Ride.RIDE_ITEM.get() == null) {
             return Component.text("ride item");
         }
-        ItemStack item = Configuration.Skilltree.Skill.Ride.RIDE_ITEM.getItem();
+        ItemStack item = MyPetGlobal.Skilltree.Skill.Ride.RIDE_ITEM.get().getItem();
         if (item == null || item.getType() == Material.AIR) {
             return Component.text("ride item");
         }
@@ -386,8 +386,8 @@ public final class RideGate {
         // skipped (the command itself is the trigger).
         if (!isCommandTrigger()
                 && ConfigKeyRegistry.readBool(petType, "RequireRideItem", true)) {
-            if (Configuration.Skilltree.Skill.Ride.RIDE_ITEM != null
-                    && !Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(player.getInventory().getItemInMainHand())) {
+            if (MyPetGlobal.Skilltree.Skill.Ride.RIDE_ITEM.get() != null
+                    && !MyPetGlobal.Skilltree.Skill.Ride.RIDE_ITEM.get().compare(player.getInventory().getItemInMainHand())) {
                 return Rejection.RIDE_ITEM_REQUIRED;
             }
         }

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.gui.menus;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.StoredPet;
@@ -79,7 +79,7 @@ public final class PetSelectionMenuHandler implements MenuHandler<PetSelectionCo
         // becomes children of the TranslatableComponent and is dropped when
         // GlobalTranslator.render replaces it with the translated content.
 
-        String hungerLine = Configuration.HungerSystem.USE_HUNGER_SYSTEM
+        String hungerLine = MyPetGlobal.HungerSystem.USE_HUNGER_SYSTEM.get()
             ? Locale.renderPlain("Name.Hunger", locale) + ": <gold>" + Math.round(pet.getSaturation())
             : "";
 

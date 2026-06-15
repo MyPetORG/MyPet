@@ -22,7 +22,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
@@ -110,12 +110,12 @@ public class PetDeathListener implements Listener {
         }
 
         // Calculate respawn time
-        pet.setRespawnTime((Configuration.Respawn.TIME_FIXED + MyPetApi.getPetInfo().getCustomRespawnTimeFixed(pet.getPetType())) + (pet.getExperience().getLevel() * (Configuration.Respawn.TIME_FACTOR + MyPetApi.getPetInfo().getCustomRespawnTimeFactor(pet.getPetType()))));
+        pet.setRespawnTime((MyPetGlobal.Respawn.TIME_FIXED.get() + MyPetApi.getPetInfo().getCustomRespawnTimeFixed(pet.getPetType())) + (pet.getExperience().getLevel() * (MyPetGlobal.Respawn.TIME_FACTOR.get() + MyPetApi.getPetInfo().getCustomRespawnTimeFactor(pet.getPetType()))));
         pet.setStatus(PetState.Dead);
 
         if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent e) {
             if (e.getDamager() instanceof Player) {
-                pet.setRespawnTime((Configuration.Respawn.TIME_PLAYER_FIXED + MyPetApi.getPetInfo().getCustomRespawnTimeFixed(pet.getPetType())) + (pet.getExperience().getLevel() * (Configuration.Respawn.TIME_PLAYER_FACTOR + MyPetApi.getPetInfo().getCustomRespawnTimeFactor(pet.getPetType()))));
+                pet.setRespawnTime((MyPetGlobal.Respawn.TIME_PLAYER_FIXED.get() + MyPetApi.getPetInfo().getCustomRespawnTimeFixed(pet.getPetType())) + (pet.getExperience().getLevel() * (MyPetGlobal.Respawn.TIME_PLAYER_FACTOR.get() + MyPetApi.getPetInfo().getCustomRespawnTimeFactor(pet.getPetType()))));
             } else if (PetEntityMarker.isMarked(e.getDamager())) {
                 Pet killerPet = getPetManager().getPetFromEntity(e.getDamager());
                 if (pet.getSkills().isActive(Behavior.class) && killerPet.getSkills().isActive(Behavior.class)) {
@@ -137,9 +137,9 @@ public class PetDeathListener implements Listener {
         event.getDrops().clear();
 
         // XP loss on death
-        if (Configuration.LevelSystem.Experience.LOSS_FIXED > 0 || Configuration.LevelSystem.Experience.LOSS_PERCENT > 0) {
-            double lostExpirience = Configuration.LevelSystem.Experience.LOSS_FIXED;
-            lostExpirience += pet.getExperience().getRequiredExp() * Configuration.LevelSystem.Experience.LOSS_PERCENT / 100;
+        if (MyPetGlobal.LevelSystem.Experience.LOSS_FIXED.get() > 0 || MyPetGlobal.LevelSystem.Experience.LOSS_PERCENT.get() > 0) {
+            double lostExpirience = MyPetGlobal.LevelSystem.Experience.LOSS_FIXED.get();
+            lostExpirience += pet.getExperience().getRequiredExp() * MyPetGlobal.LevelSystem.Experience.LOSS_PERCENT.get() / 100;
             if (lostExpirience > pet.getExp()) {
                 lostExpirience = pet.getExp();
             }
@@ -150,12 +150,12 @@ public class PetDeathListener implements Listener {
                     lostExpirience = pet.getExp() - lostExpirience < minExp ? pet.getExp() - minExp : lostExpirience;
                 }
             }
-            if (Configuration.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE) {
+            if (MyPetGlobal.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE.get()) {
                 lostExpirience = pet.getExperience().removeExp(lostExpirience);
             } else {
                 lostExpirience = pet.getExperience().removeCurrentExp(lostExpirience);
             }
-            if (Configuration.LevelSystem.Experience.DROP_LOST_EXP && lostExpirience < 0) {
+            if (MyPetGlobal.LevelSystem.Experience.DROP_LOST_EXP.get() && lostExpirience < 0) {
                 event.setDroppedExp((int) (Math.abs(lostExpirience)));
             }
         }
@@ -175,7 +175,7 @@ public class PetDeathListener implements Listener {
 
         // Auto-respawn via economy
         if (MyPetApi.getHookHelper().isEconomyEnabled() && owner.hasAutoRespawnEnabled() && pet.getRespawnTime() <= owner.getAutoRespawnMin() && Permissions.has(owner.getPlayer(), "MyPet.command.respawn")) {
-            double costs = pet.getRespawnTime() * Configuration.Respawn.COSTS_FACTOR + Configuration.Respawn.COSTS_FIXED;
+            double costs = pet.getRespawnTime() * MyPetGlobal.Respawn.COSTS_FACTOR.get() + MyPetGlobal.Respawn.COSTS_FIXED.get();
             if (MyPetApi.getHookHelper().getEconomy().canPay(owner, costs)) {
                 MyPetApi.getHookHelper().getEconomy().pay(owner, costs);
                 pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Respawn.Paid", owner.getPlayer(), pet.getDisplayName(), costs + " " + MyPetApi.getHookHelper().getEconomy().currencyNameSingular()));

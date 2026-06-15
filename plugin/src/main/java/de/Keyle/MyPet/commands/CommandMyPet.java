@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.commands;
 
 import com.mojang.brigadier.Command;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.util.VersionUtil;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
@@ -264,7 +264,7 @@ public class CommandMyPet {
 
         sender.sendMessage("");
         sender.sendMessage(Locale.getComponent("Message.Command.Help.MoreInfo", sender)
-                .append(Component.text(" " + Configuration.Misc.WIKI_URL).color(NamedTextColor.GOLD)));
+                .append(Component.text(" " + MyPetGlobal.Misc.WIKI_URL.get()).color(NamedTextColor.GOLD)));
         sender.sendMessage(dashes(SEPARATOR_WIDTH));
     }
 

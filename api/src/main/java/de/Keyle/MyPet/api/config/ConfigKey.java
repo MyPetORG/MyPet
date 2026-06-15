@@ -47,16 +47,18 @@ public final class ConfigKey<T> {
 
     private final String petType;
     private final String key;
+    private final String explicitPath;
     private final T defaultValue;
     private final Object yamlDefault;
     private final BiFunction<ConfigurationSection, String, T> reader;
 
     private volatile T value;
 
-    private ConfigKey(String petType, String key, T defaultValue, Object yamlDefault,
+    private ConfigKey(String petType, String key, String explicitPath, T defaultValue, Object yamlDefault,
                       BiFunction<ConfigurationSection, String, T> reader) {
         this.petType = petType;
         this.key = key;
+        this.explicitPath = explicitPath;
         this.defaultValue = defaultValue;
         this.yamlDefault = yamlDefault;
         this.reader = reader;
@@ -88,14 +90,26 @@ public final class ConfigKey<T> {
         return petType;
     }
 
-    /** Bare key name (e.g. {@code "AllowLightningPower"}). */
+    /** Bare key name (e.g. {@code "AllowLightningPower"}). Null for global keys. */
     public String key() {
         return key;
     }
 
-    /** Full YAML path: {@code MyPet.Pets.<PetType>.<Key>}. */
+    /**
+     * Whether this is a global key (lives in {@code config.yml} at an explicit
+     * path) rather than a per-pet key (lives in {@code pet-config.yml} under
+     * {@code MyPet.Pets.<Type>.<Key>}).
+     */
+    public boolean isGlobal() {
+        return explicitPath != null;
+    }
+
+    /**
+     * Full YAML path. Per-pet keys derive {@code MyPet.Pets.<PetType>.<Key>};
+     * global keys return their explicit, hand-authored path.
+     */
     public String yamlPath() {
-        return "MyPet.Pets." + petType + "." + key;
+        return explicitPath != null ? explicitPath : "MyPet.Pets." + petType + "." + key;
     }
 
     /**
@@ -123,7 +137,7 @@ public final class ConfigKey<T> {
 
     /** Boolean key with explicit default. */
     public static ConfigKey<Boolean> bool(String petType, String key, boolean defaultValue) {
-        ConfigKey<Boolean> ck = new ConfigKey<>(petType, key, defaultValue, defaultValue,
+        ConfigKey<Boolean> ck = new ConfigKey<>(petType, key, null, defaultValue, defaultValue,
                 (config, path) -> config.getBoolean(path, defaultValue));
         ConfigKeyRegistry.register(ck);
         return ck;
@@ -141,9 +155,79 @@ public final class ConfigKey<T> {
     public static ConfigKey<ConfigItem> growUpItem(String petType, String defaultMaterial) {
         String defaultString = defaultMaterial.toLowerCase();
         ConfigItem defaultItem = ConfigItem.createConfigItem(defaultString);
-        ConfigKey<ConfigItem> ck = new ConfigKey<>(petType, "GrowUpItem", defaultItem, defaultString,
+        ConfigKey<ConfigItem> ck = new ConfigKey<>(petType, "GrowUpItem", null, defaultItem, defaultString,
                 (config, path) -> ConfigItem.createConfigItem(config.getString(path, defaultString)));
         ConfigKeyRegistry.register(ck);
         return ck;
+    }
+
+    // =====================================================================
+    // Global factories — for the plugin-wide settings in config.yml that
+    // were previously public static fields on the Configuration class. Unlike
+    // per-pet keys, the YAML path is explicit (the paths are hand-authored and
+    // irregular, e.g. "MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible"), and
+    // these register into ConfigKeyRegistry's separate global bucket so plugin
+    // I/O targets config.yml rather than pet-config.yml. Declared as static
+    // fields on MyPetGlobal.
+    // =====================================================================
+
+    /**
+     * General-purpose global key. Most callers want one of the typed wrappers
+     * below; use this directly only when a custom {@code reader} is needed
+     * (e.g. post-read normalization or enum validation).
+     *
+     * @param path         full YAML path in {@code config.yml}
+     * @param defaultValue compile-time default at type {@code T}
+     * @param yamlDefault  value written to YAML by {@code writeGlobalDefaults}
+     * @param reader       reads and converts the value from a config section
+     */
+    public static <T> ConfigKey<T> global(String path, T defaultValue, Object yamlDefault,
+                                          BiFunction<ConfigurationSection, String, T> reader) {
+        ConfigKey<T> ck = new ConfigKey<>(null, null, path, defaultValue, yamlDefault, reader);
+        ConfigKeyRegistry.register(ck);
+        return ck;
+    }
+
+    /** Global boolean key. */
+    public static ConfigKey<Boolean> globalBool(String path, boolean defaultValue) {
+        return global(path, defaultValue, defaultValue, (config, p) -> config.getBoolean(p, defaultValue));
+    }
+
+    /** Global int key. */
+    public static ConfigKey<Integer> globalInt(String path, int defaultValue) {
+        return global(path, defaultValue, defaultValue, (config, p) -> config.getInt(p, defaultValue));
+    }
+
+    /** Global long key. */
+    public static ConfigKey<Long> globalLong(String path, long defaultValue) {
+        return global(path, defaultValue, defaultValue, (config, p) -> config.getLong(p, defaultValue));
+    }
+
+    /** Global double key. */
+    public static ConfigKey<Double> globalDouble(String path, double defaultValue) {
+        return global(path, defaultValue, defaultValue, (config, p) -> config.getDouble(p, defaultValue));
+    }
+
+    /** Global string key. */
+    public static ConfigKey<String> globalString(String path, String defaultValue) {
+        return global(path, defaultValue, defaultValue, (config, p) -> config.getString(p, defaultValue));
+    }
+
+    /** Global string-set key — reads a YAML list into a {@link java.util.Set}. */
+    public static ConfigKey<java.util.Set<String>> globalStringSet(String path) {
+        return global(path, new java.util.HashSet<>(), new java.util.ArrayList<>(),
+                (config, p) -> new java.util.HashSet<>(config.getStringList(p)));
+    }
+
+    /**
+     * Global {@link ConfigItem} key. The YAML default is the source material
+     * string (e.g. {@code "lead"}) since {@code addDefault} can't serialize a
+     * {@code ConfigItem} directly — mirrors {@link #growUpItem}.
+     */
+    public static ConfigKey<ConfigItem> globalItem(String path, String defaultMaterial) {
+        String defaultString = defaultMaterial.toLowerCase();
+        ConfigItem defaultItem = ConfigItem.createConfigItem(defaultString);
+        return global(path, defaultItem, defaultString,
+                (config, p) -> ConfigItem.createConfigItem(config.getString(p, defaultString)));
     }
 }

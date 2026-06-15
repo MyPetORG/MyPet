@@ -136,7 +136,7 @@ public abstract class AbstractSqlRepository implements Repository {
     /**
      * Resolve a logical table name (e.g. {@code "pets"}) to the fully-qualified
      * form used in SQL. SQLite returns the name unchanged; MySQL prepends
-     * {@code Configuration.Repository.MySQL.PREFIX} (validated at init time
+     * {@code MyPetGlobal.Repository.MySQL.PREFIX.get()} (validated at init time
      * against {@code [A-Za-z0-9_]*}).
      */
     protected abstract String qualifyTable(String baseName);

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
@@ -121,7 +121,7 @@ public class PickupImpl implements Pickup {
             pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Pickup.StartStop", pet.getOwner().getPlayer(), pet.getDisplayName(), Locale.getComponent("Name.Disabled", pet.getOwner())));
             return;
         }
-        if (pickup && pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Configuration.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE && !Permissions.has(pet.getOwner().getPlayer(), "MyPet.admin")) {
+        if (pickup && pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !MyPetGlobal.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE.get() && !Permissions.has(pet.getOwner().getPlayer(), "MyPet.admin")) {
             pet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Pickup.Creative", pet.getOwner()));
             pickup = false;
             return;

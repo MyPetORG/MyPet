@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
@@ -35,7 +35,7 @@ import java.util.Optional;
  *
  * <p>Resolution order:</p>
  * <ol>
- *   <li>If {@code Configuration.Repository.REPOSITORY_TYPE} equals {@code "MySQL"} (case
+ *   <li>If {@code MyPetGlobal.Repository.REPOSITORY_TYPE.get()} equals {@code "MySQL"} (case
  *       insensitive), attempt to initialize {@link MySqlRepository}. On
  *       {@link RepositoryInitException}, log via {@link ErrorUtil#reportSevere} and fall through.</li>
  *   <li>Attempt to initialize {@link SqLiteRepository}. On failure, log a warning and return
@@ -60,7 +60,7 @@ public final class RepositoryFactory {
     public static Optional<Repository> initWithFallback() {
         Repository repository = null;
 
-        if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
+        if (MyPetGlobal.Repository.REPOSITORY_TYPE.get().equalsIgnoreCase("MySQL")) {
             repository = new MySqlRepository();
             try {
                 repository.init();

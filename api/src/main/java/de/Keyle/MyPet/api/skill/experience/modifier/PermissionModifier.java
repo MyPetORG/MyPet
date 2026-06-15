@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.skill.experience.modifier;
 
-import de.Keyle.MyPet.api.Configuration.LevelSystem.Experience.Modifier;
+import de.Keyle.MyPet.api.MyPetGlobal.LevelSystem.Experience.Modifier;
 import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -61,7 +61,7 @@ public class PermissionModifier extends ExperienceModifier {
 
     /** {@inheritDoc} Applies the highest applicable permission-based multiplier. */
     public double modify(double experience, double baseExperience) {
-        if (!Modifier.PERMISSION) return experience;
+        if (!Modifier.PERMISSION.get()) return experience;
 
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return experience;

@@ -26,7 +26,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
@@ -206,8 +206,8 @@ public class CommandOptionExp {
         }
         Pet pet = MyPetApi.getPetManager().getPet(petOwner);
         int targetLevel = switch (operator) {
-            case SET -> Math.min(levels, Configuration.LevelSystem.Experience.LEVEL_CAP);
-            case ADD -> Math.min(pet.getExperience().getLevel() + levels, Configuration.LevelSystem.Experience.LEVEL_CAP);
+            case SET -> Math.min(levels, MyPetGlobal.LevelSystem.Experience.LEVEL_CAP.get());
+            case ADD -> Math.min(pet.getExperience().getLevel() + levels, MyPetGlobal.LevelSystem.Experience.LEVEL_CAP.get());
             case REMOVE -> Math.max(1, pet.getExperience().getLevel() - levels);
         };
 

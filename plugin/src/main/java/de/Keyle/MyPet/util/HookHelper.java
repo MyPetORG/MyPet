@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.hooks.types.*;
 import org.bukkit.GameMode;
@@ -44,7 +44,7 @@ public class HookHelper extends de.Keyle.MyPet.api.util.hooks.HookHelper {
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {
-        if (Configuration.Misc.DISABLE_PET_VS_PLAYER) {
+        if (MyPetGlobal.Misc.DISABLE_PET_VS_PLAYER.get()) {
             return false;
         }
         if (attacker != null && defender != null && attacker != defender) {

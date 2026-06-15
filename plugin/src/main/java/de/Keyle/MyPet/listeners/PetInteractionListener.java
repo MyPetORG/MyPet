@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetNaturallyRideable;
 import de.Keyle.MyPet.api.skill.skills.Ride;
@@ -89,15 +89,15 @@ public class PetInteractionListener implements Listener {
         // open below — so suppress the menu for that case and let RideInteractListener
         // mount. With a non-empty ride item, the bare hand is not a mount trigger,
         // so the menu still opens (and the player mounts by holding the item).
-        boolean holdingRideItem = Configuration.Skilltree.Skill.Ride.RIDE_ITEM == null
-                || Configuration.Skilltree.Skill.Ride.RIDE_ITEM.compare(item);
+        boolean holdingRideItem = MyPetGlobal.Skilltree.Skill.Ride.RIDE_ITEM.get() == null
+                || MyPetGlobal.Skilltree.Skill.Ride.RIDE_ITEM.get().compare(item);
         boolean skillRideMountTrigger = !(pet instanceof PetNaturallyRideable)
                 && pet.getSkills().isActive(Ride.class)
                 && holdingRideItem;
         if (bareHand && !player.isSneaking() && isOwner(player, pet)
                 && !(pet instanceof PetNaturallyRideable)
                 && !skillRideMountTrigger
-                && Configuration.Misc.RIGHT_CLICK_COMMAND.isEmpty()) {
+                && MyPetGlobal.Misc.RIGHT_CLICK_COMMAND.get().isEmpty()) {
             event.setCancelled(true);
             openPetMenu(player, pet);
         }

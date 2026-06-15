@@ -63,6 +63,14 @@ public final class ConfigKeyRegistry {
     private static final List<ConfigKey<?>> ALL_KEYS = new CopyOnWriteArrayList<>();
     private static volatile boolean petsLoaded = false;
 
+    // Global keys (config.yml) are kept in a separate bucket from per-pet keys
+    // (pet-config.yml) so writeDefaults/loadFromYaml and their global twins
+    // each target the right file. Populated when MyPetGlobal's static fields
+    // initialize (forced by ensureGlobalsLoaded).
+    private static final ConcurrentHashMap<String, ConfigKey<?>> GLOBAL_BY_PATH = new ConcurrentHashMap<>();
+    private static final List<ConfigKey<?>> GLOBAL_KEYS = new CopyOnWriteArrayList<>();
+    private static volatile boolean globalsLoaded = false;
+
     /**
      * Force-initializes every registered pet class via {@code Class.forName(true)}
      * so each one's static {@link ConfigKey} field initializers fire and
@@ -96,6 +104,17 @@ public final class ConfigKeyRegistry {
      * matching pet class already owns.
      */
     static void register(ConfigKey<?> ck) {
+        if (ck.isGlobal()) {
+            ConfigKey<?> previous = GLOBAL_BY_PATH.putIfAbsent(ck.yamlPath(), ck);
+            if (previous != null) {
+                MyPetApi.getLogger().warning(
+                        "ConfigKeyRegistry: duplicate registration of global key "
+                                + ck.yamlPath() + " — keeping the first instance.");
+                return;
+            }
+            GLOBAL_KEYS.add(ck);
+            return;
+        }
         String mapKey = pathKey(ck.petType(), ck.key());
         ConfigKey<?> previous = KEYS_BY_PATH.putIfAbsent(mapKey, ck);
         if (previous != null) {
@@ -146,6 +165,41 @@ public final class ConfigKeyRegistry {
     public static List<ConfigKey<?>> all() {
         ensurePetsLoaded();
         return new ArrayList<>(ALL_KEYS);
+    }
+
+    /**
+     * Force-initializes {@code MyPetGlobal} (and, via its static block, every
+     * nested section) so each global {@link ConfigKey} field initializer fires
+     * and registers. Idempotent; runs once per JVM. The class is referenced by
+     * name because it lives in the same {@code api} module but is not otherwise
+     * a compile dependency of the registry.
+     */
+    public static synchronized void ensureGlobalsLoaded() {
+        if (globalsLoaded) return;
+        try {
+            Class.forName("de.Keyle.MyPet.api.MyPetGlobal", true,
+                    ConfigKeyRegistry.class.getClassLoader());
+        } catch (Throwable t) {
+            MyPetApi.getLogger().warning("ConfigKeyRegistry: failed to load MyPetGlobal: "
+                    + t.getClass().getSimpleName() + ": " + t.getMessage());
+        }
+        globalsLoaded = true;
+    }
+
+    /** Writes every global key's default into {@code config} (config.yml). */
+    public static void writeGlobalDefaults(Configuration config) {
+        ensureGlobalsLoaded();
+        for (ConfigKey<?> ck : GLOBAL_KEYS) {
+            config.addDefault(ck.yamlPath(), ck.yamlDefault());
+        }
+    }
+
+    /** Reads every global key's value from {@code config} (config.yml). Hot-reloadable. */
+    public static void loadGlobalsFromYaml(ConfigurationSection config) {
+        ensureGlobalsLoaded();
+        for (ConfigKey<?> ck : GLOBAL_KEYS) {
+            ck.loadFrom(config);
+        }
     }
 
     /** Writes {@link ConfigKey#yamlDefault} for every registered key into {@code config}. */

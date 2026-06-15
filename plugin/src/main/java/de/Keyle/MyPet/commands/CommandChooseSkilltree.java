@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
@@ -53,15 +53,15 @@ import java.util.*;
  *
  * <p>Skilltree selection may be restricted by configuration:
  * <ul>
- *   <li>{@link Configuration.Skilltree#AUTOMATIC_SKILLTREE_ASSIGNMENT} — when enabled,
+ *   <li>{@link MyPetGlobal.Skilltree#AUTOMATIC_SKILLTREE_ASSIGNMENT} — when enabled,
  *       skilltrees are auto-assigned and manual selection is blocked (unless admin)</li>
- *   <li>{@link Configuration.Skilltree#CHOOSE_SKILLTREE_ONLY_ONCE} — when enabled,
+ *   <li>{@link MyPetGlobal.Skilltree#CHOOSE_SKILLTREE_ONLY_ONCE} — when enabled,
  *       players cannot change their pet's skilltree after the initial selection (unless admin)</li>
  * </ul>
  *
  * <p>Switching skilltrees may incur an experience penalty based on
- * {@link Configuration.Skilltree#SWITCH_FEE_FIXED} and
- * {@link Configuration.Skilltree#SWITCH_FEE_PERCENT}.</p>
+ * {@link MyPetGlobal.Skilltree#SWITCH_FEE_FIXED} and
+ * {@link MyPetGlobal.Skilltree#SWITCH_FEE_PERCENT}.</p>
  *
  * <p><b>Usage:</b> {@code /petchooseskilltree [skilltree]}</p>
  * <p><b>Aliases:</b> {@code /pcst}, {@code /petcst}</p>
@@ -147,7 +147,7 @@ public class CommandChooseSkilltree {
         final Pet pet = MyPetApi.getPetManager().getPet(player);
         final MyPetPlayer myPetOwner = pet.getOwner();
 
-        if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !pet.getOwner().isMyPetAdmin()) {
+        if (MyPetGlobal.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT.get() && !pet.getOwner().isMyPetAdmin()) {
             pet.autoAssignSkilltree();
             player.sendMessage(Locale.getComponent("Message.Command.ChooseSkilltree.AutomaticSkilltreeAssignment", pet.getOwner()));
             return;
@@ -169,7 +169,7 @@ public class CommandChooseSkilltree {
                 player,
                 (MenuId<ChooseSkilltreeContext>) (MenuId<?>) MenuIds.CHOOSE_SKILLTREE,
                 new ChooseSkilltreeContext(player, pet, availableSkilltrees, tree -> {
-                    if (pet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !pet.getOwner().isMyPetAdmin()) {
+                    if (pet.getSkilltree() != null && MyPetGlobal.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE.get() && !pet.getOwner().isMyPetAdmin()) {
                         player.sendMessage(Locale.getFormattedComponent("Message.Command.ChooseSkilltree.OnlyOnce", pet.getOwner(), pet.getDisplayName()));
                         return;
                     }
@@ -200,12 +200,12 @@ public class CommandChooseSkilltree {
         final Pet pet = MyPetApi.getPetManager().getPet(player);
         final MyPetPlayer myPetOwner = pet.getOwner();
 
-        if (Configuration.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT && !pet.getOwner().isMyPetAdmin()) {
+        if (MyPetGlobal.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT.get() && !pet.getOwner().isMyPetAdmin()) {
             pet.autoAssignSkilltree();
             player.sendMessage(Locale.getComponent("Message.Command.ChooseSkilltree.AutomaticSkilltreeAssignment", pet.getOwner()));
             return;
         }
-        if (pet.getSkilltree() != null && Configuration.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE && !pet.getOwner().isMyPetAdmin()) {
+        if (pet.getSkilltree() != null && MyPetGlobal.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE.get() && !pet.getOwner().isMyPetAdmin()) {
             player.sendMessage(Locale.getFormattedComponent("Message.Command.ChooseSkilltree.OnlyOnce", pet.getOwner(), pet.getDisplayName()));
             return;
         }
@@ -227,7 +227,7 @@ public class CommandChooseSkilltree {
      * <p>Validates that the pet meets the skilltree's minimum level requirement and does
      * not exceed its maximum level. On successful assignment, deducts an experience penalty
      * (fixed + percentage) unless the owner is an admin with fee exemption. The penalty
-     * respects the {@link Configuration.LevelSystem.Experience#ALLOW_LEVEL_DOWNGRADE}
+     * respects the {@link MyPetGlobal.LevelSystem.Experience#ALLOW_LEVEL_DOWNGRADE}
      * setting to determine whether the pet can lose levels from the fee.</p>
      *
      * @param pet      the pet to assign the skilltree to
@@ -243,15 +243,15 @@ public class CommandChooseSkilltree {
             pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.MaxLevel.Message", myPetOwner, pet.getDisplayName(), maxLevel));
         } else if (pet.setSkilltree(skilltree, PetSelectSkilltreeEvent.Source.PLAYER_COMMAND)) {
             pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skilltree.SwitchedTo", myPetOwner, Util.SANITIZED_MINIMESSAGE.deserialize(skilltree.getDisplayName())));
-            if (!pet.getOwner().isMyPetAdmin() || Configuration.Skilltree.SWITCH_FEE_ADMIN) {
-                double switchPenalty = Configuration.Skilltree.SWITCH_FEE_FIXED;
-                switchPenalty += pet.getExperience().getExp() * Configuration.Skilltree.SWITCH_FEE_PERCENT / 100.;
+            if (!pet.getOwner().isMyPetAdmin() || MyPetGlobal.Skilltree.SWITCH_FEE_ADMIN.get()) {
+                double switchPenalty = MyPetGlobal.Skilltree.SWITCH_FEE_FIXED.get();
+                switchPenalty += pet.getExperience().getExp() * MyPetGlobal.Skilltree.SWITCH_FEE_PERCENT.get() / 100.;
 
                 if (requiredLevel > 1) {
                     double minExp = pet.getExperience().getExpByLevel(requiredLevel);
                     switchPenalty = pet.getExp() - switchPenalty < minExp ? pet.getExp() - minExp : switchPenalty;
                 }
-                if (Configuration.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE) {
+                if (MyPetGlobal.LevelSystem.Experience.ALLOW_LEVEL_DOWNGRADE.get()) {
                     pet.getExperience().removeExp(switchPenalty);
                 } else {
                     pet.getExperience().removeCurrentExp(switchPenalty);

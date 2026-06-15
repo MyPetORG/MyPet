@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.api.player;
 
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
@@ -29,7 +29,7 @@ import org.bukkit.permissions.PermissibleBase;
  * Static permission-check utility. All MyPet permission queries go through
  * this class rather than calling {@code player.hasPermission()} directly,
  * because MyPet supports an "extended permissions" mode
- * ({@link Configuration.Permissions#EXTENDED}) that gates optional features
+ * ({@link MyPetGlobal.Permissions#EXTENDED}) that gates optional features
  * behind additional permission nodes.
  * <p>
  * Two families of checks:
@@ -75,7 +75,7 @@ public class Permissions {
         if (player != null && player.isOnline()) {
             return hasExtended(player.getPlayer(), node);
         }
-        return !Configuration.Permissions.EXTENDED;
+        return !MyPetGlobal.Permissions.EXTENDED.get();
     }
 
     /**
@@ -83,7 +83,7 @@ public class Permissions {
      * are disabled, or if the player has the node.
      */
     public static boolean hasExtended(Player player, String node) {
-        return !Configuration.Permissions.EXTENDED || has(player, node);
+        return !MyPetGlobal.Permissions.EXTENDED.get() || has(player, node);
     }
 
     /**
@@ -92,7 +92,7 @@ public class Permissions {
      * of unconditionally passing.
      */
     public static boolean hasExtended(Player player, String node, boolean defaultValue) {
-        if (Configuration.Permissions.EXTENDED) {
+        if (MyPetGlobal.Permissions.EXTENDED.get()) {
             return has(player, node);
         }
         return defaultValue;
@@ -116,12 +116,12 @@ public class Permissions {
 
     /** Extended-mode offline check. See {@link #hasExtended(Player, String)}. */
     public static boolean hasExtended(OfflinePlayer player, String node) {
-        return !Configuration.Permissions.EXTENDED || has(player, node);
+        return !MyPetGlobal.Permissions.EXTENDED.get() || has(player, node);
     }
 
     /** Extended-mode offline check with explicit default. */
     public static boolean hasExtended(OfflinePlayer player, String node, boolean defaultValue) {
-        if (Configuration.Permissions.EXTENDED) {
+        if (MyPetGlobal.Permissions.EXTENDED.get()) {
             return has(player, node);
         }
         return defaultValue;

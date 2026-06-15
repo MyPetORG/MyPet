@@ -25,7 +25,7 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.entity.Pet;
@@ -227,7 +227,7 @@ public class CommandTrade {
                                     newOwner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", newOwner, pet.get().getDisplayName()));
                                     break;
                                 case Dead:
-                                    if (!Configuration.Respawn.DISABLE_AUTO_RESPAWN) {
+                                    if (!MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
                                         newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", newOwner, pet.get().getDisplayName(), pet.get().getRespawnTime()));
                                     }
                                     break;

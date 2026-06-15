@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.Configuration;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.repository.PetManager;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
@@ -94,10 +94,10 @@ public final class MyPetMetrics {
     }
 
     private static String updateMode() {
-        if (!Configuration.Update.CHECK) {
+        if (!MyPetGlobal.Update.CHECK.get()) {
             return "Disabled";
         }
-        return Configuration.Update.DOWNLOAD ? "Check & Download" : "Check";
+        return MyPetGlobal.Update.DOWNLOAD.get() ? "Check & Download" : "Check";
     }
 
     private static Map<String, Integer> activatedHooks() {
@@ -119,10 +119,10 @@ public final class MyPetMetrics {
     }
 
     private static String databaseType() {
-        if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("SQLite")) {
+        if (MyPetGlobal.Repository.REPOSITORY_TYPE.get().equalsIgnoreCase("SQLite")) {
             return "SQLite";
         }
-        if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("MySQL")) {
+        if (MyPetGlobal.Repository.REPOSITORY_TYPE.get().equalsIgnoreCase("MySQL")) {
             return "MySQL";
         }
         return null;
