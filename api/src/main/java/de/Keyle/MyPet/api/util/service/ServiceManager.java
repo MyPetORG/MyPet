@@ -34,6 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The {@link ServiceManager} manages all interactions with other plugins. Services are stored by class and by the
@@ -41,9 +42,13 @@ import java.util.*;
  * other plugins are active.
  */
 public class ServiceManager {
-    final Map<Class<? extends ServiceContainer>, ServiceContainer> services = new HashMap<>();
-    final Map<String, ServiceContainer> serviceByName = new HashMap<>();
+    // Read by getService()/isServiceActive()/hasServices() — paths that may run off the main
+    // thread (async repository callbacks, late hook registration) — so these must be concurrent.
+    final Map<Class<? extends ServiceContainer>, ServiceContainer> services = new ConcurrentHashMap<>();
+    final Map<String, ServiceContainer> serviceByName = new ConcurrentHashMap<>();
 
+    // Only mutated on the main thread during registerService()/activate() lifecycle; never read
+    // from the async path, so a plain multimap is sufficient.
     final ArrayListMultimap<Load.State, ServiceContainer> registeredServices = ArrayListMultimap.create();
 
     @Getter
