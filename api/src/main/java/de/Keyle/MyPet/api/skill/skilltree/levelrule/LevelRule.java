@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.skill.skilltree.levelrule;
 
+import java.util.Set;
 
 /**
  * A rule that determines whether a particular upgrade or notification should activate at a
@@ -29,13 +30,13 @@ package de.Keyle.MyPet.api.skill.skilltree.levelrule;
  * each upgrade is paired with a rule, and the upgrade is only applied when
  * {@link #check(int)} returns {@code true} for the pet's current level.
  *
- * <p>Implementations can express patterns such as "every N levels", "exactly at level X",
- * "from level X to level Y", or arbitrary combinations thereof.
+ * <p>The closed set of rule kinds is the two nested records: {@link Dynamic} (an "every N levels,
+ * optionally bounded" pattern) and {@link Static} (an explicit set of levels).
  *
  * <p>When multiple rules match the same level, they are applied in ascending
  * {@link #getPriority()} order to ensure deterministic upgrade sequencing.
  */
-public interface LevelRule {
+public sealed interface LevelRule permits LevelRule.Dynamic, LevelRule.Static {
 
     /**
      * Tests whether this rule matches the given level.
@@ -50,4 +51,51 @@ public interface LevelRule {
      * same level. Lower values execute first.
      */
     int getPriority();
+
+    /**
+     * Matches levels by an "every {@code modulo} levels" pattern, optionally restricted to the
+     * inclusive range {@code [start, end]} ({@code end == 0} means unbounded).
+     */
+    record Dynamic(int modulo, int start, int end) implements LevelRule {
+
+        public Dynamic {
+            modulo = Math.max(1, modulo);
+            start = Math.max(1, start);
+            end = Math.max(0, end);
+        }
+
+        @Override
+        public boolean check(int level) {
+            if (start > 1 && level < start) {
+                return false;
+            }
+            if (end > 0 && level > end) {
+                return false;
+            }
+            return (level - start) % modulo == 0;
+        }
+
+        @Override
+        public int getPriority() {
+            return 0;
+        }
+    }
+
+    /** Matches an explicit, fixed set of levels. */
+    record Static(Set<Integer> levels) implements LevelRule {
+
+        public Static {
+            levels = Set.copyOf(levels);
+        }
+
+        @Override
+        public boolean check(int level) {
+            return levels.contains(level);
+        }
+
+        @Override
+        public int getPriority() {
+            return 1;
+        }
+    }
 }

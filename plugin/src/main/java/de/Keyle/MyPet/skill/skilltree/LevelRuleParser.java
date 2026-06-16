@@ -22,11 +22,9 @@ package de.Keyle.MyPet.skill.skilltree;
 
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
-import de.Keyle.MyPet.skill.skilltree.levelrule.DynamicLevelRule;
-import de.Keyle.MyPet.skill.skilltree.levelrule.StaticLevelRule;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,16 +52,16 @@ public final class LevelRuleParser {
                     max = Integer.parseInt(matcher.group(2));
                 }
             }
-            levelRule = new DynamicLevelRule(modulo, min, max);
+            levelRule = new LevelRule.Dynamic(modulo, min, max);
         } else {
             String[] levelStrings = levelRuleString.split(",");
-            List<Integer> levels = new ArrayList<>();
+            Set<Integer> levels = new HashSet<>();
             for (String levelString : levelStrings) {
                 if (Util.isInt(levelString.trim())) {
                     levels.add(Integer.parseInt(levelString.trim()));
                 }
             }
-            levelRule = new StaticLevelRule(levels);
+            levelRule = new LevelRule.Static(levels);
         }
         return levelRule;
     }

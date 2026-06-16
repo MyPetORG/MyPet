@@ -77,8 +77,8 @@ public class Skilltree {
     protected double weight = 1;
     @Getter
     protected final Set<PetType> mobTypes = new HashSet<>();
-    protected final Map<LevelRule, Upgrade<?>> upgrades = new HashMap<>();
-    protected final Map<LevelRule, String> notifications = new HashMap<>();
+    protected final List<UpgradeEntry> upgrades = new ArrayList<>();
+    protected final List<NotificationEntry> notifications = new ArrayList<>();
     protected @Getter List<Settings> requirementSettings = new ArrayList<>();
 
     /**
@@ -204,11 +204,11 @@ public class Skilltree {
             }
         }
 
-        List<LevelRule> rules = new ArrayList<>(this.upgrades.keySet());
-        rules.sort(Comparator.comparingInt(LevelRule::getPriority));
-        for (LevelRule rule : rules) {
-            if (rule.check(level)) {
-                upgrades.add(this.upgrades.get(rule));
+        List<UpgradeEntry> sorted = new ArrayList<>(this.upgrades);
+        sorted.sort(Comparator.comparingInt(entry -> entry.rule().getPriority()));
+        for (UpgradeEntry entry : sorted) {
+            if (entry.rule().check(level)) {
+                upgrades.add(entry.upgrade());
             }
         }
         return upgrades;
@@ -221,7 +221,7 @@ public class Skilltree {
      * @param upgrade   the upgrade to apply
      */
     public void addUpgrade(LevelRule levelRule, Upgrade<?> upgrade) {
-        this.upgrades.put(levelRule, upgrade);
+        this.upgrades.add(new UpgradeEntry(levelRule, upgrade));
     }
 
     /**
@@ -232,11 +232,11 @@ public class Skilltree {
      */
     public List<String> getNotifications(int level) {
         List<String> notifications = new ArrayList<>();
-        List<LevelRule> rules = new ArrayList<>(this.notifications.keySet());
-        rules.sort(Comparator.comparingInt(LevelRule::getPriority));
-        for (LevelRule rule : rules) {
-            if (rule.check(level)) {
-                notifications.add(this.notifications.get(rule));
+        List<NotificationEntry> sorted = new ArrayList<>(this.notifications);
+        sorted.sort(Comparator.comparingInt(entry -> entry.rule().getPriority()));
+        for (NotificationEntry entry : sorted) {
+            if (entry.rule().check(level)) {
+                notifications.add(entry.notification());
             }
         }
         return notifications;
@@ -249,7 +249,16 @@ public class Skilltree {
      * @param notification the message to display to the pet owner
      */
     public void addNotification(LevelRule levelRule, String notification) {
-        this.notifications.put(levelRule, notification);
+        this.notifications.add(new NotificationEntry(levelRule, notification));
+    }
+
+    /** A level-gated upgrade binding. Stored as a list entry (not a map key) because two
+     * different skills may share an identical {@link LevelRule}, which must stay distinct. */
+    protected record UpgradeEntry(LevelRule rule, Upgrade<?> upgrade) {
+    }
+
+    /** A level-gated notification binding. See {@link UpgradeEntry} for why this is a list entry. */
+    protected record NotificationEntry(LevelRule rule, String notification) {
     }
 
     /**
