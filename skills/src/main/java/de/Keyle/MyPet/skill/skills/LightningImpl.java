@@ -35,19 +35,17 @@ import org.bukkit.entity.Player;
 
 import java.util.Random;
 
-public class LightningImpl implements Lightning {
+public class LightningImpl extends AbstractSkill implements Lightning {
 
     private static Random random = new Random();
     @Getter
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     @Getter
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
-    @Getter
-    private Pet pet;
     private boolean isStriking = false;
 
     public LightningImpl(Pet pet) {
-        this.pet = pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -73,7 +71,7 @@ public class LightningImpl implements Lightning {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Lightning.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getDamage().getValue().doubleValue())
+                upgradeMessage("Message.Skill.Lightning.Upgrade", getChance().getValue(), getDamage().getValue().doubleValue())
         };
     }
 

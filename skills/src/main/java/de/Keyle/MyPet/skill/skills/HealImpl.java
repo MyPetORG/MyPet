@@ -29,20 +29,15 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 
-public class HealImpl implements Heal {
+public class HealImpl extends AbstractSkill implements Heal {
 
     protected UpgradeComputer<Number> heal = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> timer = new UpgradeComputer<>(0);
     protected boolean particles = false;
     private int timeCounter = 0;
-    private Pet pet;
 
     public HealImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -70,7 +65,7 @@ public class HealImpl implements Heal {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.HpRegeneration.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getHeal().getValue().doubleValue(), getTimer().getValue())
+                upgradeMessage("Message.Skill.HpRegeneration.Upgrade", getHeal().getValue().doubleValue(), getTimer().getValue())
         };
     }
 

@@ -43,7 +43,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
-public class BeaconImpl implements Beacon {
+public class BeaconImpl extends AbstractSkill implements Beacon {
 
     private static final Set<Buff> BOOLEAN_BUFFS = EnumSet.of(
             Buff.FireResistance, Buff.WaterBreathing, Buff.Invisibility, Buff.NightVision, Buff.Luck);
@@ -77,7 +77,6 @@ public class BeaconImpl implements Beacon {
     protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> selectableBuffs = new UpgradeComputer<>(0);
     protected Map<Buff, UpgradeComputer<?>> buffLevel = new HashMap<>();
-    protected Pet pet;
     protected boolean active = false;
     protected int hungerDecreaseTimer;
     protected BuffReceiver receiver = BuffReceiver.Owner;
@@ -85,7 +84,7 @@ public class BeaconImpl implements Beacon {
     protected Set<Buff> selectedBuffs = new HashSet<>();
 
     public BeaconImpl(Pet pet) {
-        this.pet = pet;
+        super(pet);
         hungerDecreaseTimer = MyPetGlobal.Skilltree.Skill.Beacon.HUNGER_DECREASE_TIME.get();
 
         for (Buff buff : Buff.values()) {
@@ -107,10 +106,6 @@ public class BeaconImpl implements Beacon {
                 buffLevel.put(buff, intComputer);
             }
         }
-    }
-
-    public Pet getPet() {
-        return pet;
     }
 
     public boolean isActive() {

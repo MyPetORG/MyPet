@@ -27,7 +27,7 @@ import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-public class RideImpl implements Ride {
+public class RideImpl extends AbstractSkill implements Ride {
 
     protected UpgradeComputer<Integer> speed = new UpgradeComputer<>(0);
     protected UpgradeComputer<Number> jumpHeight = new UpgradeComputer<>(0);
@@ -35,14 +35,9 @@ public class RideImpl implements Ride {
     protected UpgradeComputer<Number> flyLimit = new UpgradeComputer<>(0);
     protected UpgradeComputer<Boolean> canFly = new UpgradeComputer<>(false);
     protected UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);
-    private Pet pet;
 
     public RideImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     @Override

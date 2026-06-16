@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Knockback;
-import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.LivingEntity;
@@ -31,19 +30,14 @@ import org.bukkit.util.Vector;
 
 import java.util.Random;
 
-public class KnockbackImpl implements Knockback {
+public class KnockbackImpl extends AbstractSkill implements Knockback {
 
     private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
-    private Pet pet;
 
     public KnockbackImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -65,7 +59,7 @@ public class KnockbackImpl implements Knockback {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Knockback.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue())
+                upgradeMessage("Message.Skill.Knockback.Upgrade", getChance().getValue())
         };
     }
 

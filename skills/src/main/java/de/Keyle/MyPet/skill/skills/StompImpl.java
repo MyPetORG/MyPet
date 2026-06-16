@@ -33,24 +33,15 @@ import org.bukkit.util.Vector;
 
 import java.util.Random;
 
-public class StompImpl implements Stomp {
+public class StompImpl extends AbstractSkill implements Stomp {
 
     private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
-    private Pet pet;
 
     public StompImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -76,7 +67,7 @@ public class StompImpl implements Stomp {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Stomp.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getChance().getValue().doubleValue())
+                upgradeMessage("Message.Skill.Stomp.Upgrade", getChance().getValue(), getChance().getValue().doubleValue())
         };
     }
 

@@ -27,23 +27,14 @@ import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-public class RangedImpl implements Ranged {
+public class RangedImpl extends AbstractSkill implements Ranged {
 
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> rateOfFire = new UpgradeComputer<>(1);
     protected UpgradeComputer<Projectile> projectile = new UpgradeComputer<>(Projectile.Arrow);
-    private Pet pet;
 
     public RangedImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
+        super(pet);
     }
 
     public boolean isActive() {

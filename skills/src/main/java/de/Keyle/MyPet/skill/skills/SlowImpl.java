@@ -32,20 +32,15 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Random;
 
-public class SlowImpl implements Slow {
+public class SlowImpl extends AbstractSkill implements Slow {
 
     private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
-    private Pet pet;
 
     public SlowImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -71,7 +66,7 @@ public class SlowImpl implements Slow {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Slow.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getDuration().getValue())
+                upgradeMessage("Message.Skill.Slow.Upgrade", getChance().getValue(), getDuration().getValue())
         };
     }
 

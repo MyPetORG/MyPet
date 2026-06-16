@@ -23,24 +23,14 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Sprint;
-import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 
-public class SprintImpl implements Sprint {
+public class SprintImpl extends AbstractSkill implements Sprint {
 
     protected UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);
-    private Pet pet;
 
     public SprintImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -64,7 +54,7 @@ public class SprintImpl implements Sprint {
     public Component[] getUpgradeMessage() {
         if (getActive().getValue()) {
             return new Component[]{
-                    Locale.getFormattedComponent("Message.Skill.Sprint.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName())
+                    upgradeMessage("Message.Skill.Sprint.Upgrade")
             };
         }
         return null;

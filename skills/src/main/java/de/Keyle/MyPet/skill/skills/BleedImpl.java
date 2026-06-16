@@ -38,12 +38,9 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BleedImpl implements Bleed {
+public class BleedImpl extends AbstractSkill implements Bleed {
 
     private static Random random = new Random();
-
-    @Getter
-    private Pet pet;
 
     @Getter
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
@@ -57,7 +54,7 @@ public class BleedImpl implements Bleed {
     private final Map<UUID, BleedEffect> activeEffects = new ConcurrentHashMap<>();
 
     public BleedImpl(Pet pet) {
-        this.pet = pet;
+        super(pet);
     }
 
     @Override
@@ -97,10 +94,8 @@ public class BleedImpl implements Bleed {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent(
+                upgradeMessage(
                         "Message.Skill.Bleed.Upgrade",
-                        pet.getOwner().getLanguage(),
-                        pet.getDisplayName(),
                         getChance().getValue(),
                         getDamage().getValue().doubleValue(),
                         getInterval().getValue(),

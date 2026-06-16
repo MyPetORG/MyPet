@@ -27,16 +27,11 @@ import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-public class DamageImpl implements Damage {
-    protected Pet pet;
+public class DamageImpl extends AbstractSkill implements Damage {
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
 
     public DamageImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -59,7 +54,7 @@ public class DamageImpl implements Damage {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Damage.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getDamage().getValue().doubleValue())
+                upgradeMessage("Message.Skill.Damage.Upgrade", getDamage().getValue().doubleValue())
         };
     }
 

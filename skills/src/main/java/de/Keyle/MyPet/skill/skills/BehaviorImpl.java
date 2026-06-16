@@ -51,11 +51,9 @@ import static de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode.*;
  * to avoid infinite loops. When an unavailable mode is requested, it falls back to
  * {@link Behavior.BehaviorMode#Normal}.
  */
-public class BehaviorImpl implements Behavior {
+public class BehaviorImpl extends AbstractSkill implements Behavior {
 
     protected static Random random = new Random();
-    @Getter
-    protected Pet pet;
     protected Set<BehaviorMode> activeBehaviors = new HashSet<>();
     protected BehaviorMode selectedBehavior = BehaviorMode.Normal;
     Iterator<BehaviorMode> behaviorCycler;
@@ -77,7 +75,7 @@ public class BehaviorImpl implements Behavior {
      * @param pet the owning pet (must not be null)
      */
     public BehaviorImpl(@NotNull Pet pet) {
-        this.pet = pet;
+        super(pet);
         activeBehaviors.add(BehaviorMode.Normal);
         updateCycler();
 

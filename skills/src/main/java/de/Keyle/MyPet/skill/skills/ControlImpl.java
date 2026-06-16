@@ -26,18 +26,13 @@ import de.Keyle.MyPet.api.skill.skills.Control;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 
-public class ControlImpl implements Control {
+public class ControlImpl extends AbstractSkill implements Control {
     private Location moveTo;
     private Location prevMoveTo;
     private UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);
-    private Pet pet;
 
     public ControlImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     @Override

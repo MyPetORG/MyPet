@@ -33,24 +33,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.Random;
 
-public class ShieldImpl implements Shield {
+public class ShieldImpl extends AbstractSkill implements Shield {
 
     private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> redirectedDamage = new UpgradeComputer<>(0);
-    private Pet pet;
 
     public ShieldImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -70,7 +61,7 @@ public class ShieldImpl implements Shield {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Shield.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getRedirectedDamage().getValue())
+                upgradeMessage("Message.Skill.Shield.Upgrade", getChance().getValue(), getRedirectedDamage().getValue())
         };
     }
 

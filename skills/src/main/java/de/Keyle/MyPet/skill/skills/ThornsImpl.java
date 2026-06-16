@@ -35,20 +35,15 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.Random;
 
-public class ThornsImpl implements Thorns {
+public class ThornsImpl extends AbstractSkill implements Thorns {
 
     private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> reflectedDamage = new UpgradeComputer<>(0);
-    private Pet pet;
 
     public ThornsImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -74,7 +69,7 @@ public class ThornsImpl implements Thorns {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Thorns.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getReflectedDamage().getValue())
+                upgradeMessage("Message.Skill.Thorns.Upgrade", getChance().getValue(), getReflectedDamage().getValue())
         };
     }
 

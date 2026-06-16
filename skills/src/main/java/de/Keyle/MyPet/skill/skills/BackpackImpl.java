@@ -51,7 +51,7 @@ import java.util.Optional;
  * is available for drop-on-death and self-feeding integration points that have
  * not yet been migrated to the new menu system.
  */
-public class BackpackImpl implements Backpack {
+public class BackpackImpl extends AbstractSkill implements Backpack {
 
     /**
      * Number of inventory rows available to the Pet. Each row equals 9 slots.
@@ -75,18 +75,12 @@ public class BackpackImpl implements Backpack {
     protected ItemStack[] contents = new ItemStack[0];
 
     /**
-     * The owning Pet.
-     */
-    @Getter
-    protected Pet pet;
-
-    /**
      * Creates a new Backpack skill instance for the given Pet.
      *
      * @param pet owning Pet
      */
     public BackpackImpl(Pet pet) {
-        this.pet = pet;
+        super(pet);
         // Shrink the persisted array whenever the granted row count decreases.
         // Items in newly-unreachable slots are packed into empty surviving slots;
         // anything that can't fit is dropped at the pet's location (or the owner's).
@@ -258,7 +252,7 @@ public class BackpackImpl implements Backpack {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Inventory.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getRows().getValue().intValue() * 9)
+                upgradeMessage("Message.Skill.Inventory.Upgrade", getRows().getValue().intValue() * 9)
         };
     }
 

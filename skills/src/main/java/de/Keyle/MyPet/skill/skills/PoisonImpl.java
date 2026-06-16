@@ -32,19 +32,14 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Random;
 
-public class PoisonImpl implements Poison {
+public class PoisonImpl extends AbstractSkill implements Poison {
 
     private static Random random = new Random();
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
-    private Pet pet;
 
     public PoisonImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -70,7 +65,7 @@ public class PoisonImpl implements Poison {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Poison.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getDuration().getValue())
+                upgradeMessage("Message.Skill.Poison.Upgrade", getChance().getValue(), getDuration().getValue())
         };
     }
 

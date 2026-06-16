@@ -45,19 +45,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 
-public class PickupImpl implements Pickup {
+public class PickupImpl extends AbstractSkill implements Pickup {
 
     protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
     protected UpgradeComputer<Boolean> expPickup = new UpgradeComputer<>(false);
     private boolean pickup = false;
-    private Pet pet;
 
     public PickupImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -83,7 +78,7 @@ public class PickupImpl implements Pickup {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Pickup.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), String.format("%1.2f", getRange().getValue().doubleValue()))
+                upgradeMessage("Message.Skill.Pickup.Upgrade", String.format("%1.2f", getRange().getValue().doubleValue()))
         };
     }
 

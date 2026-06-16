@@ -31,20 +31,15 @@ import org.bukkit.entity.LivingEntity;
 
 import java.util.Random;
 
-public class FireImpl implements Fire {
+public class FireImpl extends AbstractSkill implements Fire {
 
     private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
-    private Pet pet;
 
     public FireImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -70,7 +65,7 @@ public class FireImpl implements Fire {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Fire.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getDuration().getValue())
+                upgradeMessage("Message.Skill.Fire.Upgrade", getChance().getValue(), getDuration().getValue())
         };
     }
 

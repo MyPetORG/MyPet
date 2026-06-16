@@ -32,20 +32,15 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Random;
 
-public class WitherImpl implements Wither {
+public class WitherImpl extends AbstractSkill implements Wither {
 
     private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
-    private Pet pet;
 
     public WitherImpl(Pet pet) {
-        this.pet = pet;
-    }
-
-    public Pet getPet() {
-        return pet;
+        super(pet);
     }
 
     public boolean isActive() {
@@ -71,7 +66,7 @@ public class WitherImpl implements Wither {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Wither.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), getChance().getValue(), getDuration().getValue())
+                upgradeMessage("Message.Skill.Wither.Upgrade", getChance().getValue(), getDuration().getValue())
         };
     }
 
