@@ -196,6 +196,23 @@ public class BackpackImpl extends AbstractSkill implements Backpack {
     }
 
     /**
+     * Adds an item to the backpack, persisting the result back to {@link #contents}.
+     * Unlike {@link #getInventory()} (a transient view), this write-through path is
+     * safe for callers that need the addition to stick (e.g. the Pickup skill).
+     *
+     * @param item the stack to add
+     * @return the amount that could not be stored (0 if fully inserted)
+     */
+    @Override
+    public int addItem(ItemStack item) {
+        if (item == null || item.getType().isAir()) return 0;
+        CustomInventory inv = getInventory();
+        int leftover = inv.addItem(item);
+        writeContents(inv.getContents().toArray(new ItemStack[0]));
+        return leftover;
+    }
+
+    /**
      * Drops all non-null, non-air items from {@link #contents} at the given location
      * and clears those slots. Callers should prefer this over
      * {@code getInventory().dropContentAt(loc)} because that method operates on a

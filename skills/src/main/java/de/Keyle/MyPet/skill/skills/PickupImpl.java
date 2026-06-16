@@ -29,7 +29,6 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Pickup;
-import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -147,8 +146,7 @@ public class PickupImpl extends AbstractSkill implements Pickup {
 
                                 itemStack = itemEntity.getItemStack();
 
-                                CustomInventory inv = pet.getSkills().get(BackpackImpl.class).getInventory();
-                                int itemAmount = inv.addItem(itemStack);
+                                int itemAmount = pet.getSkills().get(BackpackImpl.class).addItem(itemStack);
                                 if (itemAmount == 0) {
                                     petEntity.getWorld().playSound(petEntity.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.2F, 1.0F);
                                     itemStack.setAmount(0);

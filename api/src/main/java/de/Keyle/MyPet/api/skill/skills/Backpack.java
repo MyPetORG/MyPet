@@ -49,6 +49,12 @@ public interface Backpack extends Skill, ActiveSkill {
      */
     CustomInventory getInventory();
 
+    /**
+     * Adds an item to the backpack and persists the result, unlike the transient
+     * {@link #getInventory()} view. Returns the amount that did not fit (0 if fully stored).
+     */
+    int addItem(ItemStack item);
+
     /** Returns the upgrade computer controlling whether items drop when the pet dies. */
     UpgradeComputer<Boolean> getDropOnDeath();
 
