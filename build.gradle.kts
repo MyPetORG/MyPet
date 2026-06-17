@@ -1,7 +1,6 @@
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import org.gradle.api.attributes.Usage
-import java.net.URI
 
 plugins {
     java
@@ -83,18 +82,6 @@ sourceSets {
     }
 }
 
-val downloadVersionmatcher by tasks.register("downloadVersionmatcher") {
-    val dest = layout.projectDirectory.file("src/main/resources/versionmatcher.csv")
-    outputs.file(dest)
-    doLast {
-        dest.asFile.parentFile.mkdirs()
-        val url = URI("https://raw.githubusercontent.com/MyPetORG/MyPet/versionmatcher/versionmatcher.csv").toURL()
-        url.openStream().use { input ->
-            dest.asFile.outputStream().use { out -> input.copyTo(out) }
-        }
-    }
-}
-
 val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
     group = "resources"
     description = "Downloads MyPet translations into build/resources/main/locale"
@@ -135,7 +122,7 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
 }
 
 tasks.named<ProcessResources>("processResources") {
-    dependsOn(downloadVersionmatcher, downloadTranslations)
+    dependsOn(downloadTranslations)
     duplicatesStrategy = DuplicatesStrategy.WARN
 
     // Define filtering properties inline for configuration cache compatibility
