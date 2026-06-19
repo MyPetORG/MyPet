@@ -25,7 +25,6 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.configuration.ConfigurationYAML;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -51,10 +50,14 @@ public class ServiceManager {
     // from the async path, so a plain multimap is sufficient.
     final ArrayListMultimap<Load.State, ServiceContainer> registeredServices = ArrayListMultimap.create();
 
-    @Getter
     private ConfigurationYAML config;
 
-    private ConfigurationYAML getOrInitConfig() {
+    /**
+     * Returns the hook/service configuration, lazily creating it on first access. Hooks may read
+     * config from their constructor (during {@code onLoad}, before {@link #activate} runs), so this
+     * must always return a live config rather than the possibly-null backing field.
+     */
+    public ConfigurationYAML getConfig() {
         if (config == null) {
             File hookConfigFile = new File(MyPetApi.getPlugin().getDataFolder().getPath() + File.separator + "hooks-config.yml");
             config = new ConfigurationYAML(hookConfigFile);
@@ -140,7 +143,7 @@ public class ServiceManager {
                     continue;
                 }
 
-                FileConfiguration cfg = getOrInitConfig().getConfig();
+                FileConfiguration cfg = getConfig().getConfig();
                 if (cfg.contains(requires.value())) {
                     if (!cfg.getBoolean(requires.value() + ".Enabled", true)) {
                         continue;

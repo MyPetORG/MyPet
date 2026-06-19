@@ -121,7 +121,8 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
                         registerFlag(flagRegistry, BEACON_DURATION_MULT_FLAG);
                         registerFlag(flagRegistry, BEACON_AMPLIFIER_ADD_FLAG);
 
-                        MyPetApi.getLeashFlagManager().registerLeashFlag(new RegionFlag());
+                        // The leash flag is registered in onEnable() — LeashFlagManager isn't
+                        // available yet during onLoad, when this constructor runs.
                         customFlags = true;
                     } catch (Exception e) {
                         MyPetApi.getLogger().warning("Could not register WorldGuard flags: " + e.getMessage());
