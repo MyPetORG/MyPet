@@ -439,6 +439,62 @@ public final class MenuDispatcher implements Listener {
         }
     }
 
+    /**
+     * Inserts {@code item} into the live storage section of the menu the viewer
+     * currently has open, so the addition is visible immediately and survives the
+     * snapshot-on-close in {@link #extractStorageAndPersist}. Stacking matches
+     * vanilla (top up existing stacks, then fill empties).
+     *
+     * @return the amount that did not fit, or empty when the viewer has no open
+     *         menu with a storage section (caller should fall back to its own store)
+     */
+    public OptionalInt addToOpenStorage(Player viewer, ItemStack item) {
+        if (item == null || item.getType().isAir()) return OptionalInt.of(0);
+        MenuInstanceImpl inst = visibleByViewer.get(viewer.getUniqueId());
+        if (inst == null) return OptionalInt.empty();
+
+        StorageSection target = null;
+        for (Section s : inst.definition().sections().values()) {
+            if (s instanceof StorageSection st) { target = st; break; }
+        }
+        if (target == null) return OptionalInt.empty();
+
+        // Insert via a scratch inventory so Bukkit handles stacking, then write the
+        // result back into just the section's slots of the live menu inventory.
+        int cap = target.slotCapacity();
+        int scratchSize = ((cap + 8) / 9) * 9;
+        Inventory live = inst.getInventory();
+        Inventory scratch = Bukkit.createInventory(null, scratchSize);
+        int[] slots = new int[cap];
+        int idx = 0;
+        for (int dr = 0; dr < target.height(); dr++) {
+            for (int dc = 0; dc < target.width(); dc++) {
+                int slot = (target.row() + dr) * 9 + (target.col() + dc);
+                slots[idx] = slot;
+                scratch.setItem(idx, live.getItem(slot));
+                idx++;
+            }
+        }
+
+        Map<Integer, ItemStack> leftover = scratch.addItem(item.clone());
+
+        for (int i = 0; i < cap; i++) {
+            live.setItem(slots[i], scratch.getItem(i));
+        }
+
+        int remaining = 0;
+        for (ItemStack rem : leftover.values()) {
+            if (rem != null) remaining += rem.getAmount();
+        }
+        // Padding slots (when capacity isn't a multiple of 9) aren't part of the
+        // section, so anything Bukkit placed there didn't actually fit.
+        for (int i = cap; i < scratchSize; i++) {
+            ItemStack pad = scratch.getItem(i);
+            if (pad != null) remaining += pad.getAmount();
+        }
+        return OptionalInt.of(remaining);
+    }
+
     private void extractStorageAndPersist(MenuInstanceImpl inst) {
         for (Section s : inst.definition().sections().values()) {
             if (s instanceof StorageSection st) {

@@ -22,8 +22,10 @@ package de.Keyle.MyPet.api.gui;
 
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.InputStream;
+import java.util.OptionalInt;
 import java.util.function.Supplier;
 
 /**
@@ -48,6 +50,15 @@ public interface GuiService extends ServiceContainer {
 
     /** Close the viewer's current menu with {@link CloseReason#PLUGIN_CLOSED}. */
     void closeMenu(Player viewer);
+
+    /**
+     * Inserts {@code item} into the live storage of the menu {@code viewer} currently
+     * has open (e.g. an open Backpack), so the addition is visible immediately and is
+     * persisted when the menu closes. Returns the amount that did not fit, or empty
+     * when the viewer has no open menu with a storage section — callers should then
+     * persist through their own backing store instead.
+     */
+    OptionalInt addToOpenStorage(Player viewer, ItemStack item);
 
     SectionTypeRegistry getSectionTypeRegistry();
 }

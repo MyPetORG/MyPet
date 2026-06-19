@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
@@ -36,9 +37,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * Backpack Pet Skill
@@ -196,9 +199,11 @@ public class BackpackImpl extends AbstractSkill implements Backpack {
     }
 
     /**
-     * Adds an item to the backpack, persisting the result back to {@link #contents}.
-     * Unlike {@link #getInventory()} (a transient view), this write-through path is
-     * safe for callers that need the addition to stick (e.g. the Pickup skill).
+     * Adds an item to the backpack and makes the addition stick. When the owner has
+     * the backpack menu open the live menu inventory — not {@link #contents} — is
+     * authoritative (it overwrites {@code contents} on close), so the item is routed
+     * there; otherwise it is written through to {@code contents}. Either way the
+     * result persists, unlike the transient {@link #getInventory()} view.
      *
      * @param item the stack to add
      * @return the amount that could not be stored (0 if fully inserted)
@@ -206,6 +211,11 @@ public class BackpackImpl extends AbstractSkill implements Backpack {
     @Override
     public int addItem(ItemStack item) {
         if (item == null || item.getType().isAir()) return 0;
+        Player owner = pet.getOwner() != null ? pet.getOwner().getPlayer() : null;
+        if (owner != null) {
+            OptionalInt live = MyPetApi.getGuiService().addToOpenStorage(owner, item);
+            if (live.isPresent()) return live.getAsInt();
+        }
         CustomInventory inv = getInventory();
         int leftover = inv.addItem(item);
         writeContents(inv.getContents().toArray(new ItemStack[0]));

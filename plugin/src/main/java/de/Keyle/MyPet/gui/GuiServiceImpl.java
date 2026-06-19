@@ -24,9 +24,11 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.gui.*;
 import de.Keyle.MyPet.api.util.service.ServiceName;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.io.InputStream;
+import java.util.OptionalInt;
 import java.util.function.Supplier;
 
 /**
@@ -101,6 +103,11 @@ public final class GuiServiceImpl implements GuiService {
     @Override
     public void closeMenu(Player viewer) {
         viewer.closeInventory();
+    }
+
+    @Override
+    public OptionalInt addToOpenStorage(Player viewer, ItemStack item) {
+        return dispatcher.addToOpenStorage(viewer, item);
     }
 
     @Override
