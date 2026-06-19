@@ -61,7 +61,7 @@ public class StompImpl extends AbstractSkill implements Stomp {
                 .append(Component.text(damage.getValue().doubleValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
                 .append(Locale.getComponent("Name.Damage", locale))
-                .build();
+                .asComponent();
     }
 
     @Override

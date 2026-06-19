@@ -97,7 +97,7 @@ public class CommandOptionShop {
         }
 
         if (!selectedNPC.hasTrait(ShopTrait.class)) {
-            sender.sendMessage(MessageUtil.prefixed(Component.text().append(Component.text("This NPC doesn't has the ")).append(Component.text("mypet-shop").color(NamedTextColor.GOLD)).append(Component.text(" trait!")).build()));
+            sender.sendMessage(MessageUtil.prefixed(Component.text().append(Component.text("This NPC doesn't has the ")).append(Component.text("mypet-shop").color(NamedTextColor.GOLD)).append(Component.text(" trait!")).asComponent()));
             return;
         }
 

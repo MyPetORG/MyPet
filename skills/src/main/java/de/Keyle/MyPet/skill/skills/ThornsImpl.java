@@ -63,7 +63,7 @@ public class ThornsImpl extends AbstractSkill implements Thorns {
                 .append(Component.text(reflectedDamage.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.text("% "))
                 .append(Locale.getComponent("Name.Damage", locale))
-                .build();
+                .asComponent();
     }
 
     @Override

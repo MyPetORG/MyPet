@@ -143,7 +143,7 @@ public class CommandSkill {
                             .append(skill.getName(locale).color(NamedTextColor.GREEN))
                             .append(Component.space())
                             .append(skill.toPrettyComponent(locale))
-                            .build());
+                            .asComponent());
                 }
             }
         } else {

@@ -345,7 +345,7 @@ public final class Locale implements Translator {
             for (Component child : component.children()) {
                 builder.append(replaceInComponent(child, values));
             }
-            return builder.build();
+            return builder.asComponent();
         }
 
         // Non-TextComponent nodes (e.g. TranslatableComponent) carry their children inside

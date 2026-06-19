@@ -55,7 +55,7 @@ public class RangedImpl extends AbstractSkill implements Ranged {
                 .append(Component.text(damage.getValue().doubleValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
                 .append(Locale.getComponent("Name.Damage", locale))
-                .build();
+                .asComponent();
     }
 
     @Override

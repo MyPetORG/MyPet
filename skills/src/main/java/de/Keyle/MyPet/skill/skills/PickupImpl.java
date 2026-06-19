@@ -71,7 +71,7 @@ public class PickupImpl extends AbstractSkill implements Pickup {
                 .append(Component.text(String.format("%1.2f", range.getValue().doubleValue())).color(NamedTextColor.GOLD))
                 .append(Component.space())
                 .append(Locale.getComponent("Name.Blocks", locale))
-                .build();
+                .asComponent();
     }
 
     @Override

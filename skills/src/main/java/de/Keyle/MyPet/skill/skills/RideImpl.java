@@ -56,7 +56,7 @@ public class RideImpl extends AbstractSkill implements Ride {
                 .append(Component.text(" +"))
                 .append(Component.text(speed.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.text("%"))
-                .build();
+                .asComponent();
     }
 
     @Override

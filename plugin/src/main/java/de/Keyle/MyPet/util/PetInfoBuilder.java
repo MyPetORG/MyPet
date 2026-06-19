@@ -79,7 +79,7 @@ public class PetInfoBuilder {
                 .append(Locale.getComponent("Name.Owner", sender))
                 .append(Component.text(": "))
                 .append(Component.text(pet.getOwner().getName()))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -96,7 +96,7 @@ public class PetInfoBuilder {
                 .append(Component.text(INDENT))
                 .append(Locale.getComponent("Name.HP", sender))
                 .append(Component.text(": "))
-                .build();
+                .asComponent();
 
         if (pet.getStatus() == PetState.Dead) {
             return hpLabel.append(
@@ -121,7 +121,7 @@ public class PetInfoBuilder {
                 .append(Component.text(String.format("%1.2f", health)).color(healthColor))
                 .append(Component.text("/").color(NamedTextColor.WHITE))
                 .append(Component.text(String.format("%1.2f", maxHealth)).color(healthColor))
-                .build());
+                .asComponent());
     }
 
     /**
@@ -142,7 +142,7 @@ public class PetInfoBuilder {
                 .append(Locale.getComponent("Name.Respawntime", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.valueOf(pet.getRespawnTime())))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -163,7 +163,7 @@ public class PetInfoBuilder {
                 .append(Locale.getComponent("Name.Damage", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.format("%1.2f", pet.getDamage())))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -184,7 +184,7 @@ public class PetInfoBuilder {
                 .append(Locale.getComponent("Name.RangedDamage", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.format("%1.2f", pet.getRangedDamage())))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -205,7 +205,7 @@ public class PetInfoBuilder {
                 .append(Locale.getComponent("Name.Hunger", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.valueOf(Math.round(pet.getSaturation()))))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -258,7 +258,7 @@ public class PetInfoBuilder {
                 messageBuilder.append(itemComponent);
                 comma = true;
             }
-            return messageBuilder.build();
+            return messageBuilder.asComponent();
         } else {
             // For console, just show material names without hover
             String foodList = MyPetApi.getPetInfo().getFood(pet.getPetType())
@@ -272,7 +272,7 @@ public class PetInfoBuilder {
                     .append(Locale.getComponent("Name.Food", sender))
                     .append(Component.text(": "))
                     .append(Component.text(foodList))
-                    .build();
+                    .asComponent();
         }
     }
 
@@ -295,7 +295,7 @@ public class PetInfoBuilder {
                 .append(Locale.getComponent("Name.Skill.Behavior", sender))
                 .append(Component.text(": "))
                 .append(Locale.getComponent("Name." + behavior.getBehavior().name(), sender))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -316,7 +316,7 @@ public class PetInfoBuilder {
                 .append(Locale.getComponent("Name.Skilltree", sender))
                 .append(Component.text(": "))
                 .append(Util.SANITIZED_MINIMESSAGE.deserialize(pet.getSkilltree().getDisplayName()))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -334,7 +334,7 @@ public class PetInfoBuilder {
                 .append(Locale.getComponent("Name.Level", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.valueOf(level)))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -362,7 +362,7 @@ public class PetInfoBuilder {
                 .append(Locale.getComponent("Name.Exp", sender))
                 .append(Component.text(": "))
                 .append(Component.text(String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqExp)))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -386,7 +386,7 @@ public class PetInfoBuilder {
                 .append(Component.text(icon + " ").color(NamedTextColor.GOLD))
                 .append(Locale.getComponent("Name.Title." + rank.name(), sender).color(NamedTextColor.GOLD))
                 .append(Component.text(" " + icon).color(NamedTextColor.GOLD))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -494,7 +494,7 @@ public class PetInfoBuilder {
             hasContent = true;
         }
 
-        return hasContent ? builder.build() : Component.empty();
+        return hasContent ? builder.asComponent() : Component.empty();
     }
 
     /**
@@ -557,6 +557,6 @@ public class PetInfoBuilder {
                     .append(Locale.getComponent("Name.Dead", lang).color(NamedTextColor.RED));
         }
 
-        return HoverEvent.showText(builder.build());
+        return HoverEvent.showText(builder.asComponent());
     }
 }

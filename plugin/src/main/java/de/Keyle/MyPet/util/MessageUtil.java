@@ -40,7 +40,7 @@ public class MessageUtil {
                 .append(Component.text("["))
                 .append(Component.text("MyPet").color(NamedTextColor.GREEN))
                 .append(Component.text("]"))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -69,7 +69,7 @@ public class MessageUtil {
         Component successMessage = Component.text()
                 .append(Component.text("✔ ").decorate(TextDecoration.BOLD).color(NamedTextColor.GREEN))
                 .append(message.color(NamedTextColor.GREEN))
-                .build();
+                .asComponent();
 
         if (withPrefix) {
             return pluginPrefix()
@@ -105,7 +105,7 @@ public class MessageUtil {
         Component errorMessage = Component.text()
                 .append(Component.text("✘ ").decorate(TextDecoration.BOLD).color(NamedTextColor.RED))
                 .append(message.color(NamedTextColor.RED))
-                .build();
+                .asComponent();
 
         if (withPrefix) {
             return pluginPrefix()
@@ -213,7 +213,7 @@ public class MessageUtil {
                 .append(Component.text("===== ").color(NamedTextColor.GRAY))
                 .append(text.color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD))
                 .append(Component.text(" =====").color(NamedTextColor.GRAY))
-                .build();
+                .asComponent();
     }
 
     /**
@@ -228,7 +228,7 @@ public class MessageUtil {
         return Component.text()
                 .append(Component.text(label + ": "))
                 .append(Component.text(String.valueOf(value)).color(NamedTextColor.GOLD))
-                .build();
+                .asComponent();
     }
 
     /**

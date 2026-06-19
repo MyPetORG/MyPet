@@ -29,7 +29,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
-import net.kyori.adventure.translation.TranslationRegistry;
+import net.kyori.adventure.translation.Translator;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
@@ -101,7 +101,7 @@ public final class VanillaTranslationLoader {
     private static final Pattern MC_VERSION_RE = Pattern.compile("\\d+\\.\\d+(?:\\.\\d+)?");
     private static final Pattern SHA1_HEX_RE = Pattern.compile("[0-9a-fA-F]{40}");
 
-    private static TranslationRegistry activeRegistry = null;
+    private static Translator activeRegistry = null;
 
     // Tracks the in-flight async load so MyPetPlugin#onDisable can interrupt it before any
     // straggling GlobalTranslator mutation lands after the plugin has been disabled.
@@ -396,7 +396,7 @@ public final class VanillaTranslationLoader {
     }
 
     private static void registerAllLocales(Path cacheDir, Plugin plugin) throws IOException {
-        TranslationRegistry registry = TranslationRegistry.create(TRANSLATOR_KEY);
+        VanillaTranslationStore store = VanillaTranslationStore.create(TRANSLATOR_KEY);
         int localeCount = 0;
         int keyCount = 0;
         try (DirectoryStream<Path> files = Files.newDirectoryStream(cacheDir, "*.json")) {
@@ -405,7 +405,7 @@ public final class VanillaTranslationLoader {
                 if ("hashes.json".equals(name)) continue;
                 String localeTag = name.substring(0, name.length() - ".json".length());
                 Locale loc = parseLocale(localeTag);
-                int added = registerOneLocale(registry, loc, file);
+                int added = registerOneLocale(store, loc, file);
                 if (added > 0) {
                     localeCount++;
                     keyCount += added;
@@ -424,13 +424,14 @@ public final class VanillaTranslationLoader {
         if (activeRegistry != null) {
             GlobalTranslator.translator().removeSource(activeRegistry);
         }
-        GlobalTranslator.translator().addSource(registry);
-        activeRegistry = registry;
+        Translator source = store.asTranslator();
+        GlobalTranslator.translator().addSource(source);
+        activeRegistry = source;
         MyPetApi.getLogger().info("Loaded " + keyCount + " vanilla entity translations across "
                 + localeCount + " locales");
     }
 
-    private static int registerOneLocale(TranslationRegistry registry, Locale loc, Path file) {
+    private static int registerOneLocale(VanillaTranslationStore store, Locale loc, Path file) {
         int added = 0;
         try (Reader rdr = new InputStreamReader(Files.newInputStream(file), StandardCharsets.UTF_8)) {
             JsonObject obj = JsonParser.parseReader(rdr).getAsJsonObject();
@@ -440,7 +441,7 @@ public final class VanillaTranslationLoader {
                 if (!v.isJsonPrimitive() || !v.getAsJsonPrimitive().isString()) continue;
                 String escaped = v.getAsString().replace("'", "''");
                 try {
-                    registry.register(e.getKey(), loc, new MessageFormat(escaped, loc));
+                    store.register(e.getKey(), loc, new MessageFormat(escaped, loc));
                     added++;
                 } catch (IllegalArgumentException ignored) {
                     // Skip keys with malformed MessageFormat patterns; no entity name needs args.

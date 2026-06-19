@@ -152,7 +152,7 @@ public class CommandList {
                             doComma = true;
                         }
                     }
-                    sender.sendMessage(messageBuilder.build());
+                    sender.sendMessage(messageBuilder.asComponent());
                 };
                 if (sender instanceof Player senderPlayer) {
                     senderPlayer.getScheduler().run(MyPetApi.getPlugin(), schedTask -> listBody.run(), null);

@@ -264,7 +264,7 @@ public class CommandRelease {
                 .append(Util.SANITIZED_MINIMESSAGE.deserialize(pet.getSkilltree() != null ? pet.getSkilltree().getDisplayName() : "-")
                         .color(NamedTextColor.GOLD));
 
-        HoverEvent<Component> hoverEvent = HoverEvent.showText(hoverBuilder.build());
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(hoverBuilder.asComponent());
 
         petOwner.sendMessage(
                 Locale.getComponent("Message.Command.Release.Confirm", petOwner).append(Component.text(" "))

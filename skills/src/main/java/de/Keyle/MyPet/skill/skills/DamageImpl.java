@@ -48,7 +48,7 @@ public class DamageImpl extends AbstractSkill implements Damage {
                 .append(Component.text(damage.getValue().doubleValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
                 .append(Locale.getComponent("Name.Damage", locale))
-                .build();
+                .asComponent();
     }
 
     @Override

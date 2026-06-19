@@ -257,7 +257,7 @@ public class BackpackImpl extends AbstractSkill implements Backpack {
                 .append(Component.text(rows.getValue().toString()).color(NamedTextColor.GOLD))
                 .append(Component.space())
                 .append(Locale.getComponent("Name.Rows", locale))
-                .build();
+                .asComponent();
     }
 
     /**

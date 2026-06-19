@@ -202,7 +202,7 @@ public class CommandOptionSwitch {
                         );
                         first = false;
                     }
-                    sender.sendMessage(messageBuilder.build());
+                    sender.sendMessage(messageBuilder.asComponent());
                 } else {
                     for (StoredPet storedPet : value) {
                         String strippedName = Util.SANITIZED_MINIMESSAGE.stripTags(storedPet.getPetName());

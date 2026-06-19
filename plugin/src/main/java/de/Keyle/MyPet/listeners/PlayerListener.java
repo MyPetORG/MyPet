@@ -295,7 +295,7 @@ public class PlayerListener implements Listener {
                             .hoverEvent(HoverEvent.showText(
                                     Component.text(versionUrl).color(NamedTextColor.GRAY)
                             )))
-                    .build());
+                    .asComponent());
         }
     }
 

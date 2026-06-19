@@ -210,7 +210,7 @@ public class BehaviorImpl extends AbstractSkill implements Behavior {
                 .append(Locale.getComponent("Name.Modes", locale))
                 .append(Component.text(": "))
                 .append(Locale.getComponent("Name.Normal", locale).color(NamedTextColor.GOLD))
-                .build();
+                .asComponent();
 
         if (activeBehaviors.contains(Friendly)) {
             builder = builder.append(Component.text(", ")).append(Locale.getComponent("Name.Friendly", locale).color(NamedTextColor.GOLD));

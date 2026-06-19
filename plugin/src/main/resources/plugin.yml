@@ -6,9 +6,6 @@ folia-supported: true
 author: Keyle
 libraries:
   - com.zaxxer:HikariCP:6.3.0
-  - net.kyori:adventure-text-minimessage:4.17.0
-  - net.kyori:adventure-text-serializer-ansi:4.17.0
-  - net.kyori:adventure-text-serializer-legacy:4.17.0
 website: https://mypet.plugin.de/
 softdepend:
   - BattleArena

@@ -60,7 +60,7 @@ public class SlowImpl extends AbstractSkill implements Slow {
                 .append(Component.text(duration.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
                 .append(Locale.getComponent("Name.Seconds", locale))
-                .build();
+                .asComponent();
     }
 
     @Override

@@ -59,7 +59,7 @@ public class HealImpl extends AbstractSkill implements Heal {
                 .append(Component.text(timer.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
                 .append(Locale.getComponent("Name.Seconds", locale))
-                .build();
+                .asComponent();
     }
 
     @Override

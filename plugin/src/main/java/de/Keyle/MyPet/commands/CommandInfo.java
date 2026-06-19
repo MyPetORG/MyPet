@@ -265,7 +265,7 @@ public class CommandInfo {
                         .append(Component.text("   " + icon + " ").color(NamedTextColor.GOLD))
                         .append(Locale.getComponent("Name.Title." + rank.name(), sender).color(NamedTextColor.GOLD))
                         .append(Component.text(" " + icon).color(NamedTextColor.GOLD))
-                        .build());
+                        .asComponent());
             }
 
             if (!infoShown) {

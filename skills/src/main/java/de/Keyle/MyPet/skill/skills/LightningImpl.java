@@ -65,7 +65,7 @@ public class LightningImpl extends AbstractSkill implements Lightning {
                 .append(Component.text(damage.getValue().doubleValue()).color(NamedTextColor.GOLD))
                 .append(Component.space())
                 .append(Locale.getComponent("Name.Damage", locale))
-                .build();
+                .asComponent();
     }
 
     @Override

@@ -53,7 +53,7 @@ public class KnockbackImpl extends AbstractSkill implements Knockback {
         return Component.text()
                 .append(Component.text(chance.getValue()).color(NamedTextColor.GOLD))
                 .append(Component.text("%"))
-                .build();
+                .asComponent();
     }
 
     @Override

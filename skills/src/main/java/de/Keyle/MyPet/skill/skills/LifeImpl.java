@@ -47,7 +47,7 @@ public class LifeImpl extends AbstractSkill implements Life {
         return Component.text()
                 .append(Component.text("+"))
                 .append(Component.text(life.getValue().doubleValue()).color(NamedTextColor.GOLD))
-                .build();
+                .asComponent();
     }
 
     @Override
