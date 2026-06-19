@@ -193,6 +193,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     public void onDisable() {
         isDisabling = true;
 
+        // Tell any live web-editor session the server is going down so the browser
+        // stops showing it as live (sends the `close` notice before the socket drops).
+        de.Keyle.MyPet.webeditor.WebEditorManager.getInstance().shutdown();
+
         // Interrupt any in-flight vanilla translation download so it cannot mutate the
         // JVM-singleton GlobalTranslator after this plugin instance is gone.
         VanillaTranslationLoader.cancelLoad();

@@ -79,6 +79,14 @@ public final class MyPetGlobal {
         public static final ConfigKey<Boolean> SHOW_OP = ConfigKey.globalBool("MyPet.Update.OP-Notification", true);
     }
 
+    /** Browser-based config editor (`/mypet editor`) — relay endpoints + on/off. */
+    public static final class WebEditor {
+        public static final ConfigKey<Boolean> ENABLED = ConfigKey.globalBool("MyPet.WebEditor.Enabled", true);
+        public static final ConfigKey<String> BYTEBIN_URL = ConfigKey.globalString("MyPet.WebEditor.BytebinUrl", "https://bytebin.mypet-plugin.de");
+        public static final ConfigKey<String> BYTESOCKS_URL = ConfigKey.globalString("MyPet.WebEditor.BytesocksUrl", "wss://bytesocks.mypet-plugin.de");
+        public static final ConfigKey<String> EDITOR_URL = ConfigKey.globalString("MyPet.WebEditor.EditorUrl", "https://editor.mypet-plugin.de");
+    }
+
     public static final class Repository {
         public static final ConfigKey<Long> EXTERNAL_LOAD_DELAY = ConfigKey.globalLong("MyPet.Repository.LoadDelay", 20L);
         public static final ConfigKey<String> REPOSITORY_TYPE = ConfigKey.globalString("MyPet.Repository.Type", "SQLite");
@@ -219,7 +227,7 @@ public final class MyPetGlobal {
     // nested class does not init its siblings or parent, so each is listed.
     static {
         Class<?>[] sections = {
-                Misc.class, Entity.class, Update.class,
+                Misc.class, Entity.class, Update.class, WebEditor.class,
                 Repository.class, Repository.MySQL.class,
                 Respawn.class, Name.class, Name.Tag.class, Permissions.class,
                 LevelSystem.class, LevelSystem.Curve.class, LevelSystem.Experience.class, LevelSystem.Experience.Modifier.class,

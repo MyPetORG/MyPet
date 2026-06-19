@@ -48,6 +48,11 @@ permissions:
     description: Player receive all Pet-Types.
   MyPet.admin:
     description: Gives access to the MyPet admin features.
+    children:
+      MyPet.admin.notify: true
+  MyPet.admin.notify:
+    description: Receive web-editor apply notifications (changes applied via /mypet editor).
+    default: op
   MyPet.*:
     description: Gives access to MyPet features for normal user.
     children:

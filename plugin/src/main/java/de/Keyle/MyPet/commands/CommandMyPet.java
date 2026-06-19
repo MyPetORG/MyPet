@@ -27,6 +27,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.commands.mypet.CommandOptionEditor;
 import de.Keyle.MyPet.commands.mypet.CommandOptionReload;
 import de.Keyle.MyPet.commands.mypet.CommandOptionTicket;
 import de.Keyle.MyPet.commands.mypet.CommandOptionUpdate;
@@ -122,6 +123,7 @@ public class CommandMyPet {
                         .then(new CommandOptionReload().buildNode())
                         .then(new CommandOptionTicket().buildNode())
                         .then(new CommandOptionUpdate().buildNode())
+                        .then(new CommandOptionEditor().buildNode())
                         .build(),
                 "MyPet plugin commands",
                 List.of()
