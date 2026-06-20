@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -65,7 +66,10 @@ public final class ConfigApplier {
             JsonObject files = changedConfigs.getAsJsonObject("skilltrees").getAsJsonObject("files");
             for (Map.Entry<String, JsonElement> entry : files.entrySet()) {
                 // .st.json files store the raw JSON object as written by the editor.
-                write(new File(dir, entry.getKey()), entry.getValue().toString());
+                File target = safeChildFile(dir, entry.getKey(), ".st.json");
+                if (target != null) {
+                    write(target, entry.getValue().toString());
+                }
             }
         }
 
@@ -73,9 +77,35 @@ public final class ConfigApplier {
             File dir = ensureDir("locale");
             JsonObject files = changedConfigs.getAsJsonObject("locale").getAsJsonObject("files");
             for (Map.Entry<String, JsonElement> entry : files.entrySet()) {
-                write(new File(dir, entry.getKey()), entry.getValue().getAsString());
+                File target = safeChildFile(dir, entry.getKey(), ".properties");
+                if (target != null) {
+                    write(target, entry.getValue().getAsString());
+                }
             }
         }
+    }
+
+    /**
+     * Resolve an editor-supplied {@code name} as a direct child of {@code dir},
+     * rejecting anything that isn't a plain single-segment filename with the
+     * expected suffix. Guards the skilltree/locale bundles against path traversal
+     * (`..`, separators, absolute paths) in untrusted change payloads — the
+     * filenames come straight from the relayed JSON. Returns {@code null} (after
+     * logging) for an unsafe name.
+     */
+    private File safeChildFile(File dir, String name, String requiredSuffix) {
+        boolean validName = name != null && !name.isBlank()
+                && name.indexOf('/') < 0 && name.indexOf('\\') < 0
+                && name.endsWith(requiredSuffix);
+        if (validName) {
+            Path base = dir.toPath().toAbsolutePath().normalize();
+            Path target = base.resolve(name).normalize();
+            if (target.startsWith(base) && base.equals(target.getParent())) {
+                return target.toFile();
+            }
+        }
+        MyPetApi.getLogger().warning("WebEditor: rejected unsafe file name in change payload: " + name);
+        return null;
     }
 
     /** Hot-reload config, skilltrees and locale. Call on the main thread. */

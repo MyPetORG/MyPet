@@ -48,10 +48,14 @@ import java.util.function.Consumer;
  */
 public final class WebEditorSocket {
 
+    /** Hard cap on a reassembled message — the relay is untrusted, so endless `last=false` frames must not OOM us. */
+    private static final int MAX_MESSAGE_CHARS = 8 * 1024 * 1024; // 8M chars (~16 MiB UTF-16); configs are kilobytes
+
     private final HttpClient http = HttpClient.newHttpClient();
     private final Consumer<String> onMessage;
     private final Runnable onClose;
     private final StringBuilder buffer = new StringBuilder();
+    private boolean discardingOversized; // set once a message blows the cap; cleared at its frame boundary
     private volatile WebSocket webSocket;
 
     public WebEditorSocket(Consumer<String> onMessage, Runnable onClose) {
@@ -121,14 +125,27 @@ public final class WebEditorSocket {
 
         @Override
         public CompletionStage<?> onText(WebSocket ws, CharSequence data, boolean last) {
-            buffer.append(data);
+            // onText is delivered sequentially per socket, so buffer/discardingOversized need no locking.
+            if (!discardingOversized) {
+                if (buffer.length() + data.length() > MAX_MESSAGE_CHARS) {
+                    MyPetApi.getLogger().warning("WebEditor: dropping oversized socket message (> " + MAX_MESSAGE_CHARS + " chars)");
+                    buffer.setLength(0);
+                    discardingOversized = true; // keep draining frames until `last`, but don't buffer them
+                } else {
+                    buffer.append(data);
+                }
+            }
             if (last) {
-                String message = buffer.toString();
-                buffer.setLength(0);
-                try {
-                    onMessage.accept(message);
-                } catch (RuntimeException e) {
-                    MyPetApi.getLogger().warning("WebEditor: error handling message: " + e.getMessage());
+                if (discardingOversized) {
+                    discardingOversized = false; // message fully drained; ready for the next one
+                } else {
+                    String message = buffer.toString();
+                    buffer.setLength(0);
+                    try {
+                        onMessage.accept(message);
+                    } catch (RuntimeException e) {
+                        MyPetApi.getLogger().warning("WebEditor: error handling message: " + e.getMessage());
+                    }
                 }
             }
             ws.request(1);

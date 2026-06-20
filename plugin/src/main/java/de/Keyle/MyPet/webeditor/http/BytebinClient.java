@@ -20,7 +20,9 @@
 
 package de.Keyle.MyPet.webeditor.http;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -50,6 +52,9 @@ public final class BytebinClient {
 
     private static final Pattern KEY_PATTERN = Pattern.compile("\"key\"\\s*:\\s*\"([^\"]+)\"");
 
+    /** Hard cap on a fetched payload — the relay is untrusted, so an oversized blob must not OOM the server. */
+    private static final int MAX_PAYLOAD_BYTES = 8 * 1024 * 1024; // 8 MiB
+
     private final HttpClient http;
     private final String baseUrl;
 
@@ -75,18 +80,47 @@ public final class BytebinClient {
         return extractKey(response);
     }
 
-    /** GET a blob by key; returns the raw body text. */
+    /** GET a blob by key; returns the raw body text, capped at {@link #MAX_PAYLOAD_BYTES}. */
     public String get(String key) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder(URI.create(baseUrl + "/" + key))
                 .timeout(Duration.ofSeconds(30))
                 .GET()
                 .build();
 
-        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<InputStream> response = http.send(request, HttpResponse.BodyHandlers.ofInputStream());
         if (response.statusCode() / 100 != 2) {
+            response.body().close();
             throw new IOException("bytebin GET failed: HTTP " + response.statusCode());
         }
-        return response.body();
+        return readBounded(response, MAX_PAYLOAD_BYTES);
+    }
+
+    /**
+     * Read a response body into a string, refusing to buffer more than {@code maxBytes}.
+     * A {@code Content-Length} over the cap is rejected up front; the byte counter then
+     * enforces the same cap even when the relay omits or under-reports the length
+     * (chunked transfer), so an untrusted relay cannot exhaust memory.
+     */
+    private static String readBounded(HttpResponse<InputStream> response, int maxBytes) throws IOException {
+        long advertised = response.headers().firstValueAsLong("Content-Length").orElse(-1L);
+        if (advertised > maxBytes) {
+            response.body().close();
+            throw new IOException("bytebin payload too large: " + advertised + " bytes (max " + maxBytes + ")");
+        }
+        try (InputStream in = response.body()) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] chunk = new byte[8192];
+            int total = 0;
+            int read;
+            while ((read = in.read(chunk)) != -1) {
+                if (total + read > maxBytes) {
+                    throw new IOException("bytebin payload exceeded " + maxBytes + " bytes");
+                }
+                out.write(chunk, 0, read);
+                total += read;
+            }
+            return out.toString(StandardCharsets.UTF_8);
+        }
     }
 
     private static String extractKey(HttpResponse<String> response) throws IOException {

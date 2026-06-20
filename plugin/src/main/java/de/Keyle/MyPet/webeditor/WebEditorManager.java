@@ -77,7 +77,7 @@ public final class WebEditorManager {
         if (active == null || active.isClosed()) {
             return false;
         }
-        boolean confirmed = active.confirmTrust(code);
+        boolean confirmed = active.confirmTrust(player.getUniqueId(), code);
         if (confirmed) {
             persistKeystore();
         }

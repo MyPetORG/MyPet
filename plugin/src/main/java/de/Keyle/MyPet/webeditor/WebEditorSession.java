@@ -62,9 +62,12 @@ public final class WebEditorSession {
     private final ConfigApplier applier = new ConfigApplier();
 
     private WebEditorSocket socket;
-    private PublicKey remoteKey;          // browser key, set once trusted
-    private String pendingPublicKey;      // candidate awaiting in-game trust
-    private String pendingNonce;
+    // Trust state crosses threads: written on the socket thread (handleHello) and the
+    // command thread (confirmTrust), read on the socket thread (onMessage). volatile gives
+    // the socket thread visibility of a trust confirmed from the command thread.
+    private volatile PublicKey remoteKey;          // browser key, set once trusted
+    private volatile String pendingPublicKey;      // candidate awaiting in-game trust
+    private volatile String pendingNonce;
     private volatile boolean closed;
     private volatile long lastActivity = System.currentTimeMillis();
     private ScheduledTask inactivityTask;
@@ -108,12 +111,20 @@ public final class WebEditorSession {
     }
 
     /** Confirm a pending trust attempt (admin ran {@code /mypet editor trust <code>}). */
-    public boolean confirmTrust(String code) throws Exception {
+    public boolean confirmTrust(UUID confirmingPlayer, String code) throws Exception {
+        // Only the player who opened this session may authorize its browser — a different
+        // admin (even one who saw the nonce on the public channel) must not be able to trust it.
+        if (!owner.equals(confirmingPlayer)) {
+            return false;
+        }
         if (keystore.confirmTrust(code).isEmpty()) {
             return false;
         }
-        if (pendingPublicKey != null && code.equals(pendingNonce)) {
-            remoteKey = SignatureAlgorithm.importPublicKey(pendingPublicKey);
+        // Capture once: handleHello (socket thread) may overwrite these between check and use.
+        String candidateKey = pendingPublicKey;
+        String candidateNonce = pendingNonce;
+        if (candidateKey != null && code.equals(candidateNonce)) {
+            remoteKey = SignatureAlgorithm.importPublicKey(candidateKey);
             pendingPublicKey = null;
             pendingNonce = null;
         }
@@ -213,7 +224,19 @@ public final class WebEditorSession {
         sendSigned(typed("change-response", "accepted", null));
 
         String payloadKey = msg.get("key").getAsString();
-        JsonObject payload = JsonParser.parseString(bytebin.get(payloadKey)).getAsJsonObject();
+        String body = bytebin.get(payloadKey);
+
+        // The signed change-request commits to a SHA-256 of the payload; the blob
+        // itself travels over the untrusted relay. Verifying the fetched bytes
+        // against the signed hash stops a tampering/compromised relay from
+        // substituting config content the trusted browser never authored.
+        String expectedHash = msg.has("hash") ? msg.get("hash").getAsString() : null;
+        if (expectedHash == null || !expectedHash.equals(SignatureAlgorithm.sha256Base64(body))) {
+            MyPetApi.getLogger().warning("WebEditor: dropped change-request — payload hash mismatch (relay tampering?)");
+            return;
+        }
+
+        JsonObject payload = JsonParser.parseString(body).getAsJsonObject();
         JsonObject changedConfigs = payload.getAsJsonObject("configs");
         // Diff against the current on-disk files BEFORE they're overwritten.
         List<Component> changes = WebEditorChanges.summarize(MyPetApi.getPlugin().getDataFolder(), changedConfigs);

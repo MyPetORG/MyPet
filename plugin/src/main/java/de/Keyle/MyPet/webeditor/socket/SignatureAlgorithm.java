@@ -25,6 +25,8 @@ import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
@@ -90,6 +92,22 @@ public final class SignatureAlgorithm {
             return Base64.getEncoder().encodeToString(signature.sign());
         } catch (GeneralSecurityException e) {
             throw new IllegalStateException("Failed to sign message", e);
+        }
+    }
+
+    /**
+     * Base64 SHA-256 of a UTF-8 message. The signed {@code change-request} carries
+     * this over the payload so the plugin can confirm the relay returned the exact
+     * bytes the trusted browser committed to (the browser uses Web Crypto's
+     * {@code digest("SHA-256")} + base64 over the same string).
+     */
+    public static String sha256Base64(String message) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(message.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 unavailable", e);
         }
     }
 

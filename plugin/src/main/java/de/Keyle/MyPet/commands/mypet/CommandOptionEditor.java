@@ -24,6 +24,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.webeditor.WebEditorManager;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -78,6 +79,10 @@ public class CommandOptionEditor {
     private void open(CommandSender sender) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(Component.text("Only players can open the web editor.", NamedTextColor.RED));
+            return;
+        }
+        if (!MyPetGlobal.WebEditor.ENABLED.get()) {
+            player.sendMessage(Component.text("The MyPet web editor is disabled in the server config.", NamedTextColor.RED));
             return;
         }
         player.sendMessage(Component.text("Connecting you to an editor session…", NamedTextColor.GRAY));
