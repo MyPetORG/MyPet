@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands.mypet;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -51,7 +51,7 @@ import java.util.zip.ZipOutputStream;
  *
  * <h3>Permissions</h3>
  * <ul>
- *   <li>{@code MyPet.admin} -- required for players; console can always execute</li>
+ *   <li>{@code MyPet.admin.ticket} -- required for players; console can always execute (granted by the {@code MyPet.admin} bundle)</li>
  * </ul>
  *
  * <p>The generated ZIP includes configuration files ({@code config.yml}, {@code pet-config.yml},
@@ -70,10 +70,7 @@ public class CommandOptionTicket {
      */
     public LiteralCommandNode<CommandSourceStack> buildNode() {
         return Commands.literal("ticket")
-                .requires(ctx -> {
-                    var sender = ctx.getSender();
-                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin");
-                })
+                .requires(AdminPermissions.requiresNode(AdminPermissions.TICKET))
                 .executes(ctx -> {
                     CommandSender sender = ctx.getSource().getSender();
                     File ticketFile = new File(MyPetApi.getPlugin().getDataFolder(), "ticket.zip");

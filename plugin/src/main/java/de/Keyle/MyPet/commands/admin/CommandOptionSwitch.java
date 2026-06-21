@@ -33,6 +33,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -75,7 +76,7 @@ import java.util.concurrent.CompletableFuture;
  * and the entity is spawned. Various spawn result states (success, canceled, no space,
  * not allowed, dead, flying) are handled with appropriate localized messages.
  *
- * <p>Requires the {@code MyPet.admin} permission.
+ * <p>Requires the {@code MyPet.admin.switch} permission (or the {@code MyPet.admin} bundle).
  */
 public class CommandOptionSwitch {
 
@@ -104,10 +105,11 @@ public class CommandOptionSwitch {
                 "/petadmin switch",
                 CommandCategory.ADMIN,
                 36,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.SWITCH)
         ));
 
         return Commands.literal("switch")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.SWITCH))
                 .then(Commands.argument("player", ArgumentTypes.player())
                         // /petadmin switch <player> (show pet list)
                         .executes(ctx -> {

@@ -25,7 +25,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
-import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -43,7 +43,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 
 import java.io.File;
@@ -52,8 +51,8 @@ import java.util.Optional;
 /**
  * Provides the {@code /mypet reload} subcommand, enabling hot-reload of plugin resources.
  *
- * <p>This command is restricted to the console and players with the {@code MyPet.admin}
- * permission. It supports four reload targets:</p>
+ * <p>This command is restricted to the console and players with the {@code MyPet.admin.reload}
+ * permission (or the {@code MyPet.admin} bundle). It supports four reload targets:</p>
  *
  * <h3>Command tree</h3>
  * <pre>
@@ -71,7 +70,7 @@ public class CommandOptionReload {
     /**
      * Builds the {@code reload} literal command node to be mounted under {@code /mypet}.
      *
-     * <p>The node requires {@code MyPet.admin} permission (or console) and defines four
+     * <p>The node requires {@code MyPet.admin.reload} permission (or console, or the {@code MyPet.admin} bundle) and defines four
      * sub-literals ({@code all}, {@code config}, {@code skilltrees}, {@code shops}). The
      * bare {@code /mypet reload} execution (without a target) sends a usage hint listing
      * the available targets.</p>
@@ -80,10 +79,7 @@ public class CommandOptionReload {
      */
     public LiteralCommandNode<CommandSourceStack> buildNode() {
         return Commands.literal("reload")
-                .requires(ctx -> {
-                    var sender = ctx.getSender();
-                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin");
-                })
+                .requires(AdminPermissions.requiresNode(AdminPermissions.RELOAD))
                 .then(Commands.literal("all")
                         .executes(ctx -> {
                             CommandSender sender = ctx.getSource().getSender();

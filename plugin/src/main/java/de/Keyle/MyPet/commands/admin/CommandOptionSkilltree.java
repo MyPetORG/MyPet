@@ -30,6 +30,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.event.PetSelectSkilltreeEvent;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -55,7 +56,7 @@ import java.util.List;
  * <p>Fires a {@link PetSelectSkilltreeEvent} with source
  * {@link PetSelectSkilltreeEvent.Source#ADMIN_COMMAND} when the skilltree is changed.
  *
- * <p>Requires the {@code MyPet.admin} permission.
+ * <p>Requires the {@code MyPet.admin.skilltree} permission (or the {@code MyPet.admin} bundle).
  */
 public class CommandOptionSkilltree {
 
@@ -84,10 +85,11 @@ public class CommandOptionSkilltree {
                 "/petadmin skilltree",
                 CommandCategory.ADMIN,
                 32,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.SKILLTREE)
         ));
 
         return Commands.literal("skilltree")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.SKILLTREE))
                 .then(Commands.argument("player", ArgumentTypes.player())
                         .then(Commands.argument("skilltree", StringArgumentType.word())
                                 .suggests((ctx, builder) -> {

@@ -31,6 +31,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -54,7 +55,7 @@ import org.bukkit.entity.Player;
  * <p>When no operator is specified, {@code set} is used by default. Experience is clamped
  * to the range {@code [0, maxExp]} and levels are clamped to {@code [1, LEVEL_CAP]}.</p>
  *
- * <p>Requires the {@code MyPet.admin} permission.</p>
+ * <p>Requires the {@code MyPet.admin.exp} permission (or the {@code MyPet.admin} bundle).</p>
  */
 public class CommandOptionExp {
 
@@ -82,12 +83,13 @@ public class CommandOptionExp {
                 "/petadmin exp",
                 CommandCategory.ADMIN,
                 26,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.EXP)
         ));
 
         // /petadmin exp <player> <amount> [add|set|remove]
         // /petadmin exp <player> <levels> levels [add|set|remove]
         LiteralArgumentBuilder<CommandSourceStack> expNode = Commands.literal("exp")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.EXP))
                 .then(Commands.argument("player", ArgumentTypes.player())
                         // Raw exp branch: /petadmin exp <player> <amount> [operator]
                         .then(Commands.argument("amount", DoubleArgumentType.doubleArg(0))

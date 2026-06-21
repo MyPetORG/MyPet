@@ -25,7 +25,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetGlobal;
-import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.webeditor.WebEditorManager;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -46,7 +46,7 @@ import org.bukkit.entity.Player;
  *   /mypet editor close        - end the active session
  * </pre>
  *
- * <p>Admin-gated ({@code MyPet.admin}). Delegates to the singleton
+ * <p>Admin-gated ({@code MyPet.admin.editor} or the {@code MyPet.admin} bundle). Delegates to the singleton
  * {@link WebEditorManager}. NOTE: behavior end-to-end needs a running server +
  * relay.
  */
@@ -54,10 +54,7 @@ public class CommandOptionEditor {
 
     public LiteralCommandNode<CommandSourceStack> buildNode() {
         return Commands.literal("editor")
-                .requires(ctx -> {
-                    var sender = ctx.getSender();
-                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin");
-                })
+                .requires(AdminPermissions.requiresNode(AdminPermissions.EDITOR))
                 .then(Commands.literal("trust")
                         .then(Commands.argument("code", StringArgumentType.string())
                                 .executes(ctx -> {

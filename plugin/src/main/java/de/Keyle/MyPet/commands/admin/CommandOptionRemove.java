@@ -30,6 +30,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -60,7 +61,7 @@ import org.bukkit.entity.Player;
  * <p>This operation is irreversible -- the pet and all its data (level, skills, etc.)
  * are permanently deleted.
  *
- * <p>Requires the {@code MyPet.admin} permission.
+ * <p>Requires the {@code MyPet.admin.remove} permission (or the {@code MyPet.admin} bundle).
  */
 public class CommandOptionRemove {
 
@@ -83,10 +84,11 @@ public class CommandOptionRemove {
                 "/petadmin remove",
                 CommandCategory.ADMIN,
                 22,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.REMOVE)
         ));
 
         return Commands.literal("remove")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.REMOVE))
                 .then(Commands.argument("player", ArgumentTypes.player())
                         .executes(ctx -> {
                             Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)

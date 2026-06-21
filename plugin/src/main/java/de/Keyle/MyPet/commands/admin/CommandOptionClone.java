@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.event.PetSaveEvent;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -57,7 +58,7 @@ import java.util.Optional;
  * saturation, respawn time, NBT info, skilltree, and skill data) to a new pet owned by the
  * target player. The target player must not already have an active pet.</p>
  *
- * <p>Requires the {@code MyPet.admin} permission.</p>
+ * <p>Requires the {@code MyPet.admin.clone} permission (or the {@code MyPet.admin} bundle).</p>
  */
 public class CommandOptionClone {
 
@@ -76,10 +77,11 @@ public class CommandOptionClone {
                 "/petadmin clone",
                 CommandCategory.ADMIN,
                 34,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.CLONE)
         ));
 
         return Commands.literal("clone")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.CLONE))
                 .then(Commands.argument("player", ArgumentTypes.player())
                         .then(Commands.argument("target", ArgumentTypes.player())
                                 .executes(ctx -> {

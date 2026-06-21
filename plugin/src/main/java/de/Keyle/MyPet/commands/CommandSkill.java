@@ -29,6 +29,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -52,7 +53,7 @@ import java.util.List;
  *
  * <p><b>Permissions:</b></p>
  * <ul>
- *   <li>{@code MyPet.admin} -- required to view another player's pet skills</li>
+ *   <li>{@code MyPet.command.skill.other} -- required to view another player's pet skills (granted by the {@code MyPet.admin} bundle)</li>
  * </ul>
  */
 public class CommandSkill {
@@ -106,7 +107,7 @@ public class CommandSkill {
         Player petOwner;
         if (targetName == null && sender instanceof Player) {
             petOwner = (Player) sender;
-        } else if (targetName != null && (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin"))) {
+        } else if (targetName != null && (!(sender instanceof Player) || Permissions.has((Player) sender, AdminPermissions.SKILL_OTHER))) {
             petOwner = Bukkit.getServer().getPlayer(targetName);
 
             if (petOwner == null || !petOwner.isOnline()) {

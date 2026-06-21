@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands.admin;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.commands.admin.npc.CommandOptionShop;
 import de.Keyle.MyPet.commands.admin.npc.CommandOptionWallet;
@@ -53,7 +54,8 @@ public class CommandOptionNpc {
      */
     public LiteralCommandNode<CommandSourceStack> buildNode(HelpRegistry helpRegistry) {
         return Commands.literal("npc")
-                .requires(ctx -> MyPetApi.getServiceManager().isServiceActive("Citizens"))
+                .requires(AdminPermissions.requiresNode(AdminPermissions.NPC)
+                        .and(ctx -> MyPetApi.getServiceManager().isServiceActive("Citizens")))
                 .then(new CommandOptionShop().buildNode(helpRegistry))
                 .then(new CommandOptionWallet().buildNode(helpRegistry))
                 .build();

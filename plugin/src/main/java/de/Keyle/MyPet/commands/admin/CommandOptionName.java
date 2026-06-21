@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.arguments.MiniMessageSuggestions;
@@ -54,7 +55,7 @@ import java.util.regex.Pattern;
  * to prevent formatting from leaking into subsequent text. Tab completion suggests available
  * MiniMessage tags via {@link MiniMessageSuggestions}.
  *
- * <p>Requires the {@code MyPet.admin} permission.
+ * <p>Requires the {@code MyPet.admin.name} permission (or the {@code MyPet.admin} bundle).
  */
 public class CommandOptionName {
 
@@ -81,10 +82,11 @@ public class CommandOptionName {
                 "/petadmin name",
                 CommandCategory.ADMIN,
                 24,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.NAME)
         ));
 
         return Commands.literal("name")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.NAME))
                 .then(Commands.argument("player", ArgumentTypes.player())
                         .then(Commands.argument("name", StringArgumentType.greedyString())
                                 .suggests((ctx, builder) -> {

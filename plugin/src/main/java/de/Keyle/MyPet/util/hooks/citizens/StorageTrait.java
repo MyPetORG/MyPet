@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.gui.MenuId;
 import de.Keyle.MyPet.api.gui.MenuIds;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -88,7 +89,7 @@ public class StorageTrait extends Trait {
                         }
 
                         int maxPetCount = 0;
-                        if (!Permissions.has(player, "MyPet.admin")) {
+                        if (!Permissions.has(player, AdminPermissions.PETSTORAGE_LIMIT_ALL)) {
                             for (int i = Misc.MAX_STORED_PET_COUNT.get(); i > 0; i--) {
                                 if (Permissions.has(player, "MyPet.petstorage.limit." + i)) {
                                     maxPetCount = i;

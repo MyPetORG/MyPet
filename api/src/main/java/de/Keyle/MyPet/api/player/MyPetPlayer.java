@@ -134,9 +134,6 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
     /** Returns the player's locale code (e.g. {@code "en_us"}). */
     String getLanguage();
 
-    /** Returns {@code true} if this player has the MyPet admin permission. */
-    boolean isMyPetAdmin();
-
     /** Returns {@code true} if this player has an active (live) pet. */
     boolean hasPet();
 

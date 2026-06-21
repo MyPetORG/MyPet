@@ -28,6 +28,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -56,7 +57,7 @@ import java.time.temporal.ChronoUnit;
  * <p>The cleanup is delegated to the repository's {@code cleanup()} method, which handles
  * the actual database deletion based on the computed cutoff timestamp.</p>
  *
- * <p>Requires the {@code MyPet.admin} permission.</p>
+ * <p>Requires the {@code MyPet.admin.purge} permission (or the {@code MyPet.admin} bundle).</p>
  */
 public class CommandOptionPurge {
 
@@ -80,7 +81,7 @@ public class CommandOptionPurge {
                 "/petadmin purge",
                 CommandCategory.ADMIN,
                 38,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.PURGE)
         ));
 
         // Build a time-unit node: /petadmin purge <amount> <years|days|hours|minutes>
@@ -98,6 +99,7 @@ public class CommandOptionPurge {
         }
 
         return Commands.literal("purge")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.PURGE))
                 // /petadmin purge (no args — delete all unused)
                 .executes(ctx -> {
                     executeCleanup(ctx.getSource().getSender(), -1);

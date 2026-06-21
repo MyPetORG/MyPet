@@ -42,6 +42,7 @@ import de.Keyle.MyPet.api.gui.MenuHandler;
 import de.Keyle.MyPet.api.gui.PaginatedListSection;
 import de.Keyle.MyPet.api.gui.Section;
 import de.Keyle.MyPet.api.gui.SlotSection;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
@@ -636,7 +637,8 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
     /** Opens the existing choose-skilltree menu (Task 11: choose-skilltree). */
     @SuppressWarnings("unchecked")
     private void openChooseSkilltreeMenu(Player viewer, Pet pet) {
-        if (MyPetGlobal.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT.get() && !pet.getOwner().isMyPetAdmin()) {
+        if (MyPetGlobal.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT.get()
+                && !Permissions.has(pet.getOwner(), AdminPermissions.BYPASS_SKILLTREE)) {
             pet.autoAssignSkilltree();
             viewer.sendMessage(Locale.getComponent(
                 "Message.Command.ChooseSkilltree.AutomaticSkilltreeAssignment", pet.getOwner()));
@@ -659,7 +661,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
             new ChooseSkilltreeContext(viewer, pet, available, chosen -> {
                 if (pet.getSkilltree() != null
                     && MyPetGlobal.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE.get()
-                    && !pet.getOwner().isMyPetAdmin()) {
+                    && !Permissions.has(pet.getOwner(), AdminPermissions.BYPASS_SKILLTREE)) {
                     viewer.sendMessage(Locale.getFormattedComponent(
                         "Message.Command.ChooseSkilltree.OnlyOnce", pet.getOwner(), pet.getDisplayName()));
                     return;
@@ -718,7 +720,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
 
     private static int computeMaxPetCount(Player viewer) {
         int max = 0;
-        if (viewer.hasPermission("MyPet.admin")) {
+        if (viewer.hasPermission(AdminPermissions.PETSTORAGE_LIMIT_ALL)) {
             max = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get();
         } else {
             for (int i = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get(); i > 0; i--) {

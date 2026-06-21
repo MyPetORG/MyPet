@@ -47,11 +47,77 @@ permissions:
   MyPet.command.trade.receive.*:
     description: Player receive all Pet-Types.
   MyPet.admin:
-    description: Gives access to the MyPet admin features.
+    description: Grants all MyPet admin commands and capabilities.
+    default: op
     children:
+      MyPet.admin.editor: true
+      MyPet.admin.reload: true
+      MyPet.admin.ticket: true
+      MyPet.admin.update: true
+      MyPet.admin.clone: true
+      MyPet.admin.create: true
+      MyPet.admin.exp: true
+      MyPet.admin.exprate: true
+      MyPet.admin.info: true
+      MyPet.admin.name: true
+      MyPet.admin.npc: true
+      MyPet.admin.purge: true
+      MyPet.admin.remove: true
+      MyPet.admin.respawn: true
+      MyPet.admin.skilltree: true
+      MyPet.admin.switch: true
+      MyPet.command.info.other: true
+      MyPet.command.list.other: true
+      MyPet.command.skill.other: true
+      MyPet.command.inventory.other: true
+      MyPet.command.sendaway.other: true
       MyPet.admin.notify: true
+      MyPet.bypass.skilltree: true
+      MyPet.bypass.fee: true
+      MyPet.bypass.death: true
+      MyPet.bypass.inventory: true
+      MyPet.bypass.creative: true
+      MyPet.petstorage.limit.*: true
+  MyPet.admin.editor: {description: "Use /mypet editor.", default: op}
+  MyPet.admin.reload: {description: "Use /mypet reload.", default: op}
+  MyPet.admin.ticket: {description: "Use /mypet ticket.", default: op}
+  MyPet.admin.update: {description: "Use /mypet update.", default: op}
+  MyPet.admin.clone: {description: "Use /petadmin clone.", default: op}
+  MyPet.admin.create: {description: "Use /petadmin create.", default: op}
+  MyPet.admin.exp: {description: "Use /petadmin exp.", default: op}
+  MyPet.admin.exprate: {description: "Use /petadmin exprate.", default: op}
+  MyPet.admin.info: {description: "Use /petadmin info.", default: op}
+  MyPet.admin.name: {description: "Use /petadmin name.", default: op}
+  MyPet.admin.npc: {description: "Use /petadmin npc.", default: op}
+  MyPet.admin.purge: {description: "Use /petadmin purge.", default: op}
+  MyPet.admin.remove: {description: "Use /petadmin remove.", default: op}
+  MyPet.admin.respawn: {description: "Use /petadmin respawn.", default: op}
+  MyPet.admin.skilltree: {description: "Use /petadmin skilltree.", default: op}
+  MyPet.admin.switch: {description: "Use /petadmin switch.", default: op}
+  MyPet.command.list.other: {description: "List other players' pets (/petlist <player>).", default: op}
+  MyPet.command.skill.other: {description: "Edit other players' pet skills.", default: op}
+  MyPet.command.inventory.other: {description: "Open other players' pet inventories.", default: op}
+  MyPet.command.sendaway.other: {description: "Send away other players' pets.", default: op}
   MyPet.admin.notify:
     description: Receive web-editor apply notifications (changes applied via /mypet editor).
+    default: op
+  MyPet.bypass.skilltree:
+    description: Bypass skilltree auto-assignment and the choose-only-once restriction.
+    default: op
+  MyPet.bypass.fee:
+    description: Exempt from the skilltree switch fee.
+    default: op
+  MyPet.bypass.death:
+    description: Exempt from release-on-death and backpack-drop-on-death.
+    default: op
+  MyPet.bypass.inventory:
+    description: Open your own pet's backpack without MyPet.extended.inventory.
+    default: op
+  MyPet.bypass.creative:
+    description: Use the pet backpack and pickup in Creative mode even when Backpack.OpenInCreative is disabled.
+    default: op
+  MyPet.petstorage.limit.*:
+    description: Store the configured maximum number of pets (unlimited storage tier).
     default: op
   MyPet.*:
     description: Gives access to MyPet features for normal user.

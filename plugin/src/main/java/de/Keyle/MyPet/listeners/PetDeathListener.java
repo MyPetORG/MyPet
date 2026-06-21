@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.event.PetRemoveEvent;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
@@ -73,7 +74,7 @@ public class PetDeathListener implements Listener {
         final MyPetPlayer owner = pet.getOwner();
 
         // Release-on-death: permanently remove the pet
-        if (MyPetApi.getPetInfo().getReleaseOnDeath(pet.getPetType()) && !owner.isMyPetAdmin()) {
+        if (MyPetApi.getPetInfo().getReleaseOnDeath(pet.getPetType()) && !Permissions.has(owner, AdminPermissions.BYPASS_DEATH)) {
             PetRemoveEvent removeEvent = new PetRemoveEvent(pet, PetRemoveEvent.Source.DEATH);
             Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
@@ -164,7 +165,7 @@ public class PetDeathListener implements Listener {
         if (pet.getSkills().isActive(Backpack.class)) {
             BackpackImpl inventorySkill = pet.getSkills().get(BackpackImpl.class);
             inventorySkill.closeInventory();
-            if (inventorySkill.getDropOnDeath().getValue() && !owner.isMyPetAdmin()) {
+            if (inventorySkill.getDropOnDeath().getValue() && !Permissions.has(owner, AdminPermissions.BYPASS_DEATH)) {
                 inventorySkill.dropContents(pet.getLocation().get());
             }
         }

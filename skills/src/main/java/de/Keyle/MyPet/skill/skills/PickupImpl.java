@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
 import de.Keyle.MyPet.api.event.PetPickupItemEvent;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
@@ -115,7 +116,7 @@ public class PickupImpl extends AbstractSkill implements Pickup {
             pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Pickup.StartStop", pet.getOwner().getPlayer(), pet.getDisplayName(), Locale.getComponent("Name.Disabled", pet.getOwner())));
             return;
         }
-        if (pickup && pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !MyPetGlobal.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE.get() && !Permissions.has(pet.getOwner().getPlayer(), "MyPet.admin")) {
+        if (pickup && pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !MyPetGlobal.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE.get() && !Permissions.has(pet.getOwner().getPlayer(), AdminPermissions.BYPASS_CREATIVE)) {
             pet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Pickup.Creative", pet.getOwner()));
             pickup = false;
             return;

@@ -53,7 +53,7 @@ import java.util.*;
  * <h3>Permissions</h3>
  * <ul>
  *   <li>{@code MyPet.shop.access.<shopname>} -- required to access a specific shop</li>
- *   <li>{@code MyPet.admin} -- grants access to all shops</li>
+ *   <li>{@code MyPet.shop.access.*} -- grants access to all shops</li>
  * </ul>
  *
  * <p>Requires a Vault-compatible economy plugin to be active. The command is only
@@ -171,7 +171,7 @@ public class CommandShop {
 
         final Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
         if (shopManager.isPresent()) {
-            if (Permissions.has(player, "MyPet.shop.access." + shopName) || Permissions.has(player, "MyPet.admin")) {
+            if (Permissions.has(player, "MyPet.shop.access." + shopName)) {
                 shopManager.get().open(shopName, player);
             } else {
                 player.sendMessage(Locale.getComponent("Message.No.Allowed", player));
@@ -181,7 +181,8 @@ public class CommandShop {
 
     /**
      * Returns the list of shop names the given player has permission to access.
-     * Admin players (with {@code MyPet.admin}) receive all shops.
+     * Access is determined solely by {@code MyPet.shop.access.<shopName>}
+     * (a wildcard grant of {@code MyPet.shop.access.*} yields all shops).
      *
      * @param player the player to check permissions for
      * @return the list of accessible shop names, or {@code null} if the {@link ShopManager} service is not available
@@ -189,16 +190,9 @@ public class CommandShop {
     public List<String> getAvailablePetShops(Player player) {
         Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
         if (shopManager.isPresent()) {
-            if (Permissions.has(player, "MyPet.admin")) {
-                return new ArrayList<>(shopManager.get().getShopNames());
-            }
-            List<String> shops = new ArrayList<>();
-            for (String shop : shopManager.get().getShopNames()) {
-                if (Permissions.has(player, "MyPet.shop.access." + shop)) {
-                    shops.add(shop);
-                }
-            }
-            return shops;
+            return shopManager.get().getShopNames().stream()
+                    .filter(name -> Permissions.has(player, "MyPet.shop.access." + name))
+                    .toList();
         }
         return null;
     }

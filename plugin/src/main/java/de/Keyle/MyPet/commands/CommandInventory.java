@@ -28,6 +28,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.gui.MenuId;
 import de.Keyle.MyPet.api.gui.MenuIds;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.commands.help.CommandCategory;
@@ -56,8 +57,8 @@ import java.util.List;
  * <p><b>Permissions:</b></p>
  * <ul>
  *   <li>{@code MyPet.extended.inventory} -- required to open own pet's inventory</li>
- *   <li>{@code MyPet.admin} -- required to open another player's pet inventory;
- *       also bypasses the extended inventory permission check</li>
+ *   <li>{@code MyPet.command.inventory.other} -- required to open another player's pet inventory;
+ *       also bypasses the extended inventory permission check (granted by the {@code MyPet.admin} bundle)</li>
  * </ul>
  */
 public class CommandInventory {
@@ -80,7 +81,7 @@ public class CommandInventory {
                         .then(Commands.argument("player", StringArgumentType.word())
                                 .suggests((ctx, builder) -> {
                                     if (ctx.getSource().getSender() instanceof Player player
-                                            && Permissions.has(player, "MyPet.admin")) {
+                                            && Permissions.has(player, AdminPermissions.INVENTORY_OTHER)) {
                                         Bukkit.getOnlinePlayers().forEach(p -> builder.suggest(p.getName()));
                                     }
                                     return builder.buildFuture();
@@ -125,7 +126,7 @@ public class CommandInventory {
                 player.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", player, pet.getDisplayName()));
                 return;
             }
-            if (!Permissions.hasExtended(player, "MyPet.extended.inventory") && !Permissions.has(player, "MyPet.admin")) {
+            if (!Permissions.hasExtended(player, "MyPet.extended.inventory") && !Permissions.has(player, AdminPermissions.BYPASS_INVENTORY)) {
                 pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", player));
                 return;
             }
@@ -146,7 +147,8 @@ public class CommandInventory {
     }
 
     /**
-     * Opens another player's pet Backpack inventory. Requires the {@code MyPet.admin}
+     * Opens another player's pet Backpack inventory. Requires the {@code MyPet.command.inventory.other}
+     * permission (granted by the {@code MyPet.admin} bundle)
      * permission; non-admins are redirected to {@link #executeOwn(Player)}.
      *
      * @param player     the admin player executing the command
@@ -157,7 +159,7 @@ public class CommandInventory {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
-        if (!Permissions.has(player, "MyPet.admin")) {
+        if (!Permissions.has(player, AdminPermissions.INVENTORY_OTHER)) {
             // Non-admins fall back to own inventory
             executeOwn(player);
             return;

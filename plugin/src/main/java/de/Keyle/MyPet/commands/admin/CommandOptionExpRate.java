@@ -27,8 +27,10 @@ import de.Keyle.MyPet.api.MyPetGlobal.LevelSystem.Experience.Modifier;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
+import org.bukkit.entity.Player;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -47,7 +49,7 @@ import org.bukkit.command.CommandSender;
  * Changes take effect immediately but are not persisted across server restarts (the value is
  * stored in {@link Modifier#GLOBAL}).
  *
- * <p>Requires the {@code MyPet.admin} permission.
+ * <p>Requires the {@code MyPet.admin.exprate} permission (or the {@code MyPet.admin} bundle).
  */
 public class CommandOptionExpRate {
 
@@ -75,10 +77,11 @@ public class CommandOptionExpRate {
                 "/petadmin exp-rate",
                 CommandCategory.ADMIN,
                 28,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.EXPRATE)
         ));
 
         return Commands.literal("exp-rate")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.EXPRATE))
                 .then(Commands.literal("global")
                         // /petadmin exp-rate global (show current rate)
                         .executes(ctx -> {

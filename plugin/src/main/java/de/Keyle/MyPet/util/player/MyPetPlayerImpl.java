@@ -236,10 +236,6 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         return lastLanguage;
     }
 
-    public boolean isMyPetAdmin() {
-        return isOnline() && Permissions.has(getPlayer(), "MyPet.admin");
-    }
-
     public boolean hasPet() {
         return MyPetApi.getPetManager().hasActivePet(this);
     }

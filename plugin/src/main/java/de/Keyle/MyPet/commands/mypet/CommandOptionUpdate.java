@@ -23,13 +23,12 @@ package de.Keyle.MyPet.commands.mypet;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.util.VersionUtil;
-import de.Keyle.MyPet.api.player.Permissions;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.util.Updater;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.entity.Player;
 
 /**
  * Provides the {@code /mypet update} subcommand, which checks whether a newer version
@@ -40,7 +39,7 @@ import org.bukkit.entity.Player;
  *
  * <h3>Permissions</h3>
  * <ul>
- *   <li>{@code MyPet.admin} -- required for players; console can always execute</li>
+ *   <li>{@code MyPet.admin.update} -- required for players; console can always execute (granted by the {@code MyPet.admin} bundle)</li>
  * </ul>
  *
  * <p>Reports the latest available version if an update exists, or confirms the
@@ -56,10 +55,7 @@ public class CommandOptionUpdate {
      */
     public LiteralCommandNode<CommandSourceStack> buildNode() {
         return Commands.literal("update")
-                .requires(ctx -> {
-                    var sender = ctx.getSender();
-                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin");
-                })
+                .requires(AdminPermissions.requiresNode(AdminPermissions.UPDATE))
                 .executes(ctx -> {
                     var sender = ctx.getSource().getSender();
                     if (Updater.isUpdateAvailable()) {

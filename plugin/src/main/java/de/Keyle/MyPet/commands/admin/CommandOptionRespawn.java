@@ -29,6 +29,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -53,7 +54,7 @@ import org.bukkit.entity.Player;
  *       the specified number of seconds (only works if the pet is dead)</li>
  * </ul>
  *
- * <p>Requires the {@code MyPet.admin} permission.
+ * <p>Requires the {@code MyPet.admin.respawn} permission (or the {@code MyPet.admin} bundle).
  */
 public class CommandOptionRespawn {
 
@@ -80,10 +81,11 @@ public class CommandOptionRespawn {
                 "/petadmin respawn",
                 CommandCategory.ADMIN,
                 30,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.RESPAWN)
         ));
 
         return Commands.literal("respawn")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.RESPAWN))
                 .then(Commands.argument("player", ArgumentTypes.player())
                         // /petadmin respawn <player> (no second arg - set to 0)
                         .executes(ctx -> {

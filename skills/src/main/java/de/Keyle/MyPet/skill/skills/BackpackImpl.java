@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.SkillState;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
@@ -300,7 +301,7 @@ public class BackpackImpl extends AbstractSkill implements Backpack {
                 pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", pet.getOwner()));
                 return false;
             }
-            if (pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !MyPetGlobal.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE.get() && !Permissions.has(pet.getOwner().getPlayer(), "MyPet.admin")) {
+            if (pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !MyPetGlobal.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE.get() && !Permissions.has(pet.getOwner().getPlayer(), AdminPermissions.BYPASS_CREATIVE)) {
                 pet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Inventory.Creative", pet.getOwner()));
                 return false;
             }

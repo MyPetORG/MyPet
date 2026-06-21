@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.StoredPet;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
@@ -149,7 +150,7 @@ public class CommandStore {
      */
     private int getMaxPetCount(Player p) {
         int maxPetCount = 0;
-        if (Permissions.has(p, "MyPet.admin")) {
+        if (Permissions.has(p, AdminPermissions.PETSTORAGE_LIMIT_ALL)) {
             maxPetCount = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get();
         } else {
             for (int i = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get(); i > 0; i--) {

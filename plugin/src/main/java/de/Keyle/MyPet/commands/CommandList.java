@@ -29,6 +29,7 @@ import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.PetInfoBuilder;
@@ -53,7 +54,7 @@ import java.util.List;
  *
  * <p><b>Permissions:</b></p>
  * <ul>
- *   <li>{@code MyPet.admin} -- required to view another player's pet list</li>
+ *   <li>{@code MyPet.command.list.other} -- required to view another player's pet list (granted by the {@code MyPet.admin} bundle)</li>
  * </ul>
  */
 public class CommandList {
@@ -111,7 +112,7 @@ public class CommandList {
         if (targetName == null) {
             petOwner = sender;
         } else {
-            if (Permissions.has(sender, "MyPet.admin")) {
+            if (Permissions.has(sender, AdminPermissions.LIST_OTHER)) {
                 petOwner = Bukkit.getPlayer(targetName);
             } else {
                 petOwner = sender;

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.commands.help.HelpRegistry;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.commands.admin.*;
 import io.papermc.paper.command.brigadier.Commands;
@@ -32,9 +33,10 @@ import java.util.List;
  * Handles the {@code /mypetadmin} command (alias {@code /petadmin}) using Paper's
  * Brigadier API.
  *
- * <p>This is the administrative top-level command. It requires the {@code MyPet.admin}
- * permission (or console access) and delegates to a set of admin subcommand nodes, each
- * provided by a dedicated class in the {@code de.Keyle.MyPet.commands.admin} package.</p>
+ * <p>This is the administrative top-level command. It requires any {@code MyPet.admin.*}
+ * command node (granted as a bundle by {@code MyPet.admin}), or console access, and
+ * delegates to a set of admin subcommand nodes, each provided by a dedicated class in
+ * the {@code de.Keyle.MyPet.commands.admin} package.</p>
  *
  * <h3>Command tree</h3>
  * <pre>
@@ -63,9 +65,10 @@ public class CommandAdmin {
      * Registers the {@code /mypetadmin} Brigadier command and its help entry.
      *
      * <p>The root literal {@code mypetadmin} requires the sender to either be the console
-     * or a player with the {@code MyPet.admin} permission. Each admin subcommand is
-     * mounted as a child literal node built by its respective command option class, which
-     * also registers its own {@link HelpEntry} in the shared {@link HelpRegistry}.</p>
+     * or a player with any {@code MyPet.admin.*} command node (granted as a bundle by
+     * {@code MyPet.admin}). Each admin subcommand is mounted as a child literal node built
+     * by its respective command option class, which also registers its own {@link HelpEntry}
+     * in the shared {@link HelpRegistry}.</p>
      *
      * @param commands     the Paper {@link Commands} registrar used to register the Brigadier command
      * @param helpRegistry the {@link HelpRegistry} to register the command's help entry with
@@ -74,7 +77,7 @@ public class CommandAdmin {
         commands.register(
                 Commands.literal("mypetadmin")
                         .requires(ctx -> !(ctx.getSender() instanceof Player player)
-                                || Permissions.has(player, "MyPet.admin"))
+                                || AdminPermissions.hasAnyOf(player, AdminPermissions.MYPETADMIN_NODES))
                         .then(new CommandOptionName().buildNode(helpRegistry))
                         .then(new CommandOptionExp().buildNode(helpRegistry))
                         .then(new CommandOptionExpRate().buildNode(helpRegistry))

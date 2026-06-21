@@ -39,6 +39,7 @@ import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
@@ -77,7 +78,7 @@ import java.util.Set;
  * Optional trailing arguments control the pet's appearance and metadata (e.g. {@code baby}, {@code saddle},
  * {@code variant:lucy}, {@code skilltree:Combat}, {@code name:Fluffy}).</p>
  *
- * <p>Requires the {@code MyPet.admin} permission.</p>
+ * <p>Requires the {@code MyPet.admin.create} permission (or the {@code MyPet.admin} bundle).</p>
  *
  * <p>Per-type tab-completion options come from the pet class's
  * {@code CREATION_SPECS} field plus auto-derived flag specs for any marker
@@ -149,10 +150,11 @@ public class CommandOptionCreate {
                 "/petadmin create",
                 CommandCategory.ADMIN,
                 20,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.CREATE)
         ));
 
         return Commands.literal("create")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.CREATE))
                 // /petadmin create -f <player> <type> [options...]
                 .then(Commands.literal("-f")
                         .then(Commands.argument("player", ArgumentTypes.player())

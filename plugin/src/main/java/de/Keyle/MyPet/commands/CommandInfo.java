@@ -29,6 +29,7 @@ import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.PetInfoBuilder;
@@ -57,7 +58,7 @@ import java.util.List;
  * <p><b>Permissions:</b></p>
  * <ul>
  *   <li>{@code MyPet.command.info.other} -- required to view another player's pet info</li>
- *   <li>{@code MyPet.admin} -- bypasses admin-only display restrictions</li>
+ *   <li>{@code MyPet.command.info.other} -- bypasses admin-only display restrictions (granted by the {@code MyPet.admin} bundle)</li>
  * </ul>
  */
 public class CommandInfo {
@@ -66,8 +67,8 @@ public class CommandInfo {
      * Determines whether the given sender is allowed to see a particular info field.
      *
      * <p>If {@code adminOnly} is {@code true}, the field is only visible to the pet owner
-     * themselves or to players with the {@code MyPet.admin} permission. Console senders
-     * can always see all fields.</p>
+     * themselves or to players with the {@code MyPet.command.info.other} permission (granted by
+     * the {@code MyPet.admin} bundle). Console senders can always see all fields.</p>
      *
      * @param adminOnly   whether the field requires admin or owner status to view
      * @param sender      the command sender requesting the information
@@ -76,7 +77,7 @@ public class CommandInfo {
      */
     public static boolean canSee(boolean adminOnly, CommandSender sender, StoredPet storedPet) {
         if (sender instanceof Player player) {
-            return !adminOnly || storedPet.getOwner().getPlayer() == player || Permissions.has(player, "MyPet.admin");
+            return !adminOnly || storedPet.getOwner().getPlayer() == player || Permissions.has(player, AdminPermissions.INFO_OTHER);
         } else {
             return true;
         }
@@ -140,7 +141,7 @@ public class CommandInfo {
                 sender.sendMessage(Locale.getComponent("Message.No.HasPet", player));
                 return;
             }
-        } else if (targetName != null && (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.command.info.other"))) {
+        } else if (targetName != null && (!(sender instanceof Player) || Permissions.has((Player) sender, AdminPermissions.INFO_OTHER))) {
             Player p = Bukkit.getServer().getPlayer(targetName);
             if (p == null || !p.isOnline()) {
                 sender.sendMessage(Locale.getComponent("Message.No.PlayerOnline", sender));
@@ -283,7 +284,7 @@ public class CommandInfo {
     /**
      * Enum controlling the visibility of each pet info field.
      * When {@code adminOnly} is {@code true}, the field is only visible to the pet owner
-     * or players with {@code MyPet.admin} permission.
+     * or players with {@code MyPet.command.info.other} permission (granted by the {@code MyPet.admin} bundle).
      */
     public enum PetInfoDisplay {
         Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false), RespawnTime(true), Behavior(true);

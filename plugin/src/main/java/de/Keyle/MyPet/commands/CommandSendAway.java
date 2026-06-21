@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.event.PetSendAwayEvent;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -50,7 +51,7 @@ import java.util.List;
  *
  * <p><b>Usage:</b> {@code /petsendaway [player]}</p>
  * <p><b>Aliases:</b> {@code /petsa}, {@code /psa}</p>
- * <p><b>Permissions:</b> {@code MyPet.admin} — required to send away another player's pet</p>
+ * <p><b>Permissions:</b> {@code MyPet.command.sendaway.other} — required to send away another player's pet (granted by the {@code MyPet.admin} bundle)</p>
  * <p><b>Help category:</b> {@link CommandCategory#PET PET} (priority 80)</p>
  *
  * @see PetSendAwayEvent
@@ -80,7 +81,7 @@ public class CommandSendAway {
                         .then(Commands.argument("player", StringArgumentType.word())
                                 .requires(ctx -> {
                                     var sender = ctx.getSender();
-                                    return !(sender instanceof Player p) || Permissions.has(p, "MyPet.admin");
+                                    return !(sender instanceof Player p) || Permissions.has(p, AdminPermissions.SENDAWAY_OTHER);
                                 })
                                 .suggests((ctx, builder) -> {
                                     Bukkit.getOnlinePlayers().forEach(p -> builder.suggest(p.getName()));

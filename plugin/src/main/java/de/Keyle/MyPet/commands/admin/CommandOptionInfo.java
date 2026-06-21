@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.commands.help.CommandCategory;
 import de.Keyle.MyPet.commands.help.HelpEntry;
 import de.Keyle.MyPet.commands.help.HelpRegistry;
+import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.util.MessageUtil;
@@ -57,7 +58,7 @@ import org.bukkit.inventory.ItemStack;
  * The serialized item strings use the platform helper's {@code itemstackToString} format,
  * which can be pasted directly into MyPet configuration files.
  *
- * <p>Requires the {@code MyPet.admin} permission.
+ * <p>Requires the {@code MyPet.admin.info} permission (or the {@code MyPet.admin} bundle).
  */
 public class CommandOptionInfo {
 
@@ -86,10 +87,11 @@ public class CommandOptionInfo {
                 "/petadmin info",
                 CommandCategory.ADMIN,
                 40,
-                player -> Permissions.has(player, "MyPet.admin")
+                player -> Permissions.has(player, AdminPermissions.INFO)
         ));
 
         return Commands.literal("info")
+                .requires(AdminPermissions.requiresNode(AdminPermissions.INFO))
                 .then(Commands.literal("item")
                         .executes(ctx -> {
                             executeItem(ctx.getSource().getSender());
