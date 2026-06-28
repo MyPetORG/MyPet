@@ -85,7 +85,7 @@ public class StompImpl implements Stomp {
     public void apply(LivingEntity target) {
         Location location = target.getLocation();
         location.getWorld().playEffect(location, Effect.STEP_SOUND, Material.BEDROCK);
-        location.getWorld().playSound(location, Sound.valueOf(SoundCompat.FALL_BIG.get()), 0.9F, 0.7F);
+        SoundCompat.play(location, SoundCompat.FALL_BIG.get(), 0.9F, 0.7F);
 
         double posX = location.getX();
         double posY = location.getY();
