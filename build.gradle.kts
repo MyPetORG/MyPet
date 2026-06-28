@@ -28,8 +28,9 @@ allprojects {
     repositories {
         mavenCentral()
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
-        maven("https://repo.mypet-plugin.de/")
         maven("https://repo.userderezzed.dev/releases")
+        maven("https://repo.userderezzed.dev/snapshots")
+        maven("https://repo.mypet-plugin.de/")
     }
 }
 
