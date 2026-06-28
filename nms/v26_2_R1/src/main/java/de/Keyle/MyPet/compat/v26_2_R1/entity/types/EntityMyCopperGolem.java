@@ -43,6 +43,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.entity.item.ItemEntity;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 
 import static de.Keyle.MyPet.compat.v26_2_R1.util.HandSlot.getSlotForHand;
 
@@ -182,7 +183,7 @@ public class EntityMyCopperGolem extends EntityMyPet {
 			}
 			// Add poppy interaction
 			if (itemStack.getItem() == Blocks.POPPY.asItem() && !getMyPet().hasPoppy()) {
-				getMyPet().setPoppy(CraftItemStack.asBukkitCopy(itemStack));
+				getMyPet().setPoppy(CompatItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {

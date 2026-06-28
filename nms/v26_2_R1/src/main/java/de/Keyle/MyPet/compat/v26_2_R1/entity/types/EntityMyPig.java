@@ -47,6 +47,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -110,7 +111,7 @@ public class EntityMyPig extends EntityMyPet {
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
+				getMyPet().setSaddle(CompatItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {

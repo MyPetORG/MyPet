@@ -36,6 +36,7 @@ import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class ItemStackNBTConverter {
     }
 
     public static org.bukkit.inventory.ItemStack compoundToBukkitItemStack(TagCompound compound) {
-        return CraftItemStack.asBukkitCopy(compoundToItemStack(compound));
+        return CompatItemStack.asBukkitCopy(compoundToItemStack(compound));
     }
 
     public static ItemStack vanillaCompoundToItemStack(CompoundTag compoundTag) {

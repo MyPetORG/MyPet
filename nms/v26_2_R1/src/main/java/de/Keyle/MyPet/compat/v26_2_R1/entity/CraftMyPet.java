@@ -31,7 +31,7 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftMob;
 import org.bukkit.craftbukkit.inventory.CraftEntityEquipment;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -258,45 +258,45 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 		@NotNull
 		@Override
 		public ItemStack getItemInMainHand() {
-			return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
+			return CompatItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
 		}
 
 		@NotNull
 		@Override
 		public ItemStack getItemInOffHand() {
-			return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
+			return CompatItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
 		}
 
 		@NotNull
 		@Override
 		public ItemStack getItemInHand() {
-			return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
+			return CompatItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
 		}
 
 		@Override
 		public ItemStack getHelmet() {
-			return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
+			return CompatItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
 		}
 
 		@Override
 		public ItemStack getChestplate() {
-			return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
+			return CompatItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
 		}
 
 		@Override
 		public ItemStack getLeggings() {
-			return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
+			return CompatItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
 		}
 
 		@Override
 		public ItemStack getBoots() {
-			return CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
+			return CompatItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
 		}
 
 		@NotNull
 		@Override
 		public ItemStack[] getArmorContents() {
-			ItemStack empty = CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
+			ItemStack empty = CompatItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.EMPTY);
 			return new ItemStack[]{empty, empty, empty, empty};
 		}
 	}

@@ -22,6 +22,7 @@ package de.Keyle.MyPet.compat.v26_2_R1.entity.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
@@ -113,7 +114,7 @@ public class EntityMyIronGolem extends EntityMyPet {
 		}
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (itemStack.getItem() == Blocks.POPPY.asItem() && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
+				getMyPet().setFlower(CompatItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {

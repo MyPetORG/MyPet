@@ -38,6 +38,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 
 import static de.Keyle.MyPet.compat.v26_2_R1.util.HandSlot.getSlotForHand;
 
@@ -79,7 +80,7 @@ public class EntityMyLlama extends EntityMyPet {
 
 		if (itemStack != null && canUseItem()) {
 			if (itemStack.is(ItemTags.WOOL_CARPETS) && !getMyPet().hasDecor() && getOwner().getPlayer().isSneaking() && canEquip()) {
-				getMyPet().setDecor(CraftItemStack.asBukkitCopy(itemStack));
+				getMyPet().setDecor(CompatItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {
@@ -88,7 +89,7 @@ public class EntityMyLlama extends EntityMyPet {
 				}
 				return InteractionResult.CONSUME;
 			} else if (itemStack.getItem() == Blocks.CHEST.asItem() && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && !getMyPet().isBaby() && canEquip()) {
-				getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
+				getMyPet().setChest(CompatItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {

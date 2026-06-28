@@ -45,6 +45,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 
 import java.util.List;
 import java.util.Optional;
@@ -97,7 +98,7 @@ public class EntityMyFox extends EntityMyPet {
 						entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 						this.level().addFreshEntity(entityitem);
 					}
-					getMyPet().setEquipment(EquipmentSlot.MainHand, CraftItemStack.asBukkitCopy(itemStack));
+					getMyPet().setEquipment(EquipmentSlot.MainHand, CompatItemStack.asBukkitCopy(itemStack));
 					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {

@@ -49,6 +49,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 
 import java.util.List;
 
@@ -124,7 +125,7 @@ public class EntityMyHorse extends EntityMyPet{
 		}
 
 		if (itemStack != null && canUseItem()) {
-			org.bukkit.inventory.ItemStack is = CraftItemStack.asBukkitCopy(itemStack);
+			org.bukkit.inventory.ItemStack is = CompatItemStack.asBukkitCopy(itemStack);
 			if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking() && canEquip()) {
 				getMyPet().setSaddle(is);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {

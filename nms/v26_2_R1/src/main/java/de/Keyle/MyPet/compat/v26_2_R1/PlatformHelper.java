@@ -68,6 +68,7 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 import org.bukkit.craftbukkit.util.UnsafeList;
 import org.bukkit.entity.*;
 
@@ -283,7 +284,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
 
     @Override
     public org.bukkit.inventory.ItemStack compundToItemStack(TagCompound compound) {
-        return CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
+        return CompatItemStack.asBukkitCopy(ItemStackNBTConverter.compoundToItemStack(compound));
     }
 
     @Override
@@ -378,7 +379,7 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     }
 
     public org.bukkit.inventory.ItemStack asBukkitItemStack(ItemStack itemStack) {
-        return CraftItemStack.asBukkitCopy(itemStack);
+        return CompatItemStack.asBukkitCopy(itemStack);
     }
 
     public ItemStack asNmsItemStack(org.bukkit.inventory.ItemStack itemStack) {

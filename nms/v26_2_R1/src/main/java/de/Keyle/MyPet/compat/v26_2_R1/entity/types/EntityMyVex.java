@@ -45,6 +45,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 
 import java.util.List;
 
@@ -121,7 +122,7 @@ public class EntityMyVex extends EntityMyFlyingPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (MyPetApi.getPlatformHelper().isEquipment(CraftItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
+			} else if (MyPetApi.getPlatformHelper().isEquipment(CompatItemStack.asBukkitCopy(itemStack)) && getOwner().getPlayer().isSneaking() && canEquip()) {
 				EquipmentSlot slot = EquipmentSlot.getSlotById(getEquipmentSlotForItem(itemStack).getId());
 				if (slot == EquipmentSlot.MainHand) {
 					ItemStack itemInSlot = CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
@@ -131,7 +132,7 @@ public class EntityMyVex extends EntityMyFlyingPet {
 						entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));
 						this.level().addFreshEntity(entityitem);
 					}
-					getMyPet().setEquipment(slot, CraftItemStack.asBukkitCopy(itemStack));
+					getMyPet().setEquipment(slot, CompatItemStack.asBukkitCopy(itemStack));
 					if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 						itemStack.shrink(1);
 						if (itemStack.getCount() <= 0) {

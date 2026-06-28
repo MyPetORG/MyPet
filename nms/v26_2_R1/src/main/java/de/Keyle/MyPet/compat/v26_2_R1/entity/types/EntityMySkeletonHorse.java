@@ -42,6 +42,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 
 import static de.Keyle.MyPet.compat.v26_2_R1.util.HandSlot.getSlotForHand;
 
@@ -116,7 +117,7 @@ public class EntityMySkeletonHorse extends EntityMyPet {
 
 		if (itemStack != null && canUseItem()) {
 			if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking() && canEquip()) {
-				getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
+				getMyPet().setSaddle(CompatItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {

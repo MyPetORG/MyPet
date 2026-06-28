@@ -38,6 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 
 import static de.Keyle.MyPet.compat.v26_2_R1.util.HandSlot.getSlotForHand;
 
@@ -102,7 +103,7 @@ public class EntityMyCamel extends EntityMyPet {
 
 		if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
 			if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
+				getMyPet().setSaddle(CompatItemStack.asBukkitCopy(itemStack));
 				makeSound("entity.camel.saddle", 1.0F, 1.0F);
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);

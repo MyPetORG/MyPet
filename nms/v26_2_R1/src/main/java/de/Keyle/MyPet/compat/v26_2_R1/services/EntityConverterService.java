@@ -57,6 +57,7 @@ import org.bukkit.craftbukkit.entity.CraftTropicalFish;
 import org.bukkit.craftbukkit.entity.CraftVillager;
 import org.bukkit.craftbukkit.entity.CraftVillagerZombie;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
@@ -737,7 +738,7 @@ public class EntityConverterService extends de.Keyle.MyPet.api.util.service.type
             net.minecraft.world.item.ItemStack poppyNMS = nmsGolem.getItemBySlot(net.minecraft.world.entity.animal.golem.CopperGolem.EQUIPMENT_SLOT_ANTENNA);
 
             if (poppyNMS != null && !poppyNMS.isEmpty()) {
-                org.bukkit.inventory.ItemStack poppyBukkit = CraftItemStack.asBukkitCopy(poppyNMS);
+                org.bukkit.inventory.ItemStack poppyBukkit = CompatItemStack.asBukkitCopy(poppyNMS);
                 properties.getCompoundData().put("Poppy", MyPetApi.getPlatformHelper().itemStackToCompund(poppyBukkit));
             }
         } catch (Exception e) {

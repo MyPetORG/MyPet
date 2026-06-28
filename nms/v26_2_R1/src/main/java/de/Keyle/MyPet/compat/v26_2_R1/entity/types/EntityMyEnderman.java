@@ -40,6 +40,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 
 import java.util.Optional;
@@ -95,7 +96,7 @@ public class EntityMyEnderman extends EntityMyPet {
 
 				return InteractionResult.CONSUME;
 			} else if (getMyPet().getBlock() == null && Util.isBetween(1, 255, Item.getId(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
-				getMyPet().setBlock(CraftItemStack.asBukkitCopy(itemStack));
+				getMyPet().setBlock(CompatItemStack.asBukkitCopy(itemStack));
 				if (itemStack != ItemStack.EMPTY && !entityhuman.getAbilities().instabuild) {
 					itemStack.shrink(1);
 					if (itemStack.getCount() <= 0) {

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.compat.v26_2_R1.util.inventory;
 import de.Keyle.MyPet.api.util.Compat;
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import de.Keyle.MyPet.compat.v26_2_R1.util.CompatItemStack;
 import org.bukkit.inventory.ItemStack;
 
 @Compat("v26_2_R1")
@@ -54,7 +55,7 @@ public class ItemStackComparator {
                 if (tag1.equals(tag2)) {
                     return true;
                 } else {
-                    i1 = CraftItemStack.asBukkitCopy(CraftItemStack.asNMSCopy(i1));
+                    i1 = CompatItemStack.asBukkitCopy(CraftItemStack.asNMSCopy(i1));
                     tag1 = ItemStackNBTConverter.itemStackToVanillaCompound(CraftItemStack.asNMSCopy(i1));
                     return tag1.equals(tag2);
                 }
