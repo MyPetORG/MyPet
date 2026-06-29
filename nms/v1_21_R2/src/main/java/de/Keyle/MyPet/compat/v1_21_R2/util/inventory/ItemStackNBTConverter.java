@@ -216,6 +216,8 @@ public class ItemStackNBTConverter {
                 return FloatTag.valueOf(((TagFloat) tag).getFloatData());
             case Int_Array:
                 return new IntArrayTag(((TagIntArray) tag).getIntArrayData());
+            case Long_Array:
+                return new LongArrayTag(((TagLongArray) tag).getLongArrayData());
             case Long:
                 return LongTag.valueOf(((TagLong) tag).getLongData());
             case List:
@@ -258,12 +260,10 @@ public class ItemStackNBTConverter {
                 return new TagString(vanillaTag.getAsString());
             case 9:
                 ListTag tagList = (ListTag) vanillaTag;
-                List compoundList = new ArrayList();
+                List<TagBase> compoundList = new ArrayList<>();
                 try {
-                    ArrayList list = (ArrayList) TAG_LIST_LIST.get(tagList);
-                    for (Object aList : list) {
-                        compoundList.add(vanillaCompoundToCompound((Tag) aList));
-                    }
+                    ArrayList<?> list = (ArrayList<?>) TAG_LIST_LIST.get(tagList);
+                    normalizeMixedListElements(list, compoundList);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -279,7 +279,42 @@ public class ItemStackNBTConverter {
                 return compound;
             case 11:
                 return new TagIntArray(((IntArrayTag) vanillaTag).getAsIntArray());
+            case 12:
+                return new TagLongArray(((LongArrayTag) vanillaTag).getAsLongArray());
         }
         return null;
+    }
+
+    /**
+     * Convert Mojang list elements, upgrading bare StringTags to
+     * {@code {text: "..."}} CompoundTags when the list is predominantly
+     * compound.
+     *
+     * Mojang's text-component codec (used for lore, custom_name, extra arg
+     * lists, etc.) can emit a ListTag that mixes StringTag elements (plain
+     * text components) with CompoundTag elements (styled components). NBT
+     * lists must be homogeneous on the wire, so knbt's TagList rejects mixed
+     * construction. Wrapping stray strings into {text: ...} compounds is the
+     * canonical Minecraft-text-component form and preserves the semantics.
+     */
+    private static void normalizeMixedListElements(ArrayList<?> source, List<TagBase> out) {
+        boolean hasCompound = false;
+        boolean hasString = false;
+        for (Object element : source) {
+            if (element instanceof CompoundTag) hasCompound = true;
+            else if (element instanceof StringTag) hasString = true;
+        }
+        boolean wrapStringsAsCompounds = hasCompound && hasString;
+
+        for (Object element : source) {
+            Tag tag = (Tag) element;
+            if (wrapStringsAsCompounds && tag instanceof StringTag stringTag) {
+                CompoundTag wrapped = new CompoundTag();
+                wrapped.putString("text", stringTag.getAsString());
+                out.add(vanillaCompoundToCompound(wrapped));
+            } else {
+                out.add(vanillaCompoundToCompound(tag));
+            }
+        }
     }
 }

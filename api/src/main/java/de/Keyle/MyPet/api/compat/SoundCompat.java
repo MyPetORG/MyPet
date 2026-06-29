@@ -20,7 +20,26 @@
 
 package de.Keyle.MyPet.api.compat;
 
+import de.Keyle.MyPet.MyPetApi;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+
+import java.lang.reflect.Method;
+
 public class SoundCompat {
+
+    // Resolved once at class load: org.bukkit.Sound keeps a static valueOf(String)
+    // whether it is an enum (<= 1.21.2) or an interface (1.21.3+), so a single
+    // reflective lookup serves every supported server. null only if it is absent.
+    private static final Method SOUND_VALUE_OF = resolveSoundValueOf();
+
+    private static Method resolveSoundValueOf() {
+        try {
+            return Sound.class.getMethod("valueOf", String.class);
+        } catch (Throwable t) {
+            return null;
+        }
+    }
 
     public static Compat<String> ENDERMAN_TELEPORT = new Compat<String>()
             .d("mob.endermen.portal")
@@ -52,4 +71,42 @@ public class SoundCompat {
             .d("ANVIL_BREAK")
             .v("1.9", "ENTITY_WITHER_BREAK_BLOCK")
             .search();
+
+    /**
+     * Plays a sound resolved from a version-specific {@link Sound} constant name
+     * (as produced by the {@code Compat<String>} fields above) without baking a
+     * static reference to {@link Sound#valueOf(String)} into the bytecode.
+     * <p>
+     * {@code org.bukkit.Sound} changed kind across Minecraft versions: it is an
+     * {@code enum} up to ~1.21.2 and an {@code interface} (with a static
+     * {@code valueOf} kept for source-compat) from 1.21.3 on. A compiled
+     * {@code Sound.valueOf} call carries the constant-pool tag of whichever API
+     * it was built against — {@code Methodref} for the enum, {@code
+     * InterfaceMethodref} for the interface. When that tag disagrees with the
+     * {@code Sound} kind on the running server the JVM throws
+     * {@link IncompatibleClassChangeError} while linking the call.
+     * <p>
+     * Resolving {@code valueOf} reflectively sidesteps the static call entirely,
+     * so the sound resolves correctly whether {@code Sound} is an enum or an
+     * interface at runtime, on every supported version (1.8 through current).
+     *
+     * @param location  where to play the sound (ignored if {@code null} or worldless)
+     * @param soundName the {@link Sound} constant name, e.g. from {@link #LEVEL_UP}
+     * @param volume    the sound volume
+     * @param pitch     the sound pitch
+     */
+    public static void play(Location location, String soundName, float volume, float pitch) {
+        if (location == null || location.getWorld() == null || soundName == null || SOUND_VALUE_OF == null) {
+            return;
+        }
+        try {
+            Sound sound = (Sound) SOUND_VALUE_OF.invoke(null, soundName);
+            location.getWorld().playSound(location, sound, volume, pitch);
+        } catch (Throwable t) {
+            // Unknown constant for this version, or an unexpected linkage error:
+            // skip the sound rather than aborting the surrounding event, but keep
+            // a broken Compat mapping diagnosable instead of failing silently.
+            MyPetApi.getLogger().warning("Could not play sound '" + soundName + "': " + t);
+        }
+    }
 }

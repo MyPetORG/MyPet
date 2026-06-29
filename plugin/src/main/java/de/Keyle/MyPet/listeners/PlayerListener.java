@@ -44,10 +44,10 @@ import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.ShieldImpl;
 import de.Keyle.MyPet.util.Updater;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
-import at.blvckbytes.raw_message.MessageColor;
-import at.blvckbytes.raw_message.RawMessage;
-import at.blvckbytes.raw_message.click.OpenUrlAction;
-import at.blvckbytes.raw_message.hover.ShowTextAction;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -288,17 +288,20 @@ public class PlayerListener implements Listener {
 
         if (Configuration.Update.SHOW_OP && event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
             String versionUrl = "https://modrinth.com/plugin/mypet/version/" + Updater.getLatest().getVersion();
-            new RawMessage(Translation.getString("Message.Update.Available", event.getPlayer()) + " ")
-                .addExtra(
-                    new RawMessage("[" + Updater.getLatest().getVersion() + "]")
-                        .setColor(MessageColor.GREEN)
-                        .setClickAction(new OpenUrlAction(versionUrl))
-                        .setHoverAction(new ShowTextAction(
-                            new RawMessage(versionUrl)
-                                .setColor(MessageColor.GRAY)
-                        ))
-                )
-                .tellRawTo(event.getPlayer());
+
+            TextComponent updateMsg = new TextComponent(Translation.getString("Message.Update.Available", event.getPlayer()) + " ");
+
+            TextComponent versionPart = new TextComponent("[" + Updater.getLatest().getVersion() + "]");
+            versionPart.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+            versionPart.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, versionUrl));
+
+            TextComponent hoverUrl = new TextComponent(versionUrl);
+            hoverUrl.setColor(net.md_5.bungee.api.ChatColor.GRAY);
+            versionPart.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new BaseComponent[]{hoverUrl}));
+
+            updateMsg.addExtra(versionPart);
+            event.getPlayer().spigot().sendMessage(updateMsg);
         }
     }
 

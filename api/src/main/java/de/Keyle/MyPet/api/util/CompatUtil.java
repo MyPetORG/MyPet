@@ -38,8 +38,8 @@ import java.util.regex.Pattern;
 
 public class CompatUtil {
     private static final Pattern PACKAGE_VERSION_MATCHER = Pattern.compile(".*\\.(v\\d+_\\d+_R\\d+)(?:.+)?");
-    private static final Pattern MINECRAFT_VERSION_MATCHER = Pattern.compile("\\(MC: (\\d\\.\\d+(?:\\.\\d+)?)");
-    private static final Pattern VERSION_MATCHER = Pattern.compile("\\d\\.\\d+(?:\\.\\d+)?");
+    private static final Pattern MINECRAFT_VERSION_MATCHER = Pattern.compile("\\(MC: (\\d+\\.\\d+(?:\\.\\d+)?)");
+    private static final Pattern VERSION_MATCHER = Pattern.compile("\\d+\\.\\d+(?:\\.\\d+)?");
 
     private String internalVersion = null;
     private String minecraftVersion = "0.0.0";

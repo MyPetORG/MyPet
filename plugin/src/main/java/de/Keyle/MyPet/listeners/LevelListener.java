@@ -40,7 +40,6 @@ import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.location.EntityLocationHolder;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
@@ -126,7 +125,7 @@ public class LevelListener implements Listener {
                         }
                     }.loop(2);
 
-                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf(SoundCompat.LEVEL_UP.get()), 1F, 0.7F);
+                    SoundCompat.play(entity.getLocation(), SoundCompat.LEVEL_UP.get(), 1F, 0.7F);
                 }
             });
         }
@@ -174,7 +173,7 @@ public class LevelListener implements Listener {
                         }
                     }.once();
 
-                    entity.getWorld().playSound(entity.getLocation(), Sound.valueOf(SoundCompat.LEVEL_DOWN.get()), 1F, 0.7F);
+                    SoundCompat.play(entity.getLocation(), SoundCompat.LEVEL_DOWN.get(), 1F, 0.7F);
                 }
             });
         }

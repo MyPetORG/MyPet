@@ -33,8 +33,8 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.repository.Repository;
 import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.util.locale.Translation;
-import at.blvckbytes.raw_message.RawMessage;
-import at.blvckbytes.raw_message.click.RunCommandAction;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -251,10 +251,11 @@ public class CommandTrade implements CommandTabCompleter {
                         receiver.sendMessage(Util.formatText(Translation.getString("Message.Command.Trade.Receiver.Offer", receiver), player.getName()));
                     }
 
-                    new RawMessage(" »» " + myPet.getPetName())
-                      .setHoverAction(Util.myPetToItemAction(myPet, MyPetApi.getPlatformHelper().getPlayerLanguage(receiver)))
-                      .setClickAction(new RunCommandAction("/pettrade accept"))
-                      .tellRawTo(receiver);
+                    TextComponent tradeMsg = new TextComponent(" »» " + myPet.getPetName());
+                    tradeMsg.setHoverEvent(Util.myPetToHoverEvent(myPet,
+                        MyPetApi.getPlatformHelper().getPlayerLanguage(receiver)));
+                    tradeMsg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pettrade accept"));
+                    receiver.spigot().sendMessage(tradeMsg);
 
                     return true;
                 } else {

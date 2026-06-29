@@ -78,9 +78,6 @@ public class BeaconImpl implements Beacon {
             // beachball
             partyMeta.setOwner("NeverUsed0000003");
             partyMeta.setTexture("http://textures.minecraft.net/texture/5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd");
-            // owner skin
-            ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD")).getItemMeta();
-            ownerMeta.setOwner(myPet.getOwner().getName());
         }
 
         for (Buff buff : Buff.values()) {
@@ -144,8 +141,21 @@ public class BeaconImpl implements Beacon {
         active = false;
     }
 
+    protected void buildOwnerMeta(Player owner) {
+        if (Configuration.Skilltree.Skill.Beacon.DISABLE_HEAD_TEXTURE) {
+            return;
+        }
+        ownerMeta = (org.bukkit.inventory.meta.SkullMeta) new ItemStack(EnumSelector.find(Material.class, "SKULL_ITEM", "PLAYER_HEAD")).getItemMeta();
+        try {
+            ownerMeta.setOwningPlayer(owner);
+        } catch (NoSuchMethodError legacy) {
+            ownerMeta.setOwner(owner.getName());
+        }
+    }
+
     public boolean activate() {
         final Player owner = myPet.getOwner().getPlayer();
+        buildOwnerMeta(owner);
 
         final BeaconImpl beacon = this;
         String title = RESET + Translation.getString("Name.Skill.Beacon", myPet.getOwner());

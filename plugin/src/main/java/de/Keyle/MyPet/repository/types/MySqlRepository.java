@@ -295,9 +295,25 @@ public class MySqlRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
+                MyPet[] activePets = MyPetApi.getMyPetManager().getAllActiveMyPets();
+                StringBuilder sql = new StringBuilder("DELETE FROM ")
+                        .append(Configuration.Repository.MySQL.PREFIX)
+                        .append("pets WHERE last_used<?");
+                if (activePets.length > 0) {
+                    sql.append(" AND uuid NOT IN (");
+                    for (int i = 0; i < activePets.length; i++) {
+                        if (i > 0) sql.append(',');
+                        sql.append('?');
+                    }
+                    sql.append(')');
+                }
+                sql.append(';');
                 try (Connection connection = dataSource.getConnection();
-                     PreparedStatement statement = connection.prepareStatement("DELETE FROM " + Configuration.Repository.MySQL.PREFIX + "pets WHERE last_used<?;")) {
+                     PreparedStatement statement = connection.prepareStatement(sql.toString())) {
                     statement.setLong(1, timestamp);
+                    for (int i = 0; i < activePets.length; i++) {
+                        statement.setString(2 + i, activePets[i].getUUID().toString());
+                    }
 
                     int result = statement.executeUpdate();
 

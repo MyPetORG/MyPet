@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 30
 
     env:
-      JAVA_VERSION: '21'
+      JAVA_VERSION: '25'
       PROJECT_VERSION: ""
       BUILD_NUMBER: 0
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
@@ -27,7 +27,6 @@ jobs:
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      POLYMART_TOKEN: ${{ secrets.POLYMART_TOKEN }}
 
     steps:
       - name: Checkout
@@ -126,6 +125,13 @@ jobs:
       - name: Build MyPet
         run: |
           ./gradlew --no-daemon build -PbuildType=dev -PBUILD_NUMBER=${BUILD_NUMBER} -PSENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+        env:
+          REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}
+
+      - name: Publish API snapshot to Reposilite
+        run: ./gradlew --no-daemon :api:publish -PbuildType=dev
+        env:
+          REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}
 
       - name: Find and rename shaded JAR with build number
         id: findjar
@@ -227,18 +233,8 @@ jobs:
             1.19.x
             1.20.x
             1.21.x
+            26.1
           files: ${{ steps.findjar.outputs.jar }}
-
-#      - name: Publish to Hangar
-#        run: |
-#          ./gradlew publishPluginPublicationToHangar --no-daemon \
-#            -PbuildType=dev \
-#            -PHANGAR_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} \
-#            -PHANGAR_FILE=${{ steps.findjar.outputs.jar }} \
-#            -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
-
-      - name: Publish to Polymart
-        run: ./gradlew createPolymartRelease --no-daemon -PPOLYMART_TOKEN=${POLYMART_TOKEN} -PPOLYMART_VERSION=${PROJECT_VERSION}-SNAPSHOT-b${BUILD_NUMBER} -PPOLYMART_FILE=${{ steps.findjar.outputs.jar }}
 
       - name: Send a Discord webhook notification
         env:

@@ -45,6 +45,7 @@ import de.Keyle.MyPet.skill.skills.LifeImpl;
 import de.Keyle.MyPet.skill.skills.RangedImpl;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.hooks.WorldGuardHook;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -131,7 +132,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
         skills = new Skills(this);
         experience = new MyPetExperience(this);
         hungerTime = Configuration.HungerSystem.HUNGER_SYSTEM_TIME;
-        petName = Translation.getString("Name." + getPetType().name(), petOwner);
+        petName = PetDefaultNameResolver.resolve(getPetType(), petOwner);
     }
 
     public java.util.Optional<MyPetBukkitEntity> getEntity() {
@@ -273,7 +274,7 @@ public abstract class MyPet implements de.Keyle.MyPet.api.entity.MyPet, NBTStora
 
     public void setPetName(String newName) {
         if (!NameFilter.isClean(newName)) {
-            newName = Translation.getString("Name." + getPetType().name(), getOwner().getLanguage());
+            newName = PetDefaultNameResolver.resolve(getPetType(), getOwner().getLanguage());
         }
         if (!this.petName.equals(newName)) {
             MyPetNameEvent event = new MyPetNameEvent(this, newName);

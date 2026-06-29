@@ -47,6 +47,7 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.api.util.service.types.EntityConverterService;
 import de.Keyle.MyPet.entity.InactiveMyPet;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -327,7 +328,7 @@ public class EntityListener implements Listener {
 
                         final InactiveMyPet inactiveMyPet = new InactiveMyPet(owner);
                         inactiveMyPet.setPetType(petType);
-                        inactiveMyPet.setPetName(Translation.getString("Name." + petType.name(), inactiveMyPet.getOwner()));
+                        inactiveMyPet.setPetName(PetDefaultNameResolver.resolve(petType, inactiveMyPet.getOwner()));
 
                         WorldGroup worldGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
                         inactiveMyPet.setWorldGroup(worldGroup.getName());
