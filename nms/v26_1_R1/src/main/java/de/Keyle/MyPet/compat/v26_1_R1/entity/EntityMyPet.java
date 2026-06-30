@@ -1177,6 +1177,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     /**
      * -> unmount(Entity)
      */
+    // guards against the unsafe-dismount re-mount recursing into itself
+    private boolean reMounting = false;
     @Override
     protected boolean removePassenger(Entity entity) {
         boolean result = super.removePassenger(entity);
@@ -1194,7 +1196,14 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         AABB bb = entity.getBoundingBox();
         bb = getBBAtPosition(bb, this.getX(), this.getY(), this.getZ());
         if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), this)) {
-            entity.startRiding(this, true, true);
+            if (!reMounting) {
+                reMounting = true;
+                try {
+                    entity.startRiding(this, true, true);
+                } finally {
+                    reMounting = false;
+                }
+            }
         } else {
             entity.setPos(getX(), getY(), getZ());
         }
