@@ -21,9 +21,10 @@
 package de.Keyle.MyPet.api.repository;
 
 public class RepositoryInitException extends Exception {
-    final public Exception exception;
+    final public Throwable exception;
 
-    public RepositoryInitException(Exception e) {
+    public RepositoryInitException(Throwable e) {
+        super(e);
         exception = e;
     }
 
