@@ -199,6 +199,15 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             return;
         }
 
+        // isValidBukkitPacket() can pass on a brand-new server build for which no compat module
+        // actually loaded, leaving these null (set in onLoad via getCompatInstance). Bail cleanly
+        // instead of NPEing in registerEntityTypes() / compatManager.enable() below.
+        if (entityRegistry == null || platformHelper == null || petInfo == null || compatManager == null) {
+            getLogger().severe("No MyPet compatibility module could be loaded for " + compatUtil.getMinecraftVersion() + " (internal version " + compatUtil.getInternalVersion() + "). MyPet cannot run on this server version - disabling.");
+            setEnabled(false);
+            return;
+        }
+
         serviceManager.activate(Load.State.OnEnable);
 
         entityRegistry.registerEntityTypes();
