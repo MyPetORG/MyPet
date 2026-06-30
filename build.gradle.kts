@@ -18,7 +18,7 @@ val minecraftVersion by extra("26.2")
 val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6;v1_21_R7;v26_1_R1;v26_2_R1")
 val specialVersions by extra("")
 
-version = "3.14.2"
+version = "3.14.3"
 
 @Suppress("UNCHECKED_CAST")
 val nmsModules: List<String> = gradle.extra["nmsModules"] as List<String>
