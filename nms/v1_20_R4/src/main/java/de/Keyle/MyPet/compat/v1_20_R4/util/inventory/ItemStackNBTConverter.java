@@ -54,6 +54,12 @@ public class ItemStackNBTConverter {
     }
 
     public static CompoundTag itemStackToVanillaCompound(ItemStack itemStack) {
+        if (itemStack == null || itemStack.isEmpty()) {
+            CompoundTag air = new CompoundTag();
+            air.putString("id", "minecraft:air");
+            air.putInt("count", 1);
+            return air;
+        }
         return (CompoundTag) itemStack.save(registryAccess);
     }
 
