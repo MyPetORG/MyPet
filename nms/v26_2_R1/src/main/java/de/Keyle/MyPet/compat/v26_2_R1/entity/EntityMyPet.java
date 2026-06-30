@@ -928,6 +928,16 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     protected void dropCustomDeathLoot(ServerLevel worldserver, DamageSource damagesource, boolean flag) {
     }
 
+    /**
+     * do NOT drop anything (and skip vanilla loot-table evaluation entirely).
+     * Besides matching the "pets drop nothing" behavior, this avoids running loot predicates
+     * against the custom mypet_* entity-type holder, whose data components are unbound -> that
+     * throws "Components not bound yet" during death-loot on 26.x+.
+     */
+    @Override
+    protected void dropFromLootTable(ServerLevel worldserver, DamageSource damagesource, boolean flag) {
+    }
+
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     @Override
