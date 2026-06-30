@@ -225,6 +225,19 @@ sentry {
     org = "mypet"
     projectName = "mypet"
     authToken = System.getenv("SENTRY_AUTH_TOKEN")
+
+    // The actual code lives in the api/plugin/nms subprojects, but the shipped artifact is a single
+    // shaded jar built here at the root with ONE sentry-debug-meta.properties. Enabling source
+    // context per-subproject would emit colliding debug-meta files that shadowJar silently dedups,
+    // so instead we fold every module's source root into this project's single source bundle. One
+    // bundle id, one properties file, all sources -> stack frames across all modules symbolicate.
+    val moduleSourceDirs = (listOf("api", "plugin") +
+        file("nms").listFiles().orEmpty()
+            .filter { it.isDirectory && File(it, "src/main/java").isDirectory }
+            .map { "nms/${it.name}" })
+        .map { "$it/src/main/java" }
+        .filter { file(it).isDirectory }
+    additionalSourceDirsForSourceContext.set(moduleSourceDirs)
 }
 
 /* ---------- Root compilation settings (Java 8 output) ---------- */
