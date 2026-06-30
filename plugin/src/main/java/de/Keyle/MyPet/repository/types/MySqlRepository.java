@@ -102,51 +102,54 @@ public class MySqlRepository implements Repository {
         dataSource.addDataSourceProperty("cachePrepStmts", true);
         dataSource.setLeakDetectionThreshold(10000);
 
+        // Read the schema version, then release the connection *before* running any
+        // migrations. The migration methods each borrow their own connection, so holding
+        // this one open across the whole ALTER TABLE chain only pinned it idle and could
+        // trip HikariCP's 10s leak detector on slow databases (MYPET-DMY).
+        int oldVersion;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + Configuration.Repository.MySQL.PREFIX + "info;");
              ResultSet resultSet = statement.executeQuery()) {
 
             if (resultSet.next()) {
-                updateStructure(resultSet);
-                updateInfo();
+                oldVersion = resultSet.getInt("version");
             } else {
                 initStructure();
+                return;
             }
         } catch (SQLSyntaxErrorException e) {
             initStructure();
+            return;
         } catch (Exception e) {
             throw new RepositoryInitException(e);
         }
+
+        updateStructure(oldVersion);
+        updateInfo();
     }
 
-    private void updateStructure(ResultSet resultSet) {
-        try {
-            int oldVersion = resultSet.getInt("version");
+    private void updateStructure(int oldVersion) {
+        if (oldVersion < version) {
+            MyPetApi.getLogger().info("[MySQL] Updating database from v" + oldVersion + " to v" + version + ".");
 
-            if (oldVersion < version) {
-                MyPetApi.getLogger().info("[MySQL] Updating database from v" + oldVersion + " to v" + version + ".");
-
-                switch (oldVersion) {
-                    case 1:
-                        updateToV2();
-                    case 2:
-                        updateToV3();
-                    case 3:
-                        updateToV4();
-                    case 4:
-                        updateToV5();
-                    case 5:
-                        updateToV6();
-                    case 6:
-                    case 7:
-                        updateToV8();
-                    case 8:
-                    case 9:
-                        updateToV10();
-                }
+            switch (oldVersion) {
+                case 1:
+                    updateToV2();
+                case 2:
+                    updateToV3();
+                case 3:
+                    updateToV4();
+                case 4:
+                    updateToV5();
+                case 5:
+                    updateToV6();
+                case 6:
+                case 7:
+                    updateToV8();
+                case 8:
+                case 9:
+                    updateToV10();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
