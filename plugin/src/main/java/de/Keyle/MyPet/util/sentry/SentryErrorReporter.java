@@ -23,7 +23,6 @@ package de.Keyle.MyPet.util.sentry;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Configuration;
 import de.Keyle.MyPet.api.MyPetVersion;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import io.sentry.Breadcrumb;
@@ -219,23 +218,36 @@ public class SentryErrorReporter implements ErrorReporter {
      * Checks if the throwable is related to MyPet.
      */
     protected boolean isMyPetRelated(Throwable t) {
-        // Check the main exception and all causes
+        // Check the main exception and every cause in the chain.
         Throwable current = t;
         while (current != null) {
-            if (Util.findStringInThrowable(current, "MyPet")) {
+            if (isMyPetOrigin(current)) {
                 return true;
             }
-            // For NPEs, require MyPet in top 3 stack frames
-            if (current instanceof NullPointerException) {
-                long myPetInTop3 = Arrays.stream(current.getStackTrace())
-                        .limit(3)
-                        .filter(frame -> frame.getClassName().contains("MyPet"))
-                        .count();
-                if (myPetInTop3 > 0) {
-                    return true;
-                }
-            }
             current = current.getCause();
+        }
+        return false;
+    }
+
+    /**
+     * True only if MyPet is the <i>origin</i> of this throwable: a MyPet frame appears at or above
+     * the first Bukkit listener-dispatch boundary ({@code RegisteredListener.callEvent}).
+     * <p>
+     * MyPet appearing only <i>below</i> such a boundary means MyPet merely fired a Bukkit event and
+     * a third-party plugin's listener threw while handling it. Those are the other plugin's bugs.
+     */
+    private boolean isMyPetOrigin(Throwable t) {
+        for (StackTraceElement frame : t.getStackTrace()) {
+            String className = frame.getClassName();
+            if (className.contains("de.Keyle.MyPet")) {
+                return true;
+            }
+            // Reached the listener-invoke boundary before any MyPet frame: whatever threw above
+            // this is a (non-MyPet) event listener, so MyPet is at most the code that fired the
+            // event - not the fault.
+            if (className.equals("org.bukkit.plugin.RegisteredListener")) {
+                return false;
+            }
         }
         return false;
     }
@@ -390,13 +402,10 @@ public class SentryErrorReporter implements ErrorReporter {
 
         @Override
         public Result filter(LogEvent event) {
-            // Quick pre-filter: only accept if MyPet is in the stack trace
-            // The beforeSend hook will do the detailed filtering
-            if (event.getThrown() != null) {
-                Throwable thrown = event.getThrown();
-                if (Util.findStringInThrowable(thrown, "MyPet")) {
-                    return Result.ACCEPT;
-                }
+            // Accept only events MyPet actually originated, dropping third-party listener errors
+            // that merely pass through a MyPet-fired event.
+            if (event.getThrown() != null && isMyPetRelated(event.getThrown())) {
+                return Result.ACCEPT;
             }
             return Result.DENY;
         }
