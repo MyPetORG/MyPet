@@ -96,7 +96,7 @@ dependencies {
     compileOnly("com.github.Angeschossen:LandsAPI:4.5.2.0")
     compileOnly("de.keyle:mypet-premium-apis:1.0-SNAPSHOT")
 
-    compileOnly("org.bstats:bstats-bukkit:1.7")
+    compileOnly("org.bstats:bstats-bukkit:3.1.0")
     compileOnly("org.mongodb:mongodb-driver:3.12.11")
     compileOnly("de.keyle:knbt:0.0.6")
 
