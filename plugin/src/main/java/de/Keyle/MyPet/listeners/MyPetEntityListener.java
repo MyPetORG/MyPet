@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
@@ -299,14 +298,20 @@ public class MyPetEntityListener implements Listener {
                 EntityMyPetProjectile projectile = ((CraftMyPetProjectile) event.getDamager()).getMyPetProjectile();
 
                 if (projectile != null && projectile.getShooter() != null) {
-                    if (myPet == projectile.getShooter().getMyPet()) {
+                    MyPet shooterMyPet = projectile.getShooter().getMyPet();
+                    if (myPet == shooterMyPet) {
                         event.setCancelled(true);
                     }
-                    // Allow damage if both pets are dueling each other (bypasses PvP restrictions)
-                    // Must verify: shooter is in duel mode, target is in duel mode, AND shooter's target is the hit pet
-                    boolean inDuel = projectile.getShooter().getTargetPriority() == TargetPriority.Duel
-                            && myPet.getEntity().isPresent()
-                            && myPet.getEntity().get().getHandle().getTargetPriority() == TargetPriority.Duel
+                    // Allow damage if both pets are dueling each other (bypasses PvP restrictions).
+                    // Read the Behavior skill mode like the EntityDeathEvent duel handler below does:
+                    // the targetPriority field is never populated (setMyPetTarget ignores its priority
+                    // argument), so checking getTargetPriority() == Duel here would always be false and
+                    // duel projectiles would always be canceled. Also require the shooter to actually
+                    // be targeting the pet it hit.
+                    boolean inDuel = shooterMyPet.getSkills().isActive(Behavior.class)
+                            && myPet.getSkills().isActive(Behavior.class)
+                            && shooterMyPet.getSkills().get(Behavior.class).getBehavior() == BehaviorMode.Duel
+                            && myPet.getSkills().get(Behavior.class).getBehavior() == BehaviorMode.Duel
                             && projectile.getShooter().getMyPetTarget() == craftMyPet;
                     if (!inDuel && !MyPetApi.getHookHelper().canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
                         event.setCancelled(true);
