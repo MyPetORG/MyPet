@@ -210,7 +210,19 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         serviceManager.activate(Load.State.OnEnable);
 
-        entityRegistry.registerEntityTypes();
+        try {
+            entityRegistry.registerEntityTypes();
+        } catch (LinkageError e) {
+            // The entity-registration hack reflects into vanilla/Spigot registry internals. On
+            // Forge-Bukkit hybrids (Arclight, Mohist, ...) those internals are remapped, so the
+            // field/method access throws NoSuchFieldError/NoSuchMethodError/etc. (LinkageError).
+            // These platforms are not supported - disable cleanly instead of half-enabling.
+            getLogger().severe("Failed to register MyPet's entities on this server (" + compatUtil.getMinecraftVersion() + "). " +
+                    "This usually means an unsupported server platform - MyPet does not support Forge-Bukkit hybrids such as Arclight or Mohist. Disabling.");
+            getLogger().severe("Reason: " + e);
+            setEnabled(false);
+            return;
+        }
 
         DebugLogHandler.setup(getLogger());
 
