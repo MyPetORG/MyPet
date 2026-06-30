@@ -280,7 +280,9 @@ public class SentryErrorReporter implements ErrorReporter {
             }
             if (current instanceof java.sql.SQLException) {
                 String message = current.getMessage();
-                if (message != null && message.contains("Access denied")) {
+                if (message != null && (
+                        message.contains("Access denied") ||
+                        message.contains("is not allowed to connect"))) {
                     return true;
                 }
             }
