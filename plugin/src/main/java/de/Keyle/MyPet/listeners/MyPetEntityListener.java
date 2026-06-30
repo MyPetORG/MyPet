@@ -381,8 +381,17 @@ public class MyPetEntityListener implements Listener {
                     return;
                 }
 
-                // fix influence of other plugins for this event and throw damage event
-                MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
+                // We run at MONITOR, so the BASE modifier already reflects what earlier plugins did to it.
+                // MythicLib (MMOItems) applies a player's DEFENSE at HIGHEST by writing the mitigated value
+                // into the BASE modifier via setDamage(double); resetting to getOriginalDamage(BASE) here would
+                // erase that defense (the original "ignore all plugin influence" behaviour). We take the
+                // smaller of the original and current BASE so legitimate reductions (armor/defense/resistance)
+                // are honoured while the pet's configured Damage still acts as a cap against damage-inflating
+                // plugins. BASE excludes the vanilla ARMOR modifier, so armor is not double-counted.
+                double baseDamage = Math.min(
+                        event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE),
+                        event.getDamage(EntityDamageEvent.DamageModifier.BASE));
+                MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, baseDamage);
                 Bukkit.getPluginManager().callEvent(petDamageEvent);
                 if (petDamageEvent.isCancelled()) {
                     event.setCancelled(true);
