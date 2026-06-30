@@ -66,6 +66,9 @@ import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import de.Keyle.MyPet.util.translation.VanillaTranslationLoader;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.AdvancedPie;
+import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -429,11 +432,12 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         // init Metrics
         try {
-            Metrics metrics = new Metrics(this, 778);
-            if (metrics.isEnabled() && !MyPetVersion.isLocalBuild()) {
-                metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
-                metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
-                metrics.addCustomChart(new Metrics.SimplePie("update_mode", () -> {
+            // Don't construct Metrics on local builds
+            if (!MyPetVersion.isLocalBuild()) {
+                Metrics metrics = new Metrics(this, 778);
+                metrics.addCustomChart(new SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
+                metrics.addCustomChart(new SimplePie("build", MyPetVersion::getBuild));
+                metrics.addCustomChart(new SimplePie("update_mode", () -> {
                     String mode = "Disabled";
                     if (Configuration.Update.CHECK) {
                         mode = "Check";
@@ -444,7 +448,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     return mode;
                 }
                 ));
-                metrics.addCustomChart(new Metrics.AdvancedPie("hooks", () -> {
+                metrics.addCustomChart(new AdvancedPie("hooks", () -> {
                     Map<String, Integer> activatedHooks = new HashMap<>();
                     for (PluginHook hook : MyPetApi.getPluginHookManager().getHooks()) {
                         activatedHooks.put(hook.getPluginName(), 1);
@@ -452,7 +456,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     return activatedHooks;
                 }
                 ));
-                metrics.addCustomChart(new Metrics.AdvancedPie("pet_types", () -> {
+                metrics.addCustomChart(new AdvancedPie("pet_types", () -> {
                     Map<String, Integer> petTypes = new HashMap<>();
                     for (MyPet pet : myPetManager.getAllActiveMyPets()) {
                         petTypes.merge(pet.getPetType().name(), 1, Integer::sum);
@@ -460,7 +464,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     return petTypes;
                 }
                 ));
-                metrics.addCustomChart(new Metrics.SimplePie("database_type", () -> {
+                metrics.addCustomChart(new SimplePie("database_type", () -> {
                     String type = null;
                     if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("SQLite")) {
                         type = "SQLite";
@@ -471,7 +475,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     }
                     return type;
                 }));
-                metrics.addCustomChart(new Metrics.AdvancedPie("active_skills", () -> {
+                metrics.addCustomChart(new AdvancedPie("active_skills", () -> {
                     Map<String, Integer> skillCounts = new HashMap<>();
                     for (MyPet pet : myPetManager.getAllActiveMyPets()) {
                         for (Skill skill : pet.getSkills().all()) {
