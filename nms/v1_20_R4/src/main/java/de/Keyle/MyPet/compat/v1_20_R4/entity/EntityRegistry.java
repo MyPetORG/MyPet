@@ -148,7 +148,13 @@ public class EntityRegistry extends de.Keyle.MyPet.api.entity.EntityRegistry {
 		Field mapField =  ReflectionUtil.getField(bukkitRegistry.getClass(), "map");
 		Map<NamespacedKey, org.bukkit.entity.EntityType> bukkitMap = (Map) ReflectionUtil.getFieldValue(mapField,bukkitRegistry);
 		ImmutableMap.Builder<NamespacedKey, org.bukkit.entity.EntityType> ownMap = ImmutableMap.builder();
-		ownMap.putAll(bukkitMap);
+		// Skip stale mypet_* keys so re-registration (e.g. after reload) is idempotent
+		// and ImmutableMap.Builder does not fail with "Multiple entries with same key".
+		bukkitMap.forEach((key, value) -> {
+			if (!key.getKey().startsWith("mypet_")) {
+				ownMap.put(key, value);
+			}
+		});
 
 		for (MyPetType type : MyPetType.all()) {
 			//The fun part
