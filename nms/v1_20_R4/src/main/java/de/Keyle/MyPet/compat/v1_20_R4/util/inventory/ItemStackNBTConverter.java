@@ -146,7 +146,7 @@ public class ItemStackNBTConverter {
                 ListTag tagList = (ListTag) vanillaTag;
                 List<TagBase> compoundList = new ArrayList<>();
                 try {
-                    ArrayList<?> list = (ArrayList<?>) TAG_LIST_LIST.get(tagList);
+                    List<?> list = (List<?>) TAG_LIST_LIST.get(tagList);
                     normalizeMixedListElements(list, compoundList);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -181,7 +181,7 @@ public class ItemStackNBTConverter {
      * construction. Wrapping stray strings into {text: ...} compounds is the
      * canonical Minecraft-text-component form and preserves the semantics.
      */
-    private static void normalizeMixedListElements(ArrayList<?> source, List<TagBase> out) {
+    private static void normalizeMixedListElements(List<?> source, List<TagBase> out) {
         boolean hasCompound = false;
         boolean hasString = false;
         for (Object element : source) {

@@ -146,7 +146,7 @@ public class ItemStackNBTConverter {
                 ListTag tagList = (ListTag) vanillaTag;
                 List compoundList = new ArrayList();
                 try {
-                    ArrayList list = (ArrayList) TAG_LIST_LIST.get(tagList);
+                    List list = (List) TAG_LIST_LIST.get(tagList);
                     for (Object aList : list) {
                         compoundList.add(vanillaCompoundToCompound((Tag) aList));
                     }
