@@ -246,7 +246,11 @@ public class ProtocolLibHook implements PluginHook {
 
                         PacketContainer packet = event.getPacket();
 
-                        final Entity entity = packet.getEntityModifier(event).readSafely(0);
+                        Entity entity = null;
+                        try {
+                            entity = packet.getEntityModifier(event).readSafely(0);
+                        } catch (RuntimeException ignored) {
+                        }
 
                         if (entity instanceof MyPetBukkitEntity && ((MyPetBukkitEntity) entity).getPetType() == MyPetType.EnderDragon) {
 
