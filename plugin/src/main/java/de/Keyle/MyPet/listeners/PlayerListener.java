@@ -398,6 +398,11 @@ public class PlayerListener implements Listener {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             final MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
 
+            // Race condition: player may have disconnected between isMyPetPlayer and getMyPetPlayer
+            if (myPetPlayer == null) {
+                return;
+            }
+
             final WorldGroup fromGroup = WorldGroup.getGroupByWorld(event.getFrom().getName());
 
             final MyPet myPet = myPetPlayer.hasMyPet() ? myPetPlayer.getMyPet() : null;
