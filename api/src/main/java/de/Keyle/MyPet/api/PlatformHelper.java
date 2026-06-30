@@ -107,18 +107,21 @@ public abstract class PlatformHelper {
     }
 
     public boolean copyResource(Plugin plugin, String ressource, File destination) {
-        try {
-            InputStream template = plugin.getResource(ressource);
-            OutputStream out = Files.newOutputStream(destination.toPath());
-
+        InputStream template = plugin.getResource(ressource);
+        if (template == null) {
+            // getResource() returns null (rather than throwing) when the entry is missing from the
+            // jar - e.g. a corrupted download, a host that repackages/strips the jar, or an
+            // incomplete build. Fail gracefully instead of NPEing out of onEnable and disabling MyPet.
+            plugin.getLogger().warning("Could not copy bundled resource \"" + ressource + "\": it is missing from the MyPet jar.");
+            return false;
+        }
+        try (InputStream in = template;
+             OutputStream out = Files.newOutputStream(destination.toPath())) {
             byte[] buf = new byte[1024];
             int len;
-            while ((len = template.read(buf)) > 0) {
+            while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
-            template.close();
-            out.close();
-
             return true;
         } catch (IOException e) {
             e.printStackTrace();
