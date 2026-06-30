@@ -54,6 +54,13 @@ public class SentryErrorReporter implements ErrorReporter {
     protected boolean hooksLoaded = false;
 
     public void onEnable() {
+        // Don't report errors from self-compiled builds. Only CI builds set a non-"local"
+        // Project-Type in the manifest (release via -PbuildType=release, snapshot via -PbuildType=dev),
+        // so a plain `./gradlew build` stays "local" and never initializes Sentry.
+        if (MyPetVersion.isLocalBuild()) {
+            return;
+        }
+
         // Initialize Sentry with modern 8.0.0+ API
         Sentry.init(options -> {
             options.setDsn("https://14aec086f95d4fbe8a378638c80b68fa@o221805.ingest.us.sentry.io/1368849");
