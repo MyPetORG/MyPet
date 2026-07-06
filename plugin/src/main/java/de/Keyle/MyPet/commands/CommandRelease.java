@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
@@ -257,7 +258,7 @@ public class CommandRelease {
                 .append(Component.newline())
                 .append(Locale.getComponent("Name.Type", petOwner))
                 .append(Component.text(": "))
-                .append(Locale.getComponent("Name." + pet.getPetType().name(), petOwner).color(NamedTextColor.GOLD))
+                .append(Component.text(PetDefaultNameResolver.resolve(pet.getPetType(), pet.getOwner())).color(NamedTextColor.GOLD))
                 .append(Component.newline())
                 .append(Locale.getComponent("Name.Skilltree", petOwner))
                 .append(Component.text(": "))

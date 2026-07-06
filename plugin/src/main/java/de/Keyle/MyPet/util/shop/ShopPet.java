@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.shop;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.gui.IconMenuItem;
@@ -115,7 +116,7 @@ public class ShopPet {
         if (petName != null && !petName.isEmpty()) {
             return petName;
         }
-        return Locale.renderPlain("Name." + petType.name(), buyer.getLanguage());
+        return PetDefaultNameResolver.resolve(petType, buyer);
     }
 
     public Component getDisplayName() {

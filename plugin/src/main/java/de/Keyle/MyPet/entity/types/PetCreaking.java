@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
@@ -227,7 +228,7 @@ public class PetCreaking extends PetImpl {
 
             final PersistedPet inactivePet = PersistedPet.builder(owner)
                     .petType(petType)
-                    .petName(Locale.renderPlain("Name." + petType.name(), owner.getLanguage()))
+                    .petName(PetDefaultNameResolver.resolve(petType, owner))
                     .worldGroup(worldGroup.getName())
                     .info(snapshot)
                     .build();
