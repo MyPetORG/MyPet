@@ -22,7 +22,6 @@ package de.Keyle.MyPet.commands.admin;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
@@ -49,7 +48,7 @@ import org.bukkit.entity.Player;
  * <p>Usage:</p>
  * <ul>
  *   <li>{@code /petadmin exp <player> <amount> [add|set|remove]} -- manipulates raw experience points</li>
- *   <li>{@code /petadmin exp <player> <levels> levels [add|set|remove]} -- manipulates levels (converted to exp)</li>
+ *   <li>{@code /petadmin exp <player> <amount> levels [add|set|remove]} -- manipulates levels (converted to exp)</li>
  * </ul>
  *
  * <p>When no operator is specified, {@code set} is used by default. Experience is clamped
@@ -67,11 +66,12 @@ public class CommandOptionExp {
     /**
      * Builds the Brigadier command tree for the {@code exp} subcommand.
      *
-     * <p>The tree has two branches under the {@code <player>} argument:</p>
+     * <p>A single {@code <amount>} (double) argument under {@code <player>} carries both branches
+     * as literal children, so all continuations tab-complete:</p>
      * <ol>
-     *   <li>Raw exp branch: {@code <amount>} (double) followed by optional {@code add|set|remove} literals.</li>
-     *   <li>Level branch: {@code <levels>} (integer) followed by the {@code levels} literal keyword and
-     *       optional {@code add|set|remove} literals.</li>
+     *   <li>Raw exp: {@code <amount>} followed by optional {@code add|set|remove} literals.</li>
+     *   <li>Levels: {@code <amount>} followed by the {@code levels} literal keyword (truncated to an
+     *       int) and optional {@code add|set|remove} literals.</li>
      * </ol>
      *
      * @param helpRegistry the help registry to register the command's help entry with
@@ -87,73 +87,53 @@ public class CommandOptionExp {
         ));
 
         // /petadmin exp <player> <amount> [add|set|remove]
-        // /petadmin exp <player> <levels> levels [add|set|remove]
+        // /petadmin exp <player> <amount> levels [add|set|remove]
         LiteralArgumentBuilder<CommandSourceStack> expNode = Commands.literal("exp")
                 .requires(AdminPermissions.requiresNode(AdminPermissions.EXP))
                 .then(Commands.argument("player", ArgumentTypes.player())
-                        // Raw exp branch: /petadmin exp <player> <amount> [operator]
                         .then(Commands.argument("amount", DoubleArgumentType.doubleArg(0))
-                                .executes(ctx -> {
-                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
-                                            .resolve(ctx.getSource()).getFirst();
-                                    double amount = DoubleArgumentType.getDouble(ctx, "amount");
-                                    executeExp(ctx.getSource().getSender(), player, amount, Operator.SET);
-                                    return Command.SINGLE_SUCCESS;
-                                })
-                                .then(Commands.literal("add").executes(ctx -> {
-                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
-                                            .resolve(ctx.getSource()).getFirst();
-                                    executeExp(ctx.getSource().getSender(), player,
-                                            DoubleArgumentType.getDouble(ctx, "amount"), Operator.ADD);
-                                    return Command.SINGLE_SUCCESS;
-                                }))
-                                .then(Commands.literal("set").executes(ctx -> {
-                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
-                                            .resolve(ctx.getSource()).getFirst();
-                                    executeExp(ctx.getSource().getSender(), player,
-                                            DoubleArgumentType.getDouble(ctx, "amount"), Operator.SET);
-                                    return Command.SINGLE_SUCCESS;
-                                }))
-                                .then(Commands.literal("remove").executes(ctx -> {
-                                    Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
-                                            .resolve(ctx.getSource()).getFirst();
-                                    executeExp(ctx.getSource().getSender(), player,
-                                            DoubleArgumentType.getDouble(ctx, "amount"), Operator.REMOVE);
-                                    return Command.SINGLE_SUCCESS;
-                                })))
-                        // Level branch: /petadmin exp <player> <levels> levels [operator]
-                        .then(Commands.argument("levels", IntegerArgumentType.integer(0))
+                                // Raw exp: /petadmin exp <player> <amount> [add|set|remove]
+                                .executes(expOp(Operator.SET))
+                                .then(Commands.literal("add").executes(expOp(Operator.ADD)))
+                                .then(Commands.literal("set").executes(expOp(Operator.SET)))
+                                .then(Commands.literal("remove").executes(expOp(Operator.REMOVE)))
+                                // Levels: /petadmin exp <player> <amount> levels [add|set|remove]
                                 .then(Commands.literal("levels")
-                                        .executes(ctx -> {
-                                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
-                                                    .resolve(ctx.getSource()).getFirst();
-                                            int levels = IntegerArgumentType.getInteger(ctx, "levels");
-                                            executeLevels(ctx.getSource().getSender(), player, levels, Operator.SET);
-                                            return Command.SINGLE_SUCCESS;
-                                        })
-                                        .then(Commands.literal("add").executes(ctx -> {
-                                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
-                                                    .resolve(ctx.getSource()).getFirst();
-                                            executeLevels(ctx.getSource().getSender(), player,
-                                                    IntegerArgumentType.getInteger(ctx, "levels"), Operator.ADD);
-                                            return Command.SINGLE_SUCCESS;
-                                        }))
-                                        .then(Commands.literal("set").executes(ctx -> {
-                                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
-                                                    .resolve(ctx.getSource()).getFirst();
-                                            executeLevels(ctx.getSource().getSender(), player,
-                                                    IntegerArgumentType.getInteger(ctx, "levels"), Operator.SET);
-                                            return Command.SINGLE_SUCCESS;
-                                        }))
-                                        .then(Commands.literal("remove").executes(ctx -> {
-                                            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
-                                                    .resolve(ctx.getSource()).getFirst();
-                                            executeLevels(ctx.getSource().getSender(), player,
-                                                    IntegerArgumentType.getInteger(ctx, "levels"), Operator.REMOVE);
-                                            return Command.SINGLE_SUCCESS;
-                                        })))));
+                                        .executes(levelOp(Operator.SET))
+                                        .then(Commands.literal("add").executes(levelOp(Operator.ADD)))
+                                        .then(Commands.literal("set").executes(levelOp(Operator.SET)))
+                                        .then(Commands.literal("remove").executes(levelOp(Operator.REMOVE))))));
 
         return expNode.build();
+    }
+
+    /**
+     * Builds an executor that applies a raw-experience modification with the given operator.
+     * Reads the shared {@code amount} argument as-is (raw exp points).
+     */
+    private Command<CommandSourceStack> expOp(Operator operator) {
+        return ctx -> {
+            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                    .resolve(ctx.getSource()).getFirst();
+            executeExp(ctx.getSource().getSender(), player,
+                    DoubleArgumentType.getDouble(ctx, "amount"), operator);
+            return Command.SINGLE_SUCCESS;
+        };
+    }
+
+    /**
+     * Builds an executor that applies a level modification with the given operator.
+     * The shared {@code amount} argument is a double; levels are whole numbers, so it is
+     * truncated to an int.
+     */
+    private Command<CommandSourceStack> levelOp(Operator operator) {
+        return ctx -> {
+            Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
+                    .resolve(ctx.getSource()).getFirst();
+            executeLevels(ctx.getSource().getSender(), player,
+                    (int) DoubleArgumentType.getDouble(ctx, "amount"), operator);
+            return Command.SINGLE_SUCCESS;
+        };
     }
 
     /**
