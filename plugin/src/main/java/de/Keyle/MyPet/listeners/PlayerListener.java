@@ -32,7 +32,6 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.skill.skills.Ride;
-import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
@@ -647,8 +646,7 @@ public class PlayerListener implements Listener {
                 final Pet pet = myPetPlayer.getPet();
                 if (pet.getStatus() == Pet.PetState.Here && MyPetGlobal.Skilltree.Skill.Backpack.DROP_WHEN_OWNER_DIES.get()) {
                     if (pet.getSkills().isActive(BackpackImpl.class)) {
-                        CustomInventory inv = pet.getSkills().get(BackpackImpl.class).getInventory();
-                        inv.dropContentAt(pet.getLocation().get());
+                        pet.getSkills().get(BackpackImpl.class).dropContents(pet.getLocation().get());
                     }
                 }
                 pet.removePet();
