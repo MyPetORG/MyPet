@@ -40,11 +40,8 @@ import de.Keyle.MyPet.api.util.hooks.types.PetModelSourceHook;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.World;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Ageable;
@@ -288,6 +285,9 @@ public final class VanillaMobSpawner {
 
         Mob newMob = null;
         if (snapshot != null) {
+            // Drop MyPet's attribute writes so the released mob deserializes
+            // with its  vanilla attributes
+            snapshot = snapshot.remove("attributes").remove("Attributes");
             try {
                 Mob restored = PetEntitySnapshot.restore(snapshot, world);
                 if (mobClass.isInstance(restored)
@@ -386,25 +386,6 @@ public final class VanillaMobSpawner {
             }
         }
 
-        // Reset every attribute on the mob: drop all modifiers (Life skill
-        // MAX_HEALTH boost, Sprint MOVEMENT_SPEED boost, Damage ATTACK_DAMAGE
-        // boost, etc.) and snap the base value back to the vanilla default.
-        for (Attribute attribute : Registry.ATTRIBUTE) {
-            AttributeInstance inst = newMob.getAttribute(attribute);
-            if (inst == null) continue;
-            for (AttributeModifier mod : inst.getModifiers()) {
-                try {
-                    inst.removeModifier(mod);
-                } catch (Throwable ignored) {
-                }
-            }
-            try {
-                inst.setBaseValue(inst.getDefaultValue());
-            } catch (Throwable ignored) {
-            }
-        }
-        // Clamp current health to the new (vanilla) max in case attribute
-        // reset shrank max-HP below current health.
         newMob.setHealth(Math.min(newMob.getHealth(), newMob.getMaxHealth()));
 
         // Wild defaults for persistence / AI flags. PetEntitySnapshot.restore
