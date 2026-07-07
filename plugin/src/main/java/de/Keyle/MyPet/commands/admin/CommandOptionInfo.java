@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.commands.admin;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.PetType;
@@ -30,6 +31,7 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -39,7 +41,6 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -75,8 +76,8 @@ public class CommandOptionInfo {
      *         (executes) -- show leash item for the given pet type
      * </pre>
      *
-     * <p>The {@code pettype} argument reuses the custom argument type from
-     * {@link CommandOptionCreate#PET_ENTITY_TYPE}.
+     * <p>The {@code pettype} argument accepts any registered {@link PetType} name (vanilla or custom),
+     * resolved via {@link CommandOptionCreate#matchPetType}.
      *
      * @param helpRegistry the help registry to register the command's help entry with
      * @return the built {@link LiteralCommandNode} representing the {@code info} subcommand
@@ -98,11 +99,25 @@ public class CommandOptionInfo {
                             return Command.SINGLE_SUCCESS;
                         }))
                 .then(Commands.literal("leashitem")
-                        .then(Commands.argument("pettype", CommandOptionCreate.PET_ENTITY_TYPE)
+                        .then(Commands.argument("pettype", StringArgumentType.word())
+                                .suggests((ctx, builder) -> {
+                                    String partial = builder.getRemaining().toLowerCase();
+                                    for (PetType pt : PetType.values()) {
+                                        String name = pt.name().toLowerCase();
+                                        if (name.startsWith(partial)) {
+                                            builder.suggest(name);
+                                        }
+                                    }
+                                    return builder.buildFuture();
+                                })
                                 .executes(ctx -> {
-                                    EntityType entityType = ctx.getArgument("pettype", EntityType.class);
-                                    PetType type = PetType.byEntityTypeName(entityType.name());
-                                    executeLeashItem(ctx.getSource().getSender(), type);
+                                    String token = StringArgumentType.getString(ctx, "pettype");
+                                    PetType type = CommandOptionCreate.matchPetType(token);
+                                    if (type != null) {
+                                        executeLeashItem(ctx.getSource().getSender(), type);
+                                    } else {
+                                        ctx.getSource().getSender().sendMessage(Locale.getComponent("Message.Command.PetType.Unknown", ctx.getSource().getSender()));
+                                    }
                                     return Command.SINGLE_SUCCESS;
                                 })))
                 .build();

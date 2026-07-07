@@ -9,17 +9,20 @@ libraries:
 website: https://mypet.plugin.de/
 softdepend:
   - BattleArena
+  - BetterModel
   - Citizens
   - CombatLogX
   - FactionsUUID
   - GriefPrevention
   - Guilds
   - Heroes
+  - ItemsAdder
   - Kingdoms
   - Lands
   - mcMMO
   - MiniaturePets
   - MobArena
+  - ModelEngine
   - Multiverse-Core
   - My_Worlds
   - MythicMobs

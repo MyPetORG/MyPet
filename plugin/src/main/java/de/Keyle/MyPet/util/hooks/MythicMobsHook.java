@@ -32,27 +32,31 @@ import de.Keyle.MyPet.api.util.service.RequiresPlugin;
 import de.Keyle.MyPet.api.util.service.ServiceName;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.hooks.types.MonsterExperienceHook;
+import de.Keyle.MyPet.api.util.hooks.types.PetModelSourceHook;
 import de.Keyle.MyPet.api.util.hooks.types.PlayerVersusEntityHook;
 import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @ServiceName("MythicMobs")
 @RequiresPlugin("MythicMobs")
 @Load(Load.State.Hooks)
-public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, MonsterExperienceHook, Listener {
+public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, MonsterExperienceHook, PetModelSourceHook, Listener {
 
     public static boolean DISABLE_MYTHIC_MOB_LEASHING = true;
     public static Set<String> PREVENT_DAMAGE_TO_FACTIONS = new HashSet<>();
@@ -179,6 +183,40 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
         } catch (Throwable t) {
             MyPetApi.getLogger().warning("MythicMobs damage event handling failed: " + t.getMessage());
         }
+    }
+
+    @Override
+    public Set<String> availableSources() {
+        try { return new HashSet<>(MythicBukkit.inst().getMobManager().getMobNames()); }
+        catch (Throwable t) { return Set.of(); }
+    }
+
+    @Override
+    public Optional<String> sourceIdOf(Entity entity) {
+        try {
+            if (MythicBukkit.inst().getMobManager().isActiveMob(BukkitAdapter.adapt(entity))) {
+                String internal = MythicBukkit.inst().getMobManager()
+                        .getMythicMobInstance(entity).getType().getInternalName();
+                return Optional.of(internal);
+            }
+        } catch (Throwable ignored) {
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Mob> spawnSource(String typeId, Location location) {
+        try {
+            if (MythicBukkit.inst().getMobManager().getMythicMob(typeId).isPresent()) {
+                Entity spawned = MythicBukkit.inst().getAPIHelper().spawnMythicMob(typeId, location);
+                if (spawned instanceof Mob mob) {
+                    return Optional.of(mob);
+                }
+            }
+        } catch (Throwable t) {
+            MyPetApi.getLogger().warning("MythicMobs spawnSource('" + typeId + "') failed: " + t.getMessage());
+        }
+        return Optional.empty();
     }
 
     protected double getEntityAttackModifier(MythicMob mob) {

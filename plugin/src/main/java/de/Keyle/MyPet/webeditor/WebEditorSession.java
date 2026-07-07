@@ -31,9 +31,13 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.security.KeyPair;
 import java.security.PublicKey;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,11 +76,23 @@ public final class WebEditorSession {
     private volatile long lastActivity = System.currentTimeMillis();
     private ScheduledTask inactivityTask;
 
-    public WebEditorSession(Player player, WebEditorKeystore keystore) {
-        this.owner = player.getUniqueId();
+    public WebEditorSession(UUID owner, WebEditorKeystore keystore) {
+        this.owner = owner;
         this.keystore = keystore;
         this.keyPair = SignatureAlgorithm.generateKeyPair();
         this.bytebin = new BytebinClient(MyPetGlobal.WebEditor.BYTEBIN_URL.get());
+    }
+
+    /** Deliver a session message to the owner — the console when console-owned, else the player if online. */
+    private void messageOwner(Component message) {
+        if (WebEditorManager.CONSOLE_OWNER.equals(owner)) {
+            Bukkit.getConsoleSender().sendMessage(message);
+            return;
+        }
+        Player player = Bukkit.getPlayer(owner);
+        if (player != null) {
+            player.sendMessage(message);
+        }
     }
 
     public boolean isClosed() {
@@ -192,6 +208,7 @@ public final class WebEditorSession {
             switch (msg.get("type").getAsString()) {
                 case "ping" -> sendSigned(pong());
                 case "change-request" -> handleChangeRequest(msg);
+                case "model-upload" -> handleModelUpload(msg);
                 case "close" -> shutdown();
                 default -> {
                     // "connected" and unknown types: nothing to do
@@ -213,10 +230,7 @@ public final class WebEditorSession {
             pendingNonce = nonce;
             keystore.beginTrustAttempt(nonce, owner, publicKey);
             sendHelloReply("untrusted");
-            Player player = Bukkit.getPlayer(owner);
-            if (player != null) {
-                player.sendMessage(Component.text("Run /mypet editor trust " + nonce + " to authorize the web editor."));
-            }
+            messageOwner(Component.text("Run /mypet editor trust " + nonce + " to authorize the web editor."));
         }
     }
 
@@ -260,6 +274,84 @@ public final class WebEditorSession {
         });
     }
 
+    /**
+     * Handle a signed {@code model-upload}: write an uploaded {@code .bbmodel} into the
+     * chosen ModelEngine/BetterModel provider folder and reload that provider. Mirrors the
+     * authenticated {@code change-request} flow — the outer frame is already signature-verified.
+     */
+    private void handleModelUpload(JsonObject msg) throws Exception {
+        String provider = msg.get("provider").getAsString();
+        String filename = msg.get("filename").getAsString();
+        String payloadKey = msg.get("key").getAsString();
+        String body = bytebin.get(payloadKey);
+
+        // Same hash commitment as change-request: the signed frame commits to a SHA-256 of the
+        // payload blob; verifying the fetched bytes stops a compromised relay from substituting
+        // model content the trusted browser never authored.
+        String expectedHash = msg.has("hash") ? msg.get("hash").getAsString() : null;
+        if (expectedHash == null || !expectedHash.equals(SignatureAlgorithm.sha256Base64(body))) {
+            MyPetApi.getLogger().warning("WebEditor: dropped model-upload — payload hash mismatch (relay tampering?)");
+            return;
+        }
+
+        // Provider allow-list — only the two supported model plugins. Normalize to the
+        // allow-list's canonical spelling: getPlugin(...) below is case-sensitive, so a
+        // lowercased provider name from the browser must not leak past this check.
+        if ("ModelEngine".equalsIgnoreCase(provider)) {
+            provider = "ModelEngine";
+        } else if ("BetterModel".equalsIgnoreCase(provider)) {
+            provider = "BetterModel";
+        } else {
+            MyPetApi.getLogger().warning("WebEditor: rejected model-upload — unknown provider '" + provider + "'");
+            sendSigned(typed("model-upload-response", "error", null));
+            return;
+        }
+
+        // Cheap extension/shape guard; ConfigApplier.safeChildFile below closes the remaining
+        // path-traversal gap (drive-relative names) once the target directory is known.
+        if (filename.isBlank() || filename.contains("/") || filename.contains("\\")
+                || !filename.toLowerCase(java.util.Locale.ROOT).endsWith(".bbmodel")) {
+            MyPetApi.getLogger().warning("WebEditor: rejected model-upload — invalid filename '" + filename + "'");
+            sendSigned(typed("model-upload-response", "error", null));
+            return;
+        }
+
+        try {
+            JsonObject payload = JsonParser.parseString(body).getAsJsonObject();
+            byte[] bytes = Base64.getDecoder().decode(payload.get("bbmodel").getAsString());
+
+            Plugin providerPlugin = Bukkit.getPluginManager().getPlugin(provider);
+            if (providerPlugin == null) {
+                MyPetApi.getLogger().warning("WebEditor: rejected model-upload — provider plugin '" + provider + "' not installed");
+                sendSigned(typed("model-upload-response", "error", null));
+                return;
+            }
+
+            boolean modelEngine = provider.equalsIgnoreCase("ModelEngine");
+            File dir = new File(providerPlugin.getDataFolder(), modelEngine ? "blueprints" : "models");
+            dir.mkdirs();
+            // Same normalize + parent-equality guard ConfigApplier uses for config writes —
+            // closes the residual gap in the checks above (a Windows drive-relative name like
+            // "C:evil.bbmodel" has no '/' or '\' but would otherwise resolve outside dir).
+            File target = ConfigApplier.safeChildFile(dir, filename);
+            if (target == null) {
+                MyPetApi.getLogger().warning("WebEditor: rejected model-upload — invalid filename '" + filename + "'");
+                sendSigned(typed("model-upload-response", "error", null));
+                return;
+            }
+            Files.write(target.toPath(), bytes); // file I/O — safe off the main thread
+
+            // Reload touches plugin state → global region scheduler (Folia-safe), then reply.
+            Bukkit.getGlobalRegionScheduler().run(MyPetApi.getPlugin(), task -> {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), modelEngine ? "meg reload" : "bettermodel reload");
+                sendSigned(typed("model-upload-response", "applied", null));
+            });
+        } catch (Exception e) {
+            MyPetApi.getLogger().warning("WebEditor: failed to apply model-upload: " + e.getMessage());
+            sendSigned(typed("model-upload-response", "error", null));
+        }
+    }
+
     private void onSocketClosed() {
         // Socket already gone — just clean up (frees the single-session lock); no notice to send.
         shutdown();
@@ -272,11 +364,8 @@ public final class WebEditorSession {
                 return;
             }
             if (System.currentTimeMillis() > expiresAt()) {
-                MyPetApi.getLogger().info("WebEditor: session for " + owner + " timed out after inactivity.");
-                Player player = Bukkit.getPlayer(owner);
-                if (player != null) {
-                    player.sendMessage(Component.text("Your MyPet web editor session expired after 10 minutes of inactivity."));
-                }
+                MyPetApi.getLogger().info("WebEditor: session for " + ownerName() + " timed out after inactivity.");
+                messageOwner(Component.text("Your MyPet web editor session expired after 10 minutes of inactivity."));
                 close();
             }
         }, CHECK_PERIOD_TICKS, CHECK_PERIOD_TICKS);
@@ -288,6 +377,9 @@ public final class WebEditorSession {
 
     /** Best-effort display name for the session owner (for the apply broadcast). */
     private String ownerName() {
+        if (WebEditorManager.CONSOLE_OWNER.equals(owner)) {
+            return "Console";
+        }
         Player online = Bukkit.getPlayer(owner);
         if (online != null) {
             return online.getName();

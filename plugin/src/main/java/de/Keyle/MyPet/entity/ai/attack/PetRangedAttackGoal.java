@@ -25,6 +25,8 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.entity.model.PetModelAnimation;
+import de.Keyle.MyPet.entity.model.PetModelService;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
@@ -240,6 +242,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
     }
 
     private void shootProjectile(LivingEntity target, float damage, Ranged.Projectile projectile) {
+        PetModelService.playAnimation(pet, PetModelAnimation.ATTACK);
         Location petLoc = mob.getLocation();
         Location targetLoc = target.getLocation();
         World world = petLoc.getWorld();

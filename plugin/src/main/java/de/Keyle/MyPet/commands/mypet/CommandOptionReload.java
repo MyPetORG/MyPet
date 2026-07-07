@@ -27,6 +27,9 @@ import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
+import de.Keyle.MyPet.entity.model.BundledModelInstaller;
+import de.Keyle.MyPet.entity.model.CustomPetLoader;
+import de.Keyle.MyPet.entity.model.PetModelService;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.service.RequiresPlugin;
@@ -34,6 +37,7 @@ import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.MessageUtil;
+import de.Keyle.MyPet.util.PetPermissions;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -136,8 +140,15 @@ public class CommandOptionReload {
      */
     protected void reloadConfig(CommandSender sender) {
         int oldMaxPetCount = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get();
+        // Register any custom creatures added to pet-config.yml since boot BEFORE the per-type
+        // loops run, so the new types get their defaults, PetInfo, and model mapping loaded below.
+        // (Idempotent — existing types are skipped. Changing an existing type's Host still needs a
+        // restart, since its host class is bound at registration.)
+        CustomPetLoader.registerCustomTypes();
         ConfigurationLoader.loadConfiguration();
         ConfigurationLoader.loadCompatConfiguration();
+        // Wire permission nodes for any newly-registered custom types (no-op for existing ones).
+        PetPermissions.registerAll();
 
         Locale.init();
 
@@ -170,6 +181,11 @@ public class CommandOptionReload {
                 hook.loadConfig(pluginSection);
             }
         }
+        // The pet-config Model blocks were just re-loaded above (loadCompatConfiguration repopulates
+        // the model registry); re-apply them to already-spawned pets so removed/changed models take
+        // effect live.
+        BundledModelInstaller.installReferencedDefaults();
+        PetModelService.reapplyAll();
         if (!(sender instanceof ConsoleCommandSender)) {
             sender.sendMessage(MessageUtil.prefixed(Component.text("config reloaded!")));
         }

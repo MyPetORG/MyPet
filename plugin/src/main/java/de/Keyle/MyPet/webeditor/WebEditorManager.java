@@ -23,7 +23,6 @@ package de.Keyle.MyPet.webeditor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import de.Keyle.MyPet.MyPetApi;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Owns the single active {@link WebEditorSession} (one editor session per server,
@@ -46,6 +46,10 @@ import java.util.Map;
 public final class WebEditorManager {
 
     private static final WebEditorManager INSTANCE = new WebEditorManager();
+
+    /** Sentinel owner id for sessions opened from the server console (which has no player UUID). */
+    public static final UUID CONSOLE_OWNER = new UUID(0L, 0L);
+
     private static final Gson GSON = new Gson();
     private static final Type STATE_TYPE = new TypeToken<Map<String, List<String>>>() {
     }.getType();
@@ -62,22 +66,22 @@ public final class WebEditorManager {
     private WebEditorManager() {
     }
 
-    /** Open a new session for the player, enforcing one active session at a time. */
-    public synchronized String open(Player player) throws Exception {
+    /** Open a new session for the owner (a player UUID, or {@link #CONSOLE_OWNER}), one at a time. */
+    public synchronized String open(UUID owner) throws Exception {
         loadKeystoreIfNeeded();
         if (active != null && !active.isClosed()) {
             throw new IllegalStateException("A web editor session is already active. Use /mypet editor close first.");
         }
-        active = new WebEditorSession(player, keystore);
+        active = new WebEditorSession(owner, keystore);
         return active.start();
     }
 
     /** Confirm a pending trust attempt; persists the keystore when a new browser is trusted. */
-    public synchronized boolean trust(Player player, String code) throws Exception {
+    public synchronized boolean trust(UUID owner, String code) throws Exception {
         if (active == null || active.isClosed()) {
             return false;
         }
-        boolean confirmed = active.confirmTrust(player.getUniqueId(), code);
+        boolean confirmed = active.confirmTrust(owner, code);
         if (confirmed) {
             persistKeystore();
         }
@@ -85,7 +89,7 @@ public final class WebEditorManager {
     }
 
     /** Close the active session, if any. */
-    public synchronized boolean close(Player player) {
+    public synchronized boolean close() {
         if (active == null || active.isClosed()) {
             return false;
         }

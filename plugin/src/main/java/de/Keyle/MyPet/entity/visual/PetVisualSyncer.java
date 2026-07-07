@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.visual;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetZombifiable;
+import de.Keyle.MyPet.entity.model.PetModelService;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Hoglin;
 import org.bukkit.entity.Mob;
@@ -69,6 +70,13 @@ public final class PetVisualSyncer {
      */
     public static void sync(Pet pet, Mob mob, boolean applyTameable) {
         if (pet == null || mob == null) return;
+
+        // A custom model is rendered on top of this host; skip vanilla visual
+        // syncing (baby/sit/tameable/etc.) so it doesn't fight the model. The
+        // host itself is hidden by the renderer hook's attach().
+        if (PetModelService.hasModel(pet)) {
+            return;
+        }
 
         if (pet instanceof PetBaby baby && mob instanceof Ageable ageable) {
             if (baby.isBaby()) {

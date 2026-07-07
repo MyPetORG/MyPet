@@ -38,7 +38,6 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.api.event.PetCreateEvent;
-import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
@@ -46,17 +45,15 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.Keyle.MyPet.util.MessageUtil;
-import de.Keyle.MyPet.commands.arguments.RegistryArgumentType;
+import de.Keyle.MyPet.commands.arguments.PetTypeArgument;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
-import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -89,21 +86,6 @@ import java.util.Set;
 public class CommandOptionCreate {
 
     /**
-     * Custom {@link RegistryArgumentType} that filters the Paper entity-type registry to only include
-     * entity types that have a corresponding {@link PetType} entry. This ensures tab-completion
-     * only suggests valid pet types.
-     */
-    static final RegistryArgumentType<EntityType> PET_ENTITY_TYPE =
-            RegistryArgumentType.of(RegistryKey.ENTITY_TYPE, entityType -> {
-                try {
-                    PetType.byEntityTypeName(entityType.name());
-                    return true;
-                } catch (PetTypeNotFoundException e) {
-                    return false;
-                }
-            });
-
-    /**
      * Options common to all pet types, appended to every suggestion list.
      */
     private static final List<String> COMMON_OPTIONS = List.of("skilltree:", "name:");
@@ -113,10 +95,13 @@ public class CommandOptionCreate {
      * {@code "snow_golem"}, {@code "SnowGolem"}) to a registered {@link PetType},
      * or {@code null} if no match.
      */
-    private static PetType matchPetType(String token) {
-        String stripped = token.startsWith("minecraft:")
-                ? token.substring("minecraft:".length())
-                : token;
+    static PetType matchPetType(String token) {
+        String stripped = token;
+        if (stripped.startsWith("minecraft:")) {
+            stripped = stripped.substring("minecraft:".length());
+        } else if (stripped.startsWith("mypet:")) {
+            stripped = stripped.substring("mypet:".length());
+        }
         String key = stripped.toLowerCase().replace("_", "");
         for (PetType type : PetType.values()) {
             if (type.name().toLowerCase().equals(key)) {
@@ -158,13 +143,13 @@ public class CommandOptionCreate {
                 // /petadmin create -f <player> <type> [options...]
                 .then(Commands.literal("-f")
                         .then(Commands.argument("player", ArgumentTypes.player())
-                                .then(Commands.argument("type", PET_ENTITY_TYPE)
+                                .then(Commands.argument("type", new PetTypeArgument())
                                         .executes(ctx -> {
                                             Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
                                                     .resolve(ctx.getSource()).getFirst();
                                             executeCreate(ctx.getSource().getSender(),
                                                     true, player,
-                                                    ctx.getArgument("type", EntityType.class),
+                                                    ctx.getArgument("type", PetType.class),
                                                     new String[0]);
                                             return Command.SINGLE_SUCCESS;
                                         })
@@ -178,19 +163,19 @@ public class CommandOptionCreate {
                                                             .resolve(ctx.getSource()).getFirst();
                                                     executeCreate(ctx.getSource().getSender(),
                                                             true, player,
-                                                            ctx.getArgument("type", EntityType.class),
+                                                            ctx.getArgument("type", PetType.class),
                                                             StringArgumentType.getString(ctx, "options").split(" "));
                                                     return Command.SINGLE_SUCCESS;
                                                 })))))
                 // /petadmin create <player> <type> [options...]
                 .then(Commands.argument("player", ArgumentTypes.player())
-                        .then(Commands.argument("type", PET_ENTITY_TYPE)
+                        .then(Commands.argument("type", new PetTypeArgument())
                                 .executes(ctx -> {
                                     Player player = ctx.getArgument("player", PlayerSelectorArgumentResolver.class)
                                             .resolve(ctx.getSource()).getFirst();
                                     executeCreate(ctx.getSource().getSender(),
                                             false, player,
-                                            ctx.getArgument("type", EntityType.class),
+                                            ctx.getArgument("type", PetType.class),
                                             new String[0]);
                                     return Command.SINGLE_SUCCESS;
                                 })
@@ -204,7 +189,7 @@ public class CommandOptionCreate {
                                                     .resolve(ctx.getSource()).getFirst();
                                             executeCreate(ctx.getSource().getSender(),
                                                     false, player,
-                                                    ctx.getArgument("type", EntityType.class),
+                                                    ctx.getArgument("type", PetType.class),
                                                     StringArgumentType.getString(ctx, "options").split(" "));
                                             return Command.SINGLE_SUCCESS;
                                         }))))
@@ -322,15 +307,13 @@ public class CommandOptionCreate {
      * @param sender     the command sender (for feedback messages)
      * @param force      if {@code true}, deactivates the player's current pet before creation
      * @param owner      the target player who will own the new pet
-     * @param entityType the Bukkit entity type to create as a pet
+     * @param petType    the pet type to create (vanilla or custom ModelPet)
      * @param options    additional creation options (e.g. {@code "baby"}, {@code "variant:lucy"}, {@code "skilltree:Combat"})
      */
-    private void executeCreate(CommandSender sender, boolean force, Player owner, EntityType entityType, String[] options) {
-        String lang = Locale.getCommandSenderLanguage(sender);
-
-        try {
-            PetType petType = PetType.byEntityTypeName(entityType.name());
-            if (petType.checkMinecraftVersion() && MyPetApi.getPetInfo().isLeashableEntityType(entityType)) {
+    private void executeCreate(CommandSender sender, boolean force, Player owner, PetType petType, String[] options) {
+        // petType is resolved and validated by PetTypeArgument (vanilla via minecraft:, custom
+        // ModelPet via mypet:), so no entity-type lookup or leashable check is needed here.
+        if (petType.checkMinecraftVersion()) {
                 if (WorldGroup.getGroupByWorld(owner.getWorld()).isDisabled()) {
                     sender.sendMessage(MessageUtil.prefixed(Component.text("Pets are not allowed in ").append(Component.text(owner.getWorld().getName()).color(NamedTextColor.GOLD))));
                     return;
@@ -399,9 +382,6 @@ public class CommandOptionCreate {
                         }
                 }, null));
             }
-        } catch (PetTypeNotFoundException e) {
-            sender.sendMessage(Locale.getComponent("Message.Command.PetType.Unknown", lang));
-        }
     }
 
     /**

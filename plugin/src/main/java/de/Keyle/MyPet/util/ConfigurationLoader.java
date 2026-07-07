@@ -28,6 +28,8 @@ import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
+import de.Keyle.MyPet.entity.model.PetModelAnimation;
+import de.Keyle.MyPet.entity.model.PetModelService;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.ErrorUtil;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
@@ -133,15 +135,17 @@ public class ConfigurationLoader {
             if (!petType.checkMinecraftVersion()) {
                 continue;
             }
+            // Custom (third-party) pet types have no @DefaultInfo annotation
+            // (pi == null). They still need HP/Speed/Food/Leash/respawn rows
+            // written, so fall back to hardcoded sensible defaults instead of
+            // skipping the type. Vanilla types (pi != null) keep their exact
+            // annotation-derived defaults.
             DefaultInfo pi = petType.getPetClass().getAnnotation(DefaultInfo.class);
-            if (pi == null) {
-                continue;
-            }
 
-            config.addDefault("MyPet.Pets." + petType.name() + ".HP", pi.hp());
-            config.addDefault("MyPet.Pets." + petType.name() + ".Speed", pi.walkSpeed());
-            config.addDefault("MyPet.Pets." + petType.name() + ".Food", linkFood(pi.food()));
-            config.addDefault("MyPet.Pets." + petType.name() + ".LeashRequirements", pi.leashFlags());
+            config.addDefault("MyPet.Pets." + petType.name() + ".HP", pi != null ? pi.hp() : 20.0);
+            config.addDefault("MyPet.Pets." + petType.name() + ".Speed", pi != null ? pi.walkSpeed() : 0.3);
+            config.addDefault("MyPet.Pets." + petType.name() + ".Food", pi != null ? linkFood(pi.food()) : new ArrayList<String>());
+            config.addDefault("MyPet.Pets." + petType.name() + ".LeashRequirements", pi != null ? pi.leashFlags() : new String[0]);
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0);
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0);
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashItem", "lead");
@@ -283,6 +287,11 @@ public class ConfigurationLoader {
     public static void loadCompatConfiguration() {
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
+        // Drop all prior model mappings so a (re)load picks up edits and
+        // removals; the loop below repopulates from each type's Model block.
+        PetModelService.clearModels();
+        PetModelService.clearAnimationOverrides();
+
         // CONTROL_ITEM / RIDE_ITEM are now MyPetGlobal ConfigKeys loaded by
         // ConfigKeyRegistry.loadGlobalsFromYaml in loadConfiguration().
 
@@ -301,15 +310,15 @@ public class ConfigurationLoader {
             if (!petType.checkMinecraftVersion()) {
                 continue;
             }
+            // Custom (third-party) pet types have no @DefaultInfo annotation
+            // (pi == null); load their values with hardcoded fallbacks instead
+            // of skipping. Vanilla types (pi != null) read exactly as before.
             DefaultInfo pi = petType.getPetClass().getAnnotation(DefaultInfo.class);
-            if (pi == null) {
-                continue;
-            }
 
-            MyPetApi.getPetInfo().setStartHP(petType, config.getDouble("MyPet.Pets." + petType.name() + ".HP", pi.hp()));
-            MyPetApi.getPetInfo().setSpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".Speed", pi.walkSpeed()));
-            MyPetApi.getPetInfo().setOverrideFlySpeed(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".OverrideFlySpeed", pi.overrideFlySpeed()));
-            MyPetApi.getPetInfo().setFlySpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".FlySpeed", pi.flySpeed()));
+            MyPetApi.getPetInfo().setStartHP(petType, config.getDouble("MyPet.Pets." + petType.name() + ".HP", pi != null ? pi.hp() : 20.0));
+            MyPetApi.getPetInfo().setSpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".Speed", pi != null ? pi.walkSpeed() : 0.3));
+            MyPetApi.getPetInfo().setOverrideFlySpeed(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".OverrideFlySpeed", pi != null ? pi.overrideFlySpeed() : false));
+            MyPetApi.getPetInfo().setFlySpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".FlySpeed", pi != null ? pi.flySpeed() : 0.4));
             MyPetApi.getPetInfo().clearFood(petType);
             if (config.get("MyPet.Pets." + petType.name() + ".Food") instanceof ArrayList) {
                 List<String> foodList = config.getStringList("MyPet.Pets." + petType.name() + ".Food");
@@ -326,6 +335,35 @@ public class ConfigurationLoader {
             MyPetApi.getPetInfo().setReleaseOnDeath(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".ReleaseOnDeath", false));
             MyPetApi.getPetInfo().setRemoveAfterRelease(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".RemoveAfterRelease", false));
             MyPetApi.getPetInfo().setLeashItem(petType, ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.name() + ".LeashItem", "lead")));
+
+            // Record this type's Model sub-block (re-skins for vanilla types and
+            // the renderer mapping for custom types). PascalCase keys per the
+            // pet-config custom-pet key invariant. nameHeight is optional.
+            String base = "MyPet.Pets." + petType.name();
+            if (config.isConfigurationSection(base + ".Model")) {
+                // Uniform shape for every custom creature: Provider + Id. Whether MyPet renders the
+                // model (ModelEngine/BetterModel/ItemsAdder) or the model rides in from an adopted
+                // source creature (MythicMobs) is decided at spawn time from the provider's hook
+                // type — not here. See PetModelService.isSourceDriven / resolve.
+                String provider = config.getString(base + ".Model.Provider");
+                String id = config.getString(base + ".Model.Id");
+                Double nameHeight = config.contains(base + ".Model.NameHeight")
+                        ? config.getDouble(base + ".Model.NameHeight") : null;
+                PetModelService.registerModel(petType.name(),
+                        new PetModelService.ModelConfig(provider, id, nameHeight));
+                // Optional per-event animation-name overrides (rendered and source alike).
+                ConfigurationSection anims = config.getConfigurationSection(base + ".Model.Animations");
+                if (anims != null) {
+                    Map<PetModelAnimation, String> overrides = new EnumMap<>(PetModelAnimation.class);
+                    for (PetModelAnimation a : PetModelAnimation.values()) {
+                        String name = anims.getString(a.defaultName());
+                        if (name != null && !name.isBlank()) {
+                            overrides.put(a, name);
+                        }
+                    }
+                    PetModelService.registerAnimationOverrides(petType.name(), overrides);
+                }
+            }
         }
         // GrowUpItem is now loaded by ConfigKeyRegistry.loadFromYaml in loadConfiguration().
     }

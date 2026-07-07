@@ -49,6 +49,7 @@ import org.bukkit.entity.Mob;
 import org.bukkit.event.Event;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -277,10 +278,9 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
     }
 
     private static Pet createMyPetInstance(PetType type, MyPetPlayer owner) {
-        String className = "de.Keyle.MyPet.entity.types.Pet" + type.name();
         try {
-            Class<?> clazz = Class.forName(className);
-            return (Pet) clazz.getConstructor(MyPetPlayer.class).newInstance(owner);
+            Constructor<? extends Pet> ctor = type.getPetClass().getConstructor(MyPetPlayer.class);
+            return ctor.newInstance(owner);
         } catch (Exception e) {
             ErrorUtil.reportError("Failed to create PetImpl instance for " + type.name(), e);
             return null;

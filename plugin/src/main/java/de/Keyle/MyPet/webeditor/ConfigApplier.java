@@ -94,17 +94,29 @@ public final class ConfigApplier {
      * logging) for an unsafe name.
      */
     private File safeChildFile(File dir, String name, String requiredSuffix) {
-        boolean validName = name != null && !name.isBlank()
-                && name.indexOf('/') < 0 && name.indexOf('\\') < 0
-                && name.endsWith(requiredSuffix);
-        if (validName) {
-            Path base = dir.toPath().toAbsolutePath().normalize();
-            Path target = base.resolve(name).normalize();
-            if (target.startsWith(base) && base.equals(target.getParent())) {
-                return target.toFile();
-            }
+        File target = (name != null && name.endsWith(requiredSuffix)) ? safeChildFile(dir, name) : null;
+        if (target == null) {
+            MyPetApi.getLogger().warning("WebEditor: rejected unsafe file name in change payload: " + name);
         }
-        MyPetApi.getLogger().warning("WebEditor: rejected unsafe file name in change payload: " + name);
+        return target;
+    }
+
+    /**
+     * Resolve {@code name} as a direct child of {@code dir} after normalization,
+     * rejecting anything that would escape {@code dir} (`..`, separators, absolute
+     * or drive-relative paths). Shared with other untrusted-filename call sites
+     * (e.g. the web editor's model upload); callers log their own context-specific
+     * warning. Returns {@code null} for an unsafe name.
+     */
+    static File safeChildFile(File dir, String name) {
+        if (name == null || name.isBlank()) {
+            return null;
+        }
+        Path base = dir.toPath().toAbsolutePath().normalize();
+        Path target = base.resolve(name).normalize();
+        if (target.startsWith(base) && base.equals(target.getParent())) {
+            return target.toFile();
+        }
         return null;
     }
 

@@ -38,7 +38,8 @@ import java.util.logging.Level;
 
 /**
  * Process-wide registry of registered menus and their resolved {@link MenuDefinition}s.
- * Populated at {@code MyPetPlugin.onEnable} and on {@code /mypet reload}.
+ * Populated at {@code MyPetPlugin.onEnable} and on {@code /mypet reload}; menus registered later
+ * (third-party plugins) resolve immediately.
  */
 public final class MenuRegistry {
 
@@ -53,6 +54,7 @@ public final class MenuRegistry {
     private int loaded = 0;
     private int overridesApplied = 0;
     private int overridesRejected = 0;
+    private boolean loadedOnce = false;
 
     public MenuRegistry(Plugin plugin) {
         this.plugin = plugin;
@@ -63,6 +65,14 @@ public final class MenuRegistry {
             throw new IllegalStateException("Menu id '" + id.id() + "' already registered");
         }
         registrations.put(id.id(), new Registration<>(id, handler, bundledJson));
+
+        if (loadedOnce) {
+            MenuDefinition def = loadOne(id.id(), registrations.get(id.id()), menusDir());
+            if (def != null) {
+                resolved.put(id.id(), def);
+                loaded++;
+            }
+        }
     }
 
     /** Resolve every registered menu. Idempotent. Returns false if any override was rejected. */
@@ -72,11 +82,7 @@ public final class MenuRegistry {
         overridesApplied = 0;
         overridesRejected = 0;
 
-        File menusDir = new File(plugin.getDataFolder(), "gui/menus");
-        if (!menusDir.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            menusDir.mkdirs();
-        }
+        File menusDir = menusDir();
 
         for (var entry : registrations.entrySet()) {
             String menuId = entry.getKey();
@@ -87,6 +93,7 @@ public final class MenuRegistry {
                 loaded++;
             }
         }
+        loadedOnce = true;
         return overridesRejected == 0;
     }
 
@@ -105,6 +112,15 @@ public final class MenuRegistry {
     public int overridesRejected() { return overridesRejected; }
 
     // --- private --------------------------------------------------------------
+
+    private File menusDir() {
+        File menusDir = new File(plugin.getDataFolder(), "gui/menus");
+        if (!menusDir.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            menusDir.mkdirs();
+        }
+        return menusDir;
+    }
 
     private MenuDefinition loadOne(String menuId, Registration<?> reg, File menusDir) {
         JsonObject bundled;

@@ -27,6 +27,8 @@ import de.Keyle.MyPet.api.util.service.ServiceName;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Central registry for {@link LeashFlag} implementations. Each flag is
@@ -62,6 +64,21 @@ public class LeashFlagManager implements ServiceContainer {
                     leashFlag.getClass().getName() + " is not annotated with @LeashFlagName");
         }
         leashFlags.put(flagName.toLowerCase(), leashFlag);
+    }
+
+    /**
+     * Returns the canonical config names of all registered flags (the original
+     * {@link LeashFlagName} casing, not the lower-cased map keys), sorted alphabetically.
+     */
+    public Set<String> flagNames() {
+        Set<String> names = new TreeSet<>();
+        for (LeashFlag flag : leashFlags.values()) {
+            String name = getLeashFlagName(flag.getClass());
+            if (name != null) {
+                names.add(name);
+            }
+        }
+        return names;
     }
 
     /**

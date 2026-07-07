@@ -63,6 +63,9 @@ import de.Keyle.MyPet.skill.skilltree.requirements.BuiltInRequirements;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import de.Keyle.MyPet.util.shop.ShopConfigGenerator;
 import de.Keyle.MyPet.util.shop.ShopManager;
+import de.Keyle.MyPet.entity.model.BundledModelInstaller;
+import de.Keyle.MyPet.entity.model.CustomPetLoader;
+import de.Keyle.MyPet.entity.model.PetModelService;
 import de.Keyle.MyPet.util.sound.PetSoundService;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -243,6 +246,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
     public void onLoad() {
         MyPetApi.setPlugin(this);
         BuiltInPetTypes.register();
+        CustomPetLoader.registerCustomTypes();
         PetPermissions.registerAll();
         getDataFolder().mkdirs();
 
@@ -454,6 +458,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         updater.waitForDownload();
 
         serviceManager.activate(Load.State.Hooks);
+        PetModelService.init();
+        BundledModelInstaller.installReferencedDefaults();
 
         MyPetMetrics.register(this, petManager, errorReporter);
 

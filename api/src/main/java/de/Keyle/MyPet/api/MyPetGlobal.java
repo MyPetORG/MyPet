@@ -182,6 +182,7 @@ public final class MyPetGlobal {
         public static final ConfigKey<Boolean> AUTOMATIC_SKILLTREE_ASSIGNMENT = ConfigKey.globalBool("MyPet.Skilltree.AutomaticAssignment", false);
         public static final ConfigKey<Boolean> RANDOM_SKILLTREE_ASSIGNMENT = ConfigKey.globalBool("MyPet.Skilltree.RandomAssignment", false);
         public static final ConfigKey<Boolean> CHOOSE_SKILLTREE_ONLY_ONCE = ConfigKey.globalBool("MyPet.Skilltree.ChooseOnce", false);
+        public static final ConfigKey<Boolean> FREE_ASCENSION = ConfigKey.globalBool("MyPet.Skilltree.FreeAscension", true);
         public static final ConfigKey<Boolean> PREVENT_LEVELLING_WITHOUT_SKILLTREE = ConfigKey.globalBool("MyPet.Skilltree.PreventLevellingWithout", true);
 
         public static final class Skill {

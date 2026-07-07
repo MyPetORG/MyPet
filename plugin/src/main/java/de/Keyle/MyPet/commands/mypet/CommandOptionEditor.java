@@ -38,6 +38,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 /**
  * Provides the {@code /mypet editor} subcommands, mounted under {@code /mypet}:
  * <pre>
@@ -74,57 +76,51 @@ public class CommandOptionEditor {
     }
 
     private void open(CommandSender sender) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(Component.text("Only players can open the web editor.", NamedTextColor.RED));
-            return;
-        }
         if (!MyPetGlobal.WebEditor.ENABLED.get()) {
-            player.sendMessage(Component.text("The MyPet web editor is disabled in the server config.", NamedTextColor.RED));
+            sender.sendMessage(Component.text("The MyPet web editor is disabled in the server config.", NamedTextColor.RED));
             return;
         }
-        player.sendMessage(Component.text("Connecting you to an editor session…", NamedTextColor.GRAY));
+        UUID owner = ownerOf(sender);
+        sender.sendMessage(Component.text("Connecting you to an editor session…", NamedTextColor.GRAY));
         // Opening serializes configs + makes HTTP calls to the relay — keep it off the main thread.
         Bukkit.getAsyncScheduler().runNow(MyPetApi.getPlugin(), task -> {
             try {
-                String url = WebEditorManager.getInstance().open(player);
-                player.sendMessage(Component.text("Open the MyPet web editor: ", NamedTextColor.GREEN)
+                String url = WebEditorManager.getInstance().open(owner);
+                sender.sendMessage(Component.text("Open the MyPet web editor: ", NamedTextColor.GREEN)
                         .append(Component.text(url, NamedTextColor.AQUA)
                                 .decorate(TextDecoration.UNDERLINED)
                                 .clickEvent(ClickEvent.openUrl(url))
                                 .hoverEvent(HoverEvent.showText(Component.text("Click to open in your browser")))));
             } catch (IllegalStateException e) {
-                player.sendMessage(Component.text(e.getMessage(), NamedTextColor.RED));
+                sender.sendMessage(Component.text(e.getMessage(), NamedTextColor.RED));
             } catch (Exception e) {
-                player.sendMessage(Component.text("Failed to open the web editor: " + e.getMessage(), NamedTextColor.RED));
+                sender.sendMessage(Component.text("Failed to open the web editor: " + e.getMessage(), NamedTextColor.RED));
                 MyPetApi.getLogger().warning("WebEditor: open failed: " + e.getMessage());
             }
         });
     }
 
     private void trust(CommandSender sender, String code) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(Component.text("Only players can authorize the web editor.", NamedTextColor.RED));
-            return;
-        }
         try {
-            boolean ok = WebEditorManager.getInstance().trust(player, code);
-            player.sendMessage(ok
+            boolean ok = WebEditorManager.getInstance().trust(ownerOf(sender), code);
+            sender.sendMessage(ok
                     ? Component.text("Browser authorized — the editor is now live.", NamedTextColor.GREEN)
                     : Component.text("No matching pending authorization. Run /mypet editor first.", NamedTextColor.RED));
         } catch (Exception e) {
-            player.sendMessage(Component.text("Trust failed: " + e.getMessage(), NamedTextColor.RED));
+            sender.sendMessage(Component.text("Trust failed: " + e.getMessage(), NamedTextColor.RED));
             MyPetApi.getLogger().warning("WebEditor: trust failed: " + e.getMessage());
         }
     }
 
     private void close(CommandSender sender) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(Component.text("Only players can close the web editor.", NamedTextColor.RED));
-            return;
-        }
-        boolean closed = WebEditorManager.getInstance().close(player);
-        player.sendMessage(closed
+        boolean closed = WebEditorManager.getInstance().close();
+        sender.sendMessage(closed
                 ? Component.text("Web editor session closed.", NamedTextColor.GREEN)
                 : Component.text("No active web editor session.", NamedTextColor.YELLOW));
+    }
+
+    /** Owner id for a session: the player's UUID, or the console sentinel for the server console. */
+    private static UUID ownerOf(CommandSender sender) {
+        return sender instanceof Player player ? player.getUniqueId() : WebEditorManager.CONSOLE_OWNER;
     }
 }

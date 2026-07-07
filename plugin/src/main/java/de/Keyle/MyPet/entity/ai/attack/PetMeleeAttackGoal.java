@@ -24,6 +24,8 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.entity.model.PetModelAnimation;
+import de.Keyle.MyPet.entity.model.PetModelService;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
@@ -284,6 +286,8 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
         if (pet == null || target == null || target.isDead()) return;
         Mob mob = pet.getBukkitEntity();
         if (mob == null) return;
+
+        PetModelService.playAnimation(pet, PetModelAnimation.ATTACK);
 
         Player owner = pet.getOwner() != null ? pet.getOwner().getPlayer() : null;
 

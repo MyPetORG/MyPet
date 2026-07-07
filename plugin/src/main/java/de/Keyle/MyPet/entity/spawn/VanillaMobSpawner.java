@@ -29,11 +29,14 @@ import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.BrainAccess;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHookRegistry;
+import de.Keyle.MyPet.entity.model.PetModelService;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
+import de.Keyle.MyPet.entity.types.ModelPet;
 import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
+import de.Keyle.MyPet.api.util.hooks.types.PetModelSourceHook;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -57,6 +60,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -120,6 +124,30 @@ public final class VanillaMobSpawner {
             }
         }
 
+        // Fresh spawn (no snapshot). A source-driven type has no renderable Model block — its model
+        // rides in from the real creature — so spawn that creature via its source plugin and adopt it
+        // in place. After this first materialization the model rides in the pet's snapshot PDC, so
+        // later respawns take the ordinary snapshot path above.
+        if (PetModelService.isSourceDriven(pet)) {
+            String sourceId = PetModelService.modelIdOf(pet);
+            if (sourceId != null && !sourceId.isBlank()) {
+                for (PetModelSourceHook src : MyPetApi.getServiceManager().getServices(PetModelSourceHook.class)) {
+                    Optional<Mob> spawned = src.spawnSource(sourceId, target);
+                    if (spawned.isPresent()) {
+                        // Mark BEFORE convertInPlace so the one-shot spawn animation plays on a
+                        // genuine create. convertInPlace routes to configureMob(..., true), which
+                        // skips markFreshSpawn — that keeps the tame path (leashing a wild source
+                        // creature via convertInPlace) silent; only create marks it here.
+                        PetModelService.markFreshSpawn(pet);
+                        convertInPlace(pet, spawned.get());
+                        return true;
+                    }
+                }
+                MyPetApi.getLogger().warning("Source-driven pet " + pet.getPetType().name()
+                        + " could not spawn source '" + sourceId + "'; falling back to host mob.");
+            }
+        }
+
         target.getWorld().spawn(target, mobClass, CreatureSpawnEvent.SpawnReason.CUSTOM, mob -> {
             configureMob(pet, mob, false);
         });
@@ -128,8 +156,9 @@ public final class VanillaMobSpawner {
 
     /**
      * Converts an existing vanilla mob in-place into a Pet. Used during the
-     * leash/tame flow — the mob already exists in the world, so no
-     * {@code world.spawn()} call is needed. The mob's existing visual state
+     * leash/tame flow and by the source-driven create path (adopting a creature
+     * just spawned by its source plugin) — the mob already exists in the world,
+     * so no {@code world.spawn()} call is needed. The mob's existing visual state
      * (colour, variant, etc.) is preserved because the entity is the same.
      *
      * <p>Responsibilities: strip vanilla AI, install Pet goals, configure
@@ -199,6 +228,12 @@ public final class VanillaMobSpawner {
 
         Location loc = oldMob.getLocation();
         UUID oldUuid = oldMob.getUniqueId();
+
+        if (pet.getPetType().getPetClass() == ModelPet.class) {
+            releaseModelPet(pet, oldMob, loc, oldUuid);
+            return;
+        }
+
         Class<? extends Mob> mobClass = pet.getPetType().getBukkitEntityClass();
         if (mobClass == null) {
             MyPetApi.getLogger().warning("releaseToWild: no Bukkit entity class for pet type "
@@ -216,6 +251,13 @@ public final class VanillaMobSpawner {
             pet.setBukkitEntity(null);
             return;
         }
+
+        // A released pet leaves MyPet's control and becomes a wild mob, so there is no
+        // later spawn-time cleanup. Detach any Path-A re-skin model BEFORE capturing the
+        // snapshot so the released mob is bare (the model is not serialized into its PDC
+        // and cannot revive on the wild mob). A brief flash here is acceptable — release
+        // is a deliberate transform.
+        PetModelService.detachAll(pet);
 
         // Capture the old mob's full vanilla NBT BEFORE removing it. The
         // snapshot carries every per-type field Mojang has ever defined for
@@ -268,6 +310,39 @@ public final class VanillaMobSpawner {
         }
 
         stripPetCustomizations(newMob);
+    }
+
+    private void releaseModelPet(Pet pet, Mob oldMob, Location loc, UUID oldUuid) {
+        // Detach Pet state (mirror the vanilla release path).
+        PetDamageTracker.cleanup(oldUuid);
+        Timer.stopPetTicking(pet);
+        PetSitParticleController.stopForPet(pet);
+        PetPotionParticleController.stopForPet(pet);
+        RideSkillFlightController.stopForPet(pet);
+        PetLifecycleHookRegistry.forPet(pet).forEach(hook -> hook.onDespawn(pet));
+        pet.setBukkitEntity(null);
+        oldMob.remove(); // despawn MyPet's host
+
+        if (loc.getWorld() != null) {
+            // Source-driven type: respawn the genuine creature (e.g. the real MythicMob) via its
+            // provider, keyed on the configured Model.Id — NOT the pet-type name.
+            if (PetModelService.isSourceDriven(pet)) {
+                String sourceId = PetModelService.modelIdOf(pet);
+                if (sourceId != null && !sourceId.isBlank()) {
+                    for (PetModelSourceHook src : MyPetApi.getServiceManager().getServices(PetModelSourceHook.class)) {
+                        if (src.spawnSource(sourceId, loc).isPresent()) {
+                            return;
+                        }
+                    }
+                }
+            }
+            // Rendered custom creature: leave a wild modeled mob (host + configured model),
+            // re-leashable back into the pet.
+            if (PetModelService.releaseAsModeledWild(pet, loc)) {
+                return;
+            }
+        }
+        // Nothing claimed it (no model, or provider absent) → already despawned above.
     }
 
     /**
@@ -447,6 +522,11 @@ public final class VanillaMobSpawner {
         PetSitParticleController.startForPet(pet);
         PetPotionParticleController.startForPet(pet);
         RideSkillFlightController.startForPet(pet);
+        // A genuine fresh summon (not a snapshot-restore / tame in-place) gets a one-shot
+        // spawn animation, played by PetModelService once the model is confirmed present.
+        if (!mobHasPersistentState) {
+            PetModelService.markFreshSpawn(pet);
+        }
         PetLifecycleHookRegistry.forPet(pet).forEach(hook -> hook.onSpawn(pet));
         PetNoPushSuppressor.startForPet(pet);
     }

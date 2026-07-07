@@ -46,14 +46,18 @@ public final class PetType {
     @Getter
     private final String bukkitName;
     private final Class<? extends Pet> petClass;
-    @Getter
-    private final Class<? extends Mob> bukkitEntityClass;
+    private final Class<? extends Mob> hostOverride;
 
-    private PetType(String name, String bukkitName, Class<? extends Pet> petClass) {
+    private PetType(String name, String bukkitName, Class<? extends Pet> petClass, Class<? extends Mob> hostOverride) {
         this.name = name;
         this.bukkitName = bukkitName;
         this.petClass = petClass;
-        this.bukkitEntityClass = resolveBukkitEntityClass(bukkitName);
+        this.hostOverride = hostOverride;
+    }
+
+    /** Returns the Bukkit entity class used to spawn this pet's host mob. */
+    public Class<? extends Mob> getBukkitEntityClass() {
+        return hostOverride != null ? hostOverride : resolveBukkitEntityClass(bukkitName);
     }
 
     private static Class<? extends Mob> resolveBukkitEntityClass(String bukkitName) {
@@ -77,12 +81,27 @@ public final class PetType {
      * @throws IllegalArgumentException if a type with this name is already registered
      */
     public static PetType register(String name, Class<? extends Pet> petClass) {
+        return register(name, petClass, null);
+    }
+
+    /**
+     * Registers a custom pet type with an explicit host mob class. Use this for data-driven
+     * pet types whose name does not match a vanilla Bukkit {@link EntityType}, so
+     * {@link #getBukkitEntityClass()} can return a spawnable class instead of {@code null}.
+     *
+     * @param name      CamelCase name (e.g. "FrostDragon")
+     * @param petClass  interface extending Pet
+     * @param hostClass the vanilla {@link Mob} subclass to spawn as the host entity
+     * @return the registered PetType
+     * @throws IllegalArgumentException if a type with this name is already registered
+     */
+    public static PetType register(String name, Class<? extends Pet> petClass, Class<? extends Mob> hostClass) {
         String key = name.toUpperCase();
         if (BY_NAME.containsKey(key)) {
             throw new IllegalArgumentException("PetType '" + name + "' is already registered");
         }
         String bukkitName = camelToSnake(name).toUpperCase();
-        PetType type = new PetType(name, bukkitName, petClass);
+        PetType type = new PetType(name, bukkitName, petClass, hostClass);
         BY_NAME.put(key, type);
         BY_BUKKIT_NAME.put(bukkitName, type);
         return type;

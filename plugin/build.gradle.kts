@@ -93,6 +93,10 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.12.2")
     compileOnly("com.github.LeonMangler:SuperVanish:6.2.18-3")
     compileOnly("com.kirelcodes.miniaturepets:miniaturepets-api:1.5.4")
+    compileOnly("com.ticxo.modelengine:ModelEngine:R4.0.4")
+    // BetterModel is driven via reflection (its 3.x API is Java-25 bytecode, uncompilable on this
+    // Java-21 build) — no compileOnly dependency. See BetterModelHook. Runtime support is Java-25 servers only.
+    compileOnly("beer.devs:itemsadder-api:4.0.17")
     compileOnly("com.github.sirblobman.combatlogx:api:11.6-SNAPSHOT")
     compileOnly("com.github.sirblobman.api:core:2.8-SNAPSHOT") // BlueSlimeCore (Java 21-compatible; 2.9-SNAPSHOT is Java 25)
     compileOnly("uk.antiperson.stackmob:StackMob:5.10.3") // 5.10.4+ are built for Java 25; 5.10.3 is Java 17

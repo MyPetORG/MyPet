@@ -44,6 +44,11 @@ public final class PetEntityMarker {
         mob.getPersistentDataContainer().set(KEY, PersistentDataType.BYTE, (byte) 1);
     }
 
+    /** Removes the pet marker, turning the mob back into an ordinary vanilla entity. */
+    public static void unmark(Mob mob) {
+        mob.getPersistentDataContainer().remove(KEY);
+    }
+
     public static boolean isMarked(Entity entity) {
         // Sub-parts of a ComplexLivingEntity (EnderDragon head/neck/body/tail/
         // wings) carry their own entity ID server-side. PlayerInteractEntityEvent

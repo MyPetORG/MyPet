@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
 import de.Keyle.MyPet.api.skill.skilltree.requirements.Requirement;
+import de.Keyle.MyPet.api.util.configuration.settings.Setting;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import lombok.Getter;
 import lombok.Setter;
@@ -302,6 +303,25 @@ public class Skilltree {
             }
         }
         return usable;
+    }
+
+    /** True if this tree's Skilltree requirement names the pet's current tree — i.e. selecting it is an ascension. */
+    public boolean isAscensionFor(Pet pet) {
+        if (pet.getSkilltree() == null) {
+            return false;
+        }
+        String current = pet.getSkilltree().getName();
+        for (Settings settings : requirementSettings) {
+            if (!"Skilltree".equalsIgnoreCase(settings.getName())) {
+                continue;
+            }
+            for (Setting setting : settings.entries()) {
+                if (setting.asString().equals(current)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

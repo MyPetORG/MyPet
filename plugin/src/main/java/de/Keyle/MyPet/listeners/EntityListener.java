@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
@@ -42,6 +43,9 @@ import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
+import de.Keyle.MyPet.api.util.hooks.types.PetModelSourceHook;
+import de.Keyle.MyPet.entity.model.PetModelService;
+import de.Keyle.MyPet.entity.types.ModelPet;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
@@ -237,7 +241,10 @@ public class EntityListener implements Listener {
                 if (!getPetManager().hasActivePet(player) && !justLeashed.contains(player.getUniqueId())) {
                     LivingEntity leashTarget = (LivingEntity) event.getEntity();
 
-                    PetType petType = PetType.byEntityTypeName(leashTarget.getType().name());
+                    PetType petType = resolveSourcePetType(leashTarget);
+                    if (petType == null) {
+                        petType = PetType.byEntityTypeName(leashTarget.getType().name());
+                    }
                     ConfigItem neededLeashItem = MyPetApi.getPetInfo().getLeashItem(petType);
 
                     if (!Permissions.has(player, "MyPet.leash." + petType.name())) {
@@ -608,5 +615,32 @@ public class EntityListener implements Listener {
                 }
             }
         }
+    }
+
+    private static PetType resolveSourcePetType(LivingEntity target) {
+        for (PetModelSourceHook src : MyPetApi.getServiceManager().getServices(PetModelSourceHook.class)) {
+            Optional<String> id = src.sourceIdOf(target);
+            if (id.isEmpty()) {
+                continue;
+            }
+            String raw = id.get();
+            // 1. A source-driven type named after the id (methods 6-9: MythicMob name / IA id / model id).
+            String normalized = raw.contains(":") ? raw.substring(raw.indexOf(':') + 1) : raw;
+            for (String candidate : new String[]{raw, normalized, raw.replace(':', '_')}) {
+                PetType t = PetType.byNameOrNull(candidate);
+                if (t != null && t.getPetClass() == ModelPet.class) {
+                    return t;
+                }
+            }
+            // 2. A custom creature whose Model.Provider+Id match this detecting hook + id (rendered
+            //    creature, /meg summon mob, or a wild MythicMob whose internal name is the Model.Id).
+            //    Matching the provider (the hook that detected it) keeps a same-id model on another
+            //    provider from cross-resolving.
+            PetType byModel = PetModelService.typeForModel(src.getServiceName(), raw);
+            if (byModel != null) {
+                return byModel;
+            }
+        }
+        return null;
     }
 }

@@ -45,6 +45,9 @@ import de.Keyle.MyPet.api.lifecycle.PetLifecycleHookRegistry;
 import de.Keyle.MyPet.util.NameFilter;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
+import de.Keyle.MyPet.entity.model.PetDespawnAnimator;
+import de.Keyle.MyPet.entity.model.PetModelNameTag;
+import de.Keyle.MyPet.entity.model.PetModelService;
 import de.Keyle.MyPet.entity.visual.PetNoPushSuppressor;
 import de.Keyle.MyPet.entity.visual.PetPotionParticleController;
 import de.Keyle.MyPet.entity.visual.PetSitParticleController;
@@ -169,9 +172,13 @@ public abstract class PetImpl implements Pet, NBTStorage {
 
     @Override
     public void setSitting(boolean sitting) {
+        boolean was = this.sitting;
         this.sitting = sitting;
         if (bukkitEntity instanceof Sittable s) {
             s.setSitting(sitting);
+        }
+        if (sitting != was && bukkitEntity != null) {
+            PetModelService.onSit(this, sitting);
         }
     }
 
@@ -262,19 +269,34 @@ public abstract class PetImpl implements Pet, NBTStorage {
     }
 
     private void applyNameTag(Mob mob) {
-        if (!MyPetGlobal.Name.Tag.SHOW.get()) {
+        Component name = nameTagComponent();
+        if (name == null) {
             mob.setCustomNameVisible(false);
-            return;
+        } else {
+            mob.customName(name);
+            mob.setCustomNameVisible(true);
+        }
+        // Keep the floating model nametag (if this pet renders a custom model) in sync.
+        PetModelNameTag.updateName(this);
+    }
+
+    /**
+     * Builds the pet's display name (prefix + name + suffix, MiniMessage-parsed), or
+     * {@code null} when nametags are globally disabled. Shared by the vanilla nametag and
+     * the floating model nametag so both render identically.
+     */
+    public net.kyori.adventure.text.Component nameTagComponent() {
+        if (!MyPetGlobal.Name.Tag.SHOW.get()) {
+            return null;
         }
         String prefix = resolveTagPlaceholders(MyPetGlobal.Name.Tag.PREFIX.get());
         String suffix = resolveTagPlaceholders(MyPetGlobal.Name.Tag.SUFFIX.get());
         String miniMessageString = prefix + petName + suffix;
         try {
-            mob.customName(Util.SANITIZED_MINIMESSAGE.deserialize(miniMessageString));
+            return Util.SANITIZED_MINIMESSAGE.deserialize(miniMessageString);
         } catch (Throwable t) {
-            mob.customName(net.kyori.adventure.text.Component.text(petName));
+            return net.kyori.adventure.text.Component.text(petName);
         }
-        mob.setCustomNameVisible(true);
     }
 
     private String resolveTagPlaceholders(String template) {
@@ -936,9 +958,18 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 RideSkillFlightController.stopForPet(this);
                 PetLifecycleHookRegistry.forPet(this).forEach(hook -> hook.onDespawn(this));
                 PetNoPushSuppressor.stopForPet(this);
+
+                // Safely-delayable despawn (store / remove, not recall): let the model play its
+                // despawn animation before the host is removed. tryAnimate gates on owner-online,
+                // owned region, and a present model, and claims the entity's removal when it fires.
+                // Must run while bukkitEntity still references entityRef (the model lookup goes
+                // through the pet), so compute it before clearing the reference below.
+                boolean despawnClaimed = !wantsToRespawn && ownedByCurrentRegion
+                        && PetDespawnAnimator.tryAnimate(this, entityRef);
+
                 bukkitEntity = null;
 
-                if (ownedByCurrentRegion) {
+                if (ownedByCurrentRegion && !despawnClaimed) {
                     try {
                         entityRef.remove();
                     } catch (NullPointerException foliaShutdown) {
@@ -947,7 +978,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
                         // callback (ServerLevel#getCurrentWorldData() is null). The entity will
                         // be saved with the world at shutdown step 7.
                     }
-                } else {
+                } else if (!ownedByCurrentRegion) {
                     // Cross-region: dispatch the remove() to the entity's owning scheduler so it
                     // runs on the correct region thread.
                     entityRef.getScheduler().run(MyPetApi.getPlugin(), task -> {

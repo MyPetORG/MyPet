@@ -20,10 +20,13 @@
 
 package de.Keyle.MyPet.webeditor;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.hooks.types.PetModelHook;
+import de.Keyle.MyPet.api.util.hooks.types.PetModelSourceHook;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -70,6 +73,25 @@ public final class ConfigSerializer {
         configs.add("pet-shops", yamlEntry("pet-shops.yml"));
         configs.add("skilltrees", skilltreeBundle());
         configs.add("locale", localeBundle());
+        JsonObject renderers = new JsonObject();
+        for (PetModelHook hook : MyPetApi.getServiceManager().getServices(PetModelHook.class)) {
+            JsonArray ids = new JsonArray();
+            hook.availableModels().stream().sorted().forEach(ids::add);
+            renderers.add(hook.getServiceName(), ids);
+        }
+        JsonObject sources = new JsonObject();
+        for (PetModelSourceHook hook : MyPetApi.getServiceManager().getServices(PetModelSourceHook.class)) {
+            JsonArray ids = new JsonArray();
+            hook.availableSources().stream().sorted().forEach(ids::add);
+            sources.add(hook.getServiceName(), ids);
+        }
+        JsonObject providers = new JsonObject();
+        providers.add("renderers", renderers);
+        providers.add("sources", sources);
+        configs.add("model-providers", providers);
+        JsonArray leashFlags = new JsonArray();
+        MyPetApi.getLeashFlagManager().flagNames().forEach(leashFlags::add);
+        configs.add("leash-flags", leashFlags);
         return configs;
     }
 
