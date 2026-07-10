@@ -41,6 +41,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.view.AnvilView;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -69,8 +70,21 @@ public final class AnvilFallbackProvider implements Listener {
         registered = true;
     }
 
+    /**
+     * Unregisters first so {@link #onClose} cannot run — a disabled plugin cannot schedule
+     * the cancel callback — then strips and closes every open prompt by hand. Without this
+     * the anvil hands its prefilled name tag to the player as the container tears down.
+     */
     public void shutdown() {
         HandlerList.unregisterAll(this);
+        for (UUID viewerId : new ArrayList<>(sessions.keySet())) {
+            Player viewer = Bukkit.getPlayer(viewerId);
+            if (viewer == null) continue;
+            if (viewer.getOpenInventory().getTopInventory() instanceof AnvilInventory anvil) {
+                anvil.clear();
+            }
+            viewer.closeInventory();
+        }
         sessions.clear();
         registered = false;
     }
@@ -140,12 +154,15 @@ public final class AnvilFallbackProvider implements Listener {
         if (event.getRawSlot() != 2) return;
         if (!(event.getView() instanceof AnvilView view)) return;
 
+        if (session.completed) return;
+
         String text = view.getRenameText();
         if (text == null) text = "";
         if (text.length() > session.spec.maxLength()) {
             text = text.substring(0, session.spec.maxLength());
         }
-        sessions.remove(viewer.getUniqueId());
+        // Keep the session registered until the close event so onClose can strip the
+        // input name tag; it removes the session and skips the cancel callback.
         session.completed = true;
         final String result = text;
         Bukkit.getScheduler().runTask(plugin, () -> {
@@ -163,7 +180,14 @@ public final class AnvilFallbackProvider implements Listener {
         if (!(event.getPlayer() instanceof Player viewer)) return;
         if (!(event.getInventory() instanceof AnvilInventory)) return;
         Session session = sessions.remove(viewer.getUniqueId());
-        if (session == null || session.completed) return;
+        if (session == null) return;
+
+        // This is a real vanilla anvil: once this event returns, ItemCombinerMenu#removed
+        // hands the input slots to the player. The prefilled name tag is a UI element, not
+        // the player's item, so drop it here or every rename prompt mints a free name tag.
+        event.getInventory().clear();
+
+        if (session.completed) return;
         Bukkit.getScheduler().runTask(plugin, () -> {
             try {
                 session.onCancel.run();
