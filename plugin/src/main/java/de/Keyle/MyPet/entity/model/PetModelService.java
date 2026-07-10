@@ -231,9 +231,10 @@ public final class PetModelService {
         if (r.isPresent()) {
             return Optional.of(r.get().hook());
         }
+        Mob host = pet.getBukkitEntity();
         for (PetModelHook hook : MyPetApi.getServiceManager().getServices(PetModelHook.class)) {
             try {
-                if (!hook.currentModels(pet).isEmpty()) {
+                if (!hook.currentModels(host).isEmpty()) {
                     return Optional.of(hook);
                 }
             } catch (Throwable ignored) {
@@ -540,13 +541,22 @@ public final class PetModelService {
 
     /** Union of the model ids every active renderer hook currently renders on the pet's host. */
     public static Set<String> currentModels(Pet pet) {
-        if (pet == null) {
+        return pet == null ? Set.of() : currentModels(pet.getBukkitEntity());
+    }
+
+    /**
+     * Union of the model ids every active renderer hook currently renders on this raw host mob.
+     * Takes the {@link Mob} directly so it can be queried against a source creature before it is
+     * adopted into a pet (the source-driven spawn waits on this before stripping the mob's goals).
+     */
+    public static Set<String> currentModels(Mob mob) {
+        if (mob == null) {
             return Set.of();
         }
         Set<String> all = new HashSet<>();
         for (PetModelHook hook : MyPetApi.getServiceManager().getServices(PetModelHook.class)) {
             try {
-                all.addAll(hook.currentModels(pet));
+                all.addAll(hook.currentModels(mob));
             } catch (Throwable ignored) {
                 // one provider failing must not block the others
             }

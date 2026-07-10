@@ -71,12 +71,14 @@ public interface PetModelHook extends ServiceContainer {
     OptionalDouble animationLength(Pet pet, String animation);
 
     /**
-     * The model ids this provider currently renders on the pet's host mob (empty if none).
-     * Used at spawn time to reconcile against config: a model present here that isn't the
-     * configured one — e.g. one revived from the persisted snapshot after a config change —
-     * is removed. Usually zero or one entry.
+     * The model ids this provider currently renders on the given host mob (empty if none).
+     * Takes the raw {@link Mob} rather than the {@link Pet} so it can also be queried against a
+     * source creature that has not yet been adopted into a pet (e.g. while waiting for a
+     * source plugin to finish applying its model). Used at spawn time to reconcile against
+     * config: a model present here that isn't the configured one — e.g. one revived from the
+     * persisted snapshot after a config change — is removed. Usually zero or one entry.
      */
-    Set<String> currentModels(Pet pet);
+    Set<String> currentModels(Mob mob);
 
     /** All model ids this provider has registered; empty if none are loaded or the provider is not ready. */
     Set<String> availableModels();

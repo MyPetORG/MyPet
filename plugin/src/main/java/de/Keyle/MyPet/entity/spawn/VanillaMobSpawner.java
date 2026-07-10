@@ -68,6 +68,13 @@ import java.util.UUID;
 public final class VanillaMobSpawner {
 
     /**
+     * Max ticks to wait for a source plugin to finish applying its model to a freshly-spawned
+     * source creature before adopting it (see {@link #adoptSourceWhenModeled}). Bounded so a
+     * source that never applies a model still gets adopted rather than waiting forever.
+     */
+    private static final int SOURCE_MODEL_WAIT_MAX_TICKS = 40;
+
+    /**
      * Spawns the pet as a Bukkit mob. Returns true on success.
      * On failure (no Bukkit class for this type, or no valid spawn position),
      * logs a warning and returns false.
@@ -131,12 +138,16 @@ public final class VanillaMobSpawner {
                 for (PetModelSourceHook src : MyPetApi.getServiceManager().getServices(PetModelSourceHook.class)) {
                     Optional<Mob> spawned = src.spawnSource(sourceId, target);
                     if (spawned.isPresent()) {
-                        // Mark BEFORE convertInPlace so the one-shot spawn animation plays on a
-                        // genuine create. convertInPlace routes to configureMob(..., true), which
-                        // skips markFreshSpawn — that keeps the tame path (leashing a wild source
-                        // creature via convertInPlace) silent; only create marks it here.
+                        // Mark BEFORE adoption so the one-shot spawn animation plays on a genuine
+                        // create. convertInPlace routes to configureMob(..., true), which skips
+                        // markFreshSpawn — that keeps the tame path (leashing a wild source
+                        // creature) silent; only create marks it here.
                         PetModelService.markFreshSpawn(pet);
-                        convertInPlace(pet, spawned.get());
+                        // The source plugin applies its model asynchronously (e.g. MythicMobs runs
+                        // an on-spawn ModelEngine mechanic off-thread). Adopting immediately would
+                        // strip the mob's goals mid-flight and race the renderer's navigation-wrap
+                        // into an NPE. Wait until the model lands, then adopt.
+                        adoptSourceWhenModeled(pet, spawned.get(), SOURCE_MODEL_WAIT_MAX_TICKS);
                         return true;
                     }
                 }
@@ -165,6 +176,28 @@ public final class VanillaMobSpawner {
         // Tame path: the wild mob already exists with its visual state intact;
         // treat it like a snapshot-restored pet so we don't clobber equipment.
         configureMob(pet, mob, true);
+    }
+
+    /**
+     * Adopts a source-spawned creature (e.g. a MythicMob) into {@code pet} once its source plugin
+     * has applied the model, polling the mob's own region scheduler (Folia-safe). Adoption strips
+     * the mob's goals; deferring it until the model is present keeps that strip from racing the
+     * source renderer's asynchronous navigation-wrap, which NPEs on a goal-stripped mob. Falls
+     * back to adopting bare once {@code ticksLeft} is exhausted, so a source that never applies a
+     * model still yields a usable pet.
+     */
+    private void adoptSourceWhenModeled(Pet pet, Mob mob, int ticksLeft) {
+        if (!mob.isValid()) {
+            MyPetApi.getLogger().warning("Source-driven pet " + pet.getPetType().name()
+                    + " lost its source creature before it could be adopted.");
+            return;
+        }
+        if (ticksLeft <= 0 || !PetModelService.currentModels(mob).isEmpty()) {
+            convertInPlace(pet, mob);
+            return;
+        }
+        mob.getScheduler().runDelayed(MyPetApi.getPlugin(),
+                task -> adoptSourceWhenModeled(pet, mob, ticksLeft - 1), null, 1L);
     }
 
     /**

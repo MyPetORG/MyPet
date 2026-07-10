@@ -188,8 +188,7 @@ public class ModelEngineHook implements PetModelHook, PetModelSourceHook {
     }
 
     @Override
-    public Set<String> currentModels(Pet pet) {
-        Mob mob = pet.getBukkitEntity();
+    public Set<String> currentModels(Mob mob) {
         if (mob == null) {
             return Set.of();
         }
