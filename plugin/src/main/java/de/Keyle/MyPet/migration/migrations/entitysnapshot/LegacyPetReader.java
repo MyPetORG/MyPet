@@ -410,7 +410,22 @@ public final class LegacyPetReader {
     private static void applyRabbit(Mob mob, CompoundBinaryTag info) {
         if (!(mob instanceof Rabbit rabbit)) return;
         Rabbit.Type type = enumByName(info, "VariantName", Rabbit.Type.class);
+        if (type == null) type = rabbitTypeByLegacyId(info);
         if (type != null) rabbit.setRabbitType(type);
+    }
+
+    /** MyPet 3 stored the fur type as a byte id under "Variant" (99 = killer bunny). */
+    private static Rabbit.Type rabbitTypeByLegacyId(CompoundBinaryTag info) {
+        if (!info.keySet().contains("Variant")) return null;
+        return switch (info.getInt("Variant")) {
+            case 1 -> Rabbit.Type.WHITE;
+            case 2 -> Rabbit.Type.BLACK;
+            case 3 -> Rabbit.Type.BLACK_AND_WHITE;
+            case 4 -> Rabbit.Type.GOLD;
+            case 5 -> Rabbit.Type.SALT_AND_PEPPER;
+            case 99 -> Rabbit.Type.THE_KILLER_BUNNY;
+            default -> Rabbit.Type.BROWN;
+        };
     }
 
     private static void applySalmon(Mob mob, CompoundBinaryTag info) {
