@@ -61,7 +61,7 @@ public class RangedImpl extends AbstractSkill implements Ranged {
     @Override
     public Component[] getUpgradeMessage() {
         return new Component[]{
-                Locale.getFormattedComponent("Message.Skill.Ranged.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), Locale.getComponent("Name." + getProjectile().getValue().name(), pet.getOwner()), damage, String.format("%1.2f", (1. / ((getRateOfFire().getValue() * 50.) / 1000.)) * 60.))
+                Locale.getFormattedComponent("Message.Skill.Ranged.Upgrade", pet.getOwner().getLanguage(), pet.getDisplayName(), Locale.getComponent("Name." + getProjectile().getValue().name(), pet.getOwner()), String.format("%1.2f", getDamage().getValue().doubleValue()), String.format("%1.2f", (1. / ((getRateOfFire().getValue() * 50.) / 1000.)) * 60.))
         };
     }
 
