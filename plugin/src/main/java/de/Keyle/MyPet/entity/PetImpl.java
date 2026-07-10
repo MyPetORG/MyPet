@@ -405,6 +405,12 @@ public abstract class PetImpl implements Pet, NBTStorage {
         java.util.List<ConfigItem> foods = MyPetApi.getPetInfo().getFood(getPetType());
         for (ConfigItem food : foods) {
             if (food.compare(item)) {
+                // Nothing to restore: swallow the interaction so the pet menu doesn't open,
+                // but don't consume the item or fire the feed event. Feeding still heals a
+                // wounded pet that is already at full saturation.
+                if (getSaturation() >= 100 && getHealth() >= getMaxHealth()) {
+                    return true;
+                }
                 double saturationPerFeed = MyPetGlobal.HungerSystem.HUNGER_SYSTEM_SATURATION_PER_FEED.get();
                 PetFeedEvent feedEvent = new PetFeedEvent(
                         this, item, saturationPerFeed, PetFeedEvent.Result.EAT);
