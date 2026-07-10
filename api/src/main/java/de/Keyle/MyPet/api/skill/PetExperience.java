@@ -373,12 +373,10 @@ public class PetExperience {
         double oldExp = this.exp;
         this.exp += expEvent.getExp();
         this.exp = Math.max(0, Math.min(maxExp, this.exp));
-        int lvl = cache.getLevel(pet.getWorldGroup(), pet.getPetType(), this.exp);
-        if (lvl != 0) {
-            this.level = lvl;
-        } else {
-            this.level = calculateLevel();
-        }
+        // Always resolve the true level for the current exp. The cached-level lookup only
+        // returned the highest ALREADY-computed threshold, so once the cache lagged behind
+        // the pet stopped levelling until /petinfo forced the next threshold to be computed.
+        this.level = calculateLevel();
         if (oldLvl != this.level) {
             if (oldLvl < this.level) {
                 Bukkit.getServer().getPluginManager().callEvent(new PetLevelUpEvent(pet, this.level, oldLvl, quiet));
@@ -391,8 +389,8 @@ public class PetExperience {
 
     /**
      * Recalculates the level by scanning up or down from the current level until the
-     * XP thresholds bracket the pet's total XP. Used as a fallback when the
-     * {@link ExperienceCache} does not have a pre-computed level for the current XP.
+     * XP thresholds bracket the pet's total XP. Thresholds are resolved (and cached)
+     * via {@link #getExpByLevel}; the upward walk is bounded by the max-level exp cap.
      *
      * @return the computed level
      */
