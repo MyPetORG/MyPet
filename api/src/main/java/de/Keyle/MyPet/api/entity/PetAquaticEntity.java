@@ -37,10 +37,10 @@ import de.Keyle.MyPet.api.config.PetConfigLookup;
  * preference loaded from {@code MyPet.Pets.<Type>.PreventSuffocation} in
  * {@code pet-config.yml}. The YAML row is auto-registered for every type
  * that implements this marker. Wiring lives in {@code PetSurvivalListener}'s
- * {@code EntityDamageEvent} arm: when the flag is {@code true}
- * {@code DamageCause.DROWNING} is canceled for marked pets (Bukkit reuses
- * {@code DROWNING} for both "land-breather underwater" and "water-breather
- * in air"; only the latter case applies to these mobs).
+ * {@code EntityDamageEvent} arm: when the flag is {@code true} both
+ * {@code DamageCause.DRYOUT} (the out-of-water case vanilla actually raises
+ * for water-breathers) and {@code DamageCause.DROWNING} are canceled for
+ * marked pets.
  */
 public interface PetAquaticEntity extends PetSwimmingEntity {
 

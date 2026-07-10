@@ -46,8 +46,9 @@ import org.bukkit.potion.PotionEffectType;
  *       next tick to escape solid blocks</li>
  *   <li>Daylight burn suppression for {@link PetSunSensitive} pets when
  *       the per-type {@code PreventDaylightBurn} flag is on</li>
- *   <li>Out-of-water suffocation suppression for {@link PetAquaticEntity}
- *       pets when the per-type {@code PreventSuffocation} flag is on</li>
+ *   <li>Out-of-water dry-out (and drowning) suppression for
+ *       {@link PetAquaticEntity} pets when the per-type
+ *       {@code PreventSuffocation} flag is on</li>
  * </ul>
  */
 public class PetSurvivalListener implements Listener {
@@ -75,11 +76,10 @@ public class PetSurvivalListener implements Listener {
             return;
         }
 
-        // Bukkit reuses DROWNING for both directions (land-breather under
-        // water, water-breather in air); for aquatic pets the latter case is
-        // the only one that fires in vanilla — strict water-breathers cannot
-        // enter the land-breather state.
-        if (event.getCause() == DamageCause.DROWNING
+        // Water-breathers take DRYOUT out of water (the case players hit on
+        // land); DROWNING only fires if one is genuinely submerged without
+        // air. Cancel both for aquatic pets when PreventSuffocation is on.
+        if ((event.getCause() == DamageCause.DRYOUT || event.getCause() == DamageCause.DROWNING)
                 && pet instanceof PetAquaticEntity aquatic
                 && aquatic.preventSuffocation()) {
             event.setCancelled(true);
