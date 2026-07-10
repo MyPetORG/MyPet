@@ -192,6 +192,22 @@ public final class Locale implements Translator {
         return GlobalTranslator.render(Component.translatable(key.toLowerCase(), args), loc);
     }
 
+    /**
+     * Read-only probe: true if MyPet has a translation for {@code key} resolvable for the given
+     * locale, using the exact same lookup + casing as rendering. Lets callers fall back before a
+     * missing key would surface as a raw translatable. Does not affect {@link #translate}.
+     */
+    public static boolean hasKey(String key, String localeString) {
+        if (instance == null) {
+            return false;
+        }
+        java.util.Locale effective = parseJdkLocale(localeString);
+        if (!MyPetGlobal.Misc.OVERWRITE_LANGUAGE.get().isEmpty()) {
+            effective = parseJdkLocale(MyPetGlobal.Misc.OVERWRITE_LANGUAGE.get());
+        }
+        return instance.lookup(key.toLowerCase(java.util.Locale.ROOT), effective) != null;
+    }
+
     // ========== Translator SPI — what Adventure calls ==========
 
     @Override

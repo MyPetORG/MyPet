@@ -69,6 +69,8 @@ import org.bukkit.*;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -1096,7 +1098,8 @@ public abstract class PetImpl implements Pet, NBTStorage {
                                 getMaxHealth() * MyPetGlobal.HungerSystem.HUNGER_SYSTEM_FACTOR.get();
                         if (leDamage >= entity.getHealth() && !MyPetGlobal.HungerSystem.HUNGER_SYSTEM_CAN_KILL.get())
                             leDamage = entity.getHealth() - 1;
-                        entity.damage(leDamage);
+                        // Self-identifying source so the death message can name starvation instead of a generic CUSTOM cause.
+                        entity.damage(leDamage, DamageSource.builder(DamageType.STARVE).build());
                     }
                 }
             }

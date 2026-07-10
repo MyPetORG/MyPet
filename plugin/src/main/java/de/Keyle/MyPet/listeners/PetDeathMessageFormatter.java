@@ -23,12 +23,14 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetType;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import net.kyori.adventure.text.Component;
 import org.bukkit.GameRule;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import static de.Keyle.MyPet.MyPetApi.getPetManager;
@@ -61,7 +63,7 @@ final class PetDeathMessageFormatter {
                 }
             } else if (e.getDamager().getType() == EntityType.WOLF) {
                 Wolf w = (Wolf) e.getDamager();
-                killer = Locale.getComponent("Name.Wolf", pet.getOwner());
+                killer = resolveName("Name.Wolf", pet.getOwner(), e.getDamager(), null);
                 if (w.isTamed()) {
                     killer = killer.append(Component.text(" (" + w.getOwner().getName() + ")"));
                 }
@@ -73,7 +75,7 @@ final class PetDeathMessageFormatter {
                     killer = Component.text(e.getDamager().getType().name());
                 }
             } else if (e.getDamager() instanceof Projectile projectile) {
-                Component projectileName = Locale.getComponent("Name." + capitalizeName(projectile.getType().name()), pet.getOwner());
+                Component projectileName = resolveName("Name." + capitalizeName(projectile.getType().name()), pet.getOwner(), projectile, null);
                 Component shooterName;
                 if (projectile.getShooter() instanceof Player) {
                     if (projectile.getShooter() == pet.getOwner().getPlayer()) {
@@ -82,35 +84,77 @@ final class PetDeathMessageFormatter {
                         shooterName = Component.text(((Player) projectile.getShooter()).getName());
                     }
                 } else {
+                    Entity shooterEntity = projectile.getShooter() instanceof Entity se ? se : null;
                     if (MyPetApi.getPetInfo().isLeashableEntityType(e.getDamager().getType())) {
-                        shooterName = Locale.getComponent("Name." + capitalizeName(PetType.byEntityTypeName(e.getDamager().getType().name()).name()), pet.getOwner());
+                        shooterName = resolveName("Name." + capitalizeName(PetType.byEntityTypeName(e.getDamager().getType().name()).name()), pet.getOwner(), shooterEntity, null);
                     } else if (e.getDamager().getType().getName() != null) {
-                        shooterName = Locale.getComponent("Name." + capitalizeName(e.getDamager().getType().getName()), pet.getOwner());
+                        shooterName = resolveName("Name." + capitalizeName(e.getDamager().getType().getName()), pet.getOwner(), shooterEntity, null);
                     } else {
-                        shooterName = Locale.getComponent("Name.Unknow", pet.getOwner());
+                        shooterName = resolveName(null, pet.getOwner(), shooterEntity, null);
                     }
                 }
                 killer = projectileName.append(Component.text(" (")).append(shooterName).append(Component.text(")"));
             } else {
                 if (MyPetApi.getPetInfo().isLeashableEntityType(e.getDamager().getType())) {
-                    killer = Locale.getComponent("Name." + capitalizeName(PetType.byEntityTypeName(e.getDamager().getType().name()).name()), pet.getOwner());
+                    killer = resolveName("Name." + capitalizeName(PetType.byEntityTypeName(e.getDamager().getType().name()).name()), pet.getOwner(), e.getDamager(), null);
                 } else {
                     if (e.getDamager().getType().getName() != null) {
-                        killer = Locale.getComponent("Name." + capitalizeName(e.getDamager().getType().getName()), pet.getOwner());
+                        killer = resolveName("Name." + capitalizeName(e.getDamager().getType().getName()), pet.getOwner(), e.getDamager(), null);
                     } else {
-                        killer = Locale.getComponent("Name.Unknow", pet.getOwner());
+                        killer = resolveName(null, pet.getOwner(), e.getDamager(), null);
                     }
                 }
             }
         } else {
             if (event.getEntity().getLastDamageCause() != null) {
-                killer = Locale.getComponent("Name." + capitalizeName(event.getEntity().getLastDamageCause().getCause().name()), pet.getOwner());
+                EntityDamageEvent.DamageCause cause = event.getEntity().getLastDamageCause().getCause();
+                killer = resolveName("Name." + capitalizeName(cause.name()), pet.getOwner(), null, cause);
             } else {
-                killer = Locale.getComponent("Name.Unknow", pet.getOwner());
+                killer = resolveName(null, pet.getOwner(), null, null);
             }
         }
 
         pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.DeathMessage", pet.getOwner(), pet.getDisplayName(), killer));
+    }
+
+    /**
+     * Resolves the killer's display name without requiring per-mob/per-cause locale keys.
+     * Ladder: (1) MyPet {@code Name.*} translation if present; (2) the killer entity's own
+     * name (custom name, else client-localized type name); (3) the humanized damage cause;
+     * (4) {@code Name.Unknow} when nothing is known.
+     */
+    private static Component resolveName(String key, MyPetPlayer owner, Entity entity, EntityDamageEvent.DamageCause cause) {
+        if (key != null && Locale.hasKey(key, owner.getLanguage())) {
+            return Locale.getComponent(key, owner);
+        }
+        if (entity != null) {
+            return entityName(entity);
+        }
+        if (cause != null) {
+            return Component.text(humanize(cause.name()));
+        }
+        return Locale.getComponent("Name.Unknow", owner);
+    }
+
+    /** The entity's custom name if set, otherwise its translatable type name so the client localizes it. */
+    private static Component entityName(Entity entity) {
+        Component custom = entity.customName();
+        if (custom != null) {
+            return custom;
+        }
+        return Component.translatable(entity.getType().translationKey());
+    }
+
+    /** Title-cases an underscore-separated enum constant, e.g. {@code SONIC_BOOM} to "Sonic Boom". English-only fallback. */
+    private static String humanize(String enumName) {
+        String[] words = enumName.toLowerCase(java.util.Locale.ROOT).split("_");
+        StringBuilder sb = new StringBuilder(enumName.length());
+        for (String word : words) {
+            if (word.isEmpty()) continue;
+            if (sb.length() > 0) sb.append(' ');
+            sb.append(Character.toUpperCase(word.charAt(0))).append(word, 1, word.length());
+        }
+        return sb.toString();
     }
 
     private static String capitalizeName(String name) {
