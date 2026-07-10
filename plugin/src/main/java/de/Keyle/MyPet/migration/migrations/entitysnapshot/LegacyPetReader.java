@@ -470,11 +470,22 @@ public final class LegacyPetReader {
         if (!(mob instanceof TropicalFish fish)) return;
         if (info.keySet().contains("Variant")) {
             try {
+                // MyPet 3 packed all four fields into one int (vanilla layout):
+                // shape | pattern << 8 | bodyColor << 16 | patternColor << 24.
                 int packed = info.getInt("Variant");
+                int shape = clampRange((packed) & 0xFF, 0, 1);
+                int patternIndex = clampRange((packed >> 8) & 0xFF, 0, 5);
                 TropicalFish.Pattern[] patterns = TropicalFish.Pattern.values();
-                fish.setPattern(patterns[Math.floorMod((packed >> 8) & 0xFF, patterns.length)]);
+                fish.setPattern(patterns[shape * 6 + patternIndex]);
+                DyeColor[] dyes = DyeColor.values();
+                fish.setBodyColor(dyes[Math.floorMod((packed >> 16) & 0xFF, dyes.length)]);
+                fish.setPatternColor(dyes[Math.floorMod((packed >> 24) & 0xFF, dyes.length)]);
             } catch (Throwable ignored) {}
         }
+    }
+
+    private static int clampRange(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     private static void applyVex(Mob mob, CompoundBinaryTag info) {
