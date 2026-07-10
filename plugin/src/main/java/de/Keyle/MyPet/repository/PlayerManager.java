@@ -22,10 +22,17 @@ package de.Keyle.MyPet.repository;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import org.bukkit.entity.Player;
 
 public class PlayerManager extends de.Keyle.MyPet.api.repository.PlayerManager {
+    @Override
+    public void setOnline(MyPetPlayer player) {
+        super.setOnline(player);
+        Timer.startPlayerTicking(player);
+    }
+
     @Override
     public MyPetPlayer createMyPetPlayer(Player player) {
         MyPetPlayer petPlayer = getMyPetPlayer(player);

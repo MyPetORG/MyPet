@@ -91,12 +91,12 @@ public abstract class PetImpl implements Pet, NBTStorage {
     protected String petName;
     protected double health;
     @Getter
-    protected int respawnTime = 0;
+    protected volatile int respawnTime = 0;
     protected int hungerTime;
     protected double saturation = 100;
     protected UUID uuid = null;
     protected String worldGroup = "";
-    protected PetState status = PetState.Despawned;
+    protected volatile PetState status = PetState.Despawned;
     @Setter
     protected boolean wantsToRespawn = false;
     @Getter

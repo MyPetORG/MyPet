@@ -111,9 +111,15 @@ public class Timer {
         if (player == null) {
             return;
         }
-        Plugin plugin = MyPetApi.getPlugin();
         UUID key = myPetPlayer.getUniqueId();
+        ScheduledTask running = playerTasks.get(key);
+        if (running != null && !running.isCancelled()) {
+            return;
+        }
+        // A cancelled task can linger in the map (e.g. the player's scheduler died on quit);
+        // drop it so a rejoin gets a fresh ticker instead of being blocked by the stale entry.
         stopPlayerTicking(myPetPlayer);
+        Plugin plugin = MyPetApi.getPlugin();
         ScheduledTask task = player.getScheduler().runAtFixedRate(plugin, t -> myPetPlayer.schedule(), null, 10L, 20L);
         if (task != null) {
             playerTasks.put(key, task);
