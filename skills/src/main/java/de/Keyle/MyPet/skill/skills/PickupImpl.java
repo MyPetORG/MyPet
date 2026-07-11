@@ -109,19 +109,24 @@ public class PickupImpl extends AbstractSkill implements Pickup {
     }
 
     public void schedule() {
+        // Fire the per-second USE heartbeat unconditionally so third-party listeners
+        // still observe it while pickup is toggled off; only the pickup work is gated.
         PetInventoryActionEvent event = new PetInventoryActionEvent(pet, PetInventoryActionEvent.Action.USE);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if (pickup && (event.isCancelled() || !Permissions.hasExtended(pet.getOwner().getPlayer(), "MyPet.extended.pickup"))) {
+        if (!pickup) {
+            return;
+        }
+        if (event.isCancelled() || !Permissions.hasExtended(pet.getOwner().getPlayer(), "MyPet.extended.pickup")) {
             pickup = false;
             pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Skill.Pickup.StartStop", pet.getOwner().getPlayer(), pet.getDisplayName(), Locale.getComponent("Name.Disabled", pet.getOwner())));
             return;
         }
-        if (pickup && pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !MyPetGlobal.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE.get() && !Permissions.has(pet.getOwner().getPlayer(), AdminPermissions.BYPASS_CREATIVE)) {
+        if (pet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !MyPetGlobal.Skilltree.Skill.Backpack.OPEN_IN_CREATIVE.get() && !Permissions.has(pet.getOwner().getPlayer(), AdminPermissions.BYPASS_CREATIVE)) {
             pet.getOwner().sendMessage(Locale.getComponent("Message.Skill.Pickup.Creative", pet.getOwner()));
             pickup = false;
             return;
         }
-        if (isActive() && pickup && pet.getStatus() == PetState.Here && pet.getSkills().isActive(BackpackImpl.class)) {
+        if (isActive() && pet.getStatus() == PetState.Here && pet.getSkills().isActive(BackpackImpl.class)) {
             Mob petEntity = pet.getBukkitEntity();
             if (petEntity != null) {
                 double range = this.range.getValue().doubleValue();
