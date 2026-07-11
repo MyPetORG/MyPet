@@ -89,6 +89,8 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
     private LivingEntity targetEntity;
     private int ticksUntilNextHitLeft = 0;
     private int timeUntilNextNavigationUpdate;
+    private boolean cachedCanSee = false;
+    private int canSeeRefreshIn = 0;
 
     /**
      * @param petEntity         the pet that will perform the attack
@@ -206,6 +208,9 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
         pet.getPetNavigation().getParameters().addSpeedModifier("MeleeAttack", walkSpeedModifier);
         pet.getPetNavigation().navigateTo(this.targetEntity);
         this.timeUntilNextNavigationUpdate = 0;
+        // Force a fresh line-of-sight raycast on the first eligible tick for the new target.
+        this.canSeeRefreshIn = 0;
+        this.cachedCanSee = false;
     }
 
     @Override
@@ -228,7 +233,8 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
             this.timeUntilNextNavigationUpdate = 4 + ThreadLocalRandom.current().nextInt(7);
             pet.getPetNavigation().navigateTo(targetEntity);
         }
-        double distSq = mob.getLocation().distanceSquared(targetEntity.getLocation());
+        Location petLoc = mob.getLocation();
+        double distSq = petLoc.distanceSquared(targetEntity.getLocation());
         // Range is passed as a linear distance (pet bbWidth + 1.3). Square it
         // before comparing against distSq so melee reach resolves to ~3 blocks
         // for a player-sized target rather than ~1.6 blocks.
@@ -238,10 +244,15 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
             // walls when the pet is pressed against one — the raycast backing
             // hasLineOfSight skips the starting block, so it would otherwise
             // return true through the wall).
-            Location eyeLoc = mob.getLocation().add(0, mob.getEyeHeight(), 0);
-            // Skip line-of-sight check when the target is in a different Folia region
-            // (hasLineOfSight touches the target's NMS handle and would trip the thread check).
-            if (eyeLoc.getBlock().isPassable() && Bukkit.isOwnedByCurrentRegion(targetEntity) && mob.hasLineOfSight(targetEntity)) {
+            Location eyeLoc = petLoc.add(0, mob.getEyeHeight(), 0); // mutates petLoc — not reused below
+            // Amortize the line-of-sight raycast over 3 ticks (like vanilla's Sensing cache).
+            if (--canSeeRefreshIn <= 0) {
+                canSeeRefreshIn = 3;
+                // Skip line-of-sight check when the target is in a different Folia region
+                // (hasLineOfSight touches the target's NMS handle and would trip the thread check).
+                cachedCanSee = Bukkit.isOwnedByCurrentRegion(targetEntity) && mob.hasLineOfSight(targetEntity);
+            }
+            if (eyeLoc.getBlock().isPassable() && cachedCanSee) {
                 // Only decrement the cooldown while the attack is actually
                 // eligible (in range + line of sight). Previously the counter
                 // ticked down unconditionally inside the outer `distSq`
@@ -253,6 +264,12 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
                     applyPetDamage(pet, targetEntity, pet.getDamage());
                 }
             }
+        } else {
+            // Out of melee reach: invalidate the amortized line-of-sight cache so a
+            // stale "can see" captured before the target left range can't authorize a
+            // through-wall hit on the first tick it re-enters range (the refresh below
+            // re-runs before cachedCanSee is read again, since canSeeRefreshIn hits 0).
+            canSeeRefreshIn = 0;
         }
     }
 

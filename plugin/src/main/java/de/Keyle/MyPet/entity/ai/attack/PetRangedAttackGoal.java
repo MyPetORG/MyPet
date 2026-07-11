@@ -100,6 +100,8 @@ public class PetRangedAttackGoal implements Goal<Mob> {
     private LivingEntity target;
     private int shootTimer = -1;
     private int lastSeenTimer = 0;
+    private boolean cachedCanSee = false;
+    private int canSeeRefreshIn = 0;
 
     /**
      * @param petEntity         the pet that will fire projectiles
@@ -199,6 +201,13 @@ public class PetRangedAttackGoal implements Goal<Mob> {
     }
 
     @Override
+    public void start() {
+        // Force a fresh line-of-sight raycast on the first tick for the new target.
+        this.canSeeRefreshIn = 0;
+        this.cachedCanSee = false;
+    }
+
+    @Override
     public void stop() {
         this.target = null;
         this.lastSeenTimer = 0;
@@ -214,10 +223,17 @@ public class PetRangedAttackGoal implements Goal<Mob> {
             return;
         }
         double distSq = mob.getLocation().distanceSquared(target.getLocation());
-        // hasLineOfSight touches both entities' NMS handles; on Folia this fails when the
-        // target is in a different region from the pet. Treat cross-region targets as
-        // "out of sight" — the goal will chase until they're in the same region again.
-        boolean canSee = Bukkit.isOwnedByCurrentRegion(target) && mob.hasLineOfSight(target);
+        // The line-of-sight raycast is amortized over 3 ticks (like vanilla's Sensing
+        // cache); lastSeenTimer accumulates off the cached value, so its 20-tick unseen
+        // threshold may drift by at most 2 ticks — acceptable.
+        if (--canSeeRefreshIn <= 0) {
+            canSeeRefreshIn = 3;
+            // hasLineOfSight touches both entities' NMS handles; on Folia this fails when the
+            // target is in a different region from the pet. Treat cross-region targets as
+            // "out of sight" — the goal will chase until they're in the same region again.
+            cachedCanSee = Bukkit.isOwnedByCurrentRegion(target) && mob.hasLineOfSight(target);
+        }
+        boolean canSee = cachedCanSee;
 
         if (canSee) {
             lastSeenTimer++;
