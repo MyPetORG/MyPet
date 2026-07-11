@@ -68,13 +68,12 @@ public class PetSkillTriggerListener implements Listener {
      * damage from a living entity. Only runs if the event has not been
      * cancelled (e.g. by PvP policy) and the hook-plugin canHurt check passes.
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPetTakesDamage(final EntityDamageByEntityEvent event) {
         Pet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
         if (pet == null) return;
         if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) return;
 
-        if (event.isCancelled()) return;
         if (!(event.getDamager() instanceof LivingEntity damager)) return;
 
         if (damager instanceof Player) {
