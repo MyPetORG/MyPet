@@ -36,30 +36,45 @@ import java.util.concurrent.ConcurrentHashMap;
  * Renders custom-coloured potion particles around MyPet pets via per-pet
  * {@code Particle.DUST} scheduler tasks.
  *
- * <p>Pets register themselves via {@link #show(Pet, Color)} and deregister
- * via {@link #hide(Pet)}. Each pet also registers a tick task on spawn
- * (see {@link #startForPet}) that emits particles when the pet is in the
- * "showing" map.
+ * <p>Pets register themselves via {@link #show(Pet, Color)} — which lazily
+ * starts the tick task on the mob's entity scheduler — and deregister via
+ * {@link #hide(Pet)}, which cancels it. {@link #stopForPet} is the despawn
+ * cleanup.
  */
 public class PetPotionParticleController {
 
-    private static final Map<UUID, Color> activeByPet = new ConcurrentHashMap<>();
+    private static final Map<UUID, Particle.DustOptions> activeByPet = new ConcurrentHashMap<>();
     private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
 
-    public static void startForPet(Pet pet) {
+    /** Despawn cleanup — cancels the tick task and forgets the colour. */
+    public static void stopForPet(Pet pet) {
+        UUID key = pet.getUUID();
+        cancelTask(key);
+        activeByPet.remove(key);
+    }
+
+    public static void show(Pet pet, Color color) {
+        if (pet == null || color == null) return;
+        activeByPet.put(pet.getUUID(), new Particle.DustOptions(color, 1.0f));
+        startTask(pet);
+    }
+
+    public static void hide(Pet pet) {
+        if (pet == null) return;
+        UUID key = pet.getUUID();
+        activeByPet.remove(key);
+        cancelTask(key);
+    }
+
+    private static void startTask(Pet pet) {
         Mob mob = pet.getBukkitEntity();
         if (mob == null) return;
         Plugin plugin = MyPetApi.getPlugin();
-        UUID key = pet.getUUID();
-        stopForPet(pet);
-        ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> tickPet(pet), null, 1L, 2L);
-        if (task != null) {
-            tasks.put(key, task);
-        }
+        tasks.computeIfAbsent(pet.getUUID(),
+                key -> mob.getScheduler().runAtFixedRate(plugin, t -> tickPet(pet), null, 1L, 2L));
     }
 
-    public static void stopForPet(Pet pet) {
-        UUID key = pet.getUUID();
+    private static void cancelTask(UUID key) {
         ScheduledTask task = tasks.remove(key);
         if (task != null) {
             try {
@@ -67,26 +82,14 @@ public class PetPotionParticleController {
             } catch (Exception ignored) {
             }
         }
-        activeByPet.remove(key);
-    }
-
-    public static void show(Pet pet, Color color) {
-        if (pet == null || color == null) return;
-        activeByPet.put(pet.getUUID(), color);
-    }
-
-    public static void hide(Pet pet) {
-        if (pet == null) return;
-        activeByPet.remove(pet.getUUID());
     }
 
     private static void tickPet(Pet pet) {
-        Color color = activeByPet.get(pet.getUUID());
-        if (color == null) return;
+        Particle.DustOptions options = activeByPet.get(pet.getUUID());
+        if (options == null) return;
         Mob mob = pet.getBukkitEntity();
         if (mob == null || mob.isDead()) return;
 
-        Particle.DustOptions options = new Particle.DustOptions(color, 1.0f);
         double width = mob.getWidth();
         double height = mob.getHeight();
         mob.getWorld().spawnParticle(

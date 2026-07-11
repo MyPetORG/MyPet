@@ -531,10 +531,10 @@ public final class VanillaMobSpawner {
             }
         }
 
-        // Folia: start per-pet scheduler tasks.
+        // Folia: start per-pet scheduler tasks. Potion particles have no
+        // spawn-time task — PetPotionParticleController starts lazily on show().
         Timer.startPetTicking(pet);
         PetSitParticleController.startForPet(pet);
-        PetPotionParticleController.startForPet(pet);
         RideSkillFlightController.startForPet(pet);
         // A genuine fresh summon (not a snapshot-restore / tame in-place) gets a one-shot
         // spawn animation, played by PetModelService once the model is confirmed present.
