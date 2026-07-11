@@ -27,16 +27,16 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.entity.StoredPet;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manages the lifecycle of active (in-world) pets and provides access to
@@ -50,6 +50,7 @@ import java.util.concurrent.CompletableFuture;
 public abstract class PetManager {
     protected final BiMap<MyPetPlayer, Pet> mActivePlayerPets = HashBiMap.create();
     protected final BiMap<Pet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
+    protected final Map<UUID, Pet> mActivePetsByEntityUuid = new ConcurrentHashMap<>();
 
     // ─── Active Pets ────────────────────────────────────────────────────────────
 
@@ -69,9 +70,8 @@ public abstract class PetManager {
     }
 
     /**
-     * Resolves a Bukkit entity to its owning {@link Pet} by checking the
-     * {@code mypet:pet} PDC marker and scanning active pets by UUID. Returns
-     * {@code null} if the entity is not a Pet or the pet is no longer tracked.
+     * Resolves a Bukkit entity to its owning {@link Pet} via the entity-UUID
+     * index. Returns {@code null} if the entity is not a live pet entity.
      */
     public Pet getPetFromEntity(Entity entity) {
         if (entity == null) return null;
@@ -80,19 +80,17 @@ public abstract class PetManager {
         if (entity instanceof ComplexEntityPart part) {
             entity = part.getParent();
         }
-        NamespacedKey markerKey = new NamespacedKey("mypet", "pet");
-        if (!entity.getPersistentDataContainer().has(markerKey,
-                PersistentDataType.BYTE)) {
-            return null;
-        }
-        java.util.UUID uuid = entity.getUniqueId();
-        for (Pet pet : getAllActivePets()) {
-            Mob mob = pet.getBukkitEntity();
-            if (mob != null && uuid.equals(mob.getUniqueId())) {
-                return pet;
-            }
-        }
-        return null;
+        return mActivePetsByEntityUuid.get(entity.getUniqueId());
+    }
+
+    /** Registers the live entity→pet binding. Called from {@code Pet#setBukkitEntity}. */
+    public void registerPetEntity(UUID entityUuid, Pet pet) {
+        mActivePetsByEntityUuid.put(entityUuid, pet);
+    }
+
+    /** Removes a live entity→pet binding. Called from {@code Pet#setBukkitEntity}. */
+    public void unregisterPetEntity(UUID entityUuid) {
+        mActivePetsByEntityUuid.remove(entityUuid);
     }
 
     /** Returns {@code true} if the given player has an active pet. */

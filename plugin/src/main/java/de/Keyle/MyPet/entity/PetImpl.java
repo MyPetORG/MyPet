@@ -153,8 +153,13 @@ public abstract class PetImpl implements Pet, NBTStorage {
 
     @Override
     public void setBukkitEntity(Mob mob) {
+        Mob previous = this.bukkitEntity;
+        if (previous != null && previous != mob) {
+            MyPetApi.getPetManager().unregisterPetEntity(previous.getUniqueId());
+        }
         this.bukkitEntity = mob;
         if (mob != null) {
+            MyPetApi.getPetManager().registerPetEntity(mob.getUniqueId(), this);
             double walkSpeed = MyPetApi.getPetInfo().getSpeed(getPetType());
             this.petNavigation = new PaperNavigation(mob, walkSpeed);
         } else {
@@ -230,6 +235,9 @@ public abstract class PetImpl implements Pet, NBTStorage {
         PetLifecycleHookRegistry.forPet(this).forEach(hook -> hook.onDespawn(this));
         PetNoPushSuppressor.stopForPet(this);
         if (bukkitEntity != null) {
+            // Unregister from the entity→pet index; setBukkitEntity's unregister
+            // only fires on rebind, not on this direct clear.
+            MyPetApi.getPetManager().unregisterPetEntity(bukkitEntity.getUniqueId());
             bukkitEntity.remove();
         }
         bukkitEntity = null;
@@ -977,6 +985,9 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 boolean despawnClaimed = !wantsToRespawn && ownedByCurrentRegion
                         && PetDespawnAnimator.tryAnimate(this, entityRef);
 
+                // Unregister from the entity→pet index; setBukkitEntity's
+                // unregister only fires on rebind, not on this direct clear.
+                MyPetApi.getPetManager().unregisterPetEntity(entityRef.getUniqueId());
                 bukkitEntity = null;
 
                 if (ownedByCurrentRegion && !despawnClaimed) {
