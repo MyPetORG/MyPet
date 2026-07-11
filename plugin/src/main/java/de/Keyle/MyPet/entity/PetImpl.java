@@ -79,7 +79,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Sittable;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import java.io.IOException;
 import java.util.*;
@@ -982,8 +981,6 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 }
 
                 // bukkitEntity is now set by VanillaMobSpawner via setBukkitEntity().
-                bukkitEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), true));
-
                 updateStatus(PetState.Here);
 
                 if (worldGroup == null || worldGroup.isEmpty()) {

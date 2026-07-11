@@ -47,7 +47,6 @@ import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.Event;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
@@ -254,11 +253,10 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
 
         // Promote status without going through createEntity (the entity is
         // already bound by convertInPlace). Mirrors the post-spawn block in
-        // Pet#respawnPet so plugin hooks see the same metadata. The
-        // updateStatus cast is the same shape as EntityListener:378 — the
-        // method lives on the plugin's concrete PetImpl, not the api facet.
+        // Pet#respawnPet. The updateStatus cast is the same shape as
+        // EntityListener:378 — the method lives on the plugin's concrete
+        // PetImpl, not the api facet.
         ((PetImpl) newPet).updateStatus(PetState.Here);
-        newEntity.setMetadata("MyPet", new FixedMetadataValue(MyPetApi.getPlugin(), true));
 
         // Carry health/saturation across — must happen AFTER status flips
         // because Pet#setHealth only writes through to the live entity
