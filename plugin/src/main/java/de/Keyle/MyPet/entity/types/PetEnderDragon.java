@@ -256,6 +256,12 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
         /** Vertical step (blocks/tick) when the rider holds jump/sneak while flying. */
         private static final double RIDE_VERTICAL_STEP = 0.5;
 
+        /** Max positional delta (per axis) at which the dragon counts as parked on its hold anchor. */
+        private static final double HOLD_POSITION_EPSILON = 1.0E-3;
+
+        /** Max rider-yaw delta (degrees) at which the ridden pose counts as unchanged. */
+        private static final float HOLD_YAW_EPSILON = 0.1f;
+
         /**
          * Vertical span (in blocks) of the collision check column at the proposed
          * teleport position. Covers the dragon's body (~3-4 blocks tall around the
@@ -277,9 +283,10 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
             UUID key = pet.getUUID();
             stopForPet(pet);
 
+            RideHoldState hold = new RideHoldState();
             ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> {
                 try {
-                    tick(dragon, pet);
+                    tick(dragon, pet, hold);
                 } catch (Throwable ignored) {
                 }
             }, null, 1L, 1L);
@@ -288,7 +295,16 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
             }
         }
 
-        private static void tick(EnderDragon dragon, Pet pet) {
+        /** Per-task ride state: anchor position + last rider yaw while parked with no input. */
+        private static final class RideHoldState {
+            boolean holding = false;
+            double x;
+            double y;
+            double z;
+            float lastYaw;
+        }
+
+        private static void tick(EnderDragon dragon, Pet pet, RideHoldState hold) {
             if (dragon.isDead()) return;
 
             // Phase suppression — keep HOVER active so the phase manager
@@ -308,10 +324,11 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
             // ON the dragon, so the follow logic ("teleport to HOVER_HEIGHT above
             // owner") would jet the dragon endlessly skyward. We instead drive
             // movement from the rider's WASD/jump/sneak input — see tickRide.
-            if (!dragon.getPassengers().isEmpty()) {
-                tickRide(dragon, pet);
+            if (!dragon.isEmpty()) {
+                tickRide(dragon, pet, hold);
                 return;
             }
+            hold.holding = false;
 
             Location ownerLoc = owner.getLocation();
             Location dragonLoc = dragon.getLocation();
@@ -359,7 +376,7 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
          * {@code setVelocity} approach is damped by EnderDragon's vanilla aiStep
          * friction (~0.8/tick). Teleport sidesteps that.
          */
-        private static void tickRide(EnderDragon dragon, Pet pet) {
+        private static void tickRide(EnderDragon dragon, Pet pet, RideHoldState hold) {
             Entity passenger = dragon.getPassengers().get(0);
             if (!(passenger instanceof Player rider)) return;
 
@@ -383,12 +400,6 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
             }
             if (input == null) return;
 
-            int speedIncrease = rideSkill.getSpeedIncrease() != null
-                    && rideSkill.getSpeedIncrease().getValue() != null
-                    ? rideSkill.getSpeedIncrease().getValue() : 0;
-            double baseStep = RideSkillFlightController.resolveBaseSpeed(pet, dragon);
-            double step = baseStep * (1.0 + speedIncrease / 100.0);
-
             float yaw = rider.getLocation().getYaw();
             float pitch = rider.getLocation().getPitch();
 
@@ -399,6 +410,42 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
             if (input.isBackward()) fx -= 0.5;
             if (input.isLeft()) fz -= 0.5;
             if (input.isRight()) fz += 0.5;
+
+            boolean hasMoveInput = fx != 0 || fz != 0 || input.isJump() || input.isSneak();
+            if (hasMoveInput) {
+                hold.holding = false;
+            } else if (hold.holding && Math.abs(yaw - hold.lastYaw) <= HOLD_YAW_EPSILON) {
+                // No input, no yaw change: skip the collision check + teleport
+                // while parked on the anchor. Vanilla's HOVER flight tracker
+                // pulls the dragon toward a stale capture point (see the class
+                // javadoc), so re-pin to the anchor as soon as it drifts.
+                Location cur = dragon.getLocation();
+                double dx = cur.getX() - hold.x;
+                double dy = cur.getY() - hold.y;
+                double dz = cur.getZ() - hold.z;
+                if (Math.abs(dx) <= HOLD_POSITION_EPSILON
+                        && Math.abs(dy) <= HOLD_POSITION_EPSILON
+                        && Math.abs(dz) <= HOLD_POSITION_EPSILON) {
+                    return;
+                }
+                if (dx * dx + dy * dy + dz * dz <= 1.0) {
+                    cur.setX(hold.x);
+                    cur.setY(hold.y);
+                    cur.setZ(hold.z);
+                    cur.setYaw(yaw + 180);
+                    cur.setPitch(0);
+                    safeTeleport(dragon, cur);
+                    return;
+                }
+                // Anchor is stale (dragon moved while uncontrolled) — fall
+                // through and re-anchor at the current position.
+            }
+
+            int speedIncrease = rideSkill.getSpeedIncrease() != null
+                    && rideSkill.getSpeedIncrease().getValue() != null
+                    ? rideSkill.getSpeedIncrease().getValue() : 0;
+            double baseStep = RideSkillFlightController.resolveBaseSpeed(pet, dragon);
+            double step = baseStep * (1.0 + speedIncrease / 100.0);
 
             double radYaw = Math.toRadians(yaw);
             double radPitch = Math.toRadians(pitch);
@@ -424,6 +471,15 @@ public class PetEnderDragon extends PetImpl implements PetLavaEntity, PetFlyingE
             next.setPitch(0);
 
             safeTeleport(dragon, next);
+            if (!hasMoveInput) {
+                // With zero input `next` is the current position, so it's a
+                // valid anchor even if safeTeleport dropped the position.
+                hold.holding = true;
+                hold.x = next.getX();
+                hold.y = next.getY();
+                hold.z = next.getZ();
+            }
+            hold.lastYaw = yaw;
         }
 
         /**
