@@ -205,9 +205,7 @@ public class Skilltree {
             }
         }
 
-        List<UpgradeEntry> sorted = new ArrayList<>(this.upgrades);
-        sorted.sort(Comparator.comparingInt(entry -> entry.rule().getPriority()));
-        for (UpgradeEntry entry : sorted) {
+        for (UpgradeEntry entry : this.upgrades) {
             if (entry.rule().check(level)) {
                 upgrades.add(entry.upgrade());
             }
@@ -217,12 +215,18 @@ public class Skilltree {
 
     /**
      * Registers an upgrade to be applied whenever the given level rule matches.
+     * The backing list is kept sorted by rule priority (stable) so the getters
+     * can iterate it directly.
      *
      * @param levelRule the rule determining at which levels this upgrade activates
      * @param upgrade   the upgrade to apply
      */
     public void addUpgrade(LevelRule levelRule, Upgrade<?> upgrade) {
-        this.upgrades.add(new UpgradeEntry(levelRule, upgrade));
+        int index = this.upgrades.size();
+        while (index > 0 && this.upgrades.get(index - 1).rule().getPriority() > levelRule.getPriority()) {
+            index--;
+        }
+        this.upgrades.add(index, new UpgradeEntry(levelRule, upgrade));
     }
 
     /**
@@ -233,9 +237,7 @@ public class Skilltree {
      */
     public List<String> getNotifications(int level) {
         List<String> notifications = new ArrayList<>();
-        List<NotificationEntry> sorted = new ArrayList<>(this.notifications);
-        sorted.sort(Comparator.comparingInt(entry -> entry.rule().getPriority()));
-        for (NotificationEntry entry : sorted) {
+        for (NotificationEntry entry : this.notifications) {
             if (entry.rule().check(level)) {
                 notifications.add(entry.notification());
             }
@@ -245,12 +247,17 @@ public class Skilltree {
 
     /**
      * Registers a notification message to be displayed when the given level rule matches.
+     * The backing list is kept sorted by rule priority (stable), like {@link #addUpgrade}.
      *
      * @param levelRule    the rule determining at which levels the notification fires
      * @param notification the message to display to the pet owner
      */
     public void addNotification(LevelRule levelRule, String notification) {
-        this.notifications.add(new NotificationEntry(levelRule, notification));
+        int index = this.notifications.size();
+        while (index > 0 && this.notifications.get(index - 1).rule().getPriority() > levelRule.getPriority()) {
+            index--;
+        }
+        this.notifications.add(index, new NotificationEntry(levelRule, notification));
     }
 
     /** A level-gated upgrade binding. Stored as a list entry (not a map key) because two
