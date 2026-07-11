@@ -47,8 +47,14 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 public class PermissionModifier extends ExperienceModifier {
 
     private static final String PREFIX = "mypet.experience.multiplier.";
+    private static final long CACHE_TTL_MS = 10_000;
 
     final Pet pet;
+
+    private int cachedHighest = 0;
+    // 0, not Long.MIN_VALUE: `now - Long.MIN_VALUE` overflows negative, so the
+    // first refresh would never run and the multiplier would stay disabled.
+    private long cachedAt = 0;
 
     /**
      * Creates a permission modifier bound to the specified pet.
@@ -66,11 +72,24 @@ public class PermissionModifier extends ExperienceModifier {
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return experience;
 
+        long now = System.currentTimeMillis();
+        if (now - cachedAt >= CACHE_TTL_MS) {
+            cachedHighest = findHighestMultiplier(owner);
+            cachedAt = now;
+        }
+
+        if (cachedHighest > 0) {
+            experience *= cachedHighest / 100.0;
+        }
+        return experience;
+    }
+
+    private static int findHighestMultiplier(Player owner) {
         int highest = 0;
         for (PermissionAttachmentInfo pai : owner.getEffectivePermissions()) {
             if (!pai.getValue()) continue;
-            String perm = pai.getPermission().toLowerCase();
-            if (!perm.startsWith(PREFIX)) continue;
+            String perm = pai.getPermission();
+            if (!perm.regionMatches(true, 0, PREFIX, 0, PREFIX.length())) continue;
 
             try {
                 int value = Integer.parseInt(perm.substring(PREFIX.length()));
@@ -78,10 +97,6 @@ public class PermissionModifier extends ExperienceModifier {
             } catch (NumberFormatException ignored) {
             }
         }
-
-        if (highest > 0) {
-            experience *= highest / 100.0;
-        }
-        return experience;
+        return highest;
     }
 }
