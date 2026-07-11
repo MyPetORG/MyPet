@@ -216,11 +216,7 @@ public class MonsterExperience {
      * @return the matching experience entry (never {@code null})
      */
     public static MonsterExperience getMonsterExperience(Entity entity) {
-        Component customName = entity.customName();
-        String name = customName != null
-                ? PlainTextComponentSerializer.plainText().serialize(customName)
-                : null;
-
+        // getServices is memoized upstream, so no local hook cache is needed here.
         List<MonsterExperienceHook> hooks = MyPetApi.getServiceManager().getServices(MonsterExperienceHook.class);
         for (MonsterExperienceHook hook : hooks) {
             MonsterExperience monsterExperience = hook.getMonsterExperience(entity);
@@ -229,16 +225,21 @@ public class MonsterExperience {
             }
         }
 
-        if (name != null) {
-            if (!PLUGIN_CONFIG_PATTERN.matcher(name).matches() && CUSTOM_MOB_EXP.containsKey(name)) {
-                return CUSTOM_MOB_EXP.get(name);
+        if (!CUSTOM_MOB_EXP.isEmpty()) {
+            Component customName = entity.customName();
+            if (customName != null) {
+                String name = PlainTextComponentSerializer.plainText().serialize(customName);
+                if (!PLUGIN_CONFIG_PATTERN.matcher(name).matches()) {
+                    MonsterExperience custom = CUSTOM_MOB_EXP.get(name);
+                    if (custom != null) {
+                        return custom;
+                    }
+                }
             }
         }
 
-        if (mobExp.containsKey(entity.getType().name())) {
-            return mobExp.get(entity.getType().name());
-        }
-        return UNKNOWN;
+        MonsterExperience byType = mobExp.get(entity.getType().name());
+        return byType != null ? byType : UNKNOWN;
     }
 
     /**
