@@ -31,6 +31,7 @@ import org.bukkit.entity.EntityType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
 /**
@@ -202,7 +203,7 @@ public class MonsterExperience {
     }
 
     private static double doubleRandom(double low, double high) {
-        return Math.random() * (high - low) + low;
+        return ThreadLocalRandom.current().nextDouble() * (high - low) + low;
     }
 
     /**

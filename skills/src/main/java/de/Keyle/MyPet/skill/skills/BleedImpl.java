@@ -31,16 +31,17 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class BleedImpl extends AbstractSkill implements Bleed {
 
-    private static Random random = new Random();
+    private static final BlockData BLOOD_PARTICLE_DATA = Material.REDSTONE_BLOCK.createBlockData();
 
     @Getter
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
@@ -106,7 +107,7 @@ public class BleedImpl extends AbstractSkill implements Bleed {
 
     @Override
     public boolean trigger() {
-        return random.nextDouble() <= chance.getValue() / 100.;
+        return ThreadLocalRandom.current().nextDouble() <= chance.getValue() / 100.;
     }
 
     @Override
@@ -231,7 +232,7 @@ public class BleedImpl extends AbstractSkill implements Bleed {
                     10,
                     0.3, 0.5, 0.3,
                     0.1,
-                    Material.REDSTONE_BLOCK.createBlockData()
+                    BLOOD_PARTICLE_DATA
             );
         }
 

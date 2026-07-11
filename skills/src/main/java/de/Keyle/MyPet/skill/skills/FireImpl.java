@@ -29,11 +29,9 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class FireImpl extends AbstractSkill implements Fire {
-
-    private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
@@ -70,7 +68,7 @@ public class FireImpl extends AbstractSkill implements Fire {
     }
 
     public boolean trigger() {
-        return random.nextDouble() <= chance.getValue() / 100.;
+        return ThreadLocalRandom.current().nextDouble() <= chance.getValue() / 100.;
     }
 
     public UpgradeComputer<Integer> getDuration() {

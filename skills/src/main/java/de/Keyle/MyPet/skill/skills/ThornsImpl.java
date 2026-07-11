@@ -33,11 +33,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ThornsImpl extends AbstractSkill implements Thorns {
-
-    private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> reflectedDamage = new UpgradeComputer<>(0);
@@ -87,7 +85,7 @@ public class ThornsImpl extends AbstractSkill implements Thorns {
 
     @Override
     public boolean trigger() {
-        return random.nextDouble() < chance.getValue() / 100.;
+        return ThreadLocalRandom.current().nextDouble() < chance.getValue() / 100.;
     }
 
     @Override

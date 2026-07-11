@@ -33,11 +33,10 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class LightningImpl extends AbstractSkill implements Lightning {
 
-    private static Random random = new Random();
     @Getter
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     @Getter
@@ -76,7 +75,7 @@ public class LightningImpl extends AbstractSkill implements Lightning {
     }
 
     public boolean trigger() {
-        return !isStriking && random.nextDouble() <= chance.getValue() / 100.;
+        return !isStriking && ThreadLocalRandom.current().nextDouble() <= chance.getValue() / 100.;
     }
 
     public void apply(LivingEntity target) {

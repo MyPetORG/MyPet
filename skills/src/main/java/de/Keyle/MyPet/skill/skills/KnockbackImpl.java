@@ -28,11 +28,9 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class KnockbackImpl extends AbstractSkill implements Knockback {
-
-    private static Random random = new Random();
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
 
@@ -64,7 +62,7 @@ public class KnockbackImpl extends AbstractSkill implements Knockback {
     }
 
     public boolean trigger() {
-        return random.nextDouble() < chance.getValue() / 100.;
+        return ThreadLocalRandom.current().nextDouble() < chance.getValue() / 100.;
     }
 
     public void apply(LivingEntity target) {

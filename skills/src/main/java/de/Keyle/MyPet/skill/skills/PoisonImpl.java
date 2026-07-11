@@ -30,11 +30,10 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PoisonImpl extends AbstractSkill implements Poison {
 
-    private static Random random = new Random();
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);
 
@@ -70,7 +69,7 @@ public class PoisonImpl extends AbstractSkill implements Poison {
     }
 
     public boolean trigger() {
-        return random.nextDouble() <= chance.getValue() / 100.;
+        return ThreadLocalRandom.current().nextDouble() <= chance.getValue() / 100.;
     }
 
     public UpgradeComputer<Integer> getDuration() {

@@ -35,6 +35,7 @@ import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode.*;
 
@@ -53,7 +54,6 @@ import static de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode.*;
  */
 public class BehaviorImpl extends AbstractSkill implements Behavior {
 
-    protected static Random random = new Random();
     protected Set<BehaviorMode> activeBehaviors = new HashSet<>();
     protected BehaviorMode selectedBehavior = BehaviorMode.Normal;
     Iterator<BehaviorMode> behaviorCycler;
@@ -281,7 +281,7 @@ public class BehaviorImpl extends AbstractSkill implements Behavior {
      */
     @Override
     public void schedule() {
-        if (selectedBehavior == Aggressive && random.nextBoolean() && pet.getStatus() == Pet.PetState.Here) {
+        if (selectedBehavior == Aggressive && ThreadLocalRandom.current().nextBoolean() && pet.getStatus() == Pet.PetState.Here) {
             Mob entity = pet.getBukkitEntity();
             if (entity != null) {
                 entity.getWorld().spawnParticle(Particle.ANGRY_VILLAGER, entity.getLocation().add(0, entity.getEyeHeight(), 0), 1, 0.2F, 0.2F, 0.2F, 0.5F);
