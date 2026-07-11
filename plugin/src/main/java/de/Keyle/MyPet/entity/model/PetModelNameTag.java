@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.PetImpl;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Location;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.TextDisplay;
@@ -67,6 +68,8 @@ public final class PetModelNameTag {
             return; // nametags globally disabled
         }
         final UUID petId = pet.getUUID();
+        // Resolved once per task — model swaps go through startForPet again,
+        // which recomputes it.
         double height = PetModelService.nameHeight(pet);
         TextDisplay display = mob.getWorld().spawn(mob.getLocation().add(0, height, 0), TextDisplay.class, d -> {
             d.setBillboard(Display.Billboard.CENTER);
@@ -81,8 +84,9 @@ public final class PetModelNameTag {
         mob.setCustomNameVisible(false);
 
         Plugin plugin = MyPetApi.getPlugin();
+        FollowState state = new FollowState();
         ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin,
-                t -> follow(pet), () -> stop(petId), 1L, 1L);
+                t -> follow(pet, state), () -> stop(petId), 1L, 1L);
         if (task != null) {
             tasks.put(petId, task);
         }
@@ -119,7 +123,14 @@ public final class PetModelNameTag {
         }
     }
 
-    private static void follow(Pet pet) {
+    /** Per-task follow state: last teleported-to mob position. */
+    private static final class FollowState {
+        double lastX = Double.NaN;
+        double lastY;
+        double lastZ;
+    }
+
+    private static void follow(Pet pet, FollowState state) {
         UUID petId = pet.getUUID();
         TextDisplay display = displays.get(petId);
         Mob mob = pet.getBukkitEntity();
@@ -127,7 +138,17 @@ public final class PetModelNameTag {
             stop(petId);
             return;
         }
-        display.teleportAsync(mob.getLocation().add(0, PetModelService.nameHeight(pet), 0));
+        Location loc = mob.getLocation();
+        if (loc.getX() == state.lastX && loc.getY() == state.lastY && loc.getZ() == state.lastZ) {
+            return;
+        }
+        state.lastX = loc.getX();
+        state.lastY = loc.getY();
+        state.lastZ = loc.getZ();
+        // Recompute the name height on each move: a pet's bounding box can change at
+        // runtime (baby→adult growth) and the auto height derives from it. The stationary
+        // check above keeps this off the hot path while the pet isn't moving.
+        display.teleportAsync(loc.add(0, PetModelService.nameHeight(pet), 0));
     }
 
     /** @return true when a display was actually removed. */
