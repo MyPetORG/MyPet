@@ -28,24 +28,31 @@ import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Bukkit-side bridge that wires every {@link PetBehavior} in
  * {@link PetBehaviorRegistry} to a real Bukkit {@code EventExecutor}.
  *
- * <p>Called once during plugin enable. For each registered behavior, this
- * registers an executor on the matching event class at the behavior's
- * priority. When Bukkit fires the event, the executor:
+ * <p>Called once during plugin enable. Behaviors sharing (event class,
+ * priority, ignoreCancelled) share ONE Bukkit executor — hot events like
+ * {@code EntityDamageByEntityEvent} carry several behaviors, and one
+ * executor per behavior would multiply the per-event dispatch cost. When
+ * Bukkit fires the event, the group executor:
  *
  * <ol>
- *   <li>Pulls the relevant entity out of the event via
- *       {@link PetBehavior#entityExtractor}.</li>
+ *   <li>Pulls the relevant entity out of the event via each behavior's
+ *       {@link PetBehavior#entityExtractor} (extractors can differ within
+ *       a group — victim vs. damager), memoizing consecutive lookups.</li>
  *   <li>Looks up the entity in {@link MyPetApi#getPetManager}. Skip if it's
  *       not a managed pet.</li>
  *   <li>Compares the pet's type name to {@link PetBehavior#petType}.
@@ -76,58 +83,88 @@ public final class PetBehaviorDispatcher implements Listener {
     public static void registerAll(Plugin plugin) {
         PetBehaviorDispatcher self = new PetBehaviorDispatcher();
         PluginManager pm = plugin.getServer().getPluginManager();
+        Map<GroupKey, List<PetBehavior<?>>> groups = new ConcurrentHashMap<>();
         // Dedup set covers the narrow race window between this initial
         // sweep and any registration that fires the hook concurrently.
         Set<PetBehavior<?>> wired = ConcurrentHashMap.newKeySet();
         PetBehaviorRegistry.setDispatchHook(behavior -> {
             if (wired.add(behavior)) {
-                registerOne(self, plugin, pm, behavior);
+                addToGroup(self, plugin, pm, groups, behavior);
             }
         });
         for (PetBehavior<?> b : PetBehaviorRegistry.all()) {
             if (wired.add(b)) {
-                registerOne(self, plugin, pm, b);
+                addToGroup(self, plugin, pm, groups, b);
             }
         }
     }
 
-    private static <E extends Event> void registerOne(
-            Listener listener, Plugin plugin, PluginManager pm, PetBehavior<E> behavior) {
-        pm.registerEvent(
-                behavior.eventClass(),
-                listener,
-                behavior.priority(),
-                (l, event) -> {
-                    if (behavior.eventClass().isInstance(event)) {
-                        invoke(behavior, behavior.eventClass().cast(event));
-                    }
-                },
-                plugin,
-                behavior.ignoreCancelled());
+    /** One Bukkit executor per distinct registration shape. */
+    private record GroupKey(Class<? extends Event> eventClass, EventPriority priority, boolean ignoreCancelled) {}
+
+    private static void addToGroup(
+            Listener listener, Plugin plugin, PluginManager pm,
+            Map<GroupKey, List<PetBehavior<?>>> groups, PetBehavior<?> behavior) {
+        GroupKey key = new GroupKey(behavior.eventClass(), behavior.priority(), behavior.ignoreCancelled());
+        groups.computeIfAbsent(key, k -> {
+            List<PetBehavior<?>> group = new CopyOnWriteArrayList<>();
+            pm.registerEvent(
+                    k.eventClass(),
+                    listener,
+                    k.priority(),
+                    (l, event) -> {
+                        if (k.eventClass().isInstance(event)) {
+                            dispatch(group, event);
+                        }
+                    },
+                    plugin,
+                    k.ignoreCancelled());
+            return group;
+        }).add(behavior);
     }
 
-    private static <E extends Event> void invoke(PetBehavior<E> behavior, E event) {
-        Entity entity = behavior.entityExtractor().apply(event);
-        if (entity == null) return;
-        // In disabled world groups, pets behave as vanilla mobs — skip
-        // PetBehavior dispatch entirely so per-pet gating doesn't interfere
-        // with vanilla physics in worlds where MyPet is turned off.
-        if (WorldGroup.getGroupByWorld(entity.getWorld()).isDisabled()) return;
-        Pet pet = MyPetApi.getPetManager().getPetFromEntity(entity);
-        if (pet == null) return;
-        // Match on the registered PetType name (consistent with
-        // PetLifecycleHookRegistry.forPet). Using getSimpleName().substring(3)
-        // would diverge for third-party pet classes that don't follow the
-        // "Pet" prefix convention.
-        if (!pet.getPetType().name().equals(behavior.petType())) return;
-        if (!(entity instanceof Mob mob)) return;
-        try {
-            behavior.handler().accept(event, pet, mob);
-        } catch (Throwable t) {
-            MyPetApi.getLogger().warning(
-                    "PetBehavior handler for " + behavior.petType() + "/"
-                            + behavior.eventClass().getSimpleName() + " threw "
-                            + t.getClass().getSimpleName() + ": " + t.getMessage());
+    @SuppressWarnings("unchecked")
+    private static void dispatch(List<PetBehavior<?>> group, Event event) {
+        // Behaviors in a group may extract different entities from the same
+        // event (onPetDamaged = victim, onPetDamages = damager), so the pet
+        // is resolved per extracted entity, memoized for consecutive hits.
+        Entity lastEntity = null;
+        Pet lastPet = null;
+        boolean worldChecked = false;
+        for (PetBehavior<?> raw : group) {
+            PetBehavior<Event> behavior = (PetBehavior<Event>) raw;
+            Entity entity = behavior.entityExtractor().apply(event);
+            if (entity == null) continue;
+            Pet pet;
+            if (entity == lastEntity) {
+                pet = lastPet;
+            } else {
+                pet = MyPetApi.getPetManager().getPetFromEntity(entity);
+                lastEntity = entity;
+                lastPet = pet;
+            }
+            if (pet == null) continue;
+            // In disabled world groups, pets behave as vanilla mobs — skip
+            // dispatch entirely. Checked once per event, after the far more
+            // selective pet check.
+            if (!worldChecked) {
+                if (WorldGroup.getGroupByWorld(entity.getWorld()).isDisabled()) return;
+                worldChecked = true;
+            }
+            // Match on the registered PetType name (consistent with
+            // PetLifecycleHookRegistry.forPet). Using getSimpleName().substring(3)
+            // would diverge for third-party pet classes that don't follow the
+            // "Pet" prefix convention.
+            if (!pet.getPetType().name().equals(behavior.petType())) continue;
+            if (!(entity instanceof Mob mob)) continue;
+            try {
+                behavior.handler().accept(event, pet, mob);
+            } catch (Throwable t) {
+                MyPetApi.getLogger().warning(
+                        "PetBehavior handler for " + behavior.petType() + "/"
+                                + behavior.eventClass().getSimpleName() + " threw "
+                                + t.getClass().getSimpleName() + ": " + t.getMessage());
+            }
         }
     }
 }
