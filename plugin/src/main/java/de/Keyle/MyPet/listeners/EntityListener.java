@@ -71,13 +71,14 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
 public class EntityListener implements Listener {
 
-    Map<UUID, ItemStack> usedItems = new HashMap<>();
-    Set<UUID> justLeashed = new HashSet<>();
+    Map<UUID, ItemStack> usedItems = new ConcurrentHashMap<>();
+    Set<UUID> justLeashed = ConcurrentHashMap.newKeySet();
 
     @EventHandler(ignoreCancelled = true)
     public void on(CreatureSpawnEvent event) {
@@ -100,9 +101,18 @@ public class EntityListener implements Listener {
             return;
         }
         if (MyPetGlobal.Misc.ALLOW_RANGED_LEASHING.get()) {
+            // Snapshot the held item for any right-click: the leash item is
+            // admin-configurable to any material and custom-plugin items can
+            // launch projectiles, so a material whitelist would silently break
+            // ranged leashing for those. The ProjectileLaunchEvent consumer
+            // only tags genuine non-arrow player projectiles.
             if (event.useItemInHand() != Event.Result.DENY && event.getItem() != null) {
-                usedItems.put(event.getPlayer().getUniqueId(), event.getItem().clone());
-                event.getPlayer().getScheduler().runDelayed(MyPetApi.getPlugin(), t -> usedItems.remove(event.getPlayer().getUniqueId()), null, 1L);
+                UUID playerId = event.getPlayer().getUniqueId();
+                usedItems.put(playerId, event.getItem().clone());
+                // Retired callback also removes — without it the entry leaks
+                // when the player disconnects the same tick.
+                event.getPlayer().getScheduler().runDelayed(MyPetApi.getPlugin(),
+                        t -> usedItems.remove(playerId), () -> usedItems.remove(playerId), 1L);
             }
         }
     }
