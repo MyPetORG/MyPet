@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static de.Keyle.MyPet.MyPetApi.getPetManager;
 
@@ -82,6 +83,7 @@ public class PetDuelTargetGoal implements Goal<Mob> {
     private final double range;
     private Mob target;
     private Mob duelOpponent = null;
+    private int rescanCooldown = 0;
 
     /**
      * @param petEntity the pet that will look for a duel partner
@@ -120,6 +122,12 @@ public class PetDuelTargetGoal implements Goal<Mob> {
         if (owner == null) {
             return false;
         }
+        // Rescan every ~10 ticks — the AABB scan is too expensive for every tick.
+        if (rescanCooldown > 0) {
+            rescanCooldown--;
+            return false;
+        }
+        rescanCooldown = 10 + ThreadLocalRandom.current().nextInt(5);
         // Scan around the pet (owning region thread). Scanning around the owner would touch
         // the owner's region from the pet's thread on Folia.
         Location petLoc = mob.getLocation();
@@ -212,6 +220,7 @@ public class PetDuelTargetGoal implements Goal<Mob> {
         pet.forgetTarget();
         duelOpponent = null;
         target = null;
+        rescanCooldown = 0;
     }
 
     /** @return the pet currently being dueled, or {@code null} if none */

@@ -39,6 +39,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Paper {@link Goal} that auto-targets hostile entities while the owner is
@@ -78,6 +79,7 @@ public class PetControlTargetGoal implements Goal<Mob> {
     private final double range;
     private LivingEntity target;
     private PetControlGoal controlGoal;
+    private int rescanCooldown = 0;
 
     /**
      * @param petEntity the pet that will acquire targets while under owner control
@@ -124,6 +126,13 @@ public class PetControlTargetGoal implements Goal<Mob> {
         if (behaviorSkill != null && behaviorSkill.isActive() && behaviorSkill.getBehavior() == BehaviorMode.Friendly) {
             return false;
         }
+        // Rescan every ~10 ticks — the AABB scan + per-candidate hook chain is
+        // too expensive for every tick.
+        if (rescanCooldown > 0) {
+            rescanCooldown--;
+            return false;
+        }
+        rescanCooldown = 10 + ThreadLocalRandom.current().nextInt(5);
 
         Location petLoc = mob.getLocation();
         for (Entity entity : petLoc.getWorld().getNearbyEntities(petLoc, range, 4.0, range)) {
@@ -206,6 +215,7 @@ public class PetControlTargetGoal implements Goal<Mob> {
     @Override
     public void stop() {
         pet.forgetTarget();
+        rescanCooldown = 0;
     }
 
     @Override

@@ -38,6 +38,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Paper {@link Goal} that acquires a hostile target for a pet whose
@@ -75,6 +76,7 @@ public class PetAggressiveTargetGoal implements Goal<Mob> {
     private final Mob mob;
     private final double range;
     private LivingEntity target;
+    private int rescanCooldown = 0;
 
     /**
      * @param petEntity the pet that will acquire targets
@@ -106,7 +108,6 @@ public class PetAggressiveTargetGoal implements Goal<Mob> {
         if (owner == null) {
             return false;
         }
-        Location petLoc = mob.getLocation();
         // Skip the scan if the pet isn't currently owned by this region thread. Folia can run
         // goal activation checks during cross-region transitions or via `inactiveTick` on
         // regions that don't own the entity; getNearbyEntities would then read world data we
@@ -114,11 +115,21 @@ public class PetAggressiveTargetGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
+        // Rescan every ~10 ticks (vanilla NearestAttackableTargetGoal cadence) —
+        // the AABB scan + per-candidate hook chain is too expensive for every tick.
+        if (rescanCooldown > 0) {
+            rescanCooldown--;
+            return false;
+        }
+        rescanCooldown = 10 + ThreadLocalRandom.current().nextInt(5);
+        Location petLoc = mob.getLocation();
         // Search around the pet. Searching around the owner would touch the owner's region from
         // the pet's thread, which Folia rejects. The existing distance-to-pet filter below
         // already narrowed results to a small radius of the pet, so this is behaviourally equivalent.
 
-        for (Entity entity : mob.getWorld().getNearbyEntities(petLoc, range, range, range)) {
+        // Scan no wider than the distanceSquared <= 91 accept check below (~9.5 blocks).
+        double scanRadius = Math.min(range, 9.54);
+        for (Entity entity : mob.getWorld().getNearbyEntities(petLoc, scanRadius, scanRadius, scanRadius)) {
             if (!(entity instanceof LivingEntity living) || entity.equals(mob)) {
                 continue;
             }
@@ -209,6 +220,7 @@ public class PetAggressiveTargetGoal implements Goal<Mob> {
     public void stop() {
         pet.forgetTarget();
         target = null;
+        rescanCooldown = 0;
     }
 
     @Override

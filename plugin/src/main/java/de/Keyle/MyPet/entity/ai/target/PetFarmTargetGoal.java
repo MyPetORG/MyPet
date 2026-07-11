@@ -37,6 +37,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Paper {@link Goal} that auto-targets hostile {@link Monster Monsters}
@@ -62,6 +63,7 @@ public class PetFarmTargetGoal implements Goal<Mob> {
     private final Mob mob;
     private final double range;
     private LivingEntity target;
+    private int rescanCooldown = 0;
 
     /**
      * @param petEntity the pet that will acquire monster targets while in Farm mode
@@ -96,12 +98,21 @@ public class PetFarmTargetGoal implements Goal<Mob> {
         if (owner == null) {
             return false;
         }
+        // Rescan every ~10 ticks (vanilla NearestAttackableTargetGoal cadence) —
+        // the AABB scan + per-candidate hook chain is too expensive for every tick.
+        if (rescanCooldown > 0) {
+            rescanCooldown--;
+            return false;
+        }
+        rescanCooldown = 10 + ThreadLocalRandom.current().nextInt(5);
         Location petLoc = mob.getLocation();
         // Scan around the pet (owning region thread). Scanning around the owner would touch
         // the owner's region from the pet's thread on Folia. The distance-to-pet filter
         // below already restricts results to a small radius of the pet.
 
-        for (Entity entity : mob.getWorld().getNearbyEntities(petLoc, range, range, range)) {
+        // Scan no wider than the distanceSquared <= 91 accept check below (~9.5 blocks).
+        double scanRadius = Math.min(range, 9.54);
+        for (Entity entity : mob.getWorld().getNearbyEntities(petLoc, scanRadius, scanRadius, scanRadius)) {
             if (!(entity instanceof Monster monster)) {
                 continue;
             }
@@ -164,6 +175,7 @@ public class PetFarmTargetGoal implements Goal<Mob> {
     public void stop() {
         pet.forgetTarget();
         target = null;
+        rescanCooldown = 0;
     }
 
     @Override
