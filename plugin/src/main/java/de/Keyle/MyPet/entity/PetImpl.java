@@ -1086,10 +1086,8 @@ public abstract class PetImpl implements Pet, NBTStorage {
     public void schedule() {
         if (status != PetState.Despawned && getOwner().isOnline()) {
             if (status == PetState.Here) {
-                for (Skill skill : skills.all()) {
-                    if (skill instanceof Scheduler scheduler) {
-                        scheduler.schedule();
-                    }
+                for (Scheduler scheduler : skills.getSchedulerSkills()) {
+                    scheduler.schedule();
                 }
 
                 if (MyPetGlobal.HungerSystem.USE_HUNGER_SYSTEM.get()) {

@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.event.PetDamageEvent;
 import de.Keyle.MyPet.api.event.PetOnHitSkillEvent;
 import de.Keyle.MyPet.api.skill.OnDamageByEntitySkill;
 import de.Keyle.MyPet.api.skill.OnHitSkill;
-import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -85,15 +84,13 @@ public class PetSkillTriggerListener implements Listener {
         }
 
         if (!isSkillActive) {
-            for (Skill skill : pet.getSkills().all()) {
-                if (skill instanceof OnDamageByEntitySkill damageByEntitySkill) {
-                    if (damageByEntitySkill.trigger()) {
-                        isSkillActive = true;
-                        try {
-                            damageByEntitySkill.apply(damager, event);
-                        } finally {
-                            isSkillActive = false;
-                        }
+            for (OnDamageByEntitySkill damageByEntitySkill : pet.getSkills().getOnDamageByEntitySkills()) {
+                if (damageByEntitySkill.trigger()) {
+                    isSkillActive = true;
+                    try {
+                        damageByEntitySkill.apply(damager, event);
+                    } finally {
+                        isSkillActive = false;
                     }
                 }
             }
@@ -141,18 +138,16 @@ public class PetSkillTriggerListener implements Listener {
 
         // Dispatch OnHitSkill skills
         if (!isSkillActive) {
-            for (Skill skill : pet.getSkills().all()) {
-                if (skill instanceof OnHitSkill onHitSkill) {
-                    if (onHitSkill.trigger()) {
-                        PetOnHitSkillEvent skillEvent = new PetOnHitSkillEvent(pet, onHitSkill, (LivingEntity) target);
-                        Bukkit.getPluginManager().callEvent(skillEvent);
-                        if (!skillEvent.isCancelled()) {
-                            isSkillActive = true;
-                            try {
-                                onHitSkill.apply((LivingEntity) target);
-                            } finally {
-                                isSkillActive = false;
-                            }
+            for (OnHitSkill onHitSkill : pet.getSkills().getOnHitSkills()) {
+                if (onHitSkill.trigger()) {
+                    PetOnHitSkillEvent skillEvent = new PetOnHitSkillEvent(pet, onHitSkill, (LivingEntity) target);
+                    Bukkit.getPluginManager().callEvent(skillEvent);
+                    if (!skillEvent.isCancelled()) {
+                        isSkillActive = true;
+                        try {
+                            onHitSkill.apply((LivingEntity) target);
+                        } finally {
+                            isSkillActive = false;
                         }
                     }
                 }

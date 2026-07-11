@@ -27,9 +27,12 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.ErrorUtil;
+import de.Keyle.MyPet.api.util.Scheduler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,6 +52,9 @@ import java.util.Set;
 public class Skills {
     private final BiMap<String, Skill> skills = HashBiMap.create();
     private final Map<Class<? extends Skill>, Skill> skillClasses = new HashMap<>();
+    private final List<OnHitSkill> onHitSkills;
+    private final List<OnDamageByEntitySkill> onDamageByEntitySkills;
+    private final List<Scheduler> schedulerSkills;
 
     /**
      * Creates a new skill container for the given pet, instantiating all
@@ -57,6 +63,9 @@ public class Skills {
      * @param pet the pet that owns these skill instances
      */
     public Skills(Pet pet) {
+        List<OnHitSkill> onHit = new ArrayList<>();
+        List<OnDamageByEntitySkill> onDamageByEntity = new ArrayList<>();
+        List<Scheduler> schedulers = new ArrayList<>();
         for (Class<? extends Skill> clazz : MyPetApi.getSkillManager().getRegisteredSkills()) {
             try {
                 Skill skill = MyPetApi.getSkillManager().getNewSkillInstance(clazz, pet);
@@ -68,10 +77,17 @@ public class Skills {
                 for (Class<? extends Skill> c : result) {
                     skillClasses.put(c, skill);
                 }
+
+                if (skill instanceof OnHitSkill onHitSkill) onHit.add(onHitSkill);
+                if (skill instanceof OnDamageByEntitySkill onDamageSkill) onDamageByEntity.add(onDamageSkill);
+                if (skill instanceof Scheduler scheduler) schedulers.add(scheduler);
             } catch (Exception e) {
                 ErrorUtil.report(e);
             }
         }
+        this.onHitSkills = List.copyOf(onHit);
+        this.onDamageByEntitySkills = List.copyOf(onDamageByEntity);
+        this.schedulerSkills = List.copyOf(schedulers);
     }
 
     /**
@@ -99,6 +115,21 @@ public class Skills {
     /** Returns all skill instances in this container. */
     public Set<Skill> all() {
         return skills.values();
+    }
+
+    /** Immutable list of all skills that implement {@link OnHitSkill}. */
+    public List<OnHitSkill> getOnHitSkills() {
+        return onHitSkills;
+    }
+
+    /** Immutable list of all skills that implement {@link OnDamageByEntitySkill}. */
+    public List<OnDamageByEntitySkill> getOnDamageByEntitySkills() {
+        return onDamageByEntitySkills;
+    }
+
+    /** Immutable list of all skills that implement {@link Scheduler}. */
+    public List<Scheduler> getSchedulerSkills() {
+        return schedulerSkills;
     }
 
     /** Returns the set of all skill names (from {@code @SkillName} annotations). */
