@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.ride;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.entity.PetAttributes;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
@@ -34,6 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,14 +44,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * Drives a pet's velocity from its rider's WASD/jump/sneak input when the Ride
  * skill is active.
  *
- * <p>Per-pet scheduling: one task per pet, registered on spawn and cancelled on
- * despawn. Fuel state is held in the controller instance so each pet gets its
- * own fuel value naturally (no more shared map with leaked entries).
+ * <p>Per-pet scheduling: one task per pet with an active Ride skill, started on
+ * spawn (or when Ride activates later) and cancelled on despawn. Fuel state is
+ * held in the controller instance so each pet gets its own fuel value naturally
+ * (no more shared map with leaked entries).
  */
 public class RideSkillFlightController {
 
     private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
     private static final Map<UUID, RideSkillFlightController> controllers = new ConcurrentHashMap<>();
+    /** Watchers on the Ride skill's active state for pets spawned without it. */
+    private static final Map<UUID, UpgradeComputer.UpgradeCallback<Boolean>> activationWatchers = new ConcurrentHashMap<>();
 
     /**
      * Air friction in vanilla's leaky-integrator travel pipeline
@@ -103,9 +108,36 @@ public class RideSkillFlightController {
     public static void startForPet(Pet pet) {
         Mob mob = pet.getBukkitEntity();
         if (mob == null) return;
+        stopForPet(pet);
+        Ride rideSkill = rideSkill(pet);
+        UpgradeComputer<Boolean> active = rideSkill != null ? rideSkill.getActive() : null;
+        if (active == null) return;
+        if (!Boolean.TRUE.equals(active.getValue())) {
+            // No Ride skill yet — skip the per-tick task. Watch the skill's
+            // active state so pets that gain Ride later (skilltree apply,
+            // level-up) still get their task.
+            UpgradeComputer.UpgradeCallback<Boolean> watcher = (value, reason) -> {
+                // Idempotent: a skilltree re-apply (e.g. on level-up) re-notifies
+                // with an unchanged TRUE value; rescheduling would cancel and
+                // rebuild the running task, resetting ride fuel. Start only when
+                // no task is running yet.
+                if (Boolean.TRUE.equals(value) && !tasks.containsKey(pet.getUUID())) {
+                    scheduleTask(pet);
+                }
+            };
+            activationWatchers.put(pet.getUUID(), watcher);
+            active.addCallback(watcher);
+            return;
+        }
+        scheduleTask(pet);
+    }
+
+    private static void scheduleTask(Pet pet) {
+        Mob mob = pet.getBukkitEntity();
+        if (mob == null) return;
         Plugin plugin = MyPetApi.getPlugin();
         UUID key = pet.getUUID();
-        stopForPet(pet);
+        cancelTask(key);
         RideSkillFlightController controller = new RideSkillFlightController();
         controllers.put(key, controller);
         ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> {
@@ -121,6 +153,18 @@ public class RideSkillFlightController {
 
     public static void stopForPet(Pet pet) {
         UUID key = pet.getUUID();
+        cancelTask(key);
+        controllers.remove(key);
+        UpgradeComputer.UpgradeCallback<Boolean> watcher = activationWatchers.remove(key);
+        if (watcher != null) {
+            Ride rideSkill = rideSkill(pet);
+            if (rideSkill != null && rideSkill.getActive() != null) {
+                rideSkill.getActive().removeCallback(watcher);
+            }
+        }
+    }
+
+    private static void cancelTask(UUID key) {
         ScheduledTask task = tasks.remove(key);
         if (task != null) {
             try {
@@ -128,7 +172,14 @@ public class RideSkillFlightController {
             } catch (Exception ignored) {
             }
         }
-        controllers.remove(key);
+    }
+
+    private static Ride rideSkill(Pet pet) {
+        try {
+            return pet.getSkills().get(Ride.class);
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
     /**
@@ -174,15 +225,15 @@ public class RideSkillFlightController {
     private void tickPet(Pet pet) {
         Mob mob = pet.getBukkitEntity();
         if (mob == null || mob.isDead()) return;
-        if (mob.getPassengers().isEmpty()) return;
+        if (mob.isEmpty()) return;
         // EnderDragon's vanilla aiStep applies ~0.8 horizontal friction to
         // setVelocity calls every tick, so velocity-based control feels
         // unresponsive. PetEnderDragon.HoverController owns dragon ride
         // movement via teleport, which overrides aiStep cleanly.
         if (mob instanceof EnderDragon) return;
 
-        Entity passenger = mob.getPassengers().get(0);
-        if (!(passenger instanceof Player rider)) return;
+        List<Entity> passengers = mob.getPassengers();
+        if (passengers.isEmpty() || !(passengers.get(0) instanceof Player rider)) return;
 
         if (pet.getOwner() == null || pet.getOwner().getPlayer() == null
                 || !rider.getUniqueId().equals(pet.getOwner().getPlayer().getUniqueId())) {

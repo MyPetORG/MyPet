@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.skill.modifier.UpgradeModifier;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Tracks the cumulative value of a single skill property (e.g. damage, chance,
@@ -43,7 +44,10 @@ import java.util.List;
 public class UpgradeComputer<T> {
 
     final List<UpgradeModifier<T>> upgrades = new LinkedList<>();
-    final List<UpgradeCallback<T>> callbacks = new LinkedList<>();
+    // CopyOnWriteArrayList: callbacks are iterated on every upgrade apply but mutated
+    // rarely (pet spawn/despawn adds/removes the Ride activation watcher), and those two
+    // can race on different region threads under Folia — a plain LinkedList would CME.
+    final List<UpgradeCallback<T>> callbacks = new CopyOnWriteArrayList<>();
     T currentValue;
     final T baseValue;
 
