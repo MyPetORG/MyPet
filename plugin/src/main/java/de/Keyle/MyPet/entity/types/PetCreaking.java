@@ -496,12 +496,18 @@ public class PetCreaking extends PetImpl {
             activePetCount.incrementAndGet();
 
             // Scoreboard mutations must run on the global region on Folia.
+            // hasEntry is a local lookup; addEntry on an existing member
+            // broadcasts remove+add team packets to every client.
             Bukkit.getGlobalRegionScheduler().execute(plugin, () -> {
                 Team team = ensureTeam();
                 if (team == null) return;
-                team.addEntry(mobUuidEntry);
+                if (!team.hasEntry(mobUuidEntry)) {
+                    team.addEntry(mobUuidEntry);
+                }
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    team.addEntry(p.getName());
+                    if (!team.hasEntry(p.getName())) {
+                        team.addEntry(p.getName());
+                    }
                 }
             });
         }
@@ -519,9 +525,14 @@ public class PetCreaking extends PetImpl {
                 Team team = scoreboard.getTeam(TEAM_NAME);
                 if (team == null) return;
                 team.removeEntry(mobUuidEntry);
-                // Player entries are left in place intentionally: they're harmless while
-                // no Creaking pets are active (the team only matters inside Creaking's
-                // own filter), and re-adding on the next spawn is idempotent.
+                // The main scoreboard is persisted — without cleanup the team's player
+                // entries grow without bound across the server lifetime and every
+                // joining client receives the full list. Re-read the count here: a
+                // spawn may have raced in since the decrement above, and its add-task
+                // (queued after this one) rebuilds the team via ensureTeam anyway.
+                if (activePetCount.get() <= 0) {
+                    team.unregister();
+                }
             });
         }
 
@@ -539,7 +550,9 @@ public class PetCreaking extends PetImpl {
                 Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
                 Team team = scoreboard.getTeam(TEAM_NAME);
                 if (team == null) return;
-                team.addEntry(name);
+                if (!team.hasEntry(name)) {
+                    team.addEntry(name);
+                }
             });
         }
 
