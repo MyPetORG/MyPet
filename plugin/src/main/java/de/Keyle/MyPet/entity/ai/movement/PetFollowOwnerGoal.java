@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 import java.util.EnumSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Owner-following goal that keeps the pet close to its player.
@@ -482,6 +483,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
     private int lookAtTimer = 0;
     private int tickCounter = 0;
+    private int timeUntilNextNavigationUpdate;
 
     // Track owner position to calculate actual movement (getDeltaMovement is unreliable for players)
     private double lastOwnerX = 0;
@@ -659,6 +661,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
 
     @Override
     public void start() {
+        this.timeUntilNextNavigationUpdate = 0;
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return;
         }
@@ -999,7 +1002,15 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
                     flyingMovementGoal.setWantedPosition(
                             ownerLoc.getX(), ownerLoc.getY() + HOVER_HEIGHT, ownerLoc.getZ(), 1.0);
                     applyWalkSpeed(distance);
-                } else if (this.nav.navigateTo(owner)) {
+                } else {
+                    // Re-path on a 4-10 tick cadence (same pattern as
+                    // PetMeleeAttackGoal) — moveTo re-runs synchronous A* whenever
+                    // the owner crosses a block boundary. Speed still updates
+                    // every tick so it stays smooth.
+                    if (--this.timeUntilNextNavigationUpdate <= 0) {
+                        this.timeUntilNextNavigationUpdate = 4 + ThreadLocalRandom.current().nextInt(7);
+                        this.nav.navigateTo(owner);
+                    }
                     applyWalkSpeed(distance);
                 }
             } else {
@@ -1094,14 +1105,12 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
             // Ground Pets need reasonable minimum to not feel sluggish
             float minCruise = (flyingPet || isSwimmingPet()) ? FLY_SWIM_MIN_CRUISE : GROUND_MIN_CRUISE;
             cruiseSpeed = Math.max(minCruise, cruiseSpeed); // Minimum to keep moving
+            // Quantize to 2 decimals so the EMA-derived value settles — unchanged
+            // values are skipped by NavigationParameters (no attribute write, no
+            // attribute packet broadcast). The addSpeedModifier callback applies
+            // the parameters, so no explicit applyNavigationParameters() is needed.
+            cruiseSpeed = Math.round(cruiseSpeed * 100f) / 100f;
             nav.getParameters().addSpeedModifier("FollowOwner", cruiseSpeed);
-
-            // For ground Pets, reapply navigation parameters to update MOVEMENT_SPEED attribute
-            // immediately. navigateTo() only calls applyNavigationParameters() when a new path
-            // starts, but we need the speed to update during ongoing navigation too.
-            if (!flyingPet && !isSwimmingPet()) {
-                nav.applyNavigationParameters();
-            }
 
             return;
         }
@@ -1165,8 +1174,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
             walkSpeed = FLYING_WALK_SPEED_CAP;
         }
 
-        // Apply the dynamic multiplier
-        float finalSpeed = walkSpeed * effectiveMultiplier;
+        // Apply the dynamic multiplier, quantized like the cruise path so
+        // unchanged values skip the attribute write.
+        float finalSpeed = Math.round(walkSpeed * effectiveMultiplier * 100f) / 100f;
 
         nav.getParameters().addSpeedModifier("FollowOwner", finalSpeed);
     }

@@ -94,7 +94,8 @@ public class NavigationParameters {
      * {@code id} already exists, its value is overwritten.
      * <p>
      * Fires the {@link #setOnSpeedChange(Runnable) onSpeedChange} callback
-     * so the navigation layer can immediately sync the attribute.
+     * so the navigation layer can immediately sync the attribute — skipped
+     * when the value is unchanged.
      *
      * @param id            stable identifier for this modifier (e.g.
      *                      {@code "sprint"}, {@code "slow"})
@@ -102,8 +103,10 @@ public class NavigationParameters {
      *                      negative = slower)
      */
     public void addSpeedModifier(String id, double speedModifier) {
-        this.speedModifier.put(id, speedModifier);
-        notifySpeedChange();
+        Double previous = this.speedModifier.put(id, speedModifier);
+        if (previous == null || previous != speedModifier) {
+            notifySpeedChange();
+        }
     }
 
     /**
@@ -122,7 +125,11 @@ public class NavigationParameters {
      * speed to produce the effective movement speed.
      */
     public double speedModifier() {
-        return this.speedModifier.values().stream().mapToDouble(Double::doubleValue).sum();
+        double sum = 0;
+        for (double value : this.speedModifier.values()) {
+            sum += value;
+        }
+        return sum;
     }
 
     private void notifySpeedChange() {
