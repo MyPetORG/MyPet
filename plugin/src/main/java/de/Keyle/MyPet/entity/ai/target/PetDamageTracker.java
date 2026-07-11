@@ -33,6 +33,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
+import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,17 +62,19 @@ public class PetDamageTracker implements Listener {
 
     private static final long EXPIRY_MS = 5000L; // 5 seconds, matches the old 100-tick window
     private static final Map<UUID, DamageRecord> lastAttackers = new ConcurrentHashMap<>();
+    private static int writeCounter = 0; // racy increment is fine — only affects sweep cadence
 
     /**
      * A single "last-hit" entry in the tracker map.
      *
-     * @param attacker      the living entity that dealt the damage (projectile shooter, if applicable)
+     * @param attackerId    UUID of the attacker (projectile shooter, if applicable)
+     * @param attackerRef   weak reference to the attacker so despawned entity graphs aren't pinned
      * @param timestampMs   wall-clock time (ms) at which the hit occurred; used to age-out stale entries.
      *                      Wall-clock is chosen over {@code Server#getCurrentTick()} because Folia's tick
      *                      counters are region-local — a record written on the victim's region and read
      *                      from another region would produce garbage diffs.
      */
-    public record DamageRecord(LivingEntity attacker, long timestampMs) {
+    public record DamageRecord(UUID attackerId, WeakReference<LivingEntity> attackerRef, long timestampMs) {
     }
 
     /**
@@ -104,7 +107,18 @@ public class PetDamageTracker implements Listener {
         if (attacker == null) {
             return;
         }
-        lastAttackers.put(victim.getUniqueId(), new DamageRecord(attacker, System.currentTimeMillis()));
+        lastAttackers.put(victim.getUniqueId(),
+                new DamageRecord(attacker.getUniqueId(), new WeakReference<>(attacker), System.currentTimeMillis()));
+        if ((++writeCounter & 255) == 0) {
+            sweepStale();
+        }
+    }
+
+    /** Opportunistic sweep so entries for victims that are never queried don't linger. */
+    private static void sweepStale() {
+        long now = System.currentTimeMillis();
+        lastAttackers.values().removeIf(record ->
+                now - record.timestampMs() > EXPIRY_MS || record.attackerRef().get() == null);
     }
 
     /**
@@ -127,11 +141,12 @@ public class PetDamageTracker implements Listener {
             lastAttackers.remove(victim.getUniqueId());
             return null;
         }
-        if (record.attacker().isDead() || !record.attacker().isValid()) {
+        LivingEntity attacker = record.attackerRef().get();
+        if (attacker == null || attacker.isDead() || !attacker.isValid()) {
             lastAttackers.remove(victim.getUniqueId());
             return null;
         }
-        return record.attacker();
+        return attacker;
     }
 
     /**
