@@ -82,6 +82,8 @@ public class PetBat extends PetImpl implements PetFlyingEntity {
             UUID key = pet.getUUID();
             stopForPet(pet);
 
+            // 5-tick poll: the sit flag changes rarely and, unlike the brain-race
+            // suppressors on other species, this needn't outrun vanilla writers every tick.
             ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> {
                 try {
                     if (bat.isDead()) return;
@@ -93,7 +95,7 @@ public class PetBat extends PetImpl implements PetFlyingEntity {
                     }
                 } catch (Throwable ignored) {
                 }
-            }, null, 1L, 1L);
+            }, null, 1L, 5L);
             if (task != null) {
                 tasks.put(key, task);
             }
