@@ -32,7 +32,9 @@ import java.util.concurrent.TimeUnit;
 public class ContributorCheck {
     private static final Map<String, Character> contributorMap = new ConcurrentHashMap<>();
     private static volatile boolean contributorMapLoaded = false;
+    private static volatile long lastFailedAttempt = 0L;
     private static final long REFRESH_INTERVAL_HOURS = 12L;
+    private static final long RETRY_BACKOFF_MS = TimeUnit.MINUTES.toMillis(10);
 
     public static void startRefreshTask() {
         Bukkit.getServer().getAsyncScheduler().runAtFixedRate(
@@ -46,6 +48,7 @@ public class ContributorCheck {
 
     private static synchronized void refreshContributorMap() {
         contributorMapLoaded = false;
+        lastFailedAttempt = 0L; // scheduled refresh always attempts, regardless of backoff
         fillContributorMap();
     }
 
@@ -73,6 +76,9 @@ public class ContributorCheck {
         if (contributorMapLoaded) {
             return;
         }
+        if (System.currentTimeMillis() - lastFailedAttempt < RETRY_BACKOFF_MS) {
+            return; // back off after a failed fetch so offline servers don't retry per player check
+        }
         try {
             String content = Util.readUrlContent("https://raw.githubusercontent.com/MyPetORG/MyPet/particles/particles.csv");
             contributorMap.clear();
@@ -83,6 +89,7 @@ public class ContributorCheck {
             }
             contributorMapLoaded = true;
         } catch (Exception e) {
+            lastFailedAttempt = System.currentTimeMillis();
             MyPetApi.getLogger().warning("Failed to load contributor list: " + e.getMessage());
         }
     }
