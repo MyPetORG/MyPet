@@ -142,7 +142,7 @@ public final class MenuDispatcher implements Listener {
         // with IncompatibleClassChangeError on Paper 1.20.x where InventoryView is
         // still a class but our compiled bytecode emits invokeinterface (1.21+).
         Inventory top = event.getInventory();
-        if (!(top.getHolder() instanceof MenuInstanceImpl inst)) return;
+        if (!(top.getHolder(false) instanceof MenuInstanceImpl inst)) return;
         if (!(event.getWhoClicked() instanceof Player viewer)) return;
 
         int rawSlot = event.getRawSlot();
@@ -214,7 +214,7 @@ public final class MenuDispatcher implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDrag(InventoryDragEvent event) {
         Inventory top = event.getInventory();
-        if (!(top.getHolder() instanceof MenuInstanceImpl inst)) return;
+        if (!(top.getHolder(false) instanceof MenuInstanceImpl inst)) return;
         int slotsInTop = inst.getInventory().getSize();
         for (int slot : event.getRawSlots()) {
             if (slot >= slotsInTop) continue;
@@ -228,7 +228,7 @@ public final class MenuDispatcher implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onClose(InventoryCloseEvent event) {
         Inventory top = event.getInventory();
-        if (!(top.getHolder() instanceof MenuInstanceImpl inst)) return;
+        if (!(top.getHolder(false) instanceof MenuInstanceImpl inst)) return;
         UUID id = inst.viewer().getUniqueId();
         if (mutating.contains(id)) return;
 
