@@ -47,6 +47,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 @ShopInfo
@@ -97,8 +98,13 @@ public class PetWarden extends PetImpl implements PetLavaEntity {
     public static final class OwnerRetaliationSuppressor {
 
         private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
+        private static final AtomicInteger activePetCount = new AtomicInteger(0);
 
         private OwnerRetaliationSuppressor() {
+        }
+
+        static int activePetCount() {
+            return activePetCount.get();
         }
 
         public static void startForPet(Pet pet) {
@@ -118,12 +124,14 @@ public class PetWarden extends PetImpl implements PetLavaEntity {
             }, null, 1L, 1L);
             if (task != null) {
                 tasks.put(key, task);
+                activePetCount.incrementAndGet();
             }
         }
 
         public static void stopForPet(Pet pet) {
             ScheduledTask task = tasks.remove(pet.getUUID());
             if (task != null) {
+                activePetCount.decrementAndGet();
                 try {
                     task.cancel();
                 } catch (Exception ignored) {
@@ -144,6 +152,8 @@ public class PetWarden extends PetImpl implements PetLavaEntity {
         @EventHandler(ignoreCancelled = true)
         public void onWardenAppliesDarkness(EntityPotionEffectEvent event) {
             if (event.getCause() != EntityPotionEffectEvent.Cause.WARDEN) return;
+            // No Warden pets active → the pulse is from a wild warden; skip the radius scan.
+            if (OwnerRetaliationSuppressor.activePetCount() == 0) return;
             Entity victim = event.getEntity();
             var nearbyWardens = victim.getWorld().getNearbyEntities(
                     victim.getLocation(), DARKNESS_RADIUS, DARKNESS_RADIUS, DARKNESS_RADIUS,
