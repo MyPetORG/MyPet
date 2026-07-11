@@ -24,6 +24,9 @@ import de.Keyle.MyPet.api.gui.HeadSkin;
 import de.Keyle.MyPet.api.gui.ItemAppearance;
 import de.Keyle.MyPet.api.gui.RenderContext;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.TranslationArgument;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -128,13 +131,37 @@ public final class MenuRenderHelpers {
      * tags in the post-render MiniMessage round-trip.
      */
     public static List<Component> splitNewlines(Component c) {
+        // Cheap tree-walk first: rendered newlines are literal '\n' in text content
+        // (MiniMessage <newline> tags become Component.newline() on deserialize), so the
+        // common no-newline case skips the serialize round-trip entirely.
+        if (!containsNewline(c)) return List.of(c);
         String mm = MINI.serialize(c);
-        if (!mm.contains("\n") && !mm.contains("<newline>")) return List.of(c);
         String normalized = mm.replace("<newline>", "\n");
         String[] parts = normalized.split("\n", -1);
         List<Component> result = new ArrayList<>(parts.length);
         for (String part : parts) result.add(MINI.deserialize(part));
         return result;
+    }
+
+    private static boolean containsNewline(Component c) {
+        if (c instanceof TextComponent text) {
+            if (text.content().indexOf('\n') >= 0) return true;
+        } else if (c instanceof TranslatableComponent translatable) {
+            String fallback = translatable.fallback();
+            if (fallback != null && fallback.indexOf('\n') >= 0) return true;
+            for (TranslationArgument arg : translatable.arguments()) {
+                if (containsNewline(arg.asComponent())) return true;
+            }
+        } else {
+            // Leaf type we can't cheaply inspect (selector/score/nbt/keybind/…):
+            // assume it may carry a newline and let the serialize path decide, rather
+            // than wrongly collapsing it into a single lore line.
+            return true;
+        }
+        for (Component child : c.children()) {
+            if (containsNewline(child)) return true;
+        }
+        return false;
     }
 
     /**
