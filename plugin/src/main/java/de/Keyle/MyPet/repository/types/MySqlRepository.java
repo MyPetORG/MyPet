@@ -155,6 +155,8 @@ public class MySqlRepository extends AbstractSqlRepository {
         } catch (Exception e) {
             throw new RepositoryInitException(e);
         }
+
+        startPeriodicFlush();
     }
 
     private void initStructure() {

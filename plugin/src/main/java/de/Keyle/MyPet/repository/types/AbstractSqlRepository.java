@@ -53,10 +53,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -112,6 +118,13 @@ public abstract class AbstractSqlRepository implements Repository {
      * {@code init()} — single-thread for SQLite, fixed pool for MySQL.
      */
     protected ExecutorService executor;
+
+    /** Daemon timer that periodically submits {@link #flushPendingSync} to {@link #executor}. */
+    private ScheduledExecutorService flushScheduler;
+    /** The most recent flush handed to the executor — awaited on shutdown before saveData writes. */
+    private volatile Future<?> pendingFlush;
+
+    private static final long FLUSH_INTERVAL_SECONDS = 60;
 
     // --- Connection lifecycle ---
 
@@ -258,13 +271,120 @@ public abstract class AbstractSqlRepository implements Repository {
     }
 
     /**
-     * Shutdown sequence: flush pending saves synchronously (on the calling
-     * thread), then drain the executor, then close the backend. Order matters —
-     * saves must complete before the executor stops accepting work, and the
-     * backend must stay open until the executor's last task returns.
+     * Starts the periodic dirty-map flush. Called from the subclass's
+     * {@code init()} after {@link #executor} is assigned. The scheduler thread
+     * only submits jobs — all JDBC work stays on {@link #executor}.
+     */
+    protected void startPeriodicFlush() {
+        flushScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread t = new Thread(r, "MyPet-" + dbLabel() + "-Flush");
+            t.setDaemon(true);
+            return t;
+        });
+        flushScheduler.scheduleWithFixedDelay(() -> {
+            try {
+                pendingFlush = executor.submit(this::flushPendingSync);
+            } catch (RejectedExecutionException ignored) {
+                // executor already shut down
+            }
+        }, FLUSH_INTERVAL_SECONDS, FLUSH_INTERVAL_SECONDS, TimeUnit.SECONDS);
+    }
+
+    private void stopPeriodicFlush() {
+        if (flushScheduler == null) {
+            return;
+        }
+        flushScheduler.shutdownNow();
+        // Let a scheduler cycle caught mid-submit finish handing off its flush...
+        try {
+            flushScheduler.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        // ...then wait for that flush to finish on the executor before the shutdown
+        // saveData() writes to the connection. On SQLite the flush and saveData share one
+        // JDBC Connection, so overlapping them corrupts the final write.
+        Future<?> flush = pendingFlush;
+        if (flush != null) {
+            try {
+                flush.get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException | CancellationException ignored) {
+                // flush failure/cancellation is already handled inside flushPendingSync
+            }
+        }
+    }
+
+    /**
+     * Drains {@link #petsToBeSaved} / {@link #playersToBeSaved} as one
+     * transaction on a single held connection. Entries are removed only after
+     * a successful commit; failed rows stay behind for the next retry.
+     * Runs on {@link #executor}.
+     */
+    private void flushPendingSync() {
+        if (petsToBeSaved.isEmpty() && playersToBeSaved.isEmpty()) {
+            return;
+        }
+        try (ConnectionHolder h = acquireConnection()) {
+            Connection c = h.connection();
+            List<StoredPet> savedPets = new ArrayList<>();
+            List<MyPetPlayer> savedPlayers = new ArrayList<>();
+            try {
+                c.setAutoCommit(false);
+                for (StoredPet pet : petsToBeSaved.values()) {
+                    // A live (respawned) pet's entity NBT can only be serialized on
+                    // its owning region thread; serializing it here, off-region,
+                    // yields an empty snapshot that would clobber the stored one.
+                    // Skip it — its own despawn/save path persists it correctly.
+                    if (pet instanceof Pet livePet && livePet.getBukkitEntity() != null) {
+                        continue;
+                    }
+                    if (savePetSync(c, pet)) {
+                        savedPets.add(pet);
+                    }
+                }
+                for (MyPetPlayer player : playersToBeSaved.values()) {
+                    if (updatePlayer(c, player)) {
+                        savedPlayers.add(player);
+                    }
+                }
+                c.commit();
+            } catch (SQLException e) {
+                try {
+                    c.rollback();
+                } catch (SQLException rollbackError) {
+                    reportError(rollbackError);
+                }
+                reportError(e);
+                return;
+            } finally {
+                try {
+                    c.setAutoCommit(true);
+                } catch (SQLException e) {
+                    reportError(e);
+                }
+            }
+            // Value-conditional removal: if updatePet/updatePlayer replaced the
+            // pending entry with newer state between our write and here, keep the
+            // newer entry for the next flush instead of dropping it.
+            savedPets.forEach(p -> petsToBeSaved.remove(p.getUUID(), p));
+            savedPlayers.forEach(p -> playersToBeSaved.remove(p.getUniqueId(), p));
+        } catch (SQLException e) {
+            reportError(e);
+        }
+    }
+
+    /**
+     * Shutdown sequence: stop the periodic flush, flush pending saves
+     * synchronously (on the calling thread), then drain the executor, then
+     * close the backend. Order matters — saves must complete before the
+     * executor stops accepting work, and the backend must stay open until
+     * the executor's last task returns.
      */
     @Override
     public void disable() {
+        stopPeriodicFlush();
         saveData();
         shutdownExecutor();
         disableBackend();
@@ -722,8 +842,17 @@ public abstract class AbstractSqlRepository implements Repository {
      * saves). Returns {@code true} if the UPDATE touched a row.
      */
     protected boolean savePetSync(StoredPet pet) {
-        try (ConnectionHolder h = acquireConnection();
-             PreparedStatement stmt = h.connection().prepareStatement(
+        try (ConnectionHolder h = acquireConnection()) {
+            return savePetSync(h.connection(), pet);
+        } catch (SQLException e) {
+            reportError(e);
+            return false;
+        }
+    }
+
+    /** Variant of {@link #savePetSync(StoredPet)} that reuses an already-held connection. */
+    private boolean savePetSync(Connection c, StoredPet pet) {
+        try (PreparedStatement stmt = c.prepareStatement(
                      "UPDATE " + qualifyTable("pets") + " SET " +
                              "owner_uuid=?, exp=?, health=?, respawn_time=?, name=?, type=?, " +
                              "last_used=?, hunger=?, world_group=?, wants_to_spawn=?, " +
@@ -743,8 +872,7 @@ public abstract class AbstractSqlRepository implements Repository {
             bindBlob(stmt, 12, NbtUtil.writeCompressed(PetInfoAccess.readSkillInfo(pet)));
             bindBlob(stmt, 13, serializeInfo(pet));
             stmt.setString(14, pet.getUUID().toString());
-            stmt.executeUpdate();
-            return true;
+            return stmt.executeUpdate() > 0;
         } catch (SQLException | IOException e) {
             reportError(e);
             return false;
@@ -798,7 +926,7 @@ public abstract class AbstractSqlRepository implements Repository {
      * UPDATE an existing pet row. Enqueues the pet in {@link #petsToBeSaved}
      * before submitting the async write; the entry is removed only when the
      * UPDATE confirms a row was touched. Entries that survive a failed UPDATE
-     * are retried on the next periodic save (see {@link #savePets}).
+     * are retried on the next periodic flush (see {@link #flushPendingSync}).
      *
      * <p>Returns {@code false} on any backend error. Never throws — even though
      * the underlying operation is async, callers don't need
@@ -867,8 +995,17 @@ public abstract class AbstractSqlRepository implements Repository {
      * Returns {@code true} if the UPDATE touched a row.
      */
     public boolean updatePlayer(final MyPetPlayer player) {
-        try (ConnectionHolder h = acquireConnection();
-             PreparedStatement stmt = h.connection().prepareStatement(
+        try (ConnectionHolder h = acquireConnection()) {
+            return updatePlayer(h.connection(), player);
+        } catch (SQLException e) {
+            reportError(e);
+            return false;
+        }
+    }
+
+    /** Variant of {@link #updatePlayer(MyPetPlayer)} that reuses an already-held connection. */
+    private boolean updatePlayer(Connection c, MyPetPlayer player) {
+        try (PreparedStatement stmt = c.prepareStatement(
                      "UPDATE " + qualifyTable("players") + " SET " +
                              "auto_respawn=?, auto_respawn_min=?, capture_mode=?, health_bar=?, " +
                              "pet_idle_volume=?, extended_info=?, multi_world=? " +
@@ -908,8 +1045,8 @@ public abstract class AbstractSqlRepository implements Repository {
         }, executor);
     }
 
-    private void savePlayer(MyPetPlayer player) {
-        updatePlayer(player);
+    private boolean savePlayer(MyPetPlayer player) {
+        return updatePlayer(player);
     }
 
     /**
@@ -953,10 +1090,10 @@ public abstract class AbstractSqlRepository implements Repository {
 
     /**
      * Flush all live and pending state to the database synchronously:
-     * {@code info} version row, every active + pending pet, every active +
-     * pending player. Called from {@link #disable()} and from the scheduled
-     * periodic save task. Runs on the calling thread (not the executor), so
-     * it's safe to invoke during shutdown after the executor has drained.
+     * {@code info} version row, every active pet/player, plus any pending
+     * entries not superseded by an active write. Called from {@link #disable()}.
+     * Runs on the calling thread (not the executor), so it's safe to invoke
+     * during shutdown after the executor has drained.
      */
     public void saveData() {
         updateInfo();
@@ -982,8 +1119,12 @@ public abstract class AbstractSqlRepository implements Repository {
     }
 
     private void savePets() {
+        // Live state is canonical: a successful active write supersedes any
+        // pending entry for the same UUID, so drop it instead of writing twice.
         for (Pet pet : MyPetApi.getPetManager().getAllActivePets()) {
-            savePetSync(pet);
+            if (savePetSync(pet)) {
+                petsToBeSaved.remove(pet.getUUID());
+            }
         }
         for (StoredPet pet : petsToBeSaved.values()) {
             savePetSync(pet);
@@ -992,7 +1133,9 @@ public abstract class AbstractSqlRepository implements Repository {
 
     private void savePlayers() {
         for (MyPetPlayer player : MyPetApi.getPlayerManager().getMyPetPlayers()) {
-            savePlayer(player);
+            if (savePlayer(player)) {
+                playersToBeSaved.remove(player.getUniqueId());
+            }
         }
         for (MyPetPlayer player : playersToBeSaved.values()) {
             savePlayer(player);

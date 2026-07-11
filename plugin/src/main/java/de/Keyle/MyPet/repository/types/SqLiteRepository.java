@@ -123,6 +123,8 @@ public class SqLiteRepository extends AbstractSqlRepository {
             } catch (SQLException e) {
                 reportError(e);
             }
+
+            startPeriodicFlush();
         } catch (Exception e) {
             reportError(e);
             throw new RepositoryInitException(e);
