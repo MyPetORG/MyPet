@@ -44,6 +44,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.*;
 import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.Creaking;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -61,6 +62,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     protected boolean captureHelperMode = false;
     protected int captureHelperTimer = 90;
+    private int creakingSweepCounter = 0;
     protected boolean autoRespawn = false;
     protected boolean showHealthBar = false;
     protected int autoRespawnMin = 1;
@@ -483,63 +485,10 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                 }
             }
 
-            // Show particles above Creaking Heart blocks for heart-linked Creakings
-            if (CompatUtil.minecraftVersionEqualsOrAbove("1.21.4")) {
-                // Search in a wider radius since Creakings can wander far from their heart
-                List<Entity> nearbyEntities = p.getNearbyEntities(32, 32, 32);
-                Set<Location> shownHeartLocations = new HashSet<>();
-                for (Entity entity : nearbyEntities) {
-                    if (!"CREAKING".equals(entity.getType().name())) {
-                        continue;
-                    }
-                    if (!(entity instanceof LivingEntity)) {
-                        continue;
-                    }
-
-                    Location homePos = getCreakingHome(entity);
-                    if (homePos == null || homePos.getWorld() == null) {
-                        continue; // Not a heart-linked Creaking (transient) or invalid location
-                    }
-
-                    // Only show particles for hearts within 16 blocks of the player (same world)
-                    Location blockLoc = homePos.getBlock().getLocation();
-                    if (!blockLoc.getWorld().equals(p.getWorld())) {
-                        continue; // Different world
-                    }
-                    if (blockLoc.distanceSquared(p.getLocation()) > 256) { // 16^2 = 256
-                        continue;
-                    }
-
-                    // Avoid showing duplicate particles for the same heart block
-                    if (shownHeartLocations.contains(blockLoc)) {
-                        continue;
-                    }
-                    shownHeartLocations.add(blockLoc);
-
-                    // Check if player can leash Creaking
-                    if (!Permissions.has(this, "MyPet.leash.Creaking")) {
-                        continue;
-                    }
-
-                    boolean canLeash = true;
-                    for (LeashHook hook : MyPetApi.getServiceManager().getServices(LeashHook.class)) {
-                        if (!hook.canLeash(p, entity)) {
-                            canLeash = false;
-                            break;
-                        }
-                    }
-                    if (!canLeash) {
-                        continue;
-                    }
-
-                    // Show particles above the Creaking Heart block (centered, 1 block above)
-                    Location particleLoc = blockLoc.clone().add(0.5, 1.5, 0.5);
-                    if (checkTamable((LivingEntity) entity, p)) {
-                        p.spawnParticle(Particle.ITEM, particleLoc, 20, 0, 0, 0, 0.02f, new ItemStack(Material.LIME_DYE));
-                    } else {
-                        p.spawnParticle(Particle.ITEM, particleLoc, 20, 0, 0, 0, 0.02f, new ItemStack(Material.RED_DYE));
-                    }
-                }
+            // Show particles above Creaking Heart blocks for heart-linked Creakings.
+            // Only every 3rd second — the wide-radius sweep is the expensive part of this task.
+            if (CompatUtil.minecraftVersionEqualsOrAbove("1.21.4") && ++creakingSweepCounter % 3 == 0) {
+                CreakingSweep.run(this, p);
             }
         }
     }
@@ -563,6 +512,63 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                 .getService(CreakingService.class)
                 .map(service -> service.getCreakingHome(entity))
                 .orElse(null);
+    }
+
+    /**
+     * Nested holder so the {@link Creaking} type reference lives in bytecode that is only
+     * loaded when the 1.21.4+ runtime gate actually invokes it.
+     */
+    private static final class CreakingSweep {
+
+        private static void run(MyPetPlayerImpl owner, Player p) {
+            // Search in a wider radius since Creakings can wander far from their heart
+            Set<Location> shownHeartLocations = new HashSet<>();
+            for (Creaking entity : p.getWorld().getNearbyEntitiesByType(Creaking.class, p.getLocation(), 32)) {
+                Location homePos = getCreakingHome(entity);
+                if (homePos == null || homePos.getWorld() == null) {
+                    continue; // Not a heart-linked Creaking (transient) or invalid location
+                }
+
+                // Only show particles for hearts within 16 blocks of the player (same world)
+                Location blockLoc = homePos.getBlock().getLocation();
+                if (!blockLoc.getWorld().equals(p.getWorld())) {
+                    continue; // Different world
+                }
+                if (blockLoc.distanceSquared(p.getLocation()) > 256) { // 16^2 = 256
+                    continue;
+                }
+
+                // Avoid showing duplicate particles for the same heart block
+                if (shownHeartLocations.contains(blockLoc)) {
+                    continue;
+                }
+                shownHeartLocations.add(blockLoc);
+
+                // Check if player can leash Creaking
+                if (!Permissions.has(owner, "MyPet.leash.Creaking")) {
+                    continue;
+                }
+
+                boolean canLeash = true;
+                for (LeashHook hook : MyPetApi.getServiceManager().getServices(LeashHook.class)) {
+                    if (!hook.canLeash(p, entity)) {
+                        canLeash = false;
+                        break;
+                    }
+                }
+                if (!canLeash) {
+                    continue;
+                }
+
+                // Show particles above the Creaking Heart block (centered, 1 block above)
+                Location particleLoc = blockLoc.clone().add(0.5, 1.5, 0.5);
+                if (owner.checkTamable(entity, p)) {
+                    p.spawnParticle(Particle.ITEM, particleLoc, 20, 0, 0, 0, 0.02f, new ItemStack(Material.LIME_DYE));
+                } else {
+                    p.spawnParticle(Particle.ITEM, particleLoc, 20, 0, 0, 0, 0.02f, new ItemStack(Material.RED_DYE));
+                }
+            }
+        }
     }
 
     @Override
