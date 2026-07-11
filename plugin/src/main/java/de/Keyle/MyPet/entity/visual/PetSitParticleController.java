@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -45,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PetSitParticleController {
 
     private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
+    private static final BlockData BARRIER_MARKER = Material.BARRIER.createBlockData();
 
     public static void startForPet(Pet pet) {
         Mob mob = pet.getBukkitEntity();
@@ -79,6 +81,6 @@ public class PetSitParticleController {
                 Particle.BLOCK_MARKER,
                 mob.getLocation().add(0, mob.getEyeHeight() + 1, 0),
                 1, 0F, 0F, 0F, 0F,
-                Material.BARRIER.createBlockData());
+                BARRIER_MARKER);
     }
 }
