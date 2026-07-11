@@ -50,7 +50,7 @@ import static de.Keyle.MyPet.MyPetApi.getPetManager;
  */
 public class PetPvPListener implements Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onCombustByEntity(EntityCombustByEntityEvent event) {
         @SuppressWarnings("ConstantConditions")
         boolean nullEntity = event.getEntity() == null;
@@ -79,7 +79,7 @@ public class PetPvPListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onDamageByEntity(final EntityDamageByEntityEvent event) {
         Pet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
         if (pet == null) return;

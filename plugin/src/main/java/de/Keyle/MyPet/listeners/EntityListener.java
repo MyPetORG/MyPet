@@ -257,9 +257,8 @@ public class EntityListener implements Listener {
                     }
                     ConfigItem neededLeashItem = MyPetApi.getPetInfo().getLeashItem(petType);
 
-                    if (!Permissions.has(player, "MyPet.leash." + petType.name())) {
-                        return;
-                    }
+                    // Item compare first: it rejects most hits (normal combat
+                    // with a non-leash item) far cheaper than a permission query.
                     boolean usedArrow = false;
                     if (!neededLeashItem.compare(leashItem)) {
                         if (leashItemArrow == null || !neededLeashItem.compare(leashItemArrow)) {
@@ -267,6 +266,9 @@ public class EntityListener implements Listener {
                         } else {
                             usedArrow = true;
                         }
+                    }
+                    if (!Permissions.has(player, "MyPet.leash." + petType.name())) {
+                        return;
                     }
                     for (LeashHook hook : MyPetApi.getServiceManager().getServices(LeashHook.class)) {
                         if (!hook.canLeash(player, leashTarget)) {

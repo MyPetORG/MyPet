@@ -61,6 +61,10 @@ public class PetDespawnListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChunkUnload(ChunkUnloadEvent event) {
+        // Sweep unconditionally: an orphaned marked entity (a despawn that failed to
+        // remove its Bukkit entity, or one another plugin flipped to persistent) can
+        // exist precisely when no pet is active, so gating on countActivePets()==0
+        // would skip cleanup exactly when it's needed. isMarked is a cheap PDC check.
         for (Entity entity : event.getChunk().getEntities()) {
             if (PetEntityMarker.isMarked(entity)) {
                 entity.remove();

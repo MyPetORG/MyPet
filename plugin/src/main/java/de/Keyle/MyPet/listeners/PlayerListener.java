@@ -126,7 +126,7 @@ public class PlayerListener implements Listener {
         if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
             return;
         }
-        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && MyPetGlobal.Skilltree.Skill.CONTROL_ITEM.get().compare(event.getPlayer().getInventory().getItemInMainHand()) && MyPetApi.getPetManager().hasActivePet(event.getPlayer())) {
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && MyPetApi.getPetManager().hasActivePet(event.getPlayer()) && MyPetGlobal.Skilltree.Skill.CONTROL_ITEM.get().compare(event.getPlayer().getInventory().getItemInMainHand())) {
             Pet pet = MyPetApi.getPetManager().getPet(event.getPlayer());
             if (pet.getStatus() == Pet.PetState.Here && pet.getBukkitEntity() != null && pet.canMove()) {
                 if (pet.getSkills().isActive(ControlImpl.class)) {
@@ -498,7 +498,6 @@ public class PlayerListener implements Listener {
                     if (event.getFrom().getWorld() != event.getTo().getWorld() || event.getFrom().distance(event.getTo()) > 10) {
                         final boolean sameWorld = event.getFrom().getWorld() == event.getTo().getWorld();
                         pet.removePet();
-                        Bukkit.getConsoleSender().sendMessage("MyPet: Teleporting player " + player.getName() + " (" + event.getFrom().getWorld().getName() + " -> " + event.getTo().getWorld().getName() + "). Respawning pet...");
                         player.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> {
                             if (myPetPlayer.isOnline() && myPetPlayer.hasPet()) {
                                 Pet runPet = myPetPlayer.getPet();
