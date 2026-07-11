@@ -56,6 +56,8 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -91,9 +93,14 @@ public class EntityListener implements Listener {
             return;
         }
         if (!MyPetGlobal.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.get().isEmpty()) {
-            event.getEntity().setMetadata("SpawnReason", new FixedMetadataValue(MyPetApi.getPlugin(), event.getSpawnReason().name()));
+            // PDC instead of server metadata: the metadata store never evicts
+            // entries for despawned entities, so it grew per spawn forever.
+            event.getEntity().getPersistentDataContainer().set(
+                    SPAWN_REASON_KEY, PersistentDataType.STRING, event.getSpawnReason().name());
         }
     }
+
+    private static final NamespacedKey SPAWN_REASON_KEY = new NamespacedKey("mypet", "spawn_reason");
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(final PlayerInteractEvent event) {
@@ -460,16 +467,13 @@ public class EntityListener implements Listener {
         if (MyPetGlobal.LevelSystem.Experience.DISABLED_WORLDS.get().contains(deadEntity.getWorld().getName())) {
             return;
         }
-        if (!MyPetGlobal.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.get().isEmpty() && event.getEntity().hasMetadata("SpawnReason")) {
-            for (MetadataValue value : event.getEntity().getMetadata("SpawnReason")) {
-                if (value.getOwningPlugin().getName().equals("MyPet")) {
-                    if (MyPetGlobal.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.get().contains(value.asString())) {
-                        return;
-                    }
-                    break;
-                }
+        if (!MyPetGlobal.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.get().isEmpty()) {
+            String spawnReason = deadEntity.getPersistentDataContainer()
+                    .get(SPAWN_REASON_KEY, PersistentDataType.STRING);
+            if (spawnReason != null
+                    && MyPetGlobal.LevelSystem.Experience.PREVENT_FROM_SPAWN_REASON.get().contains(spawnReason)) {
+                return;
             }
-            event.getEntity().removeMetadata("SpawnReason", MyPetApi.getPlugin());
         }
         if (MyPetGlobal.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION.get()) {
             Map<UUID, Double> damagePercentMap = PetExperience.getDamageToEntityPercent(deadEntity);
