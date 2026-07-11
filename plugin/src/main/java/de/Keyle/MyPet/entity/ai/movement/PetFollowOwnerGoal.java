@@ -570,7 +570,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        if (!mob.getPassengers().isEmpty()) {
+        if (!mob.isEmpty()) {
             return false;
         }
         // Cache the PetControlGoal reference on first successful lookup, and
@@ -629,7 +629,7 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        if (!mob.getPassengers().isEmpty()) {
+        if (!mob.isEmpty()) {
             return false;
         }
         if (controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null) {

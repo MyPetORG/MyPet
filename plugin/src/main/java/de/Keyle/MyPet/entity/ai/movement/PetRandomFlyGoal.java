@@ -104,9 +104,10 @@ public class PetRandomFlyGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
-        if (!Bukkit.isOwnedByCurrentRegion(mob)) return false;
-        if (!mob.getPassengers().isEmpty()) return false;
+        // Roll the (near-always-false) chance first — cheapest gate, no entity access.
         if (ThreadLocalRandom.current().nextFloat() >= FLY_STROLL_CHANCE) return false;
+        if (!Bukkit.isOwnedByCurrentRegion(mob)) return false;
+        if (!mob.isEmpty()) return false;
         if (!pet.canMove()) return false;
         if (pet.hasTarget() && !pet.getPetTarget().isDead()) return false;
 
@@ -125,7 +126,7 @@ public class PetRandomFlyGoal implements Goal<Mob> {
     @Override
     public boolean shouldStayActive() {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) return false;
-        if (!mob.getPassengers().isEmpty()) return false;
+        if (!mob.isEmpty()) return false;
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
         updateOwnerMovement(owner);
@@ -133,7 +134,7 @@ public class PetRandomFlyGoal implements Goal<Mob> {
         if (moveTo == null) return false;
         // moveTo was picked in the owner's world; the pet may have left it since.
         if (PetGoalWorlds.isCrossWorld(mob, moveTo)) return false;
-        if (mob.getLocation().distance(moveTo) < 0.75) return false;
+        if (mob.getLocation().distanceSquared(moveTo) < 0.5625) return false; // 0.75²
         if (timeToMove <= 0) return false;
         if (pet.hasTarget() && !pet.getPetTarget().isDead()) return false;
         return true;

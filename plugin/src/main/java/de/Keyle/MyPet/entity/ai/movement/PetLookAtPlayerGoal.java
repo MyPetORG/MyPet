@@ -105,7 +105,7 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
         if (pet.hasTarget() && !pet.getPetTarget().isDead()) {
             return false;
         }
-        if (!mob.getPassengers().isEmpty()) {
+        if (!mob.isEmpty()) {
             return false;
         }
         Location loc = mob.getLocation();
@@ -148,7 +148,7 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
         if (mob.getLocation().distanceSquared(targetPlayer.getLocation()) > range * range) {
             return false;
         }
-        if (!mob.getPassengers().isEmpty()) {
+        if (!mob.isEmpty()) {
             return false;
         }
         return this.ticksUntilStopLooking > 0;

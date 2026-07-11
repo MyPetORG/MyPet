@@ -80,7 +80,7 @@ public class PetRandomStrollGoal implements Goal<Mob> {
     private static final int WANDER_RADIUS = 2;
     private static final double STROLL_SPEED = 0.15;
     private static final int MAX_ATTEMPTS = 5;
-    private static final double DESTINATION_REACHED = 0.75;
+    private static final double DESTINATION_REACHED_SQ = 0.5625; // 0.75²
 
     protected final Pet pet;
     protected final Mob mob;
@@ -174,7 +174,7 @@ public class PetRandomStrollGoal implements Goal<Mob> {
         if (moveTo == null) return false;
         // moveTo was picked in the owner's world; the pet may have left it since.
         if (PetGoalWorlds.isCrossWorld(mob, moveTo)) return false;
-        if (mob.getLocation().distance(moveTo) < DESTINATION_REACHED) return false;
+        if (mob.getLocation().distanceSquared(moveTo) < DESTINATION_REACHED_SQ) return false;
         if (timeToMove <= 0) return false;
         if (pet.hasTarget() && !pet.getPetTarget().isDead()) return false;
         return true;

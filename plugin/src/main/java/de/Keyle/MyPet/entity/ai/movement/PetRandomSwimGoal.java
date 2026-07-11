@@ -142,7 +142,7 @@ public class PetRandomSwimGoal implements Goal<Mob> {
         if (moveTo == null) return false;
         // moveTo was picked in the owner's world; the pet may have left it since.
         if (PetGoalWorlds.isCrossWorld(mob, moveTo)) return false;
-        if (mob.getLocation().distance(moveTo) < 0.75) return false;
+        if (mob.getLocation().distanceSquared(moveTo) < 0.5625) return false; // 0.75²
         if (timeToMove <= 0) return false;
         if (pet.hasTarget() && !pet.getPetTarget().isDead()) return false;
         return true;

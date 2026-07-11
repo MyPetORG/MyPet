@@ -96,7 +96,7 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
         if (moveTo == null || PetGoalWorlds.isCrossWorld(mob, moveTo)) {
             return false;
         }
-        if (pet.getLocation().get().distance(moveTo) < 1) {
+        if (mob.getLocation().distanceSquared(moveTo) < 1) { // 1²
             return false;
         }
         if (timeToMove <= 0) {

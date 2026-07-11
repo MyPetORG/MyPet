@@ -65,16 +65,17 @@ public class PetRandomLookaroundGoal implements Goal<Mob> {
 
     @Override
     public boolean shouldActivate() {
+        // Roll the (near-always-false) chance first — cheapest gate, no entity access.
+        if (ThreadLocalRandom.current().nextFloat() >= 0.02F) {
+            return false;
+        }
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
         if (pet.hasTarget() && !pet.getPetTarget().isDead()) {
             return false;
         }
-        if (!mob.getPassengers().isEmpty()) {
-            return false;
-        }
-        return ThreadLocalRandom.current().nextFloat() < 0.02F;
+        return mob.isEmpty();
     }
 
     @Override
@@ -82,7 +83,7 @@ public class PetRandomLookaroundGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
-        return this.ticksUntilStopLooking > 0 && mob.getPassengers().isEmpty();
+        return this.ticksUntilStopLooking > 0 && mob.isEmpty();
     }
 
     @Override
