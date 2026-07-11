@@ -93,20 +93,34 @@ public final class CubeMobMoveControlAccess {
     }
 
     /**
+     * Resolves the cube mob's vanilla {@code MoveControl}, or {@code null} if reflection is
+     * unavailable. Stable for the entity's lifetime — cache it in the calling goal instance
+     * and pass it to {@link #setDirection(Object, float)} per tick.
+     */
+    public static Object resolveMoveControl(Slime slime) {
+        if (!initialized) tryInit(slime);
+        if (!available) return null;
+        try {
+            Object handle = getHandleMethod.invoke(slime);
+            return getMoveControlMethod.invoke(handle);
+        } catch (Throwable t) {
+            // Don't spam logs — drop silently after a successful init.
+            return null;
+        }
+    }
+
+    /**
      * Writes the wanted yaw into vanilla {@code SlimeMoveControl}'s internal direction field so
      * the next vanilla MoveControl tick rotates the slime body toward {@code yaw}.
      * Vanilla rotlerps by max 90° per tick, so a 180° turn takes ~2 ticks visually.
      *
-     * <p>Fail-soft: if the underlying reflection lookup ever breaks this becomes a no-op and the
-     * slime's body will appear stuck at its initial rotation — but movement still works correctly.
+     * <p>Fail-soft: no-op when {@code moveControl} is {@code null} (resolution failed) — the
+     * slime's body will appear stuck at its initial rotation, but movement still works correctly.
      */
-    public static void setDirection(Slime slime, float yaw) {
-        if (!initialized) tryInit(slime);
-        if (!available) return;
+    public static void setDirection(Object moveControl, float yaw) {
+        if (!available || moveControl == null) return;
         try {
-            Object handle = getHandleMethod.invoke(slime);
-            Object mc = getMoveControlMethod.invoke(handle);
-            setDirectionMethod.invoke(mc, yaw, false);
+            setDirectionMethod.invoke(moveControl, yaw, false);
         } catch (Throwable t) {
             // Don't spam logs — drop silently after a successful init.
         }

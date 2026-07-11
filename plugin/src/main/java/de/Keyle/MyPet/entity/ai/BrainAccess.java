@@ -95,6 +95,18 @@ public final class BrainAccess {
     private static volatile Object attackTargetMemoryType;
     private static volatile Object walkTargetMemoryType;
 
+    /**
+     * Resolves the entity's NMS Brain (handle→brain, two reflective invokes). Not cached:
+     * the per-tick callers are a handful of suppressor pets, so re-resolving each tick is
+     * cheaper than a shared map that would either serialize region threads on a global
+     * monitor (synchronized WeakHashMap) or strong-reference despawned entities and their
+     * brains (plain ConcurrentHashMap). Villagers were never cached anyway because
+     * {@code Villager#refreshBrain} swaps the brain object on profession/level changes.
+     */
+    private static Object brainOf(LivingEntity entity) throws Throwable {
+        return getBrainMethod.invoke(getHandleMethod.invoke(entity));
+    }
+
     private static synchronized void tryInit(LivingEntity entity) {
         if (initialized) return;
         initialized = true;
@@ -171,9 +183,7 @@ public final class BrainAccess {
         if (!initialized) tryInit(entity);
         if (!available) return;
         try {
-            Object handle = getHandleMethod.invoke(entity);
-            Object brain = getBrainMethod.invoke(handle);
-            eraseMemoryMethod.invoke(brain, attackTargetMemoryType);
+            eraseMemoryMethod.invoke(brainOf(entity), attackTargetMemoryType);
         } catch (Throwable t) {
             // Don't spam logs — drop silently after a successful init.
         }
@@ -206,9 +216,7 @@ public final class BrainAccess {
         if (!initialized) tryInit(entity);
         if (!available) return;
         try {
-            Object handle = getHandleMethod.invoke(entity);
-            Object brain = getBrainMethod.invoke(handle);
-            eraseMemoryMethod.invoke(brain, walkTargetMemoryType);
+            eraseMemoryMethod.invoke(brainOf(entity), walkTargetMemoryType);
         } catch (Throwable t) {
             // Don't spam logs — drop silently after a successful init.
         }

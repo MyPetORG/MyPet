@@ -161,6 +161,10 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
     private int tickCounter = 0;
     private int hopCooldown = 0;
 
+    /** Cached vanilla MoveControl (stable for the entity's lifetime) — see {@link CubeMobMoveControlAccess}. */
+    private Object moveControl;
+    private boolean moveControlResolved = false;
+
     // Owner-speed tracking — used only for the stationary-owner range tightening.
     private double lastOwnerX = 0;
     private double lastOwnerZ = 0;
@@ -356,7 +360,11 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
         float yaw = (float) (Math.toDegrees(Math.atan2(-dx, dz)));
         mob.setRotation(yaw, 0f);
         mob.setBodyYaw(yaw);
-        CubeMobMoveControlAccess.setDirection(slime, yaw);
+        if (!moveControlResolved) {
+            moveControl = CubeMobMoveControlAccess.resolveMoveControl(slime);
+            moveControlResolved = true;
+        }
+        CubeMobMoveControlAccess.setDirection(moveControl, yaw);
 
         // Hop driver — distance-graded cadence + size-aware impulse.
         if (hopCooldown > 0) {
