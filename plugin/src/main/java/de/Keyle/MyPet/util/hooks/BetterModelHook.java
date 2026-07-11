@@ -35,10 +35,12 @@ import org.bukkit.entity.Mob;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @ServiceName("BetterModel")
@@ -51,6 +53,23 @@ public class BetterModelHook implements PetModelHook, PetModelSourceHook {
     private Method adapt;            // BukkitAdapter.adapt(Entity) -> PlatformEntity
     private Method model;            // BetterModel.model(String) -> Optional<ModelRenderer>
     private Method registryOrNull;   // BetterModel.registryOrNull(UUID) -> EntityTrackerRegistry|null
+
+    /** Per-runtime-class Method cache — BetterModel's concrete classes are stable, so resolve once. */
+    private static final Map<MethodKey, Method> METHOD_CACHE = new ConcurrentHashMap<>();
+    /** Tracker stopAnimation may not exist on older BetterModel versions — cache absence too. */
+    private static final Map<Class<?>, Optional<Method>> STOP_ANIMATION_CACHE = new ConcurrentHashMap<>();
+
+    private record MethodKey(Class<?> type, String name) {}
+
+    private static Method cachedMethod(Class<?> type, String name, Class<?>... params) throws NoSuchMethodException {
+        MethodKey key = new MethodKey(type, name);
+        Method m = METHOD_CACHE.get(key);
+        if (m == null) {
+            m = type.getMethod(name, params);
+            METHOD_CACHE.put(key, m);
+        }
+        return m;
+    }
 
     @Override
     public boolean onEnable() {
@@ -98,7 +117,7 @@ public class BetterModelHook implements PetModelHook, PetModelSourceHook {
         try {
             Object platformEntity = adapt.invoke(null, mob);
             Object optionalRenderer = model.invoke(null, modelId);                  // Optional<ModelRenderer>
-            Object renderer = optionalRenderer.getClass().getMethod("orElse", Object.class)
+            Object renderer = cachedMethod(optionalRenderer.getClass(), "orElse", Object.class)
                     .invoke(optionalRenderer, (Object) null);
             if (renderer == null) {
                 MyPetApi.getLogger().warning("BetterModel: unknown model id '" + modelId + "'");
@@ -107,7 +126,7 @@ public class BetterModelHook implements PetModelHook, PetModelSourceHook {
             // Unlike ModelEngine/ItemsAdder, no explicit host-hide is needed here: BetterModel hides
             // the base entity itself once a model tracker is bound (verified in-server — the render
             // shows no double-body). This mirrors why detach doesn't un-hide the host.
-            unaryMethod(renderer.getClass(), "getOrCreate").invoke(renderer, platformEntity);
+            cachedUnaryMethod(renderer.getClass(), "getOrCreate").invoke(renderer, platformEntity);
         } catch (Throwable t) {
             MyPetApi.getLogger().warning("BetterModel applyModel('" + modelId + "') failed: " + t.getMessage());
         }
@@ -142,9 +161,9 @@ public class BetterModelHook implements PetModelHook, PetModelSourceHook {
             if (registry == null) {
                 return;
             }
-            Object trackers = registry.getClass().getMethod("trackers").invoke(registry);
+            Object trackers = cachedMethod(registry.getClass(), "trackers").invoke(registry);
             for (Object tracker : (Collection<?>) trackers) {
-                tracker.getClass().getMethod("animate", String.class).invoke(tracker, animation);
+                cachedMethod(tracker.getClass(), "animate", String.class).invoke(tracker, animation);
             }
         } catch (Throwable t) {
             MyPetApi.getLogger().warning("BetterModel animate('" + animation + "') failed: " + t.getMessage());
@@ -162,12 +181,21 @@ public class BetterModelHook implements PetModelHook, PetModelSourceHook {
             if (registry == null) {
                 return;
             }
-            Object trackers = registry.getClass().getMethod("trackers").invoke(registry);
+            Object trackers = cachedMethod(registry.getClass(), "trackers").invoke(registry);
             for (Object tracker : (Collection<?>) trackers) {
-                try {
-                    tracker.getClass().getMethod("stopAnimation", String.class).invoke(tracker, animation);
-                } catch (Throwable ignored) {
-                    // BetterModel may auto-replace animations (no explicit stop) → nothing to do
+                Optional<Method> stop = STOP_ANIMATION_CACHE.computeIfAbsent(tracker.getClass(), type -> {
+                    try {
+                        return Optional.of(type.getMethod("stopAnimation", String.class));
+                    } catch (NoSuchMethodException e) {
+                        // BetterModel may auto-replace animations (no explicit stop) → nothing to do
+                        return Optional.empty();
+                    }
+                });
+                if (stop.isPresent()) {
+                    try {
+                        stop.get().invoke(tracker, animation);
+                    } catch (Throwable ignored) {
+                    }
                 }
             }
         } catch (Throwable t) {
@@ -251,6 +279,17 @@ public class BetterModelHook implements PetModelHook, PetModelSourceHook {
         // standalone "source" creature. Release of a rendered pet uses releaseAsModeledWild.
         // This hook stays a PetModelSourceHook only for sourceIdOf() detection.
         return Optional.empty();
+    }
+
+    /** Cached variant of {@link #unaryMethod(Class, String)}. */
+    private static Method cachedUnaryMethod(Class<?> type, String name) throws NoSuchMethodException {
+        MethodKey key = new MethodKey(type, name);
+        Method m = METHOD_CACHE.get(key);
+        if (m == null) {
+            m = unaryMethod(type, name);
+            METHOD_CACHE.put(key, m);
+        }
+        return m;
     }
 
     /** Finds the single-argument overload of {@code name} (e.g. getOrCreate(PlatformEntity)). */

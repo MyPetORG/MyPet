@@ -33,15 +33,21 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 
+import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @ServiceName("ItemsAdder")
 @RequiresPlugin("ItemsAdder")
 @Load(Load.State.Hooks)
 public class ItemsAdderHook implements PetModelHook, PetModelSourceHook {
+
+    /** stopAnimation is absent on older ItemsAdder versions — cache presence per concrete class. */
+    private static final Map<Class<?>, Optional<Method>> STOP_ANIMATION_CACHE = new ConcurrentHashMap<>();
 
     @Override
     public boolean onEnable() {
@@ -110,9 +116,18 @@ public class ItemsAdderHook implements PetModelHook, PetModelSourceHook {
         }
         // Reflective: ItemsAdder's stop-animation API name varies by version; if absent, its
         // playAnimation replaces the current one, so a no-op here is acceptable.
-        try {
-            ce.getClass().getMethod("stopAnimation", String.class).invoke(ce, animation);
-        } catch (Throwable ignored) {
+        Optional<Method> stop = STOP_ANIMATION_CACHE.computeIfAbsent(ce.getClass(), type -> {
+            try {
+                return Optional.of(type.getMethod("stopAnimation", String.class));
+            } catch (NoSuchMethodException e) {
+                return Optional.empty();
+            }
+        });
+        if (stop.isPresent()) {
+            try {
+                stop.get().invoke(ce, animation);
+            } catch (Throwable ignored) {
+            }
         }
     }
 
