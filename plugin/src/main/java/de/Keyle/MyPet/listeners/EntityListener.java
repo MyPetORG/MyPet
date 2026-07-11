@@ -394,6 +394,8 @@ public class EntityListener implements Listener {
         if (target instanceof LivingEntity) {
             Entity source = event.getDamager();
 
+            // Damage-weighted XP attribution is recorded by PetXpAttributionListener.
+
             if (source instanceof Projectile) {
                 ProjectileSource projectileSource = ((Projectile) source).getShooter();
                 if (projectileSource instanceof Entity) {

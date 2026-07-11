@@ -40,7 +40,8 @@ import org.bukkit.entity.LivingEntity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Manages a pet's experience points, level progression, and the damage-tracking maps
@@ -67,10 +68,19 @@ public class PetExperience {
     public static final GlobalModifier GLOBAL_MODIFIER = new GlobalModifier();
 
     /**
-     * Weak-keyed map tracking cumulative damage dealt to each living entity, keyed by
-     * damager UUID. Entries are automatically cleared when the victim is garbage-collected.
+     * Cumulative damage dealt to each victim (by UUID), keyed by damager UUID.
+     * Entries are cleared on victim death and swept after {@link #DAMAGE_LOG_TTL_MILLIS}
+     * of inactivity (victims that despawn without dying).
      */
-    private static final Map<LivingEntity, Map<UUID, Double>> DAMAGE_MAPS = new WeakHashMap<>();
+    private static final Map<UUID, DamageLog> DAMAGE_MAPS = new ConcurrentHashMap<>();
+    private static final long DAMAGE_LOG_TTL_MILLIS = 5 * 60 * 1000L;
+    private static final AtomicInteger damageLogWrites = new AtomicInteger();
+
+    /** Per-victim damage log, stamped on every write for TTL eviction. */
+    private static final class DamageLog {
+        final Map<UUID, Double> byDamager = new ConcurrentHashMap<>();
+        volatile long lastUpdate = System.currentTimeMillis();
+    }
 
     @Getter
     protected final Pet pet;
@@ -103,7 +113,8 @@ public class PetExperience {
 
     /** Returns the raw damage map for a victim, or {@code null} if none exists. */
     private static Map<UUID, Double> getDamageMap(LivingEntity victim) {
-        return DAMAGE_MAPS.get(victim);
+        DamageLog log = DAMAGE_MAPS.get(victim.getUniqueId());
+        return log == null ? null : log.byDamager;
     }
 
     /**
@@ -116,14 +127,19 @@ public class PetExperience {
      * @param damage  the raw damage amount
      */
     public static void addDamageToEntity(LivingEntity damager, LivingEntity victim, double damage) {
-        Map<UUID, Double> damageMap = DAMAGE_MAPS.computeIfAbsent(victim, k -> new HashMap<>());
-        damageMap.merge(damager.getUniqueId(), Math.min(victim.getHealth(), damage),
+        DamageLog log = DAMAGE_MAPS.computeIfAbsent(victim.getUniqueId(), k -> new DamageLog());
+        log.lastUpdate = System.currentTimeMillis();
+        log.byDamager.merge(damager.getUniqueId(), Math.min(victim.getHealth(), damage),
                 (oldDamage, newDamage) -> (Math.min(victim.getHealth(), damage)) + oldDamage);
+        if ((damageLogWrites.incrementAndGet() & 1023) == 0) {
+            long cutoff = System.currentTimeMillis() - DAMAGE_LOG_TTL_MILLIS;
+            DAMAGE_MAPS.values().removeIf(l -> l.lastUpdate < cutoff);
+        }
     }
 
     /** Removes all accumulated damage records for the given victim (e.g. on death). */
     public static void clearDamageMap(LivingEntity victim) {
-        DAMAGE_MAPS.remove(victim);
+        DAMAGE_MAPS.remove(victim.getUniqueId());
     }
 
     /**

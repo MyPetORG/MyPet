@@ -43,18 +43,17 @@ public class PetXpAttributionListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDamageMonitor(final EntityDamageByEntityEvent event) {
-        @SuppressWarnings("ConstantConditions")
-        boolean nullEntity = event.getEntity() == null;
-        if (nullEntity) return;
+        // Cheapest guard first: this fires for every by-entity damage event
+        // server-wide. Record regardless of whether a pet is currently active —
+        // a fight can begin before its eventual killer's owner has a pet out,
+        // and the death handler needs the full damage history to split XP.
+        if (!MyPetGlobal.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION.get()) return;
 
         Entity target = event.getEntity();
-        if (WorldGroup.getGroupByWorld(target.getWorld()).isDisabled()) return;
-
         if (!(target instanceof LivingEntity)) return;
         if (target instanceof Player) return;
         if (PetEntityMarker.isMarked(target)) return;
-
-        if (!MyPetGlobal.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION.get()) return;
+        if (WorldGroup.getGroupByWorld(target.getWorld()).isDisabled()) return;
 
         Entity source = event.getDamager();
         LivingEntity livingSource = null;
