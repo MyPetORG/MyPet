@@ -22,6 +22,9 @@ package de.Keyle.MyPet.util;
 
 import org.bukkit.Bukkit;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Version detection and comparison helpers.
  * <p>
@@ -33,6 +36,16 @@ import org.bukkit.Bukkit;
 public final class CompatUtil {
 
     private CompatUtil() {
+    }
+
+    // Memoized per version literal — callers sit on hot event paths and the
+    // server version cannot change while the JVM runs.
+    private static final Map<String, Boolean> AT_LEAST_CACHE = new ConcurrentHashMap<>();
+
+    // Lazy holder: Bukkit.getMinecraftVersion() needs a running server, which
+    // is not guaranteed at CompatUtil class-init time.
+    private static final class ServerVersionHolder {
+        static final Runtime.Version VERSION = Runtime.Version.parse(Bukkit.getMinecraftVersion());
     }
 
     /**
@@ -50,7 +63,10 @@ public final class CompatUtil {
      *         dotted-numeric version
      */
     public static boolean minecraftVersionEqualsOrAbove(String version) {
-        return versionCompare(Bukkit.getMinecraftVersion(), version) >= 0;
+        Boolean cached = AT_LEAST_CACHE.get(version);
+        if (cached != null) return cached;
+        return AT_LEAST_CACHE.computeIfAbsent(version,
+                v -> ServerVersionHolder.VERSION.compareTo(Runtime.Version.parse(v)) >= 0);
     }
 
     /**

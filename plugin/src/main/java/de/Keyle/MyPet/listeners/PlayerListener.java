@@ -199,11 +199,13 @@ public class PlayerListener implements Listener {
         }
     }
 
+    // The un-cancel logic in the handler below is only needed on 1.20.x;
+    // 1.21+ handles pet right-click interactions correctly without it.
+    private static final boolean MODERN_PET_INTERACT = CompatUtil.minecraftVersionEqualsOrAbove("1.21");
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(PlayerInteractEntityEvent event) {
-        // The un-cancel logic below is only needed on 1.20.x; 1.21+ handles
-        // pet right-click interactions correctly without it.
-        if (CompatUtil.minecraftVersionEqualsOrAbove("1.21")) {
+        if (MODERN_PET_INTERACT) {
             return;
         }
         if (event.isCancelled()) {
