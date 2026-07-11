@@ -104,6 +104,9 @@ public final class PacketEventsSoundHook implements ServiceContainer, SoundPacke
         listener = new PacketListenerAbstract(PacketListenerPriority.NORMAL) {
             @Override
             public void onPacketSend(PacketSendEvent event) {
+                // With no pets spawned, skip before any wrapper decode — this
+                // runs on the Netty thread for every outbound sound packet.
+                if (PetSoundRegistry.size() == 0) return;
                 PacketTypeCommon type = event.getPacketType();
                 try {
                     if (type == PacketType.Play.Server.ENTITY_SOUND_EFFECT) {

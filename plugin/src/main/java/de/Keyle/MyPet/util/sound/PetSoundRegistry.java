@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.util.sound;
 
-import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.World;
 import org.bukkit.entity.Mob;
@@ -65,16 +64,15 @@ public final class PetSoundRegistry {
     /**
      * Resolves a Pet by approximate world position. Used for positional sound
      * packets (which carry coordinates instead of an entity id). Iterates
-     * every active pet on the server, so cost is O(N) per call. Threshold is
-     * one block squared — sounds are emitted at the entity's exact position
-     * and we tolerate a tick of drift.
+     * this registry's own index (no allocation), O(active pets) per call.
+     * Threshold is one block squared — sounds are emitted at the entity's
+     * exact position and we tolerate a tick of drift.
      *
      * @return the closest matching pet, or {@code null} if none.
      */
     public static Pet findAtPosition(World world, double x, double y, double z) {
         if (world == null) return null;
-        Pet[] active = MyPetApi.getPetManager().getAllActivePets();
-        for (Pet pet : active) {
+        for (Pet pet : BY_ENTITY_ID.values()) {
             Mob mob = pet.getBukkitEntity();
             if (mob == null) continue;
             if (mob.getWorld() != world) continue;

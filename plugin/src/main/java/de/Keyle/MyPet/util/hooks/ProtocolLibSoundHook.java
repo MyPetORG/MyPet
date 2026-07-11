@@ -103,6 +103,9 @@ public final class ProtocolLibSoundHook implements ServiceContainer, SoundPacket
                 PacketType.Play.Server.NAMED_SOUND_EFFECT) {
             @Override
             public void onPacketSending(PacketEvent event) {
+                // With no pets spawned, skip before any packet reads — this
+                // runs for every outbound sound packet per recipient.
+                if (PetSoundRegistry.size() == 0) return;
                 try {
                     if (event.getPacketType() == PacketType.Play.Server.ENTITY_SOUND) {
                         handleEntitySound(event, interceptor);
