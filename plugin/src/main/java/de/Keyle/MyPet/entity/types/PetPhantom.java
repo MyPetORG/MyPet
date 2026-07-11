@@ -94,7 +94,6 @@ public class PetPhantom extends PetImpl implements PetFlyingEntity, PetSunSensit
         private static final double ANGLE_STEP = Math.toRadians(4.0);
 
         private static final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
-        private static final Map<UUID, Double> angles = new ConcurrentHashMap<>();
 
         // NMS reflection — fail-soft init. Same pattern as BrainAccess
         // and CubeMobMoveControlAccess, scoped here because the target
@@ -118,7 +117,8 @@ public class PetPhantom extends PetImpl implements PetFlyingEntity, PetSunSensit
 
             // Stagger initial angle by UUID so multiple phantom pets owned by
             // the same player don't all sit at the same orbit position.
-            angles.put(key, (key.hashCode() & 0xFFFF) / (double) 0xFFFF * 2.0 * Math.PI);
+            // Only the entity-scheduler task touches the holder, so no sync needed.
+            double[] angle = {(key.hashCode() & 0xFFFF) / (double) 0xFFFF * 2.0 * Math.PI};
 
             ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin, t -> {
                 try {
@@ -128,12 +128,12 @@ public class PetPhantom extends PetImpl implements PetFlyingEntity, PetSunSensit
                     Player ownerPlayer = owner.getPlayer();
                     if (ownerPlayer == null) return;
 
-                    double angle = angles.compute(key, (k, v) -> (v == null ? 0.0 : v) + ANGLE_STEP);
+                    angle[0] += ANGLE_STEP;
                     Location loc = ownerPlayer.getLocation();
                     setMoveTargetPoint(phantom,
-                            loc.getX() + RADIUS * Math.cos(angle),
+                            loc.getX() + RADIUS * Math.cos(angle[0]),
                             loc.getY() + ALTITUDE,
-                            loc.getZ() + RADIUS * Math.sin(angle));
+                            loc.getZ() + RADIUS * Math.sin(angle[0]));
                 } catch (Throwable ignored) {
                 }
             }, null, 1L, 1L);
@@ -150,7 +150,6 @@ public class PetPhantom extends PetImpl implements PetFlyingEntity, PetSunSensit
                 } catch (Exception ignored) {
                 }
             }
-            angles.remove(pet.getUUID());
         }
 
         private static synchronized void tryInit() {
