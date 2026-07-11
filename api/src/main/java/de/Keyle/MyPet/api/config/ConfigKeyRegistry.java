@@ -80,7 +80,12 @@ public final class ConfigKeyRegistry {
      * config keys — this method is what makes those declarations observable
      * to {@link #all}, {@link #writeDefaults}, and {@link #loadFromYaml}.
      */
-    public static synchronized void ensurePetsLoaded() {
+    public static void ensurePetsLoaded() {
+        if (petsLoaded) return;
+        loadPets();
+    }
+
+    private static synchronized void loadPets() {
         if (petsLoaded) return;
         for (PetType petType : PetType.values()) {
             try {
@@ -174,7 +179,12 @@ public final class ConfigKeyRegistry {
      * name because it lives in the same {@code api} module but is not otherwise
      * a compile dependency of the registry.
      */
-    public static synchronized void ensureGlobalsLoaded() {
+    public static void ensureGlobalsLoaded() {
+        if (globalsLoaded) return;
+        loadGlobals();
+    }
+
+    private static synchronized void loadGlobals() {
         if (globalsLoaded) return;
         try {
             Class.forName("de.Keyle.MyPet.api.MyPetGlobal", true,

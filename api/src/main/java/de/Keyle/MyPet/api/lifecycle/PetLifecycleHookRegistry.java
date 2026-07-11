@@ -58,7 +58,12 @@ public final class PetLifecycleHookRegistry {
      * so each one's static {@link PetLifecycleHook} field initializers fire
      * and register with this registry. Idempotent; runs once per JVM.
      */
-    public static synchronized void ensurePetsLoaded() {
+    public static void ensurePetsLoaded() {
+        if (petsLoaded) return;
+        loadPets();
+    }
+
+    private static synchronized void loadPets() {
         if (petsLoaded) return;
         for (PetType petType : PetType.values()) {
             try {

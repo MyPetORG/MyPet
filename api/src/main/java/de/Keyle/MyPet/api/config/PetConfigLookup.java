@@ -23,6 +23,8 @@ package de.Keyle.MyPet.api.config;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.util.ConfigItem;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Resolves per-pet config values from a runtime {@code Class<? extends Pet>}
  * reference — the form marker interfaces ({@code PetFlyingEntity.canFly},
@@ -40,13 +42,21 @@ public final class PetConfigLookup {
 
     private PetConfigLookup() {}
 
+    /** Memoized {@code (petClass, key)} → {@link ConfigKey} so hot-path reads skip the name derivation. */
+    private static final ClassValue<ConcurrentHashMap<String, ConfigKey<?>>> KEY_CACHE = new ClassValue<>() {
+        @Override
+        protected ConcurrentHashMap<String, ConfigKey<?>> computeValue(Class<?> type) {
+            return new ConcurrentHashMap<>();
+        }
+    };
+
     /**
      * Returns the boolean value for {@code (petClass, key)} from the registry,
      * or {@code fallback} if no such key is registered (e.g. a third-party
      * pet that hasn't declared this flag).
      */
     public static boolean boolValue(Class<? extends Pet> petClass, String key, boolean fallback) {
-        ConfigKey<?> ck = ConfigKeyRegistry.lookup(petTypeName(petClass), key);
+        ConfigKey<?> ck = resolve(petClass, key);
         if (ck != null && ck.get() instanceof Boolean b) {
             return b;
         }
@@ -58,11 +68,23 @@ public final class PetConfigLookup {
      * {@code null} if no such key is registered.
      */
     public static ConfigItem configItemValue(Class<? extends Pet> petClass, String key) {
-        ConfigKey<?> ck = ConfigKeyRegistry.lookup(petTypeName(petClass), key);
+        ConfigKey<?> ck = resolve(petClass, key);
         if (ck != null && ck.get() instanceof ConfigItem ci) {
             return ci;
         }
         return null;
+    }
+
+    private static ConfigKey<?> resolve(Class<? extends Pet> petClass, String key) {
+        ConcurrentHashMap<String, ConfigKey<?>> cache = KEY_CACHE.get(petClass);
+        ConfigKey<?> ck = cache.get(key);
+        if (ck != null) return ck;
+        ck = ConfigKeyRegistry.lookup(petTypeName(petClass), key);
+        if (ck != null) {
+            // Misses stay uncached: third-party keys may register after first lookup.
+            cache.putIfAbsent(key, ck);
+        }
+        return ck;
     }
 
     /** Pet type name = pet class's simple name with the {@code "Pet"} prefix stripped. */
