@@ -217,10 +217,30 @@ public class BackpackImpl extends AbstractSkill implements Backpack {
             OptionalInt live = MyPetApi.getGuiService().addToOpenStorage(owner, item);
             if (live.isPresent()) return live.getAsInt();
         }
-        CustomInventory inv = getInventory();
-        int leftover = inv.addItem(item);
-        writeContents(inv.getContents().toArray(new ItemStack[0]));
-        return leftover;
+        // First-fit directly on the contents array — same capacity as getInventory().
+        int capacity = Math.max(9, rows.getValue().intValue() * 9);
+        ensureCapacity(capacity);
+        int limit = Math.min(capacity, contents.length);
+        int remaining = item.getAmount();
+        for (int i = 0; i < limit && remaining > 0; i++) {
+            ItemStack slot = contents[i];
+            if (slot == null || slot.getType().isAir() || !slot.isSimilar(item)) continue;
+            int space = slot.getMaxStackSize() - slot.getAmount();
+            if (space <= 0) continue;
+            int moved = Math.min(space, remaining);
+            slot.setAmount(slot.getAmount() + moved);
+            remaining -= moved;
+        }
+        for (int i = 0; i < limit && remaining > 0; i++) {
+            ItemStack slot = contents[i];
+            if (slot != null && !slot.getType().isAir()) continue;
+            ItemStack placed = item.clone();
+            int moved = Math.min(placed.getMaxStackSize(), remaining);
+            placed.setAmount(moved);
+            contents[i] = placed;
+            remaining -= moved;
+        }
+        return remaining;
     }
 
     /**
