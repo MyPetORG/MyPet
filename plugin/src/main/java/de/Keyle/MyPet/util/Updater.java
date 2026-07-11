@@ -62,7 +62,7 @@ public class Updater {
         public String getSha512Hash() { return sha512Hash; }
     }
 
-    protected static Update latest = null;
+    protected static volatile Update latest = null;
     protected String plugin;
     protected Thread thread;
 
@@ -81,10 +81,10 @@ public class Updater {
 
     /**
      * Checks for updates and returns a status message for display in the splash screen.
-     * The check is always synchronous so the result can be shown at startup.
-     * Downloads, if enabled, are started asynchronously.
+     * With auto-download enabled the check stays synchronous ({@link #waitForDownload()}
+     * depends on it); otherwise it runs on a background thread and logs the result.
      *
-     * @return a status message, or null if update checking is disabled
+     * @return a status message, or null if update checking is disabled or runs asynchronously
      */
     public String update() {
         if (!MyPetGlobal.Update.CHECK.get()) {
@@ -95,13 +95,25 @@ public class Updater {
             return "Skipping update check for local build.";
         }
 
+        if (!MyPetGlobal.Update.DOWNLOAD.get()) {
+            Thread checkThread = new Thread(() -> {
+                Optional<Update> update = check();
+                if (update.isPresent()) {
+                    latest = update.get();
+                    MyPetApi.getLogger().info("A new " + (VersionUtil.isDevBuild() ? "build" : "version") + " is available: " + latest);
+                } else {
+                    MyPetApi.getLogger().info("No update available.");
+                }
+            }, "MyPet-UpdateCheck");
+            checkThread.setDaemon(true);
+            checkThread.start();
+            return null;
+        }
+
         Optional<Update> update = check();
         if (update.isPresent()) {
             latest = update.get();
-
-            if (MyPetGlobal.Update.DOWNLOAD.get()) {
-                download();
-            }
+            download();
 
             String msg = "A new " + (VersionUtil.isDevBuild() ? "build" : "version") + " is available: " + latest;
             return msg;
