@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.util.locale.Locale;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -333,7 +334,7 @@ public class BeaconImpl extends AbstractSkill implements Beacon {
                 selectedBuffs.clear();
             }
 
-            range = range * range;
+            double rangeSquared = range * range;
             petLocation.getWorld().spawnParticle(Particle.WITCH, petLocation.clone().add(0, 1, 0), 5, 0.2F, 0.2F, 0.2F, 0.1F);
 
             List<Player> members = null;
@@ -355,10 +356,11 @@ public class BeaconImpl extends AbstractSkill implements Beacon {
             }
 
             targetLoop:
-            for (Player player : petLocation.getWorld().getPlayers()) {
-                if (player.getLocation().distanceSquared(petLocation) > range) {
+            for (Player player : petLocation.getNearbyPlayers(range)) {
+                // getNearbyPlayers scans a bounding box; keep the spherical filter.
+                if (player.getLocation().distanceSquared(petLocation) > rangeSquared) {
                     continue;
-                } else if (player.getGameMode().name().equals("SPECTATOR")) {
+                } else if (player.getGameMode() == GameMode.SPECTATOR) {
                     continue;
                 } else if (MyPetApi.getHookHelper().isVanished(player)) {
                     continue;
