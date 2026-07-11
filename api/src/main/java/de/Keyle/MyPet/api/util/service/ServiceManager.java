@@ -46,6 +46,11 @@ public class ServiceManager {
     final Map<Class<? extends ServiceContainer>, ServiceContainer> services = new ConcurrentHashMap<>();
     final Map<String, ServiceContainer> serviceByName = new ConcurrentHashMap<>();
 
+    // Memoized getServices() results — hook lookups run on hot paths (per damage
+    // event, per move event), so the per-call registry scan is computed once per
+    // requested type and invalidated whenever a service registers.
+    private final Map<Class<?>, List<ServiceContainer>> servicesByType = new ConcurrentHashMap<>();
+
     // Only mutated on the main thread during registerService()/activate() lifecycle; never read
     // from the async path, so a plain multimap is sufficient.
     final ArrayListMultimap<Load.State, ServiceContainer> registeredServices = ArrayListMultimap.create();
@@ -126,6 +131,7 @@ public class ServiceManager {
         }
         serviceByName.put(service.getServiceName(), service);
         services.put(service.getClass(), service);
+        servicesByType.clear();
     }
 
     public void activate(Load.State state) {
@@ -193,22 +199,21 @@ public class ServiceManager {
      * returns all services that inherit from a specific class/interface
      *
      * @param serviceClass class that implements from {@link ServiceContainer}
-     * @return list of instances of the service class
+     * @return immutable list of instances of the service class
      */
     @SuppressWarnings("unchecked")
     public <T extends ServiceContainer> List<T> getServices(Class<? extends T> serviceClass) {
-        List<T> list = new ArrayList<>();
+        return (List<T>) servicesByType.computeIfAbsent(serviceClass, this::collectServices);
+    }
 
+    private List<ServiceContainer> collectServices(Class<?> serviceClass) {
+        List<ServiceContainer> list = new ArrayList<>();
         for (ServiceContainer service : services.values()) {
-            if (serviceClass.isInstance(service)) {
-                T typed = (T) service;
-                if (!list.contains(typed)) {
-                    list.add(typed);
-                }
+            if (serviceClass.isInstance(service) && !list.contains(service)) {
+                list.add(service);
             }
         }
-
-        return list;
+        return List.copyOf(list);
     }
 
     /**
