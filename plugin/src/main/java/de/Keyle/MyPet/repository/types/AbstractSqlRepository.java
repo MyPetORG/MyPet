@@ -168,12 +168,13 @@ public abstract class AbstractSqlRepository implements Repository {
 
     /**
      * Serialize a pet's vanilla-NBT entity snapshot for the {@code info}
-     * BLOB column. Empty compounds (graceful-degradation pets, shop
-     * templates) become zero-length byte arrays.
+     * BLOB column. Empty snapshots (graceful-degradation pets, shop
+     * templates) become zero-length byte arrays. Live pets may hand back
+     * Paper's raw serialized bytes — GZIP NBT either way, so the blob stays
+     * read-compatible with {@code NbtUtil.readCompressed}.
      */
     private static byte[] serializeInfo(StoredPet pet) throws IOException {
-        CompoundBinaryTag info = PetInfoAccess.read(pet);
-        return info.keySet().isEmpty() ? new byte[0] : NbtUtil.writeCompressed(info);
+        return PetInfoAccess.readSerialized(pet);
     }
 
     /**

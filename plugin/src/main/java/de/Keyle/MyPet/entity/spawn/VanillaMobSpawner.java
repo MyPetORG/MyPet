@@ -91,12 +91,12 @@ public final class VanillaMobSpawner {
             return false;
         }
 
-        // Snapshot path: deserialize the vanilla mob from a captured NBT
-        // compound (every saved pet has one after the EntitySnapshot migration
+        // Snapshot path: deserialize the vanilla mob from captured NBT
+        // bytes (every saved pet has one after the EntitySnapshot migration
         // runs at startup). Fresh-spawn fallback covers (a) brand new pets
         // that have never been saved, and (b) defensive recovery if the
         // snapshot fails to deserialize.
-        CompoundBinaryTag snapshot = pet.consumePendingSnapshot();
+        byte[] snapshot = pet.consumePendingSnapshot();
         if (snapshot != null) {
             try {
                 Mob restored = PetEntitySnapshot.restore(snapshot, target.getWorld());

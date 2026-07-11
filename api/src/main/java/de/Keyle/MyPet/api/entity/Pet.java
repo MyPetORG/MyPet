@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.skill.PetExperience;
 import de.Keyle.MyPet.api.skill.Skills;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.Scheduler;
-import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -320,12 +319,12 @@ public non-sealed interface Pet extends StoredPet, Scheduler {
     }
 
     /**
-     * Single-shot read of the snapshot captured at the pet's last despawn,
-     * used by the spawner to deserialize a vanilla mob with the pet's prior
-     * visual state. Default {@code null} — only the active impl overrides
-     * with real semantics (read-and-clear).
+     * Single-shot read of the serialized snapshot bytes captured at the pet's
+     * last despawn, used by the spawner to deserialize a vanilla mob with the
+     * pet's prior visual state. Default {@code null} — only the active impl
+     * overrides with real semantics (read-and-clear).
      */
-    default CompoundBinaryTag consumePendingSnapshot() {
+    default byte[] consumePendingSnapshot() {
         return null;
     }
 

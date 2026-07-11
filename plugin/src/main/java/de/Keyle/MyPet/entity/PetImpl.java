@@ -43,6 +43,7 @@ import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHookRegistry;
 import de.Keyle.MyPet.util.NameFilter;
+import de.Keyle.MyPet.util.NbtUtil;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.ride.RideSkillFlightController;
 import de.Keyle.MyPet.entity.model.PetDespawnAnimator;
@@ -80,6 +81,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import java.io.IOException;
 import java.util.*;
 
 public abstract class PetImpl implements Pet, NBTStorage {
@@ -120,17 +122,23 @@ public abstract class PetImpl implements Pet, NBTStorage {
      *
      * <ul>
      *   <li>Save fallback: when {@link #getInfo} runs after the live entity
-     *       has been detached, we replay this compound so the saved row
+     *       has been detached, we replay this snapshot so the saved row
      *       still carries the most-recent state.</li>
      *   <li>Respawn input: {@link #consumePendingSnapshot} hands the
-     *       compound to {@code VanillaMobSpawner} so the new mob
+     *       snapshot to {@code VanillaMobSpawner} so the new mob
      *       deserializes from vanilla NBT, preserving
      *       variant/color/equipment/etc. across death-respawn,
      *       sendaway-recall, and store-switchback cycles. Single-use and
      *       cleared on consumption.</li>
      * </ul>
+     *
+     * <p>Held in one of two forms — at most one field is non-null. The raw
+     * serialized bytes (despawn capture) avoid a GZIP parse/re-compress round
+     * trip on the dominant despawn→respawn path; the parsed compound holds
+     * snapshots that arrived via {@link #setInfo} (repo load, listeners).
      */
-    private CompoundBinaryTag pendingSnapshot;
+    private byte[] pendingSnapshotBytes;
+    private CompoundBinaryTag pendingSnapshotTag;
     private PetType petType;
 
     protected PetImpl(MyPetPlayer petOwner) {
@@ -472,28 +480,87 @@ public abstract class PetImpl implements Pet, NBTStorage {
                         + t.getMessage());
             }
         }
-        if (snapshot == null) snapshot = pendingSnapshot;
+        if (snapshot == null) snapshot = pendingSnapshotAsTag();
         return snapshot != null ? snapshot : CompoundBinaryTag.empty();
     }
 
+    /**
+     * Serialized-form counterpart of {@link #getInfo} for the repository's
+     * {@code info} blob: skips the GZIP parse/re-compress round trip when the
+     * snapshot is already in byte form. Zero-length means "no snapshot".
+     */
+    public byte[] getInfoSerialized() {
+        final Mob entityRef = bukkitEntity;
+        if (entityRef != null && Bukkit.isOwnedByCurrentRegion(entityRef)) {
+            try {
+                return PetEntitySnapshot.captureBytes(entityRef);
+            } catch (Throwable t) {
+                MyPetApi.getLogger().warning("Failed to capture live snapshot "
+                        + "for pet " + getUUID() + " — falling back to pending snapshot. "
+                        + t.getMessage());
+            }
+        }
+        byte[] pending = serializePendingSnapshot(pendingSnapshotBytes, pendingSnapshotTag);
+        return pending != null ? pending : new byte[0];
+    }
+
+    /**
+     * Serialized form of a pending snapshot: the raw bytes if present, else the compressed
+     * tag, else {@code null}. Shared by {@link #getInfoSerialized} and
+     * {@link #consumePendingSnapshot}.
+     */
+    private byte[] serializePendingSnapshot(byte[] bytes, CompoundBinaryTag tag) {
+        if (bytes != null) {
+            return bytes;
+        }
+        if (tag != null) {
+            try {
+                return NbtUtil.writeCompressed(tag);
+            } catch (IOException e) {
+                MyPetApi.getLogger().warning("Failed to serialize pending snapshot "
+                        + "for pet " + getUUID() + ". " + e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    /** Pending snapshot as a compound, parsing the byte form lazily. */
+    private CompoundBinaryTag pendingSnapshotAsTag() {
+        if (pendingSnapshotTag != null) {
+            return pendingSnapshotTag;
+        }
+        if (pendingSnapshotBytes != null) {
+            try {
+                return NbtUtil.readCompressed(pendingSnapshotBytes);
+            } catch (IOException e) {
+                MyPetApi.getLogger().warning("Failed to parse pending snapshot "
+                        + "for pet " + getUUID() + ". " + e.getMessage());
+            }
+        }
+        return null;
+    }
+
     public void setInfo(CompoundBinaryTag info) {
-        this.pendingSnapshot = (info != null && !info.keySet().isEmpty()) ? info : null;
+        this.pendingSnapshotTag = (info != null && !info.keySet().isEmpty()) ? info : null;
+        this.pendingSnapshotBytes = null;
         // Sync the domain-side baby flag from the vanilla Age field if present.
         // Vanilla uses negative Age for babies (typically -24000 — the 20-minute
         // growth timer Ageable#setBaby writes; legacy data may carry -1).
         // Without this sync, PetVisualSyncer's setAdult call would clobber the
         // restored baby state, since pet.isBaby() defaults to false and only
         // ever gets toggled by the live grow-up interaction (PetImpl.tick:356).
-        if (this instanceof PetBaby baby && pendingSnapshot != null && pendingSnapshot.keySet().contains("Age")) {
-            baby.setBaby(pendingSnapshot.getInt("Age") < 0);
+        if (this instanceof PetBaby baby && pendingSnapshotTag != null && pendingSnapshotTag.keySet().contains("Age")) {
+            baby.setBaby(pendingSnapshotTag.getInt("Age") < 0);
         }
     }
 
     @Override
-    public CompoundBinaryTag consumePendingSnapshot() {
-        CompoundBinaryTag s = pendingSnapshot;
-        pendingSnapshot = null;
-        return s;
+    public byte[] consumePendingSnapshot() {
+        byte[] bytes = pendingSnapshotBytes;
+        CompoundBinaryTag tag = pendingSnapshotTag;
+        pendingSnapshotBytes = null;
+        pendingSnapshotTag = null;
+        return serializePendingSnapshot(bytes, tag);
     }
 
     // getEntity() is provided as a default method on the Pet api interface (returns
@@ -953,15 +1020,17 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 if (ownedByCurrentRegion) {
                     health = entityRef.getHealth();
                     try {
-                        // Stash bytes into pendingSnapshot — covers both
+                        // Stash raw bytes into pendingSnapshot — covers both
                         // save-while-detached (consumed by getInfo()) and
                         // in-memory respawn (consumed by VanillaMobSpawner).
-                        this.pendingSnapshot = PetEntitySnapshot.capture(entityRef);
+                        this.pendingSnapshotBytes = PetEntitySnapshot.captureBytes(entityRef);
+                        this.pendingSnapshotTag = null;
                     } catch (Throwable t) {
                         MyPetApi.getLogger().warning("Failed to capture EntitySnapshot "
                                 + "for pet " + getUUID() + " during removePet — pet "
                                 + "will respawn with default state. " + t.getMessage());
-                        this.pendingSnapshot = null;
+                        this.pendingSnapshotBytes = null;
+                        this.pendingSnapshotTag = null;
                     }
                 }
                 // Drop the pet's entry from the damage tracker before clearing

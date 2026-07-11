@@ -23,7 +23,10 @@ package de.Keyle.MyPet.entity;
 import de.Keyle.MyPet.api.entity.PersistedPet;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.StoredPet;
+import de.Keyle.MyPet.util.NbtUtil;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+
+import java.io.IOException;
 
 /**
  * Plugin-internal accessors for the raw NBT blobs carried by every
@@ -44,6 +47,19 @@ public final class PetInfoAccess {
         return switch (pet) {
             case PersistedPet p -> p.info();
             case Pet live -> ((PetImpl) live).getInfo();
+        };
+    }
+
+    /**
+     * Read the entity-NBT blob as GZIP-compressed bytes for DB storage,
+     * skipping the parse/re-compress round trip when the live pet already
+     * holds serialized bytes. Zero-length means "no snapshot".
+     */
+    public static byte[] readSerialized(StoredPet pet) throws IOException {
+        return switch (pet) {
+            case PersistedPet p -> p.info().keySet().isEmpty()
+                    ? new byte[0] : NbtUtil.writeCompressed(p.info());
+            case Pet live -> ((PetImpl) live).getInfoSerialized();
         };
     }
 

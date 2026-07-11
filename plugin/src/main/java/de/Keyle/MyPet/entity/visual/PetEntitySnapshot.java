@@ -92,19 +92,26 @@ public final class PetEntitySnapshot {
      * @throws UncheckedIOException     if the serialized bytes fail to parse
      */
     public static CompoundBinaryTag capture(Mob mob) {
-        byte[] bytes;
         try {
-            bytes = captureWithForce(mob);
+            return NbtUtil.readCompressed(captureBytes(mob));
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to parse serialized entity NBT", e);
+        }
+    }
+
+    /**
+     * Raw variant of {@link #capture}: returns Paper's serialized (GZIP'd
+     * Mojang NBT) bytes without parsing. Preferred on the despawn→respawn
+     * hand-off where the compound is never inspected.
+     */
+    public static byte[] captureBytes(Mob mob) {
+        try {
+            return captureWithForce(mob);
         } catch (LinkageError forceUnavailable) {
             // LinkageError covers NoClassDefFoundError + NoSuchMethodError —
             // either means the EntitySerializationFlag enum or the flagged
             // serializeEntity overload is absent on this Paper version.
-            bytes = captureWithPersistenceToggle(mob);
-        }
-        try {
-            return NbtUtil.readCompressed(bytes);
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to parse serialized entity NBT", e);
+            return captureWithPersistenceToggle(mob);
         }
     }
 
@@ -163,6 +170,15 @@ public final class PetEntitySnapshot {
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to serialize snapshot for deserializeEntity", e);
         }
+        return restore(bytes, world);
+    }
+
+    /**
+     * Raw variant of {@link #restore(CompoundBinaryTag, World)}: replays
+     * serialized snapshot bytes ({@link #captureBytes} or a compressed
+     * compound) without a parse/re-compress round trip.
+     */
+    public static Mob restore(byte[] bytes, World world) {
         Entity restored = Bukkit.getUnsafe().deserializeEntity(bytes, world, false);
         if (!(restored instanceof Mob mob)) {
             String type = restored == null ? "null" : restored.getClass().getName();
