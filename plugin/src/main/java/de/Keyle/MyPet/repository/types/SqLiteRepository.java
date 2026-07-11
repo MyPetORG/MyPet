@@ -116,6 +116,13 @@ public class SqLiteRepository extends AbstractSqlRepository {
                     initStructure();
                 }
             }
+
+            // Unconditional so databases created before the index existed get it too.
+            try (Statement index = connection.createStatement()) {
+                index.executeUpdate("CREATE INDEX IF NOT EXISTS pets_owner_uuid ON pets (owner_uuid);");
+            } catch (SQLException e) {
+                reportError(e);
+            }
         } catch (Exception e) {
             reportError(e);
             throw new RepositoryInitException(e);
