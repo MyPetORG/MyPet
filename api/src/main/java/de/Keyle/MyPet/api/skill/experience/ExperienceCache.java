@@ -36,6 +36,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -60,7 +64,8 @@ public class ExperienceCache implements ServiceContainer {
 
     String calculator = null;
     long version = 0;
-    JsonObject expMap = new JsonObject();
+    /** worldGroup -> petTypeName -> (level -> cumulative exp). Primary structure; JSON is built only in {@link #save()}. */
+    final Map<String, Map<String, NavigableMap<Integer, Double>>> expMap = new ConcurrentHashMap<>();
 
     final File cacheFile = new File(MyPetApi.getPlugin().getDataFolder(), "exp.cache");
 
@@ -74,12 +79,13 @@ public class ExperienceCache implements ServiceContainer {
      * @throws LevelNotCalculatedException if no cached value exists for the given combination
      */
     public double getExp(String worldGroup, PetType type, int level) throws LevelNotCalculatedException {
-        if (this.expMap.has(worldGroup)) {
-            JsonObject typeMap = this.expMap.getAsJsonObject(worldGroup);
-            if (typeMap.has(type.name())) {
-                JsonObject expMap = typeMap.getAsJsonObject(type.name());
-                if (expMap.has("" + level)) {
-                    return expMap.get("" + level).getAsDouble();
+        Map<String, NavigableMap<Integer, Double>> typeMap = this.expMap.get(worldGroup);
+        if (typeMap != null) {
+            NavigableMap<Integer, Double> levelMap = typeMap.get(type.name());
+            if (levelMap != null) {
+                Double exp = levelMap.get(level);
+                if (exp != null) {
+                    return exp;
                 }
             }
         }
@@ -96,22 +102,18 @@ public class ExperienceCache implements ServiceContainer {
      * @return the highest level the pet qualifies for, or {@code 0} if no cache entries exist
      */
     public int getLevel(String worldGroup, PetType type, double exp) {
-        if (!this.expMap.has(worldGroup)) return 0;
-        JsonObject typeMap = this.expMap.getAsJsonObject(worldGroup);
-        if (!typeMap.has(type.name())) return 0;
-        JsonObject levelMap = typeMap.getAsJsonObject(type.name());
-        int found = 0;
-        for (String levelKey : levelMap.keySet()) {
-            try {
-                int level = Integer.parseInt(levelKey);
-                double levelExp = levelMap.get(levelKey).getAsDouble();
-                if (levelExp <= exp && level > found) {
-                    found = level;
-                }
-            } catch (NumberFormatException ignored) {
+        Map<String, NavigableMap<Integer, Double>> typeMap = this.expMap.get(worldGroup);
+        if (typeMap == null) return 0;
+        NavigableMap<Integer, Double> levelMap = typeMap.get(type.name());
+        if (levelMap == null) return 0;
+        // Highest level whose threshold is <= exp; descending first-match is exact even
+        // if a custom calculator produces a non-monotonic curve.
+        for (Map.Entry<Integer, Double> entry : levelMap.descendingMap().entrySet()) {
+            if (entry.getValue() <= exp) {
+                return entry.getKey();
             }
         }
-        return found;
+        return 0;
     }
 
     /**
@@ -131,15 +133,9 @@ public class ExperienceCache implements ServiceContainer {
         if (worldGroup.isEmpty()) {
             return;
         }
-        if (!expMap.has(worldGroup)) {
-            expMap.add(worldGroup, new JsonObject());
-        }
-        JsonObject typeMap = this.expMap.get(worldGroup).getAsJsonObject();
-        if (!typeMap.has(type.name())) {
-            typeMap.add(type.name(), new JsonObject());
-        }
-        JsonObject expMap = typeMap.get(type.name()).getAsJsonObject();
-        expMap.addProperty("" + level, exp);
+        expMap.computeIfAbsent(worldGroup, k -> new ConcurrentHashMap<>())
+                .computeIfAbsent(type.name(), k -> new ConcurrentSkipListMap<>())
+                .put(level, exp);
     }
 
     @Override
@@ -155,7 +151,7 @@ public class ExperienceCache implements ServiceContainer {
         save();
         version = 0;
         calculator = null;
-        expMap.entrySet().clear();
+        expMap.clear();
     }
 
     /**
@@ -171,7 +167,7 @@ public class ExperienceCache implements ServiceContainer {
         long version = calculator.getVersion();
         String identifier = calculator.getIdentifier();
         if (version != this.version || !identifier.equals(this.calculator)) {
-            expMap.entrySet().clear();
+            expMap.clear();
             this.version = version;
             this.calculator = identifier;
             MyPetApi.getLogger().info("Current Exp-Cache is invalid, it will be recalculated.");
@@ -182,8 +178,20 @@ public class ExperienceCache implements ServiceContainer {
     /** Persists the in-memory cache to the GZIP-compressed {@code exp.cache} file. */
     protected void save() {
         try (OutputStreamWriter oos = new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(cacheFile.toPath())))) {
+            JsonObject expMapObject = new JsonObject();
+            for (Map.Entry<String, Map<String, NavigableMap<Integer, Double>>> worldGroupEntry : expMap.entrySet()) {
+                JsonObject typeMapObject = new JsonObject();
+                for (Map.Entry<String, NavigableMap<Integer, Double>> typeEntry : worldGroupEntry.getValue().entrySet()) {
+                    JsonObject levelMapObject = new JsonObject();
+                    for (Map.Entry<Integer, Double> levelEntry : typeEntry.getValue().entrySet()) {
+                        levelMapObject.addProperty("" + levelEntry.getKey(), levelEntry.getValue());
+                    }
+                    typeMapObject.add(typeEntry.getKey(), levelMapObject);
+                }
+                expMapObject.add(worldGroupEntry.getKey(), typeMapObject);
+            }
             JsonObject cacheObject = new JsonObject();
-            cacheObject.add("expMap", expMap);
+            cacheObject.add("expMap", expMapObject);
             cacheObject.addProperty("version", version);
             cacheObject.addProperty("calculator", calculator);
             Gson gson = new Gson();
@@ -203,7 +211,23 @@ public class ExperienceCache implements ServiceContainer {
         try (InputStreamReader reader = new InputStreamReader(new GZIPInputStream(Files.newInputStream(cacheFile.toPath())), StandardCharsets.UTF_8)) {
             Gson gson = new Gson();
             JsonObject cacheObject = gson.fromJson(reader, JsonObject.class);
-            this.expMap = cacheObject.get("expMap").getAsJsonObject();
+            JsonObject expMapObject = cacheObject.get("expMap").getAsJsonObject();
+            this.expMap.clear();
+            for (String worldGroup : expMapObject.keySet()) {
+                JsonObject typeMapObject = expMapObject.getAsJsonObject(worldGroup);
+                for (String typeName : typeMapObject.keySet()) {
+                    JsonObject levelMapObject = typeMapObject.getAsJsonObject(typeName);
+                    NavigableMap<Integer, Double> levelMap = expMap
+                            .computeIfAbsent(worldGroup, k -> new ConcurrentHashMap<>())
+                            .computeIfAbsent(typeName, k -> new ConcurrentSkipListMap<>());
+                    for (String levelKey : levelMapObject.keySet()) {
+                        try {
+                            levelMap.put(Integer.parseInt(levelKey), levelMapObject.get(levelKey).getAsDouble());
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
+                }
+            }
             this.version = cacheObject.get("version").getAsLong();
             this.calculator = cacheObject.get("calculator").getAsString();
         } catch (Throwable e) {
@@ -213,7 +237,7 @@ public class ExperienceCache implements ServiceContainer {
             }
             version = 0;
             calculator = null;
-            expMap.entrySet().clear();
+            expMap.clear();
         }
     }
 
