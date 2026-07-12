@@ -394,20 +394,6 @@ public class EntityListener implements Listener {
         if (target instanceof LivingEntity) {
             Entity source = event.getDamager();
 
-            if (MyPetGlobal.LevelSystem.Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION.get() && !(target instanceof Player) && !(PetEntityMarker.isMarked(target))) {
-                LivingEntity livingSource = null;
-                if (source instanceof Projectile projectile) {
-                    if (projectile.getShooter() instanceof LivingEntity) {
-                        livingSource = (LivingEntity) projectile.getShooter();
-                    }
-                } else if (source instanceof LivingEntity) {
-                    livingSource = (LivingEntity) source;
-                }
-                if (livingSource != null) {
-                    PetExperience.addDamageToEntity(livingSource, (LivingEntity) target, event.getDamage());
-                }
-            }
-
             if (source instanceof Projectile) {
                 ProjectileSource projectileSource = ((Projectile) source).getShooter();
                 if (projectileSource instanceof Entity) {
