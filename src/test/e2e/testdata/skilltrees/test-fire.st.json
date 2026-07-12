@@ -1,0 +1,21 @@
+{
+  "ID": "test-fire",
+  "Name": "test-fire",
+  "Order": 101,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Fire": {
+      "Upgrades": {
+        "1": {
+          "Chance": "+100",
+          "Duration": "+10"
+        }
+      }
+    }
+  }
+}

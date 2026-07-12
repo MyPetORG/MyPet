@@ -1,0 +1,21 @@
+{
+  "ID": "test-lightning",
+  "Name": "test-lightning",
+  "Order": 106,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Lightning": {
+      "Upgrades": {
+        "1": {
+          "Chance": "+100",
+          "Damage": "+10"
+        }
+      }
+    }
+  }
+}

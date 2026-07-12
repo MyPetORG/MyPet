@@ -1,0 +1,21 @@
+{
+  "ID": "test-heal",
+  "Name": "test-heal",
+  "Order": 111,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Heal": {
+      "Upgrades": {
+        "1": {
+          "Health": "+10",
+          "Timer": "-9"
+        }
+      }
+    }
+  }
+}

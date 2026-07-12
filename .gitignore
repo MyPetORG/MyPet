@@ -38,3 +38,9 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+# plugwright E2E
+src/test/e2e/node_modules/
+src/test/e2e/dist/
+
+docs/

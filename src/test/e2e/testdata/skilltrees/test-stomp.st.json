@@ -1,0 +1,21 @@
+{
+  "ID": "test-stomp",
+  "Name": "test-stomp",
+  "Order": 108,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Stomp": {
+      "Upgrades": {
+        "1": {
+          "Chance": "+100",
+          "Damage": "+50"
+        }
+      }
+    }
+  }
+}

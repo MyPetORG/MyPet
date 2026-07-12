@@ -1,0 +1,20 @@
+{
+  "ID": "test-sprint",
+  "Name": "test-sprint",
+  "Order": 113,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Sprint": {
+      "Upgrades": {
+        "1": {
+          "Active": true
+        }
+      }
+    }
+  }
+}

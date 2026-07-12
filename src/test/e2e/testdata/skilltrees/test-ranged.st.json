@@ -1,0 +1,22 @@
+{
+  "ID": "test-ranged",
+  "Name": "test-ranged",
+  "Order": 114,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Ranged": {
+      "Upgrades": {
+        "1": {
+          "Damage": "+50",
+          "Rate": "+35",
+          "Projectile": "Arrow"
+        }
+      }
+    }
+  }
+}

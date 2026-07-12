@@ -1,0 +1,23 @@
+{
+  "ID": "test-bleed",
+  "Name": "test-bleed",
+  "Order": 105,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Bleed": {
+      "Upgrades": {
+        "1": {
+          "Chance": "+100",
+          "Damage": "+1",
+          "Interval": "+1",
+          "Duration": "+8"
+        }
+      }
+    }
+  }
+}

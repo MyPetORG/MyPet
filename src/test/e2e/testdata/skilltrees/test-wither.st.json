@@ -1,0 +1,21 @@
+{
+  "ID": "test-wither",
+  "Name": "test-wither",
+  "Order": 104,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Wither": {
+      "Upgrades": {
+        "1": {
+          "Chance": "+100",
+          "Duration": "+10"
+        }
+      }
+    }
+  }
+}

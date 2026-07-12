@@ -1,0 +1,20 @@
+{
+  "ID": "test-control",
+  "Name": "test-control",
+  "Order": 116,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Control": {
+      "Upgrades": {
+        "1": {
+          "Active": true
+        }
+      }
+    }
+  }
+}

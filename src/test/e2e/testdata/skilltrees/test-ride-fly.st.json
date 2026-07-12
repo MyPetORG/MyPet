@@ -1,0 +1,10 @@
+{
+  "ID": "test-ride-fly", "Name": "test-ride-fly", "Order": 122,
+  "MobTypes": ["*"], "Icon": { "Material": "stone_axe" },
+  "Skills": {
+    "Ride": { "Upgrades": { "1": {
+      "Active": true, "Speed": "+5", "JumpHeight": "+1.25",
+      "CanFly": true, "FlyLimit": "+6", "FlyRegenRate": "+2"
+    } } }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "ID": "test-slow",
+  "Name": "test-slow",
+  "Order": 103,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Slow": {
+      "Upgrades": {
+        "1": {
+          "Chance": "+100",
+          "Duration": "+10"
+        }
+      }
+    }
+  }
+}

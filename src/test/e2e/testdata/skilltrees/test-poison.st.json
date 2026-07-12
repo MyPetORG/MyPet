@@ -1,0 +1,21 @@
+{
+  "ID": "test-poison",
+  "Name": "test-poison",
+  "Order": 102,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Poison": {
+      "Upgrades": {
+        "1": {
+          "Chance": "+100",
+          "Duration": "+10"
+        }
+      }
+    }
+  }
+}

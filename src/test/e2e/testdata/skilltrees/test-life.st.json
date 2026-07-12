@@ -1,0 +1,20 @@
+{
+  "ID": "test-life",
+  "Name": "test-life",
+  "Order": 112,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Life": {
+      "Upgrades": {
+        "1": {
+          "Health": "+20"
+        }
+      }
+    }
+  }
+}

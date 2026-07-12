@@ -1,0 +1,29 @@
+{
+  "ID": "test-pickup",
+  "Name": "test-pickup",
+  "Order": 117,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Pickup": {
+      "Upgrades": {
+        "1": {
+          "Range": "+6",
+          "Exp": false
+        }
+      }
+    },
+    "Backpack": {
+      "Upgrades": {
+        "1": {
+          "rows": "+3",
+          "drop": false
+        }
+      }
+    }
+  }
+}

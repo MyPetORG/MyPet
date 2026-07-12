@@ -1,0 +1,20 @@
+{
+  "ID": "test-knockback",
+  "Name": "test-knockback",
+  "Order": 107,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Knockback": {
+      "Upgrades": {
+        "1": {
+          "Chance": "+100"
+        }
+      }
+    }
+  }
+}

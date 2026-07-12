@@ -1,0 +1,21 @@
+{
+  "ID": "test-thorns",
+  "Name": "test-thorns",
+  "Order": 109,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Thorns": {
+      "Upgrades": {
+        "1": {
+          "Chance": "+100",
+          "Reflection": "+100"
+        }
+      }
+    }
+  }
+}

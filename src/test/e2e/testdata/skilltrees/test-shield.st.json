@@ -1,0 +1,21 @@
+{
+  "ID": "test-shield",
+  "Name": "test-shield",
+  "Order": 110,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Shield": {
+      "Upgrades": {
+        "1": {
+          "Chance": "+100",
+          "Redirect": "+90"
+        }
+      }
+    }
+  }
+}

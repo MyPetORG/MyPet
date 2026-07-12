@@ -1,0 +1,31 @@
+{
+  "ID": "test-behavior-modes",
+  "Name": "test-behavior-modes",
+  "Order": 123,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Behavior": {
+      "Upgrades": {
+        "1": {
+          "Aggro": true,
+          "Friend": true,
+          "Duel": false,
+          "Farm": false,
+          "Raid": true
+        }
+      }
+    },
+    "Damage": {
+      "Upgrades": {
+        "1": {
+          "Damage": "+50"
+        }
+      }
+    }
+  }
+}

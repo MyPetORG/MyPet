@@ -1,0 +1,21 @@
+{
+  "ID": "test-backpack",
+  "Name": "test-backpack",
+  "Order": 118,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Backpack": {
+      "Upgrades": {
+        "1": {
+          "rows": "+3",
+          "drop": false
+        }
+      }
+    }
+  }
+}

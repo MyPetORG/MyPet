@@ -1,0 +1,25 @@
+{
+  "ID": "test-beacon",
+  "Name": "test-beacon",
+  "Order": 119,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Beacon": {
+      "Upgrades": {
+        "1": {
+          "Buffs": {
+            "Strength": "+1"
+          },
+          "Duration": "+8",
+          "Count": "+1",
+          "Range": "+10"
+        }
+      }
+    }
+  }
+}

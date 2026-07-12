@@ -1,0 +1,20 @@
+{
+  "ID": "test-damage",
+  "Name": "test-damage",
+  "Order": 100,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Damage": {
+      "Upgrades": {
+        "1": {
+          "Damage": "+50"
+        }
+      }
+    }
+  }
+}

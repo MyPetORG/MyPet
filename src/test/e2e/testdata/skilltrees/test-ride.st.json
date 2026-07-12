@@ -1,0 +1,22 @@
+{
+  "ID": "test-ride",
+  "Name": "test-ride",
+  "Order": 115,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "stone_axe"
+  },
+  "Skills": {
+    "Ride": {
+      "Upgrades": {
+        "1": {
+          "Active": true,
+          "Speed": "+5",
+          "JumpHeight": "+1.25"
+        }
+      }
+    }
+  }
+}
