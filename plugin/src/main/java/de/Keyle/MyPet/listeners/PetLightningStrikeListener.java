@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.PetLightningConvertible;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.exceptions.PetTypeNotFoundException;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import de.Keyle.MyPet.repository.PetManager;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.MushroomCow;
@@ -111,6 +112,32 @@ public class PetLightningStrikeListener implements Listener {
     }
 
     /**
+     * A lightning-struck Pig converting to a ZombifiedPiglin fires {@link EntityZapEvent}
+     * on its own handler list, not the plain {@link EntityTransformEvent} above, so it
+     * needs its own handler — without this a Pig pet would become a wild zombified_piglin
+     * (the transform fires no death event, orphaning the Pet record). We listen on the
+     * parent {@code EntityZapEvent} rather than the leaf {@code PigZapEvent}: the leaf is
+     * deprecated (Bukkit warns when a listener registers for it) while sharing the same
+     * handler list, so the parent catches the zap without the deprecation. Mirrors the
+     * transform path: cancel by default, or re-type the pet if the owner opted into
+     * AllowLightningConversion.
+     */
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onPetLightningZap(EntityZapEvent event) {
+        if (!PetEntityMarker.isMarked(event.getEntity())) {
+            return;
+        }
+        Pet pet = MyPetApi.getPetManager().getPetFromEntity(event.getEntity());
+        if (pet instanceof PetLightningConvertible convertible
+                && convertible.allowLightningConversion()
+                && event.getReplacementEntity() instanceof Mob replacement
+                && convertPet(pet, replacement)) {
+            return;
+        }
+        event.setCancelled(true);
+    }
+
+    /**
      * Attempts the re-type path. Returns {@code true} if the conversion was
      * accepted (event left uncancelled, Pet domain object swapped to the new
      * species); {@code false} if the new type couldn't be resolved or the new
@@ -120,6 +147,10 @@ public class PetLightningStrikeListener implements Listener {
         if (!(event.getTransformedEntity() instanceof Mob newEntity)) {
             return false;
         }
+        return convertPet(oldPet, newEntity);
+    }
+
+    private boolean convertPet(Pet oldPet, Mob newEntity) {
         PetType newType;
         try {
             newType = PetType.byEntityTypeName(newEntity.getType().name());
