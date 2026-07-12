@@ -48,29 +48,16 @@ test('pet-volume menu opens and a bar click persists the volume', async ({ playe
   }
 });
 
-// MenuIds.PET_ADMIN_SELECTION is registered but unreachable -- no command or
-// listener in the plugin module ever calls GuiService#openMenu(...,
-// PET_ADMIN_SELECTION, ...) (confirmed by grepping every /petadmin subcommand
-// and openMenu call site); likely unwired GUI-system scaffolding. Driving it
-// would need a Java call site (out of scope), so this test exercises the real
-// reachable equivalent instead: CommandOptionSwitch's chat-based flow
-// (`/petadmin switch <player>` lists stored pets; `... <petname>` switches).
-test("petadmin switch lists and selects a player's pets for admins (pet-admin-selection GUI is unwired dead code)", async ({ player, server }) => {
+// `/petadmin switch <player>` opens the pet-admin-selection GUI for an in-game admin
+// (console gets a chat list instead). Clicking a pet switches the target player to it.
+test("petadmin switch opens the admin GUI and switching a player's pet works", async ({ player, server }) => {
   await player.makeOp();
   await createPet(server, player, 'Cow', { name: 'AdminSeen' });
   try {
-    const sinceList = player.getMessageBufferIndex();
     player.chat(`/petadmin switch ${player.username}`);
-    // CommandOptionSwitch#showPetList sends this exact literal header (not a
-    // locale key) before the clickable pet-name list.
-    await expect(player).toHaveReceivedMessage(
-      'Select the Pet you want the player to switch to:', { since: sinceList });
-    await expect(player).toHaveReceivedMessage('AdminSeen', { since: sinceList });
-
-    // Run the exact switch command the chat list's click-event would fire, to
-    // prove the flow works end-to-end, not just the listing.
+    const gui = await player.gui({ title: msgPlain('Gui.PetAdminSelection.Title') }); // "Admin: Select a Pet"
     const sinceSwitch = player.getMessageBufferIndex();
-    player.chat(`/petadmin switch ${player.username} AdminSeen`);
+    await gui.locator((i: any) => String(i.getDisplayName() ?? '').includes('AdminSeen')).click();
     await expect(player).toHaveReceivedMessage(msgFragment('Message.Command.Success'), { since: sinceSwitch });
   } finally {
     removePet(server, player);
