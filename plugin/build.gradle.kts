@@ -62,7 +62,7 @@ dependencies {
         isTransitive = false // don't drag in worldguard-core 7.0.12 etc.
     }
 
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.16")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
 
     compileOnly("dev.kitteh:factions:4.4.0")

@@ -64,8 +64,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.Keyle.MyPet.MyPetApi.getPetManager;
-
 @ServiceName("WorldGuard")
 @RequiresPlugin("WorldGuard")
 @Load(Load.State.Hooks)
@@ -178,6 +176,12 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
         }
     }
 
+    // Callers (canHurt/canFly/isPetAllowed/isBeacon*/exp modifier) invoke this synchronously
+    // from the region that owns `loc`, or from a thread where WorldGuard region reads are safe
+    // (combat target goals, for example, query a target's location from the pet's region thread).
+    // WorldGuard region queries are thread-safe in-memory reads, so no region scheduling is
+    // needed — and could not be added anyway, since a synchronous predicate cannot block on a
+    // cross-region Folia task.
     public StateFlag.State getState(Location loc, Player player, StateFlag... flags) {
         RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
         if (rc != null) {
@@ -347,8 +351,10 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             String blockTypeName = block.getType().name();
 
             if (blockTypeName.contains("PRESSURE_PLATE")) {
-                Player p = getPetManager().getPetFromEntity(ent).getOwner().getPlayer();
-                StateFlag.State s = getState(p.getLocation(), null, Flags.INTERACT);
+                // Check INTERACT where the interaction happens — the pet's location.
+                // On Folia this handler runs on the pet's region thread, so ent.getLocation()
+                // is owned by the current region; the owner may be in a different region.
+                StateFlag.State s = getState(ent.getLocation(), null, Flags.INTERACT);
                 if (s == null || s == StateFlag.State.DENY) {
                     event.setCancelled(true);
                 }
@@ -375,12 +381,18 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             Mob entity = pet.getBukkitEntity();
             if (entity != null) {
                 try {
+                    // Query at the pet's location (owned by the current region thread during
+                    // exp gain). Pass the owner only when they're on the current region thread,
+                    // so WorldGuard can still evaluate region-group (-g members/nonmembers) exp
+                    // flags; otherwise pass null to avoid a cross-region entity access on Folia.
                     Location location = entity.getLocation();
-                    Collection<Double> values = getDoubleValue(location, pet.getOwner().getPlayer(), EXP_ADD_FLAG);
+                    Player owner = pet.getOwner().getPlayer();
+                    Player wgPlayer = owner != null && Bukkit.isOwnedByCurrentRegion(owner) ? owner : null;
+                    Collection<Double> values = getDoubleValue(location, wgPlayer, EXP_ADD_FLAG);
                     for (double d : values) {
                         experience += d;
                     }
-                    values = getDoubleValue(location, pet.getOwner().getPlayer(), EXP_MULT_FLAG);
+                    values = getDoubleValue(location, wgPlayer, EXP_MULT_FLAG);
                     for (double d : values) {
                         experience *= d;
                     }
