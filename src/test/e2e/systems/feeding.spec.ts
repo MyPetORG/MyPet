@@ -87,10 +87,11 @@ test('feeding a damaged pet heals it', async ({ player, server }) => {
   await setupArena(server, player);
   const pet = await createPet(server, player, 'Cow');
   try {
-    server.execute(`damage ${pet.selector} 10 minecraft:generic`);
-    await expectScore(server, player, `data get entity ${pet.selector} Health`, '..10');
+    // Cow base is 10. Damage to 6 so feeding's heal is observable without killing it.
+    server.execute(`damage ${pet.selector} 4 minecraft:generic`);
+    await expectScore(server, player, `data get entity ${pet.selector} Health`, '..8');
     await feedPet(player, server, 'cow', 'wheat');
-    await expectScore(server, player, `data get entity ${pet.selector} Health`, '11..', { timeout: 15000 });
+    await expectScore(server, player, `data get entity ${pet.selector} Health`, '7..', { timeout: 15000 });
   } finally {
     removePet(server, player);
   }
@@ -106,10 +107,11 @@ test('a full, healthy pet refuses food (a19 regression)', async ({ player, serve
     await equipItem(player, 'wheat');
 
     // Positive control first: prove activateEntity packets land and consume, so a dropped
-    // packet can't make "held count unchanged" pass vacuously. Damaging the pet 1 HP forces
-    // the feed to eat (heal +1) regardless of saturation.
-    server.execute(`damage ${pet.selector} 1 minecraft:generic`);
-    await expectScore(server, player, `data get entity ${pet.selector} Health`, '..19');
+    // packet can't make "held count unchanged" pass vacuously. Damage the pet (Cow base 10)
+    // well below max so it eats regardless of saturation and vanilla regen can't close the
+    // gap before the feed lands.
+    server.execute(`damage ${pet.selector} 4 minecraft:generic`);
+    await expectScore(server, player, `data get entity ${pet.selector} Health`, '..8');
     let consumed = false;
     for (let i = 0; i < 4 && !consumed; i++) {
       const before = heldWheat(player);
@@ -117,7 +119,9 @@ test('a full, healthy pet refuses food (a19 regression)', async ({ player, serve
       consumed = await waitWheatBelow(player, before);
     }
     if (!consumed) throw new Error('positive control failed: a feed on a damaged pet never consumed wheat');
-    await expectScore(server, player, `data get entity ${pet.selector} Health`, '20..');
+    // Heal to full so the refusal check below tests a genuinely full-health pet.
+    server.execute(`effect give ${pet.selector} minecraft:instant_health 1 9`);
+    await expectScore(server, player, `data get entity ${pet.selector} Health`, '10..');
 
     // Only an activate performed while /petinfo reads exactly 100 counts. If a decay
     // decrement slipped in, top saturation back up with a legitimate feed and retry.

@@ -45,8 +45,13 @@ public @interface DefaultInfo {
     /** Items that restore saturation when fed to this pet type. */
     Material[] food() default {};
 
-    /** Starting max health (half-hearts). */
-    double hp() default 20D;
+    /**
+     * Starting max health (half-hearts). The default {@code -1} means "inherit the
+     * vanilla entity's natural max-health" (e.g. Wolf 8, Cow 10) — resolved from the
+     * Bukkit entity type at config load. Set an explicit non-negative value only to
+     * override that per species.
+     */
+    double hp() default -1D;
 
     /**
      * Leash flag names that must pass before a player can tame this mob.

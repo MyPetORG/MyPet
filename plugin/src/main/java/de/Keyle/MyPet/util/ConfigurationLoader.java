@@ -39,7 +39,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.EntityType;
+import de.Keyle.MyPet.entity.PetAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -142,7 +144,7 @@ public class ConfigurationLoader {
             // annotation-derived defaults.
             DefaultInfo pi = petType.getPetClass().getAnnotation(DefaultInfo.class);
 
-            config.addDefault("MyPet.Pets." + petType.name() + ".HP", pi != null ? pi.hp() : 20.0);
+            config.addDefault("MyPet.Pets." + petType.name() + ".HP", resolveDefaultHp(petType, pi));
             config.addDefault("MyPet.Pets." + petType.name() + ".Speed", pi != null ? pi.walkSpeed() : 0.3);
             config.addDefault("MyPet.Pets." + petType.name() + ".Food", pi != null ? linkFood(pi.food()) : new ArrayList<String>());
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashRequirements", pi != null ? pi.leashFlags() : new String[0]);
@@ -315,7 +317,7 @@ public class ConfigurationLoader {
             // of skipping. Vanilla types (pi != null) read exactly as before.
             DefaultInfo pi = petType.getPetClass().getAnnotation(DefaultInfo.class);
 
-            MyPetApi.getPetInfo().setStartHP(petType, config.getDouble("MyPet.Pets." + petType.name() + ".HP", pi != null ? pi.hp() : 20.0));
+            MyPetApi.getPetInfo().setStartHP(petType, config.getDouble("MyPet.Pets." + petType.name() + ".HP", resolveDefaultHp(petType, pi)));
             MyPetApi.getPetInfo().setSpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".Speed", pi != null ? pi.walkSpeed() : 0.3));
             MyPetApi.getPetInfo().setOverrideFlySpeed(petType, config.getBoolean("MyPet.Pets." + petType.name() + ".OverrideFlySpeed", pi != null ? pi.overrideFlySpeed() : false));
             MyPetApi.getPetInfo().setFlySpeed(petType, config.getDouble("MyPet.Pets." + petType.name() + ".FlySpeed", pi != null ? pi.flySpeed() : 0.4));
@@ -370,6 +372,30 @@ public class ConfigurationLoader {
 
     public static void upgradeConfig() {
         // Config key migrations are now handled by the MigrationService via ConfigMigration classes.
+    }
+
+    /**
+     * Default starting HP for a pet type: an explicit {@code @DefaultInfo(hp=…)} override
+     * if one is set (a non-negative value), otherwise the vanilla entity's natural
+     * max-health read from the Bukkit entity type (Wolf 8, Cow 10, …). Falls back to 20 for
+     * custom/non-vanilla types whose Bukkit name has no default attributes.
+     */
+    public static double resolveDefaultHp(PetType petType, DefaultInfo pi) {
+        if (pi != null && pi.hp() >= 0) {
+            return pi.hp();
+        }
+        try {
+            EntityType type = EntityType.valueOf(petType.getBukkitName());
+            if (type.hasDefaultAttributes()) {
+                AttributeInstance health = type.getDefaultAttributes().getAttribute(PetAttributes.MAX_HEALTH);
+                if (health != null) {
+                    return health.getBaseValue();
+                }
+            }
+        } catch (IllegalArgumentException ignored) {
+            // Custom / non-vanilla Bukkit name — fall through to the generic default.
+        }
+        return 20.0;
     }
 
     public static List<String> linkFood(Material[] foodTypes) {
