@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.entity.leashing.WildAngerCheck;
+import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
@@ -60,10 +61,24 @@ public class PetBee extends PetImpl implements PetBaby, PetFlyingEntity {
     public static final WildAngerCheck<Bee> ANGER_CHECK =
             new WildAngerCheck<>(Bee.class, bee -> bee.getAnger() > 0);
 
+    /**
+     * Clears the vanilla HasStung flag on every spawn. A stung bee self-kills
+     * in {@code Bee.aiStep} (generic damage → {@code DamageCause.CUSTOM}); the
+     * flag latches through the snapshot round-trip, so a bee that stung once
+     * would re-die on every respawn without this.
+     */
+    public static final PetLifecycleHook LIFECYCLE_HOOK = new PetLifecycleHook(
+            "Bee",
+            pet -> {
+                if (pet.getBukkitEntity() instanceof Bee bee) {
+                    bee.setHasStung(false);
+                }
+            },
+            pet -> {}
+    );
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofFlag("angry",      Bee.class, b -> b.setAnger(400)),
-            () -> OptionSpec.ofFlag("has-stung",  Bee.class, b -> b.setHasStung(true)),
             () -> OptionSpec.ofFlag("has-nectar", Bee.class, b -> b.setHasNectar(true))
     );
 
