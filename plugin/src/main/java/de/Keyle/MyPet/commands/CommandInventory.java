@@ -43,7 +43,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 /**
- * Handles the {@code /petinventory} command (aliases: {@code /peti}, {@code /pi}).
+ * Handles the {@code /petinventory} command (aliases: {@code /peti}, {@code /pi}, {@code /petinv}).
  *
  * <p>Opens the Backpack skill inventory for the sender's active pet. Admins can also
  * open another player's pet inventory by specifying a target player name. The pet
@@ -92,7 +92,7 @@ public class CommandInventory {
                                 }))
                         .build(),
                 "Opens your pet's inventory",
-                List.of("peti", "pi")
+                List.of("peti", "pi", "petinv")
         );
 
         helpRegistry.register(new HelpEntry(
