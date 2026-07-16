@@ -31,6 +31,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.WebSocket;
 import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
@@ -57,6 +58,13 @@ public final class WebEditorSocket {
     private final StringBuilder buffer = new StringBuilder();
     private boolean discardingOversized; // set once a message blows the cap; cleared at its frame boundary
     private volatile WebSocket webSocket;
+
+    // send() is called from the HttpClient socket thread (pong), the async scheduler (applied),
+    // and the main thread (rejected) — sendText() throws if a prior send hasn't completed, so all
+    // sends are serialized through this chain. `sendLock` only guards the trivial reassignment
+    // below, never the actual I/O, so callers are never blocked on network completion.
+    private final Object sendLock = new Object();
+    private CompletableFuture<Void> sendChain = CompletableFuture.completedFuture(null);
 
     public WebEditorSocket(Consumer<String> onMessage, Runnable onClose) {
         this.onMessage = onMessage;
@@ -97,11 +105,28 @@ public final class WebEditorSocket {
         this.webSocket = http.newWebSocketBuilder().buildAsync(uri, new Listener()).join();
     }
 
-    /** Send a complete text frame. */
+    /** Send a complete text frame, queued behind any send already in flight. Never blocks. */
     public void send(String text) {
         WebSocket ws = this.webSocket;
-        if (ws != null) {
-            ws.sendText(text, true);
+        if (ws == null) {
+            return;
+        }
+        // Chain onto the tail so sendText() is only invoked once the previous send's future
+        // completes. `handle` (not `thenCompose`+exceptionally) always resolves normally, so a
+        // failed send can't poison the chain and block every send after it.
+        synchronized (sendLock) {
+            sendChain = sendChain
+                    .thenCompose(ignored -> ws.sendText(text, true))
+                    .handle((ok, ex) -> {
+                        if (ex != null) {
+                            try {
+                                MyPetApi.getLogger().warning("WebEditor: send failed: " + ex.getMessage());
+                            } catch (RuntimeException loggingFailure) {
+                                // never let a logging error break the send chain
+                            }
+                        }
+                        return null;
+                    });
         }
     }
 

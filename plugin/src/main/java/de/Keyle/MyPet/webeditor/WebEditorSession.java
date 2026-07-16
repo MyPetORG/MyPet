@@ -234,44 +234,59 @@ public final class WebEditorSession {
         }
     }
 
-    private void handleChangeRequest(JsonObject msg) throws Exception {
-        sendSigned(typed("change-response", "accepted", null));
+    private void handleChangeRequest(JsonObject msg) {
+        try {
+            String payloadKey = msg.get("key").getAsString();
+            String body = bytebin.get(payloadKey);
 
-        String payloadKey = msg.get("key").getAsString();
-        String body = bytebin.get(payloadKey);
+            // The signed change-request commits to a SHA-256 of the payload; the blob
+            // itself travels over the untrusted relay. Verifying the fetched bytes
+            // against the signed hash stops a tampering/compromised relay from
+            // substituting config content the trusted browser never authored.
+            String expectedHash = msg.has("hash") ? msg.get("hash").getAsString() : null;
+            if (expectedHash == null || !expectedHash.equals(SignatureAlgorithm.sha256Base64(body))) {
+                MyPetApi.getLogger().warning("WebEditor: dropped change-request — payload hash mismatch (relay tampering?)");
+                sendSigned(rejected("Payload integrity check failed — nothing was changed."));
+                return;
+            }
 
-        // The signed change-request commits to a SHA-256 of the payload; the blob
-        // itself travels over the untrusted relay. Verifying the fetched bytes
-        // against the signed hash stops a tampering/compromised relay from
-        // substituting config content the trusted browser never authored.
-        String expectedHash = msg.has("hash") ? msg.get("hash").getAsString() : null;
-        if (expectedHash == null || !expectedHash.equals(SignatureAlgorithm.sha256Base64(body))) {
-            MyPetApi.getLogger().warning("WebEditor: dropped change-request — payload hash mismatch (relay tampering?)");
-            return;
-        }
+            // Only now is the payload known-authentic: "accepted" means the hash matched
+            // and processing has begun (protocol.md §5.6).
+            sendSigned(typed("change-response", "accepted", null));
 
-        JsonObject payload = JsonParser.parseString(body).getAsJsonObject();
-        JsonObject changedConfigs = payload.getAsJsonObject("configs");
-        // Diff against the current on-disk files BEFORE they're overwritten.
-        List<Component> changes = WebEditorChanges.summarize(MyPetApi.getPlugin().getDataFolder(), changedConfigs);
-        applier.writeChanges(changedConfigs); // file I/O — safe off the main thread
+            JsonObject payload = JsonParser.parseString(body).getAsJsonObject();
+            JsonObject changedConfigs = payload.getAsJsonObject("configs");
+            // Diff against the current on-disk files BEFORE they're overwritten.
+            List<Component> changes = WebEditorChanges.summarize(MyPetApi.getPlugin().getDataFolder(), changedConfigs);
+            applier.writeChanges(changedConfigs); // file I/O — safe off the main thread
 
-        // Reload touches plugin state → global region scheduler (Folia-safe);
-        // then re-serialize on that thread and upload async so we never block a tick on I/O.
-        Bukkit.getGlobalRegionScheduler().run(MyPetApi.getPlugin(), task -> {
-            applier.reload();
-            WebEditorChanges.broadcast(ownerName(), changes); // notify console + mypet.admin.notify
-            JsonObject snapshot = new JsonObject();
-            snapshot.add("configs", serializer.serializeConfigs());
-            Bukkit.getAsyncScheduler().runNow(MyPetApi.getPlugin(), asyncTask -> {
+            // Reload touches plugin state → global region scheduler (Folia-safe);
+            // then re-serialize on that thread and upload async so we never block a tick on I/O.
+            Bukkit.getGlobalRegionScheduler().run(MyPetApi.getPlugin(), task -> {
+                JsonObject snapshot = new JsonObject();
                 try {
-                    String newKey = bytebin.post(snapshot.toString(), "application/json");
-                    sendSigned(typed("change-response", "applied", newKey));
+                    applier.reload(changedConfigs);
+                    WebEditorChanges.broadcast(ownerName(), changes); // notify console + mypet.admin.notify
+                    snapshot.add("configs", serializer.serializeConfigs());
                 } catch (Exception e) {
-                    MyPetApi.getLogger().warning("WebEditor: failed to publish applied snapshot: " + e.getMessage());
+                    MyPetApi.getLogger().warning("WebEditor: failed to reload after change-request: " + e.getMessage());
+                    sendSigned(rejected("The server failed to reload the changed files. Check the console."));
+                    return;
                 }
+                Bukkit.getAsyncScheduler().runNow(MyPetApi.getPlugin(), asyncTask -> {
+                    try {
+                        String newKey = bytebin.post(snapshot.toString(), "application/json");
+                        sendSigned(typed("change-response", "applied", newKey));
+                    } catch (Exception e) {
+                        MyPetApi.getLogger().warning("WebEditor: failed to publish applied snapshot: " + e.getMessage());
+                        sendSigned(rejected("The changes were applied, but the server could not publish the updated snapshot."));
+                    }
+                });
             });
-        });
+        } catch (Exception e) {
+            MyPetApi.getLogger().warning("WebEditor: failed to handle change-request: " + e.getMessage());
+            sendSigned(rejected("The server could not apply the changes. Check the console."));
+        }
     }
 
     /**
@@ -426,6 +441,12 @@ public final class WebEditorSession {
         if (newSessionCode != null) {
             obj.addProperty("newSessionCode", newSessionCode);
         }
+        return obj;
+    }
+
+    private static JsonObject rejected(String reason) {
+        JsonObject obj = typed("change-response", "rejected", null);
+        obj.addProperty("reason", reason);
         return obj;
     }
 

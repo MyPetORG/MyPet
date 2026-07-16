@@ -22,35 +22,17 @@ package de.Keyle.MyPet.commands.mypet;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.MyPetGlobal;
-import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.AdminPermissions;
-import de.Keyle.MyPet.api.skill.experience.ExperienceCalculatorManager;
-import de.Keyle.MyPet.entity.model.BundledModelInstaller;
-import de.Keyle.MyPet.entity.model.CustomPetLoader;
-import de.Keyle.MyPet.entity.model.PetModelService;
-import de.Keyle.MyPet.skill.skilltree.SkillTreeLoaderJSON;
-import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
-import de.Keyle.MyPet.api.util.service.RequiresPlugin;
-import de.Keyle.MyPet.api.util.service.ServiceContainer;
 import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.MessageUtil;
-import de.Keyle.MyPet.util.PetPermissions;
+import de.Keyle.MyPet.util.MyPetReloader;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.permissions.Permission;
-
-import java.io.File;
-import java.util.Optional;
 
 /**
  * Provides the {@code /mypet reload} subcommand, enabling hot-reload of plugin resources.
@@ -122,126 +104,36 @@ public class CommandOptionReload {
     }
 
     /**
-     * Reloads the plugin configuration from {@code config.yml} and applies side effects.
-     *
-     * <p>This method performs the following steps in order:</p>
-     * <ol>
-     *   <li>Reloads the main configuration and version-specific compatibility config via
-     *       {@link ConfigurationLoader}</li>
-     *   <li>Re-initializes the translation/locale system</li>
-     *   <li>Adjusts {@code MyPet.petstorage.limit.*} permissions if the maximum stored
-     *       pet count changed (registers new permissions or removes excess ones)</li>
-     *   <li>Switches the experience calculator to match the configured calculation mode</li>
-     *   <li>Reloads configuration for all registered {@link ServiceContainer} integrations</li>
-     * </ol>
-     *
-     * @param sender the command sender to receive a confirmation message (console senders
-     *               receive only a log entry, not a chat message)
+     * Reloads the config and confirms to {@code sender}. See {@code MyPetReloader#reloadConfig}
+     * for what that covers.
      */
     protected void reloadConfig(CommandSender sender) {
-        int oldMaxPetCount = MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get();
-        // Register any custom creatures added to pet-config.yml since boot BEFORE the per-type
-        // loops run, so the new types get their defaults, PetInfo, and model mapping loaded below.
-        // (Idempotent — existing types are skipped. Changing an existing type's Host still needs a
-        // restart, since its host class is bound at registration.)
-        CustomPetLoader.registerCustomTypes();
-        ConfigurationLoader.loadConfiguration();
-        ConfigurationLoader.loadCompatConfiguration();
-        // Wire permission nodes for any newly-registered custom types (no-op for existing ones).
-        PetPermissions.registerAll();
-
-        Locale.init();
-
-        if (MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get() > oldMaxPetCount) {
-            for (int i = oldMaxPetCount + 1; i <= MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get(); i++) {
-                try {
-                    Bukkit.getPluginManager().addPermission(new Permission("MyPet.petstorage.limit." + i));
-                } catch (Exception ignored) {
-                }
-            }
-        } else if (oldMaxPetCount > MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get()) {
-            for (int i = oldMaxPetCount; i > MyPetGlobal.Misc.MAX_STORED_PET_COUNT.get(); i--) {
-                try {
-                    Bukkit.getPluginManager().removePermission("MyPet.petstorage.limit." + i);
-                } catch (Exception ignored) {
-                }
-            }
-        }
-
-        ExperienceCalculatorManager calculatorManager = MyPetApi.getServiceManager().getService(ExperienceCalculatorManager.class).get();
-        calculatorManager.switchCalculator(MyPetGlobal.LevelSystem.CALCULATION_MODE.get());
-
-        MyPetApi.getServiceManager().getConfig().loadConfig();
-
-        for (ServiceContainer hook : MyPetApi.getServiceManager().getServices(ServiceContainer.class).stream()
-                .filter(s -> s.getClass().isAnnotationPresent(RequiresPlugin.class))
-                .toList()) {
-            ConfigurationSection pluginSection = MyPetApi.getServiceManager().getConfig().getConfig().getConfigurationSection(hook.getServiceName());
-            if (pluginSection != null) {
-                hook.loadConfig(pluginSection);
-            }
-        }
-        // The pet-config Model blocks were just re-loaded above (loadCompatConfiguration repopulates
-        // the model registry); re-apply them to already-spawned pets so removed/changed models take
-        // effect live.
-        BundledModelInstaller.installReferencedDefaults();
-        PetModelService.reapplyAll();
-        if (!(sender instanceof ConsoleCommandSender)) {
-            sender.sendMessage(MessageUtil.prefixed(Component.text("config reloaded!")));
-        }
-        MyPetApi.getLogger().info("Config reloaded!");
+        MyPetReloader.reloadConfig();
+        message(sender, "config reloaded!");
     }
 
     /**
-     * Reloads all skilltree definitions from the {@code skilltrees/} data folder.
-     *
-     * <p>After clearing and re-loading the skilltree JSON files, every currently active
-     * pet is checked: if its previously assigned skilltree still exists and is compatible
-     * with the pet's mob type, the reference is updated to the newly loaded instance;
-     * otherwise the pet's skilltree is set to {@code null}.</p>
-     *
-     * @param sender the command sender to receive a confirmation message
+     * Reloads the skilltrees and confirms to {@code sender}. See
+     * {@code MyPetReloader#reloadSkilltrees} for what that covers.
      */
     protected void reloadSkilltrees(CommandSender sender) {
-        MyPetApi.getSkilltreeManager().clearSkilltrees();
-
-        SkillTreeLoaderJSON.loadSkilltrees(new File(MyPetApi.getPlugin().getDataFolder(), "skilltrees"));
-
-        for (Pet pet : MyPetApi.getPetManager().getAllActivePets()) {
-            Skilltree skilltree = pet.getSkilltree();
-            if (skilltree != null) {
-                String skilltreeName = skilltree.getName();
-                if (MyPetApi.getSkilltreeManager().hasSkilltree(skilltreeName)) {
-                    skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skilltreeName);
-                    if (!skilltree.getMobTypes().contains(pet.getPetType())) {
-                        skilltree = null;
-                    }
-                } else {
-                    skilltree = null;
-                }
-            }
-            pet.setSkilltree(skilltree);
-        }
-        sender.sendMessage(MessageUtil.prefixed(Component.text("skilltrees reloaded!")));
-        MyPetApi.getLogger().info("Skilltrees reloaded!");
+        MyPetReloader.reloadSkilltrees();
+        message(sender, "skilltrees reloaded!");
     }
 
     /**
-     * Reloads shop definitions by re-running the {@link ShopManager#onEnable()} lifecycle
-     * method, which re-reads shop configuration files.
-     *
-     * <p>If no {@link ShopManager} service is registered (e.g. shops are disabled), the
-     * reload is silently skipped but the confirmation message is still sent.</p>
-     *
-     * @param sender the command sender to receive a confirmation message
+     * Reloads the shops and confirms to {@code sender}. See {@code MyPetReloader#reloadShops}
+     * for what that covers.
      */
     protected void reloadShops(CommandSender sender) {
-        Optional<ShopManager> shopManager = MyPetApi.getServiceManager().getService(ShopManager.class);
-        if (shopManager.isPresent()) {
-            MyPetApi.getServiceManager().getService(ShopManager.class).get().onEnable(); //TODO reload method?
-        }
+        MyPetReloader.reloadShops();
+        message(sender, "shops reloaded!");
+    }
 
-        sender.sendMessage(MessageUtil.prefixed(Component.text("shops reloaded!")));
-        MyPetApi.getLogger().info("Shops reloaded!");
+    /** Confirm to the sender. Console already sees MyPetReloader's log line, so skip the chat echo. */
+    private static void message(CommandSender sender, String text) {
+        if (!(sender instanceof ConsoleCommandSender)) {
+            sender.sendMessage(MessageUtil.prefixed(Component.text(text)));
+        }
     }
 }

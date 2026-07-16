@@ -71,6 +71,7 @@ public final class ConfigSerializer {
         configs.add("pet-config", yamlEntry("pet-config.yml"));
         configs.add("exp-config", yamlEntry("exp-config.yml"));
         configs.add("pet-shops", yamlEntry("pet-shops.yml"));
+        configs.add("hooks-config", yamlEntry("hooks-config.yml"));
         configs.add("skilltrees", skilltreeBundle());
         configs.add("locale", localeBundle());
         JsonObject renderers = new JsonObject();

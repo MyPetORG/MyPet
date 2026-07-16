@@ -23,24 +23,28 @@ package de.Keyle.MyPet.webeditor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.util.locale.Locale;
-import de.Keyle.MyPet.skill.skilltree.SkillTreeLoaderJSON;
-import de.Keyle.MyPet.util.ConfigurationLoader;
+import de.Keyle.MyPet.util.MyPetReloader;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Writes a change payload (the {@code configs} object, containing only the dirty
  * files) back to disk and hot-reloads the affected subsystems.
  *
- * <p>{@link #reload()} touches plugin state (config + skilltree manager + locale)
- * and MUST be called on the server main thread; the socket handler schedules it
- * there. Writing files is plain I/O and is safe off-thread.
+ * <p>{@link #reload(JsonObject)} touches plugin state and MUST be called on the
+ * server main thread; the socket handler schedules it there. Writing files is
+ * plain I/O and is safe off-thread.
  */
 public final class ConfigApplier {
 
@@ -60,6 +64,7 @@ public final class ConfigApplier {
         writeYaml(changedConfigs, "pet-config", "pet-config.yml");
         writeYaml(changedConfigs, "exp-config", "exp-config.yml");
         writeYaml(changedConfigs, "pet-shops", "pet-shops.yml");
+        writeYaml(changedConfigs, "hooks-config", "hooks-config.yml");
 
         if (changedConfigs.has("skilltrees")) {
             File dir = ensureDir("skilltrees");
@@ -120,12 +125,61 @@ public final class ConfigApplier {
         return null;
     }
 
-    /** Hot-reload config, skilltrees and locale. Call on the main thread. */
-    public void reload() {
-        ConfigurationLoader.loadConfiguration();
-        MyPetApi.getSkilltreeManager().clearSkilltrees();
-        SkillTreeLoaderJSON.loadSkilltrees(new File(dataFolder, "skilltrees"));
-        Locale.init();
+    /**
+     * The reload work a payload key requires. Declaration order IS the execution
+     * order (config → skilltrees → shops, matching {@code /mypet reload all}):
+     * reloadSkilltrees re-resolves trees against state reloadConfig may have just
+     * rebuilt. EnumSet iterates in declaration order, so do not reorder.
+     */
+    private enum ReloadAction {
+        CONFIG(MyPetReloader::reloadConfig),
+        SKILLTREES(MyPetReloader::reloadSkilltrees),
+        SHOPS(MyPetReloader::reloadShops);
+
+        private final Runnable action;
+
+        ReloadAction(Runnable action) {
+            this.action = action;
+        }
+
+        void run() {
+            action.run();
+        }
+    }
+
+    /**
+     * Which reload each payload key needs. locale/exp-config/hooks-config fold into
+     * CONFIG because reloadConfig already covers them (Locale.init, the exp-config
+     * re-read in ConfigurationLoader.loadConfiguration, and the ServiceManager hook
+     * config load respectively) — and because /mypet reload has no separate target
+     * for them.
+     */
+    private static final Map<String, ReloadAction> ACTION_BY_KEY = Map.of(
+            "config", ReloadAction.CONFIG,
+            "pet-config", ReloadAction.CONFIG,
+            "exp-config", ReloadAction.CONFIG,
+            "hooks-config", ReloadAction.CONFIG,
+            "locale", ReloadAction.CONFIG,
+            "skilltrees", ReloadAction.SKILLTREES,
+            "pet-shops", ReloadAction.SHOPS
+    );
+
+    /**
+     * Hot-reload only the subsystems the changed files affect. Call on the main thread.
+     *
+     * @param changedConfigs the payload's {@code configs} object (dirty files only)
+     */
+    public void reload(JsonObject changedConfigs) {
+        EnumSet<ReloadAction> actions = EnumSet.noneOf(ReloadAction.class);
+        for (String key : changedConfigs.keySet()) {
+            ReloadAction action = ACTION_BY_KEY.get(key);
+            if (action != null) {
+                actions.add(action);
+            }
+        }
+        for (ReloadAction action : actions) {
+            action.run();
+        }
     }
 
     private void writeYaml(JsonObject configs, String key, String fileName) throws IOException {
@@ -144,7 +198,55 @@ public final class ConfigApplier {
         return dir;
     }
 
+    /**
+     * Write via a temp file + atomic rename so a concurrent reader (e.g. a manual
+     * /mypet reload racing the socket thread) never sees a half-written file. The
+     * temp file must share the target's directory: ATOMIC_MOVE only guarantees
+     * atomicity within a filesystem.
+     */
     private static void write(File file, String content) throws IOException {
-        Files.writeString(file.toPath(), content, StandardCharsets.UTF_8);
+        Path target = file.toPath();
+        Path parent = target.getParent();
+        Path tmp = Files.createTempFile(parent, target.getFileName().toString(), ".tmp");
+        try {
+            Files.writeString(tmp, content, StandardCharsets.UTF_8);
+            applyTargetPermissions(target, parent, tmp);
+            try {
+                Files.move(tmp, target, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException e) {
+                // Some filesystems (certain network/FUSE mounts) refuse atomic rename.
+                Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } finally {
+            Files.deleteIfExists(tmp);
+        }
+    }
+
+    /**
+     * Best-effort: give the temp file the permissions the final file should have.
+     * ATOMIC_MOVE is a rename, so it carries over the temp file's mode — and
+     * {@link Files#createTempFile} defaults to owner-only (600) — rather than the
+     * target's. If the target already exists we copy its exact mode; for a
+     * brand-new file we derive one from the parent directory (execute bits
+     * stripped) instead of hardcoding 644, which could loosen permissions under a
+     * restrictive umask. Never fails the write: non-POSIX filesystems (Windows)
+     * don't support this API at all, so failures here are swallowed.
+     */
+    private static void applyTargetPermissions(Path target, Path parent, Path tmp) {
+        try {
+            Set<PosixFilePermission> perms;
+            if (Files.exists(target)) {
+                perms = Files.getPosixFilePermissions(target);
+            } else {
+                perms = new HashSet<>(Files.getPosixFilePermissions(parent));
+                perms.removeAll(EnumSet.of(
+                        PosixFilePermission.OWNER_EXECUTE,
+                        PosixFilePermission.GROUP_EXECUTE,
+                        PosixFilePermission.OTHERS_EXECUTE));
+            }
+            Files.setPosixFilePermissions(tmp, perms);
+        } catch (UnsupportedOperationException | IOException e) {
+            // Non-POSIX filesystem, or permissions unreadable/unsettable — best-effort only.
+        }
     }
 }

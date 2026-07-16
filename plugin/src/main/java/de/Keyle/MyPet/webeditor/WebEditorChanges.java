@@ -69,6 +69,7 @@ public final class WebEditorChanges {
             {"pet-config", "pet-config.yml"},
             {"exp-config", "exp-config.yml"},
             {"pet-shops", "pet-shops.yml"},
+            {"hooks-config", "hooks-config.yml"},
     };
 
     /** Build the value-level change lines for the files in the payload. */
