@@ -122,8 +122,8 @@ permissions:
   MyPet.petstorage.limit.*:
     description: Store the configured maximum number of pets (unlimited storage tier).
     default: op
-  MyPet.*:
-    description: Gives access to MyPet features for normal user.
+  MyPet.player:
+    description: Gives access to MyPet features for normal players.
     children:
       MyPet.leash.*: true
       MyPet.command.respawn: true
