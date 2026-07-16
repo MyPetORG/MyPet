@@ -99,6 +99,13 @@ public class PetFloatGoal implements Goal<Mob> {
         if (pet.getPetType().specialFloat()) {
             return;
         }
+        // A pet told to sit/stay must hold its position rather than being
+        // bobbed toward the surface. This is the only enforcement of "stay"
+        // for aquatic pets: PetSitGoal is gated to on-ground PetSittable land
+        // species, so without this a sitting fish keeps rising every tick.
+        if (!pet.canMove()) {
+            return;
+        }
         // During pet removal (unlink / death / release) the owner reference
         // may be cleared before the entity is despawned, so both getOwner()
         // and its .getPlayer() result can be null. Bail out before touching
