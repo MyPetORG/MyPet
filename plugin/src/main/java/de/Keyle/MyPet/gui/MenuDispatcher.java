@@ -164,6 +164,15 @@ public final class MenuDispatcher implements Listener {
             return;
         }
 
+        // A click outside the window (rawSlot == -999) is vanilla's "drop the
+        // cursor item" gesture. Let it through instead of swallowing it in the
+        // catch-all cancel below — storage is persisted as a snapshot of the
+        // real slots on close, so a dropped cursor item (which never occupied a
+        // storage slot) can't dupe or be lost.
+        if (rawSlot == -999) {
+            return;
+        }
+
         event.setCancelled(true);
         // Force the client to re-render after cancellation. Creative-mode clicks
         // (especially middle-click clone and number-key swap) and a few other
