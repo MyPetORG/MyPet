@@ -124,6 +124,7 @@ jobs:
             --form-string "version=${PROJECT_VERSION}" \
             --form-string "channel=release" \
             --form-string "commit=${GITHUB_SHA}" \
+            --form-string "commitUrl=${{ github.server_url }}/${{ github.repository }}/commit/${GITHUB_SHA}" \
             --form-string "sha512=${SHA512}" \
             --form-string "changelog=${CHANGELOG}" \
             --form-string "mcVersions=1.20.5-1.21.11"

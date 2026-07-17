@@ -91,28 +91,6 @@ jobs:
             gh pr edit "$PR_NUMBER" --title "$TITLE" || echo "Warning: failed to update PR title"
           fi
 
-      - name: Read changelog
-        id: changelog
-        shell: bash
-        run: |
-          CHANGELOG_FILE=".github/changelogs/${BASE_PROJECT_VERSION}-alpha.md"
-          # The changelog file is cumulative for the whole alpha cycle; a dev
-          # announcement should only carry this build's "(aNN)" entries.
-          LINES=""
-          if [[ -f "$CHANGELOG_FILE" ]]; then
-            LINES=$(grep "^- (a${BUILD_NUMBER})" "$CHANGELOG_FILE" || true)
-          fi
-          if [[ -n "$LINES" ]]; then
-            {
-              echo 'content<<EOF'
-              echo "$LINES"
-              echo ""
-              echo 'EOF'
-            } >> "$GITHUB_OUTPUT"
-          else
-            echo "content=Dev build. **Do NOT use in production!**" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Build MyPet
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -157,7 +135,6 @@ jobs:
         env:
           HUB_URL: ${{ secrets.HUB_URL }}
           HUB_UPLOAD_SECRET: ${{ secrets.HUB_UPLOAD_SECRET }}
-          CHANGELOG: ${{ steps.changelog.outputs.content }}
         shell: bash
         run: |
           set -euo pipefail
@@ -171,6 +148,6 @@ jobs:
             --form-string "channel=dev" \
             --form-string "commit=${GITHUB_SHA}" \
             --form-string "commitMessage=${COMMIT_MESSAGE}" \
+            --form-string "commitUrl=${{ github.server_url }}/${{ github.repository }}/commit/${GITHUB_SHA}" \
             --form-string "sha512=${SHA512}" \
-            --form-string "changelog=${CHANGELOG}" \
             --form-string "mcVersions=1.20.5-1.21.11"
