@@ -95,6 +95,34 @@ public class PlaceholderApiHook implements ServiceContainer {
             }
         });
 
+        placeHolders.put("exp_current", new PlaceHolder<>(Pet.class) {
+            @Override
+            public String getValue(Pet pet) {
+                return String.format("%.2f", pet.getExperience().getCurrentExp());
+            }
+        });
+
+        placeHolders.put("exp_current_long", new PlaceHolder<>(Pet.class) {
+            @Override
+            public String getValue(Pet pet) {
+                return "" + pet.getExperience().getCurrentExp();
+            }
+        });
+
+        placeHolders.put("exp_max", new PlaceHolder<>(Pet.class) {
+            @Override
+            public String getValue(Pet pet) {
+                return String.format("%.2f", pet.getExperience().getRequiredExp());
+            }
+        });
+
+        placeHolders.put("exp_max_long", new PlaceHolder<>(Pet.class) {
+            @Override
+            public String getValue(Pet pet) {
+                return "" + pet.getExperience().getRequiredExp();
+            }
+        });
+
         placeHolders.put("type", new PlaceHolder<>(Pet.class) {
             @Override
             public String getValue(Pet pet) {
