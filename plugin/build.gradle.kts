@@ -1,5 +1,6 @@
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id("io.freefair.lombok") version "9.1.0"
@@ -29,6 +30,12 @@ tasks.processResources {
     )
 
     filesMatching("*.yml") { expand(filteringProps) }
+
+    // Injects the CI-only BuiltByBit Shared API token; empty for local/PR builds that
+    // don't have the secret, which BuiltByBitInfo treats as "no token bundled".
+    filesMatching("builtbybit.properties") {
+        filter<ReplaceTokens>("tokens" to mapOf("BBB_SHARED_TOKEN" to (System.getenv("BBB_SHARED_TOKEN") ?: "")))
+    }
 }
 
 dependencies {

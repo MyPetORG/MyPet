@@ -6,7 +6,6 @@ plugins {
     id("com.gradleup.shadow") version "9.3.1"
     id("io.freefair.lombok") version "9.1.0"
     id("io.sentry.jvm.gradle") version "5.12.2"
-    id("io.papermc.hangar-publish-plugin") version "0.1.4"
     id("net.minecraftforge.licenser") version "1.2.0" apply false
     id("io.github.drownek.plugwright") version "2.0.2"
     `maven-publish`
@@ -425,39 +424,3 @@ plugwright {
 }
 
 /* ---------- Root project has no source files — compilation is in submodules ---------- */
-
-/* ---------- Hangar Release ---------- */
-
-hangarPublish {
-    publications.register("plugin") {
-        val hangarVersion = providers.gradleProperty("HANGAR_VERSION").orNull
-            ?: project.version.toString()
-        val hangarFile = providers.gradleProperty("HANGAR_FILE").orNull
-            ?: "build/libs/MyPet-${project.version}.jar"
-        val hangarChangelog = providers.gradleProperty("HANGAR_CHANGELOG").orNull
-            ?: System.getenv("HANGAR_CHANGELOG")
-            ?: "View the full changelog on Modrinth: https://modrinth.com/plugin/mypet/version/$hangarVersion"
-
-        version.set(hangarVersion)
-        id.set("MyPet")
-        channel.set(when (buildType) {
-                "release" -> "Release"
-                "beta" -> "Beta"
-                else -> "Alpha"
-            })
-        changelog.set(hangarChangelog)
-        apiKey.set(
-            providers.gradleProperty("HANGAR_TOKEN").orNull
-                ?: System.getenv("HANGAR_TOKEN")
-                ?: ""
-        )
-
-        platforms {
-            paper {
-                jar.set(file(hangarFile))
-                val gameVersions = System.getenv("GAME_VERSIONS")?.split("\n")?.filter { it.isNotBlank() } ?: listOf()
-                platformVersions.set(gameVersions)
-            }
-        }
-    }
-}

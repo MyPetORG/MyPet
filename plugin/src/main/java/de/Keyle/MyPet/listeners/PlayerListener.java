@@ -287,7 +287,7 @@ public class PlayerListener implements Listener {
         }, null, Math.max(1L, delay));
 
         if (MyPetGlobal.Update.SHOW_OP.get() && event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
-            String versionUrl = "https://modrinth.com/plugin/mypet/version/" + Updater.getLatest().getVersion();
+            String versionUrl = Updater.RESOURCE_PAGE_URL;
             event.getPlayer().sendMessage(Component.text()
                     .append(Locale.getFormattedComponent("Message.Update.Available", event.getPlayer()))
                     .append(Component.text(" [" + Updater.getLatest().getVersion() + "]")

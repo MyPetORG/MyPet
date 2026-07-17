@@ -18,11 +18,6 @@ jobs:
     env:
       JAVA_VERSION: '21'
       PROJECT_VERSION: ""
-      GAME_VERSIONS: ""
-      GAME_VERSIONS_JSON: ""
-      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
 
     steps:
       - name: Checkout
@@ -40,38 +35,12 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Read version and game versions
+      - name: Read version
         shell: bash
         run: |
           set -euo pipefail
           PROJECT_VERSION=$(grep -Po 'baseVersion\s*=\s*"\K[^"]+' build.gradle.kts)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> "$GITHUB_ENV"
-
-          # Supported Minecraft versions for this build. Keep in sync with
-          # the twin copy in build-alpha.yml / build-beta.yml and with the api-version floor
-          # in plugin/src/main/resources/plugin.yml.
-          GAME_VERSIONS=$(printf '%s\n' \
-            1.20.5 \
-            1.20.6 \
-            1.21 \
-            1.21.1 \
-            1.21.2 \
-            1.21.3 \
-            1.21.4 \
-            1.21.5 \
-            1.21.6 \
-            1.21.7 \
-            1.21.8 \
-            1.21.9 \
-            1.21.10 \
-            1.21.11)
-          echo "GAME_VERSIONS<<EOF" >> "$GITHUB_ENV"
-          echo "$GAME_VERSIONS" >> "$GITHUB_ENV"
-          echo "EOF" >> "$GITHUB_ENV"
-
-          # Create JSON array for Hangar platform_dependencies (compact single-line format)
-          GAME_VERSIONS_JSON=$(echo "$GAME_VERSIONS" | jq -R . | jq -sc .)
-          echo "GAME_VERSIONS_JSON=$GAME_VERSIONS_JSON" >> "$GITHUB_ENV"
 
       - name: Read changelog
         id: changelog
@@ -79,7 +48,6 @@ jobs:
         run: |
           CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}.md"
           if [[ -f "$CHANGELOG_FILE" ]]; then
-            echo "Found changelog: $CHANGELOG_FILE"
             {
               echo 'content<<EOF'
               cat "$CHANGELOG_FILE"
@@ -87,13 +55,13 @@ jobs:
               echo 'EOF'
             } >> "$GITHUB_OUTPUT"
           else
-            echo "No changelog found at $CHANGELOG_FILE, using default message"
             echo "content=Release ${PROJECT_VERSION}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build MyPet
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          BBB_SHARED_TOKEN: ${{ secrets.BBB_SHARED_TOKEN }}
         run: |
           ./gradlew --no-daemon --build-cache build -PbuildType=release
 
@@ -114,92 +82,88 @@ jobs:
             exit 1
           fi
           echo "jar=$JAR" >> "$GITHUB_OUTPUT"
-          echo "Found: $JAR"
 
-      - name: Upload workflow artifact (jar)
-        uses: actions/upload-artifact@v4
-        with:
-          name: mypet-release-jar
-          path: ${{ steps.findjar.outputs.jar }}
-          if-no-files-found: error
-          retention-days: 90
+      - name: Verify Hub secrets
+        env:
+          HUB_URL: ${{ secrets.HUB_URL }}
+          HUB_UPLOAD_SECRET: ${{ secrets.HUB_UPLOAD_SECRET }}
+        shell: bash
+        run: |
+          : "${HUB_URL:?HUB_URL secret is not set}"
+          : "${HUB_UPLOAD_SECRET:?HUB_UPLOAD_SECRET secret is not set}"
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.PROJECT_VERSION }}
-          name: v${{ env.PROJECT_VERSION }}
-          prerelease: false
-          files: ${{ steps.findjar.outputs.jar }}
-          body: |
-            ${{ steps.changelog.outputs.content }}
+      - name: Push release tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --tags --quiet
+          if EXISTING=$(git rev-parse -q --verify "refs/tags/${PROJECT_VERSION}"); then
+            if [[ "$EXISTING" == "$GITHUB_SHA" ]]; then
+              echo "Tag ${PROJECT_VERSION} already at ${GITHUB_SHA}; skipping."
+              exit 0
+            fi
+            echo "Tag ${PROJECT_VERSION} exists at different commit ${EXISTING}" >&2
+            exit 1
+          fi
+          git tag "$PROJECT_VERSION" "$GITHUB_SHA"
+          git push origin "refs/tags/$PROJECT_VERSION"
 
-      - name: Publish to Hangar
+      - name: Upload build to MyPet Hub
+        env:
+          HUB_URL: ${{ secrets.HUB_URL }}
+          HUB_UPLOAD_SECRET: ${{ secrets.HUB_UPLOAD_SECRET }}
+          CHANGELOG: ${{ steps.changelog.outputs.content }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          JAR="${{ steps.findjar.outputs.jar }}"
+          SHA512=$(sha512sum "$JAR" | cut -d' ' -f1)
+          curl -fsS -X POST "${HUB_URL}/api/v1/builds" \
+            -H "Authorization: Bearer ${HUB_UPLOAD_SECRET}" \
+            -F "jar=@${JAR}" \
+            --form-string "version=${PROJECT_VERSION}" \
+            --form-string "channel=release" \
+            --form-string "commit=${GITHUB_SHA}" \
+            --form-string "sha512=${SHA512}" \
+            --form-string "changelog=${CHANGELOG}" \
+            --form-string "mcVersions=1.20.5-1.21.11"
+
+      - name: Publish version to BuiltByBit
         continue-on-error: true
         env:
-          HANGAR_TOKEN: ${{ env.HANGAR_TOKEN }}
-          HANGAR_CHANGELOG: ${{ steps.changelog.outputs.content }}
+          BBB_API_TOKEN: ${{ secrets.BBB_API_TOKEN }}
+          BBB_RESOURCE_ID: ${{ vars.BBB_RESOURCE_ID }}
+          CHANGELOG: ${{ steps.changelog.outputs.content }}
+        shell: bash
         run: |
-          ./gradlew --no-daemon publishPluginPublicationToHangar
+          set -euo pipefail
+          : "${BBB_API_TOKEN:?BBB_API_TOKEN secret is not set}"
+          : "${BBB_RESOURCE_ID:?BBB_RESOURCE_ID repository variable is not set}"
+          JAR="${{ steps.findjar.outputs.jar }}"
 
-      - name: Upload to Modrinth
-        continue-on-error: true
-        uses: cloudnode-pro/modrinth-publish@v2
-        with:
-          token: ${{ secrets.MODRINTH_TOKEN }}
-          project: SnE2iTno
-          channel: release
-          featured: true
-          name: ${{ env.PROJECT_VERSION }}
-          version: ${{ env.PROJECT_VERSION }}
-          changelog: ${{ steps.changelog.outputs.content }}
-          loaders: paper
-          game-versions: ${{ env.GAME_VERSIONS }}
-          files: ${{ steps.findjar.outputs.jar }}
-
-      - name: Send a Discord webhook notification
-        env:
-          FULL_CHANGELOG: ${{ steps.changelog.outputs.content }}
-        run: |
-          VERSION="${PROJECT_VERSION}"
-          MODRINTH_URL="https://modrinth.com/plugin/mypet/version/${VERSION}"
-
-          # Extract only the "Full changelog" section for Discord (after "### Full changelog:" or "## Full changelog:")
-          CHANGELOG=$(echo "$FULL_CHANGELOG" | sed -n '/^##\?#\? Full [Cc]hangelog/,$p' | tail -n +2)
-
-          # If no "Full changelog" section found, use the full changelog
-          if [[ -z "$CHANGELOG" ]]; then
-            CHANGELOG="$FULL_CHANGELOG"
-          fi
-
-          # Truncate changelog if it exceeds Discord's 4096 char limit
-          if [[ ${#CHANGELOG} -gt 4000 ]]; then
-            CHANGELOG="${CHANGELOG:0:3997}..."
-          fi
-
-          # Build JSON payload safely with jq
-          PAYLOAD=$(jq -n \
-            --arg version "$VERSION" \
-            --arg changelog "$CHANGELOG" \
-            --arg modrinth_url "$MODRINTH_URL" \
+          # v2 creator update: jar goes base64-encoded inside the JSON body
+          # (--rawfile, not --arg: the encoded jar exceeds the kernel's
+          # per-argument size limit). Changelog becomes the public update post.
+          base64 -w0 "$JAR" > "$RUNNER_TEMP/jar.b64"
+          jq -n \
+            --arg resource_id "$BBB_RESOURCE_ID" \
+            --arg version "$PROJECT_VERSION" \
+            --arg name "$(basename "$JAR")" \
+            --rawfile data "$RUNNER_TEMP/jar.b64" \
+            --arg title "MyPet $PROJECT_VERSION" \
+            --arg message "$CHANGELOG" \
             '{
-              content: ("MyPet **" + $version + "** has released!\n<@&1428362555084116131>"),
-              embeds: [
-                {
-                  title: "Changelog",
-                  description: $changelog,
-                  color: 4429633,
-                  fields: []
-                },
-                {
-                  title: "Download from Modrinth",
-                  url: $modrinth_url
-                }
-              ],
-              components: [],
-              username: "MyPet Release",
-              avatar_url: "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
-            }')
+              resource_id: ($resource_id | tonumber),
+              version_name: $version,
+              file: {name: $name, data: $data},
+              update: {post: true, title: $title, message: $message}
+            }' > "$RUNNER_TEMP/bbb-payload.json"
 
-          RESPONSE=$(curl -s -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$WEBHOOK_URL")
-          echo "Webhook server response: $RESPONSE"
+          # Auth header form ("Token <...>") follows the only known working
+          # client of this endpoint; verify against the response on first use.
+          curl -fsS -X POST "https://api.builtbybit.com/v2/resources/creator/update" \
+            -H "Authorization: Token ${BBB_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data @"$RUNNER_TEMP/bbb-payload.json"
+
+          rm -f "$RUNNER_TEMP/jar.b64" "$RUNNER_TEMP/bbb-payload.json"

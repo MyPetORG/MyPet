@@ -27,18 +27,29 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetGlobal;
-import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.util.ErrorUtil;
-import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Optional;
 
+/**
+ * Checks for MyPet updates against BuiltByBit and, for BBB-downloaded copies, downloads the
+ * matching build from the MyPet Hub with SHA-512 verification. Copies obtained elsewhere
+ * (Spigot, self-compiled, etc.) still see the version-check result — BBB version numbers are
+ * public — but are pointed at the BBB resource page instead of an automatic download.
+ */
 public class Updater {
 
     public class Update {
@@ -60,11 +71,25 @@ public class Updater {
         public String getDownloadURL() { return downloadURL; }
 
         public String getSha512Hash() { return sha512Hash; }
+
+        @Override
+        public String toString() {
+            return version;
+        }
     }
+
+    /** BuiltByBit resource id for the MyPet resource page. */
+    private static final long RESOURCE_ID = 115339;
+    private static final String BBB_API_BASE = "https://api.builtbybit.com/v1";
+    /** Public BuiltByBit resource page, shown to non-BBB copies instead of an auto-download. */
+    public static final String RESOURCE_PAGE_URL = "https://builtbybit.com/resources/" + RESOURCE_ID + "/";
+    /** MyPet Hub base URL — serves the public version manifest and entitled downloads. */
+    private static final String HUB_BASE = "https://downloads.mypet-plugin.de";
 
     protected static volatile Update latest = null;
     protected String plugin;
     protected Thread thread;
+    private boolean checkFailed = false;
 
     public Updater(String plugin) {
         this.plugin = plugin;
@@ -95,117 +120,198 @@ public class Updater {
             return "Skipping update check for local build.";
         }
 
-        if (!MyPetGlobal.Update.DOWNLOAD.get()) {
+        if (VersionUtil.isDevBuild()) {
             Thread checkThread = new Thread(() -> {
-                Optional<Update> update = check();
-                if (update.isPresent()) {
-                    latest = update.get();
-                    MyPetApi.getLogger().info("A new " + (VersionUtil.isDevBuild() ? "build" : "version") + " is available: " + latest);
-                } else {
-                    MyPetApi.getLogger().info("No update available.");
-                }
+                MyPetApi.getLogger().info(runDevCheck());
             }, "MyPet-UpdateCheck");
             checkThread.setDaemon(true);
             checkThread.start();
             return null;
         }
 
+        if (BuiltByBitInfo.sharedToken().isEmpty()) {
+            return "Skipping update check: no BuiltByBit token bundled with this build.";
+        }
+
+        if (!MyPetGlobal.Update.DOWNLOAD.get()) {
+            Thread checkThread = new Thread(() -> {
+                MyPetApi.getLogger().info(runCheck());
+            }, "MyPet-UpdateCheck");
+            checkThread.setDaemon(true);
+            checkThread.start();
+            return null;
+        }
+
+        return runCheck();
+    }
+
+    private String runCheck() {
         Optional<Update> update = check();
+        if (checkFailed) {
+            return "Update check failed.";
+        }
+
         if (update.isPresent()) {
             latest = update.get();
-            download();
 
-            String msg = "A new " + (VersionUtil.isDevBuild() ? "build" : "version") + " is available: " + latest;
-            return msg;
+            if (latest.getDownloadURL() != null) {
+                if (MyPetGlobal.Update.DOWNLOAD.get()) {
+                    download();
+                }
+                return "A new version is available: " + latest;
+            }
+            return "A new version is available: " + latest + ". Download it from " + RESOURCE_PAGE_URL;
         }
         return "No update available.";
     }
 
-    protected Optional<Update> check() {
+    /**
+     * Dev builds never auto-download; they check the Hub's public manifest (dev + release
+     * channels, no token needed) and report where to get the newer build.
+     */
+    private String runDevCheck() {
+        String currentVersion = VersionUtil.getVersion();
+        String newest = null;
+        for (String channel : new String[]{"dev", "release"}) {
+            String candidate = newestHubVersion(channel);
+            if (candidate != null && isNewerVersion(candidate, newest == null ? currentVersion : newest)) {
+                newest = candidate;
+            }
+        }
+        if (newest == null) {
+            return "No newer build available.";
+        }
+        latest = new Update(newest, null, null);
+        if (preReleaseTier(newest) == 2) {
+            return "A newer release is available: " + newest + ". Download it from " + RESOURCE_PAGE_URL;
+        }
+        return "A newer dev build is available: " + newest + ". Grab it from the MyPet Discord (#alpha-builds).";
+    }
+
+    /** Newest version in the Hub manifest for {@code channel}, or null when unavailable. */
+    private String newestHubVersion(String channel) {
         try {
+            String content = httpGet(HUB_BASE + "/api/v1/versions?channel=" + channel, null);
+            JsonObject root = new Gson().fromJson(content, JsonObject.class);
+            JsonArray versions = root != null ? root.getAsJsonArray("versions") : null;
+            if (versions == null || versions.size() == 0) {
+                return null;
+            }
+            return optString(versions.get(0).getAsJsonObject(), "version");
+        } catch (Exception e) {
+            MyPetApi.getLogger().warning("Hub version check failed: " + e.getMessage());
+            return null;
+        }
+    }
 
-            String currentPluginVersion = VersionUtil.getVersion();
+    protected Optional<Update> check() {
+        checkFailed = false;
+        try {
+            String currentVersion = VersionUtil.getVersion();
+            String token = BuiltByBitInfo.sharedToken().orElse(null);
+            if (token == null) {
+                return Optional.empty();
+            }
 
-            // Use Modrinth API to check for updates
-            String url = "https://api.modrinth.com/v2/project/mypet/version?loaders=%5B%22paper%22,%22spigot%22%5D";
+            String content = httpGet(BBB_API_BASE + "/resources/" + RESOURCE_ID + "/versions/latest", "Shared " + token);
+            JsonObject root = new Gson().fromJson(content, JsonObject.class);
+            if (root == null || !"success".equals(optString(root, "result"))) {
+                checkFailed = true;
+                return Optional.empty();
+            }
 
-            String content = Util.readUrlContent(url);
-            JsonArray resultArr = new Gson().fromJson(content, JsonArray.class);
-            Optional<Update> update = Optional.empty();
+            JsonObject data = root.getAsJsonObject("data");
+            String latestVersion = data.get("name").getAsString();
 
-            String currentMcVersion = Bukkit.getVersion();
-            boolean isDevBuild = VersionUtil.isDevBuild();
+            if (!isNewerVersion(latestVersion, currentVersion)) {
+                return Optional.empty();
+            }
 
-            for (int i = 0; i < resultArr.size(); i++) {
-                JsonObject version = (JsonObject) resultArr.get(i);
-
-                // Check version type: "release" for stable, "alpha"/"beta" for snapshots
-                String versionType = version.get("version_type").getAsString();
-                boolean isAlpha = "alpha".equals(versionType) || "beta".equals(versionType);
-
-                // Release builds should only see releases
-                // Dev builds can see both snapshots AND releases (to upgrade to final release)
-                if (!isDevBuild && isAlpha) {
-                    continue;
-                }
-
-                // Check if this version supports the current Minecraft version
-                JsonArray gameVersions = version.has("game_versions") ? version.getAsJsonArray("game_versions") : null;
-                if (gameVersions == null || gameVersions.size() == 0) {
-                    continue;
-                }
-                boolean supportsCurrentMc = false;
-                for (int j = 0; j < gameVersions.size(); j++) {
-                    String gameVersion = gameVersions.get(j).getAsString();
-                    // Support both exact match (1.21.4) and wildcard (1.21.x)
-                    if (gameVersion.equals(currentMcVersion) ||
-                        (gameVersion.endsWith(".x") && currentMcVersion.startsWith(gameVersion.substring(0, gameVersion.length() - 2)))) {
-                        supportsCurrentMc = true;
-                        break;
-                    }
-                }
-
-                if (!supportsCurrentMc) {
-                    continue;
-                }
-
-                String versionNumber = version.get("version_number").getAsString();
-
-                // Only consider this an update if the version is actually newer
-                if (!isNewerVersion(versionNumber, currentPluginVersion)) {
-                    continue;
-                }
-
-                // Find the primary file (or first file if none marked primary)
-                JsonArray files = version.getAsJsonArray("files");
-                JsonObject primaryFile = null;
-                for (int j = 0; j < files.size(); j++) {
-                    JsonObject file = files.get(j).getAsJsonObject();
-                    if (file.has("primary") && file.get("primary").getAsBoolean()) {
-                        primaryFile = file;
-                        break;
-                    }
-                }
-                if (primaryFile == null && files.size() > 0) {
-                    primaryFile = files.get(0).getAsJsonObject();
-                }
-
-                if (primaryFile != null && primaryFile.has("url")) {
-                    String downloadURL = primaryFile.get("url").getAsString();
-                    JsonObject hashes = primaryFile.has("hashes") ? primaryFile.getAsJsonObject("hashes") : null;
-                    String sha512Hash = (hashes != null && hashes.has("sha512")) ? hashes.get("sha512").getAsString() : null;
-                    update = Optional.of(new Update(versionNumber, downloadURL, sha512Hash));
-                    break;
+            if (BuiltByBitInfo.isInjected()) {
+                Optional<Update> hubUpdate = fetchHubManifest(latestVersion);
+                if (hubUpdate.isPresent()) {
+                    return hubUpdate;
                 }
             }
-            return update;
+
+            return Optional.of(new Update(latestVersion, null, null));
         } catch (Exception e) {
-            ErrorUtil.reportError("Updater operation failed", e);
+            MyPetApi.getLogger().warning("BuiltByBit update check failed: " + e.getMessage());
+            checkFailed = true;
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Looks up the download URL and SHA-512 hash for {@code version} from the Hub's public
+     * version manifest, and builds the entitled download URL from the BBB-injected member/
+     * nonce/timestamp placeholders. Only meaningful for BBB-injected copies.
+     */
+    private Optional<Update> fetchHubManifest(String version) {
+        try {
+            String content = httpGet(HUB_BASE + "/api/v1/versions?channel=release", null);
+            JsonObject root = new Gson().fromJson(content, JsonObject.class);
+            JsonArray versions = root != null ? root.getAsJsonArray("versions") : null;
+            if (versions == null) {
+                return Optional.empty();
+            }
+
+            for (int i = 0; i < versions.size(); i++) {
+                JsonObject entry = versions.get(i).getAsJsonObject();
+                if (!version.equals(optString(entry, "version"))) {
+                    continue;
+                }
+                String sha512 = optString(entry, "sha512");
+                if (sha512 == null || sha512.isEmpty()) {
+                    // No verifiable hash — fall back to a notify-only update (no download URL)
+                    // so update()/download() don't promise a download they can't verify.
+                    return Optional.of(new Update(version, null, null));
+                }
+                String downloadUrl = HUB_BASE + "/api/v1/updater/download/" + urlEncode(version)
+                        + "?member=" + urlEncode(BuiltByBitInfo.memberId())
+                        + "&nonce=" + urlEncode(BuiltByBitInfo.nonce())
+                        + "&timestamp=" + urlEncode(BuiltByBitInfo.timestamp());
+                return Optional.of(new Update(version, downloadUrl, sha512));
+            }
+        } catch (Exception e) {
+            MyPetApi.getLogger().warning("Failed to fetch Hub version manifest: " + e.getMessage());
         }
         return Optional.empty();
     }
 
+    private static String urlEncode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    }
+
+    private static String optString(JsonObject object, String key) {
+        return object.has(key) && !object.get(key).isJsonNull() ? object.get(key).getAsString() : null;
+    }
+
+    private static String httpGet(String url, String authorizationHeader) throws IOException, InterruptedException {
+        try (HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(10000))
+                .build()) {
+            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .timeout(Duration.ofMillis(10000))
+                    .GET();
+            if (authorizationHeader != null) {
+                requestBuilder.header("Authorization", authorizationHeader);
+            }
+            HttpResponse<String> response = client.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                throw new IOException("HTTP " + response.statusCode() + " from " + url);
+            }
+            return response.body();
+        }
+    }
+
     public void download() {
+        if (latest == null || latest.getDownloadURL() == null || latest.getSha512Hash() == null) {
+            MyPetApi.getLogger().warning("Download aborted: no verified download available for this copy.");
+            return;
+        }
+
         File pluginFile;
         if (MyPetGlobal.Update.REPLACE_OLD.get()) {
             pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/" + MyPetApi.getPlugin().getFile().getName());
@@ -220,11 +326,6 @@ public class Updater {
         String expectedHash = latest.getSha512Hash();
         Runnable downloadRunner = () -> {
             MyPetApi.getLogger().info("Start update download: " + latest);
-
-            if (expectedHash == null) {
-                MyPetApi.getLogger().severe("Download aborted: Hash verification unavailable (API did not provide SHA512).");
-                return;
-            }
 
             String actualHash;
             try {
@@ -302,7 +403,7 @@ public class Updater {
         String newBase = newVersion.split("-")[0];
         String currentBase = currentVersion.split("-")[0];
 
-        int baseCompare = CompatUtil.versionCompare(newBase, currentBase);
+        int baseCompare = compareBaseVersions(newBase, currentBase);
         if (baseCompare != 0) {
             return baseCompare > 0;
         }
@@ -329,6 +430,43 @@ public class Updater {
         if (version.contains("-alpha")) return 0;
         if (version.contains("-beta")) return 1;
         return 2;
+    }
+
+    /**
+     * Compares two dotted base version strings (e.g. "4.0.0") numerically, segment by segment.
+     * {@code CompatUtil.versionCompare} isn't used here because it delegates to
+     * {@code Runtime.Version.parse}, which throws on trailing-zero versions like "4.0.0".
+     * An optional leading "v"/"V" is stripped; missing or non-numeric segments count as 0.
+     *
+     * @return negative if {@code a} &lt; {@code b}, positive if {@code a} &gt; {@code b}, 0 if equal
+     */
+    private static int compareBaseVersions(String a, String b) {
+        String[] segmentsA = stripLeadingV(a).split("\\.");
+        String[] segmentsB = stripLeadingV(b).split("\\.");
+        int length = Math.max(segmentsA.length, segmentsB.length);
+        for (int i = 0; i < length; i++) {
+            int partA = i < segmentsA.length ? parseSegment(segmentsA[i]) : 0;
+            int partB = i < segmentsB.length ? parseSegment(segmentsB[i]) : 0;
+            if (partA != partB) {
+                return Integer.compare(partA, partB);
+            }
+        }
+        return 0;
+    }
+
+    private static String stripLeadingV(String version) {
+        if (!version.isEmpty() && (version.charAt(0) == 'v' || version.charAt(0) == 'V')) {
+            return version.substring(1);
+        }
+        return version;
+    }
+
+    private static int parseSegment(String segment) {
+        try {
+            return Integer.parseInt(segment);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     /**
