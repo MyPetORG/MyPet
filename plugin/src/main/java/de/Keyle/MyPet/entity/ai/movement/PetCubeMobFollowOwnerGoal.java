@@ -212,6 +212,12 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
         if (!refreshOwner()) {
             return false;
         }
+        // An owner who changed world is recovered by PlayerListener re-creating the pet
+        // there; until then this entity keeps ticking in the old world, where measuring
+        // distance to the owner would throw. Matches the guard in tick().
+        if (PetFollowOwnerSupport.isCrossWorld(mob, owner)) {
+            return false;
+        }
         double distSqToOwner = mob.getLocation().distanceSquared(owner.getLocation());
         double effectiveStartDistance = this.startDistance;
         if (ownerMovementSpeed < OWNER_STATIONARY_THRESHOLD) {
@@ -232,6 +238,10 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
             return false;
         }
         if (!refreshOwner()) {
+            return false;
+        }
+        // See the matching check in shouldActivate().
+        if (PetFollowOwnerSupport.isCrossWorld(mob, owner)) {
             return false;
         }
         double effectiveStopDistance = this.stopDistance;

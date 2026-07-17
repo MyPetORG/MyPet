@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
+import de.Keyle.MyPet.entity.ai.PetGoalWorlds;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Mob;
@@ -91,7 +92,7 @@ public final class PetFollowOwnerSupport {
 
     /** Returns {@code true} when the owner is in a different world than the pet. */
     public static boolean isCrossWorld(Mob mob, Player owner) {
-        return !mob.getWorld().equals(owner.getWorld());
+        return PetGoalWorlds.isCrossWorld(mob, owner);
     }
 
     /**

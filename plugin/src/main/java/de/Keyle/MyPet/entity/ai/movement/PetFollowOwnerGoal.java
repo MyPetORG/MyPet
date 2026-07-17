@@ -600,6 +600,12 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         } else if (!refreshOwner()) {
             return false;
         }
+        // An owner who changed world is recovered by PlayerListener re-creating the pet
+        // there; until then this entity keeps ticking in the old world, where measuring
+        // distance to the owner would throw. Matches the guard in tick().
+        if (PetFollowOwnerSupport.isCrossWorld(mob, owner)) {
+            return false;
+        }
 
         // Use tighter constraint when owner is stationary to eliminate dead zone with RandomStroll
         // ownerMovementSpeed might not be initialized yet on first tick, so also check position delta
@@ -629,6 +635,10 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         } else if (!refreshOwner()) {
             return false;
         }
+        // See the matching check in shouldActivate().
+        if (PetFollowOwnerSupport.isCrossWorld(mob, owner)) {
+            return false;
+        }
 
         // Use tighter stop distance when owner is stationary
         double effectiveStopDistance = this.stopDistance;
@@ -653,6 +663,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
             return;
         }
         if (!refreshOwner()) {
+            return;
+        }
+        if (PetFollowOwnerSupport.isCrossWorld(mob, owner)) {
             return;
         }
         double distance = Math.sqrt(mob.getLocation().distanceSquared(owner.getLocation()));

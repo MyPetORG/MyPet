@@ -29,6 +29,7 @@ import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.api.util.Scheduler;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.entity.ai.PetGoalWorlds;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
@@ -88,6 +89,11 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
         // a destructive read on an already-consumed skill location.
         Location newLocation = controlSkill.getLocation(false);
         if (newLocation != null && !newLocation.equals(moveTo)) {
+            return false;
+        }
+        // start() only checks the world once, when moveTo is set; the pet itself can
+        // leave that world afterwards, and measuring against moveTo would then throw.
+        if (moveTo == null || PetGoalWorlds.isCrossWorld(mob, moveTo)) {
             return false;
         }
         if (pet.getLocation().get().distance(moveTo) < 1) {

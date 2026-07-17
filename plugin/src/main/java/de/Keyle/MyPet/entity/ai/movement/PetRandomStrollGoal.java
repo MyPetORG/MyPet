@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.entity.ai.PetGoalWorlds;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -146,6 +147,9 @@ public class PetRandomStrollGoal implements Goal<Mob> {
 
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
+        // Strolling is anchored to the owner; measuring distance to one in another
+        // world would throw.
+        if (PetGoalWorlds.isCrossWorld(mob, owner)) return false;
 
         updateOwnerMovement(owner);
         if (!ownerStationary) return false;
@@ -162,11 +166,14 @@ public class PetRandomStrollGoal implements Goal<Mob> {
         if (controlGoal != null && controlGoal.moveTo != null) return false;
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
+        if (PetGoalWorlds.isCrossWorld(mob, owner)) return false;
         updateOwnerMovement(owner);
         if (!ownerStationary && mob.getLocation().distanceSquared(owner.getLocation()) > STATIONARY_MAX_DIST_SQ)
             return false;
         if (!pet.canMove()) return false;
         if (moveTo == null) return false;
+        // moveTo was picked in the owner's world; the pet may have left it since.
+        if (PetGoalWorlds.isCrossWorld(mob, moveTo)) return false;
         if (mob.getLocation().distance(moveTo) < DESTINATION_REACHED) return false;
         if (timeToMove <= 0) return false;
         if (pet.hasTarget() && !pet.getPetTarget().isDead()) return false;

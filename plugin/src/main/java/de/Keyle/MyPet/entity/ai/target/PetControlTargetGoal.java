@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.entity.ai.PetGoalWorlds;
 import de.Keyle.MyPet.entity.ai.movement.PetControlGoal;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -191,7 +192,10 @@ public class PetControlTargetGoal implements Goal<Mob> {
             return false;
         }
         Player owner = pet.getOwner().getPlayer();
-        return owner != null && mob.getLocation().distanceSquared(owner.getLocation()) <= 600;
+        // The target world check above says nothing about the owner, who can have
+        // changed world independently; measuring distance to them would then throw.
+        return owner != null && !PetGoalWorlds.isCrossWorld(mob, owner)
+                && mob.getLocation().distanceSquared(owner.getLocation()) <= 600;
     }
 
     @Override

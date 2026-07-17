@@ -26,6 +26,7 @@ import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.entity.ai.PetGoalWorlds;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -111,6 +112,9 @@ public class PetRandomFlyGoal implements Goal<Mob> {
 
         Player owner = pet.getOwner().getPlayer();
         if (owner == null) return false;
+        // Flying is anchored to the owner; measuring distance to one in another
+        // world would throw.
+        if (PetGoalWorlds.isCrossWorld(mob, owner)) return false;
 
         updateOwnerMovement(owner);
         if (!ownerStationary) return false;
@@ -127,6 +131,8 @@ public class PetRandomFlyGoal implements Goal<Mob> {
         updateOwnerMovement(owner);
         if (!pet.canMove()) return false;
         if (moveTo == null) return false;
+        // moveTo was picked in the owner's world; the pet may have left it since.
+        if (PetGoalWorlds.isCrossWorld(mob, moveTo)) return false;
         if (mob.getLocation().distance(moveTo) < 0.75) return false;
         if (timeToMove <= 0) return false;
         if (pet.hasTarget() && !pet.getPetTarget().isDead()) return false;

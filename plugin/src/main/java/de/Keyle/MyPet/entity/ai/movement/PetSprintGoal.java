@@ -26,6 +26,7 @@ import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.entity.ai.PetGoalWorlds;
 import de.Keyle.MyPet.skill.skills.SprintImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -97,6 +98,11 @@ public class PetSprintGoal implements Goal<Mob> {
         if (target.equals(lastTarget)) {
             return false;
         }
+        // A target that changed world since it was set is unreachable, and measuring
+        // distance to it would throw.
+        if (PetGoalWorlds.isCrossWorld(mob, target)) {
+            return false;
+        }
         if (pet.getRangedDamage() > 0 && mob.getLocation().distanceSquared(target.getLocation()) >= 16) {
             return false;
         }
@@ -113,6 +119,10 @@ public class PetSprintGoal implements Goal<Mob> {
             return false;
         }
         if (lastTarget == null || lastTarget.isDead()) {
+            return false;
+        }
+        // See the matching check in shouldActivate().
+        if (PetGoalWorlds.isCrossWorld(mob, lastTarget)) {
             return false;
         }
         if (mob.getLocation().distanceSquared(lastTarget.getLocation()) < 16) {

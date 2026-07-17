@@ -33,6 +33,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.entity.ai.PetGoalWorlds;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -128,6 +129,11 @@ public class PetRangedAttackGoal implements Goal<Mob> {
         if (target == null || target.isDead() || target instanceof ArmorStand) {
             return false;
         }
+        // A target that changed world since it was set is unreachable, and measuring
+        // distance to it would throw.
+        if (PetGoalWorlds.isCrossWorld(mob, target)) {
+            return false;
+        }
         // Defer to melee when target is within melee reach AND melee damage is higher.
         // rangedSkill may legitimately be null during skilltree hot-reload even when
         // pet.getRangedDamage() still returns a cached non-zero value, so the
@@ -166,6 +172,10 @@ public class PetRangedAttackGoal implements Goal<Mob> {
         if (current == null || !current.equals(target)) {
             return false;
         }
+        // See the matching check in shouldActivate().
+        if (PetGoalWorlds.isCrossWorld(mob, target)) {
+            return false;
+        }
         // Defer to melee when target is within melee reach AND melee damage is higher.
         // See the matching comment in shouldActivate() for the rationale behind the
         // null gate on rangedSkill.
@@ -198,6 +208,9 @@ public class PetRangedAttackGoal implements Goal<Mob> {
     @Override
     public void tick() {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
+        if (PetGoalWorlds.isCrossWorld(mob, target)) {
             return;
         }
         double distSq = mob.getLocation().distanceSquared(target.getLocation());

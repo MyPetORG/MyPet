@@ -26,6 +26,7 @@ import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.entity.ai.PetGoalWorlds;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -133,6 +134,12 @@ public class PetLookAtPlayerGoal implements Goal<Mob> {
         }
         // Drop the target if it has moved to a different Folia region (can't inspect state safely).
         if (!Bukkit.isOwnedByCurrentRegion(targetPlayer)) {
+            return false;
+        }
+        // The player was picked from this pet's own world in shouldActivate(), but may have
+        // changed world since; measuring distance to them would then throw. The region check
+        // above does not cover this — it says nothing about worlds outside Folia.
+        if (PetGoalWorlds.isCrossWorld(mob, targetPlayer)) {
             return false;
         }
         if (targetPlayer.isDead()) {

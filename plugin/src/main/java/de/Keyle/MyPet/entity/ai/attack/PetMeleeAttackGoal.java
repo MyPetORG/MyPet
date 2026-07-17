@@ -32,6 +32,7 @@ import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.entity.ai.PetGoalWorlds;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
@@ -123,6 +124,11 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
         if (target instanceof ArmorStand) {
             return false;
         }
+        // A target that changed world since it was set is unreachable, and measuring
+        // distance to it would throw.
+        if (PetGoalWorlds.isCrossWorld(mob, target)) {
+            return false;
+        }
         // Defer to ranged when target is far AND ranged damage is higher (mirrors
         // the logic in PetRangedAttackGoal — must use the same distance threshold)
         double rangedDamage = pet.getRangedDamage();
@@ -162,6 +168,10 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
         }
         LivingEntity currentTarget = pet.getPetTarget();
         if (currentTarget == null || !currentTarget.equals(targetEntity)) {
+            return false;
+        }
+        // See the matching check in shouldActivate().
+        if (PetGoalWorlds.isCrossWorld(mob, targetEntity)) {
             return false;
         }
         // Defer to ranged when target is far AND ranged damage is higher
@@ -208,6 +218,9 @@ public class PetMeleeAttackGoal implements Goal<Mob> {
     @Override
     public void tick() {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
+            return;
+        }
+        if (PetGoalWorlds.isCrossWorld(mob, targetEntity)) {
             return;
         }
         mob.lookAt(targetEntity, 30.0F, 30.0F);
