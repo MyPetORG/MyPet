@@ -37,9 +37,11 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Renders a pet's name as a floating {@link TextDisplay} above its custom model.
  *
- * <p>The vanilla nametag is bound to the host mob, which renderer plugins hide (and which
- * sits at the host's height, buried inside a taller model), so modeled pets get this
- * provider-independent floating name instead. One free TextDisplay per modeled pet —
+ * <p>The vanilla nametag is bound to the host mob, which sits at the host's height, buried
+ * inside a taller model — so modeled pets get this provider-independent floating name instead.
+ * While a display exists it is the pet's <em>only</em> visible name: {@link #startForPet} hides
+ * the host's vanilla tag and {@link #stopForPet} hands it back, so neither a renderer that
+ * leaves the host visible nor a failed attach can double the name. One free TextDisplay —
  * <em>not</em> a passenger, so it never lands in the pet's persisted entity snapshot —
  * teleported to follow the host each tick on the host's region thread (Folia-safe).</p>
  */
@@ -73,6 +75,10 @@ public final class PetModelNameTag {
             d.text(name);
         });
         displays.put(petId, display);
+        // This display now owns the pet's name, so hide the host's vanilla tag. Renderers that
+        // hide the host hide its tag with it, but one that fails to attach (e.g. an unknown
+        // Model.Id) would otherwise leave both names rendering at once.
+        mob.setCustomNameVisible(false);
 
         Plugin plugin = MyPetApi.getPlugin();
         ScheduledTask task = mob.getScheduler().runAtFixedRate(plugin,
@@ -82,9 +88,23 @@ public final class PetModelNameTag {
         }
     }
 
-    /** Remove the floating name and stop following. Safe to call when none exists. */
+    /**
+     * Remove the floating name and stop following, handing the name back to the host's vanilla
+     * tag so a pet whose model went away isn't left nameless. Safe to call when none exists.
+     */
     public static void stopForPet(Pet pet) {
-        stop(pet.getUUID());
+        if (!stop(pet.getUUID())) {
+            return; // no display of ours was showing -> the vanilla tag is already in charge
+        }
+        Mob mob = pet.getBukkitEntity();
+        if (mob != null && nameComponent(pet) != null) {
+            mob.setCustomNameVisible(true);
+        }
+    }
+
+    /** Whether this pet currently renders its name through a floating display. */
+    public static boolean hasDisplay(Pet pet) {
+        return pet != null && displays.containsKey(pet.getUUID());
     }
 
     /** Refresh the floating name text (e.g. on rename). No-op if this pet has no model nametag. */
@@ -110,7 +130,8 @@ public final class PetModelNameTag {
         display.teleportAsync(mob.getLocation().add(0, PetModelService.nameHeight(pet), 0));
     }
 
-    private static void stop(UUID petId) {
+    /** @return true when a display was actually removed. */
+    private static boolean stop(UUID petId) {
         ScheduledTask task = tasks.remove(petId);
         if (task != null) {
             try {
@@ -118,17 +139,20 @@ public final class PetModelNameTag {
             } catch (Exception ignored) {
             }
         }
-        remove(petId);
+        return remove(petId);
     }
 
-    private static void remove(UUID petId) {
+    /** @return true when a display was actually removed. */
+    private static boolean remove(UUID petId) {
         TextDisplay display = displays.remove(petId);
-        if (display != null) {
-            try {
-                display.remove();
-            } catch (Exception ignored) {
-            }
+        if (display == null) {
+            return false;
         }
+        try {
+            display.remove();
+        } catch (Exception ignored) {
+        }
+        return true;
     }
 
     private static Component nameComponent(Pet pet) {

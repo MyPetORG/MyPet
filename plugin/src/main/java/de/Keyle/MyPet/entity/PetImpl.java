@@ -276,7 +276,9 @@ public abstract class PetImpl implements Pet, NBTStorage {
             mob.setCustomNameVisible(false);
         } else {
             mob.customName(name);
-            mob.setCustomNameVisible(true);
+            // A floating model nametag, where one exists, is the only visible name — showing the
+            // host's tag as well would render the name twice.
+            mob.setCustomNameVisible(!PetModelNameTag.hasDisplay(this));
         }
         // Keep the floating model nametag (if this pet renders a custom model) in sync.
         PetModelNameTag.updateName(this);
