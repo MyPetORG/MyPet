@@ -60,6 +60,10 @@ public final class MyPetReloader {
         // (Idempotent — existing types are skipped. Changing an existing type's Host still needs a
         // restart, since its host class is bound at registration.)
         CustomPetLoader.registerCustomTypes();
+        // Mirrors the boot order (setDefault then loadConfiguration): a type registered just above
+        // has no rows in pet-config.yml yet, so materialize them before they're read back. Without
+        // this a custom type had no Food/HP/Speed rows until the next full restart.
+        ConfigurationLoader.setDefault();
         ConfigurationLoader.loadConfiguration();
         ConfigurationLoader.loadCompatConfiguration();
         // Wire permission nodes for any newly-registered custom types (no-op for existing ones).

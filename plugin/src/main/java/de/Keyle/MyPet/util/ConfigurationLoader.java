@@ -49,7 +49,15 @@ import java.util.*;
 
 public class ConfigurationLoader {
 
+    /**
+     * Materializes every default row into config.yml, exp-config.yml and pet-config.yml.
+     * Runs on boot and on every reload, so a custom type added to pet-config.yml since boot
+     * gets its rows written without waiting for a restart. Idempotent — existing values survive.
+     */
     public static void setDefault() {
+        // Re-read config.yml from disk first: this method saves it below, and on a reload the
+        // cached copy would be stale, so saving it would clobber edits made since boot.
+        MyPetApi.getPlugin().reloadConfig();
         FileConfiguration config = MyPetApi.getPlugin().getConfig();
 
         config.options().header("""
@@ -163,10 +171,9 @@ public class ConfigurationLoader {
         // PetMultiPassenger    -> AllowNonOwnerSecondaryMount (true)
         // PetSaddleable        -> RequireSaddle (false), AllowNonOwnerSaddle (false)
         //
-        // ConfigKey.bool self-registers with ConfigKeyRegistry on each call.
-        // setDefault() runs once per plugin enable, so duplicate-registration
-        // warnings would only fire on a Bukkit /reload — which also resets the
-        // plugin classloader and clears the registry, so they don't fire then either.
+        // ConfigKey.bool self-registers with ConfigKeyRegistry on each call, and setDefault()
+        // re-runs on every reload, so these go through registerFlagIfAbsent — registering a
+        // second time would trip the registry's duplicate-registration warning for every type.
         for (PetType petType : PetType.values()) {
             if (!petType.checkMinecraftVersion()) {
                 continue;
@@ -175,19 +182,19 @@ public class ConfigurationLoader {
             String name = petType.name();
 
             if (PetNaturallyRideable.class.isAssignableFrom(petClass)) {
-                ConfigKey.bool(name, "RequireRideSkill", true);
-                ConfigKey.bool(name, "RequireRideItem", true);
-                ConfigKey.bool(name, "AllowNonOwnerPrimaryMount", false);
+                registerFlagIfAbsent(name, "RequireRideSkill", true);
+                registerFlagIfAbsent(name, "RequireRideItem", true);
+                registerFlagIfAbsent(name, "AllowNonOwnerPrimaryMount", false);
             }
             if (PetMultiPassenger.class.isAssignableFrom(petClass)) {
-                ConfigKey.bool(name, "AllowNonOwnerSecondaryMount", true);
+                registerFlagIfAbsent(name, "AllowNonOwnerSecondaryMount", true);
             }
             if (PetSaddleable.class.isAssignableFrom(petClass)) {
-                ConfigKey.bool(name, "RequireSaddle", false);
-                ConfigKey.bool(name, "AllowNonOwnerSaddle", false);
+                registerFlagIfAbsent(name, "RequireSaddle", false);
+                registerFlagIfAbsent(name, "AllowNonOwnerSaddle", false);
             }
             if (PetBaby.class.isAssignableFrom(petClass)) {
-                ConfigKey.bool(name, "PreventNaturalGrowup", true);
+                registerFlagIfAbsent(name, "PreventNaturalGrowup", true);
             }
         }
 
@@ -372,6 +379,13 @@ public class ConfigurationLoader {
 
     public static void upgradeConfig() {
         // Config key migrations are now handled by the MigrationService via ConfigMigration classes.
+    }
+
+    /** Registers a per-pet flag key, unless one is already registered for {@code (petType, key)}. */
+    private static void registerFlagIfAbsent(String petType, String key, boolean defaultValue) {
+        if (ConfigKeyRegistry.lookup(petType, key) == null) {
+            ConfigKey.bool(petType, key, defaultValue);
+        }
     }
 
     /**
