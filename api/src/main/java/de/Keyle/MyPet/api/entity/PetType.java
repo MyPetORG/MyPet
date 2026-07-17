@@ -60,6 +60,14 @@ public final class PetType {
         return hostOverride != null ? hostOverride : resolveBukkitEntityClass(bukkitName);
     }
 
+    /**
+     * The explicit Host class this type was registered with, or {@code null} when it spawns
+     * the entity its own name maps to. Non-null only for custom (data-driven) types.
+     */
+    public Class<? extends Mob> getHostOverride() {
+        return hostOverride;
+    }
+
     private static Class<? extends Mob> resolveBukkitEntityClass(String bukkitName) {
         try {
             EntityType bukkitType = EntityType.valueOf(bukkitName);
@@ -162,6 +170,14 @@ public final class PetType {
             return type;
         }
         throw new PetTypeNotFoundException(name);
+    }
+
+    /**
+     * Looks up a type by its Bukkit entity name, returning {@code null} instead of
+     * throwing if the type is not registered.
+     */
+    public static PetType byEntityTypeNameOrNull(String name) {
+        return BY_BUKKIT_NAME.get(name.toUpperCase());
     }
 
     /**

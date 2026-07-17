@@ -147,14 +147,14 @@ public class ConfigurationLoader {
             }
             // Custom (third-party) pet types have no @DefaultInfo annotation
             // (pi == null). They still need HP/Speed/Food/Leash/respawn rows
-            // written, so fall back to hardcoded sensible defaults instead of
-            // skipping the type. Vanilla types (pi != null) keep their exact
-            // annotation-derived defaults.
+            // written, so resolve what the Host mob they spawn would use, and fall
+            // back to hardcoded defaults for the rest, instead of skipping the type.
+            // Vanilla types (pi != null) keep their exact annotation-derived defaults.
             DefaultInfo pi = petType.getPetClass().getAnnotation(DefaultInfo.class);
 
             config.addDefault("MyPet.Pets." + petType.name() + ".HP", resolveDefaultHp(petType, pi));
             config.addDefault("MyPet.Pets." + petType.name() + ".Speed", pi != null ? pi.walkSpeed() : 0.3);
-            config.addDefault("MyPet.Pets." + petType.name() + ".Food", pi != null ? linkFood(pi.food()) : new ArrayList<String>());
+            config.addDefault("MyPet.Pets." + petType.name() + ".Food", resolveDefaultFood(petType, pi));
             config.addDefault("MyPet.Pets." + petType.name() + ".LeashRequirements", pi != null ? pi.leashFlags() : new String[0]);
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFactor", 0);
             config.addDefault("MyPet.Pets." + petType.name() + ".CustomRespawnTimeFixed", 0);
@@ -389,27 +389,65 @@ public class ConfigurationLoader {
     }
 
     /**
+     * The Bukkit entity type a pet type's defaults come from: itself for a vanilla type, and
+     * for a custom type — whose name is not a Bukkit entity — the Host mob it spawns.
+     * Null when neither resolves.
+     */
+    private static EntityType defaultsEntityType(PetType petType) {
+        // An explicit Host always wins: a custom type's own name may coincidentally match a
+        // Bukkit entity, and its Host is what actually spawns.
+        Class<?> host = petType.getHostOverride();
+        if (host != null) {
+            for (EntityType candidate : EntityType.values()) {
+                if (candidate.getEntityClass() == host) {
+                    return candidate;
+                }
+            }
+            return null;
+        }
+        try {
+            return EntityType.valueOf(petType.getBukkitName());
+        } catch (IllegalArgumentException noSuchEntity) {
+            return null;
+        }
+    }
+
+    /**
      * Default starting HP for a pet type: an explicit {@code @DefaultInfo(hp=…)} override
-     * if one is set (a non-negative value), otherwise the vanilla entity's natural
-     * max-health read from the Bukkit entity type (Wolf 8, Cow 10, …). Falls back to 20 for
-     * custom/non-vanilla types whose Bukkit name has no default attributes.
+     * if one is set (a non-negative value), otherwise the natural max-health of the entity it
+     * spawns (Wolf 8, Cow 10, …) — for a custom type that means its Host mob. Falls back to 20
+     * when the entity has no default attributes.
      */
     public static double resolveDefaultHp(PetType petType, DefaultInfo pi) {
         if (pi != null && pi.hp() >= 0) {
             return pi.hp();
         }
-        try {
-            EntityType type = EntityType.valueOf(petType.getBukkitName());
-            if (type.hasDefaultAttributes()) {
-                AttributeInstance health = type.getDefaultAttributes().getAttribute(PetAttributes.MAX_HEALTH);
-                if (health != null) {
-                    return health.getBaseValue();
-                }
+        EntityType type = defaultsEntityType(petType);
+        if (type != null && type.hasDefaultAttributes()) {
+            AttributeInstance health = type.getDefaultAttributes().getAttribute(PetAttributes.MAX_HEALTH);
+            if (health != null) {
+                return health.getBaseValue();
             }
-        } catch (IllegalArgumentException ignored) {
-            // Custom / non-vanilla Bukkit name — fall through to the generic default.
         }
         return 20.0;
+    }
+
+    /**
+     * Default food list for a pet type: its own {@code @DefaultInfo(food=…)}, or — for a custom
+     * type, which carries no annotation — the food of the MyPet type its Host mob maps to, so a
+     * Mooshroom-hosted creature eats what a Mooshroom pet eats. Empty when neither resolves.
+     */
+    private static List<String> resolveDefaultFood(PetType petType, DefaultInfo pi) {
+        if (pi != null) {
+            return linkFood(pi.food());
+        }
+        EntityType host = defaultsEntityType(petType);
+        PetType hostType = host == null ? null : PetType.byEntityTypeNameOrNull(host.name());
+        if (hostType == null || hostType == petType) {
+            return new ArrayList<>();
+        }
+        DefaultInfo hostInfo = hostType.getPetClass().getAnnotation(DefaultInfo.class);
+        return hostInfo != null ? linkFood(hostInfo.food()) : new ArrayList<>();
     }
 
     public static List<String> linkFood(Material[] foodTypes) {
