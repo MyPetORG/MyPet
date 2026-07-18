@@ -75,7 +75,6 @@ public final class MyPetGlobal {
         public static final ConfigKey<Boolean> ASYNC = ConfigKey.globalBool("MyPet.Update.In-Background", false);
         public static final ConfigKey<Boolean> CHECK = ConfigKey.globalBool("MyPet.Update.Check", true);
         public static final ConfigKey<Boolean> DOWNLOAD = ConfigKey.globalBool("MyPet.Update.Download", false);
-        public static final ConfigKey<Boolean> REPLACE_OLD = ConfigKey.globalBool("MyPet.Update.ReplaceOld", false);
         public static final ConfigKey<Boolean> SHOW_OP = ConfigKey.globalBool("MyPet.Update.OP-Notification", true);
     }
 

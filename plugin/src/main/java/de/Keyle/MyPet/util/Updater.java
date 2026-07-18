@@ -130,7 +130,10 @@ public class Updater {
 
         if (VersionUtil.isDevBuild()) {
             checkThread = new Thread(() -> {
-                MyPetApi.getLogger().info(runDevCheck());
+                String result = runDevCheck();
+                if (result != null) {
+                    MyPetApi.getLogger().info(result);
+                }
             }, "MyPet-UpdateCheck");
             checkThread.setDaemon(true);
             checkThread.start();
@@ -198,8 +201,9 @@ public class Updater {
                     + "?discord=" + urlEncode(HubInfo.discordId())
                     + "&nonce=" + urlEncode(HubInfo.nonce());
             latest = new Update(newest, downloadUrl, null);
+            MyPetApi.getLogger().info("A newer dev build is available: " + newest + ". Downloading from the MyPet Hub...");
             download();
-            return "A newer dev build is available: " + newest + ". Downloading from the MyPet Hub...";
+            return null;
         }
         latest = new Update(newest, null, null);
         return "A newer dev build is available: " + newest + ". Grab it from the MyPet Discord (#alpha-builds).";
@@ -329,12 +333,10 @@ public class Updater {
             return;
         }
 
-        File pluginFile;
-        if (MyPetGlobal.Update.REPLACE_OLD.get()) {
-            pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/" + MyPetApi.getPlugin().getFile().getName());
-        } else {
-            pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/MyPet-" + latest.getVersion() + ".jar");
-        }
+        // Stage under the versioned name. Paper matches the update jar to the installed plugin
+        // by plugin name (not filename) and renames the installed jar to this staged file's name,
+        // so the loaded jar always ends up named for the version it actually contains.
+        File pluginFile = new File(MyPetApi.getPlugin().getFile().getParentFile().getAbsolutePath(), "update/MyPet-" + latest.getVersion() + ".jar");
         if (!pluginFile.getParentFile().exists()) {
             pluginFile.getParentFile().mkdirs();
         }
@@ -416,13 +418,7 @@ public class Updater {
                 return;
             }
 
-            String message = "Finished update download (verified).";
-            if (MyPetGlobal.Update.REPLACE_OLD.get() || MyPetApi.getPlugin().getFile().getName().equals("MyPet-" + latest.getVersion() + ".jar")) {
-                message += " The update will be loaded on the next server start.";
-            } else {
-                message += " The file was stored in the \"update\" folder.";
-            }
-            MyPetApi.getLogger().info(message);
+            MyPetApi.getLogger().info("Finished update download (verified). The update will be loaded on the next server start.");
         };
         if (!MyPetGlobal.Update.ASYNC.get()) {
             downloadRunner.run();
