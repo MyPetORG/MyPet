@@ -41,6 +41,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.Optional;
 
@@ -89,6 +92,8 @@ public class Updater {
     protected static volatile Update latest = null;
     protected String plugin;
     protected Thread thread;
+    /** Background thread running an async version check (dev checks, or BBB checks with auto-download off). */
+    protected Thread checkThread;
     private boolean checkFailed = false;
 
     public Updater(String plugin) {
@@ -106,8 +111,11 @@ public class Updater {
 
     /**
      * Checks for updates and returns a status message for display in the splash screen.
-     * With auto-download enabled the check stays synchronous ({@link #waitForDownload()}
-     * depends on it); otherwise it runs on a background thread and logs the result.
+     * Dev-build checks (and BBB checks with auto-download disabled) run asynchronously on
+     * {@link #checkThread} and log their own result — including any auto-download they
+     * trigger, which runs on {@link #thread}. Only the BBB release path with auto-download
+     * enabled stays synchronous. {@link #waitForDownload()} waits for both threads before
+     * shutdown, regardless of which path was taken.
      *
      * @return a status message, or null if update checking is disabled or runs asynchronously
      */
@@ -121,7 +129,7 @@ public class Updater {
         }
 
         if (VersionUtil.isDevBuild()) {
-            Thread checkThread = new Thread(() -> {
+            checkThread = new Thread(() -> {
                 MyPetApi.getLogger().info(runDevCheck());
             }, "MyPet-UpdateCheck");
             checkThread.setDaemon(true);
@@ -134,7 +142,7 @@ public class Updater {
         }
 
         if (!MyPetGlobal.Update.DOWNLOAD.get()) {
-            Thread checkThread = new Thread(() -> {
+            checkThread = new Thread(() -> {
                 MyPetApi.getLogger().info(runCheck());
             }, "MyPet-UpdateCheck");
             checkThread.setDaemon(true);
@@ -181,10 +189,19 @@ public class Updater {
         if (newest == null) {
             return "No newer build available.";
         }
-        latest = new Update(newest, null, null);
         if (preReleaseTier(newest) == 2) {
+            latest = new Update(newest, null, null);
             return "A newer release is available: " + newest + ". Download it from " + RESOURCE_PAGE_URL;
         }
+        if (HubInfo.isInjected() && MyPetGlobal.Update.DOWNLOAD.get()) {
+            String downloadUrl = HUB_BASE + "/api/v1/updater/dev-download/" + urlEncode(newest)
+                    + "?discord=" + urlEncode(HubInfo.discordId())
+                    + "&nonce=" + urlEncode(HubInfo.nonce());
+            latest = new Update(newest, downloadUrl, null);
+            download();
+            return "A newer dev build is available: " + newest + ". Downloading from the MyPet Hub...";
+        }
+        latest = new Update(newest, null, null);
         return "A newer dev build is available: " + newest + ". Grab it from the MyPet Discord (#alpha-builds).";
     }
 
@@ -307,7 +324,7 @@ public class Updater {
     }
 
     public void download() {
-        if (latest == null || latest.getDownloadURL() == null || latest.getSha512Hash() == null) {
+        if (latest == null || latest.getDownloadURL() == null) {
             MyPetApi.getLogger().warning("Download aborted: no verified download available for this copy.");
             return;
         }
@@ -322,11 +339,17 @@ public class Updater {
             pluginFile.getParentFile().mkdirs();
         }
 
+        // Stream to a temp file alongside the final target and only promote it on success,
+        // so a killed process (e.g. server shutdown) can never leave a half-written jar under
+        // the final name — Bukkit's updater would otherwise blindly promote it next boot.
+        File tmpFile = new File(pluginFile.getParentFile(), pluginFile.getName() + ".tmp");
+
         String finalUrl = latest.getDownloadURL();
-        String expectedHash = latest.getSha512Hash();
+        String manifestHash = latest.getSha512Hash();
         Runnable downloadRunner = () -> {
             MyPetApi.getLogger().info("Start update download: " + latest);
 
+            String expectedHash = manifestHash;
             String actualHash;
             try {
                 URL website = new URL(finalUrl);
@@ -338,9 +361,21 @@ public class Updater {
                     return;
                 }
 
+                // Personalized (Hub dev-download) copies have no public manifest hash — the
+                // per-user hash instead rides along on the response itself.
+                if (expectedHash == null) {
+                    String headerHash = httpConn.getHeaderField("X-Content-SHA512");
+                    if (headerHash == null || headerHash.isBlank()) {
+                        MyPetApi.getLogger().warning("Download aborted: server did not provide a verification hash.");
+                        httpConn.disconnect();
+                        return;
+                    }
+                    expectedHash = headerHash.trim();
+                }
+
                 Hasher hasher = Hashing.sha512().newHasher();
                 try (InputStream inputStream = httpConn.getInputStream();
-                     FileOutputStream outputStream = new FileOutputStream(pluginFile)) {
+                     FileOutputStream outputStream = new FileOutputStream(tmpFile)) {
                     int bytesRead;
                     byte[] buffer = new byte[4096];
                     while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -351,7 +386,7 @@ public class Updater {
                 actualHash = hasher.hash().toString();
             } catch (IOException e) {
                 MyPetApi.getLogger().warning("Download failed: " + e.getMessage());
-                pluginFile.delete(); // Clean up partial download
+                tmpFile.delete(); // Clean up partial download
                 return;
             }
 
@@ -361,9 +396,23 @@ public class Updater {
                 MyPetApi.getLogger().severe("Expected: " + expectedHash);
                 MyPetApi.getLogger().severe("Actual:   " + actualHash);
                 MyPetApi.getLogger().severe("Deleting corrupted file...");
-                if (!pluginFile.delete()) {
-                    MyPetApi.getLogger().warning("Failed to delete corrupted file: " + pluginFile.getAbsolutePath());
+                if (!tmpFile.delete()) {
+                    MyPetApi.getLogger().warning("Failed to delete corrupted file: " + tmpFile.getAbsolutePath());
                 }
+                return;
+            }
+
+            // Verified — atomically promote the staged file to its final name. A process
+            // killed at any point up to here leaves only a stray ".tmp" that Bukkit ignores.
+            try {
+                try {
+                    Files.move(tmpFile.toPath(), pluginFile.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+                } catch (AtomicMoveNotSupportedException e) {
+                    Files.move(tmpFile.toPath(), pluginFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
+            } catch (IOException e) {
+                MyPetApi.getLogger().warning("Failed to finalize downloaded update: " + e.getMessage());
+                tmpFile.delete();
                 return;
             }
 
@@ -383,14 +432,32 @@ public class Updater {
         }
     }
 
+    /**
+     * Waits for shutdown for any pending background work: the async version check
+     * (which may itself have kicked off a download, e.g. dev builds) and, for the
+     * synchronous release path, the download thread. Both waits are bounded so a stuck
+     * network call can't hang server shutdown indefinitely.
+     */
     public void waitForDownload() {
-        if (MyPetGlobal.Update.ASYNC.get() && thread != null && thread.isAlive()) {
-            MyPetApi.getLogger().info("Wait for the update download to finish...");
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                ErrorUtil.report(e);
-            }
+        joinBounded(checkThread, "update check");
+        if (MyPetGlobal.Update.ASYNC.get()) {
+            joinBounded(thread, "update download");
+        }
+    }
+
+    private void joinBounded(Thread target, String label) {
+        if (target == null || !target.isAlive()) {
+            return;
+        }
+        MyPetApi.getLogger().info("Wait for the " + label + " to finish...");
+        try {
+            target.join(30_000);
+        } catch (InterruptedException e) {
+            ErrorUtil.report(e);
+            return;
+        }
+        if (target.isAlive()) {
+            MyPetApi.getLogger().warning("Timed out waiting for the " + label + " to finish.");
         }
     }
 
