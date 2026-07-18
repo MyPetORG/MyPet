@@ -297,6 +297,13 @@ public class PlaceholderApiHook implements ServiceContainer {
             }
         });
 
+        placeHolders.put("owns_pet", new PlaceHolder<>(Player.class) {
+            @Override
+            public String getValue(Player player) {
+                return MyPetApi.getPetManager().ownsAnyPet(player.getUniqueId()) ? "yes" : "no";
+            }
+        });
+
         placeHolders.put("volume", new PlaceHolder<>(MyPetPlayer.class) {
             @Override
             public String getValue(MyPetPlayer player) {

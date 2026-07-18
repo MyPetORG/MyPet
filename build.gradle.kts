@@ -232,9 +232,14 @@ plugwright {
     //    net.milkbowl.vault Economy/Permission API MyPet's VaultHook.java targets.
     //  - PlayerPoints 3.3.5 — the economy provider (/points, integer "Points"
     //    currency); Vault hook enabled via its own config.yml below.
+    // PlaceholderAPI 2.12.2 (placeholder/*.spec.ts) — matches the compileOnly
+    // version in plugin/build.gradle.kts; MyPet auto-registers its expansion when
+    // present, and the suite reads placeholders back via `/papi parse`. Safe for
+    // all suites: it registers only `/papi`, shadowing no vanilla command.
     downloadPlugins {
         url("https://cdn.modrinth.com/data/ayRaM8J7/versions/cLNipSgw/VaultUnlocked-2.20.2.jar")
         url("https://cdn.modrinth.com/data/bPX4jcVd/versions/Jgohk2ua/PlayerPoints-3.3.5.jar")
+        url("https://cdn.modrinth.com/data/lKEzGugV/versions/UmbIiI5H/PlaceholderAPI-2.12.2.jar")
     }
 
     writeFiles {

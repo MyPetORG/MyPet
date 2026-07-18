@@ -920,7 +920,14 @@ public abstract class AbstractSqlRepository implements Repository {
                 reportError(e);
                 return false;
             }
-        }, executor);
+        }, executor).thenApply(inserted -> {
+            // Central create chokepoint: any newly stored pet means its owner now owns
+            // at least one, so we can flip the cache without re-querying.
+            if (inserted) {
+                MyPetApi.getPetManager().setOwnsPet(storedPet.getOwner().getUniqueId(), true);
+            }
+            return inserted;
+        });
     }
 
     /**

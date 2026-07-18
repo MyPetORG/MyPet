@@ -554,7 +554,8 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
         viewer.sendMessage(Locale.getFormattedComponent(
             "Message.Command.Release.Success", viewer, pet.getDisplayName()));
         MyPetApi.getPetManager().deactivatePet(pet.getOwner(), false);
-        MyPetPlugin.getInstance().getRepository().removePet(pet.getUUID());
+        MyPetPlugin.getInstance().getRepository().removePet(pet.getUUID())
+                .thenRun(() -> MyPetApi.getPetManager().refreshOwnership(pet.getOwner()));
     }
 
     @SuppressWarnings("unchecked")

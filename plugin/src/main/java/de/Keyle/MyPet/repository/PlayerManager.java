@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.repository;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.util.Timer;
@@ -31,6 +32,7 @@ public class PlayerManager extends de.Keyle.MyPet.api.repository.PlayerManager {
     public void setOnline(MyPetPlayer player) {
         super.setOnline(player);
         Timer.startPlayerTicking(player);
+        MyPetApi.getPetManager().refreshOwnership(player);
     }
 
     @Override
@@ -47,6 +49,7 @@ public class PlayerManager extends de.Keyle.MyPet.api.repository.PlayerManager {
     @Override
     public void setOffline(MyPetPlayer player) {
         onlinePlayers.remove(player.getUniqueId());
+        MyPetApi.getPetManager().setOwnsPet(player.getUniqueId(), false);
         MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(player);
     }
 

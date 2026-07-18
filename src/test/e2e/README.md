@@ -96,7 +96,9 @@ bots ~25 blocks from the arena. Don't remove it.
                   specs, with a dispose() disconnect), config.ts (live
                   config.yml flip + /mypet reload), economy.ts (fundBot via
                   PlayerPoints /points, expectBalanceReply via a {since}-scoped
-                  /points me)
+                  /points me), placeholder.ts (expectPlaceholder — reads a
+                  placeholder back via /papi parse with a {since}-scoped,
+                  sentinel-anchored retry)
     testdata/skilltrees/
                   deterministic *.st.json fixtures, one per skill plus
                   variants (all chances 100%, huge magnitudes) — staged into
@@ -132,15 +134,22 @@ bots ~25 blocks from the arena. Don't remove it.
                                respawn-cost (/petrespawn show/pay + denial)
     migration/                mypet3.spec.ts (v3 -> v4 DB auto-migration)
     persistence/              store/switch round-trip (exp + skilltree survive)
+    placeholder/              owns-pet.spec.ts (%mypet_owns_pet% tracks stored +
+                               active ownership via /papi parse — needs the
+                               downloaded PlaceholderAPI jar)
 
-101 tests across 31 spec files, green in the last full-suite flake gate
-(2 consecutive runs, ~6min per run including the Gradle build).
+101 tests across 31 spec files were green in the last full-suite flake gate
+(2 consecutive runs, ~6min per run including the Gradle build). The
+placeholder/ suite (3 tests, added for #1606) passed a single isolated run
+(`./gradlew plugwrightTest -PtestFiles="owns-pet"`) but has not yet been through
+the 2-run flake gate the rest of the suite has.
 
-## Economy plugins (downloaded, not committed)
+## Downloaded plugins (not committed)
 
-`build.gradle.kts`'s `downloadPlugins` block pins two extra jars into the
-run directory's `plugins/` for the `economy/` suite (and the parts of
-`/petrespawn` + `/petshop` that need a live economy):
+`build.gradle.kts`'s `downloadPlugins` block pins three extra jars into the
+run directory's `plugins/`. The first two serve the `economy/` suite (and the
+parts of `/petrespawn` + `/petshop` that need a live economy); the third serves
+the `placeholder/` suite:
 
 - **VaultUnlocked 2.20.2** — maintained drop-in fork of classic Vault;
   keeps the `net.milkbowl.vault` service API MyPet's `VaultHook` targets
@@ -157,8 +166,13 @@ run directory's `plugins/` for the `economy/` suite (and the parts of
   re-anchored to world spawn (~15 base tests broke). Do not swap a
   kitchen-sink plugin in here; any candidate must not register vanilla
   command names.
+- **PlaceholderAPI 2.12.2** — matches the `compileOnly` version in
+  `plugin/build.gradle.kts`. MyPet auto-registers its `mypet` expansion when
+  PAPI is present, and `placeholder/` reads placeholders back via `/papi parse
+  me ...` (see `lib/placeholder.ts`). Safe for every suite: it registers only
+  `/papi`, shadowing no vanilla command.
 
-The `MYPET_TEST_MYSQL` opt-in below is unaffected — both plugins are
+The `MYPET_TEST_MYSQL` opt-in below is unaffected — the plugins are
 repository-agnostic, and the config.yml staging keeps every always-on key
 (including the economy fee/cost pins) in the same single `file()` call as
 the conditional MySQL block.

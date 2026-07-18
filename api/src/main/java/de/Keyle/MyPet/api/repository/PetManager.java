@@ -34,6 +34,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,6 +52,15 @@ public abstract class PetManager {
     protected final BiMap<MyPetPlayer, Pet> mActivePlayerPets = HashBiMap.create();
     protected final BiMap<Pet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
     protected final Map<UUID, Pet> mActivePetsByEntityUuid = new ConcurrentHashMap<>();
+
+    /**
+     * Owner UUIDs known to have at least one pet — active or stored. Populated
+     * asynchronously (repository I/O) at the few points ownership can change, so
+     * that {@link #ownsAnyPet(UUID)} can answer synchronously for callers on the
+     * main thread (e.g. the PlaceholderAPI hook). May lag reality by the duration
+     * of an in-flight refresh.
+     */
+    protected final Set<UUID> petOwners = ConcurrentHashMap.newKeySet();
 
     // ─── Active Pets ────────────────────────────────────────────────────────────
 
@@ -116,6 +126,25 @@ public abstract class PetManager {
         return false;
     }
 
+    /**
+     * Returns {@code true} if the player owns at least one pet — active or stored.
+     * Reads the cached {@link #petOwners} set, so it is safe to call on the main
+     * thread. The value is refreshed asynchronously on login and whenever a pet is
+     * created or removed; see the concrete implementation's {@code refreshOwnership}.
+     */
+    public boolean ownsAnyPet(UUID playerUuid) {
+        return petOwners.contains(playerUuid);
+    }
+
+    /** Updates the cached ownership flag for a player. Called by the async refresh. */
+    public void setOwnsPet(UUID playerUuid, boolean owns) {
+        if (owns) {
+            petOwners.add(playerUuid);
+        } else {
+            petOwners.remove(playerUuid);
+        }
+    }
+
     // ─── Inactive / Stored ──────────────────────────────────────────────────────
 
     /**
@@ -162,6 +191,13 @@ public abstract class PetManager {
      * undefined behavior on Paper and an outright crash on Folia.
      */
     public abstract CompletableFuture<List<StoredPet>> getStoredPets(MyPetPlayer owner);
+
+    /**
+     * Asynchronously re-derives the cached {@link #ownsAnyPet(UUID)} flag for the
+     * given owner from the repository. Safe to ignore the returned future — the
+     * cache is updated as a side effect when it completes.
+     */
+    public abstract CompletableFuture<Void> refreshOwnership(MyPetPlayer owner);
 
     /** Returns the total number of currently active pets across all players. */
     public int countActivePets() {

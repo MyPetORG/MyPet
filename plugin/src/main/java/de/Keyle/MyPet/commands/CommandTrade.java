@@ -210,6 +210,9 @@ public class CommandTrade {
                         newOwner.setPetForWorldGroup(worldGroup, persistedPet.getUUID());
                         repo.updateMyPetPlayer(oldOwner);
                         repo.updateMyPetPlayer(newOwner);
+                        // New owner is covered by the addPet cache hook; re-derive the
+                        // losing side, who may still own other stored pets.
+                        MyPetApi.getPetManager().refreshOwnership(oldOwner);
 
                         if (pet.isPresent()) {
 

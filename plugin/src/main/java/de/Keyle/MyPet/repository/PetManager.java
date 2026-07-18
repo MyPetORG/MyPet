@@ -158,6 +158,22 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
     }
 
     /**
+     * Re-derives the cached "owns any pet" flag for a player by asking the
+     * repository. Runs on the repository's background executor; the continuation
+     * only touches the concurrent {@link #petOwners} set (no Bukkit API), so no
+     * scheduler hop is needed. Call after any ownership change where the outcome
+     * is uncertain (e.g. a removal that may or may not have been the player's last pet).
+     */
+    @Override
+    public CompletableFuture<Void> refreshOwnership(MyPetPlayer owner) {
+        if (owner == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return MyPetPlugin.getInstance().getRepository().hasPets(owner)
+                .thenAccept(has -> setOwnsPet(owner.getUniqueId(), has));
+    }
+
+    /**
      * Re-types a live, active Pet to a new {@link PetType} by binding it
      * to the entity vanilla just produced from a transformation (Hoglin →
      * Zoglin, Piglin/PiglinBrute → ZombifiedPiglin). The old {@link Pet}
