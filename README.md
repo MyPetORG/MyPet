@@ -30,12 +30,13 @@ per pet type and per world.
 ### Highlights
 
 - 🐾 **85+ tameable mob types** — from Wolves and Cats to Wardens and Ender Dragons
-- ⚔️ **21 trainable skills** — Ride, Backpack, Beacon, Heal, Damage, Thorns, Pickup, …
+- 🛠️ **Custom mob models supported** — using ModelEngine, BetterModel, ItemsAdder, or MythicMobs
 - 🌳 **Skilltrees** — design exactly how pets level up and which skills they unlock
+- ⚔️ **20+ trainable skills** — Ride, Backpack, Beacon, Heal, Damage, Thorns, Pickup, …
 - 🧬 **Pets are real vanilla mobs** — v4 spawns genuine Paper entities with custom AI, so visuals, physics, flying, and swimming all behave natively (no NMS hacks)
 - 🖥️ **In-game GUIs & browser configurator** — manage pets via menus in game, edit configs live with `/mypet editor`
 - 💾 **SQLite & MySQL storage** — sync your Pets across servers
-- ☘️ **Folia Supported** — Enjoy even on the biggest of servers
+- ☘️ **Folia supported** — Enjoy even on the biggest of servers
 - 🔌 **Deep plugin integration** — WorldGuard, Vault, Citizens, PlaceholderAPI, MythicMobs, Towny, GriefPrevention, and many more
 - 🌍 **Localized** — community-maintained translations for dozens of languages
 
