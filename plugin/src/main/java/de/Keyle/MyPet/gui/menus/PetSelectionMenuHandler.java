@@ -54,7 +54,7 @@ public final class PetSelectionMenuHandler implements MenuHandler<PetSelectionCo
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
         if (!"pets".equals(sectionId)) return;
-        PetSelectionContext ctx = (PetSelectionContext) ((de.Keyle.MyPet.gui.MenuInstanceImpl) instance).context();
+        PetSelectionContext ctx = (PetSelectionContext) instance.context();
         List<StoredPet> pets = currentPetsSync(ctx);
         if (payload.itemIndex() < 0 || payload.itemIndex() >= pets.size()) return;
         ctx.onSelect().accept(pets.get(payload.itemIndex()));

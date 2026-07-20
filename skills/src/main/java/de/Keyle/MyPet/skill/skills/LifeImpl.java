@@ -21,12 +21,22 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Life;
+import de.Keyle.MyPet.skill.upgrades.LifeUpgrade;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class LifeImpl extends AbstractSkill implements Life {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Life.class,
+            UpgradeSchema.builder()
+                    .number("health").label("Health Bonus").cumulative()
+                    .build(), json -> new LifeUpgrade()
+            .setLifeModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "health"))));
 
     protected UpgradeComputer<Number> life = new UpgradeComputer<>(0);
 

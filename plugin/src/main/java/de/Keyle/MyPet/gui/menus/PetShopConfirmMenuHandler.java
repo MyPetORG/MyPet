@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.gui.menus;
 
 import de.Keyle.MyPet.api.gui.*;
-import de.Keyle.MyPet.gui.MenuInstanceImpl;
 import de.Keyle.MyPet.gui.context.PetShopConfirmContext;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -38,7 +37,7 @@ public final class PetShopConfirmMenuHandler implements MenuHandler<PetShopConfi
 
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
-        PetShopConfirmContext ctx = (PetShopConfirmContext) ((MenuInstanceImpl) instance).context();
+        PetShopConfirmContext ctx = (PetShopConfirmContext) instance.context();
         if ("yes".equals(sectionId)) {
             ctx.onConfirm().run();
             instance.close();

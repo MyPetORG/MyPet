@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -185,6 +186,22 @@ public final class Locale implements Translator {
      */
     public static String renderPlain(String key, String localeString) {
         return PlainTextComponentSerializer.plainText().serialize(renderTranslatable(key, localeString));
+    }
+
+    /** Plain-text renderings of {@code key} in every loaded bundle that contains it. */
+    public static Map<String, String> renderPlainAll(String key) {
+        Map<String, String> out = new TreeMap<>();
+        if (instance == null) {
+            return out;
+        }
+        String lowerKey = key.toLowerCase(java.util.Locale.ROOT);
+        instance.bundles.forEach((tag, bundle) -> {
+            Component component = bundle.get(lowerKey);
+            if (component != null) {
+                out.put(tag, PlainTextComponentSerializer.plainText().serialize(component));
+            }
+        });
+        return out;
     }
 
     private static Component renderTranslatable(String key, String localeString, ComponentLike... args) {

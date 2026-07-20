@@ -49,7 +49,6 @@ import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
-import de.Keyle.MyPet.gui.MenuInstanceImpl;
 import de.Keyle.MyPet.gui.context.BackpackContext;
 import de.Keyle.MyPet.gui.context.ChooseSkilltreeContext;
 import de.Keyle.MyPet.gui.context.PetMenuContext;
@@ -110,7 +109,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
 
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
-        PetMenuContext ctx = (PetMenuContext) ((MenuInstanceImpl) instance).context();
+        PetMenuContext ctx = (PetMenuContext) instance.context();
         Pet pet = ctx.pet();
         Player viewer = ctx.viewer();
         switch (sectionId) {
@@ -569,7 +568,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
 
     /** Flips a multi-state slot's value and refreshes it. */
     private void refreshStateSlot(MenuInstance instance, String slotId) {
-        PetMenuContext ctx = (PetMenuContext) ((MenuInstanceImpl) instance).context();
+        PetMenuContext ctx = (PetMenuContext) instance.context();
         Pet pet = ctx.pet();
         String state = switch (slotId) {
             case "stay" -> pet.isSitting() ? "staying" : "following";

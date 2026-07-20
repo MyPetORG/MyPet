@@ -23,57 +23,73 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 
+import java.io.File;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
- * Registers MyPet's bundled skill implementations with {@link de.Keyle.MyPet.api.skill.SkillManager}.
- *
- * <p>Each entry in {@link #SKILLS} is a concrete skill class that participates in the skill
- * resolution pipeline used by skilltrees. The order of registration is preserved on disk
- * and reflects the canonical "core skill" ordering — adding a new built-in skill should
- * append to {@link #SKILLS} rather than insert mid-list, so existing skilltree files
- * continue to resolve in the same order.</p>
- *
- * <p>Invoked once during plugin enable, after the skill manager is initialized but before
- * skilltrees are loaded from disk.</p>
+ * Discovers and registers MyPet's built-in skills by scanning this package for
+ * concrete {@link Skill} implementations — adding a skill class is the whole
+ * registration step.
  */
 public final class BuiltInSkills {
 
-    private static final List<Class<? extends Skill>> SKILLS = List.of(
-            BackpackImpl.class,
-            HealImpl.class,
-            PickupImpl.class,
-            BehaviorImpl.class,
-            DamageImpl.class,
-            ControlImpl.class,
-            LifeImpl.class,
-            PoisonImpl.class,
-            RideImpl.class,
-            ThornsImpl.class,
-            FireImpl.class,
-            BeaconImpl.class,
-            WitherImpl.class,
-            LightningImpl.class,
-            SlowImpl.class,
-            KnockbackImpl.class,
-            RangedImpl.class,
-            SprintImpl.class,
-            StompImpl.class,
-            ShieldImpl.class,
-            BleedImpl.class
-    );
+    private static final String SKILLS_PACKAGE_PATH = "de/Keyle/MyPet/skill/skills/";
 
     private BuiltInSkills() {
     }
 
-    /**
-     * Registers every built-in skill class with the active {@link de.Keyle.MyPet.api.skill.SkillManager}.
-     * Intended to be called exactly once per plugin enable; the manager logs (but does not throw)
-     * on duplicate registration.
-     */
     public static void register() {
-        for (Class<? extends Skill> skill : SKILLS) {
+        List<Class<? extends Skill>> discovered = discoverSkillClasses();
+        if (discovered.isEmpty()) {
+            throw new IllegalStateException("No built-in skill classes discovered in " + SKILLS_PACKAGE_PATH
+                    + " — plugin jar scan failed");
+        }
+        for (Class<? extends Skill> skill : discovered) {
             MyPetApi.getSkillManager().registerSkill(skill);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Class<? extends Skill>> discoverSkillClasses() {
+        List<Class<? extends Skill>> classes = new ArrayList<>();
+        try {
+            File jarFile = new File(MyPetApi.getPlugin().getClass().getProtectionDomain()
+                    .getCodeSource().getLocation().toURI());
+            if (!jarFile.isFile()) {
+                throw new IllegalStateException("MyPet is not running from a jar; cannot scan for built-in skills");
+            }
+            ClassLoader classLoader = MyPetApi.getPlugin().getClass().getClassLoader();
+            List<String> classNames = new ArrayList<>();
+            try (JarFile jar = new JarFile(jarFile)) {
+                Enumeration<JarEntry> jarEntries = jar.entries();
+                while (jarEntries.hasMoreElements()) {
+                    String name = jarEntries.nextElement().getName();
+                    if (!name.startsWith(SKILLS_PACKAGE_PATH) || !name.endsWith(".class") || name.contains("$")) {
+                        continue;
+                    }
+                    classNames.add(name.replace('/', '.').replace(".class", ""));
+                }
+            }
+            Collections.sort(classNames);
+            for (String className : classNames) {
+                Class<?> clazz = Class.forName(className, false, classLoader);
+                if (Skill.class.isAssignableFrom(clazz)
+                        && !clazz.isInterface()
+                        && !Modifier.isAbstract(clazz.getModifiers())) {
+                    classes.add((Class<? extends Skill>) clazz);
+                }
+            }
+        } catch (IllegalStateException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to scan for built-in skills", e);
+        }
+        return classes;
     }
 }

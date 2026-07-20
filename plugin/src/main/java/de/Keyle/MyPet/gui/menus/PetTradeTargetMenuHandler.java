@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.gui.MenuHandler;
 import de.Keyle.MyPet.api.gui.MenuId;
 import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.api.gui.MenuInstance;
-import de.Keyle.MyPet.gui.MenuInstanceImpl;
 import de.Keyle.MyPet.gui.context.PetTradeConfirmContext;
 import de.Keyle.MyPet.gui.context.PetTradeTargetContext;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -58,7 +57,7 @@ public final class PetTradeTargetMenuHandler implements MenuHandler<PetTradeTarg
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
         if (!"targets".equals(sectionId)) return;
-        PetTradeTargetContext ctx = (PetTradeTargetContext) ((MenuInstanceImpl) instance).context();
+        PetTradeTargetContext ctx = (PetTradeTargetContext) instance.context();
         List<Player> targets = onlineTargets(ctx);
         if (payload.itemIndex() < 0 || payload.itemIndex() >= targets.size()) return;
         Player target = targets.get(payload.itemIndex());

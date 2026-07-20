@@ -21,11 +21,21 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Sprint;
+import de.Keyle.MyPet.skill.upgrades.SprintUpgrade;
 import net.kyori.adventure.text.Component;
 
 public class SprintImpl extends AbstractSkill implements Sprint {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Sprint.class,
+            UpgradeSchema.builder()
+                    .bool("active").label("Active")
+                    .build(), json -> new SprintUpgrade()
+            .setActiveModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "active"))));
 
     protected UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);
 

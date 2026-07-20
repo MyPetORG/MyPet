@@ -21,16 +21,33 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
+import com.google.gson.JsonObject;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.gui.ClickPayload;
+import de.Keyle.MyPet.api.gui.ItemAppearance;
+import de.Keyle.MyPet.api.gui.MenuHandler;
 import de.Keyle.MyPet.api.gui.MenuId;
 import de.Keyle.MyPet.api.gui.MenuIds;
+import de.Keyle.MyPet.api.gui.MenuInstance;
 import de.Keyle.MyPet.api.skill.SkillState;
+import de.Keyle.MyPet.api.skill.SkillStateCodec;
+import de.Keyle.MyPet.api.skill.SkillStateCodecs;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Beacon;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.BeaconUpgrade;
+import net.kyori.adventure.nbt.BinaryTagTypes;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
+import net.kyori.adventure.nbt.StringBinaryTag;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
@@ -45,6 +62,209 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.*;
 
 public class BeaconImpl extends AbstractSkill implements Beacon {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Beacon.class,
+            UpgradeSchema.builder()
+                    .number("range").label("Range (blocks)").cumulative()
+                    .integer("duration").label("Duration (s)").cumulative()
+                    .integer("count").label("Count (simultaneous buffs)").cumulative()
+                    .group("buffs", g -> g
+                            .integer("absorption").label("Absorption").cumulative()
+                            .bool("fireresistance").label("Fire Resistance")
+                            .integer("haste").label("Haste").cumulative()
+                            .bool("luck").label("Luck")
+                            .bool("nightvision").label("Night Vision")
+                            .integer("resistance").label("Resistance").cumulative()
+                            .integer("speed").label("Speed").cumulative()
+                            .integer("strength").label("Strength").cumulative()
+                            .bool("waterbreathing").label("Water Breathing")
+                            .integer("regeneration").label("Regeneration").cumulative()
+                            .bool("invisibility").label("Invisibility")
+                            .integer("jumpboost").label("Jump Boost").cumulative())
+                    .label("Buffs")
+                    .build(), json -> {
+        JsonObject buffs = (JsonObject) UpgradeParsers.get(json, "buffs");
+        return new BeaconUpgrade()
+                .setRangeModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "range")))
+                .setDurationModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "duration")))
+                .setNumberOfBuffsModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "count")))
+                .setAbsorptionModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(buffs, "absorption")))
+                .setFireResistanceModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(buffs, "fireresistance")))
+                .setHasteModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(buffs, "haste")))
+                .setLuckModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(buffs, "luck")))
+                .setNightVisionModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(buffs, "nightvision")))
+                .setResistanceModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(buffs, "resistance")))
+                .setSpeedModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(buffs, "speed")))
+                .setStrengthModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(buffs, "strength")))
+                .setWaterBreathingModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(buffs, "waterbreathing")))
+                .setRegenerationModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(buffs, "regeneration")))
+                .setInvisibilityModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(buffs, "invisibility")))
+                .setJumpBoostModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(buffs, "jumpboost")));
+    });
+
+    public static final SkillStateCodecs STATE_CODEC = SkillStateCodecs.of(Beacon.class, Beacon.State.class,
+            new SkillStateCodec<>() {
+                @Override
+                public CompoundBinaryTag write(Beacon.State state) {
+                    ListBinaryTag.Builder<StringBinaryTag> buffsBuilder = ListBinaryTag.builder(BinaryTagTypes.STRING);
+                    for (Buff buff : state.buffs()) {
+                        buffsBuilder.add(StringBinaryTag.stringBinaryTag(buff.getName()));
+                    }
+                    return CompoundBinaryTag.builder()
+                            .put("Buffs", buffsBuilder.build())
+                            .putBoolean("Active", state.active())
+                            .putString("Receiver", state.receiver().name())
+                            .build();
+                }
+
+                @Override
+                public Optional<Beacon.State> read(CompoundBinaryTag compound) {
+                    if (compound.keySet().isEmpty()) return Optional.empty();
+                    List<Buff> buffs = new ArrayList<>();
+                    if (compound.keySet().contains("Buffs")) {
+                        ListBinaryTag list = compound.getList("Buffs", BinaryTagTypes.STRING);
+                        for (int i = 0; i < list.size(); i++) {
+                            Buff b = Buff.getByName(list.getString(i));
+                            if (b != null) buffs.add(b);
+                        }
+                    }
+                    boolean active = compound.keySet().contains("Active") && compound.getBoolean("Active");
+                    // Receiver is enum.valueOf — tolerate stale or unknown names by
+                    // falling back to Owner. The pre-codec live-skill load lacked
+                    // this catch and would propagate IllegalArgumentException up
+                    // through pet activation; consolidating to one codec lets the
+                    // lenient (parser) behavior win for both contexts.
+                    BuffReceiver receiver = BuffReceiver.Owner;
+                    if (compound.keySet().contains("Receiver")) {
+                        try {
+                            receiver = BuffReceiver.valueOf(compound.getString("Receiver"));
+                        } catch (IllegalArgumentException ignored) {
+                        }
+                    }
+                    return Optional.of(new Beacon.State(List.copyOf(buffs), active, receiver));
+                }
+            });
+
+    /**
+     * GUI handler for the Beacon buff-selection menu. The buff buttons are rendered as a
+     * single {@code paginated-list} section ({@code "buffs"}) that the handler populates
+     * dynamically from {@link #getAvailableBuffs()}. The receiver and toggle slots are
+     * stateful per pet; the confirm slot persists state and closes.
+     */
+    public static final class BeaconMenuHandler implements MenuHandler<Beacon.MenuContext> {
+
+        @SuppressWarnings("unchecked")
+        @Override public MenuId<Beacon.MenuContext> id() {
+            return (MenuId<Beacon.MenuContext>) MenuIds.BEACON;
+        }
+
+        @Override
+        public void onOpen(MenuInstance instance, Beacon.MenuContext context) {
+            BeaconImpl beacon = beaconSkill(context);
+            if (beacon == null) { instance.close(); return; }
+
+            // Drop stale selections from a previous skilltree configuration so schedule()
+            // doesn't wipe everything when size > current limit.
+            beacon.pruneUnavailableBuffs();
+
+            instance.setSlotState("receiver", beacon.getReceiverModeStateName());
+            instance.setSlotState("toggle",   beacon.isEnabled() ? "on" : "off");
+        }
+
+        @Override
+        public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
+            Beacon.MenuContext ctx = (Beacon.MenuContext) instance.context();
+            BeaconImpl beacon = beaconSkill(ctx);
+            if (beacon == null) { instance.close(); return; }
+
+            if ("buffs".equals(sectionId)) {
+                List<Buff> available = beacon.getAvailableBuffs();
+                int idx = payload.itemIndex();
+                if (idx < 0 || idx >= available.size()) return;
+                Buff clicked = available.get(idx);
+                int limit = beacon.getBuffLimit();
+
+                if (beacon.isBuffEnabled(clicked)) {
+                    beacon.setBuffEnabled(clicked, false);
+                } else if (limit <= 1) {
+                    // Single-buff mode: clear all available buffs first.
+                    for (Buff other : available) {
+                        if (beacon.isBuffEnabled(other)) beacon.setBuffEnabled(other, false);
+                    }
+                    beacon.setBuffEnabled(clicked, true);
+                } else if (beacon.getSelectedBuffCount() < limit) {
+                    beacon.setBuffEnabled(clicked, true);
+                }
+                // else: at limit — silently ignored.
+                instance.refreshSection("buffs");
+            } else if ("receiver".equals(sectionId)) {
+                String next = beacon.cycleReceiverMode();
+                instance.setSlotState("receiver", next);
+            } else if ("toggle".equals(sectionId)) {
+                boolean now = !beacon.isEnabled();
+                beacon.setActive(now);
+                instance.setSlotState("toggle", now ? "on" : "off");
+            } else if ("confirm".equals(sectionId)) {
+                beacon.persist();
+                instance.close();
+            }
+        }
+
+        @Override
+        public List<?> templateItems(Beacon.MenuContext context, String sectionId) {
+            if (!"buffs".equals(sectionId)) return List.of();
+            BeaconImpl beacon = beaconSkill(context);
+            if (beacon == null) return List.of();
+            return beacon.getAvailableBuffs();
+        }
+
+        @Override
+        public TagResolver placeholders(Beacon.MenuContext context, String sectionId, int itemIndex) {
+            // The receiver slot's title leads with a label, so supply it as a leaf
+            // translatable; a leading <lang:Key> would swallow the trailing value.
+            TagResolver receiverLabel = Placeholder.component("receiver_label",
+                Component.translatable("Gui.Beacon.Receiver.Label"));
+            if (!"buffs".equals(sectionId) || itemIndex < 0) return receiverLabel;
+            BeaconImpl beacon = beaconSkill(context);
+            if (beacon == null) return receiverLabel;
+            List<Buff> available = beacon.getAvailableBuffs();
+            if (itemIndex >= available.size()) return receiverLabel;
+            Buff buff = available.get(itemIndex);
+            // Vanilla effect translation key resolves client-side against the player's
+            // selected language. PotionEffectType implements Translatable on Paper 1.20+.
+            return TagResolver.builder()
+                .resolver(receiverLabel)
+                .resolver(Placeholder.component("buff_name",
+                    Component.translatable(buff.getPotionEffectType().translationKey())))
+                .build();
+        }
+
+        @Override
+        public ItemAppearance customizeTemplateItem(Beacon.MenuContext context, String sectionId,
+                                                    int itemIndex, ItemAppearance template) {
+            if (!"buffs".equals(sectionId)) return template;
+            BeaconImpl beacon = beaconSkill(context);
+            if (beacon == null) return template;
+            List<Buff> available = beacon.getAvailableBuffs();
+            if (itemIndex < 0 || itemIndex >= available.size()) return template;
+            Buff buff = available.get(itemIndex);
+            boolean selected = beacon.isBuffEnabled(buff);
+            return new ItemAppearance(
+                template.material(),
+                template.title(),
+                template.lore(),
+                selected,
+                template.amount(),
+                template.customModelData(),
+                template.headSkin(),
+                buff.getPotionEffectType().getColor()
+            );
+        }
+
+        private static BeaconImpl beaconSkill(Beacon.MenuContext ctx) {
+            return ctx.pet().getSkills().get(BeaconImpl.class);
+        }
+    }
 
     private static final Set<Buff> BOOLEAN_BUFFS = EnumSet.of(
             Buff.FireResistance, Buff.WaterBreathing, Buff.Invisibility, Buff.NightVision, Buff.Luck);
@@ -134,15 +354,9 @@ public class BeaconImpl extends AbstractSkill implements Beacon {
             return false;
         }
 
-        try {
-            Class<?> contextType = Class.forName("de.Keyle.MyPet.gui.context.BeaconContext");
-            Object context = contextType.getConstructor(Player.class, Pet.class).newInstance(player, pet);
-            @SuppressWarnings("unchecked")
-            MenuId<Object> id = (MenuId<Object>) (MenuId<?>) MenuIds.BEACON;
-            MyPetApi.getGuiService().openMenu(player, id, context);
-        } catch (Exception e) {
-            return false;
-        }
+        @SuppressWarnings("unchecked")
+        MenuId<Beacon.MenuContext> id = (MenuId<Beacon.MenuContext>) (MenuId<?>) MenuIds.BEACON;
+        MyPetApi.getGuiService().openMenu(player, id, new Beacon.MenuContext(player, pet));
         return true;
     }
 

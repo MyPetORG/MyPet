@@ -55,10 +55,10 @@ import de.Keyle.MyPet.services.BuiltInServices;
 import de.Keyle.MyPet.api.skill.experience.ExponentialExperienceCalculator;
 import de.Keyle.MyPet.api.skill.experience.LinearExperienceCalculator;
 import de.Keyle.MyPet.api.skill.experience.PowerExperienceCalculator;
+import de.Keyle.MyPet.api.skill.skills.Beacon;
 import de.Keyle.MyPet.entity.types.BuiltInPetTypes;
-import de.Keyle.MyPet.skill.skills.BuiltInSkillStateCodecs;
+import de.Keyle.MyPet.skill.skills.BeaconImpl;
 import de.Keyle.MyPet.skill.skills.BuiltInSkills;
-import de.Keyle.MyPet.skill.upgrades.BuiltInUpgradeParsers;
 import de.Keyle.MyPet.skill.skilltree.requirements.BuiltInRequirements;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import de.Keyle.MyPet.util.shop.ShopConfigGenerator;
@@ -344,8 +344,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             new de.Keyle.MyPet.gui.menus.ChooseSkilltreeMenuHandler(),
             () -> getClass().getResourceAsStream("/gui/menus/choose-skilltree.json"));
         gui.registerMenu(
-            (MenuId<de.Keyle.MyPet.gui.context.BeaconContext>) (MenuId<?>) MenuIds.BEACON,
-            new de.Keyle.MyPet.gui.menus.BeaconMenuHandler(),
+            (MenuId<Beacon.MenuContext>) (MenuId<?>) MenuIds.BEACON,
+            new BeaconImpl.BeaconMenuHandler(),
             () -> getClass().getResourceAsStream("/gui/menus/beacon.json"));
         gui.registerMenu(
             (MenuId<de.Keyle.MyPet.gui.context.BackpackContext>) (MenuId<?>) MenuIds.BACKPACK,
@@ -405,8 +405,6 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         WorldGroup.loadGroups(new File(getDataFolder().getPath(), "worldgroups.yml"));
 
         BuiltInSkills.register();
-        BuiltInUpgradeParsers.register(MyPetApi.getSkillManager());
-        BuiltInSkillStateCodecs.register(MyPetApi.getSkillManager());
 
         // create folders
         File skilltreeFolder = new File(getDataFolder().getPath(), "skilltrees");

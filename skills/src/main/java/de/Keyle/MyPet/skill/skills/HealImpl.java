@@ -22,14 +22,26 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Heal;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.HealUpgrade;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 
 public class HealImpl extends AbstractSkill implements Heal {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Heal.class,
+            UpgradeSchema.builder()
+                    .number("health").label("Health (+X)").cumulative()
+                    .integer("timer").label("Timer (s)").cumulative()
+                    .build(), json -> new HealUpgrade()
+            .setHealModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "health")))
+            .setTimerModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "timer"))));
 
     protected UpgradeComputer<Number> heal = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> timer = new UpgradeComputer<>(0);

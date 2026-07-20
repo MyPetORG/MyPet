@@ -21,13 +21,24 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Damage;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.DamageUpgrade;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class DamageImpl extends AbstractSkill implements Damage {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Damage.class,
+            UpgradeSchema.builder()
+                    .number("damage").label("Damage (+X)").cumulative()
+                    .build(), json -> new DamageUpgrade()
+            .setDamageModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "damage"))));
+
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
 
     public DamageImpl(Pet pet) {

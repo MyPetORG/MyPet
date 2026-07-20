@@ -21,9 +21,13 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Lightning;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.LightningUpgrade;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -36,6 +40,14 @@ import org.bukkit.entity.Player;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class LightningImpl extends AbstractSkill implements Lightning {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Lightning.class,
+            UpgradeSchema.builder()
+                    .integer("chance").label("Chance %").suffix("%").cumulative()
+                    .number("damage").label("Damage").cumulative()
+                    .build(), json -> new LightningUpgrade()
+            .setChanceModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "chance")))
+            .setDamageModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "damage"))));
 
     @Getter
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);

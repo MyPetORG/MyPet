@@ -20,10 +20,13 @@
 
 package de.Keyle.MyPet.api.gui;
 
+import de.Keyle.MyPet.api.skill.skills.Beacon;
+
 /**
- * Catalog of built-in {@link MenuId}s. The context type parameters reference plugin-side
+ * Catalog of built-in {@link MenuId}s. Most context type parameters reference plugin-side
  * record classes loaded reflectively via {@code Class.forName} so this api-side class
- * does not depend on plugin-side packages.
+ * does not depend on plugin-side packages; {@link Beacon.MenuContext} is an api-side type
+ * and is referenced directly.
  */
 public final class MenuIds {
 
@@ -33,7 +36,7 @@ public final class MenuIds {
     public static final MenuId<?> PET_SHOP            = MenuId.of("pet-shop",            contextType("PetShopContext"));
     public static final MenuId<?> PET_SHOP_CONFIRM    = MenuId.of("pet-shop-confirm",    contextType("PetShopConfirmContext"));
     public static final MenuId<?> CHOOSE_SKILLTREE    = MenuId.of("choose-skilltree",    contextType("ChooseSkilltreeContext"));
-    public static final MenuId<?> BEACON              = MenuId.of("beacon",              contextType("BeaconContext"));
+    public static final MenuId<?> BEACON              = MenuId.of("beacon",              Beacon.MenuContext.class);
     public static final MenuId<?> BACKPACK            = MenuId.of("backpack",            contextType("BackpackContext"));
     public static final MenuId<?> NPC_STORAGE_CONFIRM = MenuId.of("npc-storage-confirm", contextType("NpcStorageConfirmContext"));
     public static final MenuId<?> PET_MENU             = MenuId.of("pet-menu",             contextType("PetMenuContext"));

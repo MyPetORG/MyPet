@@ -21,12 +21,23 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Control;
+import de.Keyle.MyPet.skill.upgrades.ControlUpgrade;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 
 public class ControlImpl extends AbstractSkill implements Control {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Control.class,
+            UpgradeSchema.builder()
+                    .bool("active").label("Active")
+                    .build(), json -> new ControlUpgrade()
+            .setActiveModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "active"))));
+
     private Location moveTo;
     private Location prevMoveTo;
     private UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);

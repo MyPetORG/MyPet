@@ -22,9 +22,13 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Bleed;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.BleedUpgrade;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -40,6 +44,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BleedImpl extends AbstractSkill implements Bleed {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Bleed.class,
+            UpgradeSchema.builder()
+                    .number("damage").label("Damage").cumulative()
+                    .integer("interval").label("Interval (s)").cumulative()
+                    .integer("duration").label("Duration (s)").cumulative()
+                    .integer("chance").label("Chance %").suffix("%").cumulative()
+                    .build(), json -> new BleedUpgrade()
+            .setDamageModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "damage")))
+            .setIntervalModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "interval")))
+            .setDurationModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "duration")))
+            .setChanceModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "chance"))));
 
     private static final BlockData BLOOD_PARTICLE_DATA = Material.REDSTONE_BLOCK.createBlockData();
 

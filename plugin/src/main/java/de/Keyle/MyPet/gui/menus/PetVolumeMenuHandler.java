@@ -54,7 +54,7 @@ public final class PetVolumeMenuHandler implements MenuHandler<PetVolumeContext>
         if (!"volume".equals(sectionId)) return;
         int cell = payload.itemIndex();
         if (cell < 0 || cell >= BAR_WIDTH) return;
-        Player viewer = ((PetVolumeContext) ((de.Keyle.MyPet.gui.MenuInstanceImpl) instance).context()).viewer();
+        Player viewer = ((PetVolumeContext) instance.context()).viewer();
         if (!MyPetApi.getPlayerManager().isMyPetPlayer(viewer)) return;
         MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(viewer);
         player.setPetVolume(percentForCell(cell) / 100f);

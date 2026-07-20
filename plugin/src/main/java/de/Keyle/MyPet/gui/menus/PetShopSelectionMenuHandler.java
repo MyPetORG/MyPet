@@ -22,7 +22,6 @@ package de.Keyle.MyPet.gui.menus;
 
 import de.Keyle.MyPet.api.gui.*;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
-import de.Keyle.MyPet.gui.MenuInstanceImpl;
 import de.Keyle.MyPet.gui.context.PetShopSelectionContext;
 import de.Keyle.MyPet.util.shop.PetShop;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -49,7 +48,7 @@ public final class PetShopSelectionMenuHandler implements MenuHandler<PetShopSel
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
         if (!"shops".equals(sectionId)) return;
-        PetShopSelectionContext ctx = (PetShopSelectionContext) ((MenuInstanceImpl) instance).context();
+        PetShopSelectionContext ctx = (PetShopSelectionContext) instance.context();
         int idx = payload.itemIndex();
         if (idx < 0 || idx >= ctx.shops().size()) return;
         // Replaces this menu with the selected shop — open() goes through

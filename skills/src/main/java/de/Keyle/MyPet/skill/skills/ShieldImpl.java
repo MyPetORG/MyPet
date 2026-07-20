@@ -22,9 +22,13 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Shield;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.ShieldUpgrade;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -34,6 +38,14 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ShieldImpl extends AbstractSkill implements Shield {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Shield.class,
+            UpgradeSchema.builder()
+                    .integer("chance").label("Chance %").suffix("%").cumulative()
+                    .integer("redirect").label("Redirect (Damage) %").suffix("%").cumulative()
+                    .build(), json -> new ShieldUpgrade()
+            .setChanceModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "chance")))
+            .setRedirectedDamageModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "redirect"))));
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> redirectedDamage = new UpgradeComputer<>(0);

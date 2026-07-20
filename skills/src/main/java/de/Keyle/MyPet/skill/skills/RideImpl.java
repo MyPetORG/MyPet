@@ -21,13 +21,33 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.RideUpgrade;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class RideImpl extends AbstractSkill implements Ride {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Ride.class,
+            UpgradeSchema.builder()
+                    .bool("active").label("Active")
+                    .integer("speed").label("Speed").suffix("%").cumulative()
+                    .number("jumpheight").label("Jump Height").cumulative()
+                    .number("flylimit").label("Fly Limit").cumulative()
+                    .number("flyregenrate").label("Fly Regen Rate").cumulative()
+                    .bool("canfly").label("Can Fly")
+                    .build(), json -> new RideUpgrade()
+            .setActiveModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "active")))
+            .setSpeedIncreaseModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "speed")))
+            .setJumpHeightModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "jumpheight")))
+            .setFlyLimitModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "flylimit")))
+            .setFlyRegenRateModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "flyregenrate")))
+            .setCanFlyModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "canfly"))));
 
     protected UpgradeComputer<Integer> speed = new UpgradeComputer<>(0);
     protected UpgradeComputer<Number> jumpHeight = new UpgradeComputer<>(0);

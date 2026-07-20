@@ -143,6 +143,7 @@ public final class MenuInstanceImpl implements MenuInstance, InventoryHolder {
 
     // --- Public accessors used by dispatcher / renderer / handlers -----------
 
+    @Override
     public Object context() { return context; }
 
     @SuppressWarnings("unchecked")

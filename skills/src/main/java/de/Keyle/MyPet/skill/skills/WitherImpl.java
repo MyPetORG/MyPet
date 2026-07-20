@@ -21,9 +21,13 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Wither;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.WitherUpgrade;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.LivingEntity;
@@ -33,6 +37,14 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class WitherImpl extends AbstractSkill implements Wither {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Wither.class,
+            UpgradeSchema.builder()
+                    .integer("chance").label("Chance %").suffix("%").cumulative()
+                    .integer("duration").label("Duration (ticks)").cumulative()
+                    .build(), json -> new WitherUpgrade()
+            .setChanceModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "chance")))
+            .setDurationModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "duration"))));
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);

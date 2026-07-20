@@ -28,9 +28,16 @@ import de.Keyle.MyPet.api.event.PetPickupItemEvent;
 import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.SkillState;
+import de.Keyle.MyPet.api.skill.SkillStateCodec;
+import de.Keyle.MyPet.api.skill.SkillStateCodecs;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Pickup;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.PickupUpgrade;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -46,6 +53,30 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Optional;
 
 public class PickupImpl extends AbstractSkill implements Pickup {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Pickup.class,
+            UpgradeSchema.builder()
+                    .number("range").label("Range").cumulative()
+                    .bool("exp").label("EXP Pickup")
+                    .build(), json -> new PickupUpgrade()
+            .setRangeModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "range")))
+            .setPickupExpModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "exp"))));
+
+    public static final SkillStateCodecs STATE_CODEC = SkillStateCodecs.of(Pickup.class, Pickup.State.class,
+            new SkillStateCodec<>() {
+                @Override
+                public CompoundBinaryTag write(Pickup.State state) {
+                    return CompoundBinaryTag.builder()
+                            .putBoolean("Active", state.active())
+                            .build();
+                }
+
+                @Override
+                public Optional<Pickup.State> read(CompoundBinaryTag compound) {
+                    if (compound.keySet().isEmpty()) return Optional.empty();
+                    return Optional.of(new Pickup.State(compound.getBoolean("Active")));
+                }
+            });
 
     protected UpgradeComputer<Number> range = new UpgradeComputer<>(0);
     protected UpgradeComputer<Boolean> expPickup = new UpgradeComputer<>(false);

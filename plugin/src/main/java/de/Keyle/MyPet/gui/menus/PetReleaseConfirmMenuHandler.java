@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.gui.menus;
 
 import de.Keyle.MyPet.api.gui.*;
-import de.Keyle.MyPet.gui.MenuInstanceImpl;
 import de.Keyle.MyPet.gui.context.PetReleaseConfirmContext;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -37,7 +36,7 @@ public final class PetReleaseConfirmMenuHandler implements MenuHandler<PetReleas
 
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
-        PetReleaseConfirmContext ctx = (PetReleaseConfirmContext) ((MenuInstanceImpl) instance).context();
+        PetReleaseConfirmContext ctx = (PetReleaseConfirmContext) instance.context();
         if ("yes".equals(sectionId)) {
             ctx.onYes().run();
             instance.close();

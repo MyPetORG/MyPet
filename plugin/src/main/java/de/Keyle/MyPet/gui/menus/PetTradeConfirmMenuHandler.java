@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.gui.MenuHandler;
 import de.Keyle.MyPet.api.gui.MenuId;
 import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.api.gui.MenuInstance;
-import de.Keyle.MyPet.gui.MenuInstanceImpl;
 import de.Keyle.MyPet.gui.context.PetTradeConfirmContext;
 import de.Keyle.MyPet.util.shop.PetTradeService;
 import net.kyori.adventure.text.Component;
@@ -52,7 +51,7 @@ public final class PetTradeConfirmMenuHandler implements MenuHandler<PetTradeCon
 
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
-        PetTradeConfirmContext ctx = (PetTradeConfirmContext) ((MenuInstanceImpl) instance).context();
+        PetTradeConfirmContext ctx = (PetTradeConfirmContext) instance.context();
         if ("yes".equals(sectionId)) {
             PetTradeService.offerTrade(ctx.viewer(), ctx.target(), ctx.pet());
             instance.close();

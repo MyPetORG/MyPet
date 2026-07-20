@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.skill.skills;
 
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.ActiveSkill;
 import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.SkillState;
@@ -28,6 +29,7 @@ import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.Scheduler;
 import lombok.Getter;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
@@ -151,4 +153,8 @@ public interface Beacon extends Skill, Scheduler, ActiveSkill {
      * Snapshot of a Beacon skill's persisted or live state — the player-chosen buffs, the toggle, and the receiver scope.
      */
     record State(List<Buff> buffs, boolean active, BuffReceiver receiver) implements SkillState {}
+
+    /** Context for the Beacon buff-selection menu. */
+    record MenuContext(Player viewer, Pet pet) {
+    }
 }

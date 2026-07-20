@@ -24,10 +24,17 @@ import com.google.common.collect.Iterables;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.SkillState;
+import de.Keyle.MyPet.api.skill.SkillStateCodec;
+import de.Keyle.MyPet.api.skill.SkillStateCodecs;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.BehaviorUpgrade;
 import lombok.Getter;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Particle;
@@ -53,6 +60,42 @@ import static de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode.*;
  * {@link Behavior.BehaviorMode#Normal}.
  */
 public class BehaviorImpl extends AbstractSkill implements Behavior {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Behavior.class,
+            UpgradeSchema.builder()
+                    .bool("aggro").label("Aggro")
+                    .bool("duel").label("Duel")
+                    .bool("farm").label("Farm")
+                    .bool("friend").label("Friend")
+                    .bool("raid").label("Raid")
+                    .build(), json -> new BehaviorUpgrade()
+            .setAggroModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "aggro")))
+            .setDuelModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "duel")))
+            .setFarmModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "farm")))
+            .setFriendlyModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "friend")))
+            .setRaidModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "raid"))));
+
+    public static final SkillStateCodecs STATE_CODEC = SkillStateCodecs.of(Behavior.class, Behavior.State.class,
+            new SkillStateCodec<>() {
+                @Override
+                public CompoundBinaryTag write(Behavior.State state) {
+                    return CompoundBinaryTag.builder()
+                            .putString("selectedBehavior", state.mode().name())
+                            .build();
+                }
+
+                @Override
+                public Optional<Behavior.State> read(CompoundBinaryTag compound) {
+                    if (!compound.keySet().contains("selectedBehavior")) return Optional.empty();
+                    BehaviorMode mode;
+                    try {
+                        mode = BehaviorMode.valueOf(compound.getString("selectedBehavior"));
+                    } catch (IllegalArgumentException e) {
+                        mode = BehaviorMode.Normal;
+                    }
+                    return Optional.of(new Behavior.State(mode));
+                }
+            });
 
     protected Set<BehaviorMode> activeBehaviors = new HashSet<>();
     protected BehaviorMode selectedBehavior = BehaviorMode.Normal;

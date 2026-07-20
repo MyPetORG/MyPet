@@ -21,8 +21,12 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Knockback;
+import de.Keyle.MyPet.skill.upgrades.KnockbackUpgrade;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.LivingEntity;
@@ -31,6 +35,12 @@ import org.bukkit.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class KnockbackImpl extends AbstractSkill implements Knockback {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Knockback.class,
+            UpgradeSchema.builder()
+                    .integer("chance").label("Chance %").suffix("%").cumulative()
+                    .build(), json -> new KnockbackUpgrade()
+            .setChanceModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "chance"))));
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
 

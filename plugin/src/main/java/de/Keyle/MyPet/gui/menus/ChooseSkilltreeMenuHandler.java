@@ -23,7 +23,6 @@ package de.Keyle.MyPet.gui.menus;
 import de.Keyle.MyPet.api.gui.*;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
-import de.Keyle.MyPet.gui.MenuInstanceImpl;
 import de.Keyle.MyPet.gui.context.ChooseSkilltreeContext;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -45,7 +44,7 @@ public final class ChooseSkilltreeMenuHandler implements MenuHandler<ChooseSkill
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
         if (!"skilltrees".equals(sectionId)) return;
-        ChooseSkilltreeContext ctx = (ChooseSkilltreeContext) ((MenuInstanceImpl) instance).context();
+        ChooseSkilltreeContext ctx = (ChooseSkilltreeContext) instance.context();
         if (payload.itemIndex() < 0 || payload.itemIndex() >= ctx.available().size()) return;
         ctx.onChoose().accept(ctx.available().get(payload.itemIndex()));
         instance.close();

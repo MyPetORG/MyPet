@@ -21,9 +21,13 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Thorns;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.ThornsUpgrade;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Particle;
@@ -36,6 +40,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ThornsImpl extends AbstractSkill implements Thorns {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Thorns.class,
+            UpgradeSchema.builder()
+                    .integer("chance").label("Chance %").suffix("%").cumulative()
+                    .integer("reflection").label("Reflection %").suffix("%").cumulative()
+                    .build(), json -> new ThornsUpgrade()
+            .setChanceModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "chance")))
+            .setReflectedDamageModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "reflection"))));
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> reflectedDamage = new UpgradeComputer<>(0);

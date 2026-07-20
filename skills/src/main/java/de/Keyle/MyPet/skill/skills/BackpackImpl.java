@@ -27,11 +27,22 @@ import de.Keyle.MyPet.api.event.PetInventoryActionEvent;
 import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.SkillState;
+import de.Keyle.MyPet.api.skill.SkillStateCodec;
+import de.Keyle.MyPet.api.skill.SkillStateCodecs;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.BackpackUpgrade;
 import lombok.Getter;
+import net.kyori.adventure.nbt.BinaryTag;
+import net.kyori.adventure.nbt.BinaryTagTypes;
+import net.kyori.adventure.nbt.ByteArrayBinaryTag;
+import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -41,6 +52,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Base64;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -56,6 +68,79 @@ import java.util.OptionalInt;
  * not yet been migrated to the new menu system.
  */
 public class BackpackImpl extends AbstractSkill implements Backpack {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Backpack.class,
+            UpgradeSchema.builder()
+                    .number("rows").label("Extra Rows").cumulative()
+                    .bool("drop").label("Drop on death")
+                    .build(), json -> new BackpackUpgrade()
+            .setRowsModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "rows")))
+            .setDropOnDeathModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "drop"))));
+
+    public static final SkillStateCodecs STATE_CODEC = SkillStateCodecs.of(Backpack.class, Backpack.State.class,
+            new SkillStateCodec<>() {
+                @Override
+                public CompoundBinaryTag write(Backpack.State state) {
+                    ItemStack[] contents = state.contents();
+                    ListBinaryTag.Builder<BinaryTag> builder = ListBinaryTag.builder();
+                    for (int i = 0; i < contents.length; i++) {
+                        ItemStack stack = contents[i];
+                        if (stack == null || stack.getType().isAir()) {
+                            builder.add(ByteArrayBinaryTag.byteArrayBinaryTag(new byte[0]));
+                        } else {
+                            builder.add(ByteArrayBinaryTag.byteArrayBinaryTag(stack.serializeAsBytes()));
+                        }
+                    }
+                    return CompoundBinaryTag.builder().put("Items", builder.build()).build();
+                }
+
+                @Override
+                public Optional<Backpack.State> read(CompoundBinaryTag compound) {
+                    if (compound.keySet().isEmpty()) return Optional.empty();
+                    // New format: flat byte-array list
+                    if (compound.keySet().contains("Items")) {
+                        ListBinaryTag list = compound.getList("Items");
+                        // New format: each entry is a ByteArrayBinaryTag
+                        if (list.size() > 0 && list.get(0) instanceof ByteArrayBinaryTag) {
+                            ItemStack[] contents = new ItemStack[list.size()];
+                            for (int i = 0; i < list.size(); i++) {
+                                byte[] bytes = ((ByteArrayBinaryTag) list.get(i)).value();
+                                contents[i] = bytes.length == 0 ? null : ItemStack.deserializeBytes(bytes);
+                            }
+                            return Optional.of(new Backpack.State(contents));
+                        }
+                        // Legacy format: slot-indexed compound list (CustomInventory.save format)
+                        ListBinaryTag legacyItems = compound.getList("Items", BinaryTagTypes.COMPOUND);
+                        int maxSlot = -1;
+                        for (int i = 0; i < legacyItems.size(); i++) {
+                            CompoundBinaryTag item = legacyItems.getCompound(i);
+                            if (item.keySet().contains("Slot")) {
+                                int slot = item.getByte("Slot") & 0xff;
+                                if (slot > maxSlot) maxSlot = slot;
+                            }
+                        }
+                        if (maxSlot >= 0) {
+                            int size = Math.min(54, Math.max(9, ((maxSlot + 9) / 9) * 9));
+                            ItemStack[] contents = new ItemStack[size];
+                            for (int i = 0; i < legacyItems.size(); i++) {
+                                CompoundBinaryTag item = legacyItems.getCompound(i);
+                                if (!item.keySet().contains("Slot")) continue;
+                                int slot = item.getByte("Slot") & 0xff;
+                                if (slot >= size) continue;
+                                String paperData = item.getString("PaperItem");
+                                if (!paperData.isEmpty()) {
+                                    try {
+                                        byte[] bytes = Base64.getDecoder().decode(paperData);
+                                        contents[slot] = ItemStack.deserializeBytes(bytes);
+                                    } catch (Exception ignored) {}
+                                }
+                            }
+                            return Optional.of(new Backpack.State(contents));
+                        }
+                    }
+                    return Optional.empty();
+                }
+            });
 
     /**
      * Number of inventory rows available to the Pet. Each row equals 9 slots.

@@ -21,9 +21,13 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Fire;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.FireUpgrade;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Particle;
@@ -32,6 +36,14 @@ import org.bukkit.entity.LivingEntity;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class FireImpl extends AbstractSkill implements Fire {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Fire.class,
+            UpgradeSchema.builder()
+                    .integer("chance").label("Chance %").suffix("%").cumulative()
+                    .integer("duration").label("Duration (s)").cumulative()
+                    .build(), json -> new FireUpgrade()
+            .setChanceModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "chance")))
+            .setDurationModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "duration"))));
 
     protected UpgradeComputer<Integer> chance = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> duration = new UpgradeComputer<>(0);

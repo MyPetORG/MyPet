@@ -21,13 +21,27 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.skill.SkillUpgrades;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
+import de.Keyle.MyPet.api.skill.UpgradeParsers;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Ranged;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.skill.upgrades.RangedUpgrade;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class RangedImpl extends AbstractSkill implements Ranged {
+
+    public static final SkillUpgrades UPGRADES = SkillUpgrades.of(Ranged.class,
+            UpgradeSchema.builder()
+                    .number("damage").label("Damage").cumulative()
+                    .integer("rate").label("Rate (cooldown or speed)").cumulative()
+                    .enumOf("projectile", Ranged.Projectile.class).label("Projectile")
+                    .build(), json -> new RangedUpgrade()
+            .setDamageModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "damage")))
+            .setRateOfFireModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "rate")))
+            .setProjectileModifier(UpgradeParsers.parseEnum(UpgradeParsers.get(json, "projectile"), Ranged.Projectile.class)));
 
     protected UpgradeComputer<Number> damage = new UpgradeComputer<>(0);
     protected UpgradeComputer<Integer> rateOfFire = new UpgradeComputer<>(1);

@@ -22,7 +22,6 @@ package de.Keyle.MyPet.gui.menus;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.gui.*;
-import de.Keyle.MyPet.gui.MenuInstanceImpl;
 import de.Keyle.MyPet.gui.context.PetShopConfirmContext;
 import de.Keyle.MyPet.gui.context.PetShopContext;
 import de.Keyle.MyPet.services.EggIconService;
@@ -47,7 +46,7 @@ public final class PetShopMenuHandler implements MenuHandler<PetShopContext> {
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
         if (!"entries".equals(sectionId)) return;
-        PetShopContext ctx = (PetShopContext) ((MenuInstanceImpl) instance).context();
+        PetShopContext ctx = (PetShopContext) instance.context();
         if (payload.itemIndex() < 0 || payload.itemIndex() >= ctx.entries().size()) return;
         ShopPet picked = ctx.entries().get(payload.itemIndex());
         MyPetApi.getGuiService().openMenu(

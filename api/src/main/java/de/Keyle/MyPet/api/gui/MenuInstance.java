@@ -54,4 +54,7 @@ public interface MenuInstance {
 
     /** Current state name of a multi-state slot section, or its default. */
     String getSlotState(String slotSectionId);
+
+    /** The context object this menu was opened with. */
+    Object context();
 }

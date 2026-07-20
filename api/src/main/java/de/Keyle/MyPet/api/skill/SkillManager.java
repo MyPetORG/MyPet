@@ -31,11 +31,14 @@ import de.Keyle.MyPet.api.util.service.ServiceName;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 
 import java.lang.reflect.Constructor;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Central registry for all {@link Skill} classes, their {@link UpgradeParser}s, and
@@ -50,7 +53,8 @@ import java.util.Set;
  * <p>Upgrade parsers (registered via {@link #registerUpgradeParser}) convert skilltree
  * JSON nodes into {@link Upgrade} objects; state codecs (registered via
  * {@link #registerCodec}) round-trip persisted NBT to typed {@link SkillState}
- * records.
+ * records. A skill impl may instead declare a {@link SkillUpgrades} static field,
+ * which {@link #registerSkill(Class)} picks up automatically.
  *
  * @see Skills
  * @see SkillName
@@ -61,6 +65,7 @@ public class SkillManager implements ServiceContainer {
     private final Map<Class<? extends Skill>, String> registeredSkillsNames = new HashMap<>();
     private final Map<String, Class<? extends Skill>> registeredNamesSkills = new HashMap<>();
     private final Map<String, UpgradeParser<?>> upgradeParsers = new HashMap<>();
+    private final Map<String, UpgradeSchema> upgradeSchemas = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<Class<? extends Skill>, SkillStateCodecBinding<?>> stateCodecs = new HashMap<>();
 
     /** Pairs the registered state class with its codec so save/load/parse can dispatch on skill class alone. */
@@ -71,6 +76,7 @@ public class SkillManager implements ServiceContainer {
         registeredSkillsNames.clear();
         registeredNamesSkills.clear();
         upgradeParsers.clear();
+        upgradeSchemas.clear();
         stateCodecs.clear();
     }
 
@@ -99,6 +105,30 @@ public class SkillManager implements ServiceContainer {
         }
         registeredSkillsNames.put(clazz, skillName);
         registeredNamesSkills.put(skillName, clazz);
+
+        // A skill impl may declare its upgrades as a self-registering SkillUpgrades static
+        // field; initialize the class so that declaration runs, then adopt it.
+        try {
+            Class.forName(clazz.getName(), true, clazz.getClassLoader());
+        } catch (ClassNotFoundException ignored) {
+        }
+        SkillUpgrades declared = SkillUpgrades.resolve(skillName);
+        if (declared != null) {
+            upgradeParsers.put(skillName.toLowerCase(Locale.ROOT), declared.parser());
+            upgradeSchemas.put(skillName, declared.schema());
+        }
+
+        // A skill impl may likewise declare its state codec as a self-registering
+        // SkillStateCodecs static field; the class was already initialized above.
+        SkillStateCodecs declaredCodec = SkillStateCodecs.resolve(skillName);
+        if (declaredCodec != null && !stateCodecs.containsKey(declaredCodec.skillClass())) {
+            stateCodecs.put(declaredCodec.skillClass(), toBinding(declaredCodec));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends SkillState> SkillStateCodecBinding<T> toBinding(SkillStateCodecs declared) {
+        return new SkillStateCodecBinding<>((Class<T>) declared.stateClass(), (SkillStateCodec<T>) declared.codec());
     }
 
     /** Returns the set of all registered skill implementation classes. */
@@ -153,6 +183,15 @@ public class SkillManager implements ServiceContainer {
         return registeredNamesSkills.get(name);
     }
 
+    /** Translation node from the skill's {@code @SkillName}, or null if the name is unknown. */
+    public String getSkillTranslationNode(String skillName) {
+        Class<? extends Skill> clazz = registeredNamesSkills.get(skillName);
+        if (clazz == null) {
+            return null;
+        }
+        return AnnotationLookup.findName(clazz, SkillName.class, Skill.class, SkillName::translationNode);
+    }
+
     /**
      * Creates a new instance of the given skill class for the specified pet. The skill
      * class must have a public constructor accepting a single {@link Pet} parameter.
@@ -177,30 +216,33 @@ public class SkillManager implements ServiceContainer {
     }
 
     /**
-     * Registers a parser that builds an {@link Upgrade} from the JSON object
-     * under {@code Skills.<name>.Upgrades.<levelRule>} in an {@code .st.json}
-     * skilltree file.
+     * Registers the upgrade parser and its {@link UpgradeSchema} for a skill. The schema is
+     * mandatory — it is what the web editor uses to render and validate this skill's upgrades.
      *
      * <p>The skill name used as the JSON-lookup key is read from the
      * {@code @SkillName} annotation on {@code skillClass} (walking superclasses
      * and interfaces if necessary). Re-registering the same skill silently
-     * overwrites the previous parser; addons should call this exactly once
-     * per skill, after registering the corresponding {@code Skill} class via
-     * {@link #registerSkill}.
+     * overwrites the previous parser and schema; addons should call this
+     * exactly once per skill, after registering the corresponding
+     * {@code Skill} class via {@link #registerSkill}.
      *
      * @param skillClass any {@link Skill} type bearing a {@code @SkillName} —
      *                   typically the same class passed to {@link #registerSkill}
+     * @param schema     the upgrade schema for {@code S}; must not be {@code null}
      * @param parser     the parser to register; must produce upgrades for
      *                   {@code S}
      * @throws IllegalArgumentException if {@code skillClass} has no
      *         {@code @SkillName} annotation in its type hierarchy
      */
-    public <S extends Skill> void registerUpgradeParser(Class<S> skillClass, UpgradeParser<S> parser) {
+    public <S extends Skill> void registerUpgradeParser(Class<S> skillClass, UpgradeSchema schema, UpgradeParser<S> parser) {
+        Objects.requireNonNull(schema, "schema");
+        Objects.requireNonNull(parser, "parser");
         String skillName = getSkillName(skillClass);
         if (skillName == null) {
             throw new IllegalArgumentException(skillClass.getName() + " is not annotated with @SkillName");
         }
         upgradeParsers.put(skillName.toLowerCase(Locale.ROOT), parser);
+        upgradeSchemas.put(skillName, schema);
     }
 
     /**
@@ -210,6 +252,16 @@ public class SkillManager implements ServiceContainer {
      */
     public UpgradeParser<?> getUpgradeParser(String skillName) {
         return upgradeParsers.get(skillName.toLowerCase(Locale.ROOT));
+    }
+
+    /** Schema for one skill, or {@code null} if none registered. Case-insensitive. */
+    public UpgradeSchema getUpgradeSchema(String skillName) {
+        return upgradeSchemas.get(skillName);
+    }
+
+    /** All registered schemas, keyed by canonical skill name, sorted case-insensitively. */
+    public Map<String, UpgradeSchema> getUpgradeSchemas() {
+        return Collections.unmodifiableMap(upgradeSchemas);
     }
 
     /**

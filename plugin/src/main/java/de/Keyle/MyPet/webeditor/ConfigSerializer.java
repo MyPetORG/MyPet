@@ -25,14 +25,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.util.hooks.types.PetModelHook;
 import de.Keyle.MyPet.api.util.hooks.types.PetModelSourceHook;
+import de.Keyle.MyPet.api.util.locale.Locale;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Reads MyPet's on-disk config files into the JSON {@code configs} envelope the
@@ -93,7 +97,63 @@ public final class ConfigSerializer {
         JsonArray leashFlags = new JsonArray();
         MyPetApi.getLeashFlagManager().flagNames().forEach(leashFlags::add);
         configs.add("leash-flags", leashFlags);
+        configs.add("skills", skillsArray());
         return configs;
+    }
+
+    /** Build the {@code skills} array: one entry per registered skill, sorted by name. */
+    private JsonArray skillsArray() {
+        JsonArray skills = new JsonArray();
+        for (Map.Entry<String, UpgradeSchema> entry : MyPetApi.getSkillManager().getUpgradeSchemas().entrySet()) {
+            String id = entry.getKey();
+            JsonObject skill = new JsonObject();
+            skill.addProperty("id", id);
+            String translationNode = MyPetApi.getSkillManager().getSkillTranslationNode(id);
+            String labelKey = translationNode != null && !translationNode.isBlank() ? translationNode : "Name.Skill." + id;
+            skill.add("label", labelMap(labelKey, id));
+            skill.add("fields", fieldsArray(id, "", entry.getValue().fields()));
+            skills.add(skill);
+        }
+        return skills;
+    }
+
+    /** Build the {@code fields} array for one skill (or a nested group), recursing into child fields. */
+    private JsonArray fieldsArray(String skillId, String prefix, List<UpgradeSchema.Field> fields) {
+        JsonArray out = new JsonArray();
+        for (UpgradeSchema.Field field : fields) {
+            JsonObject f = new JsonObject();
+            f.addProperty("name", field.getName());
+            f.addProperty("type", field.getType().name().toLowerCase(java.util.Locale.ROOT));
+            String labelKey = "Editor.Skill." + skillId + "." + prefix + field.getName();
+            String fallback = field.getLabel() != null ? field.getLabel() : field.getName();
+            f.add("label", labelMap(labelKey, fallback));
+            if (field.getSuffix() != null) {
+                f.addProperty("suffix", field.getSuffix());
+            }
+            if (field.isCumulative()) {
+                f.addProperty("cumulative", true);
+            }
+            if (!field.getEnumValues().isEmpty()) {
+                JsonArray values = new JsonArray();
+                field.getEnumValues().forEach(values::add);
+                f.add("values", values);
+            }
+            if (!field.getChildren().isEmpty()) {
+                f.add("fields", fieldsArray(skillId, prefix + field.getName() + ".", field.getChildren()));
+            }
+            out.add(f);
+        }
+        return out;
+    }
+
+    /** Label map for a translation key across all loaded languages; guarantees an "en" entry. */
+    private JsonObject labelMap(String key, String enFallback) {
+        JsonObject map = new JsonObject();
+        Locale.renderPlainAll(key).forEach(map::addProperty);
+        if (!map.has("en")) {
+            map.addProperty("en", enFallback);
+        }
+        return map;
     }
 
     private JsonObject yamlEntry(String fileName) {

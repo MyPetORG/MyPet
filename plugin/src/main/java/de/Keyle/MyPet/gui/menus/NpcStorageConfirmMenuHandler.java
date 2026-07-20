@@ -22,7 +22,6 @@ package de.Keyle.MyPet.gui.menus;
 
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.gui.*;
-import de.Keyle.MyPet.gui.MenuInstanceImpl;
 import de.Keyle.MyPet.gui.context.NpcStorageConfirmContext;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -39,7 +38,7 @@ public final class NpcStorageConfirmMenuHandler implements MenuHandler<NpcStorag
 
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
-        NpcStorageConfirmContext ctx = (NpcStorageConfirmContext) ((MenuInstanceImpl) instance).context();
+        NpcStorageConfirmContext ctx = (NpcStorageConfirmContext) instance.context();
         if ("yes".equals(sectionId)) {
             ctx.onConfirm().run();
             instance.close();
