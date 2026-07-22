@@ -23,6 +23,7 @@ package de.Keyle.MyPet.gui;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.gui.*;
 import de.Keyle.MyPet.api.util.service.ServiceName;
+import de.Keyle.MyPet.gui.menus.ToolboxStationHold;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -61,6 +62,7 @@ public final class GuiServiceImpl implements GuiService {
             dispatcher.open(reopened);
         };
         dispatcher.register();
+        ToolboxStationHold.register(plugin);
         SectionTypeRegistry.ensureBuiltinsRegistered();
         registry.loadAll();
         return true;

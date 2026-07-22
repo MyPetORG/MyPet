@@ -60,7 +60,7 @@ public final class AdminPermissions {
     // unlimited-storage tier in the existing MyPet.petstorage.limit.<n> family
     public static final String PETSTORAGE_LIMIT_ALL = "MyPet.petstorage.limit.*";
 
-    /** The 12 /mypetadmin subcommand nodes — used to gate the /mypetadmin parent literal. */
+    /** The /mypetadmin subcommand nodes — used to gate the /mypetadmin parent literal. */
     public static final List<String> MYPETADMIN_NODES = List.of(
             CLONE, CREATE, EXP, EXPRATE, INFO, NAME, NPC, PURGE, REMOVE, RESPAWN, SKILLTREE, SWITCH);
 

@@ -30,6 +30,8 @@ import de.Keyle.MyPet.api.skill.SkillName;
 import de.Keyle.MyPet.api.skill.Upgrade;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
+import de.Keyle.MyPet.entity.PetArmorApplier;
+import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.util.animation.particle.FixedCircleAnimation;
 import de.Keyle.MyPet.util.animation.particle.SpiralAnimation;
 import net.kyori.adventure.text.Component;
@@ -105,6 +107,7 @@ public class LevelListener implements Listener {
                 }
             }
         }
+        PetArmorApplier.update(pet);
 
         if (pet.getStatus() == Pet.PetState.Here) {
             Mob entity = pet.getBukkitEntity();
@@ -154,6 +157,7 @@ public class LevelListener implements Listener {
                 }
             }
         }
+        PetArmorApplier.update(pet);
 
         if (pet.getStatus() == Pet.PetState.Here) {
             Mob entity = pet.getBukkitEntity();
@@ -183,6 +187,11 @@ public class LevelListener implements Listener {
         }
         int lvl = pet.getExperience().getLevel();
 
+        // Skill objects are reused across skilltree changes: reset() zeroes their upgrades but keeps
+        // held state (the Backpack keeps its stored items). If the new tree no longer grants Backpack,
+        // those items would be orphaned — inaccessible and never dropped — so remember it was active.
+        boolean hadBackpack = pet.getSkills().isActive(BackpackImpl.class);
+
         pet.getSkills().all().forEach(Skill::reset);
 
         Skilltree skilltree = event.getSkilltree();
@@ -203,6 +212,25 @@ public class LevelListener implements Listener {
                 }
             }
         }
+        if (hadBackpack && !pet.getSkills().isActive(BackpackImpl.class)) {
+            dropLostBackpack(pet);
+        }
+        PetArmorApplier.update(pet);
+    }
+
+    /** Drops a pet's backpack contents at its location when a skilltree change takes the Backpack skill away. */
+    private static void dropLostBackpack(Pet pet) {
+        BackpackImpl backpack = pet.getSkills().get(BackpackImpl.class);
+        if (backpack == null) {
+            return;
+        }
+        Location dropAt = pet.getLocation().orElseGet(() ->
+                pet.getOwner() != null && pet.getOwner().isOnline() ? pet.getOwner().getPlayer().getLocation() : null);
+        if (dropAt == null) {
+            return; // nowhere to drop (pet stored, owner offline) — leave the items in place for next time
+        }
+        backpack.closeInventory();
+        backpack.dropContents(dropAt);
     }
 
     @SuppressWarnings("unchecked")

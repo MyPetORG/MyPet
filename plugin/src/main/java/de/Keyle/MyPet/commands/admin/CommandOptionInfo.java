@@ -31,6 +31,7 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.ItemStrings;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -133,24 +134,29 @@ public class CommandOptionInfo {
      * @param sender the command sender; must be a {@link Player} instance
      */
     private void executeItem(CommandSender sender) {
-        if (sender instanceof Player player) {
-            ItemStack itemStack = player.getInventory().getItemInMainHand();
-            String itemString = itemStack.getType() != Material.AIR
-                    ? itemStack.getType().name()
-                    : "air";
-
-            Component copyButton = Component.text(" [Copy]").color(NamedTextColor.AQUA)
-                    .clickEvent(ClickEvent.copyToClipboard(itemString))
-                    .hoverEvent(HoverEvent.showText(
-                            Component.text("Click to copy to clipboard").color(NamedTextColor.YELLOW)));
-
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("You can't use this command from server console!");
+            return;
+        }
+        ItemStack itemStack = player.getInventory().getItemInMainHand();
+        if (itemStack.getType() == Material.AIR) {
             sender.sendMessage(MessageUtil.prefixed(
                     Component.text("Item: ").color(NamedTextColor.GRAY)
-                            .append(Component.text(itemString).color(NamedTextColor.WHITE))
-                            .append(copyButton)));
-        } else {
-            sender.sendMessage("You can't use this command from server console!");
+                            .append(Component.text("air").color(NamedTextColor.WHITE))));
+            return;
         }
+
+        String itemString = ItemStrings.serialize(itemStack);
+        Component copyButton = Component.text(" [Copy]").color(NamedTextColor.AQUA)
+                .clickEvent(ClickEvent.copyToClipboard(itemString))
+                .hoverEvent(HoverEvent.showText(
+                        Component.text("Click to copy the full item string (paste into a skilltree Sniff drop)")
+                                .color(NamedTextColor.YELLOW)));
+
+        sender.sendMessage(MessageUtil.prefixed(
+                Component.text("Item: ").color(NamedTextColor.GRAY)
+                        .append(itemStack.displayName().color(NamedTextColor.WHITE))
+                        .append(copyButton)));
     }
 
     /**

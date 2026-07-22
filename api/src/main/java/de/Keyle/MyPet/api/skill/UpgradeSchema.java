@@ -33,7 +33,7 @@ import java.util.function.Consumer;
 public final class UpgradeSchema {
 
     public enum FieldType {
-        NUMBER, INTEGER, BOOLEAN, ENUM, GROUP
+        NUMBER, INTEGER, BOOLEAN, ENUM, GROUP, LIST, STRING
     }
 
     /** One upgrade field: name (the exact JSON key the parser reads), type, and display hints. */
@@ -114,6 +114,11 @@ public final class UpgradeSchema {
             return add(new Field(name, FieldType.INTEGER));
         }
 
+        /** A free-text field; the editor renders a text input. Used for pasted item strings. */
+        public Builder string(String name) {
+            return add(new Field(name, FieldType.STRING));
+        }
+
         public Builder bool(String name) {
             return add(new Field(name, FieldType.BOOLEAN));
         }
@@ -124,10 +129,30 @@ public final class UpgradeSchema {
             return add(field);
         }
 
+        /** An enum field whose allowed values come from a runtime list (e.g. a server registry dump). */
+        public Builder enumValues(String name, List<String> values) {
+            Field field = new Field(name, FieldType.ENUM);
+            field.enumValues = List.copyOf(values);
+            return add(field);
+        }
+
         public Builder group(String name, Consumer<Builder> children) {
             Field field = new Field(name, FieldType.GROUP);
             Builder inner = new Builder();
             children.accept(inner);
+            field.children = List.copyOf(inner.fields);
+            return add(field);
+        }
+
+        /**
+         * A repeatable list field: the editor renders zero or more rows, each row carrying the
+         * {@code row} fields. Unlike {@link #group}, the value is an array of row objects, and the row's
+         * numeric fields are absolute values (not additive {@code +n} modifiers).
+         */
+        public Builder list(String name, Consumer<Builder> row) {
+            Field field = new Field(name, FieldType.LIST);
+            Builder inner = new Builder();
+            row.accept(inner);
             field.children = List.copyOf(inner.fields);
             return add(field);
         }

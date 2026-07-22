@@ -44,3 +44,6 @@ src/test/e2e/node_modules/
 src/test/e2e/dist/
 
 docs/
+
+# Local git worktrees
+.worktrees/

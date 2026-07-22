@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
@@ -37,11 +38,13 @@ import de.Keyle.MyPet.api.skill.UpgradeSchema;
 import de.Keyle.MyPet.api.skill.skills.Pickup;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.skill.upgrades.PickupUpgrade;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
@@ -49,6 +52,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.Optional;
 
@@ -185,9 +189,7 @@ public class PickupImpl extends AbstractSkill implements Pickup {
 
                                 int itemAmount = pet.getSkills().get(BackpackImpl.class).addItem(itemStack);
                                 if (itemAmount == 0) {
-                                    petEntity.getWorld().playSound(petEntity.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.2F, 1.0F);
-                                    itemStack.setAmount(0);
-                                    itemEntity.remove();
+                                    animatePickup(petEntity, itemEntity); // magnet the item into the pet, then remove it
                                 } else {
                                     itemStack.setAmount(itemAmount);
                                     itemEntity.setItemStack(itemStack);
@@ -202,6 +204,47 @@ public class PickupImpl extends AbstractSkill implements Pickup {
                 }
             }
         }
+    }
+
+    /** Ticks the collected item spends flying toward the pet before it vanishes. */
+    private static final long PICKUP_FLY_TICKS = 8L;
+
+    /**
+     * Plays the classic pickup animation: the already-collected item entity magnets toward the pet
+     * for a few ticks, then vanishes with the pickup sound. The item is kept unpickable during the
+     * flight so nothing else grabs it, and the retired callback still removes it if the entity dies.
+     */
+    private void animatePickup(Mob pet, Item item) {
+        item.setPickupDelay(Short.MAX_VALUE);
+        int[] ticks = {0};
+        ScheduledTask task = item.getScheduler().runAtFixedRate(MyPetApi.getPlugin(), t -> {
+            if (!item.isValid()) {
+                t.cancel();
+                return;
+            }
+            if (!pet.isValid() || ticks[0]++ >= PICKUP_FLY_TICKS) {
+                finishPickup(pet, item);
+                t.cancel();
+                return;
+            }
+            Vector delta = pet.getLocation().add(0, pet.getHeight() * 0.4, 0).subtract(item.getLocation()).toVector();
+            if (delta.lengthSquared() < 0.25) {
+                finishPickup(pet, item);
+                t.cancel();
+                return;
+            }
+            item.setVelocity(delta.multiply(0.6));
+        }, () -> finishPickup(pet, item), 1L, 1L);
+        if (task == null) {
+            finishPickup(pet, item); // scheduler already retired (mob mid-teleport) — just collect it
+        }
+    }
+
+    private static void finishPickup(Mob pet, Item item) {
+        if (pet.isValid()) {
+            pet.getWorld().playSound(pet.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.2F, 1.0F);
+        }
+        item.remove();
     }
 
     @Override

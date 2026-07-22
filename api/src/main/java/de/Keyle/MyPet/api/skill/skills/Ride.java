@@ -55,4 +55,7 @@ public interface Ride extends Skill {
 
     /** Returns the upgrade computer controlling whether the pet can fly while ridden. */
     UpgradeComputer<Boolean> getCanFly();
+
+    /** Whether a ridden pet can climb walls spider-style (was the standalone Climb skill). */
+    UpgradeComputer<Boolean> getClimb();
 }

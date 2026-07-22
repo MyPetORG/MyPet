@@ -57,8 +57,14 @@ import de.Keyle.MyPet.gui.context.PetTradeTargetContext;
 import de.Keyle.MyPet.services.EggIconService;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.BeaconImpl;
+import de.Keyle.MyPet.skill.skills.ToolboxImpl;
 import de.Keyle.MyPet.skill.skills.BehaviorImpl;
+import de.Keyle.MyPet.skill.skills.FishingImpl;
+import de.Keyle.MyPet.skill.skills.LumberjackImpl;
+import de.Keyle.MyPet.skill.skills.MiningImpl;
 import de.Keyle.MyPet.skill.skills.PickupImpl;
+import de.Keyle.MyPet.skill.skills.SniffImpl;
+import de.Keyle.MyPet.api.skill.ToggleableSkill;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import org.bukkit.Material;
 import de.Keyle.MyPet.util.NameFilter;
@@ -97,6 +103,22 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
             Util.SANITIZED_MINIMESSAGE.deserialize(context.pet().getPetName()));
     }
 
+    /** Gathering/Sniff skills that show an on/off toggle button in the hub, by section id. */
+    private static final Map<String, Class<? extends Skill>> GATHER_TOGGLES = Map.of(
+            "mining", MiningImpl.class,
+            "lumberjack", LumberjackImpl.class,
+            "fishing", FishingImpl.class,
+            "sniff", SniffImpl.class);
+
+    /** The toggleable skill behind a hub toggle section, or null if this section isn't one. */
+    private static ToggleableSkill toggleSkill(Pet pet, String sectionId) {
+        Class<? extends Skill> skillClass = GATHER_TOGGLES.get(sectionId);
+        if (skillClass == null) {
+            return null;
+        }
+        return pet.getSkills().get(skillClass) instanceof ToggleableSkill toggle ? toggle : null;
+    }
+
     @Override public void onOpen(MenuInstance instance, PetMenuContext context) {
         Pet pet = context.pet();
         instance.setSlotState("stay", pet.isSitting() ? "staying" : "following");
@@ -105,6 +127,12 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
             PickupImpl pickup = pet.getSkills().get(PickupImpl.class);
             instance.setSlotState("pickup", pickup != null && pickup.isPickupEnabled() ? "on" : "off");
         }
+        for (String id : GATHER_TOGGLES.keySet()) {
+            ToggleableSkill toggle = toggleSkill(pet, id);
+            if (toggle != null && isSlotVisible(context, id)) {
+                instance.setSlotState(id, toggle.isEnabled() ? "on" : "off");
+            }
+        }
     }
 
     @Override
@@ -112,6 +140,12 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
         PetMenuContext ctx = (PetMenuContext) instance.context();
         Pet pet = ctx.pet();
         Player viewer = ctx.viewer();
+        ToggleableSkill toggle = toggleSkill(pet, sectionId);
+        if (toggle != null) {
+            toggle.setEnabled(!toggle.isEnabled());
+            refreshStateSlot(instance, sectionId);
+            return;
+        }
         switch (sectionId) {
             case "rename" -> openRenameDialog(instance, ctx);
             case "call" -> {
@@ -185,6 +219,9 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
     @Override
     public boolean isSlotVisible(PetMenuContext context, String sectionId) {
         Player viewer = context.viewer();
+        if (GATHER_TOGGLES.containsKey(sectionId)) {
+            return context.pet().getSkills().isActive(GATHER_TOGGLES.get(sectionId));
+        }
         return switch (sectionId) {
             case "rename" -> viewer.hasPermission("MyPet.command.name");
             case "call" -> viewer.hasPermission("MyPet.command.call");
@@ -241,6 +278,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
             case "auto-respawn" -> "Gui.PetMenu.AutoRespawn.Label";
             case "pickup" -> "Gui.PetMenu.Pickup.Label";
             case "behavior" -> "Gui.PetMenu.Behavior.Label";
+            case "mining", "lumberjack", "fishing", "sniff" -> "Gui.PetMenu.GatherToggle.Label";
             default -> null;
         };
         if (labelKey != null) {
@@ -387,7 +425,10 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
             "MyPet.command.inventory", false),
         BEACON(BeaconImpl.class, Material.BEACON,
             "Gui.PetMenu.Beacon.Title", "Gui.PetMenu.Beacon.Lore",
-            "MyPet.extended.beacon", true);
+            "MyPet.extended.beacon", true),
+        TOOLBOX(ToolboxImpl.class, Material.CRAFTING_TABLE,
+            "Gui.PetMenu.Toolbox.Title", "Gui.PetMenu.Toolbox.Lore",
+            "MyPet.extended.toolbox", true);
 
         final Class<? extends Skill> skillClass;
         final Material material;
@@ -432,6 +473,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
                     BeaconImpl beacon = pet.getSkills().get(BeaconImpl.class);
                     if (beacon != null) beacon.activate();
                 }
+                case TOOLBOX -> ToolboxMenuHandler.open(viewer, pet);
             }
         }
     }
@@ -570,6 +612,11 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
     private void refreshStateSlot(MenuInstance instance, String slotId) {
         PetMenuContext ctx = (PetMenuContext) instance.context();
         Pet pet = ctx.pet();
+        ToggleableSkill toggle = toggleSkill(pet, slotId);
+        if (toggle != null) {
+            instance.setSlotState(slotId, toggle.isEnabled() ? "on" : "off");
+            return;
+        }
         String state = switch (slotId) {
             case "stay" -> pet.isSitting() ? "staying" : "following";
             case "auto-respawn" -> pet.getOwner().hasAutoRespawnEnabled() ? "on" : "off";

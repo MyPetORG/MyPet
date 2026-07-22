@@ -57,6 +57,10 @@ public class RideUpgrade implements Upgrade<Ride> {
     @Setter
     @Accessors(chain = true)
     protected UpgradeBooleanModifier canFlyModifier = null;
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    protected UpgradeBooleanModifier climbModifier = null;
 
     @Override
     public void apply(Ride skill) {
@@ -66,6 +70,7 @@ public class RideUpgrade implements Upgrade<Ride> {
         skill.getFlyLimit().addUpgrade(flyLimitModifier);
         skill.getFlyRegenRate().addUpgrade(flyRegenRateModifier);
         skill.getCanFly().addUpgrade(canFlyModifier);
+        skill.getClimb().addUpgrade(climbModifier);
     }
 
     @Override
@@ -76,5 +81,6 @@ public class RideUpgrade implements Upgrade<Ride> {
         skill.getFlyLimit().removeUpgrade(flyLimitModifier);
         skill.getFlyRegenRate().removeUpgrade(flyRegenRateModifier);
         skill.getCanFly().removeUpgrade(canFlyModifier);
+        skill.getClimb().removeUpgrade(climbModifier);
     }
 }

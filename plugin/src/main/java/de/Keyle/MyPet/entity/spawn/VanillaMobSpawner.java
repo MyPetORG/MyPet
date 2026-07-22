@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.util.Timer;
+import de.Keyle.MyPet.entity.PetArmorApplier;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.BrainAccess;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
@@ -498,6 +499,10 @@ public final class VanillaMobSpawner {
         if (speed != null) {
             speed.setBaseValue(MyPetApi.getPetInfo().getSpeed(pet.getPetType()));
         }
+
+        // Armor skill: ARMOR / ARMOR_TOUGHNESS attribute modifiers. Idempotent
+        // (remove-then-add by key), so snapshot-restores and respawns never stack.
+        PetArmorApplier.update(pet);
 
         // FLYING_SPEED attribute is intentionally left at vanilla's baseValue.
         // The Ride controller (RideSkillFlightController.resolveBaseSpeed)

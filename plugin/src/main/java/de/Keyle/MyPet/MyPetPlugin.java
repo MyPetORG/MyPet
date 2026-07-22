@@ -40,6 +40,8 @@ import de.Keyle.MyPet.api.util.service.Load;
 import de.Keyle.MyPet.api.util.service.ServiceManager;
 import de.Keyle.MyPet.dialog.DialogServiceImpl;
 import de.Keyle.MyPet.gui.GuiServiceImpl;
+import de.Keyle.MyPet.gui.context.ToolboxContext;
+import de.Keyle.MyPet.gui.menus.ToolboxMenuHandler;
 import de.Keyle.MyPet.services.EggIconService;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.commands.BuiltInCommands;
@@ -375,6 +377,10 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             (MenuId<de.Keyle.MyPet.gui.context.PetVolumeContext>) (MenuId<?>) MenuIds.PET_VOLUME,
             new de.Keyle.MyPet.gui.menus.PetVolumeMenuHandler(),
             () -> getClass().getResourceAsStream("/gui/menus/pet-volume.json"));
+        gui.registerMenu(
+            (MenuId<ToolboxContext>) (MenuId<?>) MenuIds.TOOLBOX,
+            new ToolboxMenuHandler(),
+            () -> getClass().getResourceAsStream("/gui/menus/toolbox.json"));
 
         // Initialize the DialogService once it's been OnEnable-activated.
         ((DialogServiceImpl) MyPetApi.getDialogService()).init(this);

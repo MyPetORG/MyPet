@@ -82,6 +82,8 @@ public final class PetListeners {
             PetXpAttributionListener::new,
             PetPvPListener::new,
             PetSkillTriggerListener::new,
+            PetTauntListener::new,
+            PetPotionListener::new,
             PetDeathListener::new,
             PetDespawnListener::new,
             PetDropListener::new

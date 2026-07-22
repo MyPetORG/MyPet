@@ -162,6 +162,8 @@ permissions:
     description: Extended permission. Allows to equip pets.
   MyPet.extended.beacon:
     description: Extended permission. Allows to open the beacon GUI.
+  MyPet.extended.toolbox:
+    description: Extended permission. Allows to open the pet's toolbox workstations.
   MyPet.extended.inventory:
     description: Extended permission. Allows to open the inventory of the pet.
   MyPet.extended.ride:

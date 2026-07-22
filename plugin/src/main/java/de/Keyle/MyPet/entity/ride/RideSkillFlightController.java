@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Ride;
+import de.Keyle.MyPet.entity.PetClimbSupport;
 import de.Keyle.MyPet.entity.PetAttributes;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Input;
@@ -33,6 +34,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -338,6 +340,19 @@ public class RideSkillFlightController {
             }
         }
 
+        // Climb skill: spider-style wall climbing while ridden. Only when the
+        // rider is not already driving Y (jump/flight win), the pet has no
+        // flight (flying pets don't need to climb), the rider holds forward,
+        // and the pet is actually pressing against a wall in its movement
+        // direction. Water/lava are excluded — jump-driven swimming handles
+        // vertical motion there.
+        if (!riderDroveY && !canFly && !pet.getPetType().isFlyingPet()
+                && input.isForward() && !mob.isInWater() && !mob.isInLava()
+                && isClimbActive(pet) && PetClimbSupport.isWallAhead(mob, worldX, worldZ)) {
+            worldY = PetClimbSupport.CLIMB_SPEED;
+            riderDroveY = true;
+        }
+
         mob.setVelocity(new Vector(worldX, worldY, worldZ));
         // Reset fallDistance only when the rider actually drove vertical
         // motion this tick. Vanilla's accumulator would otherwise treat a
@@ -349,5 +364,17 @@ public class RideSkillFlightController {
         if (riderDroveY) {
             mob.setFallDistance(0f);
         }
+    }
+
+    /** Returns whether the ridden pet has the Ride skill's climb upgrade unlocked. */
+    private static boolean isClimbActive(Pet pet) {
+        Ride rideSkill;
+        try {
+            rideSkill = pet.getSkills().get(Ride.class);
+        } catch (Throwable t) {
+            return false;
+        }
+        return rideSkill != null && rideSkill.getClimb() != null
+                && Boolean.TRUE.equals(rideSkill.getClimb().getValue());
     }
 }
