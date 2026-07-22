@@ -59,6 +59,7 @@ public final class BuiltInCommands {
             (c, h) -> new CommandList().register(c, h),
             (c, h) -> new CommandTrade().register(c, h),
             (c, h) -> new CommandBeacon().register(c, h),
+            (c, h) -> new CommandToolbox().register(c, h),
             (c, h) -> new CommandChooseSkilltree().register(c, h),
             (c, h) -> new CommandSwitch().register(c, h),
             (c, h) -> new CommandStore().register(c, h),

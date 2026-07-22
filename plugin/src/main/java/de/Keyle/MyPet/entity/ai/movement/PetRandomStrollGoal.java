@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.skill.skills.PetWorkFocus;
 import de.Keyle.MyPet.entity.ai.PetGoalWorlds;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -131,6 +132,9 @@ public class PetRandomStrollGoal implements Goal<Mob> {
     public boolean shouldActivate() {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
+        }
+        if (PetWorkFocus.isWorking(pet)) {
+            return false; // don't wander off while the pet is busy mining/chopping/fishing
         }
         if (ThreadLocalRandom.current().nextFloat() >= strollChance) {
             return false;

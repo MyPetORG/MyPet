@@ -41,13 +41,15 @@ public class RideImpl extends AbstractSkill implements Ride {
                     .number("flylimit").label("Fly Limit").cumulative()
                     .number("flyregenrate").label("Fly Regen Rate").cumulative()
                     .bool("canfly").label("Can Fly")
+                    .bool("climb").label("Climb (ridden)")
                     .build(), json -> new RideUpgrade()
             .setActiveModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "active")))
             .setSpeedIncreaseModifier(UpgradeParsers.parseInteger(UpgradeParsers.get(json, "speed")))
             .setJumpHeightModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "jumpheight")))
             .setFlyLimitModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "flylimit")))
             .setFlyRegenRateModifier(UpgradeParsers.parseNumber(UpgradeParsers.get(json, "flyregenrate")))
-            .setCanFlyModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "canfly"))));
+            .setCanFlyModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "canfly")))
+            .setClimbModifier(UpgradeParsers.parseBoolean(UpgradeParsers.get(json, "climb"))));
 
     protected UpgradeComputer<Integer> speed = new UpgradeComputer<>(0);
     protected UpgradeComputer<Number> jumpHeight = new UpgradeComputer<>(0);
@@ -55,6 +57,8 @@ public class RideImpl extends AbstractSkill implements Ride {
     protected UpgradeComputer<Number> flyLimit = new UpgradeComputer<>(0);
     protected UpgradeComputer<Boolean> canFly = new UpgradeComputer<>(false);
     protected UpgradeComputer<Boolean> active = new UpgradeComputer<>(false);
+    /** Ridden-only spider-style wall climbing (was the standalone Climb skill). */
+    protected UpgradeComputer<Boolean> climb = new UpgradeComputer<>(false);
 
     public RideImpl(Pet pet) {
         super(pet);
@@ -68,6 +72,7 @@ public class RideImpl extends AbstractSkill implements Ride {
         flyRegenRate.removeAllUpgrades();
         flyLimit.removeAllUpgrades();
         canFly.removeAllUpgrades();
+        climb.removeAllUpgrades();
     }
 
     public Component toPrettyComponent(String locale) {
@@ -110,6 +115,10 @@ public class RideImpl extends AbstractSkill implements Ride {
 
     public UpgradeComputer<Boolean> getCanFly() {
         return canFly;
+    }
+
+    public UpgradeComputer<Boolean> getClimb() {
+        return climb;
     }
 
 }

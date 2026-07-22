@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.PetAttributes;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.skill.skills.PetWorkFocus;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -573,6 +574,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         if (!mob.isEmpty()) {
             return false;
         }
+        if (PetWorkFocus.isWorking(pet)) {
+            return false; // pet is mid-work (Mining/Lumberjack/Fishing/Sniff) — don't fight it with follow navigation
+        }
         // Cache the PetControlGoal reference on first successful lookup, and
         // remember a negative result via controlGoalLookupDone so subsequent
         // activations don't iterate the goal list every tick for flying pets
@@ -631,6 +635,9 @@ public class PetFollowOwnerGoal implements Goal<Mob> {
         }
         if (!mob.isEmpty()) {
             return false;
+        }
+        if (PetWorkFocus.isWorking(pet)) {
+            return false; // pet is mid-work (Mining/Lumberjack/Fishing/Sniff) — don't fight it with follow navigation
         }
         if (controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null) {
             return false;

@@ -31,6 +31,7 @@ import de.Keyle.MyPet.api.goal.PetGoalRetentionRegistry;
 import de.Keyle.MyPet.entity.ai.BrainAccess;
 import de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
+import de.Keyle.MyPet.entity.ai.movement.PetClimbGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetFlyingMovementGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetControlGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetFloatGoal;
@@ -113,6 +114,7 @@ public final class PetGoalInstaller {
         }
         if (!swimming && !flying) {
             goals.addGoal(mob, 7, new PetRandomStrollGoal(pet, mob));
+            goals.addGoal(mob, 6, new PetClimbGoal(pet, mob));
         }
         if (flying) {
             goals.addGoal(mob, 7, new PetRandomFlyGoal(pet, mob, flyingMovementGoal));

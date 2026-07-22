@@ -1,0 +1,55 @@
+{
+  "title": "<gold><lang:Gui.Toolbox.Title></gold>",
+  "rows": 3,
+  "esc-supports-back": false,
+  "sound-on-open":  { "key": "minecraft:block.smithing_table.use", "volume": 0.5 },
+  "sound-on-close": { "key": "minecraft:block.chest.close",        "volume": 0.5 },
+  "sections": {
+    "frame": {
+      "type": "border",
+      "item": { "material": "GRAY_STAINED_GLASS_PANE", "title": " " }
+    },
+    "crafting": {
+      "type": "slot",
+      "position": { "col": 1, "row": 1 },
+      "item": { "material": "CRAFTING_TABLE", "title": "<yellow><station_name></yellow>", "lore": ["<gray><lang:Gui.Toolbox.Open.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
+    },
+    "anvil": {
+      "type": "slot",
+      "position": { "col": 2, "row": 1 },
+      "item": { "material": "ANVIL", "title": "<yellow><station_name></yellow>", "lore": ["<gray><lang:Gui.Toolbox.Open.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:block.anvil.land", "volume": 0.4 }
+    },
+    "grindstone": {
+      "type": "slot",
+      "position": { "col": 3, "row": 1 },
+      "item": { "material": "GRINDSTONE", "title": "<yellow><station_name></yellow>", "lore": ["<gray><lang:Gui.Toolbox.Open.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:block.grindstone.use", "volume": 0.5 }
+    },
+    "smithing": {
+      "type": "slot",
+      "position": { "col": 4, "row": 1 },
+      "item": { "material": "SMITHING_TABLE", "title": "<yellow><station_name></yellow>", "lore": ["<gray><lang:Gui.Toolbox.Open.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:block.smithing_table.use", "volume": 0.5 }
+    },
+    "stonecutter": {
+      "type": "slot",
+      "position": { "col": 5, "row": 1 },
+      "item": { "material": "STONECUTTER", "title": "<yellow><station_name></yellow>", "lore": ["<gray><lang:Gui.Toolbox.Open.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:ui.stonecutter.take_result", "volume": 0.5 }
+    },
+    "loom": {
+      "type": "slot",
+      "position": { "col": 6, "row": 1 },
+      "item": { "material": "LOOM", "title": "<yellow><station_name></yellow>", "lore": ["<gray><lang:Gui.Toolbox.Open.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:ui.loom.take_result", "volume": 0.5 }
+    },
+    "cartography": {
+      "type": "slot",
+      "position": { "col": 7, "row": 1 },
+      "item": { "material": "CARTOGRAPHY_TABLE", "title": "<yellow><station_name></yellow>", "lore": ["<gray><lang:Gui.Toolbox.Open.Lore></gray>"] },
+      "sound-on-click": { "key": "minecraft:ui.cartography_table.take_result", "volume": 0.5 }
+    }
+  }
+}

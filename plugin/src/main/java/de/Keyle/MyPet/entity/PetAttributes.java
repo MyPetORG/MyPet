@@ -46,6 +46,9 @@ public final class PetAttributes {
     public static final Attribute MOVEMENT_SPEED = resolve("movement_speed", "generic.movement_speed");
     public static final Attribute KNOCKBACK_RESISTANCE = resolve("knockback_resistance", "generic.knockback_resistance");
     public static final Attribute FLYING_SPEED = resolve("flying_speed", "generic.flying_speed");
+    public static final Attribute ARMOR = resolve("armor", "generic.armor");
+    public static final Attribute ARMOR_TOUGHNESS = resolve("armor_toughness", "generic.armor_toughness");
+    public static final Attribute STEP_HEIGHT = resolve("step_height", "generic.step_height");
 
     private PetAttributes() {
     }

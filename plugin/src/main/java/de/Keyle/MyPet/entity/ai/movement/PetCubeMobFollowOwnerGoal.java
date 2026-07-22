@@ -25,6 +25,7 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
+import de.Keyle.MyPet.skill.skills.PetWorkFocus;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Mob;
@@ -200,6 +201,9 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
         }
+        if (PetWorkFocus.isWorking(pet)) {
+            return false; // don't hop off toward the owner while mining/chopping/fishing
+        }
         if (controlPathfinderGoal == null && !controlGoalLookupDone) {
             Goal<Mob> goal = Bukkit.getMobGoals().getGoal(pet.getBukkitEntity(), PetGoalKey.CONTROL);
             if (goal instanceof PetControlGoal pcg) {
@@ -237,6 +241,9 @@ public class PetCubeMobFollowOwnerGoal implements Goal<Mob> {
     public boolean shouldStayActive() {
         if (!Bukkit.isOwnedByCurrentRegion(mob)) {
             return false;
+        }
+        if (PetWorkFocus.isWorking(pet)) {
+            return false; // yield to the work skill; resume hopping once it's done
         }
         if (controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null) {
             return false;

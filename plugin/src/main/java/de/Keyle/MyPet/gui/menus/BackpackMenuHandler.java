@@ -40,7 +40,22 @@ public final class BackpackMenuHandler implements MenuHandler<BackpackContext> {
         return (MenuId<BackpackContext>) MenuIds.BACKPACK;
     }
 
-    @Override public void onOpen(MenuInstance instance, BackpackContext context) {}
+    @Override public void onOpen(MenuInstance instance, BackpackContext context) {
+        setMenuOpen(context, true); // pause gathering skills while items are being moved around
+    }
+
+    @Override
+    public void onClose(MenuInstance instance, CloseReason reason) {
+        // Contents are persisted before this fires, so the gathering skills resume on fresh state.
+        if (((MenuInstanceImpl) instance).context() instanceof BackpackContext context) {
+            setMenuOpen(context, false);
+        }
+    }
+
+    private static void setMenuOpen(BackpackContext context, boolean open) {
+        BackpackImpl bp = context.pet().getSkills().get(BackpackImpl.class);
+        if (bp != null) bp.setMenuOpen(open);
+    }
 
     @Override
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {

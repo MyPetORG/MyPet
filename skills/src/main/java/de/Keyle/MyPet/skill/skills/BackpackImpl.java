@@ -201,6 +201,30 @@ public class BackpackImpl extends AbstractSkill implements Backpack {
     // Menu-handler API
     // -----------------------------------------------------------------------
 
+    /**
+     * The live backing contents array, for same-package skills that read/mutate stored items
+     * in place (e.g. the gathering skills resolving and wearing a tool). Mutations to elements
+     * persist; do not resize. Returns an empty array if the backpack has no capacity yet.
+     */
+    ItemStack[] rawContents() {
+        return contents;
+    }
+
+    /**
+     * Whether the owner currently has this backpack's menu open. While it is, {@link #contents} is
+     * stale (edits live in the menu inventory and only persist on close), so the gathering skills
+     * pause rather than act on a tool the owner may be moving out. Set by the backpack menu handler.
+     */
+    private boolean menuOpen;
+
+    public void setMenuOpen(boolean menuOpen) {
+        this.menuOpen = menuOpen;
+    }
+
+    public boolean isMenuOpen() {
+        return menuOpen;
+    }
+
     /** Return up to {@code capacity} stacks for opening into a Backpack menu. */
     public ItemStack[] readContents(int capacity) {
         ItemStack[] out = new ItemStack[capacity];

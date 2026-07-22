@@ -204,6 +204,18 @@ public final class MyPetGlobal {
                 public static final ConfigKey<Boolean> OPEN_IN_CREATIVE = ConfigKey.globalBool("MyPet.Skill.Backpack.Creative", false);
                 public static final ConfigKey<Boolean> DROP_WHEN_OWNER_DIES = ConfigKey.globalBool("MyPet.Skill.Backpack.DropWhenOwnerDies", false);
             }
+
+            public static final class Mining {
+                public static final ConfigKey<Boolean> ACTIVE = ConfigKey.globalBool("MyPet.Skill.Mining.Active", true);
+            }
+
+            public static final class Lumberjack {
+                public static final ConfigKey<Boolean> ACTIVE = ConfigKey.globalBool("MyPet.Skill.Lumberjack.Active", true);
+            }
+
+            public static final class Fishing {
+                public static final ConfigKey<Boolean> ACTIVE = ConfigKey.globalBool("MyPet.Skill.Fishing.Active", true);
+            }
         }
     }
 
@@ -233,7 +245,8 @@ public final class MyPetGlobal {
                 LevelSystem.class, LevelSystem.Curve.class, LevelSystem.Experience.class, LevelSystem.Experience.Modifier.class,
                 HungerSystem.class,
                 Skilltree.class, Skilltree.Skill.class, Skilltree.Skill.Ride.class,
-                Skilltree.Skill.Beacon.class, Skilltree.Skill.Backpack.class
+                Skilltree.Skill.Beacon.class, Skilltree.Skill.Backpack.class,
+                Skilltree.Skill.Mining.class, Skilltree.Skill.Lumberjack.class, Skilltree.Skill.Fishing.class
         };
         for (Class<?> section : sections) {
             try {

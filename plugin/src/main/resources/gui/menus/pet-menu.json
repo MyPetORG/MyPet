@@ -135,6 +135,70 @@
       },
       "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
     },
+    "mining": {
+      "type": "slot",
+      "position": { "col": 5, "row": 4 },
+      "default-state": "off",
+      "states": {
+        "off": { "item": { "material": "IRON_PICKAXE", "title": "<yellow><lang:Gui.PetMenu.Mining.Title></yellow>", "lore": [
+          "<gray><label>: <red><lang:Gui.PetMenu.GatherToggle.Off.Value></red>",
+          "<yellow><lang:Gui.PetMenu.GatherToggle.Off.Hint></yellow>"
+        ] } },
+        "on":  { "item": { "material": "IRON_PICKAXE", "title": "<yellow><lang:Gui.PetMenu.Mining.Title></yellow>", "lore": [
+          "<gray><label>: <green><lang:Gui.PetMenu.GatherToggle.On.Value></green>",
+          "<yellow><lang:Gui.PetMenu.GatherToggle.On.Hint></yellow>"
+        ], "glow": true } }
+      },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
+    },
+    "lumberjack": {
+      "type": "slot",
+      "position": { "col": 6, "row": 4 },
+      "default-state": "off",
+      "states": {
+        "off": { "item": { "material": "IRON_AXE", "title": "<yellow><lang:Gui.PetMenu.Lumberjack.Title></yellow>", "lore": [
+          "<gray><label>: <red><lang:Gui.PetMenu.GatherToggle.Off.Value></red>",
+          "<yellow><lang:Gui.PetMenu.GatherToggle.Off.Hint></yellow>"
+        ] } },
+        "on":  { "item": { "material": "IRON_AXE", "title": "<yellow><lang:Gui.PetMenu.Lumberjack.Title></yellow>", "lore": [
+          "<gray><label>: <green><lang:Gui.PetMenu.GatherToggle.On.Value></green>",
+          "<yellow><lang:Gui.PetMenu.GatherToggle.On.Hint></yellow>"
+        ], "glow": true } }
+      },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
+    },
+    "fishing": {
+      "type": "slot",
+      "position": { "col": 7, "row": 4 },
+      "default-state": "off",
+      "states": {
+        "off": { "item": { "material": "FISHING_ROD", "title": "<yellow><lang:Gui.PetMenu.Fishing.Title></yellow>", "lore": [
+          "<gray><label>: <red><lang:Gui.PetMenu.GatherToggle.Off.Value></red>",
+          "<yellow><lang:Gui.PetMenu.GatherToggle.Off.Hint></yellow>"
+        ] } },
+        "on":  { "item": { "material": "FISHING_ROD", "title": "<yellow><lang:Gui.PetMenu.Fishing.Title></yellow>", "lore": [
+          "<gray><label>: <green><lang:Gui.PetMenu.GatherToggle.On.Value></green>",
+          "<yellow><lang:Gui.PetMenu.GatherToggle.On.Hint></yellow>"
+        ], "glow": true } }
+      },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
+    },
+    "sniff": {
+      "type": "slot",
+      "position": { "col": 8, "row": 4 },
+      "default-state": "off",
+      "states": {
+        "off": { "item": { "material": "BONE", "title": "<yellow><lang:Gui.PetMenu.Sniff.Title></yellow>", "lore": [
+          "<gray><label>: <red><lang:Gui.PetMenu.GatherToggle.Off.Value></red>",
+          "<yellow><lang:Gui.PetMenu.GatherToggle.Off.Hint></yellow>"
+        ] } },
+        "on":  { "item": { "material": "BONE", "title": "<yellow><lang:Gui.PetMenu.Sniff.Title></yellow>", "lore": [
+          "<gray><label>: <green><lang:Gui.PetMenu.GatherToggle.On.Value></green>",
+          "<yellow><lang:Gui.PetMenu.GatherToggle.On.Hint></yellow>"
+        ], "glow": true } }
+      },
+      "sound-on-click": { "key": "minecraft:ui.button.click", "pitch": { "min": 0.9, "max": 1.1 } }
+    },
     "stop-attacking": {
       "type": "slot",
       "position": { "col": 7, "row": 5 },
