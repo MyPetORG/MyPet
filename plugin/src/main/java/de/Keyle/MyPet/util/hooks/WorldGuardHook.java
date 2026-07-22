@@ -96,7 +96,15 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     public WorldGuardHook() {
         if (MyPetApi.getPluginHookManager().getConfig().getConfig().getBoolean("WorldGuard.Enabled")) {
-            if (ReflectionUtil.getMethod(com.sk89q.worldedit.util.Location.class, "toVector") == null) {
+            try {
+                if (ReflectionUtil.getMethod(com.sk89q.worldedit.util.Location.class, "toVector") == null) {
+                    return;
+                }
+            } catch (Throwable e) {
+                // Some server builds bundle a bytecode rewriter (e.g. Paper's Commodore) whose ASM
+                // version can't parse WorldEdit/WorldGuard classes compiled for a newer Java release,
+                // throwing here on first class-load instead of a normal ClassNotFoundException.
+                MyPetApi.getLogger().warning("Failed to inspect WorldEdit/WorldGuard classes - disabling the WorldGuard hook: " + e);
                 return;
             }
 
