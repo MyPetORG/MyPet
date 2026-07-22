@@ -140,6 +140,10 @@ tasks.named<ProcessResources>("processResources") {
     filesMatching("*.yml") { expand(filteringProps) }
 }
 
+// Only the official CI has this secret. Forks and self-compiled builds get an empty DSN, so
+// SentryErrorReporter stays disabled instead of silently reporting a fork's errors to our project.
+val sentryDsn = System.getenv("SENTRY_DSN") ?: ""
+
 fun Manifest.attributesForMyPet() = attributes(
     mapOf(
         "Class-Path" to "MyPet/rhino.jar MyPet/rhino-1.7.9.jar MyPet/rhino-1.7.10.jar MyPet/rhino-1.7.15.jar ../MyPet/rhino.jar ../MyPet/rhino-1.7.9.jar ../MyPet/rhino-1.7.10.jar ../MyPet/rhino-1.7.15.jar MyPet/mongo-java-driver.jar MyPet/mongo-java-driver-3.12.11.jar",
@@ -151,7 +155,8 @@ fun Manifest.attributesForMyPet() = attributes(
         "Project-Minecraft-Version" to minecraftVersion,
         "Project-Bukkit-Packets" to bukkitPackets,
         "Special-MC-Versions" to specialVersions,
-        "Git-Commit" to (System.getenv("GIT_COMMIT") ?: "")
+        "Git-Commit" to (System.getenv("GIT_COMMIT") ?: ""),
+        "Sentry-Dsn" to sentryDsn
     )
 )
 

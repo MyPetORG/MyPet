@@ -21,6 +21,7 @@ jobs:
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
       GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
 
