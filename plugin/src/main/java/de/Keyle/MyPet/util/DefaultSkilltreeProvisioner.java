@@ -21,33 +21,28 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.util.ErrorUtil;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Seeds the {@code skilltrees/} folder of a fresh installation with the bundled default
- * {@code .st.json} files (Combat, Farm, PvP, Ride, Utility) extracted from the plugin JAR.
- *
- * <p>This is opt-in: the copy only runs when the caller signals that the {@code skilltrees/}
- * folder did not exist prior to the current {@code mkdirs()} call. Server operators who have
- * deleted a default skilltree on purpose will not see it reappear after a restart, because by
- * then the folder already exists.</p>
- *
- * <p>Existing files are never overwritten, even on the first-run path — the per-file
- * {@code exists()} guard prevents clobbering a file the operator may have created manually.</p>
+ * {@code .st.json} files (tier-1 paths, path ascensions, and species signatures). The set of
+ * bundled files is discovered from the plugin JAR at runtime rather than hardcoded, so adding,
+ * renaming, or removing a bundled skilltree needs no change here. Existing files are never
+ * overwritten, and the copy only runs on first-time setup.
  */
 public final class DefaultSkilltreeProvisioner {
 
-    private static final List<String> DEFAULT_SKILLTREES = List.of(
-            "Combat.st.json",
-            "Farm.st.json",
-            "PvP.st.json",
-            "Ride.st.json",
-            "Utility.st.json"
-    );
+    private static final String RESOURCE_DIR = "skilltrees/";
+    private static final String SUFFIX = ".st.json";
 
     private DefaultSkilltreeProvisioner() {
     }
@@ -68,12 +63,48 @@ public final class DefaultSkilltreeProvisioner {
         if (!createdFolder) {
             return;
         }
-        for (String fileName : DEFAULT_SKILLTREES) {
+        int copied = 0;
+        for (String fileName : bundledSkilltreeFileNames(plugin)) {
             File target = new File(skilltreeFolder, fileName);
-            if (!target.exists()) {
-                ResourceUtil.copyResource(plugin, "skilltrees/" + fileName, target);
+            if (!target.exists() && ResourceUtil.copyResource(plugin, RESOURCE_DIR + fileName, target)) {
+                copied++;
             }
         }
-        MyPetApi.getLogger().info("Default skilltree files created.");
+        if (copied > 0) {
+            MyPetApi.getLogger().info("Default skilltree files created (" + copied + ").");
+        }
+    }
+
+    /** File names of every bundled {@code skilltrees/<name>.st.json} resource, from the plugin JAR (or exploded classpath in dev). */
+    private static List<String> bundledSkilltreeFileNames(@NotNull Plugin plugin) {
+        List<String> names = new ArrayList<>();
+        try {
+            File codeSource = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+            if (codeSource.isDirectory()) {
+                // Exploded classpath (dev / IDE run): the resources sit on disk.
+                File[] files = new File(codeSource, RESOURCE_DIR).listFiles((dir, name) -> name.endsWith(SUFFIX));
+                if (files != null) {
+                    for (File file : files) {
+                        names.add(file.getName());
+                    }
+                }
+            } else {
+                try (JarFile jar = new JarFile(codeSource)) {
+                    Enumeration<JarEntry> entries = jar.entries();
+                    while (entries.hasMoreElements()) {
+                        String entryName = entries.nextElement().getName();
+                        // Only files directly under skilltrees/ (no nested subdirectories).
+                        if (entryName.startsWith(RESOURCE_DIR) && entryName.endsWith(SUFFIX)
+                                && entryName.indexOf('/', RESOURCE_DIR.length()) < 0) {
+                            names.add(entryName.substring(RESOURCE_DIR.length()));
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            ErrorUtil.report(e);
+        }
+        names.sort(null);
+        return names;
     }
 }

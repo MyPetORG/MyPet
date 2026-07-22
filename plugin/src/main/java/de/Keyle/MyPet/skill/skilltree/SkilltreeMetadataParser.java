@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.skill.skilltree;
 
+import com.google.gson.JsonElement;
+import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
@@ -44,7 +47,30 @@ public final class SkilltreeMetadataParser {
         tryToLoad("MaxLevel", () -> reader.optInt("MaxLevel").ifPresent(skilltree::setMaxLevel));
         tryToLoad("RequiredLevel", () -> reader.optInt("RequiredLevel").ifPresent(skilltree::setRequiredLevel));
         tryToLoad("Order", () -> reader.optInt("Order").ifPresent(skilltree::setOrder));
-        tryToLoad("Weight", () -> reader.optDouble("Weight").ifPresent(skilltree::setWeight));
+        tryToLoad("Weight", () -> {
+            reader.optDouble("Weight").ifPresent(skilltree::setWeight);
+            reader.optObject("Weight").ifPresent(weightObject -> {
+                for (String key : weightObject.keySet()) {
+                    // Guard each entry individually so one malformed value can't abort the whole
+                    // Weight block (and silently revert the tree to the default weight of 1).
+                    Double value = numericOrNull(weightObject.get(key));
+                    if (value == null) {
+                        MyPetApi.getLogger().warning("Skilltree '" + skilltree.getName() + "': non-numeric Weight value for '" + key + "' - ignored");
+                        continue;
+                    }
+                    if ("Default".equalsIgnoreCase(key)) {
+                        skilltree.setWeight(value);
+                    } else {
+                        PetType type = PetType.byNameOrNull(key);
+                        if (type != null) {
+                            skilltree.setWeightOverride(type, value);
+                        } else {
+                            MyPetApi.getLogger().warning("Skilltree '" + skilltree.getName() + "': unknown pet type '" + key + "' in Weight - ignored");
+                        }
+                    }
+                }
+            });
+        });
         tryToLoad("MobTypes", () -> reader.optArray("MobTypes").ifPresent(arr ->
                 skilltree.setMobTypes(MobTypeParser.parse(arr, skilltree.getName()))));
         tryToLoad("Icon", () -> reader.optObject("Icon").ifPresent(iconObject -> {
@@ -79,5 +105,17 @@ public final class SkilltreeMetadataParser {
                     }
                     skilltree.addRequirementSettings(settings);
                 })));
+    }
+
+    /** The element as a double (accepting a numeric string, like the reader's scalar coercion), or null if it isn't a number. */
+    private static Double numericOrNull(JsonElement element) {
+        if (element == null || !element.isJsonPrimitive()) {
+            return null;
+        }
+        try {
+            return element.getAsDouble();
+        } catch (NumberFormatException ex) {
+            return null;
+        }
     }
 }

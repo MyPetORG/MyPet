@@ -46,11 +46,11 @@ import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
-import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.gui.context.BackpackContext;
 import de.Keyle.MyPet.gui.context.ChooseSkilltreeContext;
+import de.Keyle.MyPet.skill.skilltree.ChoosableSkilltrees;
 import de.Keyle.MyPet.gui.context.PetMenuContext;
 import de.Keyle.MyPet.gui.context.PetSelectionContext;
 import de.Keyle.MyPet.gui.context.PetTradeTargetContext;
@@ -691,13 +691,8 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
                 "Message.Command.ChooseSkilltree.AutomaticSkilltreeAssignment", pet.getOwner()));
             return;
         }
-        List<Skilltree> available = new ArrayList<>();
-        for (Skilltree st : MyPetApi.getSkilltreeManager().getOrderedSkilltrees()) {
-            if (st.getMobTypes().contains(pet.getPetType()) && st.checkRequirements(pet)) {
-                available.add(st);
-            }
-        }
-        if (available.isEmpty()) {
+        ChoosableSkilltrees choices = ChoosableSkilltrees.forPet(pet);
+        if (choices.isEmpty()) {
             viewer.sendMessage(Locale.getFormattedComponent(
                 "Message.Command.ChooseSkilltree.NoneAvailable", viewer, pet.getDisplayName()));
             return;
@@ -705,10 +700,11 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
         MyPetApi.getGuiService().openMenu(
             viewer,
             (MenuId<ChooseSkilltreeContext>) (MenuId<?>) MenuIds.CHOOSE_SKILLTREE,
-            new ChooseSkilltreeContext(viewer, pet, available, chosen -> {
+            new ChooseSkilltreeContext(viewer, pet, choices.available(), choices.locked(), chosen -> {
                 if (pet.getSkilltree() != null
                     && MyPetGlobal.Skilltree.CHOOSE_SKILLTREE_ONLY_ONCE.get()
-                    && !Permissions.has(pet.getOwner(), AdminPermissions.BYPASS_SKILLTREE)) {
+                    && !Permissions.has(pet.getOwner(), AdminPermissions.BYPASS_SKILLTREE)
+                    && !chosen.isAscensionFor(pet)) {
                     viewer.sendMessage(Locale.getFormattedComponent(
                         "Message.Command.ChooseSkilltree.OnlyOnce", pet.getOwner(), pet.getDisplayName()));
                     return;

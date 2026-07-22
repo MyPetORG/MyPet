@@ -73,9 +73,24 @@ public class Skilltree {
     @Setter
     @Getter
     protected int order = 0;
-    @Getter
-    @Setter
     protected double weight = 1;
+    protected final Map<PetType, Double> weightOverrides = new HashMap<>();
+
+    /** Default weight used by random assignment when no per-type override exists. */
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    /** Per-type override for random-assignment weighting. */
+    public void setWeightOverride(PetType type, double weight) {
+        weightOverrides.put(type, weight);
+    }
+
+    /** Random-assignment weight for the given pet type. */
+    public double getWeight(PetType type) {
+        return weightOverrides.getOrDefault(type, weight);
+    }
+
     @Getter
     protected final Set<PetType> mobTypes = new HashSet<>();
     protected final List<UpgradeEntry> upgrades = new ArrayList<>();
@@ -310,6 +325,18 @@ public class Skilltree {
             }
         }
         return usable;
+    }
+
+    /** Names of the requirements the pet currently fails, in evaluation order. */
+    public List<String> getFailedRequirements(Pet pet) {
+        List<String> failed = new ArrayList<>();
+        for (Settings flagSettings : requirementSettings) {
+            Requirement requirement = MyPetApi.getSkilltreeManager().getRequirement(flagSettings.getName());
+            if (requirement != null && !requirement.check(this, pet, flagSettings)) {
+                failed.add(flagSettings.getName());
+            }
+        }
+        return failed;
     }
 
     /** True if this tree's Skilltree requirement names the pet's current tree — i.e. selecting it is an ascension. */

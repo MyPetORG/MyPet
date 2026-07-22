@@ -70,10 +70,14 @@ public final class ConfigApplier {
             File dir = ensureDir("skilltrees");
             JsonObject files = changedConfigs.getAsJsonObject("skilltrees").getAsJsonObject("files");
             for (Map.Entry<String, JsonElement> entry : files.entrySet()) {
-                // .st.json files store the raw JSON object as written by the editor.
+                // .st.json files store the raw JSON object as written by the editor. A broken
+                // file that can't be parsed round-trips as a raw-text JSON string primitive
+                // instead — write it verbatim, not as a quoted .toString() literal.
                 File target = safeChildFile(dir, entry.getKey(), ".st.json");
                 if (target != null) {
-                    write(target, entry.getValue().toString());
+                    JsonElement value = entry.getValue();
+                    write(target, value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()
+                            ? value.getAsString() : value.toString());
                 }
             }
         }

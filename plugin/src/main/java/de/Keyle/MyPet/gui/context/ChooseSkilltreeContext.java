@@ -32,5 +32,6 @@ public record ChooseSkilltreeContext(
     Player viewer,
     Pet pet,
     List<Skilltree> available,
+    List<Skilltree> locked,
     Consumer<Skilltree> onChoose
 ) {}

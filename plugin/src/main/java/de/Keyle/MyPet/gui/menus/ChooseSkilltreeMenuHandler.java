@@ -23,14 +23,21 @@ package de.Keyle.MyPet.gui.menus;
 import de.Keyle.MyPet.api.gui.*;
 import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
+import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.gui.context.ChooseSkilltreeContext;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Material;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class ChooseSkilltreeMenuHandler implements MenuHandler<ChooseSkilltreeContext> {
+
+    private static final MiniMessage MINI = MiniMessage.miniMessage();
 
     @SuppressWarnings("unchecked")
     @Override public MenuId<ChooseSkilltreeContext> id() {
@@ -45,36 +52,80 @@ public final class ChooseSkilltreeMenuHandler implements MenuHandler<ChooseSkill
     public void onClick(MenuInstance instance, String sectionId, ClickPayload payload) {
         if (!"skilltrees".equals(sectionId)) return;
         ChooseSkilltreeContext ctx = (ChooseSkilltreeContext) instance.context();
-        if (payload.itemIndex() < 0 || payload.itemIndex() >= ctx.available().size()) return;
-        ctx.onChoose().accept(ctx.available().get(payload.itemIndex()));
+        int index = payload.itemIndex();
+        if (index < 0 || index >= ctx.available().size() + ctx.locked().size()) return;
+        if (isLocked(ctx, index)) {
+            ctx.viewer().sendMessage(Locale.getComponent("Message.Menu.ChooseSkilltree.Locked", ctx.viewer()));
+            return;
+        }
+        ctx.onChoose().accept(ctx.available().get(index));
         instance.close();
     }
 
     @Override
     public List<?> templateItems(ChooseSkilltreeContext context, String sectionId) {
-        return "skilltrees".equals(sectionId) ? context.available() : List.of();
+        if (!"skilltrees".equals(sectionId)) return List.of();
+        List<Skilltree> combined = new ArrayList<>(context.available());
+        combined.addAll(context.locked());
+        return combined;
     }
 
     @Override
     public TagResolver placeholders(ChooseSkilltreeContext context, String sectionId, int itemIndex) {
-        if (!"skilltrees".equals(sectionId) || itemIndex < 0 || itemIndex >= context.available().size()) {
+        if (!"skilltrees".equals(sectionId) || itemIndex < 0
+                || itemIndex >= context.available().size() + context.locked().size()) {
             return TagResolver.empty();
         }
-        Skilltree tree = context.available().get(itemIndex);
+        Skilltree tree = treeAt(context, itemIndex);
         List<String> descLines = tree.getDescription();
         String desc = descLines == null || descLines.isEmpty() ? "" : String.join("<newline>", descLines);
+
+        if (!isLocked(context, itemIndex)) {
+            return TagResolver.builder()
+                .resolver(Placeholder.unparsed("skilltree_name", tree.getName()))
+                .resolver(Placeholder.parsed("skilltree_description", desc))
+                .build();
+        }
+
+        String hint = MINI.serialize(lockedHint(context, tree));
+        desc = desc.isEmpty() ? "<gray>" + hint : desc + "<newline><gray>" + hint;
         return TagResolver.builder()
-            .resolver(Placeholder.unparsed("skilltree_name", tree.getName()))
+            // component (not parsed) so a tree name containing MiniMessage syntax renders literally, greyed.
+            .resolver(Placeholder.component("skilltree_name", Component.text(tree.getName(), NamedTextColor.GRAY)))
             .resolver(Placeholder.parsed("skilltree_description", desc))
             .build();
+    }
+
+    /** The reason a locked entry is teased: a level gate or a pending ascension. */
+    private Component lockedHint(ChooseSkilltreeContext context, Skilltree tree) {
+        int level = context.pet().getExperience().getLevel();
+        if (level < tree.getRequiredLevel()) {
+            return Locale.getFormattedComponent("Message.Menu.ChooseSkilltree.LockedLevel",
+                    context.viewer(), tree.getDisplayName(), tree.getRequiredLevel());
+        }
+        return Locale.getComponent("Message.Menu.ChooseSkilltree.LockedAscension", context.viewer());
     }
 
     @Override
     public ItemAppearance customizeTemplateItem(ChooseSkilltreeContext context, String sectionId,
                                                 int itemIndex, ItemAppearance template) {
         if (!"skilltrees".equals(sectionId)) return template;
-        if (itemIndex < 0 || itemIndex >= context.available().size()) return template;
-        SkilltreeIcon icon = context.available().get(itemIndex).getIcon();
+        if (itemIndex < 0 || itemIndex >= context.available().size() + context.locked().size()) return template;
+
+        if (isLocked(context, itemIndex)) {
+            return new ItemAppearance(
+                Material.GRAY_DYE,
+                template.title(),
+                template.lore(),
+                false,
+                template.amount(),
+                template.customModelData(),
+                template.headSkin(),
+                template.potionColor()
+            );
+        }
+
+        SkilltreeIcon icon = treeAt(context, itemIndex).getIcon();
         Material mat = Material.matchMaterial(icon.getMaterial());
         if (mat == null) return template;
         return new ItemAppearance(
@@ -87,5 +138,15 @@ public final class ChooseSkilltreeMenuHandler implements MenuHandler<ChooseSkill
             template.headSkin(),
             template.potionColor()
         );
+    }
+
+    private Skilltree treeAt(ChooseSkilltreeContext ctx, int index) {
+        return index < ctx.available().size()
+                ? ctx.available().get(index)
+                : ctx.locked().get(index - ctx.available().size());
+    }
+
+    private boolean isLocked(ChooseSkilltreeContext ctx, int index) {
+        return index >= ctx.available().size();
     }
 }

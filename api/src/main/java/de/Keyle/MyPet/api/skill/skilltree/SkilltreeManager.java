@@ -110,9 +110,9 @@ public class SkilltreeManager implements ServiceContainer {
 
         double totalWeight = 0;
         for (Skilltree skilltree : skilltrees) {
-            if (skilltree.getMobTypes().contains(pet.getPetType()) && skilltree.checkRequirements(pet) && skilltree.getWeight() > 0) {
+            if (skilltree.getMobTypes().contains(pet.getPetType()) && skilltree.checkRequirements(pet) && skilltree.getWeight(pet.getPetType()) > 0) {
                 skilltreeMap.put(totalWeight, skilltree);
-                totalWeight += skilltree.getWeight();
+                totalWeight += skilltree.getWeight(pet.getPetType());
             }
         }
 
