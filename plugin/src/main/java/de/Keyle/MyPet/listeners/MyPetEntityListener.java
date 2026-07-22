@@ -178,7 +178,8 @@ public class MyPetEntityListener implements Listener {
                 } else {
                     leashItem = damager.getItemInHand();
                 }
-                if (MyPetApi.getMyPetInfo().getLeashItem(myPet.getPetType()).compare(leashItem)) {
+                ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(myPet.getPetType());
+                if (neededLeashItem == null || neededLeashItem.compare(leashItem)) {
                     boolean infoShown = false;
                     if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, myPet)) {
                         damager.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
