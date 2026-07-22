@@ -36,6 +36,7 @@ public class MyPetVersion {
     private static String version = "0.0.0";
     private static String build = "";
     private static String buildType = "local";
+    private static String sentryDsn = "";
     private static String minecraftVersion = "0.0.0";
     private static List<String> bukkitPackets = new ArrayList<>();
     private static List<String> specialMCVersions = new ArrayList<>();
@@ -54,6 +55,9 @@ public class MyPetVersion {
             }
             if ((val = attr.getValue("Project-Type")) != null && !val.isEmpty()) {
                 buildType = val;
+            }
+            if ((val = attr.getValue("Sentry-Dsn")) != null) {
+                sentryDsn = val;
             }
             if (attr.getValue("Project-Minecraft-Version") != null) {
                 minecraftVersion = attr.getValue("Project-Minecraft-Version");
@@ -111,6 +115,14 @@ public class MyPetVersion {
             updated = true;
         }
         return build;
+    }
+
+    public static String getSentryDsn() {
+        if (!updated) {
+            loadData();
+            updated = true;
+        }
+        return sentryDsn;
     }
 
     public static String getFormattedVersion() {
