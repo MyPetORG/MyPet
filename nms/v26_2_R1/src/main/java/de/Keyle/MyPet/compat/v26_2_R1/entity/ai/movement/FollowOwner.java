@@ -527,6 +527,17 @@ public class FollowOwner implements AIGoal {
         return owner.isInWater() && !canPetSwim() && !flyingPet;
     }
 
+    // Some Paper builds remap Abilities#getWalkingSpeed to a narrower access level than the
+    // compile-time API declares, so the call throws IllegalAccessError at runtime. Fall back to
+    // the vanilla default speed rather than crashing the AI goal.
+    private float getWalkingSpeed(Player player) {
+        try {
+            return player.getAbilities().getWalkingSpeed();
+        } catch (LinkageError e) {
+            return NORMAL_WALK_SPEED;
+        }
+    }
+
     /** Tracks whether the Pet is currently performing surface swimming toward the owner. */
     private boolean surfaceSwimmingToOwner = false;
 
@@ -723,7 +734,7 @@ public class FollowOwner implements AIGoal {
                 boolean swimmingPet = isSwimmingPet();
                 {
                     Vec3 vel = this.petEntity.getDeltaMovement();
-                    float ownerSpeed = owner.getAbilities().getWalkingSpeed();
+                    float ownerSpeed = getWalkingSpeed(owner);
                     // Cap speed multiplier - Pets can't handle extreme speeds
                     // At speed 5 (0.5 walkspeed), raw multiplier would be 5.0, cap at MAX_SPEED_MULTIPLIER
                     double rawSpeedMultiplier = Math.max(1.0, ownerSpeed / NORMAL_WALK_SPEED);
@@ -918,7 +929,7 @@ public class FollowOwner implements AIGoal {
      * @param distance the current distance from Pet to owner in blocks
      */
     private void applyWalkSpeed(double distance) {
-        float baseWalkSpeed = owner.getAbilities().getWalkingSpeed();
+        float baseWalkSpeed = getWalkingSpeed(owner);
         float walkSpeed = baseWalkSpeed;
 
         // When close to owner, use cruise speed to match their pace
