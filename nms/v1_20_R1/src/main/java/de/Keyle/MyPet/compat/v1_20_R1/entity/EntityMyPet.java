@@ -684,6 +684,9 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
 	@Override
 	public float getHealth() {
+		if (myPet == null) {
+			return super.getHealth();
+		}
 		double health = super.getHealth();
 		double maxHealth = myPet.getMaxHealth();
 		if (health > maxHealth) {
@@ -695,6 +698,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
     @Override
     public void setHealth(float f) {
+        if (myPet == null) {
+            super.setHealth(f);
+            return;
+        }
         double maxHealth = myPet.getMaxHealth();
 
         boolean silent = this.getAttribute(Attributes.MAX_HEALTH).getValue() != maxHealth;

@@ -647,6 +647,9 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
 	@Override
 	public float getHealth() {
+		if (myPet == null) {
+			return super.getHealth();
+		}
 		double health = this.datawatcher.get(HEALTH);
 		double maxHealth = myPet.getMaxHealth();
 		if (health > maxHealth) {
@@ -658,6 +661,10 @@ public abstract class EntityMyPet extends EntityInsentient implements MyPetMinec
 
 	@Override
     public void setHealth(float f) {
+        if (myPet == null) {
+            super.setHealth(f);
+            return;
+        }
         double maxHealth = myPet.getMaxHealth();
 
         boolean silent = this.getAttributeInstance(GenericAttributes.MAX_HEALTH).getValue() != maxHealth;

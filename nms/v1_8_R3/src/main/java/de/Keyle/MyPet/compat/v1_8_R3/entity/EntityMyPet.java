@@ -621,6 +621,10 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     }
 
     public void setHealth(float f) {
+        if (myPet == null) {
+            super.setHealth(f);
+            return;
+        }
         double maxHealth = myPet.getMaxHealth();
 
         boolean silent = this.getAttributeInstance(GenericAttributes.maxHealth).getValue() != maxHealth;
