@@ -1,0 +1,27 @@
+{
+  "ID": "ShoreKeeper",
+  "Name": "Shore Keeper",
+  "Order": 23,
+  "Description": [
+    "<green>Where tide and bank keep their own stores.",
+    "- <green><bold>Backpack</bold> <reset>storage",
+    "- Deep-reaching <green><bold>Pickup</bold> <reset>current",
+    "- Mingling <green><bold>Beacon</bold> <reset>aura",
+    "- <green><bold>Fishing</bold> <reset>the shallows between tide and bank"
+  ],
+  "Icon": { "Material": "turtle_scute" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Axolotl", "Capybara", "Drowned", "Frog", "Turtle"],
+  "Skills": {
+    "Fishing": { "Upgrades": { "12": { "range": "+4", "interval": "+110" }, "20": { "range": "+2", "interval": "-20" } } },
+    "Backpack": { "Upgrades": { "1": { "Rows": "+1", "Drop": false }, "8": { "Rows": "+1" }, "16": { "Rows": "+1" } } },
+    "Pickup":   { "Upgrades": { "3": { "Range": "+2", "Exp": true }, "%4>4<25": { "Range": "+0.5" } } },
+    "Beacon":   { "Upgrades": { "12": { "Buffs": { "Regeneration": "+1", "WaterBreathing": true }, "Duration": "+6", "Count": "+2", "Range": "+8" } } }
+  },
+  "Notifications": {
+    "19": "<gray>The line between land and water blurs. At level 20 it may ascend."
+  }
+}

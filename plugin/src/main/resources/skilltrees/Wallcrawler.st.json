@@ -1,0 +1,28 @@
+{
+  "ID": "Wallcrawler",
+  "Name": "✦ Wallcrawler",
+  "Order": 191,
+  "Description": [
+    "<light_purple>By day it's just a spider. By night, it's already three walls closer.",
+    "- Steady <red><bold>Damage</bold><reset>",
+    "- A lacing of <red><bold>Poison</bold><reset>",
+    "- A wall-climbing <blue><bold>Sprint</bold> <reset>burst",
+    "- <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "cobweb", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Arthropod:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Spider"],
+  "Skills": {
+    "Climb": { "Upgrades": { "30": { "active": true } } },
+    "Damage": { "Upgrades": { "20": { "Damage": "+5" }, "%10>30": { "Damage": "+1" } } },
+    "Poison": { "Upgrades": { "24": { "Chance": "+20", "Duration": "+3" }, "%14>36": { "Chance": "+3" } } },
+    "Sprint": { "Upgrades": { "26": { "Active": true } } },
+    "Pickup": { "Upgrades": { "30": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It's already three walls up before you notice it moved — Wallcrawler awakens.",
+    "60": "<light_purple>Night falls, and it's already closer than it was."
+  }
+}

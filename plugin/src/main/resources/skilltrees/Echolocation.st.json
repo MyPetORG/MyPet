@@ -1,0 +1,26 @@
+{
+  "ID": "Echolocation",
+  "Name": "✦ Echolocation",
+  "Order": 144,
+  "Description": [
+    "<light_purple>It reads the dark better than anything reads the day.",
+    "- A <blue><bold>Sprint</bold> <reset>burst it never runs out of",
+    "- A disorienting <red><bold>Slow</bold> <reset>on whatever it brushes past",
+    "- A wiry <red><bold>Life</bold> <reset>pool and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "sculk_sensor", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Rascal:SkyKeeper:SkyWayfarer"],
+  "MobTypes": ["Bat"],
+  "Skills": {
+    "Sprint": { "Upgrades": { "20": { "Active": true } } },
+    "Slow":   { "Upgrades": { "24": { "Chance": "+15", "Duration": "+2" }, "%16>40": { "Chance": "+3" } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+2" }, "%14>36": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "28": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its wings find the dark without a sound — Echolocation awakens.",
+    "60": "<light_purple>Nothing it passes moves quite as fast again."
+  }
+}

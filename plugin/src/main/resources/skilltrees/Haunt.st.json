@@ -1,0 +1,27 @@
+{
+  "ID": "Haunt",
+  "Name": "✦ Haunt",
+  "Order": 183,
+  "Description": [
+    "<light_purple>It doesn't chase in a straight line. It doesn't need to.",
+    "- <green><bold>Pickup</bold> <reset>reach for whatever it corners",
+    "- Small, relentless <red><bold>Damage</bold> <reset>strikes that keep growing every 7 levels, right up to level 99",
+    "- A phasing <blue><bold>Sprint</bold> <reset>burst that never really stops",
+    "- A padded <red><bold>Life</bold> <reset>pool — it plans on being hit and not caring"
+  ],
+  "Icon": { "Material": "iron_sword", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Illager:SkyKeeper:SkyWayfarer"],
+  "MobTypes": ["Vex"],
+  "Skills": {
+    "Pickup": { "Upgrades": { "20": { "Range": "+1.5", "Exp": true } } },
+    "Damage": { "Upgrades": { "22": { "Damage": "+3" }, "%7>29": { "Damage": "+2" } } },
+    "Sprint": { "Upgrades": { "24": { "Active": true } } },
+    "Life":   { "Upgrades": { "28": { "Health": "+7" }, "%8>32": { "Health": "+2" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It phases through the wall before you finish turning — Haunt has arrived.",
+    "65": "<light_purple>It never once stops circling."
+  }
+}

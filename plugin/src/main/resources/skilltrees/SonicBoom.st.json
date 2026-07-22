@@ -1,0 +1,29 @@
+{
+  "ID": "SonicBoom",
+  "Name": "✦ Sonic Boom",
+  "Order": 164,
+  "Description": [
+    "<light_purple>The shriek arrives before the sound does.",
+    "- <red><bold>Ranged</bold> <reset>bursts that hit harder, shot for shot, than anything else in the roster",
+    "- A slow, deliberate cadence — every shot is a real commitment",
+    "- Boss-sized <red><bold>Life</bold><reset>, backing <red><bold>Damage</bold><reset>, and <green><bold>Backpack</bold> <reset>storage",
+    "- <red><bold>Armor</bold> <reset>over old scars and a <red><bold>Taunt</bold> <reset>nothing ignores"
+  ],
+  "Icon": { "Material": "echo_shard", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Predator:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Warden"],
+  "Skills": {
+    "Taunt": { "Upgrades": { "28": { "range": "+8", "interval": "+8" }, "%18>46": { "range": "+2", "interval": "-1" } } },
+    "Armor": { "Upgrades": { "24": { "armor": "+3", "toughness": "+1" }, "%16>40": { "armor": "+1" }, "60": { "toughness": "+1" } } },
+    "Ranged":   { "Upgrades": { "20": { "Rate": "+6", "Damage": "+14", "Projectile": "EnderPearl" }, "%10>30": { "Damage": "+3" }, "60": { "Rate": "+4" } } },
+    "Backpack": { "Upgrades": { "25": { "Rows": "+1", "Drop": false } } },
+    "Damage":   { "Upgrades": { "24": { "Damage": "+5" }, "%16>40": { "Damage": "+1" } } },
+    "Life":     { "Upgrades": { "20": { "Health": "+12" }, "%8>28": { "Health": "+2" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The air goes silent for a moment too long — Sonic Boom is ready to shriek.",
+    "70": "<light_purple>You feel the hit before you register it fired."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "ID": "OceanKeeper",
+  "Name": "Ocean Keeper",
+  "Order": 22,
+  "Description": [
+    "<green>The reef never runs short of supplies.",
+    "- <green><bold>Backpack</bold> <reset>storage",
+    "- Deep-reaching <green><bold>Pickup</bold> <reset>current",
+    "- Bioluminescent <green><bold>Beacon</bold> <reset>aura",
+    "- <green><bold>Fishing</bold> <reset>the reef for whatever the tide offers"
+  ],
+  "Icon": { "Material": "heart_of_the_sea" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Cod", "Dolphin", "ElderGuardian", "GlowSquid", "Guardian", "Nautilus", "Pufferfish", "Salmon", "Squid", "Tadpole", "TropicalFish", "ZombieNautilus"],
+  "Skills": {
+    "Fishing": { "Upgrades": { "12": { "range": "+4", "interval": "+110" }, "20": { "range": "+2", "interval": "-20" } } },
+    "Backpack": { "Upgrades": { "1": { "Rows": "+1", "Drop": false }, "8": { "Rows": "+1" }, "16": { "Rows": "+1" } } },
+    "Pickup":   { "Upgrades": { "3": { "Range": "+2", "Exp": true }, "%4>4<25": { "Range": "+0.5" } } },
+    "Beacon":   { "Upgrades": { "12": { "Buffs": { "NightVision": true, "WaterBreathing": true }, "Duration": "+8", "Count": "+2", "Range": "+8" } } }
+  },
+  "Notifications": {
+    "19": "<gray>The tide carries a deeper calling. At level 20 it may ascend."
+  }
+}

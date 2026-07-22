@@ -1,0 +1,26 @@
+{
+  "ID": "Riptide",
+  "Name": "✦ Riptide",
+  "Order": 112,
+  "Description": [
+    "<light_purple>It rises from the deep, trident in hand.",
+    "- <red><bold>Ranged</bold> <reset>trident throws — the only Undead to wield one",
+    "- Follow-up <red><bold>Damage</bold> <reset>in close quarters",
+    "- <green><bold>Pickup</bold> <reset>reach for sunken loot"
+  ],
+  "Icon": { "Material": "trident", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:ShoreKeeper:ShoreWayfarer"],
+  "MobTypes": ["Drowned"],
+  "Skills": {
+    "Ranged": { "Upgrades": { "20": { "Rate": "-8", "Damage": "+5", "Projectile": "Trident" }, "%10>30": { "Damage": "+1" }, "60": { "Rate": "-6" } } },
+    "Damage": { "Upgrades": { "20": { "Damage": "+3" }, "%12>32": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+4" }, "%12>32": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The tide answers its call — Riptide has surfaced.",
+    "60": "<light_purple>No current runs faster than its throw."
+  }
+}

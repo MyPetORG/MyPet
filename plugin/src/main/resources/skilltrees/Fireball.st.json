@@ -1,0 +1,26 @@
+{
+  "ID": "Fireball",
+  "Name": "✦ Fireball",
+  "Order": 170,
+  "Description": [
+    "<light_purple>It doesn't aim so much as it drops the sky on you.",
+    "- The only <red><bold>Ranged</bold> <reset>signature that launches a Large Fireball — the biggest projectile in the game",
+    "- <red><bold>Knockback</bold> <reset>that sends the impact zone flying",
+    "- Reinforced <red><bold>Life</bold> <reset>and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "fire_charge", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Nether:SkyKeeper:SkyWayfarer"],
+  "MobTypes": ["Ghast"],
+  "Skills": {
+    "Ranged":    { "Upgrades": { "20": { "Rate": "-8", "Damage": "+6", "Projectile": "LargeFireball" }, "%12>32": { "Damage": "+2" }, "70": { "Rate": "-4" } } },
+    "Pickup":    { "Upgrades": { "24": { "Range": "+1.5", "Exp": true } } },
+    "Life":      { "Upgrades": { "26": { "Health": "+5" }, "%14>38": { "Health": "+1" } } },
+    "Knockback": { "Upgrades": { "30": { "Chance": "+20" }, "%20>50": { "Chance": "+5" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The sky itself seems to lean closer to it — Fireball takes aim.",
+    "70": "<light_purple>Nothing it launches is ever small."
+  }
+}

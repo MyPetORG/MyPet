@@ -1,0 +1,26 @@
+{
+  "ID": "SplitSecond",
+  "Name": "✦ Split Second",
+  "Order": 153,
+  "Description": [
+    "<light_purple>Cut it in half and there are just two of it a split second later.",
+    "- The <red><bold>biggest Life stack</bold> <reset>of any signature, pound for pound",
+    "- A bouncing <red><bold>Knockback</bold> <reset>shove",
+    "- Steady <red><bold>Damage</bold> <reset>and a light <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "slime_ball", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Rascal:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Slime"],
+  "Skills": {
+    "Life":      { "Upgrades": { "20": { "Health": "+12" }, "%5>25": { "Health": "+2" } } },
+    "Knockback": { "Upgrades": { "26": { "Chance": "+20" }, "%16>40": { "Chance": "+5" } } },
+    "Damage":    { "Upgrades": { "30": { "Damage": "+4" }, "%14>38": { "Damage": "+1" } } },
+    "Pickup":    { "Upgrades": { "24": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It jiggles, splits, and reforms without missing a beat — Split Second begins.",
+    "60": "<light_purple>However much you take off, there's always a split second more."
+  }
+}

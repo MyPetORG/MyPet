@@ -1,0 +1,25 @@
+{
+  "ID": "End",
+  "Name": "End",
+  "Order": 15,
+  "Description": [
+    "<red>Space folds to its will.",
+    "- <red><bold>Damage</bold> <reset>void strikes",
+    "- Blinking <red><bold>Sprint</bold> <reset>bursts",
+    "- <red><bold>Knockback</bold> <reset>displacement"
+  ],
+  "Icon": { "Material": "ender_pearl" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 2.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["EnderDragon", "Enderman", "Endermite"],
+  "Skills": {
+    "Damage":    { "Upgrades": { "1": { "Damage": "+2" }, "%4>4<25": { "Damage": "+1" } } },
+    "Sprint":    { "Upgrades": { "8": { "Active": true } } },
+    "Knockback": { "Upgrades": { "12": { "Chance": "+20" }, "20": { "Chance": "+15" } } }
+  },
+  "Notifications": {
+    "19": "<gray>The void whispers your pet's name. At level 20 it may ascend."
+  }
+}

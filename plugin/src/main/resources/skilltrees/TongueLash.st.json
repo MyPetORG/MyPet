@@ -1,0 +1,28 @@
+{
+  "ID": "TongueLash",
+  "Name": "✦ Tongue Lash",
+  "Order": 165,
+  "Description": [
+    "<light_purple>The strike lands from farther away than it has any right to.",
+    "- A reach-flavored <red><bold>Slow</bold> <reset>tongue-lash that sticks",
+    "- A <red><bold>Damage</bold> <reset>bite right behind it",
+    "- Reinforced <red><bold>Life</bold> <reset>and <green><bold>Pickup</bold> <reset>reach",
+    "- <green><bold>Fishing</bold> <reset>the pond it hunts"
+  ],
+  "Icon": { "Material": "ochre_froglight", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Predator:ShoreKeeper:ShoreWayfarer"],
+  "MobTypes": ["Frog"],
+  "Skills": {
+    "Fishing": { "Upgrades": { "30": { "range": "+5", "interval": "+90" }, "%20>50": { "range": "+1", "interval": "-8" }, "70": { "toolless": true } } },
+    "Slow":   { "Upgrades": { "20": { "Chance": "+18", "Duration": "+3" }, "%20>44": { "Chance": "+4" } } },
+    "Damage": { "Upgrades": { "26": { "Damage": "+4" }, "%16>40": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "22": { "Health": "+4" }, "%14>36": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "28": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its tongue snaps out farther than seems possible — Tongue Lash finds its range.",
+    "60": "<light_purple>Whatever it tags stays slowed long after the tongue snaps back."
+  }
+}

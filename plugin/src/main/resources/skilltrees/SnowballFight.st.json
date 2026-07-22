@@ -1,0 +1,26 @@
+{
+  "ID": "SnowballFight",
+  "Name": "✦ Snowball Fight",
+  "Order": 176,
+  "Description": [
+    "<light_purple>It looks like a toy right up until the volley starts landing.",
+    "- A steady <red><bold>Slow</bold> <reset>chill that pairs with every throw",
+    "- A harmless-looking <red><bold>Ranged</bold> <reset>snowball volley",
+    "- Cheerful <red><bold>Life</bold> <reset>and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "carved_pumpkin", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Construct:LandKeeper:LandWayfarer"],
+  "MobTypes": ["SnowGolem"],
+  "Skills": {
+    "Slow":   { "Upgrades": { "20": { "Chance": "+18", "Duration": "+2" }, "%26>46": { "Chance": "+4" } } },
+    "Ranged": { "Upgrades": { "22": { "Rate": "-6", "Damage": "+1", "Projectile": "Snowball" } } },
+    "Life":   { "Upgrades": { "24": { "Health": "+2" }, "%20>44": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "26": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its carved grin seems a little wider now — Snowball Fight is on.",
+    "60": "<light_purple>Nobody expects the pumpkin-headed one to actually hurt."
+  }
+}

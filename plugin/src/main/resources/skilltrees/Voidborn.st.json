@@ -1,0 +1,24 @@
+{
+  "ID": "Voidborn",
+  "Name": "Voidborn",
+  "Order": 35,
+  "Description": [
+    "<gold>Space folds to its will, and the void feeds it strength.",
+    "- <gold><bold>Damage</bold> <reset>void strikes cut deeper still",
+    "- Blinking <gold><bold>Sprint</bold> <reset>and <gold><bold>Knockback</bold> <reset>displacement hold steady",
+    "- The void itself grants bonus <gold><bold>Life</bold><reset>"
+  ],
+  "Icon": { "Material": "end_crystal" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:End"],
+  "Inheritance": { "Skilltree": "End" },
+  "MobTypes": ["EnderDragon", "Enderman", "Endermite"],
+  "Weight": 0,
+  "Skills": {
+    "Damage": { "Upgrades": { "%5>25": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "30": { "Health": "+2" } } }
+  },
+  "Notifications": {
+    "30": "<gray>The void no longer just whispers - it feeds."
+  }
+}

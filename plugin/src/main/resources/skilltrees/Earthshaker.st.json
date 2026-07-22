@@ -1,0 +1,27 @@
+{
+  "ID": "Earthshaker",
+  "Name": "✦ Earthshaker",
+  "Order": 103,
+  "Description": [
+    "<light_purple>Every footstep is a small earthquake.",
+    "- Crushing <red><bold>Damage</bold> <reset>from an oversized fist",
+    "- <red><bold>Stomp</bold> <reset>shockwaves at mini-boss scale",
+    "- Reinforced <green><bold>Life</bold> <reset>and a <green><bold>Knockback</bold> <reset>shove"
+  ],
+  "Icon": { "Material": "cobblestone", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Giant"],
+  "Skills": {
+    "Damage":    { "Upgrades": { "20": { "Damage": "+6" }, "%10>30": { "Damage": "+2" } } },
+    "Stomp":     { "Upgrades": { "20": { "Chance": "+25", "Damage": "+3" }, "%10>30": { "Chance": "+5", "Damage": "+1" } } },
+    "Life":      { "Upgrades": { "20": { "Health": "+8" }, "%8>28": { "Health": "+2" } } },
+    "Knockback": { "Upgrades": { "30": { "Chance": "+20" } } },
+    "Pickup":    { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The ground itself seems to flinch — Earthshaker awakens.",
+    "70": "<light_purple>Whole rooms tremble when it plants its feet."
+  }
+}

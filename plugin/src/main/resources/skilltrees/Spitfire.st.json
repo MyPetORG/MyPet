@@ -1,0 +1,28 @@
+{
+  "ID": "Spitfire",
+  "Name": "✦ Spitfire",
+  "Order": 140,
+  "Description": [
+    "<light_purple>It spits first, and it spits fast.",
+    "- <red><bold>Ranged</bold> <reset>llama spit at the highest rate of fire in the Companion family",
+    "- A <red><bold>Knockback</bold> <reset>shove to keep its distance",
+    "- <green><bold>Backpack</bold> <reset>row and reinforced <red><bold>Life</bold><reset>",
+    "- A <red><bold>Taunt</bold> <reset>that starts every argument"
+  ],
+  "Icon": { "Material": "orange_carpet", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Llama"],
+  "Skills": {
+    "Taunt": { "Upgrades": { "28": { "range": "+8", "interval": "+8" }, "%18>46": { "range": "+2", "interval": "-1" } } },
+    "Ranged":    { "Upgrades": { "20": { "Rate": "-10", "Damage": "+3", "Projectile": "LlamaSpit" }, "%10>30": { "Damage": "+1" }, "50": { "Rate": "-6" } } },
+    "Knockback": { "Upgrades": { "26": { "Chance": "+20" }, "%16>40": { "Chance": "+5" } } },
+    "Backpack":  { "Upgrades": { "30": { "Rows": "+1", "Drop": false } } },
+    "Life":      { "Upgrades": { "22": { "Health": "+4" }, "%12>34": { "Health": "+1" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It works up a mouthful before the fight even starts — Spitfire takes aim.",
+    "65": "<light_purple>Nothing closes the distance fast enough anymore."
+  }
+}

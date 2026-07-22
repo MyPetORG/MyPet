@@ -1,0 +1,26 @@
+{
+  "ID": "WitheringTouch",
+  "Name": "✦ Withering Touch",
+  "Order": 117,
+  "Description": [
+    "<light_purple>Its blade carries a curse older than the Nether fortress it guarded.",
+    "- <red><bold>Damage</bold> <reset>from a stone sword",
+    "- <red><bold>Fire</bold> <reset>and <red><bold>Wither</bold> <reset>burn together — a true double burn",
+    "- <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "wither_skeleton_skull", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["WitherSkeleton"],
+  "Skills": {
+    "Damage": { "Upgrades": { "20": { "Damage": "+5" }, "%10>30": { "Damage": "+1" } } },
+    "Fire":   { "Upgrades": { "20": { "Chance": "+25", "Duration": "+3" }, "%10>30": { "Duration": "+1" } } },
+    "Wither": { "Upgrades": { "24": { "Chance": "+20", "Duration": "+3" }, "%12>36": { "Chance": "+5" } } },
+    "Pickup": { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Ash and curse rise together — Withering Touch is complete.",
+    "65": "<light_purple>What it burns, it also rots from within."
+  }
+}

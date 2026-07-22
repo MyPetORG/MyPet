@@ -1,0 +1,29 @@
+{
+  "ID": "Tusks",
+  "Name": "✦ Tusks",
+  "Order": 177,
+  "Description": [
+    "<light_purple>It doesn't just hit you. It sends you somewhere else first.",
+    "- <red><bold>Knockback</bold> <reset>that launches whatever it catches",
+    "- A <red><bold>Life</bold> <reset>pool built for headlong charges",
+    "- Follow-up <red><bold>Damage</bold> <reset>once you land",
+    "- <green><bold>Pickup</bold> <reset>reach for the aftermath",
+    "- <red><bold>Armor</bold> <reset>hide thick enough to charge through anything"
+  ],
+  "Icon": { "Material": "warped_fungus", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Nether:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Hoglin"],
+  "Skills": {
+    "Armor": { "Upgrades": { "24": { "armor": "+3", "toughness": "+1" }, "%16>40": { "armor": "+1" }, "60": { "toughness": "+1" } } },
+    "Knockback": { "Upgrades": { "20": { "Chance": "+25" }, "%18>40": { "Chance": "+4" } } },
+    "Life":      { "Upgrades": { "22": { "Health": "+5" }, "%14>36": { "Health": "+1" } } },
+    "Damage":    { "Upgrades": { "24": { "Damage": "+3" }, "%16>40": { "Damage": "+1" } } },
+    "Pickup":    { "Upgrades": { "26": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It lowers its tusks and means it — Tusks charges in.",
+    "65": "<light_purple>Nothing it hits stays on its feet for long."
+  }
+}

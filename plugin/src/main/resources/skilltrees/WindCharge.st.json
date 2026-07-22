@@ -1,0 +1,27 @@
+{
+  "ID": "WindCharge",
+  "Name": "✦ Wind Charge",
+  "Order": 154,
+  "Description": [
+    "<light_purple>The air around it never sits still.",
+    "- The <red><bold>biggest Knockback</bold> <reset>of any signature in the roster",
+    "- A gusting <red><bold>Ranged</bold> <reset>snowball volley",
+    "- A <blue><bold>Sprint</bold> <reset>burst, reinforced <red><bold>Life</bold><reset>, and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "wind_charge", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Rascal:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Breeze"],
+  "Skills": {
+    "Knockback": { "Upgrades": { "20": { "Chance": "+30" }, "%10>40": { "Chance": "+5" } } },
+    "Ranged":    { "Upgrades": { "20": { "Rate": "-8", "Damage": "+2", "Projectile": "Snowball" }, "%14>34": { "Damage": "+1" } } },
+    "Sprint":    { "Upgrades": { "26": { "Active": true } } },
+    "Life":      { "Upgrades": { "20": { "Health": "+5" }, "%12>32": { "Health": "+1" } } },
+    "Pickup":    { "Upgrades": { "30": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The air starts swirling around it — Wind Charge is loose.",
+    "60": "<light_purple>Nothing stays on its feet once the gust hits."
+  }
+}

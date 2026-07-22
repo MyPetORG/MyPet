@@ -1,0 +1,27 @@
+{
+  "ID": "ShoreSteward",
+  "Name": "Shore Steward",
+  "Order": 42,
+  "Description": [
+    "<gold>Where tide and bank keep their own stores, it keeps more.",
+    "- A deeper <gold><bold>Backpack</bold> <reset>(bonus row)",
+    "- Farther-reaching <gold><bold>Pickup</bold> <reset>current",
+    "- A strengthening second <gold><bold>Beacon</bold> <reset>effect",
+    "- <green><bold>Fishing</bold> <reset>that reaches farther and hauls sooner"
+  ],
+  "Icon": { "Material": "sponge" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:ShoreKeeper"],
+  "Inheritance": { "Skilltree": "ShoreKeeper" },
+  "MobTypes": ["Axolotl", "Capybara", "Drowned", "Frog", "Turtle"],
+  "Weight": 0,
+  "Skills": {
+    "Fishing": { "Upgrades": { "%20>50": { "range": "+1", "interval": "-8" }, "70": { "toolless": true } } },
+    "Backpack": { "Upgrades": { "30": { "Rows": "+1" } } },
+    "Pickup":   { "Upgrades": { "%5>25": { "Range": "+0.5" } } },
+    "Beacon":   { "Upgrades": { "40": { "Buffs": { "Strength": "+1" }, "Duration": "+4", "Count": "+1", "Range": "+4" } } }
+  },
+  "Notifications": {
+    "40": "<gray>Neither shore wants while your pet keeps watch."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "ID": "Illager",
+  "Name": "Illager",
+  "Order": 12,
+  "Description": [
+    "<red>Raiders drilled for the hunt.",
+    "- <red><bold>Ranged</bold> <reset>crossbow volleys",
+    "- <red><bold>Damage</bold> <reset>melee follow-through",
+    "- <red><bold>Knockback</bold> <reset>shield bash",
+    "- Thrown <red><bold>Potion</bold> <reset>flasks from the back line"
+  ],
+  "Icon": { "Material": "crossbow" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 2.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Evoker", "Illusioner", "Pillager", "Ravager", "Vex", "Vindicator"],
+  "Skills": {
+    "Potion": { "Upgrades": { "15": { "potions": [{ "type": "minecraft:poison", "cooldown": 10 }, { "type": "minecraft:weakness", "cooldown": 12 }] } } },
+    "Ranged":    { "Upgrades": { "1": { "Damage": "+1", "Rate": "+5", "Projectile": "Arrow" }, "%5>5<25": { "Damage": "+1" } } },
+    "Damage":    { "Upgrades": { "3": { "Damage": "+2" }, "%5>5<25": { "Damage": "+0.5" } } },
+    "Knockback": { "Upgrades": { "12": { "Chance": "+20" }, "20": { "Chance": "+15" } } }
+  },
+  "Notifications": {
+    "19": "<gray>The war horn calls for a captain. At level 20 it may ascend."
+  }
+}

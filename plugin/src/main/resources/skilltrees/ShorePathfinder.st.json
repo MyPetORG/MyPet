@@ -1,0 +1,24 @@
+{
+  "ID": "ShorePathfinder",
+  "Name": "Shore Pathfinder",
+  "Order": 46,
+  "Description": [
+    "<gold>At home crossing either border, faster with every step.",
+    "- <gold><bold>Ride</bold> <reset>speed keeps climbing, slow and steady",
+    "- Bounding <gold><bold>Sprint</bold> <reset>and precision <gold><bold>Control</bold> <reset>hold steady",
+    "- A hastening <gold><bold>Beacon</bold> <reset>aura joins the journey"
+  ],
+  "Icon": { "Material": "leather_boots" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:ShoreWayfarer"],
+  "Inheritance": { "Skilltree": "ShoreWayfarer" },
+  "MobTypes": ["Axolotl", "Capybara", "Drowned", "Frog", "Turtle"],
+  "Weight": 0,
+  "Skills": {
+    "Ride":   { "Upgrades": { "%10>25": { "Speed": "+1" } } },
+    "Beacon": { "Upgrades": { "30": { "Buffs": { "Speed": "+1" }, "Duration": "+6", "Count": "+1", "Range": "+8" } } }
+  },
+  "Notifications": {
+    "30": "<gray>Neither shore holds your pet for long anymore."
+  }
+}

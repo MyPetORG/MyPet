@@ -1,0 +1,23 @@
+{
+  "ID": "OceanPathfinder",
+  "Name": "Ocean Pathfinder",
+  "Order": 45,
+  "Description": [
+    "<gold>The current does the carrying, and the lungs no longer mind.",
+    "- Surging <gold><bold>Sprint</bold> <reset>and precision <gold><bold>Control</bold> <reset>hold steady",
+    "- <gold><bold>Ride</bold> <reset>stays active for the whole crossing",
+    "- A hastening <gold><bold>Beacon</bold> <reset>aura now grants Water Breathing"
+  ],
+  "Icon": { "Material": "prismarine_shard" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:OceanWayfarer"],
+  "Inheritance": { "Skilltree": "OceanWayfarer" },
+  "MobTypes": ["Cod", "Dolphin", "ElderGuardian", "GlowSquid", "Guardian", "Nautilus", "Pufferfish", "Salmon", "Squid", "Tadpole", "TropicalFish", "ZombieNautilus"],
+  "Weight": 0,
+  "Skills": {
+    "Beacon": { "Upgrades": { "30": { "Buffs": { "Speed": "+1", "WaterBreathing": true }, "Duration": "+6", "Count": "+1", "Range": "+8" } } }
+  },
+  "Notifications": {
+    "30": "<gray>The current carries your pet somewhere new, and it never needs to surface."
+  }
+}

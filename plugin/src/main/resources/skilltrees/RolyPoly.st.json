@@ -1,0 +1,26 @@
+{
+  "ID": "RolyPoly",
+  "Name": "✦ Roly-Poly",
+  "Order": 126,
+  "Description": [
+    "<light_purple>Tip it over and it just rolls back into the fight.",
+    "- <red><bold>Thorns</bold> <reset>plating — the bounciest defense of any Companion",
+    "- Reinforced <red><bold>Life</bold> <reset>to shrug off the tumble",
+    "- A <red><bold>Knockback</bold> <reset>shove and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "bamboo", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Panda"],
+  "Skills": {
+    "Thorns":    { "Upgrades": { "20": { "Chance": "+20", "Reflection": "+10" }, "%12>32": { "Reflection": "+2" } } },
+    "Life":      { "Upgrades": { "22": { "Health": "+5" }, "%12>34": { "Health": "+1" } } },
+    "Knockback": { "Upgrades": { "26": { "Chance": "+20" }, "%20>46": { "Chance": "+5" } } },
+    "Pickup":    { "Upgrades": { "28": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It tumbles, rights itself, and keeps coming — Roly-Poly settles in.",
+    "65": "<light_purple>Every shove it takes just bounces right back."
+  }
+}

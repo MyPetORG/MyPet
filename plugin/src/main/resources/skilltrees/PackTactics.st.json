@@ -1,0 +1,28 @@
+{
+  "ID": "PackTactics",
+  "Name": "✦ Pack Tactics",
+  "Order": 160,
+  "Description": [
+    "<light_purple>It never really stops fighting — it just changes angles.",
+    "- The <red><bold>highest total Damage</bold> <reset>of any hostile signature",
+    "- A <blue><bold>Sprint</bold> <reset>that keeps it in the fight instead of chasing it down",
+    "- A parting <red><bold>Bleed</bold> <reset>nip and <green><bold>Backpack</bold> <reset>storage",
+    "- A <red><bold>Taunt</bold> <reset>that draws the fight onto itself"
+  ],
+  "Icon": { "Material": "wolf_armor", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Predator:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Wolf"],
+  "Skills": {
+    "Taunt": { "Upgrades": { "28": { "range": "+8", "interval": "+8" }, "%18>46": { "range": "+2", "interval": "-1" } } },
+    "Damage":   { "Upgrades": { "20": { "Damage": "+6" }, "%8>28": { "Damage": "+1" } } },
+    "Backpack": { "Upgrades": { "25": { "Rows": "+1", "Drop": false } } },
+    "Sprint":   { "Upgrades": { "20": { "Active": true } } },
+    "Bleed":    { "Upgrades": { "30": { "Damage": "+1", "Duration": "+3", "Chance": "+20" }, "%16>40": { "Chance": "+5" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It falls into step beside you like it never left — Pack Tactics locks in.",
+    "65": "<light_purple>It hasn't slowed down once since the fight started."
+  }
+}

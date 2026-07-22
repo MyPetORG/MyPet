@@ -1,0 +1,26 @@
+{
+  "ID": "Rabid",
+  "Name": "✦ Rabid",
+  "Order": 111,
+  "Description": [
+    "<light_purple>Whatever made it a hoglin is long gone — only hunger remains.",
+    "- Relentless <red><bold>Damage</bold> <reset>charges",
+    "- The <red><bold>highest Bleed chance</bold> <reset>of any Undead",
+    "- A <green><bold>Knockback</bold> <reset>headbutt and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "leather", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Zoglin"],
+  "Skills": {
+    "Damage":    { "Upgrades": { "20": { "Damage": "+5" }, "%10>30": { "Damage": "+1" } } },
+    "Bleed":     { "Upgrades": { "20": { "Damage": "+1", "Duration": "+3", "Chance": "+30" }, "%8>28": { "Chance": "+5" } } },
+    "Knockback": { "Upgrades": { "35": { "Chance": "+20" } } },
+    "Pickup":    { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It charges without thinking — Rabid takes hold.",
+    "65": "<light_purple>Every gouge it leaves keeps bleeding long after the fight."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "ID": "Caravan",
+  "Name": "✦ Caravan",
+  "Order": 121,
+  "Description": [
+    "<light_purple>A steady gait across dunes that never seem to end.",
+    "- <blue><bold>Ride</bold> <reset>a mount built for the long crossing",
+    "- <green><bold>Backpack</bold> <reset>rows tied for the deepest mount storage in the roster",
+    "- Reinforced <red><bold>Life</bold> <reset>and a <red><bold>Shield</bold> <reset>against raiders"
+  ],
+  "Icon": { "Material": "saddle", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Camel"],
+  "Skills": {
+    "Ride":     { "Upgrades": { "20": { "Active": true, "Speed": "+3" }, "%10>30": { "Speed": "+1" } } },
+    "Backpack": { "Upgrades": { "20": { "Rows": "+1", "Drop": false }, "45": { "Rows": "+1" } } },
+    "Life":     { "Upgrades": { "22": { "Health": "+5" }, "%12>34": { "Health": "+1" } } },
+    "Shield":   { "Upgrades": { "30": { "Chance": "+15", "Redirect": "+10" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its saddlebags settle and its stride steadies — Caravan sets out.",
+    "65": "<light_purple>The dunes hold nothing it hasn't already crossed."
+  }
+}

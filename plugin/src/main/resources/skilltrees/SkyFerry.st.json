@@ -1,0 +1,26 @@
+{
+  "ID": "SkyFerry",
+  "Name": "✦ Sky Ferry",
+  "Order": 129,
+  "Description": [
+    "<light_purple>A gentle giant that carries whoever needs the ride.",
+    "- <blue><bold>Ride</bold> <reset>it across the open sky",
+    "- A <red><bold>Shield</bold> <reset>that turns aside anything that gets too close",
+    "- Reinforced <red><bold>Life</bold> <reset>and <green><bold>Backpack</bold> <reset>rows tied for the deepest mount storage"
+  ],
+  "Icon": { "Material": "ghast_tear", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:SkyKeeper:SkyWayfarer"],
+  "MobTypes": ["HappyGhast"],
+  "Skills": {
+    "Ride":     { "Upgrades": { "20": { "Active": true, "Speed": "+2" }, "%14>34": { "Speed": "+1" } } },
+    "Shield":   { "Upgrades": { "20": { "Chance": "+20", "Redirect": "+10" }, "%14>34": { "Chance": "+5" } } },
+    "Life":     { "Upgrades": { "24": { "Health": "+4" }, "%12>36": { "Health": "+1" } } },
+    "Backpack": { "Upgrades": { "20": { "Rows": "+1", "Drop": false }, "45": { "Rows": "+1" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its harness settles and the sky opens up — Sky Ferry departs.",
+    "70": "<light_purple>Nothing that reaches for its passengers gets a second try."
+  }
+}

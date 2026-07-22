@@ -1,0 +1,26 @@
+{
+  "ID": "Heartwood",
+  "Name": "✦ Heartwood",
+  "Order": 171,
+  "Description": [
+    "<light_purple>Something old lives in the grain of it, and it is in no hurry at all.",
+    "- A <red><bold>Thorns</bold> <reset>wall that punishes every impatient swing",
+    "- A <red><bold>Life</bold> <reset>pool built for a long, patient watch",
+    "- Sudden <red><bold>Damage</bold> <reset>for whoever looks away first"
+  ],
+  "Icon": { "Material": "creaking_heart", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Construct:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Creaking"],
+  "Skills": {
+    "Thorns":  { "Upgrades": { "20": { "Chance": "+22", "Reflection": "+8" }, "%10>30": { "Reflection": "+3" } } },
+    "Pickup":  { "Upgrades": { "24": { "Range": "+1.5", "Exp": true } } },
+    "Life":    { "Upgrades": { "22": { "Health": "+8" }, "%10>32": { "Health": "+2" } } },
+    "Damage":  { "Upgrades": { "26": { "Damage": "+3" }, "%16>42": { "Damage": "+1" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It stops pretending to be still — Heartwood wakes for good.",
+    "70": "<light_purple>Turn your back on it, even once, and you'll regret it."
+  }
+}

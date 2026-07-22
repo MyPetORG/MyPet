@@ -1,0 +1,27 @@
+{
+  "ID": "LandWayfarer",
+  "Name": "Land Wayfarer",
+  "Order": 24,
+  "Description": [
+    "<blue>Ground eaten mile by mile.",
+    "- <blue><bold>Ride</bold> <reset>the pet as a mount",
+    "- Galloping <blue><bold>Sprint</bold> <reset>bursts",
+    "- <blue><bold>Control</bold> <reset>precision steering",
+    "- <blue><bold>Climb</bold> <reset>the ledges that used to stop it"
+  ],
+  "Icon": { "Material": "saddle" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0, "Horse": 3.0, "Camel": 3.0, "Donkey": 3.0, "Mule": 3.0, "SkeletonHorse": 3.0, "ZombieHorse": 3.0, "Strider": 3.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Armadillo", "Bogged", "Breeze", "Camel", "CamelHusk", "Cat", "CaveSpider", "Chameleon", "Chicken", "CopperGolem", "Cow", "Creaking", "Creeper", "Donkey", "Enderman", "Endermite", "Evoker", "Fox", "Giant", "Goat", "Hoglin", "Horse", "Husk", "Illusioner", "IronGolem", "Llama", "MagmaCube", "Mooshroom", "Mule", "Ocelot", "Panda", "Parched", "Pig", "Piglin", "PiglinBrute", "Pillager", "PolarBear", "Rabbit", "Ravager", "Sheep", "Silverfish", "Skeleton", "SkeletonHorse", "Slime", "Sniffer", "SnowGolem", "Spider", "Stray", "Strider", "TraderLlama", "Villager", "Vindicator", "WanderingTrader", "Warden", "Witch", "WitherSkeleton", "Wolf", "Zoglin", "Zombie", "ZombieHorse", "ZombieVillager", "ZombifiedPiglin"],
+  "Skills": {
+    "Climb": { "Upgrades": { "10": { "active": true } } },
+    "Ride":    { "Upgrades": { "1": { "Active": true, "Speed": "+5" }, "%6>6<25": { "Speed": "+2" } } },
+    "Sprint":  { "Upgrades": { "3": { "Active": true } } },
+    "Control": { "Upgrades": { "12": { "Active": true } } }
+  },
+  "Notifications": {
+    "19": "<gray>The horizon keeps pulling your pet onward. At level 20 it may ascend."
+  }
+}

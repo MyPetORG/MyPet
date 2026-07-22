@@ -1,0 +1,26 @@
+{
+  "ID": "Inferno",
+  "Name": "✦ Inferno",
+  "Order": 172,
+  "Description": [
+    "<light_purple>It doesn't need to get close. The air around it is already the weapon.",
+    "- The only signature that pairs a <red><bold>Ranged</bold> <reset>fireball volley with <red><bold>Fire</bold> <reset>itself",
+    "- Steady <red><bold>Life</bold> <reset>to keep the flame burning",
+    "- <green><bold>Pickup</bold> <reset>reach for whatever survives the blast"
+  ],
+  "Icon": { "Material": "blaze_rod", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Nether:SkyKeeper:SkyWayfarer"],
+  "MobTypes": ["Blaze"],
+  "Skills": {
+    "Ranged": { "Upgrades": { "20": { "Rate": "-9", "Damage": "+3", "Projectile": "SmallFireball" }, "%10>30": { "Damage": "+1" }, "60": { "Rate": "-5" } } },
+    "Fire":   { "Upgrades": { "22": { "Chance": "+20", "Duration": "+3" }, "%16>38": { "Chance": "+4" } } },
+    "Life":   { "Upgrades": { "24": { "Health": "+4" }, "%14>38": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "26": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its rod-arms glow brighter than ever — Inferno ignites.",
+    "70": "<light_purple>The air around it shimmers with heat even when it's still."
+  }
+}

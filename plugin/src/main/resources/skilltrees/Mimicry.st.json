@@ -1,0 +1,26 @@
+{
+  "ID": "Mimicry",
+  "Name": "✦ Mimicry",
+  "Order": 149,
+  "Description": [
+    "<light_purple>It repeats everything it hears, and helps itself to whatever it finds.",
+    "- A <blue><bold>Sprint</bold> <reset>flit that never settles",
+    "- A light-fingered <green><bold>Pickup</bold> <reset>reach — the biggest investment in its kit",
+    "- A small <red><bold>Life</bold> <reset>pool and a squawk that drags its <red><bold>Slow</bold> <reset>out longer"
+  ],
+  "Icon": { "Material": "cookie", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Rascal:SkyKeeper:SkyWayfarer"],
+  "MobTypes": ["Parrot"],
+  "Skills": {
+    "Sprint": { "Upgrades": { "20": { "Active": true } } },
+    "Pickup": { "Upgrades": { "24": { "Range": "+2", "Exp": true }, "%12>36": { "Range": "+0.5" } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+2" }, "%28>48": { "Health": "+1" } } },
+    "Slow":   { "Upgrades": { "32": { "Duration": "+2" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It cocks its head and mimics the last sound it heard — Mimicry begins.",
+    "55": "<light_purple>Whatever it hears once, it repeats forever after."
+  }
+}

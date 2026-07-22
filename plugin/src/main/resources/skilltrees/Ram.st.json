@@ -1,0 +1,29 @@
+{
+  "ID": "Ram",
+  "Name": "✦ Ram",
+  "Order": 152,
+  "Description": [
+    "<light_purple>It backs up, and you already know what's coming next.",
+    "- A <red><bold>Knockback</bold> <reset>charge — the second-hardest shove in the roster",
+    "- Solid <red><bold>Damage</bold> <reset>behind every headbutt",
+    "- A <blue><bold>Sprint</bold> <reset>run-up, reinforced <red><bold>Life</bold><reset>, and <green><bold>Pickup</bold> <reset>reach",
+    "- A <red><bold>Taunt</bold> <reset>that dares you to try it"
+  ],
+  "Icon": { "Material": "goat_horn", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Rascal:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Goat"],
+  "Skills": {
+    "Taunt": { "Upgrades": { "28": { "range": "+8", "interval": "+8" }, "%18>46": { "range": "+2", "interval": "-1" } } },
+    "Knockback": { "Upgrades": { "20": { "Chance": "+25" }, "%12>32": { "Chance": "+5" } } },
+    "Damage":    { "Upgrades": { "24": { "Damage": "+4" }, "%12>34": { "Damage": "+1" } } },
+    "Sprint":    { "Upgrades": { "20": { "Active": true } } },
+    "Life":      { "Upgrades": { "22": { "Health": "+3" }, "%14>36": { "Health": "+1" } } },
+    "Pickup":    { "Upgrades": { "30": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It paws the ground once — Ram is about to charge.",
+    "60": "<light_purple>Nothing braces in time for the second hit."
+  }
+}

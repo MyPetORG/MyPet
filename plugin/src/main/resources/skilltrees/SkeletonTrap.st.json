@@ -1,0 +1,26 @@
+{
+  "ID": "SkeletonTrap",
+  "Name": "✦ Skeleton Trap",
+  "Order": 113,
+  "Description": [
+    "<light_purple>Struck by lightning, ridden by the dead ever since.",
+    "- <blue><bold>Ride</bold> <reset>a mount born from a storm",
+    "- <red><bold>Lightning</bold> <reset>strikes on command — the only mount that can",
+    "- Reinforced <green><bold>Life</bold> <reset>and <green><bold>Backpack</bold> <reset>storage"
+  ],
+  "Icon": { "Material": "lightning_rod", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["SkeletonHorse"],
+  "Skills": {
+    "Ride":      { "Upgrades": { "20": { "Active": true, "Speed": "+3" }, "%10>30": { "Speed": "+1" } } },
+    "Lightning": { "Upgrades": { "22": { "Chance": "+15", "Damage": "+2" }, "%12>34": { "Chance": "+5" } } },
+    "Life":      { "Upgrades": { "24": { "Health": "+4" }, "%12>36": { "Health": "+1" } } },
+    "Backpack":  { "Upgrades": { "25": { "Rows": "+1", "Drop": false } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Thunder still clings to its mane — Skeleton Trap is sprung.",
+    "65": "<light_purple>Storms seem to follow wherever it rides."
+  }
+}

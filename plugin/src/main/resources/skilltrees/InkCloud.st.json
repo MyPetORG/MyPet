@@ -1,0 +1,26 @@
+{
+  "ID": "InkCloud",
+  "Name": "✦ Ink Cloud",
+  "Order": 146,
+  "Description": [
+    "<light_purple>One cloud of ink and it's already gone.",
+    "- A billowing <red><bold>Slow</bold> <reset>that covers its retreat",
+    "- A <blue><bold>Sprint</bold> <reset>burst the moment the water clouds",
+    "- A quiet <red><bold>Life</bold> <reset>pool and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "ink_sac", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Rascal:OceanKeeper:OceanWayfarer"],
+  "MobTypes": ["Squid"],
+  "Skills": {
+    "Slow":   { "Upgrades": { "20": { "Chance": "+22", "Duration": "+3" }, "%14>38": { "Chance": "+4" } } },
+    "Sprint": { "Upgrades": { "26": { "Active": true } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+2" }, "%14>36": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "30": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The water clouds instantly — Ink Cloud is ready to vanish.",
+    "60": "<light_purple>By the time the ink clears, it's already somewhere else."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "ID": "RaidCaptain",
+  "Name": "Raid Captain",
+  "Order": 32,
+  "Description": [
+    "<gold>It leads the raid now. It doesn't just join one.",
+    "- <gold><bold>Ranged</bold> <reset>volleys and <gold><bold>Damage</bold> <reset>follow-through sharpen further",
+    "- <gold><bold>Knockback</bold> <reset>shield bash holds firm",
+    "- A raised <gold><bold>Shield</bold> <reset>redirects the counter-blow",
+    "- A deeper <red><bold>Potion</bold> <reset>satchel for the raid"
+  ],
+  "Icon": { "Material": "ominous_bottle" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:Illager"],
+  "Inheritance": { "Skilltree": "Illager" },
+  "MobTypes": ["Evoker", "Illusioner", "Pillager", "Ravager", "Vex", "Vindicator"],
+  "Weight": 0,
+  "Skills": {
+    "Potion": { "Upgrades": { "22": { "potions": [{ "type": "minecraft:poison", "cooldown": 8 }, { "type": "minecraft:harming", "cooldown": 12 }] }, "45": { "potions": [{ "type": "minecraft:weakness", "cooldown": 12 }, { "type": "minecraft:slowness", "cooldown": 12 }] }, "80": { "materialize": true } } },
+    "Ranged": { "Upgrades": { "%5>30": { "Damage": "+1" } } },
+    "Damage": { "Upgrades": { "%5>30": { "Damage": "+0.5" } } },
+    "Shield": { "Upgrades": { "30": { "Chance": "+20", "Redirect": "+15" } } }
+  },
+  "Notifications": {
+    "30": "<gray>The banner is raised. It commands the raid now."
+  }
+}

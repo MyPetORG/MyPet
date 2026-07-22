@@ -1,0 +1,26 @@
+{
+  "ID": "CarrotChase",
+  "Name": "✦ Carrot Chase",
+  "Order": 134,
+  "Description": [
+    "<light_purple>Dangle the stick and it will follow you to the end of the world.",
+    "- <blue><bold>Ride</bold> <reset>it — a carrot on a stick is all the steering it needs",
+    "- A truffle-snouted <green><bold>Pickup</bold> <reset>reach that only gets longer",
+    "- A short <blue><bold>Sprint</bold> <reset>burst and a hardy little <red><bold>Life</bold> <reset>pool"
+  ],
+  "Icon": { "Material": "carrot_on_a_stick", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Pig"],
+  "Skills": {
+    "Ride":    { "Upgrades": { "20": { "Active": true, "Speed": "+2" } } },
+    "Pickup":  { "Upgrades": { "24": { "Range": "+1.5", "Exp": true }, "%16>40": { "Range": "+0.5" } } },
+    "Sprint":  { "Upgrades": { "30": { "Active": true } } },
+    "Life":    { "Upgrades": { "20": { "Health": "+2" }, "%18>44": { "Health": "+1" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The stick swings into place and it can't help but follow — Carrot Chase begins.",
+    "60": "<light_purple>It has never once caught the carrot, and never once stopped trying."
+  }
+}

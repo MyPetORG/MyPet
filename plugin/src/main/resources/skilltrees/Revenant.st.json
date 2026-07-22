@@ -1,0 +1,25 @@
+{
+  "ID": "Revenant",
+  "Name": "Revenant",
+  "Order": 30,
+  "Description": [
+    "<gold>The grave no longer holds it back.",
+    "- Undying <gold><bold>Damage</bold> <reset>and <gold><bold>Withering</bold> strikes deepen further",
+    "- <gold><bold>Hardened bones</bold> <reset>keep thickening",
+    "- A grim <gold><bold>Heal</bold> <reset>knits shattered bone shut"
+  ],
+  "Icon": { "Material": "soul_lantern" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:Undead"],
+  "Inheritance": { "Skilltree": "Undead" },
+  "MobTypes": ["Bogged", "CamelHusk", "Drowned", "Giant", "Husk", "Parched", "Phantom", "Skeleton", "SkeletonHorse", "Stray", "Wither", "WitherSkeleton", "Zoglin", "Zombie", "ZombieHorse", "ZombieNautilus", "ZombieVillager", "ZombifiedPiglin"],
+  "Weight": 0,
+  "Skills": {
+    "Damage": { "Upgrades": { "%5>25": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "%5>25": { "Health": "+1" } } },
+    "Heal":   { "Upgrades": { "30": { "Health": "+1", "Timer": "-10" } } }
+  },
+  "Notifications": {
+    "30": "<gray>The grave answers your pet's call now."
+  }
+}

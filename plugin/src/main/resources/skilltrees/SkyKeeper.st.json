@@ -1,0 +1,27 @@
+{
+  "ID": "SkyKeeper",
+  "Name": "Sky Keeper",
+  "Order": 21,
+  "Description": [
+    "<green>A nest stocked high above the clouds.",
+    "- <green><bold>Backpack</bold> <reset>storage",
+    "- <green><bold>Pickup</bold> <reset>reach",
+    "- Early, windswept <green><bold>Beacon</bold> <reset>aura",
+    "- A <green><bold>Toolbox</bold> <reset>of workstations hauled up to the nest"
+  ],
+  "Icon": { "Material": "phantom_membrane" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Allay", "Bat", "Bee", "Blaze", "EnderDragon", "Ghast", "HappyGhast", "Parrot", "Phantom", "Vex", "Wither"],
+  "Skills": {
+    "Toolbox": { "Upgrades": { "10": { "crafting": true }, "18": { "smithing": true } } },
+    "Backpack": { "Upgrades": { "1": { "Rows": "+1", "Drop": false }, "16": { "Rows": "+1" } } },
+    "Pickup":   { "Upgrades": { "3": { "Range": "+1.5", "Exp": true }, "%5>5<25": { "Range": "+0.5" } } },
+    "Beacon":   { "Upgrades": { "8": { "Buffs": { "Speed": "+1", "JumpBoost": "+1" }, "Duration": "+6", "Count": "+2", "Range": "+8" } } }
+  },
+  "Notifications": {
+    "19": "<gray>Something calls from above the clouds. At level 20 it may ascend."
+  }
+}

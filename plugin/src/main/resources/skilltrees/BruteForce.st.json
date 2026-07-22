@@ -1,0 +1,26 @@
+{
+  "ID": "BruteForce",
+  "Name": "✦ Brute Force",
+  "Order": 167,
+  "Description": [
+    "<light_purple>It doesn't barter. It doesn't need to.",
+    "- <red><bold>Damage</bold> <reset>heavy enough that nothing needs a second swing",
+    "- A <red><bold>Life</bold> <reset>pool built to shrug off retaliation",
+    "- <red><bold>Knockback</bold> <reset>that clears space for the next swing"
+  ],
+  "Icon": { "Material": "golden_axe", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Nether:LandKeeper:LandWayfarer"],
+  "MobTypes": ["PiglinBrute"],
+  "Skills": {
+    "Life":      { "Upgrades": { "20": { "Health": "+10" }, "%10>30": { "Health": "+2" } } },
+    "Damage":    { "Upgrades": { "22": { "Damage": "+8" }, "%8>30": { "Damage": "+2" } } },
+    "Knockback": { "Upgrades": { "26": { "Chance": "+12" }, "%20>46": { "Chance": "+3" } } },
+    "Pickup":    { "Upgrades": { "28": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its golden axe never leaves its hand again — Brute Force takes over.",
+    "70": "<light_purple>It has stopped bothering to aim. It doesn't need to."
+  }
+}

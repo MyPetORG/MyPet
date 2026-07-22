@@ -1,0 +1,28 @@
+{
+  "ID": "AncientSeeds",
+  "Name": "✦ Ancient Seeds",
+  "Order": 132,
+  "Description": [
+    "<light_purple>It digs deeper than any other companion, and always finds something.",
+    "- The <green><bold>widest Pickup range</bold> <reset>of any Companion signature",
+    "- A late <green><bold>Beacon</bold> <reset>aura nursing whatever it uncovers",
+    "- Reinforced <red><bold>Life</bold> <reset>and a single <green><bold>Backpack</bold> <reset>row for its finds",
+    "- <green><bold>Sniff</bold> <reset>out what the soil buried — seeds, pods and stranger things"
+  ],
+  "Icon": { "Material": "torchflower_seeds", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Sniffer"],
+  "Skills": {
+    "Sniff": { "Upgrades": { "25": { "interval": "+80", "drops": [{ "item": "minecraft:torchflower_seeds", "weight": 4, "amountMin": 1, "amountMax": 1 }, { "item": "minecraft:pitcher_pod", "weight": 4, "amountMin": 1, "amountMax": 1 }, { "item": "minecraft:moss_block", "weight": 3, "amountMin": 1, "amountMax": 2 }, { "item": "minecraft:wheat_seeds", "weight": 6, "amountMin": 1, "amountMax": 3 }] }, "60": { "interval": "-15" } } },
+    "Pickup":   { "Upgrades": { "20": { "Range": "+2", "Exp": true }, "%12>32": { "Range": "+0.5" } } },
+    "Life":     { "Upgrades": { "22": { "Health": "+5" }, "%12>34": { "Health": "+1" } } },
+    "Beacon":   { "Upgrades": { "45": { "Buffs": { "Regeneration": "+1" }, "Duration": "+6", "Count": "+1", "Range": "+6" } } },
+    "Backpack": { "Upgrades": { "55": { "Rows": "+1", "Drop": false } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It snuffles the dirt and turns something up — Ancient Seeds takes root.",
+    "70": "<light_purple>Nothing buried nearby stays buried for long."
+  }
+}

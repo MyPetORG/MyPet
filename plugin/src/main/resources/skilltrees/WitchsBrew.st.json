@@ -1,0 +1,28 @@
+{
+  "ID": "WitchsBrew",
+  "Name": "✦ Witch's Brew",
+  "Order": 155,
+  "Description": [
+    "<light_purple>Whatever's in the cauldron tonight, you don't want a taste.",
+    "- A lingering <red><bold>Poison</bold> <reset>brewed into every strike",
+    "- A staggering <red><bold>Slow</bold> <reset>to keep you in range",
+    "- A self-<red><bold>Heal</bold> <reset>that keeps the pot simmering, plus <green><bold>Pickup</bold> <reset>reach",
+    "- Thrown <red><bold>Potion</bold> <reset>flasks straight from the cauldron"
+  ],
+  "Icon": { "Material": "cauldron", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Rascal:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Witch"],
+  "Skills": {
+    "Potion": { "Upgrades": { "22": { "potions": [{ "type": "minecraft:poison", "cooldown": 8 }, { "type": "minecraft:harming", "cooldown": 12 }] }, "45": { "potions": [{ "type": "minecraft:weakness", "cooldown": 12 }, { "type": "minecraft:slowness", "cooldown": 12 }] }, "80": { "materialize": true } } },
+    "Poison": { "Upgrades": { "20": { "Chance": "+30", "Duration": "+4" }, "%8>28": { "Duration": "+1" } } },
+    "Slow":   { "Upgrades": { "26": { "Chance": "+20", "Duration": "+3" }, "%14>36": { "Chance": "+5" } } },
+    "Heal":   { "Upgrades": { "32": { "Health": "+3", "Timer": "-18" }, "%16>38": { "Health": "+1", "Timer": "-4" } } },
+    "Pickup": { "Upgrades": { "24": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The cauldron bubbles over — Witch's Brew is ready.",
+    "60": "<light_purple>It shrugs off what should have finished it — the brew heals as it hurts."
+  }
+}

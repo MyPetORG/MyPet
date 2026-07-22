@@ -1,0 +1,25 @@
+{
+  "ID": "SkyWayfarer",
+  "Name": "Sky Wayfarer",
+  "Order": 25,
+  "Description": [
+    "<blue>Wingbeats close the distance.",
+    "- <blue><bold>Ride</bold> <reset>the pet as a mount",
+    "- Soaring <blue><bold>Sprint</bold> <reset>bursts",
+    "- <blue><bold>Control</bold> <reset>precision steering"
+  ],
+  "Icon": { "Material": "elytra" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0, "HappyGhast": 3.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Allay", "Bat", "Bee", "Blaze", "EnderDragon", "Ghast", "HappyGhast", "Parrot", "Phantom", "Vex", "Wither"],
+  "Skills": {
+    "Ride":    { "Upgrades": { "1": { "Active": true, "JumpHeight": "+0.5" }, "%6>6<25": { "JumpHeight": "+0.25" } } },
+    "Sprint":  { "Upgrades": { "3": { "Active": true } } },
+    "Control": { "Upgrades": { "12": { "Active": true } } }
+  },
+  "Notifications": {
+    "19": "<gray>The open sky feels smaller each day. At level 20 it may ascend."
+  }
+}

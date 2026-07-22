@@ -1,0 +1,29 @@
+{
+  "ID": "VillageGuardian",
+  "Name": "✦ Village Guardian",
+  "Order": 178,
+  "Description": [
+    "<light_purple>It has protected this village since before you arrived, and it isn't stopping now.",
+    "- A <red><bold>Knockback</bold> <reset>shove with a golem's full weight behind it",
+    "- A <green><bold>Backpack</bold> <reset>row for whatever the village needs carried",
+    "- Steady <red><bold>Damage</bold> <reset>and a protector's <red><bold>Life</bold> <reset>pool",
+    "- Iron <red><bold>Armor</bold> <reset>and a <red><bold>Taunt</bold> <reset>that puts it between you and the mob"
+  ],
+  "Icon": { "Material": "poppy", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Construct:LandKeeper:LandWayfarer"],
+  "MobTypes": ["IronGolem"],
+  "Skills": {
+    "Taunt": { "Upgrades": { "28": { "range": "+8", "interval": "+8" }, "%18>46": { "range": "+2", "interval": "-1" } } },
+    "Armor": { "Upgrades": { "24": { "armor": "+3", "toughness": "+1" }, "%16>40": { "armor": "+1" }, "60": { "toughness": "+1" } } },
+    "Knockback": { "Upgrades": { "20": { "Chance": "+22" }, "%14>34": { "Chance": "+5" } } },
+    "Backpack":  { "Upgrades": { "22": { "Rows": "+1", "Drop": false }, "55": { "Rows": "+1" } } },
+    "Damage":    { "Upgrades": { "24": { "Damage": "+4" }, "%14>38": { "Damage": "+1" } } },
+    "Life":      { "Upgrades": { "26": { "Health": "+6" }, "%12>38": { "Health": "+2" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It plants its feet between you and the danger — Village Guardian takes its post.",
+    "65": "<light_purple>It has never once let anything past."
+  }
+}

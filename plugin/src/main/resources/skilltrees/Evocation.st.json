@@ -1,0 +1,27 @@
+{
+  "ID": "Evocation",
+  "Name": "✦ Evocation",
+  "Order": 182,
+  "Description": [
+    "<light_purple>Every gesture summons something worse than the last.",
+    "- Bursts of spell <red><bold>Damage</bold><reset>",
+    "- A <red><bold>Ranged</bold> <reset>volley backing the melee",
+    "- <red><bold>Slow</bold><reset>-laced casting that lingers",
+    "- <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "totem_of_undying", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Illager:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Evoker"],
+  "Skills": {
+    "Damage": { "Upgrades": { "20": { "Damage": "+6" }, "%10>30": { "Damage": "+2" } } },
+    "Ranged": { "Upgrades": { "24": { "Rate": "-6", "Damage": "+6", "Projectile": "Arrow" }, "%12>36": { "Damage": "+2" } } },
+    "Slow":   { "Upgrades": { "28": { "Chance": "+20", "Duration": "+3" }, "%14>38": { "Chance": "+5" } } },
+    "Pickup": { "Upgrades": { "30": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The runes flare to life — Evocation begins its cast.",
+    "70": "<light_purple>Every gesture calls something worse than the last."
+  }
+}

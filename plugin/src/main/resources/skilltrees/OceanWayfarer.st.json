@@ -1,0 +1,25 @@
+{
+  "ID": "OceanWayfarer",
+  "Name": "Ocean Wayfarer",
+  "Order": 26,
+  "Description": [
+    "<blue>The current does the carrying.",
+    "- <blue><bold>Ride</bold> <reset>the pet as a mount",
+    "- Surging <blue><bold>Sprint</bold> <reset>bursts",
+    "- <blue><bold>Control</bold> <reset>precision steering"
+  ],
+  "Icon": { "Material": "trident" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Cod", "Dolphin", "ElderGuardian", "GlowSquid", "Guardian", "Nautilus", "Pufferfish", "Salmon", "Squid", "Tadpole", "TropicalFish", "ZombieNautilus"],
+  "Skills": {
+    "Ride":    { "Upgrades": { "1": { "Active": true } } },
+    "Sprint":  { "Upgrades": { "3": { "Active": true } } },
+    "Control": { "Upgrades": { "12": { "Active": true } } }
+  },
+  "Notifications": {
+    "19": "<gray>The current pulls your pet somewhere new. At level 20 it may ascend."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "ID": "Crossbow",
+  "Name": "✦ Crossbow",
+  "Order": 180,
+  "Description": [
+    "<light_purple>It never lowers the bolt, and it never misses twice.",
+    "- Reinforced <red><bold>Life</bold> <reset>to survive the reload",
+    "- The <red><bold>heaviest crossbow bolt</bold> <reset>any Illager carries",
+    "- Hard-hitting <red><bold>Damage</bold> <reset>up close when the bolt isn't enough",
+    "- <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "crossbow", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Illager:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Pillager"],
+  "Skills": {
+    "Life":   { "Upgrades": { "20": { "Health": "+7" }, "%10>30": { "Health": "+2" } } },
+    "Ranged": { "Upgrades": { "22": { "Rate": "-8", "Damage": "+9", "Projectile": "Arrow" }, "%9>27": { "Damage": "+2" } } },
+    "Damage": { "Upgrades": { "26": { "Damage": "+5" }, "%12>32": { "Damage": "+2" } } },
+    "Pickup": { "Upgrades": { "30": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The bolt is already nocked — Crossbow takes aim.",
+    "75": "<light_purple>Nothing survives two shots from it twice."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "ID": "BeastOfBurden",
+  "Name": "✦ Beast of Burden",
+  "Order": 120,
+  "Description": [
+    "<light_purple>No pack animal in the world carries more.",
+    "- <green><bold>Backpack</bold> <reset>rows — more than any other signature in the roster",
+    "- <blue><bold>Ride</bold> <reset>it once its load is proven",
+    "- Reinforced <red><bold>Life</bold> <reset>and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "bundle", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Donkey"],
+  "Skills": {
+    "Backpack": { "Upgrades": { "20": { "Rows": "+1", "Drop": false }, "30": { "Rows": "+1" }, "55": { "Rows": "+1" }, "80": { "Rows": "+1" } } },
+    "Life":     { "Upgrades": { "20": { "Health": "+5" }, "%12>32": { "Health": "+1" } } },
+    "Ride":     { "Upgrades": { "22": { "Active": true, "Speed": "+3" } } },
+    "Pickup":   { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It settles into its harness without complaint — Beast of Burden takes the load.",
+    "80": "<light_purple>Its packs hold more than any caravan could ask for."
+  }
+}

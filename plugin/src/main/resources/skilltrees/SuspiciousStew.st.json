@@ -1,0 +1,26 @@
+{
+  "ID": "SuspiciousStew",
+  "Name": "✦ Suspicious Stew",
+  "Order": 131,
+  "Description": [
+    "<light_purple>Whatever it grazes on, something odd comes out the other side.",
+    "- A gentle <red><bold>Heal</bold> <reset>paired with a supporting <green><bold>Beacon</bold> <reset>aura",
+    "- Reinforced <red><bold>Life</bold> <reset>and <green><bold>Backpack</bold> <reset>storage",
+    "- The strangest support combo of any Companion"
+  ],
+  "Icon": { "Material": "suspicious_stew", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Mooshroom"],
+  "Skills": {
+    "Heal":     { "Upgrades": { "20": { "Health": "+2", "Timer": "-15" }, "%12>32": { "Health": "+1", "Timer": "-5" } } },
+    "Beacon":   { "Upgrades": { "20": { "Buffs": { "Regeneration": "+1" }, "Duration": "+6", "Count": "+1", "Range": "+6" }, "%20>40": { "Duration": "+2" } } },
+    "Life":     { "Upgrades": { "24": { "Health": "+4" }, "%12>36": { "Health": "+1" } } },
+    "Backpack": { "Upgrades": { "25": { "Rows": "+1", "Drop": false } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Something in the stew starts to make sense — Suspicious Stew settles in.",
+    "60": "<light_purple>Nobody's quite sure what it grazed on, but it's working."
+  }
+}

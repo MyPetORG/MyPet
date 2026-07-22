@@ -1,0 +1,26 @@
+{
+  "ID": "CaravanGuard",
+  "Name": "✦ Caravan Guard",
+  "Order": 133,
+  "Description": [
+    "<light_purple>It spits first and guards the goods after.",
+    "- <red><bold>Ranged</bold> <reset>llama spit to keep raiders at bay",
+    "- <red><bold>Thorns</bold> <reset>that guard every pack it stands beside",
+    "- <green><bold>Backpack</bold> <reset>rows for the caravan's cargo and steady <red><bold>Life</bold><reset>"
+  ],
+  "Icon": { "Material": "lead", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["TraderLlama"],
+  "Skills": {
+    "Ranged":   { "Upgrades": { "20": { "Rate": "-8", "Damage": "+3", "Projectile": "LlamaSpit" }, "%12>32": { "Damage": "+1" } } },
+    "Thorns":   { "Upgrades": { "26": { "Chance": "+15", "Reflection": "+8" }, "%14>38": { "Reflection": "+2" } } },
+    "Backpack": { "Upgrades": { "20": { "Rows": "+1", "Drop": false }, "50": { "Rows": "+1" } } },
+    "Life":     { "Upgrades": { "24": { "Health": "+4" }, "%12>36": { "Health": "+1" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It steps to the front of the train, spit already loaded — Caravan Guard takes post.",
+    "65": "<light_purple>Nothing gets near the packs while it's watching."
+  }
+}

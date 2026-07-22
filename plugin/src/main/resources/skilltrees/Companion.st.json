@@ -1,0 +1,30 @@
+{
+  "ID": "Companion",
+  "Name": "Companion",
+  "Order": 17,
+  "Description": [
+    "<red>Loyal to the last, fierce when it counts.",
+    "- <red><bold>Hardened bones</bold> <reset>(bonus health)",
+    "- <red><bold>Heal</bold> <reset>over time",
+    "- <red><bold>Thorns</bold> <reset>plating",
+    "- <red><bold>Shield</bold> <reset>redirection",
+    "- <red><bold>Armor</bold> <reset>plating and a <red><bold>Taunt</bold> <reset>that pulls danger off you"
+  ],
+  "Icon": { "Material": "golden_carrot" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Armadillo", "Camel", "Capybara", "Chicken", "Cod", "Cow", "Donkey", "HappyGhast", "Horse", "Llama", "Mooshroom", "Mule", "Nautilus", "Panda", "Pig", "Salmon", "Sheep", "Sniffer", "Tadpole", "TraderLlama", "TropicalFish", "Turtle", "Villager", "WanderingTrader"],
+  "Skills": {
+    "Armor": { "Upgrades": { "8": { "armor": "+2" }, "%4>12<25": { "armor": "+1", "toughness": "+1" } } },
+    "Taunt": { "Upgrades": { "10": { "range": "+8", "interval": "+8" }, "20": { "range": "+4", "interval": "-3" } } },
+    "Life":   { "Upgrades": { "1": { "Health": "+2" }, "%6>6<25": { "Health": "+1" } } },
+    "Heal":   { "Upgrades": { "3": { "Health": "+1", "Timer": "-20" }, "13": { "Health": "+1", "Timer": "-15" } } },
+    "Thorns": { "Upgrades": { "8": { "Chance": "+15", "Reflection": "+10" }, "16": { "Chance": "+10", "Reflection": "+8" } } },
+    "Shield": { "Upgrades": { "12": { "Chance": "+20", "Redirect": "+15" }, "20": { "Chance": "+15", "Redirect": "+10" } } }
+  },
+  "Notifications": {
+    "19": "<gray>A deeper bond is within reach. At level 20 it may ascend."
+  }
+}

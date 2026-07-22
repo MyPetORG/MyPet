@@ -1,0 +1,26 @@
+{
+  "ID": "Frostbite",
+  "Name": "✦ Frostbite",
+  "Order": 104,
+  "Description": [
+    "<light_purple>Its arrows carry the chill of the tundra.",
+    "- <red><bold>Ranged</bold> <reset>arrows tipped with frost",
+    "- The <red><bold>longest Slow</bold> <reset>duration of any Undead",
+    "- <green><bold>Backpack</bold> <reset>storage"
+  ],
+  "Icon": { "Material": "tipped_arrow", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Stray"],
+  "Skills": {
+    "Ranged":   { "Upgrades": { "20": { "Rate": "-8", "Damage": "+3", "Projectile": "Arrow" }, "%10>30": { "Damage": "+1" } } },
+    "Slow":     { "Upgrades": { "20": { "Chance": "+20", "Duration": "+4" }, "%8>28": { "Duration": "+1" } } },
+    "Life":     { "Upgrades": { "20": { "Health": "+5" }, "%12>32": { "Health": "+1" } } },
+    "Backpack": { "Upgrades": { "25": { "Rows": "+1", "Drop": false } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>A cold wind follows its shots — Frostbite sets in.",
+    "70": "<light_purple>Its targets stay frozen long after the arrow lands."
+  }
+}

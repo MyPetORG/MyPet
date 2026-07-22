@@ -1,0 +1,24 @@
+{
+  "ID": "LandPathfinder",
+  "Name": "Land Pathfinder",
+  "Order": 43,
+  "Description": [
+    "<gold>No stretch of ground slows it down anymore.",
+    "- <gold><bold>Ride</bold> <reset>speed keeps climbing",
+    "- Galloping <gold><bold>Sprint</bold> <reset>and precision <gold><bold>Control</bold> <reset>hold steady",
+    "- A hastening <gold><bold>Beacon</bold> <reset>aura joins the journey"
+  ],
+  "Icon": { "Material": "diamond_horse_armor" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:LandWayfarer"],
+  "Inheritance": { "Skilltree": "LandWayfarer" },
+  "MobTypes": ["Armadillo", "Bogged", "Breeze", "Camel", "CamelHusk", "Cat", "CaveSpider", "Chameleon", "Chicken", "CopperGolem", "Cow", "Creaking", "Creeper", "Donkey", "Enderman", "Endermite", "Evoker", "Fox", "Giant", "Goat", "Hoglin", "Horse", "Husk", "Illusioner", "IronGolem", "Llama", "MagmaCube", "Mooshroom", "Mule", "Ocelot", "Panda", "Parched", "Pig", "Piglin", "PiglinBrute", "Pillager", "PolarBear", "Rabbit", "Ravager", "Sheep", "Silverfish", "Skeleton", "SkeletonHorse", "Slime", "Sniffer", "SnowGolem", "Spider", "Stray", "Strider", "TraderLlama", "Villager", "Vindicator", "WanderingTrader", "Warden", "Witch", "WitherSkeleton", "Wolf", "Zoglin", "Zombie", "ZombieHorse", "ZombieVillager", "ZombifiedPiglin"],
+  "Weight": 0,
+  "Skills": {
+    "Ride":   { "Upgrades": { "%5>25": { "Speed": "+2" } } },
+    "Beacon": { "Upgrades": { "30": { "Buffs": { "Speed": "+1" }, "Duration": "+6", "Count": "+1", "Range": "+8" } } }
+  },
+  "Notifications": {
+    "30": "<gray>The horizon is closer now than it ever was."
+  }
+}

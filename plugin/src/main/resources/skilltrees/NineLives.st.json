@@ -1,0 +1,26 @@
+{
+  "ID": "NineLives",
+  "Name": "✦ Nine Lives",
+  "Order": 159,
+  "Description": [
+    "<light_purple>It should have run out of luck several falls ago.",
+    "- A <red><bold>Life</bold> <reset>curve that spikes hard right when it should be over",
+    "- A <blue><bold>Sprint</bold> <reset>dash to land on its feet",
+    "- A precise <red><bold>Damage</bold> <reset>pounce and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "string", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Predator:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Cat"],
+  "Skills": {
+    "Life":   { "Upgrades": { "20": { "Health": "+2" }, "%12>32": { "Health": "+1" }, "72": { "Health": "+4" } } },
+    "Sprint": { "Upgrades": { "20": { "Active": true } } },
+    "Damage": { "Upgrades": { "26": { "Damage": "+3" }, "%16>40": { "Damage": "+1" } } },
+    "Pickup": { "Upgrades": { "28": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It shakes off a fall that should have ended it — Nine Lives begins counting down.",
+    "72": "<light_purple>However many it has left, it's not running out tonight."
+  }
+}

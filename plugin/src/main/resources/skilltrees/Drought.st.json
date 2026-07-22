@@ -1,0 +1,26 @@
+{
+  "ID": "Drought",
+  "Name": "✦ Drought",
+  "Order": 102,
+  "Description": [
+    "<light_purple>It crossed the dunes long after it should have crumbled.",
+    "- <red><bold>Damage</bold> <reset>from a body dried to leather",
+    "- <red><bold>Withering</bold> <reset>touch paired with a <blue><bold>Sprint</bold> <reset>burst",
+    "- <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "cactus", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Parched"],
+  "Skills": {
+    "Damage": { "Upgrades": { "20": { "Damage": "+5" }, "%10>30": { "Damage": "+1" } } },
+    "Wither": { "Upgrades": { "20": { "Chance": "+20", "Duration": "+3" }, "%10>30": { "Chance": "+5" } } },
+    "Sprint": { "Upgrades": { "22": { "Active": true } } },
+    "Pickup": { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The dunes shift as it quickens its pace — Drought has come.",
+    "65": "<light_purple>Everything it touches withers like the land it crossed."
+  }
+}

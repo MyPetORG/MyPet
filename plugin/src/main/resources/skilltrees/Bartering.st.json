@@ -1,0 +1,26 @@
+{
+  "ID": "Bartering",
+  "Name": "✦ Bartering",
+  "Order": 166,
+  "Description": [
+    "<light_purple>It still trades in gold — but it never forgets how to fight for a better price.",
+    "- A well-stocked <green><bold>Backpack</bold> <reset>purse for its haul",
+    "- Hard-swung <red><bold>Damage</bold> <reset>that backs up the deal",
+    "- <green><bold>Pickup</bold> <reset>reach for anything shiny left on the ground"
+  ],
+  "Icon": { "Material": "gold_ingot", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Nether:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Piglin"],
+  "Skills": {
+    "Backpack": { "Upgrades": { "20": { "Rows": "+1", "Drop": false }, "55": { "Rows": "+1" } } },
+    "Damage":   { "Upgrades": { "22": { "Damage": "+9" }, "%8>30": { "Damage": "+2" } } },
+    "Pickup":   { "Upgrades": { "26": { "Range": "+2", "Exp": true } } },
+    "Life":     { "Upgrades": { "24": { "Health": "+9" }, "%10>34": { "Health": "+2" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It counts its ingots, checks its blade, and gets back to the barter — Bartering settles in.",
+    "70": "<light_purple>It has never once given away a deal for free."
+  }
+}

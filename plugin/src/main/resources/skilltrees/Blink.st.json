@@ -1,0 +1,27 @@
+{
+  "ID": "Blink",
+  "Name": "✦ Blink",
+  "Order": 179,
+  "Description": [
+    "<light_purple>It still doesn't have the trick down — for now, it just gets there faster and hits much, much harder.",
+    "- A <green><bold>Pickup</bold> <reset>reach worthy of a born block-carrier",
+    "- A <blue><bold>Sprint</bold> <reset>burst standing in for the vanish it hasn't learned yet",
+    "- Front-loaded burst <red><bold>Damage</bold> <reset>— most of it lands by level 30",
+    "- A lean <red><bold>Life</bold> <reset>pool: it plans on not being where the hit lands"
+  ],
+  "Icon": { "Material": "ender_pearl", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:End:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Enderman"],
+  "Skills": {
+    "Pickup": { "Upgrades": { "20": { "Range": "+1.5", "Exp": true } } },
+    "Sprint": { "Upgrades": { "22": { "Active": true } } },
+    "Damage": { "Upgrades": { "24": { "Damage": "+18" }, "30": { "Damage": "+4" }, "%14>44": { "Damage": "+2" } } },
+    "Life":   { "Upgrades": { "26": { "Health": "+7" }, "%12>38": { "Health": "+2" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It hesitates at the edge of every jump — Blink hasn't quite learned the trick yet.",
+    "70": "<light_purple>One day it'll be gone before you blink. Today, it's just fast."
+  }
+}

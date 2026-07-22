@@ -1,0 +1,26 @@
+{
+  "ID": "LavaWalker",
+  "Name": "✦ Lava Walker",
+  "Order": 173,
+  "Description": [
+    "<light_purple>Where lesser mounts would sink, it strolls.",
+    "- The Nether's own <blue><bold>Ride</bold> <reset>mount, saddled from the very first day",
+    "- <red><bold>Fire</bold> <reset>that never bothers it, only the ones nearby",
+    "- Reinforced <red><bold>Life</bold> <reset>and a <green><bold>Backpack</bold> <reset>row for the crossing"
+  ],
+  "Icon": { "Material": "warped_fungus_on_a_stick", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Nether:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Strider"],
+  "Skills": {
+    "Ride":     { "Upgrades": { "20": { "Active": true, "Speed": "+3" }, "%16>36": { "Speed": "+1" } } },
+    "Fire":     { "Upgrades": { "24": { "Chance": "+18", "Duration": "+2" }, "%18>42": { "Chance": "+3" } } },
+    "Life":     { "Upgrades": { "26": { "Health": "+3" }, "%16>42": { "Health": "+1" } } },
+    "Backpack": { "Upgrades": { "28": { "Rows": "+1", "Drop": false } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It sets out across the lava like it's solid ground — Lava Walker is saddled.",
+    "65": "<light_purple>Not even the heat slows its stride anymore."
+  }
+}

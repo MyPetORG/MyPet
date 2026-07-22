@@ -1,0 +1,28 @@
+{
+  "ID": "ScuteShield",
+  "Name": "✦ Scute Shield",
+  "Order": 138,
+  "Description": [
+    "<light_purple>Roll up and the fight simply stops mattering.",
+    "- <red><bold>Thorns</bold> <reset>plating stacked with a rolled-up <red><bold>Shield</bold><reset>",
+    "- Reinforced <red><bold>Life</bold> <reset>to outlast the roll",
+    "- <green><bold>Pickup</bold> <reset>reach for whatever it finds after unrolling",
+    "- <red><bold>Armor</bold> <reset>scutes layered over the roll"
+  ],
+  "Icon": { "Material": "armadillo_scute", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Armadillo"],
+  "Skills": {
+    "Armor": { "Upgrades": { "24": { "armor": "+3", "toughness": "+1" }, "%16>40": { "armor": "+1" }, "60": { "toughness": "+1" } } },
+    "Thorns": { "Upgrades": { "20": { "Chance": "+20", "Reflection": "+8" }, "%12>32": { "Reflection": "+2" } } },
+    "Shield": { "Upgrades": { "26": { "Chance": "+20", "Redirect": "+10" }, "%14>38": { "Chance": "+5" } } },
+    "Life":   { "Upgrades": { "22": { "Health": "+5" }, "%12>34": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "28": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It tucks in tight and its plating hardens — Scute Shield rolls into place.",
+    "65": "<light_purple>Nothing has found a way through the shell yet."
+  }
+}

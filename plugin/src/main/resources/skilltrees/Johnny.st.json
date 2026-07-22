@@ -1,0 +1,27 @@
+{
+  "ID": "Johnny",
+  "Name": "✦ Johnny",
+  "Order": 185,
+  "Description": [
+    "<light_purple>Sometimes it spawns alone, hostile to everyone it meets — even its own raid. Some things never change.",
+    "- <red><bold>Bleed</bold> <reset>gouges from every axe swing",
+    "- Pure axe <red><bold>Damage</bold> <reset>DPS",
+    "- A charging <blue><bold>Sprint</bold> <reset>burst",
+    "- <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "iron_axe", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Illager:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Vindicator"],
+  "Skills": {
+    "Bleed":  { "Upgrades": { "20": { "Damage": "+1", "Duration": "+3", "Chance": "+22" }, "%10>30": { "Chance": "+4" } } },
+    "Damage": { "Upgrades": { "22": { "Damage": "+6" }, "%10>30": { "Damage": "+1" } } },
+    "Sprint": { "Upgrades": { "26": { "Active": true } } },
+    "Pickup": { "Upgrades": { "30": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It came alone, and it's already swinging — Johnny wakes up.",
+    "70": "<light_purple>Here's Johnny — and it never once stops chopping."
+  }
+}

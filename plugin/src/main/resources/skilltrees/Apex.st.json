@@ -1,0 +1,24 @@
+{
+  "ID": "Apex",
+  "Name": "Apex",
+  "Order": 36,
+  "Description": [
+    "<gold>Top of the food chain, and it knows it.",
+    "- <gold><bold>Damage</bold> <reset>bite and claw cut deeper still",
+    "- Rending <gold><bold>Bleed</bold> <reset>wounds and pouncing <gold><bold>Sprint</bold> <reset>hold steady",
+    "- A hunter's constitution grants bonus <gold><bold>Life</bold><reset>"
+  ],
+  "Icon": { "Material": "totem_of_undying" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:Predator"],
+  "Inheritance": { "Skilltree": "Predator" },
+  "MobTypes": ["Axolotl", "Cat", "Chameleon", "Creeper", "Dolphin", "Frog", "Ocelot", "PolarBear", "Warden", "Wolf"],
+  "Weight": 0,
+  "Skills": {
+    "Damage": { "Upgrades": { "%5>25": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "30": { "Health": "+2" } } }
+  },
+  "Notifications": {
+    "30": "<gray>Nothing left in these woods hunts it back."
+  }
+}

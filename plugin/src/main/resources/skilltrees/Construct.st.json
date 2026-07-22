@@ -1,0 +1,30 @@
+{
+  "ID": "Construct",
+  "Name": "Construct",
+  "Order": 13,
+  "Description": [
+    "<red>Unmoved. Unmelted. Unbroken.",
+    "- <red><bold>Hardened bones</bold> <reset>(bonus health)",
+    "- <red><bold>Thorns</bold> <reset>plating",
+    "- <red><bold>Shield</bold> <reset>redirection",
+    "- Ground-shaking <red><bold>Stomp</bold> <reset>slam",
+    "- <red><bold>Armor</bold> <reset>plating and a <red><bold>Taunt</bold> <reset>that makes it the target"
+  ],
+  "Icon": { "Material": "iron_ingot" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 2.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["CopperGolem", "Creaking", "ElderGuardian", "Guardian", "IronGolem", "SnowGolem"],
+  "Skills": {
+    "Taunt": { "Upgrades": { "10": { "range": "+8", "interval": "+8" }, "20": { "range": "+4", "interval": "-3" } } },
+    "Armor": { "Upgrades": { "8": { "armor": "+2" }, "%4>12<25": { "armor": "+1", "toughness": "+1" } } },
+    "Life":   { "Upgrades": { "1": { "Health": "+3" }, "%6>6<25": { "Health": "+1" } } },
+    "Thorns": { "Upgrades": { "3": { "Chance": "+15", "Reflection": "+10" }, "13": { "Chance": "+10", "Reflection": "+8" } } },
+    "Shield": { "Upgrades": { "8": { "Chance": "+20", "Redirect": "+15" }, "16": { "Chance": "+15", "Redirect": "+10" } } },
+    "Stomp":  { "Upgrades": { "12": { "Chance": "+20", "Damage": "+2" }, "20": { "Chance": "+15", "Damage": "+1" } } }
+  },
+  "Notifications": {
+    "19": "<gray>The core hums louder each day. At level 20 it may ascend."
+  }
+}

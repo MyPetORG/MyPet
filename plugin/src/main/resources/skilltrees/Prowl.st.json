@@ -1,0 +1,26 @@
+{
+  "ID": "Prowl",
+  "Name": "✦ Prowl",
+  "Order": 161,
+  "Description": [
+    "<light_purple>It was already gone before you heard the grass move.",
+    "- A <blue><bold>Sprint</bold> <reset>burst that closes the gap in an instant",
+    "- A raking <red><bold>Bleed</bold> <reset>wound that keeps working after the ambush",
+    "- A finishing <red><bold>Damage</bold> <reset>swipe and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "rabbit", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Predator:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Ocelot"],
+  "Skills": {
+    "Sprint": { "Upgrades": { "20": { "Active": true } } },
+    "Bleed":  { "Upgrades": { "26": { "Damage": "+1", "Duration": "+3", "Chance": "+20" }, "%18>44": { "Chance": "+4" } } },
+    "Damage": { "Upgrades": { "30": { "Damage": "+3" }, "%18>44": { "Damage": "+1" } } },
+    "Pickup": { "Upgrades": { "24": { "Range": "+2", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It flattens into the underbrush without a sound — Prowl has begun.",
+    "60": "<light_purple>By the time anything reacts, the ambush is already over."
+  }
+}

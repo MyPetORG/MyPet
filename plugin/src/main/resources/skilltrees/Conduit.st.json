@@ -1,0 +1,26 @@
+{
+  "ID": "Conduit",
+  "Name": "✦ Conduit",
+  "Order": 122,
+  "Description": [
+    "<light_purple>Its shell hums with the same power that calms the deep.",
+    "- A true <green><bold>Beacon</bold> <reset>aura — Haste, Night Vision, and Water Breathing together",
+    "- A <red><bold>Shield</bold> <reset>that turns the tide back on attackers",
+    "- Reinforced <red><bold>Life</bold> <reset>and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "conduit", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:OceanKeeper:OceanWayfarer"],
+  "MobTypes": ["Nautilus"],
+  "Skills": {
+    "Beacon": { "Upgrades": { "20": { "Buffs": { "Haste": "+1", "NightVision": true, "WaterBreathing": true }, "Duration": "+8", "Count": "+3", "Range": "+6" }, "%20>40": { "Duration": "+2" } } },
+    "Shield": { "Upgrades": { "24": { "Chance": "+15", "Redirect": "+10" }, "%14>38": { "Chance": "+5" } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+4" }, "%12>32": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "26": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The water around it clears and calms — Conduit awakens.",
+    "65": "<light_purple>Everything nearby breathes a little easier."
+  }
+}

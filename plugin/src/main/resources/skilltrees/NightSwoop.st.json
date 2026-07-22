@@ -1,0 +1,26 @@
+{
+  "ID": "NightSwoop",
+  "Name": "✦ Night Swoop",
+  "Order": 110,
+  "Description": [
+    "<light_purple>It circles unseen, then falls like a shadow.",
+    "- A <blue><bold>Sprint</bold> <reset>burst into every dive",
+    "- <red><bold>Bleed</bold> <reset>claws that don't stop hurting",
+    "- <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "coal", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:SkyKeeper:SkyWayfarer"],
+  "MobTypes": ["Phantom"],
+  "Skills": {
+    "Damage": { "Upgrades": { "20": { "Damage": "+4" }, "%10>30": { "Damage": "+1" } } },
+    "Sprint": { "Upgrades": { "20": { "Active": true } } },
+    "Bleed":  { "Upgrades": { "24": { "Damage": "+1", "Duration": "+3", "Chance": "+20" }, "%12>36": { "Chance": "+5" } } },
+    "Pickup": { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Wings catch the moonlight — Night Swoop begins its patrol.",
+    "60": "<light_purple>By the time you hear it, the dive is already over."
+  }
+}

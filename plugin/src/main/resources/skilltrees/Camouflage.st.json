@@ -1,0 +1,26 @@
+{
+  "ID": "Camouflage",
+  "Name": "✦ Camouflage",
+  "Order": 156,
+  "Description": [
+    "<light_purple>Stand still long enough and the jungle simply swallows it whole.",
+    "- <red><bold>Camouflage</bold> <reset>— the only tree with this skill: stay still and vanish",
+    "- A <red><bold>Damage</bold> <reset>bite that waits for the ambush to land",
+    "- A <blue><bold>Sprint</bold> <reset>burst to close the last few blocks and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "oak_leaves", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Predator:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Chameleon"],
+  "Skills": {
+    "Camouflage": { "Upgrades": { "20": { "Delay": "+8" }, "50": { "Delay": "-4" } } },
+    "Damage":     { "Upgrades": { "24": { "Damage": "+5" }, "%14>38": { "Damage": "+1" } } },
+    "Sprint":     { "Upgrades": { "20": { "Active": true } } },
+    "Pickup":     { "Upgrades": { "26": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It goes still as stone — Camouflage settles over its scales.",
+    "65": "<light_purple>Blink and you'll swear there was nothing there at all."
+  }
+}

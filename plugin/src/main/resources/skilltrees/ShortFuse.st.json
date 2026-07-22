@@ -1,0 +1,26 @@
+{
+  "ID": "ShortFuse",
+  "Name": "✦ Short Fuse",
+  "Order": 163,
+  "Description": [
+    "<light_purple>It doesn't build up to anything. It's already lit.",
+    "- A <red><bold>Damage</bold> <reset>spike that jumps in sudden bursts, not a slow climb",
+    "- A <red><bold>Knockback</bold> <reset>shove to clear space after it goes off",
+    "- Reinforced <red><bold>Life</bold> <reset>and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "gunpowder", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Predator:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Creeper"],
+  "Skills": {
+    "Damage":    { "Upgrades": { "20": { "Damage": "+5" }, "50": { "Damage": "+4" }, "80": { "Damage": "+3" } } },
+    "Knockback": { "Upgrades": { "26": { "Chance": "+20" }, "%16>40": { "Chance": "+5" } } },
+    "Life":      { "Upgrades": { "22": { "Health": "+5" }, "%12>34": { "Health": "+1" } } },
+    "Pickup":    { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Something hisses, low and steady — Short Fuse is already counting down.",
+    "70": "<light_purple>It doesn't build tension anymore. It just goes off."
+  }
+}

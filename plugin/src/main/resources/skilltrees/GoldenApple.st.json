@@ -1,0 +1,26 @@
+{
+  "ID": "GoldenApple",
+  "Name": "✦ Golden Apple",
+  "Order": 105,
+  "Description": [
+    "<light_purple>The cure never fully took, but it remembers how to mend.",
+    "- <red><bold>Heal</bold> <reset>over time — the only Undead healer",
+    "- A sturdy <red><bold>Life</bold> <reset>pool to anchor the cure",
+    "- <green><bold>Thorns</bold> <reset>and <green><bold>Backpack</bold> <reset>storage"
+  ],
+  "Icon": { "Material": "golden_apple", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["ZombieVillager"],
+  "Skills": {
+    "Heal":     { "Upgrades": { "20": { "Health": "+2", "Timer": "-15" }, "%10>30": { "Health": "+1", "Timer": "-5" } } },
+    "Life":     { "Upgrades": { "20": { "Health": "+5" }, "%10>30": { "Health": "+1" } } },
+    "Thorns":   { "Upgrades": { "30": { "Chance": "+15", "Reflection": "+5" } } },
+    "Backpack": { "Upgrades": { "25": { "Rows": "+1", "Drop": false } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Something of the cure lingers — Golden Apple takes hold.",
+    "65": "<light_purple>It mends faster than the rot can spread."
+  }
+}

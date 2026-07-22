@@ -1,0 +1,26 @@
+{
+  "ID": "Marksman",
+  "Name": "✦ Marksman",
+  "Order": 108,
+  "Description": [
+    "<light_purple>Every arrow finds its mark.",
+    "- <red><bold>Ranged</bold> <reset>mastery — unmatched fire rate",
+    "- <red><bold>Slowing</bold> <reset>arrows",
+    "- A quiver that <green><bold>carries</bold> <reset>a little extra"
+  ],
+  "Icon": { "Material": "bow", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Skeleton"],
+  "Skills": {
+    "Ranged":   { "Upgrades": { "20": { "Rate": "-10", "Damage": "+4", "Projectile": "Arrow" }, "%8>28": { "Damage": "+1" }, "40": { "Rate": "-10" }, "70": { "Rate": "-10" } } },
+    "Life":     { "Upgrades": { "20": { "Health": "+6" }, "%10>30": { "Health": "+1" } } },
+    "Slow":     { "Upgrades": { "30": { "Chance": "+25", "Duration": "+3" } } },
+    "Backpack": { "Upgrades": { "25": { "Rows": "+1", "Drop": false } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Your skeleton's aim sharpens — it has become a Marksman.",
+    "70": "<light_purple>Wind and distance mean nothing to it now."
+  }
+}

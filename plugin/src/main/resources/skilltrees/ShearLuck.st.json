@@ -1,0 +1,26 @@
+{
+  "ID": "ShearLuck",
+  "Name": "✦ Shear Luck",
+  "Order": 139,
+  "Description": [
+    "<light_purple>Shear it and something lucky always turns up in the wool.",
+    "- A steady drip of <red><bold>Life</bold> <reset>and <red><bold>Thorns</bold><reset>",
+    "- <green><bold>Pickup</bold> <reset>reach for stray wisps of wool",
+    "- A late <green><bold>Beacon</bold> <reset>aura carrying a touch of Luck"
+  ],
+  "Icon": { "Material": "white_wool", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Sheep"],
+  "Skills": {
+    "Life":   { "Upgrades": { "20": { "Health": "+2" }, "%16>40": { "Health": "+1" } } },
+    "Thorns": { "Upgrades": { "26": { "Chance": "+15", "Reflection": "+2" }, "%18>44": { "Reflection": "+1" } } },
+    "Pickup": { "Upgrades": { "32": { "Range": "+1", "Exp": true } } },
+    "Beacon": { "Upgrades": { "46": { "Buffs": { "Luck": "+1" }, "Duration": "+4", "Count": "+1", "Range": "+4" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The shears click and something feels different this time — Shear Luck takes hold.",
+    "60": "<light_purple>Every clip since has turned up something worth keeping."
+  }
+}

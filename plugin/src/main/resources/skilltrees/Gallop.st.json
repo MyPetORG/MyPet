@@ -1,0 +1,26 @@
+{
+  "ID": "Gallop",
+  "Name": "✦ Gallop",
+  "Order": 125,
+  "Description": [
+    "<light_purple>Nothing on four legs keeps pace with it.",
+    "- <blue><bold>Ride</bold> <reset>speed — the fastest living mount in the roster",
+    "- Reinforced <red><bold>Life</bold> <reset>for the long ride",
+    "- A galloping <blue><bold>Sprint</bold> <reset>burst and <green><bold>Backpack</bold> <reset>row"
+  ],
+  "Icon": { "Material": "golden_horse_armor", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Horse"],
+  "Skills": {
+    "Ride":     { "Upgrades": { "20": { "Active": true, "Speed": "+5" }, "%8>28": { "Speed": "+2" } } },
+    "Life":     { "Upgrades": { "22": { "Health": "+4" }, "%12>34": { "Health": "+1" } } },
+    "Sprint":   { "Upgrades": { "24": { "Active": true } } },
+    "Backpack": { "Upgrades": { "25": { "Rows": "+1", "Drop": false } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It breaks into a full gallop the instant it ascends.",
+    "60": "<light_purple>The horizon is the only thing that ever catches it."
+  }
+}

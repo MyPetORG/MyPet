@@ -1,0 +1,27 @@
+{
+  "ID": "MirrorImage",
+  "Name": "✦ Mirror Image",
+  "Order": 186,
+  "Description": [
+    "<light_purple>Look again. There were never three of it — just the one, and your own eyes lying to you.",
+    "- Disorienting <red><bold>Slow</bold> <reset>on every hit",
+    "- <green><bold>Pickup</bold> <reset>reach",
+    "- A supporting <red><bold>Ranged</bold> <reset>volley",
+    "- A repositioning <blue><bold>Sprint</bold> <reset>burst"
+  ],
+  "Icon": { "Material": "arrow", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Illager:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Illusioner"],
+  "Skills": {
+    "Slow":   { "Upgrades": { "20": { "Chance": "+22", "Duration": "+3" }, "%10>30": { "Chance": "+4" } } },
+    "Pickup": { "Upgrades": { "24": { "Range": "+1.5", "Exp": true } } },
+    "Ranged": { "Upgrades": { "26": { "Rate": "-7", "Damage": "+4", "Projectile": "Arrow" }, "%13>36": { "Damage": "+1" } } },
+    "Sprint": { "Upgrades": { "30": { "Active": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>For a second there were three of it — Mirror Image settles into the trick.",
+    "65": "<light_purple>You blink, and you're not sure which one blinked back."
+  }
+}

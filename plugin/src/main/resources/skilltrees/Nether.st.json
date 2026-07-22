@@ -1,0 +1,25 @@
+{
+  "ID": "Nether",
+  "Name": "Nether",
+  "Order": 14,
+  "Description": [
+    "<red>Ash in its lungs, fire in its veins.",
+    "- <red><bold>Damage</bold> <reset>strikes",
+    "- Searing <red><bold>Fire</bold> <reset>on hit",
+    "- <red><bold>Knockback</bold> <reset>force"
+  ],
+  "Icon": { "Material": "blaze_powder" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 2.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Blaze", "Ghast", "Hoglin", "MagmaCube", "Piglin", "PiglinBrute", "Strider"],
+  "Skills": {
+    "Damage":    { "Upgrades": { "1": { "Damage": "+2" }, "%4>4<25": { "Damage": "+1" } } },
+    "Fire":      { "Upgrades": { "3": { "Chance": "+20", "Duration": "+3" }, "13": { "Chance": "+15", "Duration": "+2" } } },
+    "Knockback": { "Upgrades": { "12": { "Chance": "+20" }, "20": { "Chance": "+15" } } }
+  },
+  "Notifications": {
+    "19": "<gray>The flames within demand more fuel. At level 20 it may ascend."
+  }
+}

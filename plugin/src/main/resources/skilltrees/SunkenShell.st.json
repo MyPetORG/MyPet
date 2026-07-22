@@ -1,0 +1,26 @@
+{
+  "ID": "SunkenShell",
+  "Name": "✦ Sunken Shell",
+  "Order": 115,
+  "Description": [
+    "<light_purple>Armored and waterlogged, it has forgotten how to stay down.",
+    "- <red><bold>Shield</bold> <reset>uptime — the highest of any Undead",
+    "- <green><bold>Thorns</bold> <reset>bite back through the armor",
+    "- Reinforced <green><bold>Life</bold> <reset>and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "nautilus_shell", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:OceanKeeper:OceanWayfarer"],
+  "MobTypes": ["ZombieNautilus"],
+  "Skills": {
+    "Shield": { "Upgrades": { "20": { "Chance": "+30", "Redirect": "+10" }, "%8>28": { "Chance": "+5" } } },
+    "Thorns": { "Upgrades": { "24": { "Chance": "+15", "Reflection": "+5" }, "%12>36": { "Reflection": "+2" } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+5" }, "%12>32": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The armor settles into place — Sunken Shell holds firm.",
+    "65": "<light_purple>Waves break against it and it doesn't even stagger."
+  }
+}

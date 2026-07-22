@@ -1,0 +1,28 @@
+{
+  "ID": "PuffUp",
+  "Name": "✦ Puff Up",
+  "Order": 151,
+  "Description": [
+    "<light_purple>Touch it and regret it immediately.",
+    "- A toxic <red><bold>Poison</bold> <reset>aura on anything that gets close",
+    "- <red><bold>Thorns</bold> <reset>spines that answer every strike",
+    "- A small <red><bold>Life</bold> <reset>pool and <green><bold>Pickup</bold> <reset>reach",
+    "- <green><bold>Fishing</bold> <reset>the reef when nothing dares come close"
+  ],
+  "Icon": { "Material": "pufferfish", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Rascal:OceanKeeper:OceanWayfarer"],
+  "MobTypes": ["Pufferfish"],
+  "Skills": {
+    "Fishing": { "Upgrades": { "30": { "range": "+5", "interval": "+90" }, "%20>50": { "range": "+1", "interval": "-8" }, "70": { "toolless": true } } },
+    "Poison": { "Upgrades": { "20": { "Chance": "+20", "Duration": "+3" }, "%16>40": { "Duration": "+1" } } },
+    "Thorns": { "Upgrades": { "26": { "Chance": "+15", "Reflection": "+2" }, "%18>42": { "Reflection": "+1" } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+2" }, "%14>36": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "30": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It puffs up to twice its size — Puff Up is not to be touched.",
+    "55": "<light_purple>Every bite it takes leaves the biter worse for it."
+  }
+}

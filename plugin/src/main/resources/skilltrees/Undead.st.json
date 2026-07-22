@@ -1,0 +1,26 @@
+{
+  "ID": "Undead",
+  "Name": "Undead",
+  "Order": 10,
+  "Description": [
+    "<red>The hunger of the grave.",
+    "- <red><bold>Damage</bold> <reset>and <red><bold>Withering</bold> strikes",
+    "- <red><bold>Hardened bones</bold> <reset>(bonus health)",
+    "- Chilling <red><bold>Slowness</bold> <reset>on hit"
+  ],
+  "Icon": { "Material": "rotten_flesh" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 2.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Bogged", "CamelHusk", "Drowned", "Giant", "Husk", "Parched", "Phantom", "Skeleton", "SkeletonHorse", "Stray", "Wither", "WitherSkeleton", "Zoglin", "Zombie", "ZombieHorse", "ZombieNautilus", "ZombieVillager", "ZombifiedPiglin"],
+  "Skills": {
+    "Damage": { "Upgrades": { "1": { "Damage": "+2" }, "%4>4<25": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "3": { "Health": "+2" }, "%6>6<25": { "Health": "+1" } } },
+    "Wither": { "Upgrades": { "8": { "Chance": "+15", "Duration": "+3" }, "16": { "Chance": "+10", "Duration": "+2" } } },
+    "Slow":   { "Upgrades": { "12": { "Chance": "+15", "Duration": "+2" }, "20": { "Chance": "+10", "Duration": "+1" } } }
+  },
+  "Notifications": {
+    "19": "<gray>Something ancient stirs in your pet's bones. At level 20 it may ascend."
+  }
+}

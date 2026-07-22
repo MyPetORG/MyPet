@@ -1,0 +1,27 @@
+{
+  "ID": "Colossus",
+  "Name": "Colossus",
+  "Order": 33,
+  "Description": [
+    "<gold>Bigger, heavier, and harder to put down.",
+    "- <gold><bold>Hardened bones</bold> <reset>keep thickening",
+    "- <gold><bold>Thorns</bold> <reset>and <gold><bold>Shield</bold> <reset>redirection hold firm",
+    "- A ground-shaking <gold><bold>Stomp</bold> <reset>now shoves attackers back with <gold><bold>Knockback</bold><reset>",
+    "- Heavier <red><bold>Armor</bold> <reset>and a wider <red><bold>Taunt</bold>"
+  ],
+  "Icon": { "Material": "netherite_ingot" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:Construct"],
+  "Inheritance": { "Skilltree": "Construct" },
+  "MobTypes": ["CopperGolem", "Creaking", "ElderGuardian", "Guardian", "IronGolem", "SnowGolem"],
+  "Weight": 0,
+  "Skills": {
+    "Taunt": { "Upgrades": { "28": { "range": "+8", "interval": "+8" }, "%18>46": { "range": "+2", "interval": "-1" } } },
+    "Armor": { "Upgrades": { "24": { "armor": "+3", "toughness": "+1" }, "%16>40": { "armor": "+1" }, "60": { "toughness": "+1" } } },
+    "Life":      { "Upgrades": { "%5>25": { "Health": "+1" } } },
+    "Knockback": { "Upgrades": { "30": { "Chance": "+20" } } }
+  },
+  "Notifications": {
+    "30": "<gray>Nothing that hits it moves it anymore."
+  }
+}

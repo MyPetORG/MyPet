@@ -1,0 +1,28 @@
+{
+  "ID": "HeroOfTheVillage",
+  "Name": "✦ Hero of the Village",
+  "Order": 135,
+  "Description": [
+    "<light_purple>The whole village rests easier with them around.",
+    "- A <green><bold>Beacon</bold> <reset>aura anchored to the trade hall",
+    "- A steady <red><bold>Heal</bold> <reset>and <green><bold>Backpack</bold> <reset>rows for the stalls",
+    "- Reinforced <red><bold>Life</bold> <reset>to weather every raid",
+    "- A <green><bold>Toolbox</bold> <reset>of village workstations, wherever they set up"
+  ],
+  "Icon": { "Material": "bell", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Villager"],
+  "Skills": {
+    "Toolbox": { "Upgrades": { "25": { "crafting": true }, "45": { "smithing": true, "anvil": true }, "65": { "grindstone": true, "stonecutter": true }, "80": { "loom": true, "cartography": true } } },
+    "Beacon":   { "Upgrades": { "20": { "Buffs": { "Regeneration": "+1" }, "Duration": "+6", "Count": "+1", "Range": "+6" }, "%20>40": { "Duration": "+2" } } },
+    "Heal":     { "Upgrades": { "26": { "Health": "+2", "Timer": "-15" }, "%18>42": { "Health": "+1", "Timer": "-5" } } },
+    "Backpack": { "Upgrades": { "20": { "Rows": "+1", "Drop": false }, "50": { "Rows": "+1" } } },
+    "Life":     { "Upgrades": { "24": { "Health": "+4" }, "%12>36": { "Health": "+1" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The bell rings and it steps up to answer — Hero of the Village stands ready.",
+    "65": "<light_purple>No raid gets through while it's still standing."
+  }
+}

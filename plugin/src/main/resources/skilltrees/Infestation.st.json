@@ -1,0 +1,29 @@
+{
+  "ID": "Infestation",
+  "Name": "✦ Infestation",
+  "Order": 184,
+  "Description": [
+    "<light_purple>Break the wrong block and three more of it come pouring out.",
+    "- A <red><bold>Life</bold> <reset>pool that reflects the swarm, not the individual",
+    "- <green><bold>Pickup</bold> <reset>reach for the rubble it leaves behind",
+    "- Small, constant <red><bold>Damage</bold> <reset>nibbles",
+    "- A skittering <blue><bold>Sprint</bold> <reset>burst",
+    "- <green><bold>Mining</bold> <reset>through stone the way it always has"
+  ],
+  "Icon": { "Material": "infested_stone", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Arthropod:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Silverfish"],
+  "Skills": {
+    "Mining": { "Upgrades": { "30": { "range": "+5", "interval": "+90" }, "%20>50": { "range": "+1", "interval": "-8" }, "70": { "toolless": true } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+6" }, "%13>33": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "24": { "Range": "+1", "Exp": true } } },
+    "Damage": { "Upgrades": { "28": { "Damage": "+4" }, "%12>32": { "Damage": "+1" } } },
+    "Sprint": { "Upgrades": { "32": { "Active": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The wall cracks, and more of it pours out — Infestation spreads.",
+    "60": "<light_purple>Break one, and two more are already climbing."
+  }
+}

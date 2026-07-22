@@ -1,0 +1,28 @@
+{
+  "ID": "DolphinsGrace",
+  "Name": "✦ Dolphin's Grace",
+  "Order": 157,
+  "Description": [
+    "<light_purple>The current itself seems to move out of its way.",
+    "- A <blue><bold>Sprint</bold> <reset>burst that never really fades in open water",
+    "- A quick <red><bold>Damage</bold> <reset>nip for anything that can't keep up",
+    "- Reinforced <red><bold>Life</bold> <reset>and <green><bold>Pickup</bold> <reset>reach",
+    "- <green><bold>Fishing</bold> <reset>the open water it already rules"
+  ],
+  "Icon": { "Material": "kelp", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Predator:OceanKeeper:OceanWayfarer"],
+  "MobTypes": ["Dolphin"],
+  "Skills": {
+    "Fishing": { "Upgrades": { "30": { "range": "+5", "interval": "+90" }, "%20>50": { "range": "+1", "interval": "-8" }, "70": { "toolless": true } } },
+    "Sprint": { "Upgrades": { "20": { "Active": true } } },
+    "Damage": { "Upgrades": { "26": { "Damage": "+3" }, "%16>40": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "22": { "Health": "+4" }, "%14>36": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "28": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It slips through the water like the current owes it a favor — Dolphin's Grace awakens.",
+    "60": "<light_purple>Nothing in the reef keeps pace with it now."
+  }
+}

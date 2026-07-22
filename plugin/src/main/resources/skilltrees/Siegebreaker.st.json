@@ -1,0 +1,31 @@
+{
+  "ID": "Siegebreaker",
+  "Name": "✦ Siegebreaker",
+  "Order": 189,
+  "Description": [
+    "<light_purple>Walls don't stop it. They just slow it down for a second.",
+    "- A building-flattening <red><bold>Knockback</bold> <reset>shove",
+    "- <red><bold>Stomp</bold> <reset>shockwaves at mini-boss scale",
+    "- Heavy melee <red><bold>Damage</bold><reset>",
+    "- A reinforced <red><bold>Life</bold> <reset>pool",
+    "- A token <green><bold>Pickup</bold> <reset>reach so ascending from the utility path is never a hard loss",
+    "- <red><bold>Armor</bold> <reset>plate bolted on for the charge"
+  ],
+  "Icon": { "Material": "tnt", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Illager:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Ravager"],
+  "Skills": {
+    "Armor": { "Upgrades": { "24": { "armor": "+3", "toughness": "+1" }, "%16>40": { "armor": "+1" }, "60": { "toughness": "+1" } } },
+    "Knockback": { "Upgrades": { "20": { "Chance": "+22" }, "%16>36": { "Chance": "+3" } } },
+    "Stomp":     { "Upgrades": { "24": { "Chance": "+18", "Damage": "+4" }, "%14>34": { "Chance": "+3", "Damage": "+1" } } },
+    "Damage":    { "Upgrades": { "28": { "Damage": "+5" }, "%12>32": { "Damage": "+1" } } },
+    "Life":      { "Upgrades": { "30": { "Health": "+8" }, "%14>36": { "Health": "+2" } } },
+    "Pickup":    { "Upgrades": { "34": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The first wall comes down without slowing it — Siegebreaker gets moving.",
+    "75": "<light_purple>It has never once needed a door."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "ID": "Serenity",
+  "Name": "✦ Serenity",
+  "Order": 128,
+  "Description": [
+    "<light_purple>It has never once looked hurried, and never once needs to be.",
+    "- A <green><bold>Beacon</bold> <reset>aura with double the effect from the very first day",
+    "- Reinforced <red><bold>Life</bold> <reset>and a gentle <red><bold>Heal</bold> <reset>over time",
+    "- <green><bold>Pickup</bold> <reset>reach for whatever drifts by"
+  ],
+  "Icon": { "Material": "mud", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:ShoreKeeper:ShoreWayfarer"],
+  "MobTypes": ["Capybara"],
+  "Skills": {
+    "Beacon": { "Upgrades": { "20": { "Buffs": { "Regeneration": "+1" }, "Duration": "+6", "Count": "+2", "Range": "+6" }, "%20>40": { "Duration": "+2" } } },
+    "Life":   { "Upgrades": { "22": { "Health": "+4" }, "%12>34": { "Health": "+1" } } },
+    "Heal":   { "Upgrades": { "26": { "Health": "+1", "Timer": "-15" }, "%20>46": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "28": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It settles into the warm mud with a double aura already blooming — Serenity arrives.",
+    "60": "<light_purple>Nothing nearby ever seems to worry, either."
+  }
+}

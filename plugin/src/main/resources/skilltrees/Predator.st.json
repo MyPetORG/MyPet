@@ -1,0 +1,25 @@
+{
+  "ID": "Predator",
+  "Name": "Predator",
+  "Order": 16,
+  "Description": [
+    "<red>Born to hunt, bred to kill.",
+    "- <red><bold>Damage</bold> <reset>bite and claw",
+    "- Rending <red><bold>Bleed</bold> <reset>wounds",
+    "- Pouncing <red><bold>Sprint</bold> <reset>bursts"
+  ],
+  "Icon": { "Material": "bone" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Axolotl", "Cat", "Chameleon", "Creeper", "Dolphin", "Frog", "Ocelot", "PolarBear", "Warden", "Wolf"],
+  "Skills": {
+    "Damage": { "Upgrades": { "1": { "Damage": "+2" }, "%4>4<25": { "Damage": "+1" } } },
+    "Bleed":  { "Upgrades": { "8": { "Damage": "+1", "Duration": "+3", "Chance": "+15" }, "16": { "Damage": "+0.5", "Chance": "+10" } } },
+    "Sprint": { "Upgrades": { "12": { "Active": true } } }
+  },
+  "Notifications": {
+    "19": "<gray>The hunter senses the apex within. At level 20 it may ascend."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "ID": "Pollinator",
+  "Name": "✦ Pollinator",
+  "Order": 188,
+  "Description": [
+    "<light_purple>It only stings once, but the garden remembers it fondly anyway.",
+    "- A single <red><bold>Poison</bold> <reset>sting",
+    "- A darting <blue><bold>Sprint</bold> <reset>burst between flowers",
+    "- A modest <red><bold>Life</bold> <reset>pool",
+    "- <green><bold>Pickup</bold> <reset>reach for pollen and loot alike"
+  ],
+  "Icon": { "Material": "honeycomb", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Arthropod:SkyKeeper:SkyWayfarer"],
+  "MobTypes": ["Bee"],
+  "Skills": {
+    "Poison": { "Upgrades": { "20": { "Chance": "+15", "Duration": "+2" }, "%18>38": { "Chance": "+3" } } },
+    "Sprint": { "Upgrades": { "24": { "Active": true } } },
+    "Life":   { "Upgrades": { "28": { "Health": "+4" }, "%18>38": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "30": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It lands, it stings, it moves on — Pollinator gets to work.",
+    "55": "<light_purple>The garden's doing better than it has in years."
+  }
+}

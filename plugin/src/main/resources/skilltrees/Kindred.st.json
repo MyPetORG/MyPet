@@ -1,0 +1,27 @@
+{
+  "ID": "Kindred",
+  "Name": "Kindred",
+  "Order": 37,
+  "Description": [
+    "<gold>The bond runs deeper than loyalty now.",
+    "- <gold><bold>Hardened bones</bold> <reset>and <gold><bold>Heal</bold> <reset>over time keep growing",
+    "- <gold><bold>Thorns</bold> <reset>and <gold><bold>Shield</bold> <reset>redirection hold firm",
+    "- A shared <gold><bold>Beacon</bold> <reset>aura mends whoever stands close",
+    "- Thicker <red><bold>Armor</bold> <reset>and a longer-reaching <red><bold>Taunt</bold>"
+  ],
+  "Icon": { "Material": "golden_apple" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:Companion"],
+  "Inheritance": { "Skilltree": "Companion" },
+  "MobTypes": ["Armadillo", "Camel", "Capybara", "Chicken", "Cod", "Cow", "Donkey", "HappyGhast", "Horse", "Llama", "Mooshroom", "Mule", "Nautilus", "Panda", "Pig", "Salmon", "Sheep", "Sniffer", "Tadpole", "TraderLlama", "TropicalFish", "Turtle", "Villager", "WanderingTrader"],
+  "Weight": 0,
+  "Skills": {
+    "Armor": { "Upgrades": { "24": { "armor": "+3", "toughness": "+1" }, "%16>40": { "armor": "+1" }, "60": { "toughness": "+1" } } },
+    "Taunt": { "Upgrades": { "28": { "range": "+8", "interval": "+8" }, "%18>46": { "range": "+2", "interval": "-1" } } },
+    "Life":   { "Upgrades": { "%5>25": { "Health": "+1" } } },
+    "Beacon": { "Upgrades": { "30": { "Buffs": { "Regeneration": "+1" }, "Duration": "+6", "Count": "+1", "Range": "+8" } } }
+  },
+  "Notifications": {
+    "30": "<gray>The bond now reaches everyone standing close."
+  }
+}

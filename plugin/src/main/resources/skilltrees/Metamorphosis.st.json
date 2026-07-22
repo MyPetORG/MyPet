@@ -1,0 +1,26 @@
+{
+  "ID": "Metamorphosis",
+  "Name": "✦ Metamorphosis",
+  "Order": 137,
+  "Description": [
+    "<light_purple>It hasn't grown legs yet. When it does, everything changes.",
+    "- A modest early <red><bold>Life</bold> <reset>pool that erupts once it nears metamorphosis",
+    "- A gentle <red><bold>Heal</bold> <reset>and a <blue><bold>Sprint</bold> <reset>kick to reach the shallows",
+    "- <green><bold>Pickup</bold> <reset>reach for whatever drifts by the pond"
+  ],
+  "Icon": { "Material": "frogspawn", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:OceanKeeper:OceanWayfarer"],
+  "MobTypes": ["Tadpole"],
+  "Skills": {
+    "Life":   { "Upgrades": { "20": { "Health": "+1" }, "%20>30<58": { "Health": "+1" }, "%8>60": { "Health": "+3" } } },
+    "Heal":   { "Upgrades": { "24": { "Health": "+1", "Timer": "-10" } } },
+    "Sprint": { "Upgrades": { "40": { "Active": true } } },
+    "Pickup": { "Upgrades": { "26": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It's still just a tadpole — for now. Metamorphosis begins quietly.",
+    "60": "<light_purple>Legs sprout overnight — everything about it changes at once."
+  }
+}

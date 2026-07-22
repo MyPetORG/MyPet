@@ -1,0 +1,24 @@
+{
+  "ID": "Menace",
+  "Name": "Menace",
+  "Order": 38,
+  "Description": [
+    "<gold>The mischief has teeth now.",
+    "- <gold><bold>Knockback</bold> <reset>shove and hindering <gold><bold>Slow</bold> <reset>hold steady",
+    "- Light-fingered <gold><bold>Pickup</bold> <reset>reach and darting <gold><bold>Sprint</bold> <reset>hold steady",
+    "- A vicious <gold><bold>Bleed</bold> <reset>wound follows every hit"
+  ],
+  "Icon": { "Material": "shears" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:Rascal"],
+  "Inheritance": { "Skilltree": "Rascal" },
+  "MobTypes": ["Allay", "Bat", "Breeze", "Fox", "GlowSquid", "Goat", "Parrot", "Pufferfish", "Rabbit", "Slime", "Squid", "Witch"],
+  "Weight": 0,
+  "Skills": {
+    "Knockback": { "Upgrades": { "%5>30": { "Chance": "+10" } } },
+    "Bleed":     { "Upgrades": { "30": { "Damage": "+1", "Duration": "+3", "Chance": "+15" } } }
+  },
+  "Notifications": {
+    "30": "<gray>The prank just drew blood."
+  }
+}

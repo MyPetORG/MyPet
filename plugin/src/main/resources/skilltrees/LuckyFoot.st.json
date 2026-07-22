@@ -1,0 +1,26 @@
+{
+  "ID": "LuckyFoot",
+  "Name": "✦ Lucky Foot",
+  "Order": 147,
+  "Description": [
+    "<light_purple>It has never once been caught — and it doesn't plan to start now.",
+    "- A <blue><bold>Sprint</bold> <reset>hop that never tires",
+    "- A parting <red><bold>Knockback</bold> <reset>kick to cover its escape",
+    "- A nimble <red><bold>Life</bold> <reset>pool and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "rabbit_foot", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Rascal:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Rabbit"],
+  "Skills": {
+    "Sprint":    { "Upgrades": { "20": { "Active": true } } },
+    "Knockback": { "Upgrades": { "26": { "Chance": "+15" }, "%18>42": { "Chance": "+3" } } },
+    "Life":      { "Upgrades": { "20": { "Health": "+2" }, "%14>36": { "Health": "+1" } } },
+    "Pickup":    { "Upgrades": { "30": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its foot twitches with something like luck — Lucky Foot takes hold.",
+    "55": "<light_purple>Every chase ends the same way: it's already gone."
+  }
+}

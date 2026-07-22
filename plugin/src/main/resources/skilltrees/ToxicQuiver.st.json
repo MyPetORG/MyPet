@@ -1,0 +1,26 @@
+{
+  "ID": "ToxicQuiver",
+  "Name": "✦ Toxic Quiver",
+  "Order": 116,
+  "Description": [
+    "<light_purple>Mushrooms bloom on its bones; its arrows carry the same rot.",
+    "- <red><bold>Ranged</bold> <reset>arrows laced with poison",
+    "- Lingering <red><bold>Poison</bold> <reset>on every hit",
+    "- <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "brown_mushroom", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Bogged"],
+  "Skills": {
+    "Ranged": { "Upgrades": { "20": { "Rate": "-9", "Damage": "+3", "Projectile": "Arrow" }, "%10>30": { "Damage": "+1" } } },
+    "Poison": { "Upgrades": { "20": { "Chance": "+25", "Duration": "+3" }, "%10>30": { "Duration": "+1" } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+5" }, "%12>32": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its quiver drips with something foul — Toxic Quiver takes aim.",
+    "70": "<light_purple>Every shaft it looses festers on contact."
+  }
+}

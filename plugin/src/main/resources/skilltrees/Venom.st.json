@@ -1,0 +1,29 @@
+{
+  "ID": "Venom",
+  "Name": "✦ Venom",
+  "Order": 190,
+  "Description": [
+    "<light_purple>The bite is small. What follows isn't.",
+    "- The <red><bold>strongest Poison</bold> <reset>of any signature",
+    "- A quick <red><bold>Damage</bold> <reset>nip",
+    "- A darting <blue><bold>Sprint</bold> <reset>burst",
+    "- <green><bold>Pickup</bold> <reset>reach",
+    "- <blue><bold>Climb</bold> <reset>the cave walls it calls home"
+  ],
+  "Icon": { "Material": "spider_eye", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Arthropod:LandKeeper:LandWayfarer"],
+  "MobTypes": ["CaveSpider"],
+  "Skills": {
+    "Climb": { "Upgrades": { "30": { "active": true } } },
+    "Poison": { "Upgrades": { "20": { "Chance": "+35", "Duration": "+5" }, "%6>26": { "Duration": "+2" } } },
+    "Damage": { "Upgrades": { "24": { "Damage": "+4" }, "%16>36": { "Damage": "+1" } } },
+    "Sprint": { "Upgrades": { "26": { "Active": true } } },
+    "Pickup": { "Upgrades": { "30": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>One bite is all it needs — Venom finds its mark.",
+    "65": "<light_purple>Whatever it caught isn't shaking off the poison anytime soon."
+  }
+}

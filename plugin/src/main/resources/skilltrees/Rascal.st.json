@@ -1,0 +1,27 @@
+{
+  "ID": "Rascal",
+  "Name": "Rascal",
+  "Order": 18,
+  "Description": [
+    "<red>Quick hands, quicker feet.",
+    "- <red><bold>Knockback</bold> <reset>shove",
+    "- Darting <red><bold>Sprint</bold> <reset>bursts",
+    "- Hindering <red><bold>Slow</bold> <reset>on hit",
+    "- Light-fingered <red><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "rabbit_foot" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Allay", "Bat", "Breeze", "Fox", "GlowSquid", "Goat", "Parrot", "Pufferfish", "Rabbit", "Slime", "Squid", "Witch"],
+  "Skills": {
+    "Knockback": { "Upgrades": { "1": { "Chance": "+15" }, "%5>5<25": { "Chance": "+10" } } },
+    "Sprint":    { "Upgrades": { "3": { "Active": true } } },
+    "Slow":      { "Upgrades": { "8": { "Chance": "+15", "Duration": "+2" }, "16": { "Chance": "+10", "Duration": "+1" } } },
+    "Pickup":    { "Upgrades": { "12": { "Range": "+1.5", "Exp": true }, "20": { "Range": "+1" } } }
+  },
+  "Notifications": {
+    "19": "<gray>Mischief brews into something bigger. At level 20 it may ascend."
+  }
+}

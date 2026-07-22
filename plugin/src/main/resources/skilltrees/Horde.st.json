@@ -1,0 +1,26 @@
+{
+  "ID": "Horde",
+  "Name": "✦ Horde",
+  "Order": 107,
+  "Description": [
+    "<light_purple>One zombie is a nuisance. This one is an army unto itself.",
+    "- <red><bold>Damage</bold> <reset>that never lets up",
+    "- The <red><bold>largest Life pool</bold> <reset>of any standard Undead",
+    "- <green><bold>Thorns</bold> <reset>bite back"
+  ],
+  "Icon": { "Material": "zombie_head", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Zombie"],
+  "Skills": {
+    "Damage": { "Upgrades": { "20": { "Damage": "+5" }, "%10>30": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+10" }, "%6>26": { "Health": "+2" } } },
+    "Thorns": { "Upgrades": { "35": { "Chance": "+15", "Reflection": "+5" }, "65": { "Chance": "+10", "Reflection": "+3" } } },
+    "Pickup": { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The horde recognizes its own — your zombie leads now.",
+    "60": "<light_purple>It shrugs off blows that would fell a lesser undead."
+  }
+}

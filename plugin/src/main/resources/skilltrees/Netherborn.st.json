@@ -1,0 +1,24 @@
+{
+  "ID": "Netherborn",
+  "Name": "Netherborn",
+  "Order": 34,
+  "Description": [
+    "<gold>Ash in its lungs, and now fire in its hands.",
+    "- <gold><bold>Damage</bold> <reset>strikes burn hotter still",
+    "- Searing <gold><bold>Fire</bold> <reset>and <gold><bold>Knockback</bold> <reset>force hold steady",
+    "- A hurled <gold><bold>Ranged</bold> <reset>fireball joins the fight"
+  ],
+  "Icon": { "Material": "fire_charge" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:Nether"],
+  "Inheritance": { "Skilltree": "Nether" },
+  "MobTypes": ["Blaze", "Ghast", "Hoglin", "MagmaCube", "Piglin", "PiglinBrute", "Strider"],
+  "Weight": 0,
+  "Skills": {
+    "Damage": { "Upgrades": { "%5>25": { "Damage": "+1" } } },
+    "Ranged": { "Upgrades": { "30": { "Damage": "+2", "Rate": "+5", "Projectile": "SmallFireball" } } }
+  },
+  "Notifications": {
+    "30": "<gray>The fire within no longer needs a torch to show."
+  }
+}

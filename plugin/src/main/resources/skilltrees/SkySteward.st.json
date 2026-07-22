@@ -1,0 +1,27 @@
+{
+  "ID": "SkySteward",
+  "Name": "Sky Steward",
+  "Order": 40,
+  "Description": [
+    "<gold>The nest above the clouds never runs bare now.",
+    "- A deeper <gold><bold>Backpack</bold> <reset>(bonus row)",
+    "- Farther <gold><bold>Pickup</bold> <reset>reach",
+    "- A strengthening second <gold><bold>Beacon</bold> <reset>effect",
+    "- A fuller <green><bold>Toolbox</bold> <reset>of workstations aloft"
+  ],
+  "Icon": { "Material": "bundle" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:SkyKeeper"],
+  "Inheritance": { "Skilltree": "SkyKeeper" },
+  "MobTypes": ["Allay", "Bat", "Bee", "Blaze", "EnderDragon", "Ghast", "HappyGhast", "Parrot", "Phantom", "Vex", "Wither"],
+  "Weight": 0,
+  "Skills": {
+    "Toolbox": { "Upgrades": { "45": { "anvil": true }, "65": { "grindstone": true, "stonecutter": true }, "80": { "loom": true, "cartography": true } } },
+    "Backpack": { "Upgrades": { "30": { "Rows": "+1" } } },
+    "Pickup":   { "Upgrades": { "%5>30": { "Range": "+0.5" } } },
+    "Beacon":   { "Upgrades": { "40": { "Buffs": { "Absorption": "+1" }, "Duration": "+4", "Count": "+1", "Range": "+4" } } }
+  },
+  "Notifications": {
+    "40": "<gray>The nest above the clouds is never truly empty."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "ID": "LandSteward",
+  "Name": "Land Steward",
+  "Order": 39,
+  "Description": [
+    "<gold>The herd's steward becomes its keeper for life.",
+    "- A deeper <gold><bold>Backpack</bold> <reset>(bonus row)",
+    "- Farther <gold><bold>Pickup</bold> <reset>reach",
+    "- A strengthening second <gold><bold>Beacon</bold> <reset>effect",
+    "- Deeper <green><bold>Mining</bold> <reset>and <green><bold>Lumberjack</bold> <reset>reach, and a fuller <green><bold>Toolbox</bold>"
+  ],
+  "Icon": { "Material": "barrel" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:LandKeeper"],
+  "Inheritance": { "Skilltree": "LandKeeper" },
+  "MobTypes": ["Armadillo", "Bogged", "Breeze", "Camel", "CamelHusk", "Cat", "CaveSpider", "Chameleon", "Chicken", "CopperGolem", "Cow", "Creaking", "Creeper", "Donkey", "Enderman", "Endermite", "Evoker", "Fox", "Giant", "Goat", "Hoglin", "Horse", "Husk", "Illusioner", "IronGolem", "Llama", "MagmaCube", "Mooshroom", "Mule", "Ocelot", "Panda", "Parched", "Pig", "Piglin", "PiglinBrute", "Pillager", "PolarBear", "Rabbit", "Ravager", "Sheep", "Silverfish", "Skeleton", "SkeletonHorse", "Slime", "Sniffer", "SnowGolem", "Spider", "Stray", "Strider", "TraderLlama", "Villager", "Vindicator", "WanderingTrader", "Warden", "Witch", "WitherSkeleton", "Wolf", "Zoglin", "Zombie", "ZombieHorse", "ZombieVillager", "ZombifiedPiglin"],
+  "Weight": 0,
+  "Skills": {
+    "Toolbox": { "Upgrades": { "45": { "anvil": true }, "65": { "grindstone": true, "stonecutter": true }, "80": { "loom": true, "cartography": true } } },
+    "Lumberjack": { "Upgrades": { "%20>52": { "range": "+1", "interval": "-8", "logs": "+1" }, "72": { "toolless": true } } },
+    "Mining": { "Upgrades": { "%20>50": { "range": "+1", "interval": "-8" }, "70": { "toolless": true } } },
+    "Backpack": { "Upgrades": { "30": { "Rows": "+1" } } },
+    "Pickup":   { "Upgrades": { "%5>30": { "Range": "+0.5" } } },
+    "Beacon":   { "Upgrades": { "40": { "Buffs": { "Strength": "+1" }, "Duration": "+4", "Count": "+1", "Range": "+4" } } }
+  },
+  "Notifications": {
+    "40": "<gray>The herd wants for nothing under your pet's watch."
+  }
+}

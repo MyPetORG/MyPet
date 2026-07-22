@@ -1,0 +1,28 @@
+{
+  "ID": "EldersCurse",
+  "Name": "✦ Elder's Curse",
+  "Order": 169,
+  "Description": [
+    "<light_purple>The deep temple's oldest guardian doesn't chase. It waits.",
+    "- A <red><bold>Shield</bold> <reset>and <red><bold>Thorns</bold> <reset>wall at boss-tier strength",
+    "- The heaviest <red><bold>Ranged</bold> <reset>bolt of any Construct",
+    "- A boss-sized <red><bold>Life</bold> <reset>pool to anchor the reef",
+    "- A token <green><bold>Pickup</bold> <reset>reach so ascending from Ocean Keeper is never a hard loss"
+  ],
+  "Icon": { "Material": "wet_sponge", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Construct:OceanKeeper:OceanWayfarer"],
+  "MobTypes": ["ElderGuardian"],
+  "Skills": {
+    "Shield":  { "Upgrades": { "20": { "Chance": "+20", "Redirect": "+10" }, "%14>34": { "Redirect": "+4" } } },
+    "Ranged":  { "Upgrades": { "22": { "Rate": "-6", "Damage": "+8", "Projectile": "EnderPearl" }, "%14>36": { "Damage": "+2" } } },
+    "Thorns":  { "Upgrades": { "24": { "Chance": "+12", "Reflection": "+4" }, "%16>40": { "Reflection": "+2" } } },
+    "Life":    { "Upgrades": { "26": { "Health": "+10" }, "%12>38": { "Health": "+2" } } },
+    "Pickup":  { "Upgrades": { "30": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The reef itself seems to lean away from it — Elder's Curse has come into its own.",
+    "80": "<light_purple>Nothing that enters its temple leaves in a hurry."
+  }
+}

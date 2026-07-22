@@ -1,0 +1,26 @@
+{
+  "ID": "MamaBear",
+  "Name": "✦ Mama Bear",
+  "Order": 158,
+  "Description": [
+    "<light_purple>Corner it and you've made the worst mistake of your life.",
+    "- <red><bold>Thorns</bold> <reset>that punish anything that lands a hit",
+    "- Furious <red><bold>Damage</bold> <reset>the instant it turns to face you",
+    "- A reinforced <red><bold>Life</bold> <reset>pool and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "packed_ice", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Predator:LandKeeper:LandWayfarer"],
+  "MobTypes": ["PolarBear"],
+  "Skills": {
+    "Thorns": { "Upgrades": { "20": { "Chance": "+22", "Reflection": "+8" }, "%10>30": { "Reflection": "+2" } } },
+    "Damage": { "Upgrades": { "24": { "Damage": "+4" }, "%14>36": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+6" }, "%12>32": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It plants itself between you and whatever you were chasing — Mama Bear stands her ground.",
+    "65": "<light_purple>Every hit you land, she makes you regret twice over."
+  }
+}

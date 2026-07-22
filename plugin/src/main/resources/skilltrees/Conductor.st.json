@@ -1,0 +1,26 @@
+{
+  "ID": "Conductor",
+  "Name": "✦ Conductor",
+  "Order": 168,
+  "Description": [
+    "<light_purple>The copper never stops carrying its charge.",
+    "- <red><bold>Lightning</bold> <reset>on command — the only non-mount signature that wields it",
+    "- <red><bold>Thorns</bold> <reset>plating that discharges right back",
+    "- <green><bold>Pickup</bold> <reset>reach for whatever the storm turns up"
+  ],
+  "Icon": { "Material": "copper_bulb", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Construct:LandKeeper:LandWayfarer"],
+  "MobTypes": ["CopperGolem"],
+  "Skills": {
+    "Lightning": { "Upgrades": { "20": { "Chance": "+10", "Damage": "+2" }, "%20>40": { "Chance": "+3" } } },
+    "Thorns":    { "Upgrades": { "24": { "Chance": "+8", "Reflection": "+2" }, "%24>48": { "Reflection": "+2" } } },
+    "Life":      { "Upgrades": { "26": { "Health": "+3" }, "%20>46": { "Health": "+1" } } },
+    "Pickup":    { "Upgrades": { "28": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its plating hums with a charge that never quite fades — Conductor switches on.",
+    "65": "<light_purple>Touch it wrong and the storm answers back."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "ID": "Broodmother",
+  "Name": "Broodmother",
+  "Order": 31,
+  "Description": [
+    "<gold>The swarm answers to one will now.",
+    "- <gold><bold>Damage</bold> <reset>bites cut deeper still",
+    "- A thickened carapace grants bonus <gold><bold>Life</bold><reset>",
+    "- <gold><bold>Poison</bold><reset>, <gold><bold>Bleed</bold> <reset>and <gold><bold>Sprint</bold> <reset>hold steady, undiminished"
+  ],
+  "Icon": { "Material": "spider_eye" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:Arthropod"],
+  "Inheritance": { "Skilltree": "Arthropod" },
+  "MobTypes": ["Bee", "CaveSpider", "Silverfish", "Spider"],
+  "Weight": 0,
+  "Skills": {
+    "Damage": { "Upgrades": { "%5>25": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "30": { "Health": "+2" } } }
+  },
+  "Notifications": {
+    "30": "<gray>The whole swarm now moves as one body."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "ID": "SkyPathfinder",
+  "Name": "Sky Pathfinder",
+  "Order": 44,
+  "Description": [
+    "<gold>Wingbeats close distances it used to just watch.",
+    "- <gold><bold>Ride</bold> <reset>jump height keeps climbing",
+    "- Soaring <gold><bold>Sprint</bold> <reset>and precision <gold><bold>Control</bold> <reset>hold steady",
+    "- A hastening <gold><bold>Beacon</bold> <reset>aura joins the journey"
+  ],
+  "Icon": { "Material": "firework_rocket" },
+  "RequiredLevel": 20,
+  "Requirements": ["Skilltree:SkyWayfarer"],
+  "Inheritance": { "Skilltree": "SkyWayfarer" },
+  "MobTypes": ["Allay", "Bat", "Bee", "Blaze", "EnderDragon", "Ghast", "HappyGhast", "Parrot", "Phantom", "Vex", "Wither"],
+  "Weight": 0,
+  "Skills": {
+    "Ride":   { "Upgrades": { "%5>25": { "JumpHeight": "+0.25" } } },
+    "Beacon": { "Upgrades": { "30": { "Buffs": { "Speed": "+1" }, "Duration": "+6", "Count": "+1", "Range": "+8" } } }
+  },
+  "Notifications": {
+    "30": "<gray>The open sky feels smaller with every wingbeat now."
+  }
+}

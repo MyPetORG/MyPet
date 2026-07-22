@@ -1,0 +1,27 @@
+{
+  "ID": "PrismarineGaze",
+  "Name": "✦ Prismarine Gaze",
+  "Order": 175,
+  "Description": [
+    "<light_purple>The light in its eye is the last thing careless swimmers see.",
+    "- A <red><bold>Thorns</bold> <reset>wall of spines around a slow, deliberate <red><bold>Ranged</bold> <reset>beam",
+    "- <green><bold>Fishing</bold> <reset>the temple shallows between patrols",
+    "- Reinforced <red><bold>Life</bold> <reset>and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "prismarine_crystals", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Construct:OceanKeeper:OceanWayfarer"],
+  "MobTypes": ["Guardian"],
+  "Skills": {
+    "Fishing": { "Upgrades": { "30": { "range": "+5", "interval": "+90" }, "%20>50": { "range": "+1", "interval": "-8" }, "70": { "toolless": true } } },
+    "Thorns": { "Upgrades": { "20": { "Chance": "+18", "Reflection": "+6" }, "%16>36": { "Reflection": "+2" } } },
+    "Ranged": { "Upgrades": { "22": { "Rate": "-4", "Damage": "+5", "Projectile": "Arrow" }, "%12>34": { "Damage": "+1" } } },
+    "Life":   { "Upgrades": { "24": { "Health": "+4" }, "%14>38": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "26": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>Its eye narrows to a steady glow — Prismarine Gaze locks on.",
+    "65": "<light_purple>It never needs to hurry. The beam always catches up."
+  }
+}

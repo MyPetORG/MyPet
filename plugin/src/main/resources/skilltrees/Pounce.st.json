@@ -1,0 +1,26 @@
+{
+  "ID": "Pounce",
+  "Name": "✦ Pounce",
+  "Order": 150,
+  "Description": [
+    "<light_purple>One leap, one grab, and it's already trotting away with the prize.",
+    "- A burst <red><bold>Damage</bold> <reset>pounce",
+    "- A far-reaching, thieving <green><bold>Pickup</bold> <reset>grab right after the leap",
+    "- A <blue><bold>Sprint</bold> <reset>dash into range and a parting <red><bold>Bleed</bold> <reset>nick"
+  ],
+  "Icon": { "Material": "sweet_berries", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Rascal:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Fox"],
+  "Skills": {
+    "Damage": { "Upgrades": { "20": { "Damage": "+6" }, "%10>30": { "Damage": "+1" } } },
+    "Pickup": { "Upgrades": { "24": { "Range": "+3", "Exp": true }, "%8>32": { "Range": "+0.5" } } },
+    "Sprint": { "Upgrades": { "20": { "Active": true } } },
+    "Bleed":  { "Upgrades": { "34": { "Damage": "+1", "Duration": "+1", "Chance": "+5" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It crouches low, tail flicking — Pounce is ready to spring.",
+    "60": "<light_purple>By the time you notice what's missing, it's already trotted off."
+  }
+}

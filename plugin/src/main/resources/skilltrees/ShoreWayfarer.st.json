@@ -1,0 +1,25 @@
+{
+  "ID": "ShoreWayfarer",
+  "Name": "Shore Wayfarer",
+  "Order": 27,
+  "Description": [
+    "<blue>At home crossing either border.",
+    "- <blue><bold>Ride</bold> <reset>the pet as a mount",
+    "- Bounding <blue><bold>Sprint</bold> <reset>bursts",
+    "- <blue><bold>Control</bold> <reset>precision steering"
+  ],
+  "Icon": { "Material": "lily_pad" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Axolotl", "Capybara", "Drowned", "Frog", "Turtle"],
+  "Skills": {
+    "Ride":    { "Upgrades": { "1": { "Active": true, "Speed": "+3" }, "%8>8<25": { "Speed": "+1" } } },
+    "Sprint":  { "Upgrades": { "3": { "Active": true } } },
+    "Control": { "Upgrades": { "12": { "Active": true } } }
+  },
+  "Notifications": {
+    "19": "<gray>Neither shore holds your pet for long. At level 20 it may ascend."
+  }
+}

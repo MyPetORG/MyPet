@@ -1,0 +1,27 @@
+{
+  "ID": "Arthropod",
+  "Name": "Arthropod",
+  "Order": 11,
+  "Description": [
+    "<red>The chitin swarm surges.",
+    "- <red><bold>Damage</bold> <reset>bites from chitin jaws",
+    "- Crippling <red><bold>Poison</bold> <reset>venom",
+    "- Lacerating <red><bold>Bleed</bold> <reset>wounds",
+    "- Skittering <red><bold>Sprint</bold> <reset>bursts"
+  ],
+  "Icon": { "Material": "cobweb" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 2.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Bee", "CaveSpider", "Silverfish", "Spider"],
+  "Skills": {
+    "Damage": { "Upgrades": { "1": { "Damage": "+2" }, "%4>4<25": { "Damage": "+1" } } },
+    "Poison": { "Upgrades": { "8": { "Chance": "+20", "Duration": "+3" }, "16": { "Chance": "+15", "Duration": "+2" } } },
+    "Bleed":  { "Upgrades": { "12": { "Damage": "+1", "Duration": "+3", "Chance": "+15" }, "20": { "Damage": "+0.5", "Chance": "+10" } } },
+    "Sprint": { "Upgrades": { "15": { "Active": true } } }
+  },
+  "Notifications": {
+    "19": "<gray>The swarm within grows restless. At level 20 it may ascend."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "ID": "Grudge",
+  "Name": "✦ Grudge",
+  "Order": 106,
+  "Description": [
+    "<light_purple>Strike it once and the whole horde remembers.",
+    "- Steady <red><bold>Damage</bold> <reset>with a golden sword",
+    "- The <red><bold>highest Thorns reflect</bold> <reset>of any hostile",
+    "- Reinforced <green><bold>Life</bold> <reset>and <green><bold>Pickup</bold> <reset>reach"
+  ],
+  "Icon": { "Material": "gold_nugget", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:LandKeeper:LandWayfarer"],
+  "MobTypes": ["ZombifiedPiglin"],
+  "Skills": {
+    "Damage": { "Upgrades": { "20": { "Damage": "+5" }, "%10>30": { "Damage": "+1" } } },
+    "Thorns": { "Upgrades": { "20": { "Chance": "+20", "Reflection": "+8" }, "%8>28": { "Reflection": "+2" } } },
+    "Life":   { "Upgrades": { "24": { "Health": "+4" }, "%12>36": { "Health": "+1" } } },
+    "Pickup": { "Upgrades": { "25": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The grudge is set — attack it and answer to the whole horde.",
+    "65": "<light_purple>Every blow against it comes back twice as hard."
+  }
+}

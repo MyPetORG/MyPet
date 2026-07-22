@@ -1,0 +1,28 @@
+{
+  "ID": "Schooling",
+  "Name": "✦ Schooling",
+  "Order": 127,
+  "Description": [
+    "<light_purple>Alone it's tiny. It never really fights alone.",
+    "- A darting <blue><bold>Sprint</bold> <reset>that never tires",
+    "- Swarm-flavored <red><bold>Thorns</bold> <reset>— the highest chance of any Companion",
+    "- A modest <red><bold>Life</bold> <reset>pool and <green><bold>Pickup</bold> <reset>reach",
+    "- <green><bold>Fishing</bold> <reset>alongside the school"
+  ],
+  "Icon": { "Material": "cod", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:OceanKeeper:OceanWayfarer"],
+  "MobTypes": ["Cod"],
+  "Skills": {
+    "Fishing": { "Upgrades": { "30": { "range": "+5", "interval": "+90" }, "%20>50": { "range": "+1", "interval": "-8" }, "70": { "toolless": true } } },
+    "Sprint": { "Upgrades": { "20": { "Active": true } } },
+    "Life":   { "Upgrades": { "20": { "Health": "+2" }, "%12>32": { "Health": "+1" } } },
+    "Thorns": { "Upgrades": { "24": { "Chance": "+20", "Reflection": "+3" }, "%16>40": { "Chance": "+5" } } },
+    "Pickup": { "Upgrades": { "26": { "Range": "+1", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It darts into formation with the rest of the school — Schooling begins.",
+    "55": "<light_purple>Peck at it and the whole school answers back."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "ID": "LandKeeper",
+  "Name": "Land Keeper",
+  "Order": 20,
+  "Description": [
+    "<green>A steady hand keeps the herd fed and found.",
+    "- <green><bold>Backpack</bold> <reset>storage",
+    "- <green><bold>Pickup</bold> <reset>reach",
+    "- Hastening <green><bold>Beacon</bold> <reset>aura",
+    "- <green><bold>Mining</bold> <reset>and <green><bold>Lumberjack</bold> <reset>work the land, with a <green><bold>Toolbox</bold> <reset>of workstations on hand"
+  ],
+  "Icon": { "Material": "chest" },
+  "RequiredLevel": 1,
+  "MaxLevel": 25,
+  "Weight": { "Default": 1.0, "Donkey": 3.0, "Mule": 3.0, "Llama": 3.0, "TraderLlama": 3.0 },
+  "Requirements": ["NoSkilltree"],
+  "MobTypes": ["Armadillo", "Bogged", "Breeze", "Camel", "CamelHusk", "Cat", "CaveSpider", "Chameleon", "Chicken", "CopperGolem", "Cow", "Creaking", "Creeper", "Donkey", "Enderman", "Endermite", "Evoker", "Fox", "Giant", "Goat", "Hoglin", "Horse", "Husk", "Illusioner", "IronGolem", "Llama", "MagmaCube", "Mooshroom", "Mule", "Ocelot", "Panda", "Parched", "Pig", "Piglin", "PiglinBrute", "Pillager", "PolarBear", "Rabbit", "Ravager", "Sheep", "Silverfish", "Skeleton", "SkeletonHorse", "Slime", "Sniffer", "SnowGolem", "Spider", "Stray", "Strider", "TraderLlama", "Villager", "Vindicator", "WanderingTrader", "Warden", "Witch", "WitherSkeleton", "Wolf", "Zoglin", "Zombie", "ZombieHorse", "ZombieVillager", "ZombifiedPiglin"],
+  "Skills": {
+    "Toolbox": { "Upgrades": { "10": { "crafting": true }, "18": { "smithing": true } } },
+    "Lumberjack": { "Upgrades": { "14": { "range": "+4", "interval": "+110", "logs": "+1" }, "22": { "range": "+2", "interval": "-20", "logs": "+1" } } },
+    "Mining": { "Upgrades": { "12": { "range": "+4", "interval": "+110" }, "20": { "range": "+2", "interval": "-20" } } },
+    "Backpack": { "Upgrades": { "1": { "Rows": "+1", "Drop": false }, "8": { "Rows": "+1" }, "16": { "Rows": "+1" } } },
+    "Pickup":   { "Upgrades": { "3": { "Range": "+1.5", "Exp": true }, "%5>5<25": { "Range": "+0.5" } } },
+    "Beacon":   { "Upgrades": { "12": { "Buffs": { "Haste": "+1" }, "Duration": "+6", "Count": "+1", "Range": "+8" } } }
+  },
+  "Notifications": {
+    "19": "<gray>The herd looks to you as its steward. At level 20 it may ascend."
+  }
+}

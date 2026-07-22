@@ -1,0 +1,26 @@
+{
+  "ID": "FreshMilk",
+  "Name": "✦ Fresh Milk",
+  "Order": 124,
+  "Description": [
+    "<light_purple>It never runs dry, no matter how much the pail takes.",
+    "- The <red><bold>strongest passive Heal</bold> <reset>of any Companion",
+    "- <green><bold>Backpack</bold> <reset>rows for the pail and the pasture",
+    "- Reinforced <red><bold>Life</bold> <reset>and a supporting <green><bold>Beacon</bold> <reset>aura"
+  ],
+  "Icon": { "Material": "milk_bucket", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:LandKeeper:LandWayfarer"],
+  "MobTypes": ["Cow"],
+  "Skills": {
+    "Heal":     { "Upgrades": { "20": { "Health": "+3", "Timer": "-20" }, "%10>30": { "Health": "+1", "Timer": "-5" } } },
+    "Backpack": { "Upgrades": { "25": { "Rows": "+1", "Drop": false }, "55": { "Rows": "+1" } } },
+    "Life":     { "Upgrades": { "22": { "Health": "+5" }, "%12>34": { "Health": "+1" } } },
+    "Beacon":   { "Upgrades": { "40": { "Buffs": { "Regeneration": "+1" }, "Duration": "+6", "Count": "+1", "Range": "+6" } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The pail never runs empty again — Fresh Milk flows freely.",
+    "70": "<light_purple>Whatever wound it tends closes before the next bucket fills."
+  }
+}

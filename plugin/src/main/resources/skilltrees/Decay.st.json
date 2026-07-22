@@ -1,0 +1,26 @@
+{
+  "ID": "Decay",
+  "Name": "✦ Decay",
+  "Order": 101,
+  "Description": [
+    "<light_purple>Three skulls, one purpose — nothing it touches stays whole.",
+    "- <red><bold>Ranged</bold> <reset>wither skulls — the only tree to launch them",
+    "- Devastating <red><bold>Wither</bold> <reset>at boss-tier strength",
+    "- A boss-sized <red><bold>Life</bold> <reset>pool and modest <green><bold>Backpack</bold> <reset>storage"
+  ],
+  "Icon": { "Material": "nether_star", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Undead:SkyKeeper:SkyWayfarer"],
+  "MobTypes": ["Wither"],
+  "Skills": {
+    "Ranged":   { "Upgrades": { "20": { "Rate": "-8", "Damage": "+8", "Projectile": "WitherSkull" }, "%8>28": { "Damage": "+2" }, "60": { "Rate": "-6" } } },
+    "Wither":   { "Upgrades": { "20": { "Chance": "+30", "Duration": "+4" }, "%10>30": { "Chance": "+5" } } },
+    "Life":     { "Upgrades": { "20": { "Health": "+12" }, "%8>28": { "Health": "+2" } } },
+    "Backpack": { "Upgrades": { "25": { "Rows": "+1", "Drop": false } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>The blue flame steadies — your pet has become Decay itself.",
+    "80": "<light_purple>Nothing it marks stays alive for long."
+  }
+}

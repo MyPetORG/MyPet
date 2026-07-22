@@ -1,0 +1,29 @@
+{
+  "ID": "TurtleShell",
+  "Name": "✦ Turtle Shell",
+  "Order": 141,
+  "Description": [
+    "<light_purple>Pull into the shell and simply wait it out.",
+    "- A <red><bold>Shield</bold> <reset>that turns aside almost anything",
+    "- A deep <red><bold>Life</bold> <reset>pool — the unkillable old turtle",
+    "- <red><bold>Thorns</bold> <reset>biting back through the shell and <green><bold>Pickup</bold> <reset>reach",
+    "- <red><bold>Armor</bold> <reset>under the shell and <green><bold>Fishing</bold> <reset>in the shallows"
+  ],
+  "Icon": { "Material": "turtle_helmet", "Glowing": true },
+  "RequiredLevel": 20,
+  "Weight": 0,
+  "Requirements": ["Skilltree:Companion:ShoreKeeper:ShoreWayfarer"],
+  "MobTypes": ["Turtle"],
+  "Skills": {
+    "Armor": { "Upgrades": { "24": { "armor": "+3", "toughness": "+1" }, "%16>40": { "armor": "+1" }, "60": { "toughness": "+1" } } },
+    "Fishing": { "Upgrades": { "30": { "range": "+5", "interval": "+90" }, "%20>50": { "range": "+1", "interval": "-8" }, "70": { "toolless": true } } },
+    "Shield": { "Upgrades": { "20": { "Chance": "+25", "Redirect": "+12" }, "%12>32": { "Chance": "+5" } } },
+    "Life":   { "Upgrades": { "22": { "Health": "+6" }, "%10>32": { "Health": "+1" } } },
+    "Thorns": { "Upgrades": { "30": { "Chance": "+15", "Reflection": "+6" }, "%16>46": { "Reflection": "+2" } } },
+    "Pickup": { "Upgrades": { "28": { "Range": "+1.5", "Exp": true } } }
+  },
+  "Notifications": {
+    "20": "<light_purple>It draws into its shell and holds — Turtle Shell settles in.",
+    "65": "<light_purple>Nothing has cracked that shell yet, and nothing will."
+  }
+}
