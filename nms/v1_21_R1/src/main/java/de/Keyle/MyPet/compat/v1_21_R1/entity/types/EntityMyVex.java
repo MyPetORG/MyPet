@@ -171,7 +171,7 @@ public class EntityMyVex extends EntityMyFlyingPet {
 
 	@Override
 	public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
-		if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2)) {
+		if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2) && getMyPet() != null) {
 			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getFilterFlag());
 			if (getMyPet().getEquipment(slot) != null) {
 				return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));
