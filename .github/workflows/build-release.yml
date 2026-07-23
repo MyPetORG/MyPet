@@ -2,6 +2,11 @@ name: Build Release
 
 on:
   workflow_dispatch:
+    inputs:
+      republish_bbb:
+        description: 'Post to BuiltByBit even when the Hub already has this build (use to retry a failed BBB step)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -65,10 +70,20 @@ jobs:
         run: |
           ./gradlew --no-daemon --build-cache build -PbuildType=release
 
+      # Skip if this release is already on Reposilite so a workflow re-run doesn't
+      # trip over a redeploy rejection.
       - name: Publish API release to Reposilite
-        run: ./gradlew --no-daemon :api:publish -PbuildType=release
         env:
           REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          POM_URL="https://repo.userderezzed.dev/releases/de/keyle/mypet-api/${PROJECT_VERSION}/mypet-api-${PROJECT_VERSION}.pom"
+          if curl -fsS --head -o /dev/null "$POM_URL"; then
+            echo "mypet-api ${PROJECT_VERSION} already published; skipping."
+          else
+            ./gradlew --no-daemon :api:publish -PbuildType=release
+          fi
 
       - name: Find JAR
         id: findjar
@@ -110,7 +125,10 @@ jobs:
 
       # No changelog field: the changelog file is BBCode for the BuiltByBit post;
       # the Hub's Discord embed falls back to a plain "Release {version}" description.
+      # 201 = fresh upload; 200 = the Hub already had this build from a previous run
+      # (same version + commit) and re-announced on Discord if the first attempt failed.
       - name: Upload build to MyPet Hub
+        id: hubupload
         env:
           HUB_URL: ${{ secrets.HUB_URL }}
           HUB_UPLOAD_SECRET: ${{ secrets.HUB_UPLOAD_SECRET }}
@@ -119,7 +137,8 @@ jobs:
           set -euo pipefail
           JAR="${{ steps.findjar.outputs.jar }}"
           SHA512=$(sha512sum "$JAR" | cut -d' ' -f1)
-          curl -fsS -X POST "${HUB_URL}/api/v1/builds" \
+          STATUS=$(curl -sS -o "$RUNNER_TEMP/hub-response.json" -w '%{http_code}' \
+            -X POST "${HUB_URL}/api/v1/builds" \
             -H "Authorization: Bearer ${HUB_UPLOAD_SECRET}" \
             -F "jar=@${JAR}" \
             --form-string "version=${PROJECT_VERSION}" \
@@ -127,9 +146,19 @@ jobs:
             --form-string "commit=${GITHUB_SHA}" \
             --form-string "commitUrl=${{ github.server_url }}/${{ github.repository }}/commit/${GITHUB_SHA}" \
             --form-string "sha512=${SHA512}" \
-            --form-string "mcVersions=1.20.5-26.2"
+            --form-string "mcVersions=1.20.5-26.2")
+          cat "$RUNNER_TEMP/hub-response.json"; echo
+          case "$STATUS" in
+            201) echo "fresh=true" >> "$GITHUB_OUTPUT" ;;
+            200) echo "fresh=false" >> "$GITHUB_OUTPUT"
+                 echo "Hub already has ${PROJECT_VERSION} from this commit (retry run)." ;;
+            *)   echo "Hub upload failed with HTTP $STATUS" >&2; exit 1 ;;
+          esac
 
+      # Skipped on retry runs (Hub already had the build) so a re-run can't double-post
+      # the BBB update; dispatch with republish_bbb=true to retry a failed BBB post.
       - name: Publish version to BuiltByBit
+        if: steps.hubupload.outputs.fresh == 'true' || inputs.republish_bbb
         continue-on-error: true
         env:
           BBB_API_TOKEN: ${{ secrets.BBB_API_TOKEN }}
