@@ -46,7 +46,7 @@ jobs:
         id: changelog
         shell: bash
         run: |
-          CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}.md"
+          CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}.bbcode"
           if [[ -f "$CHANGELOG_FILE" ]]; then
             {
               echo 'content<<EOF'
@@ -108,11 +108,12 @@ jobs:
           git tag "$PROJECT_VERSION" "$GITHUB_SHA"
           git push origin "refs/tags/$PROJECT_VERSION"
 
+      # No changelog field: the changelog file is BBCode for the BuiltByBit post;
+      # the Hub's Discord embed falls back to a plain "Release {version}" description.
       - name: Upload build to MyPet Hub
         env:
           HUB_URL: ${{ secrets.HUB_URL }}
           HUB_UPLOAD_SECRET: ${{ secrets.HUB_UPLOAD_SECRET }}
-          CHANGELOG: ${{ steps.changelog.outputs.content }}
         shell: bash
         run: |
           set -euo pipefail
@@ -126,7 +127,6 @@ jobs:
             --form-string "commit=${GITHUB_SHA}" \
             --form-string "commitUrl=${{ github.server_url }}/${{ github.repository }}/commit/${GITHUB_SHA}" \
             --form-string "sha512=${SHA512}" \
-            --form-string "changelog=${CHANGELOG}" \
             --form-string "mcVersions=1.20.5-26.2"
 
       - name: Publish version to BuiltByBit
