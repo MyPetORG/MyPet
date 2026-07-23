@@ -27,6 +27,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.TranslationArgument;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -127,20 +128,59 @@ public final class MenuRenderHelpers {
 
     /**
      * Split a rendered {@link Component} into one entry per newline boundary so each
-     * line becomes a separate lore slot. Works on `\n` characters and `<newline>`
-     * tags in the post-render MiniMessage round-trip.
+     * line becomes a separate lore slot, splitting the component tree directly.
+     *
+     * <p>The tree is flattened depth-first into styled text runs; each {@code '\n'} in a
+     * {@link TextComponent}'s content ends the current line. Style is inherited the way
+     * Adventure renders it — a child's own style wins, the ancestor style fills the gaps —
+     * and baked onto every emitted run, so each line stands alone.</p>
      */
     public static List<Component> splitNewlines(Component c) {
-        // Cheap tree-walk first: rendered newlines are literal '\n' in text content
-        // (MiniMessage <newline> tags become Component.newline() on deserialize), so the
-        // common no-newline case skips the serialize round-trip entirely.
+        // Fast path: no newline anywhere -> already a single line, returned as-is so its
+        // exact structure (and any non-text leaves) is preserved untouched.
         if (!containsNewline(c)) return List.of(c);
-        String mm = MINI.serialize(c);
-        String normalized = mm.replace("<newline>", "\n");
-        String[] parts = normalized.split("\n", -1);
-        List<Component> result = new ArrayList<>(parts.length);
-        for (String part : parts) result.add(MINI.deserialize(part));
-        return result;
+        List<Component> lines = new ArrayList<>();
+        List<Component> current = new ArrayList<>();
+        flattenLines(c, Style.empty(), lines, current);
+        lines.add(joinLine(current));
+        return lines;
+    }
+
+    /**
+     * Depth-first flatten of {@code node} into {@code current} (the line being built),
+     * flushing a finished line into {@code lines} at every {@code '\n'}. {@code inherited}
+     * is the ancestor style; the effective style is the node's own style with the inherited
+     * style filling any unset values.
+     */
+    private static void flattenLines(Component node, Style inherited,
+                                     List<Component> lines, List<Component> current) {
+        Style eff = node.style().merge(inherited);
+        if (node instanceof TextComponent text) {
+            String s = text.content();
+            int start = 0;
+            for (int i = 0; i < s.length(); i++) {
+                if (s.charAt(i) == '\n') {
+                    if (i > start) current.add(Component.text(s.substring(start, i), eff));
+                    lines.add(joinLine(current));
+                    current.clear();
+                    start = i + 1;
+                }
+            }
+            if (start < s.length()) current.add(Component.text(s.substring(start), eff));
+        } else {
+            // Non-text leaf (translatable/keybind/score/selector/nbt): keep atomic, restyled.
+            current.add(node.children(List.of()).style(eff));
+        }
+        for (Component child : node.children()) {
+            flattenLines(child, eff, lines, current);
+        }
+    }
+
+    /** Combine one line's runs into a single component (empty / single-run fast paths). */
+    private static Component joinLine(List<Component> parts) {
+        if (parts.isEmpty()) return Component.empty();
+        if (parts.size() == 1) return parts.get(0);
+        return Component.textOfChildren(parts.toArray(new Component[0]));
     }
 
     private static boolean containsNewline(Component c) {
