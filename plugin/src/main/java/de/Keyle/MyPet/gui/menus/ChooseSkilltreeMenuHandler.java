@@ -82,7 +82,7 @@ public final class ChooseSkilltreeMenuHandler implements MenuHandler<ChooseSkill
 
         if (!isLocked(context, itemIndex)) {
             return TagResolver.builder()
-                .resolver(Placeholder.unparsed("skilltree_name", tree.getName()))
+                .resolver(Placeholder.unparsed("skilltree_name", tree.getDisplayName()))
                 .resolver(Placeholder.parsed("skilltree_description", desc))
                 .build();
         }
@@ -91,7 +91,7 @@ public final class ChooseSkilltreeMenuHandler implements MenuHandler<ChooseSkill
         desc = desc.isEmpty() ? "<gray>" + hint : desc + "<newline><gray>" + hint;
         return TagResolver.builder()
             // component (not parsed) so a tree name containing MiniMessage syntax renders literally, greyed.
-            .resolver(Placeholder.component("skilltree_name", Component.text(tree.getName(), NamedTextColor.GRAY)))
+            .resolver(Placeholder.component("skilltree_name", Component.text(tree.getDisplayName(), NamedTextColor.GRAY)))
             .resolver(Placeholder.parsed("skilltree_description", desc))
             .build();
     }
