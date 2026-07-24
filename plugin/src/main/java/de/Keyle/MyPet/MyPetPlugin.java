@@ -195,6 +195,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         String updateStatus = updater.update();
         printSplashScreen(updateStatus);
 
+        getLogger().warning("MyPet 3 has reached end of life and will no longer receive substantive updates. If your server version supports it, please migrate to MyPet v4: https://builtbybit.com/resources/mypet-4.115339/");
+
         if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
             getLogger().warning("This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + " on " + compatUtil.getMinecraftVersion() + "\". Is MyPet up to date?");
             updater.waitForDownload();
