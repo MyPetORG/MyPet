@@ -1,5 +1,3 @@
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
@@ -18,18 +16,12 @@ tasks.processResources {
     duplicatesStrategy = DuplicatesStrategy.WARN
     dependsOn(rootProject.tasks.named("downloadTranslations"))
 
-    val buildNumber = rootProject.findProperty("BUILD_NUMBER")?.toString() ?: "local"
-    val minecraftVersion: String by rootProject.extra
+    // plugin.yml is the only *.yml here, and ${mypetVersion} is the only token it uses.
+    // Capture the value at configuration time — the filesMatching action runs at
+    // execution time, where the configuration cache forbids touching Project.
+    val mypetVersion = rootProject.version.toString()
 
-    val filteringProps = mapOf(
-        "buildNumber" to buildNumber,
-        "gitCommit" to (System.getenv("GIT_COMMIT") ?: ""),
-        "minecraft" to mapOf("version" to minecraftVersion),
-        "mypetVersion" to rootProject.version,
-        "timestamp" to DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(LocalDateTime.now()),
-    )
-
-    filesMatching("*.yml") { expand(filteringProps) }
+    filesMatching("*.yml") { expand(mapOf("mypetVersion" to mypetVersion)) }
 
     // Injects the CI-only BuiltByBit Shared API token; empty for local/PR builds that
     // don't have the secret, which BuiltByBitInfo treats as "no token bundled".

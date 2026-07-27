@@ -146,9 +146,7 @@ fun Manifest.attributesForMyPet() = attributes(
         "Project-Name" to project.name,
         "Project-Version" to version,
         "Project-Build" to buildNumber,
-        "Project-Type" to buildType,
-        "Project-Minecraft-Version" to minecraftVersion,
-        "Git-Commit" to (System.getenv("GIT_COMMIT") ?: "")
+        "Project-Type" to buildType
     )
 )
 
