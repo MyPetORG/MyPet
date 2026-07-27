@@ -93,6 +93,11 @@ public class PetRangedAttackGoal implements Goal<Mob> {
     // threshold in PetMeleeAttackGoal to avoid a dead zone between the two goals.
     static final double MELEE_PREFERENCE_RANGE_SQ = 25.0;
 
+    // Lifetime of a Pet-fired projectile that vanilla only removes on impact.
+    // The goal engages at 12 blocks and fireballs cover that in well under a
+    // second, so 5s is pure slack before a missed shot is reclaimed.
+    private static final long PROJECTILE_LIFETIME_TICKS = 100L;
+
     private final Pet pet;
     private final Mob mob;
     private final float walkSpeedModifier;
@@ -360,7 +365,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
 
     private <T extends Projectile> void launchThrowable(Mob mob, Class<T> type,
                                                                           Vector direction, float damage, Player owner, Sound sound, float volume, float pitch) {
-        mob.launchProjectile(type, direction.normalize().multiply(1.6), p -> {
+        T projectile = mob.launchProjectile(type, direction.normalize().multiply(1.6), p -> {
             p.setShooter(owner != null ? owner : mob);
             PersistentDataContainer pdc = p.getPersistentDataContainer();
             pdc.set(PROJECTILE_DAMAGE_KEY, PersistentDataType.FLOAT, damage);
@@ -368,6 +373,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
                 pdc.set(PROJECTILE_OWNER_KEY, PersistentDataType.STRING, owner.getUniqueId().toString());
             }
         });
+        scheduleDespawn(projectile);
         mob.getLocation().getWorld().playSound(mob.getLocation(), sound, volume, pitch);
     }
 
@@ -377,7 +383,7 @@ public class PetRangedAttackGoal implements Goal<Mob> {
         Vector dir = target.getLocation().add(0, target.getHeight() / 2.0, 0)
                 .subtract(petLoc.clone().add(0, mob.getHeight() / 2.0 + 0.5, 0)).toVector();
 
-        mob.launchProjectile(type, dir.normalize(), fb -> {
+        T fireball = mob.launchProjectile(type, dir.normalize(), fb -> {
             fb.setShooter(owner != null ? owner : mob);
             fb.setYield(0); // no explosion
             fb.setIsIncendiary(false);
@@ -387,11 +393,24 @@ public class PetRangedAttackGoal implements Goal<Mob> {
                 pdc.set(PROJECTILE_OWNER_KEY, PersistentDataType.STRING, owner.getUniqueId().toString());
             }
         });
+        scheduleDespawn(fireball);
         mob.getLocation().getWorld().playSound(petLoc, sound, volume, pitch);
+    }
 
-        // Schedule timeout removal (100 ticks = 5 seconds)
-        // We can't easily reference the projectile after launch in the consumer, so we schedule cleanup
-        // The hit listener handles damage; this just prevents stale fireballs
+    /**
+     * Reclaims a Pet-fired projectile that never hit anything.
+     *
+     * <p>Vanilla only discards fireballs and throwables from inside their own
+     * {@code tick()} — on impact, or when their chunk is gone. A shot that
+     * misses keeps flying until it leaves the entity-ticking area, where it
+     * stops ticking and is never removed again, so every miss leaks one entity
+     * for as long as that chunk stays loaded. The entity scheduler is ticked
+     * for every loaded entity regardless of chunk ticking state, so this still
+     * fires for a projectile frozen outside simulation distance.
+     */
+    private void scheduleDespawn(Projectile projectile) {
+        projectile.getScheduler().runDelayed(MyPetApi.getPlugin(),
+                task -> projectile.remove(), null, PROJECTILE_LIFETIME_TICKS);
     }
 
     /**

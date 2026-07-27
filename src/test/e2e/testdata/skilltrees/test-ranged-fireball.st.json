@@ -1,0 +1,22 @@
+{
+  "ID": "test-ranged-fireball",
+  "Name": "test-ranged-fireball",
+  "Order": 124,
+  "MobTypes": [
+    "*"
+  ],
+  "Icon": {
+    "Material": "fire_charge"
+  },
+  "Skills": {
+    "Ranged": {
+      "Upgrades": {
+        "1": {
+          "Damage": "+50",
+          "Rate": "+35",
+          "Projectile": "LargeFireball"
+        }
+      }
+    }
+  }
+}

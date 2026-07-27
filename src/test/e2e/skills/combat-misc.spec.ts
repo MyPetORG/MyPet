@@ -96,3 +96,29 @@ test('test-ranged: pet shoots a distant aggressor dead', async ({ player, server
     removePet(server, player);
   }
 });
+
+test('test-ranged-fireball: fireball projectiles hit, damage and leave nothing behind', async ({ player, server }) => {
+  await player.makeOp();
+  await setupArena(server, player);
+  await createPet(server, player, 'Cow', { skilltree: 'test-ranged-fireball' });
+
+  try {
+    // Fireball twin of test-ranged: fireballs take the launchFireball/scheduleDespawn path
+    // and carry their damage as a PDC tag applied by PetProjectileHitListener, none of
+    // which the arrow variant exercises. Same husk rationale as above.
+    const victim = await spawnVictim(server, player, 'husk', 'v_fbl', { dx: 14 });
+    server.execute(`damage ${player.username} 1 minecraft:mob_attack by ${victim}`);
+    await expectCondition(server, player, `unless entity ${victim}`, { timeout: 25000 });
+
+    // No fireball outlives the fight. This is a weak guard for the entity-leak fix, not a
+    // strict regression test for it: a stray fired here flies out of the loaded chunks
+    // within ~3.5s, so vanilla reclaims it on this arena even without the despawn timer.
+    // The trajectory that leaks in production — one that never leaves a loaded chunk —
+    // can't be manufactured here, since any target the pet can shoot at absorbs the shot.
+    await expectCondition(server, player, 'unless entity @e[type=minecraft:fireball]', { timeout: 15000 });
+  } finally {
+    killTagged(server, 'v_fbl');
+    server.execute('kill @e[type=minecraft:fireball]');
+    removePet(server, player);
+  }
+});
