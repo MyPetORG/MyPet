@@ -55,9 +55,17 @@ public class SentryErrorReporter implements ErrorReporter {
     protected boolean hooksLoaded = false;
 
     public void onEnable() {
+        // The DSN is injected at build time from a CI-only secret (see build.gradle.kts) rather than
+        // hardcoded, so forks that build via our release/dev workflows - but don't have our
+        // private SENTRY_DSN secret - get an empty DSN here and never report errors to our project.
+        String dsn = VersionUtil.getSentryDsn();
+        if (dsn == null || dsn.isEmpty()) {
+            return;
+        }
+
         // Initialize Sentry with modern 8.0.0+ API
         Sentry.init(options -> {
-            options.setDsn("https://14aec086f95d4fbe8a378638c80b68fa@o221805.ingest.us.sentry.io/1368849");
+            options.setDsn(dsn);
             options.setSendDefaultPii(true);
             options.setTracesSampleRate(1.0);
             options.setDebug(false);

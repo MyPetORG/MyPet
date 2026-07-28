@@ -66,6 +66,7 @@ jobs:
       - name: Build MyPet
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           BBB_SHARED_TOKEN: ${{ secrets.BBB_SHARED_TOKEN }}
         run: |
           ./gradlew --no-daemon --build-cache build -PbuildType=release

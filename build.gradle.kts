@@ -140,13 +140,18 @@ val downloadTranslations by tasks.register<Exec>("downloadTranslations") {
 // Root project no longer has src/main — resources are in :plugin module
 tasks.processResources { enabled = false }
 
+// Only the official CI has this secret. Forks and self-compiled builds get an empty DSN, so
+// SentryErrorReporter stays disabled instead of silently reporting a fork's errors to our project.
+val sentryDsn = System.getenv("SENTRY_DSN") ?: ""
+
 fun Manifest.attributesForMyPet() = attributes(
     mapOf(
         "Main-Class" to "de.Keyle.MyPet.Main",
         "Project-Name" to project.name,
         "Project-Version" to version,
         "Project-Build" to buildNumber,
-        "Project-Type" to buildType
+        "Project-Type" to buildType,
+        "Sentry-Dsn" to sentryDsn
     )
 )
 

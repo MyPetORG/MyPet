@@ -35,6 +35,7 @@ public class VersionUtil {
     private static String version = "0.0.0";
     private static String build = "";
     private static String buildType = "local";
+    private static String sentryDsn = "";
 
     private static void loadData() {
         try {
@@ -54,6 +55,9 @@ public class VersionUtil {
             }
             if ((val = attr.getValue("Project-Type")) != null && !val.isEmpty()) {
                 buildType = val;
+            }
+            if ((val = attr.getValue("Sentry-Dsn")) != null) {
+                sentryDsn = val;
             }
         } catch (IOException | URISyntaxException e) {
             ErrorUtil.report(e);
@@ -89,6 +93,14 @@ public class VersionUtil {
             updated = true;
         }
         return build;
+    }
+
+    public static String getSentryDsn() {
+        if (!updated) {
+            loadData();
+            updated = true;
+        }
+        return sentryDsn;
     }
 
     public static String getFormattedVersion() {
