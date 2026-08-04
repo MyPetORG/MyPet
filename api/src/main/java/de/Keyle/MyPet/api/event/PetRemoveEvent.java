@@ -42,8 +42,8 @@ import org.jspecify.annotations.NonNull;
  *   <li>{@link Source#OTHER} — third-party plugin path.</li>
  * </ul>
  *
- * <p>Fires from {@code CommandRelease}, {@code CommandOptionRemove}, and
- * {@code PetDeathListener}.
+ * <p>Fires from {@code CommandRelease}, {@code CommandOptionRemove},
+ * {@code PetDeathListener}, and {@code PetMenuMenuHandler}.
  *
  * <p><b>Not cancellable:</b> the deletion has already been committed (or
  * scheduled) when this event fires. Veto must happen earlier — for releases,

@@ -253,48 +253,32 @@ public final class VanillaMobSpawner {
      * tracker entry for the old UUID is cleaned up here because
      * {@code removePet()} will no longer see the reference.
      */
-    public void releaseToWild(Pet pet) {
+    public SpawnOutcome releaseToWild(Pet pet) {
         Mob oldMob = pet.getBukkitEntity();
-        if (oldMob == null) return;
+        if (oldMob == null) return SpawnOutcome.FAILED;
 
         Location loc = oldMob.getLocation();
         UUID oldUuid = oldMob.getUniqueId();
 
         if (pet.getPetType().getPetClass() == ModelPet.class) {
-            releaseModelPet(pet, oldMob, loc, oldUuid);
-            return;
+            return releaseModelPet(pet, oldMob, loc, oldUuid);
         }
 
         Class<? extends Mob> mobClass = pet.getPetType().getBukkitEntityClass();
         if (mobClass == null) {
             MyPetApi.getLogger().warning("releaseToWild: no Bukkit entity class for pet type "
                     + pet.getPetType().name() + " — cannot respawn as vanilla mob");
-            PetDamageTracker.cleanup(oldUuid);
-            pet.setBukkitEntity(null);
-            return;
+            return SpawnOutcome.FAILED;
         }
 
         World world = loc.getWorld();
         if (world == null) {
             MyPetApi.getLogger().warning("releaseToWild: world unloaded before respawn for "
                     + pet.getPetType().name() + " — cannot spawn replacement");
-            PetDamageTracker.cleanup(oldUuid);
-            pet.setBukkitEntity(null);
-            return;
+            return SpawnOutcome.FAILED;
         }
 
-        // A released pet leaves MyPet's control and becomes a wild mob, so there is no
-        // later spawn-time cleanup. Detach any Path-A re-skin model BEFORE capturing the
-        // snapshot so the released mob is bare (the model is not serialized into its PDC
-        // and cannot revive on the wild mob). A brief flash here is acceptable — release
-        // is a deliberate transform.
-        PetModelService.detachAll(pet);
-
-        // Capture the old mob's full vanilla NBT BEFORE removing it. The
-        // snapshot carries every per-type field Mojang has ever defined for
-        // this entity, plus equipment, plus per-mob runtime state — so the
-        // restored mob is byte-identical to the pet at release time, modulo
-        // the strip below.
+        // --- Build the replacement WITHOUT touching the pet -------------------
         CompoundBinaryTag snapshot;
         try {
             snapshot = PetEntitySnapshot.capture(oldMob);
@@ -305,28 +289,15 @@ public final class VanillaMobSpawner {
             snapshot = null;
         }
 
-        // Detach Pet state BEFORE any potentially-throwing operation below.
-        PetDamageTracker.cleanup(oldUuid);
-        Timer.stopPetTicking(pet);
-        PetSitParticleController.stopForPet(pet);
-        PetPotionParticleController.stopForPet(pet);
-        RideSkillFlightController.stopForPet(pet);
-        PetLifecycleHookRegistry.forPet(pet).forEach(hook -> hook.onDespawn(pet));
-        pet.setBukkitEntity(null);
-
-        // Safe to destroy the old mob now — MyPet already released the reference.
-        oldMob.remove();
-
-        Mob newMob = null;
+        Mob replacement = null;
         if (snapshot != null) {
             // Drop MyPet's attribute writes so the released mob deserializes
-            // with its  vanilla attributes
-            snapshot = snapshot.remove("attributes").remove("Attributes");
+            // with its vanilla attributes, and its PDC so no model revives.
+            snapshot = stripMyPetPdc(snapshot.remove("attributes").remove("Attributes"));
             try {
                 Mob restored = PetEntitySnapshot.restore(snapshot, world);
-                if (mobClass.isInstance(restored)
-                        && restored.spawnAt(loc, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
-                    newMob = restored;
+                if (mobClass.isInstance(restored)) {
+                    replacement = restored;
                 } else {
                     MyPetApi.getLogger().warning("releaseToWild: snapshot restore refused for "
                             + pet.getPetType().name() + " — falling back to fresh-spawn (per-type state lost).");
@@ -337,17 +308,20 @@ public final class VanillaMobSpawner {
                         + t.getClass().getSimpleName() + ": " + t.getMessage());
             }
         }
-        if (newMob == null) {
-            // Fresh-spawn fallback: vanilla mob with vanilla defaults, no
-            // per-type state preserved. Better than throwing on the caller.
-            newMob = world.spawn(loc, mobClass, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        if (replacement == null) {
+            replacement = world.createEntity(loc, mobClass);
         }
 
-        stripPetCustomizations(newMob);
-    }
+        // --- The one fallible step, before anything irreversible -------------
+        // PetEntitySnapshot.restore deserializes with preserveUUID=false, so the
+        // replacement holds a fresh UUID and may coexist with oldMob until the
+        // commit block below removes it.
+        if (!replacement.spawnAt(loc, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
+            return SpawnOutcome.DENIED;
+        }
 
-    private void releaseModelPet(Pet pet, Mob oldMob, Location loc, UUID oldUuid) {
-        // Detach Pet state (mirror the vanilla release path).
+        // --- Commit point: nothing below may throw ---------------------------
+        PetModelService.detachAll(pet);
         PetDamageTracker.cleanup(oldUuid);
         Timer.stopPetTicking(pet);
         PetSitParticleController.stopForPet(pet);
@@ -355,8 +329,17 @@ public final class VanillaMobSpawner {
         RideSkillFlightController.stopForPet(pet);
         PetLifecycleHookRegistry.forPet(pet).forEach(hook -> hook.onDespawn(pet));
         pet.setBukkitEntity(null);
-        oldMob.remove(); // despawn MyPet's host
+        oldMob.remove();
 
+        stripPetCustomizations(replacement);
+        return SpawnOutcome.SUCCESS;
+    }
+
+    private SpawnOutcome releaseModelPet(Pet pet, Mob oldMob, Location loc, UUID oldUuid) {
+        // Try to place the wild replacement BEFORE detaching the pet, so a
+        // refusal leaves the pet exactly as it was. Neither call below reads
+        // oldMob, so both are safe while it is still in the world.
+        boolean claimed = false;
         if (loc.getWorld() != null) {
             // Source-driven type: respawn the genuine creature (e.g. the real MythicMob) via its
             // provider, keyed on the configured Model.Id — NOT the pet-type name.
@@ -365,18 +348,34 @@ public final class VanillaMobSpawner {
                 if (sourceId != null && !sourceId.isBlank()) {
                     for (PetModelSourceHook src : MyPetApi.getServiceManager().getServices(PetModelSourceHook.class)) {
                         if (src.spawnSource(sourceId, loc).isPresent()) {
-                            return;
+                            claimed = true;
+                            break;
                         }
                     }
                 }
             }
             // Rendered custom creature: leave a wild modeled mob (host + configured model),
             // re-leashable back into the pet.
-            if (PetModelService.releaseAsModeledWild(pet, loc)) {
-                return;
+            if (!claimed) {
+                SpawnOutcome modeled = PetModelService.releaseAsModeledWild(pet, loc);
+                if (modeled == SpawnOutcome.DENIED) {
+                    return SpawnOutcome.DENIED;
+                }
+                claimed = modeled == SpawnOutcome.SUCCESS;
             }
         }
-        // Nothing claimed it (no model, or provider absent) → already despawned above.
+
+        // Commit: nothing claimed the release means "no model, no provider" —
+        // the host is simply despawned, exactly as before.
+        PetDamageTracker.cleanup(oldUuid);
+        Timer.stopPetTicking(pet);
+        PetSitParticleController.stopForPet(pet);
+        PetPotionParticleController.stopForPet(pet);
+        RideSkillFlightController.stopForPet(pet);
+        PetLifecycleHookRegistry.forPet(pet).forEach(hook -> hook.onDespawn(pet));
+        pet.setBukkitEntity(null);
+        oldMob.remove();
+        return SpawnOutcome.SUCCESS;
     }
 
     /**
@@ -436,6 +435,26 @@ public final class VanillaMobSpawner {
         // a released breeze shouldn't keep the owner as an attack target.
         BrainAccess.clearAttackTarget(newMob);
         BrainAccess.clearWalkTarget(newMob);
+    }
+
+    /**
+     * Removes MyPet's PDC keys from a captured snapshot so the restored mob
+     * enters the world bare. Mirrors {@link #stripPetCustomizations}, but acts
+     * on the NBT before the spawn rather than the entity after it — a model
+     * plugin reading PDC on spawn must not find a live model id.
+     */
+    private static CompoundBinaryTag stripMyPetPdc(CompoundBinaryTag snapshot) {
+        CompoundBinaryTag values = snapshot.getCompound("BukkitValues");
+        if (values.size() == 0) {
+            return snapshot;
+        }
+        CompoundBinaryTag.Builder kept = CompoundBinaryTag.builder();
+        for (String key : values.keySet()) {
+            if (!key.startsWith("mypet:")) {
+                kept.put(key, values.get(key));
+            }
+        }
+        return snapshot.put("BukkitValues", kept.build());
     }
 
     /**

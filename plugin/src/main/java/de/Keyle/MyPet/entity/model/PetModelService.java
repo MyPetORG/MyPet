@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHook;
 import de.Keyle.MyPet.api.util.hooks.types.PetModelHook;
 import de.Keyle.MyPet.api.util.hooks.types.PetModelSourceHook;
+import de.Keyle.MyPet.entity.spawn.SpawnOutcome;
 import de.Keyle.MyPet.entity.types.ModelPet;
 import org.bukkit.Location;
 import org.bukkit.entity.Mob;
@@ -311,31 +312,38 @@ public final class PetModelService {
      * On release of a RENDERED custom creature (one with a {@code Model.Provider}/{@code Id},
      * no source plugin to reconstruct it), leave a wild modeled mob in the world instead of
      * nothing: spawn the pet type's host mob and render the configured model on it. Returns
-     * false — caller despawns as before — when the type has no rendered model (source-driven
-     * types are handled by {@code spawnSource}), the provider is absent, or host/world are
-     * unavailable. Config-based, so it works after the pet's live entity is already gone.
+     * {@link SpawnOutcome#FAILED} — caller despawns as before — when the type has no rendered
+     * model (source-driven types are handled by {@code spawnSource}), the provider is absent,
+     * or host/world are unavailable. Returns {@link SpawnOutcome#DENIED} when a region/plugin
+     * refused the {@code CreatureSpawnEvent} — the caller must leave the pet untouched in that
+     * case. Config-based, so it works after the pet's live entity is already gone.
      */
-    public static boolean releaseAsModeledWild(Pet pet, Location loc) {
+    public static SpawnOutcome releaseAsModeledWild(Pet pet, Location loc) {
         if (pet == null || loc == null || loc.getWorld() == null) {
-            return false;
+            return SpawnOutcome.FAILED;
         }
         Optional<Resolved> r = resolve(pet);
         if (r.isEmpty()) {
-            return false;
+            return SpawnOutcome.FAILED;
         }
         Class<? extends Mob> host = pet.getPetType().getBukkitEntityClass();
         if (host == null) {
-            return false;
+            return SpawnOutcome.FAILED;
+        }
+        // createEntity + spawnAt so a cancelled CreatureSpawnEvent is a plain
+        // false rather than an IllegalArgumentException indistinguishable from
+        // a genuine model failure.
+        Mob wild = loc.getWorld().createEntity(loc, host);
+        if (!wild.spawnAt(loc, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
+            return SpawnOutcome.DENIED;
         }
         try {
-            Mob wild = loc.getWorld().spawn(loc, host, CreatureSpawnEvent.SpawnReason.CUSTOM, m -> {});
             r.get().hook().renderOn(wild, r.get().modelId());
-            return true;
         } catch (Throwable t) {
-            MyPetApi.getLogger().warning("release: failed to leave a modeled wild mob for "
+            MyPetApi.getLogger().warning("release: left a wild mob but failed to render its model for "
                     + pet.getPetType().name() + ": " + t.getMessage());
-            return false;
         }
+        return SpawnOutcome.SUCCESS;
     }
 
     /**

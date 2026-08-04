@@ -38,6 +38,7 @@ import de.Keyle.MyPet.api.entity.Pet.PetState;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.entity.spawn.SpawnOutcome;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
@@ -46,7 +47,9 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import java.util.logging.Level;
 
 import java.util.List;
 
@@ -174,43 +177,44 @@ public class CommandRelease {
         }
 
         if (Util.SANITIZED_MINIMESSAGE.stripTags(pet.getPetName()).trim().equalsIgnoreCase(name.trim())) {
-            PetRemoveEvent removeEvent = new PetRemoveEvent(pet, PetRemoveEvent.Source.RELEASE);
-            Bukkit.getServer().getPluginManager().callEvent(removeEvent);
-
-            // Drop backpack contents BEFORE releaseToWild — that call detaches
-            // the Bukkit entity reference from the Pet, after which
-            // pet.getLocation() falls back to the owner's location (see
-            // Pet#getLocation) and items would drop at the owner's feet
-            // instead of where the pet is standing.
-            if (pet.getSkills().isActive(Backpack.class)) {
-                pet.getSkills().get(Backpack.class).getInventory().dropContentAt(pet.getLocation().get());
-            }
+            // Captured BEFORE releaseToWild: past its commit point the Bukkit
+            // entity is detached and Pet#getLocation falls back to the owner's
+            // position, which would drop items at the owner's feet.
+            Location dropLoc = pet.getLocation().get();
 
             boolean entityConverted = false;
             if (!MyPetApi.getPetInfo().getRemoveAfterRelease(pet.getPetType())) {
-                // The pet IS a real vanilla mob — just strip MyPet infrastructure
-                // and release it back to the wild. No need to spawn a new entity.
+                SpawnOutcome outcome;
                 try {
-                    new VanillaMobSpawner().releaseToWild(pet);
-                    entityConverted = true;
+                    outcome = new VanillaMobSpawner().releaseToWild(pet);
                 } catch (Exception e) {
-                    // Log the exception and notify the owner. releaseToWild is
-                    // exception-safe w.r.t. the Pet domain object (it detaches
-                    // state before any throwing operation), so the caller can
-                    // still finish the rest of the cleanup path below.
-                    MyPetApi.getLogger().log(java.util.logging.Level.SEVERE,
+                    MyPetApi.getLogger().log(Level.SEVERE,
                             "Failed to release pet " + pet.getPetName() + " to wild", e);
-                    petOwner.sendMessage(Component.text(
-                                    "Failed to release your pet: " + e.getMessage())
+                    outcome = SpawnOutcome.FAILED;
+                }
+                if (outcome == SpawnOutcome.DENIED) {
+                    petOwner.sendMessage(Locale.getFormattedComponent(
+                            "Message.Command.Release.NotAllowed", petOwner, pet.getDisplayName()));
+                    return;
+                }
+                if (outcome != SpawnOutcome.SUCCESS) {
+                    petOwner.sendMessage(Component.text("Failed to release your pet.")
                             .color(NamedTextColor.RED));
                     return;
                 }
+                entityConverted = true;
             }
 
-            // Only drop equipment if the entity wasn't converted (equipment already transferred to the converted entity)
+            if (pet.getSkills().isActive(Backpack.class)) {
+                pet.getSkills().get(Backpack.class).getInventory().dropContentAt(dropLoc);
+            }
+
             if (pet instanceof PetEquipment && !entityConverted) {
                 ((PetEquipment) pet).dropEquipment();
             }
+
+            PetRemoveEvent removeEvent = new PetRemoveEvent(pet, PetRemoveEvent.Source.RELEASE);
+            Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
             pet.removePet();
             pet.getOwner().setPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()), null);

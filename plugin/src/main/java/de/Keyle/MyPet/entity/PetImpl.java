@@ -572,7 +572,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
     public java.util.Optional<Location> getLocation() {
         // The bukkitEntity != null guard protects against the window in which
         // status is still PetState.Here but bukkitEntity has been detached
-        // (e.g. VanillaMobSpawner#releaseToWild between the detach and the
+        // (VanillaMobSpawner#releaseToWild, between its commit point and the
         // subsequent removePet() status transition). Without the guard this
         // method NPEs for any caller that runs inside that window.
         if (status == PetState.Here && bukkitEntity != null) {
@@ -1004,9 +1004,9 @@ public abstract class PetImpl implements Pet, NBTStorage {
     public void removePet() {
         if (status == PetState.Here) {
             // bukkitEntity may be null if ownership has already been handed
-            // off (e.g. VanillaMobSpawner#releaseToWild during /petrelease).
-            // In that case only the status transition and backpack-close
-            // steps apply.
+            // off past VanillaMobSpawner#releaseToWild's commit point (during
+            // /petrelease). In that case only the status transition and
+            // backpack-close steps apply.
             if (bukkitEntity != null) {
                 final Mob entityRef = bukkitEntity;
                 final boolean ownedByCurrentRegion = Bukkit.isOwnedByCurrentRegion(entityRef);

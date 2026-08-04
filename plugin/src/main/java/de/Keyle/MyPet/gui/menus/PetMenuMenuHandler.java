@@ -47,6 +47,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.skills.Backpack;
 import de.Keyle.MyPet.api.util.locale.Locale;
+import de.Keyle.MyPet.entity.spawn.SpawnOutcome;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.gui.context.BackpackContext;
 import de.Keyle.MyPet.gui.context.ChooseSkilltreeContext;
@@ -73,6 +74,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.regex.Matcher;
@@ -84,6 +86,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -564,30 +567,41 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
             return;
         }
 
-        PetRemoveEvent removeEvent = new PetRemoveEvent(pet, PetRemoveEvent.Source.RELEASE);
-        Bukkit.getServer().getPluginManager().callEvent(removeEvent);
-
-        if (pet.getSkills().isActive(Backpack.class)) {
-            pet.getSkills().get(Backpack.class).getInventory().dropContentAt(pet.getLocation().get());
-        }
+        Location dropLoc = pet.getLocation().get();
 
         boolean entityConverted = false;
         if (!MyPetApi.getPetInfo().getRemoveAfterRelease(pet.getPetType())) {
+            SpawnOutcome outcome;
             try {
-                new VanillaMobSpawner().releaseToWild(pet);
-                entityConverted = true;
+                outcome = new VanillaMobSpawner().releaseToWild(pet);
             } catch (Exception e) {
-                MyPetApi.getLogger().log(java.util.logging.Level.SEVERE,
-                    "Failed to release pet " + pet.getPetName() + " to wild", e);
-                viewer.sendMessage(Component.text(
-                    "Failed to release your pet: " + e.getMessage()).color(NamedTextColor.RED));
+                MyPetApi.getLogger().log(Level.SEVERE,
+                        "Failed to release pet " + pet.getPetName() + " to wild", e);
+                outcome = SpawnOutcome.FAILED;
+            }
+            if (outcome == SpawnOutcome.DENIED) {
+                viewer.sendMessage(Locale.getFormattedComponent(
+                        "Message.Command.Release.NotAllowed", viewer, pet.getDisplayName()));
                 return;
             }
+            if (outcome != SpawnOutcome.SUCCESS) {
+                viewer.sendMessage(Component.text("Failed to release your pet.")
+                        .color(NamedTextColor.RED));
+                return;
+            }
+            entityConverted = true;
+        }
+
+        if (pet.getSkills().isActive(Backpack.class)) {
+            pet.getSkills().get(Backpack.class).getInventory().dropContentAt(dropLoc);
         }
 
         if (pet instanceof PetEquipment && !entityConverted) {
             ((PetEquipment) pet).dropEquipment();
         }
+
+        PetRemoveEvent removeEvent = new PetRemoveEvent(pet, PetRemoveEvent.Source.RELEASE);
+        Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
         pet.removePet();
         pet.getOwner().setPetForWorldGroup(WorldGroup.getGroupByWorld(viewer.getWorld().getName()), null);
