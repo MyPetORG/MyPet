@@ -132,7 +132,9 @@ bots ~25 blocks from the arena. Don't remove it.
     economy/                  shop (buy + denial), fees (skilltree switch fee —
                                an EXP penalty, not a currency charge),
                                respawn-cost (/petrespawn show/pay + denial)
-    migration/                mypet3.spec.ts (v3 -> v4 DB auto-migration)
+    migration/                mypet3.spec.ts (v3 -> v4 DB auto-migration),
+                               mypet3-offline.spec.ts (offline-mode v3 rows,
+                               whose mojang_uuid is NULL, survive the upgrade)
     persistence/              store/switch round-trip (exp + skilltree survive)
     placeholder/              owns-pet.spec.ts (%mypet_owns_pet% tracks stored +
                                active ownership via /papi parse — needs the

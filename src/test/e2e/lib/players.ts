@@ -63,3 +63,14 @@ export async function secondBot(
     },
   };
 }
+
+/**
+ * Idempotent "ensure this player is op". A fixed username persists its op
+ * grant across reconnects (ops.json survives), but `player.makeOp()`'s
+ * confirmation poll only matches the FIRST-ever grant message, so it times
+ * out on an already-opped player. deop-then-op sidesteps that.
+ */
+export async function ensureOp(player: any): Promise<void> {
+  await player.deOp();
+  await player.makeOp();
+}

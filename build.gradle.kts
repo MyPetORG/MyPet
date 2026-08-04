@@ -418,7 +418,7 @@ plugwright {
                   LeashRequirements: [Impossible]
         """.trimIndent())
 
-        // migration/mypet3.spec.ts: a pre-built MyPet 3.x-shaped SQLite
+        // migration/mypet3.spec.ts + mypet3-offline.spec.ts: a pre-built MyPet 3.x-shaped SQLite
         // database (testdata/legacy/pets.db, built by generate_mypet3_db.py).
         // Staged directly as the plugin's own pets.db, not via a config
         // option: MyPet.Repository.ConvertFrom only converts between
@@ -426,7 +426,8 @@ plugwright {
         // v3->v4 path is MigrationService, which auto-detects a legacy
         // install by probing the active repository's schema at boot and
         // migrates in-place — no config flag involved. persistence.spec.ts's
-        // random per-test usernames don't collide with LegacyOwner's fixed rows.
+        // random per-test usernames don't collide with the fixture's fixed rows
+        // (LegacyOwner, OfflineOwner, and one deliberately nameless row).
         file("plugins/MyPet/pets.db",
             projectDir.resolve("src/test/e2e/testdata/legacy/pets.db").also {
                 if (!it.exists()) error("src/test/e2e/testdata/legacy/pets.db missing — " +

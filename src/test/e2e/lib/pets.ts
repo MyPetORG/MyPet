@@ -1,4 +1,5 @@
 import { expectCondition } from './oracle.js';
+import { msgPlain } from './locale.js';
 
 export interface PetHandle {
   name: string;       // custom name, also used to derive the tag
@@ -63,4 +64,11 @@ export function setExp(server: any, player: any, amount: number, mode: 'set' | '
 
 export function setSkilltree(server: any, player: any, tree: string): void {
   server.execute(`petadmin skilltree ${player.username} ${tree}`);
+}
+
+/** Opens /petswitch and clicks the stored pet whose display name contains `nameFragment`. */
+export async function switchToStoredPet(player: any, nameFragment: string): Promise<void> {
+  player.chat('/petswitch');
+  const gui = await player.gui({ title: msgPlain('Gui.PetSelection.Title') });
+  await gui.locator((i: any) => String(i.getDisplayName() ?? '').includes(nameFragment)).click();
 }

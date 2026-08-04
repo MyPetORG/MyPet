@@ -1,6 +1,7 @@
 import { test, expect } from '@drownek/plugwright';
 import { expectCondition } from '../lib/oracle.js';
-import { msgPlain } from '../lib/locale.js';
+import { switchToStoredPet } from '../lib/pets.js';
+import { ensureOp } from '../lib/players.js';
 
 // Fixed bot identity, NOT the per-test random `Test_<hex>` the default
 // `player` fixture gets: the legacy fixture (testdata/legacy/pets.db, staged
@@ -8,24 +9,6 @@ import { msgPlain } from '../lib/locale.js';
 // (same algorithm as taming.spec.ts's offlineUuid), so every test here must
 // drive its own `createPlayer({ username: LEGACY_OWNER })` bot.
 const LEGACY_OWNER = 'LegacyOwner';
-
-/** Opens /petswitch and clicks the stored pet whose display name contains `nameFragment`. */
-async function switchToStoredPet(player: any, nameFragment: string): Promise<void> {
-  player.chat('/petswitch');
-  const gui = await player.gui({ title: msgPlain('Gui.PetSelection.Title') });
-  await gui.locator((i: any) => String(i.getDisplayName() ?? '').includes(nameFragment)).click();
-}
-
-/**
- * The fixed username persists its op grant across this file's 3 tests
- * (ops.json survives reconnects), but `player.makeOp()`'s confirmation poll
- * only matches the FIRST-ever grant message, so it times out on an
- * already-opped player. deop-then-op is a robust idempotent "ensure op".
- */
-async function ensureOp(player: any): Promise<void> {
-  await player.deOp();
-  await player.makeOp();
-}
 
 test('legacy MyPet-3 pet converts with name and exp intact', async ({ createPlayer, server }) => {
   const player = await createPlayer({ username: LEGACY_OWNER });

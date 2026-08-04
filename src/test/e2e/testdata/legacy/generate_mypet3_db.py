@@ -6,7 +6,8 @@ keyed on `internal_uuid` + a separate `mojang_uuid` column, `pets.owner_uuid`
 pointing at `internal_uuid`) that the plugin's `MigrationService` detects as
 `InstallType.UPGRADE_3X` (schema probe: `players.internal_uuid` column
 present) and converts on first boot via the migration chain:
-`TranslatePetOwnerUuidToMojang` -> `RebuildPlayersSchemaOnMojangUuid` ->
+`BackfillOfflineUuidsFromName` -> `TranslatePetOwnerUuidToMojang` ->
+`RebuildPlayersSchemaOnMojangUuid` ->
 `EntitySnapshotMigration` (+ `DropLegacyInfoVersionColumn`).
 
 Schema derived by reading, byte-for-byte:
@@ -43,8 +44,10 @@ import sys
 # ---------------------------------------------------------------------------
 # Offline-mode UUID (Bukkit's UUID.nameUUIDFromBytes("OfflinePlayer:" + name))
 # Mirrors src/test/e2e/taming/taming.spec.ts's `offlineUuid` (MD5, version 3,
-# RFC 4122 variant) and src/test/e2e/lib/uuid.ts (the TS port used by
-# migration/mypet3.spec.ts) bit-for-bit — all three must agree.
+# RFC 4122 variant) and the Java `offlineUuid` in
+# migration/migrations/BackfillOfflineUuidsFromName.java bit-for-bit — all
+# three must agree, since the plugin derives the same value at migration time
+# that an offline-mode server hands the plugin at login.
 # ---------------------------------------------------------------------------
 def offline_uuid(username: str) -> str:
     md5 = bytearray(hashlib.md5(f"OfflinePlayer:{username}".encode("utf-8")).digest())
@@ -112,6 +115,25 @@ FISH_UUID = "33333333-3333-3333-3333-333333333333"
 
 COW_EXP = 500.0
 
+# --- Offline-mode rows (BackfillOfflineUuidsFromName) ------------------------
+# A MyPet 3 server running offline mode never populated mojang_uuid: its join
+# handler only wrote that column when the joining UUID *differed* from the
+# name-derived offline UUID, which offline-mode servers never do. These rows
+# reproduce that state faithfully. Before BackfillOfflineUuidsFromName they
+# were deleted outright by RebuildPlayersSchemaOnMojangUuid.
+OFFLINE_OWNER_NAME = "OfflineOwner"
+OFFLINE_INTERNAL_UUID = "55555555-5555-5555-5555-555555555555"
+OFFLINE_COW_UUID = "77777777-7777-7777-7777-777777777777"
+
+# Unrecoverable: no Mojang UUID *and* no name. Nothing identifies this player,
+# so the backfill must skip it (not throw) and leave it for the rebuild to
+# drop. Its presence in the fixture is the regression test for the backfill's
+# post-condition query: a post-condition written as plain
+# `WHERE mojang_uuid IS NULL`, without the name guard, throws here, fails the
+# migration, and MigrationService disables MyPet for the whole suite.
+NAMELESS_INTERNAL_UUID = "66666666-6666-6666-6666-666666666666"
+NAMELESS_COW_UUID = "88888888-8888-8888-8888-888888888888"
+
 # Rabbit: MyPet 3 stored fur type as a byte id under "Variant" — see
 # LegacyPetReader.rabbitTypeByLegacyId: 4 = GOLD (never the post-migration
 # default BROWN, so a lost-migration regression is observable).
@@ -155,8 +177,8 @@ def build_schema(conn: sqlite3.Connection):
         """
         CREATE TABLE players (
             internal_uuid VARCHAR(36) NOT NULL PRIMARY KEY,
-            mojang_uuid VARCHAR(36),
-            name VARCHAR(255),
+            mojang_uuid VARCHAR(36) UNIQUE,
+            name VARCHAR(16) UNIQUE,
             auto_respawn BOOLEAN,
             auto_respawn_min INTEGER,
             capture_mode BOOLEAN,
@@ -191,32 +213,71 @@ def build_schema(conn: sqlite3.Connection):
             version INTEGER UNIQUE,
             last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+
+        -- SqLiteRepository#createTimestampTrigger, one per table (pets/uuid,
+        -- players/internal_uuid, info/version). Reproduced verbatim so the fixture is a
+        -- structurally real 3.x database: a migration that mishandles them (or that a
+        -- trigger fires against) fails here rather than only on a live server.
+        CREATE TRIGGER [update_time_trigger_pets]
+        AFTER UPDATE ON pets FOR EACH ROW
+        WHEN NEW.last_update < OLD.last_update
+        BEGIN
+          UPDATE pets SET last_update=CURRENT_TIMESTAMP WHERE NEW.uuid=OLD.uuid;
+        END;
+
+        CREATE TRIGGER [update_time_trigger_players]
+        AFTER UPDATE ON players FOR EACH ROW
+        WHEN NEW.last_update < OLD.last_update
+        BEGIN
+          UPDATE players SET last_update=CURRENT_TIMESTAMP
+            WHERE NEW.internal_uuid=OLD.internal_uuid;
+        END;
+
+        CREATE TRIGGER [update_time_trigger_info]
+        AFTER UPDATE ON info FOR EACH ROW
+        WHEN NEW.last_update < OLD.last_update
+        BEGIN
+          UPDATE info SET last_update=CURRENT_TIMESTAMP WHERE NEW.version=OLD.version;
+        END;
         """
     )
 
 
 def insert_rows(conn: sqlite3.Connection):
-    conn.execute(
-        "INSERT INTO players (internal_uuid, mojang_uuid, name, auto_respawn, "
-        "auto_respawn_min, capture_mode, health_bar, pet_idle_volume, "
-        "extended_info, multi_world) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        (INTERNAL_UUID, MOJANG_UUID, LEGACY_OWNER_NAME, False, 0, False, 0, 1.0,
-         EMPTY_NBT, "{}"),
-    )
+    def insert_player(internal_uuid: str, mojang_uuid: str | None, name: str | None):
+        conn.execute(
+            "INSERT INTO players (internal_uuid, mojang_uuid, name, auto_respawn, "
+            "auto_respawn_min, capture_mode, health_bar, pet_idle_volume, "
+            "extended_info, multi_world) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (internal_uuid, mojang_uuid, name, False, 0, False, 0, 1.0,
+             EMPTY_NBT, "{}"),
+        )
 
-    def insert_pet(uuid: str, name: str, pet_type: str, info: bytes):
+    def insert_pet(uuid: str, name: str, pet_type: str, info: bytes,
+                   owner: str = INTERNAL_UUID):
         conn.execute(
             "INSERT INTO pets (uuid, owner_uuid, exp, health, respawn_time, name, "
             "type, last_used, hunger, world_group, wants_to_spawn, skilltree, "
             "skills, info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (uuid, INTERNAL_UUID, COW_EXP if pet_type == "Cow" else 0.0, 20.0, 0,
+            (uuid, owner, COW_EXP if pet_type == "Cow" else 0.0, 20.0, 0,
              name, pet_type, LAST_USED_MS, 100, WORLD_GROUP, False, None,
              EMPTY_NBT, info),
         )
 
+    # Online-mode-shaped row: mojang_uuid populated. Migrates via the
+    # pre-existing chain; guards against a regression there.
+    insert_player(INTERNAL_UUID, MOJANG_UUID, LEGACY_OWNER_NAME)
     insert_pet(COW_UUID, "LegacyCow", "Cow", b"")  # empty info: no legacy visual state to migrate
     insert_pet(RABBIT_UUID, "LegacyRabbit", "Rabbit", legacy_info_blob({"Variant": RABBIT_VARIANT}))
     insert_pet(FISH_UUID, "LegacyFish", "TropicalFish", legacy_info_blob({"Variant": FISH_VARIANT}))
+
+    # Offline-mode-shaped row: mojang_uuid NULL, name present -> recoverable.
+    insert_player(OFFLINE_INTERNAL_UUID, None, OFFLINE_OWNER_NAME)
+    insert_pet(OFFLINE_COW_UUID, "OfflineCow", "Cow", b"", owner=OFFLINE_INTERNAL_UUID)
+
+    # Unrecoverable row: mojang_uuid NULL, name NULL.
+    insert_player(NAMELESS_INTERNAL_UUID, None, None)
+    insert_pet(NAMELESS_COW_UUID, "OrphanCow", "Cow", b"", owner=NAMELESS_INTERNAL_UUID)
 
     conn.execute(
         "INSERT INTO info (mypet_version, mypet_build, version) VALUES (?, ?, ?)",
@@ -239,6 +300,10 @@ def main():
 
     print(f"Wrote {out_path}")
     print(f"  LegacyOwner internal_uuid={INTERNAL_UUID} mojang_uuid={MOJANG_UUID}")
+    print(f"  OfflineOwner internal_uuid={OFFLINE_INTERNAL_UUID} mojang_uuid=NULL "
+          f"(backfills to {offline_uuid(OFFLINE_OWNER_NAME)})")
+    print(f"  Nameless internal_uuid={NAMELESS_INTERNAL_UUID} mojang_uuid=NULL name=NULL "
+          f"(unrecoverable, dropped by the rebuild)")
     print(f"  Cow uuid={COW_UUID} exp={COW_EXP}")
     print(f"  Rabbit uuid={RABBIT_UUID} legacy Variant={RABBIT_VARIANT} (-> Rabbit.Type.GOLD, vanilla RabbitType:4 (TAG_Int on this Paper build, no byte suffix))")
     print(f"  TropicalFish uuid={FISH_UUID} legacy Variant={FISH_VARIANT} "

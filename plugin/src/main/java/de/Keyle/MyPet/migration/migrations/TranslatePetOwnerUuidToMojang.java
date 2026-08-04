@@ -41,10 +41,15 @@ import java.util.logging.Logger;
  * Idempotency is by construction: the UPDATE only touches rows whose owner_uuid is
  * still an internal_uuid whose player has a non-null mojang_uuid. A second invocation
  * finds nothing to translate.
+ * <p>
+ * Depends on {@code BackfillOfflineUuidsFromName}: rows from an offline-mode 3.x
+ * install have a NULL {@code mojang_uuid} until that migration derives one, and
+ * would otherwise be reported here as untranslatable and then deleted.
  */
 @Migration(
         version = "4.0.0",
-        description = "Switch pets.owner_uuid from players.internal_uuid to players.mojang_uuid"
+        description = "Switch pets.owner_uuid from players.internal_uuid to players.mojang_uuid",
+        dependsOn = {"BackfillOfflineUuidsFromName"}
 )
 public class TranslatePetOwnerUuidToMojang implements DatabaseMigration {
 
