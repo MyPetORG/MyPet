@@ -25,7 +25,10 @@ import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.util.NbtUtil;
 import io.papermc.paper.entity.EntitySerializationFlag;
+import net.kyori.adventure.nbt.BinaryTagTypes;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.DoubleBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -58,9 +61,8 @@ import java.util.List;
  * {@code VanillaMobSpawner}):
  * <ol>
  *   <li>Call {@code mob.spawnAt(targetLocation, SpawnReason.CUSTOM)} to
- *       actually place the entity in the world. The snapshot encodes the
- *       despawn position; spawnAt overrides that with the call location.
- *       Skipping spawnAt leaves a ghost entity that will never appear.</li>
+ *       actually place the entity in the world. Skipping spawnAt leaves a
+ *       ghost entity that will never appear.</li>
  *   <li>{@link de.Keyle.MyPet.entity.spawn.PetEntityMarker#mark} — the
  *       {@code mypet:pet} PDC tag round-trips through the snapshot bytes
  *       on its own, but re-marking is cheap and tolerates snapshots
@@ -148,12 +150,19 @@ public final class PetEntitySnapshot {
      * to actually place it. Skipping that step leaves a ghost entity (no
      * errors thrown, but the mob never appears in the world).
      *
+     * <p>The snapshot's {@code Pos} tag is rewritten to {@code target}
+     * <em>before</em> deserialization. The captured position is the pet's
+     * despawn location, which on Folia can belong to a region the calling
+     * thread doesn't own — any Bukkit call on a detached entity positioned
+     * there (including {@code spawnAt}) fails the region-thread check.
+     * Born at the target, the entity is region-safe on every server.
+     *
      * <p>Persistence flags are set <em>before</em> spawn so vanilla never
      * sees the mob as persistent and never writes it to chunk save files.
      *
      * @param snapshot compound returned by a prior {@link #capture}
-     * @param world    world to deserialize into (does not have to match the
-     *                 world the snapshot was taken in)
+     * @param target   intended spawn location; supplies the deserialization
+     *                 world (does not have to match the capture world)
      * @return a detached {@link Mob} with {@code setPersistent(false)} and
      *         {@code setRemoveWhenFarAway(false)} applied; caller must call
      *         {@code spawnAt} to put it in the world
@@ -163,23 +172,19 @@ public final class PetEntitySnapshot {
      * @throws UncheckedIOException     if re-serializing the compound for
      *         Paper fails
      */
-    public static Mob restore(CompoundBinaryTag snapshot, World world) {
+    public static Mob restore(CompoundBinaryTag snapshot, Location target) {
+        snapshot = snapshot.put("Pos", ListBinaryTag.builder(BinaryTagTypes.DOUBLE)
+                .add(DoubleBinaryTag.doubleBinaryTag(target.getX()))
+                .add(DoubleBinaryTag.doubleBinaryTag(target.getY()))
+                .add(DoubleBinaryTag.doubleBinaryTag(target.getZ()))
+                .build());
         byte[] bytes;
         try {
             bytes = NbtUtil.writeCompressed(snapshot);
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to serialize snapshot for deserializeEntity", e);
         }
-        return restore(bytes, world);
-    }
-
-    /**
-     * Raw variant of {@link #restore(CompoundBinaryTag, World)}: replays
-     * serialized snapshot bytes ({@link #captureBytes} or a compressed
-     * compound) without a parse/re-compress round trip.
-     */
-    public static Mob restore(byte[] bytes, World world) {
-        Entity restored = Bukkit.getUnsafe().deserializeEntity(bytes, world, false);
+        Entity restored = Bukkit.getUnsafe().deserializeEntity(bytes, target.getWorld(), false);
         if (!(restored instanceof Mob mob)) {
             String type = restored == null ? "null" : restored.getClass().getName();
             throw new IllegalStateException(
@@ -199,6 +204,21 @@ public final class PetEntitySnapshot {
         mob.setVelocity(new Vector(0, 0, 0));
         mob.setFreezeTicks(0);
         return mob;
+    }
+
+    /**
+     * Raw variant of {@link #restore(CompoundBinaryTag, Location)}: parses
+     * serialized snapshot bytes ({@link #captureBytes} or a compressed
+     * compound) and delegates.
+     *
+     * @throws UncheckedIOException if the bytes fail to parse
+     */
+    public static Mob restore(byte[] bytes, Location target) {
+        try {
+            return restore(NbtUtil.readCompressed(bytes), target);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to parse snapshot bytes for deserializeEntity", e);
+        }
     }
 
     /**

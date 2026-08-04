@@ -101,7 +101,7 @@ public final class VanillaMobSpawner {
         byte[] snapshot = pet.consumePendingSnapshot();
         if (snapshot != null) {
             try {
-                Mob restored = PetEntitySnapshot.restore(snapshot, target.getWorld());
+                Mob restored = PetEntitySnapshot.restore(snapshot, target);
                 if (!mobClass.isInstance(restored)) {
                     // Snapshot disagrees with stored pet type (e.g. /petadmin
                     // changed the type after the snapshot was taken). Discard
@@ -328,7 +328,7 @@ public final class VanillaMobSpawner {
             // with its vanilla attributes, and its PDC so no model revives.
             snapshot = stripMyPetPdc(snapshot.remove("attributes").remove("Attributes"));
             try {
-                Mob restored = PetEntitySnapshot.restore(snapshot, world);
+                Mob restored = PetEntitySnapshot.restore(snapshot, loc);
                 if (mobClass.isInstance(restored)) {
                     replacement = restored;
                 } else {
