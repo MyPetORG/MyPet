@@ -76,20 +76,21 @@ public final class VanillaMobSpawner {
     private static final int SOURCE_MODEL_WAIT_MAX_TICKS = 40;
 
     /**
-     * Spawns the pet as a Bukkit mob. Returns true on success.
+     * Spawns the pet as a Bukkit mob. Returns the outcome of the attempt so
+     * callers can distinguish a region/plugin refusal from a genuine failure.
      * On failure (no Bukkit class for this type, or no valid spawn position),
-     * logs a warning and returns false.
+     * logs a warning.
      */
-    public boolean spawn(Pet pet, Location loc) {
+    public SpawnOutcome spawn(Pet pet, Location loc) {
         Class<? extends Mob> mobClass = pet.getPetType().getBukkitEntityClass();
         if (mobClass == null) {
             MyPetApi.getLogger().warning("No Bukkit entity class for pet type " + pet.getPetType().name());
-            return false;
+            return SpawnOutcome.FAILED;
         }
 
         Location target = findValidSpawnLocation(loc, mobClass);
         if (target == null) {
-            return false;
+            return SpawnOutcome.NO_SPACE;
         }
 
         // Snapshot path: deserialize the vanilla mob from captured NBT
@@ -116,7 +117,7 @@ public final class VanillaMobSpawner {
                     // Skipping this call would leave a ghost entity (no errors,
                     // pet just never appears). spawnAt also fires CreatureSpawnEvent.
                     configureMob(pet, restored, true);
-                    return true;
+                    return SpawnOutcome.SUCCESS;
                 } else {
                     // spawnAt returned false — another plugin canceled the
                     // CreatureSpawnEvent, or the entity was already spawned/despawned.
@@ -149,7 +150,7 @@ public final class VanillaMobSpawner {
                         // strip the mob's goals mid-flight and race the renderer's navigation-wrap
                         // into an NPE. Wait until the model lands, then adopt.
                         adoptSourceWhenModeled(pet, spawned.get(), SOURCE_MODEL_WAIT_MAX_TICKS);
-                        return true;
+                        return SpawnOutcome.SUCCESS;
                     }
                 }
                 MyPetApi.getLogger().warning("Source-driven pet " + pet.getPetType().name()
@@ -157,10 +158,33 @@ public final class VanillaMobSpawner {
             }
         }
 
-        target.getWorld().spawn(target, mobClass, CreatureSpawnEvent.SpawnReason.CUSTOM, mob -> {
-            configureMob(pet, mob, false);
-        });
-        return true;
+        // createEntity + spawnAt rather than world.spawn(..., consumer): the
+        // consumer form throws IllegalArgumentException when a listener cancels
+        // the CreatureSpawnEvent, while spawnAt reports it as a plain false.
+        // configureMob still runs pre-add — it must, so pet.updateVisuals()
+        // lands the correct colour/variant/etc. in the initial spawn packet
+        // (see the comment inside configureMob) — so a refusal here has to
+        // unwind everything configureMob already started, mirroring
+        // PetImpl#removeEntity's teardown order. bukkitEntity.remove() itself
+        // is intentionally NOT called: the mob was never added to the world
+        // (spawnAt refused it), matching the snapshot-restore-refused branch
+        // above, which drops its detached entity the same way.
+        // Note: with PetEnvironmentListener's MONITOR un-cancel restored, this DENIED branch
+        // is reachable only if a third-party MONITOR-priority listener cancels after ours
+        // (intra-priority order is plugin load order) — keep the unwind; it is defense-in-depth,
+        // not dead code.
+        Mob fresh = target.getWorld().createEntity(target, mobClass);
+        configureMob(pet, fresh, false);
+        if (!fresh.spawnAt(target, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
+            Timer.stopPetTicking(pet);
+            PetSitParticleController.stopForPet(pet);
+            RideSkillFlightController.stopForPet(pet);
+            PetLifecycleHookRegistry.forPet(pet).forEach(hook -> hook.onDespawn(pet));
+            PetNoPushSuppressor.stopForPet(pet);
+            pet.setBukkitEntity(null);
+            return SpawnOutcome.DENIED;
+        }
+        return SpawnOutcome.SUCCESS;
     }
 
     /**

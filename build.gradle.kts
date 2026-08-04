@@ -243,6 +243,10 @@ plugwright {
         url("https://cdn.modrinth.com/data/ayRaM8J7/versions/cLNipSgw/VaultUnlocked-2.20.2.jar")
         url("https://cdn.modrinth.com/data/bPX4jcVd/versions/Jgohk2ua/PlayerPoints-3.3.5.jar")
         url("https://cdn.modrinth.com/data/lKEzGugV/versions/UmbIiI5H/PlaceholderAPI-2.12.2.jar")
+        // WorldEdit is a hard dependency of WorldGuard; both must support MC 1.21.11.
+        // WorldGuard 7.0.18 dropped 1.21.11 — do not bump past 7.0.17 without rechecking.
+        url("https://cdn.modrinth.com/data/1u6JkXh5/versions/qNuPcliz/worldedit-bukkit-7.4.4.jar")
+        url("https://cdn.modrinth.com/data/DKY9btbd/versions/pI4UHLJL/worldguard-bukkit-7.0.17.jar")
     }
 
     writeFiles {
@@ -428,6 +432,22 @@ plugwright {
                 if (!it.exists()) error("src/test/e2e/testdata/legacy/pets.db missing — " +
                     "run generate_mypet3_db.py (see migration/mypet3.spec.ts)")
             })
+
+        // Region for systems/worldguard-spawn.spec.ts. Deliberately far from ARENA
+        // (0,200,0) on general principle: `mob-spawning: deny` only gates a
+        // RELEASED pet (a genuine wild mob at that point) - calling/recalling a
+        // pet is always exempt - but there's no upside to overlapping ARENA
+        // anyway. The spec builds its own platform inside.
+        file("plugins/WorldGuard/worlds/world/regions.yml", """
+            regions:
+              no-mobs:
+                type: cuboid
+                min: {x: 992, y: 0, z: 992}
+                max: {x: 1056, y: 320, z: 1056}
+                priority: 10
+                flags:
+                  mob-spawning: deny
+        """.trimIndent())
     }
 }
 

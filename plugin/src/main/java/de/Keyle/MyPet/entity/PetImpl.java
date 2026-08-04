@@ -40,6 +40,7 @@ import de.Keyle.MyPet.api.util.*;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.ai.navigation.PaperNavigation;
 import de.Keyle.MyPet.entity.ai.target.PetDamageTracker;
+import de.Keyle.MyPet.entity.spawn.SpawnOutcome;
 import de.Keyle.MyPet.entity.spawn.VanillaMobSpawner;
 import de.Keyle.MyPet.api.lifecycle.PetLifecycleHookRegistry;
 import de.Keyle.MyPet.util.NameFilter;
@@ -61,7 +62,6 @@ import de.Keyle.MyPet.skill.skills.RangedImpl;
 import de.Keyle.MyPet.util.StackTraces;
 import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.Keyle.MyPet.util.hooks.VaultHook;
-import de.Keyle.MyPet.util.hooks.WorldGuardHook;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
@@ -966,17 +966,14 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 loc.setPitch(0);
                 loc.setYaw(0);
 
-                WorldGuardHook wgHook = MyPetApi.getServiceManager().getService(WorldGuardHook.class).orElse(null);
-                if (wgHook != null) {
-                    wgHook.fixMissingEntityType(loc.getWorld(), true);
-                }
-                boolean spawned = new VanillaMobSpawner().spawn(this, loc);
-                if (wgHook != null) {
-                    wgHook.fixMissingEntityType(loc.getWorld(), false);
-                }
-
-                if (!spawned) {
+                SpawnOutcome outcome = new VanillaMobSpawner().spawn(this, loc);
+                if (outcome != SpawnOutcome.SUCCESS) {
                     updateStatus(PetState.Despawned);
+                    // DENIED -> "Pets are not allowed here!"; everything else keeps
+                    // the historical "not enough space" wording.
+                    if (outcome == SpawnOutcome.DENIED) {
+                        return SpawnFlags.NotAllowed;
+                    }
                     return SpawnFlags.NoSpace;
                 }
 

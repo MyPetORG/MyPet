@@ -22,9 +22,7 @@ package de.Keyle.MyPet.util.hooks;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.BukkitWorldConfiguration;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.config.ConfigurationManager;
 import com.sk89q.worldguard.protection.flags.DoubleFlag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.IntegerFlag;
@@ -49,7 +47,6 @@ import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
@@ -61,8 +58,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityInteractEvent;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @ServiceName("WorldGuard")
 @RequiresPlugin("WorldGuard")
@@ -88,7 +83,6 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     public static StateFlag DAMAGE_ANIMALS;
     protected WorldGuardPlugin wgp;
     protected boolean customFlags = false;
-    protected Map<String, Boolean> missingEntityTypeFixValue = new HashMap<>();
 
     public WorldGuardHook() {
         if (MyPetApi.getServiceManager().getConfig().getConfig().getBoolean("WorldGuard.Enabled")) {
@@ -154,26 +148,6 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     public void onDisable() {
         HandlerList.unregisterAll(this);
         MyPetApi.getLeashFlagManager().removeFlag("WorldGuard");
-    }
-
-    public void fixMissingEntityType(World world, boolean apply) {
-        try {
-            ConfigurationManager cfg = WorldGuard.getInstance().getPlatform().getGlobalStateManager();
-            com.sk89q.worldedit.world.World w = BukkitAdapter.adapt(world);
-            BukkitWorldConfiguration wcfg = (BukkitWorldConfiguration) cfg.get(w);
-            if (apply) {
-                if (missingEntityTypeFixValue.containsKey(world.getName())) {
-                    fixMissingEntityType(world, false);
-                }
-                missingEntityTypeFixValue.put(world.getName(), wcfg.blockPluginSpawning);
-                wcfg.blockPluginSpawning = false;
-            } else if (missingEntityTypeFixValue.containsKey(world.getName())) {
-                wcfg.blockPluginSpawning = missingEntityTypeFixValue.get(world.getName());
-                missingEntityTypeFixValue.remove(world.getName());
-            }
-        } catch (Exception e) {
-            ErrorUtil.reportWarning("Third-party plugin integration failed", e);
-        }
     }
 
     // Callers (canHurt/canFly/isPetAllowed/isBeacon*/exp modifier) invoke this synchronously
