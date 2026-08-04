@@ -159,6 +159,9 @@ public final class OnlinePlayerPetLoader {
             case Success:
                 owner.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", owner, pet.getDisplayName()));
                 break;
+            case SourceUnavailable:
+                owner.sendMessage(Locale.getFormattedComponent("Message.Spawn.SourceUnavailable", owner, pet.getDisplayName()));
+                break;
             default:
                 throw new IllegalStateException("Unhandled SpawnFlags: " + result);
         }

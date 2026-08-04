@@ -342,6 +342,8 @@ public non-sealed interface Pet extends StoredPet, Scheduler {
 
     /** Result codes returned by {@link #createEntity}. */
     enum SpawnFlags {
-        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, Spectator, WrongWorldGroup, NotAllowed, InvalidPosition
+        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, Spectator, WrongWorldGroup, NotAllowed, InvalidPosition,
+        /** A source-driven pet's real creature could not be produced; the summon was refused rather than substituting a plain mob. */
+        SourceUnavailable
     }
 }

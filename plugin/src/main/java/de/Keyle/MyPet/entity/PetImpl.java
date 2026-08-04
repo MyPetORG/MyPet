@@ -969,10 +969,13 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 SpawnOutcome outcome = new VanillaMobSpawner().spawn(this, loc);
                 if (outcome != SpawnOutcome.SUCCESS) {
                     updateStatus(PetState.Despawned);
-                    // DENIED -> "Pets are not allowed here!"; everything else keeps
-                    // the historical "not enough space" wording.
+                    // DENIED -> "Pets are not allowed here!"; SOURCE_UNAVAILABLE -> the
+                    // source-driven pet's provider couldn't produce the real creature;
+                    // everything else keeps the historical "not enough space" wording.
                     if (outcome == SpawnOutcome.DENIED) {
                         return SpawnFlags.NotAllowed;
+                    } else if (outcome == SpawnOutcome.SOURCE_UNAVAILABLE) {
+                        return SpawnFlags.SourceUnavailable;
                     }
                     return SpawnFlags.NoSpace;
                 }

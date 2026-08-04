@@ -33,4 +33,10 @@ public enum SpawnOutcome {
     DENIED,
     /** Snapshot corruption, missing Bukkit entity class, or unloaded world. */
     FAILED,
+    /**
+     * A source-driven pet's provider (e.g. MythicMobs) could not produce the real
+     * creature — not loaded, bad model id, or its own spawn was refused. The summon
+     * is refused rather than silently substituting a plain vanilla mob.
+     */
+    SOURCE_UNAVAILABLE
 }

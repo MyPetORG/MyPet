@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
+import de.Keyle.MyPet.entity.spawn.PetSpawnGuard;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -51,10 +52,15 @@ public class PetEnvironmentListener implements Listener {
      * violates the Bukkit convention that MONITOR handlers are observe-only.
      * This is intentional — without it, protection plugins that blanket-cancel
      * mob spawns would prevent pets from appearing.
+     *
+     * <p>The {@link PetSpawnGuard} check covers a source-driven pet's provider
+     * spawn (e.g. a MythicMob): that entity carries no {@link PetEntityMarker}
+     * yet when this event fires, since MyPet has not adopted it. The guard is
+     * only ever active around a summon, never a release — see its javadoc.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (PetEntityMarker.isMarked(event.getEntity())) {
+        if (PetEntityMarker.isMarked(event.getEntity()) || PetSpawnGuard.isActive()) {
             event.setCancelled(false);
         }
     }

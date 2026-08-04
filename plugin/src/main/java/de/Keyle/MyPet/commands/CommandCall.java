@@ -105,6 +105,7 @@ public class CommandCall {
      *   <li>{@code Dead} -- the pet is dead and waiting to respawn</li>
      *   <li>{@code Flying} -- the player is flying (mid-air spawn not allowed)</li>
      *   <li>{@code Spectator} -- the player is in spectator mode</li>
+     *   <li>{@code SourceUnavailable} -- a source-driven pet's real creature could not be produced</li>
      * </ul>
      *
      * @param petOwner the player who issued the command
@@ -192,6 +193,15 @@ public class CommandCall {
                     petOwner.sendMessage(MessageUtil.error(
                             Locale.getFormattedComponent(
                                     "Message.Spawn.Spectator",
+                                    petOwner,
+                                    pet.getDisplayName()
+                            ), false
+                    ));
+                    break;
+                case SourceUnavailable:
+                    petOwner.sendMessage(MessageUtil.error(
+                            Locale.getFormattedComponent(
+                                    "Message.Spawn.SourceUnavailable",
                                     petOwner,
                                     pet.getDisplayName()
                             ), false

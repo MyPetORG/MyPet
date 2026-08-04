@@ -138,7 +138,12 @@ public final class VanillaMobSpawner {
             String sourceId = PetModelService.modelIdOf(pet);
             if (sourceId != null && !sourceId.isBlank()) {
                 for (PetModelSourceHook src : MyPetApi.getServiceManager().getServices(PetModelSourceHook.class)) {
-                    Optional<Mob> spawned = src.spawnSource(sourceId, target);
+                    // Guard ONLY this call-path spawn: MyPet is summoning its own pet, so the
+                    // provider's CreatureSpawnEvent must be exempt from region/plugin denial the
+                    // same way a marker-carrying pet spawn is (see PetSpawnGuard's javadoc). The
+                    // release path (releaseModelPet) deliberately does NOT use this guard — a
+                    // release must stay refusable by the region.
+                    Optional<Mob> spawned = PetSpawnGuard.runGuarded(() -> src.spawnSource(sourceId, target));
                     if (spawned.isPresent()) {
                         // Mark BEFORE adoption so the one-shot spawn animation plays on a genuine
                         // create. convertInPlace routes to configureMob(..., true), which skips
@@ -153,8 +158,12 @@ public final class VanillaMobSpawner {
                         return SpawnOutcome.SUCCESS;
                     }
                 }
+                // Owner decision: a source-driven pet must never be silently replaced by a plain
+                // mob. If the real creature cannot be produced, refuse the summon — do NOT fall
+                // through to the generic fresh-spawn path below.
                 MyPetApi.getLogger().warning("Source-driven pet " + pet.getPetType().name()
-                        + " could not spawn source '" + sourceId + "'; falling back to host mob.");
+                        + " could not spawn source '" + sourceId + "'; refusing summon.");
+                return SpawnOutcome.SOURCE_UNAVAILABLE;
             }
         }
 

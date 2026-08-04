@@ -518,6 +518,9 @@ public class PlayerListener implements Listener {
                                     case NotAllowed:
                                         myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", myPetPlayer, runPet.getDisplayName()));
                                         break;
+                                    case SourceUnavailable:
+                                        myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.SourceUnavailable", myPetPlayer, runPet.getDisplayName()));
+                                        break;
                                 }
                             }
                         }, null, 20L);
