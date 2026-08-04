@@ -317,6 +317,12 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         String updateStatus = updater.update();
         SplashScreen.print(updateStatus, MyPetGlobal.Repository.REPOSITORY_TYPE.get());
 
+        if (CompatUtil.isFolia()) {
+            MyPetApi.getLogger().warning("Folia-based server detected. Folia does not support creating scoreboard teams yet, " +
+                    "so pet collision suppression is disabled (pets can push and be pushed by players) " +
+                    "and Creaking pets keep their vanilla freeze/stare behavior.");
+        }
+
         serviceManager.activate(Load.State.OnEnable);
 
         // Register the 8 built-in GUI menus and load their bundled JSON

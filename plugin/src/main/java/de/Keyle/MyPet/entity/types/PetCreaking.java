@@ -44,6 +44,7 @@ import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.entity.PetImpl;
 import de.Keyle.MyPet.entity.visual.PetEntitySnapshot;
+import de.Keyle.MyPet.util.CompatUtil;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -472,6 +473,10 @@ public class PetCreaking extends PetImpl {
      * captured at entity-region call time — the global-region tasks never
      * dereference live entities or players.
      *
+     * <p>On Folia itself the mechanism is disabled ({@code isFolia()} guard):
+     * Folia's {@code CraftScoreboard#registerNewTeam} throws
+     * {@code UnsupportedOperationException}. {@link MyPetPlugin} warns once
+     * at startup.
      */
     public static final class ActivationSuppressor {
 
@@ -484,6 +489,10 @@ public class PetCreaking extends PetImpl {
         }
 
         public static void startForPet(Pet pet) {
+            // Folia has no registerNewTeam — Creaking pets keep vanilla
+            // freeze/stare behaviour there. Never registering here also
+            // makes stopForPet and onPlayerJoin natural no-ops.
+            if (CompatUtil.isFolia()) return;
             Mob mob = pet.getBukkitEntity();
             if (!(mob instanceof Creaking)) return;
 

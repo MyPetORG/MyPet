@@ -69,6 +69,28 @@ public final class CompatUtil {
                 v -> ServerVersionHolder.VERSION.compareTo(Runtime.Version.parse(v)) >= 0);
     }
 
+    // Folia (and forks like Luminol) ship the regionized server classes;
+    // plain Paper does not. Classpath probe — no running server required.
+    private static final boolean FOLIA;
+
+    static {
+        boolean folia;
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            folia = true;
+        } catch (ClassNotFoundException e) {
+            folia = false;
+        }
+        FOLIA = folia;
+    }
+
+    /**
+     * Whether the server is Folia or a Folia fork (regionized multithreading).
+     */
+    public static boolean isFolia() {
+        return FOLIA;
+    }
+
     /**
      * Compares two dotted-numeric version strings numerically.
      * <p>

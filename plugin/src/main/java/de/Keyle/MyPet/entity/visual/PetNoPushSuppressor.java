@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.util.CompatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Mob;
 import org.bukkit.plugin.Plugin;
@@ -57,6 +58,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * and operate exclusively on string entries (pet UUID string) captured at
  * entity-region call time — the global-region tasks never dereference live
  * entities.
+ *
+ * <p>On Folia itself the whole mechanism is disabled ({@code isFolia()}
+ * guard): Folia's {@code CraftScoreboard#registerNewTeam} throws
+ * {@link UnsupportedOperationException} ("not supported yet"), so pets
+ * stay pushable there. {@link de.Keyle.MyPet.MyPetPlugin} warns once at
+ * startup.
  */
 public final class PetNoPushSuppressor {
 
@@ -68,6 +75,9 @@ public final class PetNoPushSuppressor {
     }
 
     public static void startForPet(Pet pet) {
+        // Folia has no registerNewTeam — see class javadoc. Never registering
+        // here also makes stopForPet a natural no-op.
+        if (CompatUtil.isFolia()) return;
         Mob mob = pet.getBukkitEntity();
         if (mob == null) return;
         // Creaking pets are owned by PetCreaking.ActivationSuppressor's team.
