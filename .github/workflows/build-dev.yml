@@ -61,6 +61,16 @@ jobs:
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> "$GITHUB_ENV"
           echo "Building version: $PROJECT_VERSION"
 
+          # Range anchor for the commit list: the last published alpha of this base
+          # version, else the newest alpha tag of any version, else empty (first build).
+          if (( ${MAX_B:-0} >= 1 )); then
+            PREV_ALPHA_TAG=$(printf '%s-alpha-%02d' "$BASE_PROJECT_VERSION" "$MAX_B")
+          else
+            PREV_ALPHA_TAG=$(git tag -l '*-alpha-*' --sort=creatordate | tail -1 || true)
+          fi
+          echo "PREV_ALPHA_TAG=$PREV_ALPHA_TAG" >> "$GITHUB_ENV"
+          echo "Commit list anchored at: ${PREV_ALPHA_TAG:-<none>}"
+
       - name: Ensure PR to master exists with release title
         continue-on-error: true
         env:
@@ -142,6 +152,13 @@ jobs:
           JAR="${{ steps.findjar.outputs.jar }}"
           SHA512=$(sha512sum "$JAR" | cut -d' ' -f1)
           COMMIT_MESSAGE=$(git log -1 --pretty=%s "$GITHUB_SHA")
+          if [[ -n "${PREV_ALPHA_TAG:-}" ]]; then
+            RAW_COMMITS=$(git log --pretty='%h%x09%s' "${PREV_ALPHA_TAG}..${GITHUB_SHA}")
+          else
+            RAW_COMMITS=$(git log -1 --pretty='%h%x09%s' "${GITHUB_SHA}")
+          fi
+          # grep exits 1 when every commit is filtered out — an empty list is valid.
+          COMMITS=$(grep -viE '\[(skip ci|ci skip|no ci|skip actions|actions skip)\]' <<< "$RAW_COMMITS" || true)
           curl -fsS -X POST "${HUB_URL}/api/v1/builds" \
             -H "Authorization: Bearer ${HUB_UPLOAD_SECRET}" \
             -F "jar=@${JAR}" \
@@ -149,6 +166,7 @@ jobs:
             --form-string "channel=dev" \
             --form-string "commit=${GITHUB_SHA}" \
             --form-string "commitMessage=${COMMIT_MESSAGE}" \
+            --form-string "commits=${COMMITS}" \
             --form-string "commitUrl=${{ github.server_url }}/${{ github.repository }}/commit/${GITHUB_SHA}" \
             --form-string "sha512=${SHA512}" \
             --form-string "mcVersions=1.20.5-26.2"
