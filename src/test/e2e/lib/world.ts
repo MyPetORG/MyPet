@@ -45,10 +45,31 @@ export function killTagged(server: any, tag: string): void {
   server.execute(`kill @e[tag=${tag}]`);
 }
 
-/** Finds a live Mineflayer entity by its `name` (entity type id, e.g. "cow"). */
+/**
+ * Finds the live Mineflayer entity of type `entityTypeName` NEAREST to the bot.
+ *
+ * Nearest, not first. `attackPinned` teleports the *tagged* mob to ~1.5 blocks in front of
+ * the bot and then swings, but the swing resolves its target by entity TYPE — so the pin
+ * only means anything if the swing picks the closest match. Returning an arbitrary entry
+ * from the (unordered) entity map means that with two mobs of one type in play, the bot
+ * can pin one and hit the other: the tagged mob stays at HurtTime 0 and the test fails as
+ * an unexplained "no message after N swings" timeout rather than pointing at the cause.
+ */
 export function findEntity(player: any, entityTypeName: string): any {
-  return Object.values(player.bot.entities as Record<string, any>)
-    .find((e: any) => e?.name === entityTypeName && e.isValid !== false);
+  const origin = player.bot.entity?.position;
+  const matches = Object.values(player.bot.entities as Record<string, any>)
+    .filter((e: any) => e?.name === entityTypeName && e.isValid !== false && e.position);
+  if (!origin) return matches[0];
+  let nearest: any = null;
+  let nearestDistance = Infinity;
+  for (const entity of matches) {
+    const distance = entity.position.distanceTo(origin);
+    if (distance < nearestDistance) {
+      nearestDistance = distance;
+      nearest = entity;
+    }
+  }
+  return nearest;
 }
 
 /** Melee-swings the bot at the nearest entity of the given type name. */
