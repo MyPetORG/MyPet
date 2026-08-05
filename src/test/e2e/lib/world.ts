@@ -29,12 +29,19 @@ export async function setupArena(server: any, player: any): Promise<void> {
     `positioned ${ARENA.x} ${ARENA.y} ${ARENA.z} if entity @a[name=${player.username},distance=..4]`);
 }
 
-/** Summons a tagged, persistent mob near ARENA; returns its `@e[tag=…,limit=1]` selector. */
+/**
+ * Summons a tagged, persistent mob near ARENA; returns its `@e[tag=…,limit=1]` selector.
+ *
+ * `extraNbt` is appended to the summon compound. Use it for state that only takes effect
+ * when the entity is read from NBT at spawn — notably a Tameable's `Owner`, which sets
+ * isTamed() via readAdditionalSaveData on load. A `data merge` of the same tag onto an
+ * already-spawned entity does NOT tame it.
+ */
 export async function spawnVictim(
   server: any, player: any, mob: string, tag: string,
-  { noAI = true, dx = 2, dz = 0 } = {},
+  { noAI = true, dx = 2, dz = 0, extraNbt = '' } = {},
 ): Promise<string> {
-  const nbt = `{Tags:["${tag}"],PersistenceRequired:1b${noAI ? ',NoAI:1b' : ''}}`;
+  const nbt = `{Tags:["${tag}"],PersistenceRequired:1b${noAI ? ',NoAI:1b' : ''}${extraNbt}}`;
   server.execute(`summon minecraft:${mob} ${ARENA.x + dx} ${ARENA.y} ${ARENA.z + dz} ${nbt}`);
   await expectCondition(server, player, `if entity @e[tag=${tag}]`);
   return `@e[tag=${tag},limit=1]`;

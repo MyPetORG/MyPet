@@ -97,18 +97,18 @@ test('hitting a cow WITHOUT the lead item does not tame', async ({ player, serve
 test('a wolf requires vanilla taming first (Tamed leash flag)', async ({ player, server }) => {
   await player.makeOp();
   await setupArena(server, player);
-  const tag = 'wolf1';
+  const wildTag = 'wolf_wild';
+  const tamedTag = 'wolf_tamed';
   try {
-    await spawnVictim(server, player, 'wolf', tag, { noAI: false, dx: 2 });
+    await spawnVictim(server, player, 'wolf', wildTag, { noAI: false, dx: 2 });
     server.execute(`clear ${player.username} minecraft:lead`);
     server.execute(`give ${player.username} minecraft:lead 1`);
-    server.execute(`give ${player.username} minecraft:bone 64`);
     await sleep(1000);
 
     // 1) Untamed wolf must not tame: PetWolf's only leash flag is Tamed
     // (TamedFlag.check requires isTamed() && getOwner() == player).
     await equipItem(player, 'lead');
-    await attackPinned(server, player, tag, 'wolf');
+    await attackPinned(server, player, wildTag, 'wolf');
     await sleep(1500);
 
     // { since } scopes the assertion to THIS /petcall reply, not stale buffer content.
@@ -116,24 +116,38 @@ test('a wolf requires vanilla taming first (Tamed leash flag)', async ({ player,
     player.chat('/petcall');
     await expect(player).toHaveReceivedMessage(msgFragment('Message.No.HasPet'), { since: sinceNoPet });
 
-    // 2) Vanilla-tame via console: merge the bot's offline UUID into Owner
-    // (int-array SNBT). TamableAnimal#readAdditionalSaveData sets tame=true
-    // automatically once a valid Owner UUID is present — no separate write needed.
-    const ownerUuid = offlineUuid(player.username);
-    const ownerSnbt = uuidToIntArraySnbt(ownerUuid);
-    server.execute(`data merge entity @e[tag=${tag},limit=1] {Owner:${ownerSnbt}}`);
-    // Same fire-and-forget hazard as the cow Health merge above.
-    await expectCondition(server, player, `if entity @e[tag=${tag},limit=1,nbt={Owner:${ownerSnbt}}]`);
+    // Confirm the untamed wolf is gone before summoning the tamed one — killTagged is
+    // fire-and-forget, and two live wolves make the swing target ambiguous. Scoped to the
+    // tag, NOT `@e[type=minecraft:wolf]`: a world-global wolf check never goes true if any
+    // other wolf exists anywhere (a leftover from another spec, a natural spawn).
+    killTagged(server, wildTag);
+    await expectCondition(server, player, `unless entity @e[tag=${wildTag}]`);
+
+    // 2) A vanilla-tamed wolf DOES tame. The Owner tag must be present in the summon
+    // compound, not merged afterwards: TamableAnimal sets isTamed() from Owner in
+    // readAdditionalSaveData, which only runs when the entity is read from NBT at spawn.
+    // A `data merge` of Owner onto a live wolf leaves it untamed (verified on 1.21.11:
+    // no tame state, max_health stays 8 instead of the tamed 20), so TamedFlag correctly
+    // refuses and the swing loop below would burn its full retry budget for the wrong
+    // reason. leash-flags.spec.ts's already-tamed cat uses this same summon-time form.
+    // TamedFlag also checks owner identity, so this needs the bot's real UUID — offline
+    // mode, hence the name-derived one — where the cat test can use a dummy.
+    const ownerSnbt = uuidToIntArraySnbt(offlineUuid(player.username));
+    await spawnVictim(server, player, 'wolf', tamedTag,
+      { noAI: false, dx: 2, extraNbt: `,Owner:${ownerSnbt}` });
+    await expectCondition(server, player,
+      `if entity @e[tag=${tamedTag},limit=1,nbt={Owner:${ownerSnbt}}]`);
 
     // tameSwingExpecting's buffer index means only this second attempt can
     // satisfy the assertion, not a wrongly-emitted message from step 1.
     await equipItem(player, 'lead');
-    await tameSwingExpecting(server, player, tag, 'wolf', 'lead', msgFragment('Message.Leash.Add'));
+    await tameSwingExpecting(server, player, tamedTag, 'wolf', 'lead', msgFragment('Message.Leash.Add'));
     player.chat('/petcall');
     await expectCondition(server, player,
       `at ${player.username} if entity @e[type=minecraft:wolf,distance=..10]`);
   } finally {
-    killTagged(server, tag);
+    killTagged(server, wildTag);
+    killTagged(server, tamedTag);
     removePet(server, player);
   }
 });
