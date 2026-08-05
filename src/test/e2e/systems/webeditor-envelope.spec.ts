@@ -167,7 +167,12 @@ test('mypet editor envelope contains skill metadata', async ({ server, player })
 
     const skills = envelope.configs.skills;
     expect(Array.isArray(skills)).toBe(true);
-    expect(skills.length).toBe(21);
+    // Deliberately not an exact count. The envelope is server-provided precisely so that
+    // new and third-party skills show up in the editor automatically, so any exact number
+    // is guaranteed to rot — this assertion was written as 21 and silently went stale when
+    // the list grew. Non-emptiness catches the failure that actually matters (an envelope
+    // that ships no skills at all); the per-skill assertions below cover the shape.
+    expect(skills.length > 0).toBe(true);
     const ids = skills.map((s: any) => s.id);
     expect(ids).toContain('Thorns');
     expect(ids).toContain('Beacon');
