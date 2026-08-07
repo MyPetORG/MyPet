@@ -293,8 +293,15 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
 
     private static Pet createMyPetInstance(PetType type, MyPetPlayer owner) {
         try {
-            Constructor<? extends Pet> ctor = type.getPetClass().getConstructor(MyPetPlayer.class);
-            return ctor.newInstance(owner);
+            Class<? extends Pet> petClass = type.getPetClass();
+            // Prefer the type-taking constructor: classes shared by several types (ModelPet)
+            // need the type injected — resolving it from the class would pick the first
+            // registered type for every instance.
+            try {
+                return petClass.getConstructor(MyPetPlayer.class, PetType.class).newInstance(owner, type);
+            } catch (NoSuchMethodException e) {
+                return petClass.getConstructor(MyPetPlayer.class).newInstance(owner);
+            }
         } catch (Exception e) {
             ErrorUtil.reportError("Failed to create PetImpl instance for " + type.name(), e);
             return null;

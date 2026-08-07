@@ -141,10 +141,16 @@ public abstract class PetImpl implements Pet, NBTStorage {
     private PetType petType;
 
     protected PetImpl(MyPetPlayer petOwner) {
+        this(petOwner, null);
+    }
+
+    /** Binds the type up front for pet classes shared by several types (ModelPet), where the class scan in {@link #getPetType()} can't tell them apart. */
+    protected PetImpl(MyPetPlayer petOwner, PetType petType) {
         if (petOwner == null) {
             throw new IllegalArgumentException("Owner must not be null.");
         }
         this.petOwner = petOwner;
+        this.petType = petType;
         skills = new Skills(this);
         experience = new PetExperience(this);
         hungerTime = MyPetGlobal.HungerSystem.HUNGER_SYSTEM_TIME.get();

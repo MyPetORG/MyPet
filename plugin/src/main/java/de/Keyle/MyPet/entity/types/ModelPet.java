@@ -20,12 +20,14 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 
 /** Generic data-driven pet type used by every custom-creature definition (Path B). */
 public class ModelPet extends PetImpl {
-    public ModelPet(MyPetPlayer petOwner) {
-        super(petOwner);
+    /** Type is a constructor argument because every custom creature shares this one class — it can't be derived from the class itself. */
+    public ModelPet(MyPetPlayer petOwner, PetType petType) {
+        super(petOwner, petType);
     }
 }
