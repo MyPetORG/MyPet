@@ -23,6 +23,7 @@ package de.Keyle.MyPet.webeditor.socket;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.webeditor.EditorNotEntitledException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -72,14 +73,20 @@ public final class WebEditorSocket {
     }
 
     /** Create a fresh bytesocks channel; returns its id. */
-    public String createChannel(String bytesocksUrl) throws IOException, InterruptedException {
+    public String createChannel(String bytesocksUrl, String ticket) throws IOException, InterruptedException {
         String httpBase = bytesocksUrl.replaceFirst("^ws", "http"); // ws->http, wss->https
         // bytesocks channel creation is GET /create (verified against lucko/bytesocks).
-        HttpRequest request = HttpRequest.newBuilder(URI.create(trimTrailingSlash(httpBase) + "/create"))
+        HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(trimTrailingSlash(httpBase) + "/create"))
                 .timeout(Duration.ofSeconds(15))
-                .GET()
-                .build();
+                .GET();
+        if (ticket != null) {
+            builder.header("X-MyPet-Ticket", ticket);
+        }
+        HttpRequest request = builder.build();
         HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 403) {
+            throw new EditorNotEntitledException("relay refused the session: not entitled");
+        }
         if (response.statusCode() / 100 != 2) {
             throw new IOException("bytesocks create failed: HTTP " + response.statusCode());
         }

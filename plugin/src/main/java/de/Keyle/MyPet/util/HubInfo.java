@@ -30,6 +30,9 @@ import java.util.Properties;
  */
 public class HubInfo {
 
+    /** MyPet Hub base URL — serves the public version manifest, entitled downloads, and editor tickets. */
+    public static final String HUB_BASE = "https://downloads.mypet-plugin.de";
+
     private static String discordId;
     private static String nonce;
     private static boolean loaded = false;

@@ -73,7 +73,22 @@ public final class WebEditorManager {
             throw new IllegalStateException("A web editor session is already active. Use /mypet editor close first.");
         }
         active = new WebEditorSession(owner, keystore);
-        return active.start();
+        try {
+            return active.start();
+        } catch (Exception e) {
+            // start() may have failed after opening a channel (e.g. a 403 from the relay
+            // surfaces as EditorNotEntitledException) — close whatever got created so it
+            // doesn't leak, then clear `active` so the next attempt isn't blocked by a
+            // session that never finished starting and will never self-close. `active = null`
+            // must run even if close() itself throws, or the manager wedges in the same stuck
+            // state this catch exists to prevent, and the original exception must still win.
+            try {
+                active.close();
+            } finally {
+                active = null;
+            }
+            throw e;
+        }
     }
 
     /** Confirm a pending trust attempt; persists the keystore when a new browser is trusted. */

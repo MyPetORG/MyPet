@@ -25,6 +25,7 @@ import com.google.gson.JsonParser;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.webeditor.http.BytebinClient;
+import de.Keyle.MyPet.webeditor.http.EditorTicketClient;
 import de.Keyle.MyPet.webeditor.socket.SignatureAlgorithm;
 import de.Keyle.MyPet.webeditor.socket.WebEditorSocket;
 import net.kyori.adventure.text.Component;
@@ -103,7 +104,8 @@ public final class WebEditorSession {
     public String start() throws Exception {
         String bytesocksUrl = MyPetGlobal.WebEditor.BYTESOCKS_URL.get();
         socket = new WebEditorSocket(this::onMessage, this::onSocketClosed);
-        String channelId = socket.createChannel(bytesocksUrl);
+        String ticket = new EditorTicketClient().requestTicket().orElse(null);
+        String channelId = socket.createChannel(bytesocksUrl, ticket);
 
         JsonObject metadata = new JsonObject();
         metadata.addProperty("pluginVersion", MyPetApi.getPlugin().getPluginMeta().getVersion());

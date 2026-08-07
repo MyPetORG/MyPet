@@ -86,8 +86,6 @@ public class Updater {
     private static final String BBB_API_BASE = "https://api.builtbybit.com/v1";
     /** Public BuiltByBit resource page, shown to non-BBB copies instead of an auto-download. */
     public static final String RESOURCE_PAGE_URL = "https://builtbybit.com/resources/" + RESOURCE_ID + "/";
-    /** MyPet Hub base URL — serves the public version manifest and entitled downloads. */
-    private static final String HUB_BASE = "https://downloads.mypet-plugin.de";
 
     protected static volatile Update latest = null;
     protected String plugin;
@@ -197,7 +195,7 @@ public class Updater {
             return "A newer release is available: " + newest + ". Download it from " + RESOURCE_PAGE_URL;
         }
         if (HubInfo.isInjected() && MyPetGlobal.Update.DOWNLOAD.get()) {
-            String downloadUrl = HUB_BASE + "/api/v1/updater/dev-download/" + urlEncode(newest)
+            String downloadUrl = HubInfo.HUB_BASE + "/api/v1/updater/dev-download/" + urlEncode(newest)
                     + "?discord=" + urlEncode(HubInfo.discordId())
                     + "&nonce=" + urlEncode(HubInfo.nonce());
             latest = new Update(newest, downloadUrl, null);
@@ -212,7 +210,7 @@ public class Updater {
     /** Newest version in the Hub manifest for {@code channel}, or null when unavailable. */
     private String newestHubVersion(String channel) {
         try {
-            String content = httpGet(HUB_BASE + "/api/v1/versions?channel=" + channel, null);
+            String content = httpGet(HubInfo.HUB_BASE + "/api/v1/versions?channel=" + channel, null);
             JsonObject root = new Gson().fromJson(content, JsonObject.class);
             JsonArray versions = root != null ? root.getAsJsonArray("versions") : null;
             if (versions == null || versions.size() == 0) {
@@ -270,7 +268,7 @@ public class Updater {
      */
     private Optional<Update> fetchHubManifest(String version) {
         try {
-            String content = httpGet(HUB_BASE + "/api/v1/versions?channel=release", null);
+            String content = httpGet(HubInfo.HUB_BASE + "/api/v1/versions?channel=release", null);
             JsonObject root = new Gson().fromJson(content, JsonObject.class);
             JsonArray versions = root != null ? root.getAsJsonArray("versions") : null;
             if (versions == null) {
@@ -288,7 +286,7 @@ public class Updater {
                     // so update()/download() don't promise a download they can't verify.
                     return Optional.of(new Update(version, null, null));
                 }
-                String downloadUrl = HUB_BASE + "/api/v1/updater/download/" + urlEncode(version)
+                String downloadUrl = HubInfo.HUB_BASE + "/api/v1/updater/download/" + urlEncode(version)
                         + "?member=" + urlEncode(BuiltByBitInfo.memberId())
                         + "&nonce=" + urlEncode(BuiltByBitInfo.nonce())
                         + "&timestamp=" + urlEncode(BuiltByBitInfo.timestamp());

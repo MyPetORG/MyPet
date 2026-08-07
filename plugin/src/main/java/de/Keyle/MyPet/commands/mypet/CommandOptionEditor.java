@@ -26,6 +26,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.player.AdminPermissions;
+import de.Keyle.MyPet.util.Updater;
+import de.Keyle.MyPet.webeditor.EditorNotEntitledException;
 import de.Keyle.MyPet.webeditor.WebEditorManager;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -93,6 +95,15 @@ public class CommandOptionEditor {
                                 .hoverEvent(HoverEvent.showText(Component.text("Click to open in your browser")))));
             } catch (IllegalStateException e) {
                 sender.sendMessage(Component.text(e.getMessage(), NamedTextColor.RED));
+            } catch (EditorNotEntitledException e) {
+                sender.sendMessage(Component.text("Couldn't verify your MyPet license, so the editor session was refused.", NamedTextColor.RED));
+                sender.sendMessage(Component.text("The web editor is available to MyPet customers — ", NamedTextColor.GRAY)
+                        .append(Component.text(Updater.RESOURCE_PAGE_URL, NamedTextColor.AQUA)
+                                .decorate(TextDecoration.UNDERLINED)
+                                .clickEvent(ClickEvent.openUrl(Updater.RESOURCE_PAGE_URL))));
+                sender.sendMessage(Component.text("Using a self-compiled build? Point MyPet.WebEditor.BytesocksUrl at your own relay.", NamedTextColor.DARK_GRAY));
+                sender.sendMessage(Component.text("Check the server console for the exact reason.", NamedTextColor.DARK_GRAY));
+                MyPetApi.getLogger().warning("WebEditor: relay refused the session (403) — " + e.getMessage());
             } catch (Exception e) {
                 sender.sendMessage(Component.text("Failed to open the web editor: " + e.getMessage(), NamedTextColor.RED));
                 MyPetApi.getLogger().warning("WebEditor: open failed: " + e.getMessage());
