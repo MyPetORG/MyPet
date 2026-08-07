@@ -114,7 +114,7 @@ public class CreakingHeartListener implements Listener {
 
         // Check leash item in main hand
         ItemStack leashItem = player.getInventory().getItemInMainHand();
-        if (!neededLeashItem.compare(leashItem)) {
+        if (neededLeashItem != null && !neededLeashItem.compare(leashItem)) {
             return;
         }
 
@@ -292,6 +292,9 @@ public class CreakingHeartListener implements Listener {
 
         // Check leash item
         ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(petType);
+        if (neededLeashItem == null) {
+            return;
+        }
         ItemStack leashItem = player.getInventory().getItemInMainHand();
         String itemName = neededLeashItem.getItem().getType().name().toLowerCase().replace("_", " ");
         if (!neededLeashItem.compare(leashItem)) {
@@ -348,7 +351,7 @@ public class CreakingHeartListener implements Listener {
      */
     private static Location getCreakingHome(Entity entity) {
         if (entity instanceof Creaking) {
-            return ((Creaking) entity).getHome();
+            try { return ((Creaking) entity).getHome(); } catch (LinkageError ignored) { return null; } // getHome() may be absent on some 1.21.4 builds
         }
         return null;
     }

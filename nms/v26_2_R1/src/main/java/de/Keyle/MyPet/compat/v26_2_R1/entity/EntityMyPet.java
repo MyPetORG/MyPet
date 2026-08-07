@@ -148,6 +148,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
         try {
             this.replaceCraftAttributes();
+            this.replaceAttributes();
             this.setBukkitEntity();
             this.myPet = myPet;
             this.isMyPet = true;
@@ -175,6 +176,17 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         Field craftAttributesField = ReflectionUtil.getField(LivingEntity.class, "craftAttributes");
         CraftAttributeMap craftAttributes = new CraftAttributeMap(this.getAttributes());
         ReflectionUtil.setFinalFieldValue(craftAttributesField, this, craftAttributes);
+    }
+
+    protected void replaceAttributes() {
+        // The LivingEntity super constructor builds its `attributes` field from
+        // DefaultAttributes.getSupplier(mypet_*), which is null for our custom entity
+        // types -> an AttributeMap with a null supplier. Most paths go through the
+        // overridden getAttributes(), but vanilla's equipment sync reads the field
+        // directly (LivingEntity.collectEquipmentChanges), which NPEs when a pet wears
+        // an item carrying attribute modifiers. Point the field at our safe map.
+        Field attributesField = ReflectionUtil.getField(LivingEntity.class, "attributes");
+        ReflectionUtil.setFinalFieldValue(attributesField, this, this.getAttributes());
     }
 
     protected void initAttributes() {
@@ -725,6 +737,9 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
     @Override
     public float getHealth() {
+        if (myPet == null) {
+            return super.getHealth();
+        }
         double health = super.getHealth();
         double maxHealth = myPet.getMaxHealth();
         if (health > maxHealth) {
@@ -736,6 +751,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
     @Override
     public void setHealth(float f) {
+        if (myPet == null) {
+            super.setHealth(f);
+            return;
+        }
         double maxHealth = myPet.getMaxHealth();
 
         boolean silent = this.getAttribute(Attributes.MAX_HEALTH).getValue() != maxHealth;
@@ -926,6 +945,16 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
      */
     @Override
     protected void dropCustomDeathLoot(ServerLevel worldserver, DamageSource damagesource, boolean flag) {
+    }
+
+    /**
+     * do NOT drop anything (and skip vanilla loot-table evaluation entirely).
+     * Besides matching the "pets drop nothing" behavior, this avoids running loot predicates
+     * against the custom mypet_* entity-type holder, whose data components are unbound -> that
+     * throws "Components not bound yet" during death-loot on 26.x+.
+     */
+    @Override
+    protected void dropFromLootTable(ServerLevel worldserver, DamageSource damagesource, boolean flag) {
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -1167,6 +1196,8 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
     /**
      * -> unmount(Entity)
      */
+    // guards against the unsafe-dismount re-mount recursing into itself
+    private boolean reMounting = false;
     @Override
     protected boolean removePassenger(Entity entity) {
         boolean result = super.removePassenger(entity);
@@ -1184,7 +1215,14 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
         AABB bb = entity.getBoundingBox();
         bb = getBBAtPosition(bb, this.getX(), this.getY(), this.getZ());
         if (!platformHelper.canSpawn(getBukkitEntity().getLocation(), this)) {
-            entity.startRiding(this, true, true);
+            if (!reMounting) {
+                reMounting = true;
+                try {
+                    entity.startRiding(this, true, true);
+                } finally {
+                    reMounting = false;
+                }
+            }
         } else {
             entity.setPos(getX(), getY(), getZ());
         }

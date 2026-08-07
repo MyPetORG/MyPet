@@ -149,7 +149,7 @@ public class EntityMyGiant extends EntityMyPet {
 
 	@Override
 	public ItemStack getItemBySlot(net.minecraft.world.entity.EquipmentSlot vanillaSlot) {
-		if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2)) {
+		if (MyPetApi.getPlatformHelper().doStackWalking(ServerEntity.class, 2) && getMyPet() != null) {
 			EquipmentSlot slot = EquipmentSlot.getSlotById(vanillaSlot.getId());
 			if (getMyPet().getEquipment(slot) != null) {
 				return CraftItemStack.asNMSCopy(getMyPet().getEquipment(slot));

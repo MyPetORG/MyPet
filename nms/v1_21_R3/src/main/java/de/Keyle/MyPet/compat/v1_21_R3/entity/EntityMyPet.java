@@ -148,6 +148,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
 		try {
 			this.replaceCraftAttributes();
+			this.replaceAttributes();
 			this.setBukkitEntity();
 
 			this.myPet = myPet;
@@ -168,6 +169,17 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	protected void replaceAttributes() {
+		// The LivingEntity super constructor builds its `attributes` field from
+		// DefaultAttributes.getSupplier(mypet_*), which is null for our custom entity
+		// types -> an AttributeMap with a null supplier. Most paths go through the
+		// overridden getAttributes(), but vanilla equipment sync reads the field
+		// directly (LivingEntity.collectEquipmentChanges), which NPEs when a pet wears
+		// an item carrying attribute modifiers. Point the field at our safe map.
+		Field attributesField = ReflectionUtil.getField(LivingEntity.class, "attributes");
+		ReflectionUtil.setFinalFieldValue(attributesField, this, this.getAttributes());
 	}
 
 	protected void replaceCraftAttributes() {
@@ -699,6 +711,9 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
 	@Override
 	public float getHealth() {
+		if (myPet == null) {
+			return super.getHealth();
+		}
 		double health = super.getHealth();
 		double maxHealth = myPet.getMaxHealth();
 		if (health > maxHealth) {
@@ -710,6 +725,10 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
     @Override
     public void setHealth(float f) {
+        if (myPet == null) {
+            super.setHealth(f);
+            return;
+        }
         double maxHealth = myPet.getMaxHealth();
 
         boolean silent = this.getAttribute(Attributes.MAX_HEALTH).getValue() != maxHealth;

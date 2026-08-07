@@ -133,7 +133,7 @@ public class ItemStackNBTConverter {
                 NBTTagList tagList = (NBTTagList) vanillaTag;
                 List compoundList = new ArrayList();
                 try {
-                    ArrayList list = (ArrayList) TAG_LIST_LIST.get(tagList);
+                    List list = (List) TAG_LIST_LIST.get(tagList);
                     for (Object aList : list) {
                         compoundList.add(vanillaCompoundToCompound((NBTBase) aList));
                     }

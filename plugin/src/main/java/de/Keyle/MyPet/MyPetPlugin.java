@@ -66,6 +66,9 @@ import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import de.Keyle.MyPet.util.shop.ShopManager;
 import de.Keyle.MyPet.util.translation.VanillaTranslationLoader;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.AdvancedPie;
+import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -192,6 +195,8 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         String updateStatus = updater.update();
         printSplashScreen(updateStatus);
 
+        getLogger().warning("MyPet 3 has reached end of life and will no longer receive substantive updates. If your server version supports it, please migrate to MyPet v4: https://builtbybit.com/resources/mypet-4.115339/");
+
         if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
             getLogger().warning("This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + " on " + compatUtil.getMinecraftVersion() + "\". Is MyPet up to date?");
             updater.waitForDownload();
@@ -199,9 +204,30 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
             return;
         }
 
+        // isValidBukkitPacket() can pass on a brand-new server build for which no compat module
+        // actually loaded, leaving these null (set in onLoad via getCompatInstance). Bail cleanly
+        // instead of NPEing in registerEntityTypes() / compatManager.enable() below.
+        if (entityRegistry == null || platformHelper == null || petInfo == null || compatManager == null) {
+            getLogger().severe("No MyPet compatibility module could be loaded for " + compatUtil.getMinecraftVersion() + " (internal version " + compatUtil.getInternalVersion() + "). MyPet cannot run on this server version - disabling.");
+            setEnabled(false);
+            return;
+        }
+
         serviceManager.activate(Load.State.OnEnable);
 
-        entityRegistry.registerEntityTypes();
+        try {
+            entityRegistry.registerEntityTypes();
+        } catch (LinkageError e) {
+            // The entity-registration hack reflects into vanilla/Spigot registry internals. On
+            // Forge-Bukkit hybrids (Arclight, Mohist, ...) those internals are remapped, so the
+            // field/method access throws NoSuchFieldError/NoSuchMethodError/etc. (LinkageError).
+            // These platforms are not supported - disable cleanly instead of half-enabling.
+            getLogger().severe("Failed to register MyPet's entities on this server (" + compatUtil.getMinecraftVersion() + "). " +
+                    "This usually means an unsupported server platform - MyPet does not support Forge-Bukkit hybrids such as Arclight or Mohist. Disabling.");
+            getLogger().severe("Reason: " + e);
+            setEnabled(false);
+            return;
+        }
 
         DebugLogHandler.setup(getLogger());
 
@@ -408,11 +434,12 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
 
         // init Metrics
         try {
-            Metrics metrics = new Metrics(this, 778);
-            if (metrics.isEnabled() && !MyPetVersion.isLocalBuild()) {
-                metrics.addCustomChart(new Metrics.SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
-                metrics.addCustomChart(new Metrics.SimplePie("build", MyPetVersion::getBuild));
-                metrics.addCustomChart(new Metrics.SimplePie("update_mode", () -> {
+            // Don't construct Metrics on local builds
+            if (!MyPetVersion.isLocalBuild()) {
+                Metrics metrics = new Metrics(this, 778);
+                metrics.addCustomChart(new SingleLineChart("active_pets", () -> myPetManager.countActiveMyPets()));
+                metrics.addCustomChart(new SimplePie("build", MyPetVersion::getBuild));
+                metrics.addCustomChart(new SimplePie("update_mode", () -> {
                     String mode = "Disabled";
                     if (Configuration.Update.CHECK) {
                         mode = "Check";
@@ -423,7 +450,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     return mode;
                 }
                 ));
-                metrics.addCustomChart(new Metrics.AdvancedPie("hooks", () -> {
+                metrics.addCustomChart(new AdvancedPie("hooks", () -> {
                     Map<String, Integer> activatedHooks = new HashMap<>();
                     for (PluginHook hook : MyPetApi.getPluginHookManager().getHooks()) {
                         activatedHooks.put(hook.getPluginName(), 1);
@@ -431,7 +458,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     return activatedHooks;
                 }
                 ));
-                metrics.addCustomChart(new Metrics.AdvancedPie("pet_types", () -> {
+                metrics.addCustomChart(new AdvancedPie("pet_types", () -> {
                     Map<String, Integer> petTypes = new HashMap<>();
                     for (MyPet pet : myPetManager.getAllActiveMyPets()) {
                         petTypes.merge(pet.getPetType().name(), 1, Integer::sum);
@@ -439,7 +466,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     return petTypes;
                 }
                 ));
-                metrics.addCustomChart(new Metrics.SimplePie("database_type", () -> {
+                metrics.addCustomChart(new SimplePie("database_type", () -> {
                     String type = null;
                     if (Configuration.Repository.REPOSITORY_TYPE.equalsIgnoreCase("SQLite")) {
                         type = "SQLite";
@@ -450,7 +477,7 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
                     }
                     return type;
                 }));
-                metrics.addCustomChart(new Metrics.AdvancedPie("active_skills", () -> {
+                metrics.addCustomChart(new AdvancedPie("active_skills", () -> {
                     Map<String, Integer> skillCounts = new HashMap<>();
                     for (MyPet pet : myPetManager.getAllActiveMyPets()) {
                         for (Skill skill : pet.getSkills().all()) {

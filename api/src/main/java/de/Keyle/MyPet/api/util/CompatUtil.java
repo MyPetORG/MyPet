@@ -77,7 +77,9 @@ public class CompatUtil {
                         classPath = "de.Keyle.MyPet.compat." + specVers + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
                         Class.forName(classPath);
                         break;
-                    } catch (ClassNotFoundException ignored) {
+                    } catch (ClassNotFoundException | LinkageError ignored) {
+                        // LinkageError (e.g. NoClassDefFoundError): the probed compat class references
+                        // an NMS symbol missing on this server - skip it and try the next candidate.
                     }
             } else {
                 classPath = "de.Keyle.MyPet.compat." + internalVersion + "." + path + (path != null && !path.isEmpty() ? "." : "") + className;
@@ -105,6 +107,12 @@ public class CompatUtil {
 
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
+        } catch (LinkageError e) {
+            // The compat class links against an NMS symbol that is missing on this server (version or
+            // mapping mismatch, e.g. NoClassDefFoundError: net/minecraft/world/level/World). Treat it
+            // as "no compat module available" so onLoad/onEnable can disable MyPet cleanly instead of
+            // crashing with an uncaught error during plugin load.
+            MyPetApi.getLogger().warning("Could not load MyPet compatibility class " + classPath + " on this server (" + minecraftVersion + "): " + e);
         }
 
         return null;

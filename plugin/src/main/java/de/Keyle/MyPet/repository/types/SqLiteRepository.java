@@ -111,7 +111,12 @@ public class SqLiteRepository implements Repository {
                 initStructure();
             }
             resultSet.close();
-        } catch (Exception e) {
+        } catch (Exception | LinkageError e) {
+            // LinkageError (e.g. UnsatisfiedLinkError) is thrown when the server-provided
+            // sqlite-jdbc native library can't be linked — typically a version conflict with
+            // another plugin's org.sqlite on the shared classpath. It's an Error, not an
+            // Exception, so without this it would escape onEnable uncaught instead of routing
+            // into MyPet's intended "repository unavailable -> disable cleanly" path.
             e.printStackTrace();
             throw new RepositoryInitException(e);
         }

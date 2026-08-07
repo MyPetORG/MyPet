@@ -36,7 +36,7 @@ public class MobStackerBHook implements LeashEntityHook {
 
     @Override
     public boolean onEnable() {
-        plugin = (MobStacker) MyPetApi.getPluginHookManager().getPluginInstance("StackMob").get();
+        plugin = MyPetApi.getPluginHookManager().getPluginInstance(MobStacker.class).get();
         Bukkit.getPluginManager().registerEvents(this, MyPetApi.getPlugin());
         return true;
     }

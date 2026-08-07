@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.*;
 import de.Keyle.MyPet.api.entity.MyPet.PetState;
-import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.skill.ranged.CraftMyPetProjectile;
 import de.Keyle.MyPet.api.entity.skill.ranged.EntityMyPetProjectile;
 import de.Keyle.MyPet.api.event.MyPetDamageEvent;
@@ -179,7 +178,8 @@ public class MyPetEntityListener implements Listener {
                 } else {
                     leashItem = damager.getItemInHand();
                 }
-                if (MyPetApi.getMyPetInfo().getLeashItem(myPet.getPetType()).compare(leashItem)) {
+                ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(myPet.getPetType());
+                if (neededLeashItem == null || neededLeashItem.compare(leashItem)) {
                     boolean infoShown = false;
                     if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, myPet)) {
                         damager.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
@@ -299,14 +299,20 @@ public class MyPetEntityListener implements Listener {
                 EntityMyPetProjectile projectile = ((CraftMyPetProjectile) event.getDamager()).getMyPetProjectile();
 
                 if (projectile != null && projectile.getShooter() != null) {
-                    if (myPet == projectile.getShooter().getMyPet()) {
+                    MyPet shooterMyPet = projectile.getShooter().getMyPet();
+                    if (myPet == shooterMyPet) {
                         event.setCancelled(true);
                     }
-                    // Allow damage if both pets are dueling each other (bypasses PvP restrictions)
-                    // Must verify: shooter is in duel mode, target is in duel mode, AND shooter's target is the hit pet
-                    boolean inDuel = projectile.getShooter().getTargetPriority() == TargetPriority.Duel
-                            && myPet.getEntity().isPresent()
-                            && myPet.getEntity().get().getHandle().getTargetPriority() == TargetPriority.Duel
+                    // Allow damage if both pets are dueling each other (bypasses PvP restrictions).
+                    // Read the Behavior skill mode like the EntityDeathEvent duel handler below does:
+                    // the targetPriority field is never populated (setMyPetTarget ignores its priority
+                    // argument), so checking getTargetPriority() == Duel here would always be false and
+                    // duel projectiles would always be canceled. Also require the shooter to actually
+                    // be targeting the pet it hit.
+                    boolean inDuel = shooterMyPet.getSkills().isActive(Behavior.class)
+                            && myPet.getSkills().isActive(Behavior.class)
+                            && shooterMyPet.getSkills().get(Behavior.class).getBehavior() == BehaviorMode.Duel
+                            && myPet.getSkills().get(Behavior.class).getBehavior() == BehaviorMode.Duel
                             && projectile.getShooter().getMyPetTarget() == craftMyPet;
                     if (!inDuel && !MyPetApi.getHookHelper().canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
                         event.setCancelled(true);
@@ -381,8 +387,17 @@ public class MyPetEntityListener implements Listener {
                     return;
                 }
 
-                // fix influence of other plugins for this event and throw damage event
-                MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE));
+                // We run at MONITOR, so the BASE modifier already reflects what earlier plugins did to it.
+                // MythicLib (MMOItems) applies a player's DEFENSE at HIGHEST by writing the mitigated value
+                // into the BASE modifier via setDamage(double); resetting to getOriginalDamage(BASE) here would
+                // erase that defense (the original "ignore all plugin influence" behaviour). We take the
+                // smaller of the original and current BASE so legitimate reductions (armor/defense/resistance)
+                // are honoured while the pet's configured Damage still acts as a cap against damage-inflating
+                // plugins. BASE excludes the vanilla ARMOR modifier, so armor is not double-counted.
+                double baseDamage = Math.min(
+                        event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE),
+                        event.getDamage(EntityDamageEvent.DamageModifier.BASE));
+                MyPetDamageEvent petDamageEvent = new MyPetDamageEvent(myPet, target, baseDamage);
                 Bukkit.getPluginManager().callEvent(petDamageEvent);
                 if (petDamageEvent.isCancelled()) {
                     event.setCancelled(true);

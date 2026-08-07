@@ -56,7 +56,11 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 		fakeEquipment = new FakeEquipment(this);
 
 		Field typeValue = ReflectionUtil.getField(CraftEntity.class, "entityType");
-		ReflectionUtil.setFieldValue(typeValue,this, EntityType.BLOCK_DISPLAY);
+		if (typeValue != null) {
+			// Some 1.20 builds have no CraftEntity.entityType field; skip the disguise instead of
+			// passing a null Field to setFieldValue (its @NonNull check would NPE on pet creation).
+			ReflectionUtil.setFieldValue(typeValue, this, EntityType.BLOCK_DISPLAY);
+		}
 	}
 
 	@Override

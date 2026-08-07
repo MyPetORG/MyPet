@@ -268,7 +268,7 @@ public class EntityListener implements Listener {
                         return;
                     }
                     boolean usedArrow = false;
-                    if (!neededLeashItem.compare(leashItem)) {
+                    if (neededLeashItem != null && !neededLeashItem.compare(leashItem)) {
                         if (leashItemArrow == null || !neededLeashItem.compare(leashItemArrow)) {
                             return;
                         } else {
@@ -439,7 +439,8 @@ public class EntityListener implements Listener {
                 if (event.getDamage() == 0) {
                     return;
                 } else if (target instanceof MyPetBukkitEntity) {
-                    if (MyPetApi.getMyPetInfo().getLeashItem(((MyPetBukkitEntity) target).getPetType()).compare(player.getItemInHand())) {
+                    ConfigItem neededLeashItem = MyPetApi.getMyPetInfo().getLeashItem(((MyPetBukkitEntity) target).getPetType());
+                    if (neededLeashItem == null || neededLeashItem.compare(player.getItemInHand())) {
                         return;
                     }
                 }

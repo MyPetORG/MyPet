@@ -80,7 +80,13 @@ public abstract class PlayerManager {
     }
 
     public boolean isMyPetPlayer(Player player) {
-        return uuidToInternalUUID.containsKey(player.getUniqueId());
+        // Require the loaded MyPetPlayer to actually be present, not just the
+        // uuid->internalUUID mapping. During the async join/load window the mapping
+        // can exist before onlinePlayers is populated; without this check,
+        // isMyPetPlayer() returns true while getMyPetPlayer() returns null, which
+        // NPEs every "if (isMyPetPlayer(p)) { getMyPetPlayer(p).hasMyPet()... }" site.
+        UUID internalUUID = uuidToInternalUUID.get(player.getUniqueId());
+        return internalUUID != null && onlinePlayers.containsKey(internalUUID);
     }
 
     public MyPetPlayer[] getMyPetPlayers() {

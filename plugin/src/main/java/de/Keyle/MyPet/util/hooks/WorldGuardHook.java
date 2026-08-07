@@ -96,7 +96,15 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     public WorldGuardHook() {
         if (MyPetApi.getPluginHookManager().getConfig().getConfig().getBoolean("WorldGuard.Enabled")) {
-            if (ReflectionUtil.getMethod(com.sk89q.worldedit.util.Location.class, "toVector") == null) {
+            try {
+                if (ReflectionUtil.getMethod(com.sk89q.worldedit.util.Location.class, "toVector") == null) {
+                    return;
+                }
+            } catch (Throwable e) {
+                // Some server builds bundle a bytecode rewriter (e.g. Paper's Commodore) whose ASM
+                // version can't parse WorldEdit/WorldGuard classes compiled for a newer Java release,
+                // throwing here on first class-load instead of a normal ClassNotFoundException.
+                MyPetApi.getLogger().warning("Failed to inspect WorldEdit/WorldGuard classes - disabling the WorldGuard hook: " + e);
                 return;
             }
 
@@ -209,41 +217,45 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
     }
 
     public StateFlag.State getState(Location loc, Player player, StateFlag... flags) {
-        if (is7) {
-            RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
-            if (rc != null) {
-                return rc.createQuery().queryState(
-                        BukkitAdapter.adapt(loc),
-                        player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
-                        flags);
-            }
-        } else {
-            try {
+        try {
+            if (is7) {
+                RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
+                if (rc != null) {
+                    return rc.createQuery().queryState(
+                            BukkitAdapter.adapt(loc),
+                            player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
+                            flags);
+                }
+            } else {
                 RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
                 ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
                 return set.queryState(player != null ? wgp.wrapPlayer(player) : null, flags);
-            } catch (Exception ignored) {
             }
+        } catch (Throwable ignored) {
+            // WorldGuard may be mid-reload or its jar already closed (e.g. via PlugManX) -> the lazy
+            // class load throws "zip file closed" / NoClassDefFoundError. Fail open (ALLOW) instead of
+            // propagating into the caller (BeaconImpl.schedule, pet-allowed checks, etc.).
         }
         return StateFlag.State.ALLOW;
     }
 
     public Collection<Double> getDoubleValue(Location loc, Player player, DoubleFlag flag) {
-        if (is7) {
-            RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
-            return rc.createQuery().queryAllValues(
-                    BukkitAdapter.adapt(loc),
-                    player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
-                    flag);
-        } else {
-            try {
+        try {
+            if (is7) {
+                RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
+                return rc.createQuery().queryAllValues(
+                        BukkitAdapter.adapt(loc),
+                        player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
+                        flag);
+            } else {
                 RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
                 ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
                 return set.queryAllValues(player != null ? wgp.wrapPlayer(player) : null, flag);
-            } catch (Exception ignored) {
-                return Collections.emptyList();
             }
+        } catch (Throwable ignored) {
+            // see getState(): WorldGuard may be mid-reload / its jar closed -> fail safe.
         }
+        return Collections.emptyList();
     }
 
     @Override

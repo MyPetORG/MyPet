@@ -122,10 +122,23 @@ public class EntityMyChicken extends EntityMyPet {
 
 		if (Configuration.MyPet.Chicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
 			this.makeSound("entity.chicken.egg", 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-			this.forceDrops = true; // CraftBukkit
+			setForceDrops(true);
 			this.spawnAtLocation(this.level().getMinecraftWorld(), Items.EGG);
-			this.forceDrops = false; // CraftBukkit
+			setForceDrops(false);
 			nextEggTimer = this.random.nextInt(6000) + 6000;
+		}
+	}
+
+	// CraftBukkit's forceDrops flag makes spawnAtLocation() spawn a real item instead of
+	// funneling it into the death-loot capture list. Some server builds don't expose this
+	// field at runtime even though it's present in the API MyPet compiles against, throwing
+	// NoSuchFieldError. Swallow that instead of crashing every egg-lay tick; worst case on
+	// those builds is a lost egg if the capture list happens to be active, not a broken pet.
+	private void setForceDrops(boolean value) {
+		try {
+			this.forceDrops = value;
+		} catch (LinkageError e) {
+			// field not present on this server build - ignore
 		}
 	}
 

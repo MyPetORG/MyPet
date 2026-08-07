@@ -18,7 +18,7 @@ val minecraftVersion by extra("26.2")
 val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6;v1_21_R7;v26_1_R1;v26_2_R1")
 val specialVersions by extra("")
 
-version = "3.14.2"
+version = "3.14.3"
 
 @Suppress("UNCHECKED_CAST")
 val nmsModules: List<String> = gradle.extra["nmsModules"] as List<String>
@@ -140,6 +140,10 @@ tasks.named<ProcessResources>("processResources") {
     filesMatching("*.yml") { expand(filteringProps) }
 }
 
+// Only the official CI has this secret. Forks and self-compiled builds get an empty DSN, so
+// SentryErrorReporter stays disabled instead of silently reporting a fork's errors to our project.
+val sentryDsn = System.getenv("SENTRY_DSN") ?: ""
+
 fun Manifest.attributesForMyPet() = attributes(
     mapOf(
         "Class-Path" to "MyPet/rhino.jar MyPet/rhino-1.7.9.jar MyPet/rhino-1.7.10.jar MyPet/rhino-1.7.15.jar ../MyPet/rhino.jar ../MyPet/rhino-1.7.9.jar ../MyPet/rhino-1.7.10.jar ../MyPet/rhino-1.7.15.jar MyPet/mongo-java-driver.jar MyPet/mongo-java-driver-3.12.11.jar",
@@ -151,7 +155,8 @@ fun Manifest.attributesForMyPet() = attributes(
         "Project-Minecraft-Version" to minecraftVersion,
         "Project-Bukkit-Packets" to bukkitPackets,
         "Special-MC-Versions" to specialVersions,
-        "Git-Commit" to (System.getenv("GIT_COMMIT") ?: "")
+        "Git-Commit" to (System.getenv("GIT_COMMIT") ?: ""),
+        "Sentry-Dsn" to sentryDsn
     )
 )
 
@@ -181,7 +186,7 @@ dependencies {
 
     // External libs to be shaded
 
-    add("shade", "org.bstats:bstats-bukkit:1.7")
+    add("shade", "org.bstats:bstats-bukkit:3.1.0")
     add("shade", "org.mongodb:mongodb-driver:3.12.11")
     add("shade", "de.keyle:knbt:0.0.6")
     add("shade", "com.google.code.gson:gson:2.8.9")
@@ -225,6 +230,19 @@ sentry {
     org = "mypet"
     projectName = "mypet"
     authToken = System.getenv("SENTRY_AUTH_TOKEN")
+
+    // The actual code lives in the api/plugin/nms subprojects, but the shipped artifact is a single
+    // shaded jar built here at the root with ONE sentry-debug-meta.properties. Enabling source
+    // context per-subproject would emit colliding debug-meta files that shadowJar silently dedups,
+    // so instead we fold every module's source root into this project's single source bundle. One
+    // bundle id, one properties file, all sources -> stack frames across all modules symbolicate.
+    val moduleSourceDirs = (listOf("api", "plugin") +
+        file("nms").listFiles().orEmpty()
+            .filter { it.isDirectory && File(it, "src/main/java").isDirectory }
+            .map { "nms/${it.name}" })
+        .map { "$it/src/main/java" }
+        .filter { file(it).isDirectory }
+    additionalSourceDirsForSourceContext.set(moduleSourceDirs)
 }
 
 /* ---------- Root compilation settings (Java 8 output) ---------- */

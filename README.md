@@ -10,6 +10,9 @@
   <img src=".github/readme-images/logo.png" alt="MyPet" width="200">
 </a>
 
+> [!WARNING]
+> **MyPet 3.x has reached end of life** and no longer receives substantive updates. Please migrate to [MyPet v4](https://builtbybit.com/resources/mypet-4.115339/).
+
 ## MyPet - The extensive pet plugin
 MyPet is a highly customizable pet plugin with a lot of features.<br />
 Take them on a lead, train them and make them a very powerful companion!

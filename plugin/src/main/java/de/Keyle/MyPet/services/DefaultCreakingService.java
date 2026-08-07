@@ -72,7 +72,7 @@ public class DefaultCreakingService extends CreakingService {
     private static class CreakingHelper {
         static Location getHome(Entity entity) {
             if (entity instanceof Creaking) {
-                return ((Creaking) entity).getHome();
+                try { return ((Creaking) entity).getHome(); } catch (LinkageError ignored) { return null; } // getHome() may be absent on some 1.21.4 builds
             }
             return null;
         }

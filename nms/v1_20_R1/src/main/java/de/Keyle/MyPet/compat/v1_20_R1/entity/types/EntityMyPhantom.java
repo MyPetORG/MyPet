@@ -69,7 +69,7 @@ public class EntityMyPhantom extends EntityMyFlyingPet {
 		getEntityData().set(SIZE_WATCHER, size);
 		this.refreshDimensions();
 		if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
-			petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.2), 20));
+			petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.7F, 3 + (getMyPet().getSize() * 0.2), 20));
 		}
 	}
 

@@ -316,7 +316,7 @@ public class PlayerListener implements Listener {
                 CraftMyPetProjectile projectile = (CraftMyPetProjectile) event.getDamager();
                 if (MyPetApi.getPlayerManager().isMyPetPlayer(victim)) {
                     MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
-                    if (myPetPlayerDamagee.hasMyPet()) {
+                    if (myPetPlayerDamagee != null && myPetPlayerDamagee.hasMyPet()) {
                         if (projectile != null && projectile.getMyPetProjectile().getShooter() != null) {
                             if (myPetPlayerDamagee.getMyPet() == projectile.getMyPetProjectile().getShooter().getMyPet()) {
                                 event.setCancelled(true);
@@ -350,7 +350,7 @@ public class PlayerListener implements Listener {
                     return;
                 }
                 MyPetPlayer myPetPlayerDamagee = MyPetApi.getPlayerManager().getMyPetPlayer(victim);
-                if (myPetPlayerDamagee.hasMyPet()) {
+                if (myPetPlayerDamagee != null && myPetPlayerDamagee.hasMyPet()) {
                     MyPet myPet = myPetPlayerDamagee.getMyPet();
                     if (myPet.getSkills().has(ShieldImpl.class)) {
                         ShieldImpl shield = myPet.getSkills().get(ShieldImpl.class);
@@ -397,6 +397,11 @@ public class PlayerListener implements Listener {
 
         if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
             final MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
+
+            // Race condition: player may have disconnected between isMyPetPlayer and getMyPetPlayer
+            if (myPetPlayer == null) {
+                return;
+            }
 
             final WorldGroup fromGroup = WorldGroup.getGroupByWorld(event.getFrom().getName());
 

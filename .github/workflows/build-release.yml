@@ -21,6 +21,7 @@ jobs:
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
       GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
 
@@ -53,6 +54,21 @@ jobs:
           ./gradlew --no-daemon build -PbuildType=release -PSENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
         env:
           REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}
+
+      # Source context (Java "source maps") is uploaded by the Sentry Gradle plugin during the
+      # build above. This step creates and finalizes the matching release.
+      - name: Finalize Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: mypet
+          SENTRY_PROJECT: mypet
+        with:
+          version: ${{ env.PROJECT_VERSION }}
+          environment: production
+          finalize: true
+          set_commits: auto
+          ignore_missing: true
 
       - name: Publish API release to Reposilite
         run: ./gradlew --no-daemon :api:publish -PbuildType=release

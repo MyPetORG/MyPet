@@ -32,6 +32,17 @@ public abstract class RepositoryCallback<T> extends BukkitRunnable {
         this.value = value;
     }
 
+    private synchronized BukkitTask scheduleOnce(java.util.function.Supplier<BukkitTask> scheduler) {
+        try {
+            return scheduler.get();
+        } catch (IllegalStateException alreadyScheduled) {
+            // This one-shot callback was already scheduled (e.g. the async repository task fired more
+            // than once with the same instance). The pending run still delivers the callback, so
+            // swallow the duplicate "Already scheduled" instead of throwing.
+            return null;
+        }
+    }
+
     @Override
     public void run() {
         callback(value);
@@ -46,61 +57,61 @@ public abstract class RepositoryCallback<T> extends BukkitRunnable {
 
     public synchronized BukkitTask runTask(Plugin plugin, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTask(plugin);
+        return scheduleOnce(() -> super.runTask(plugin));
     }
 
     public synchronized BukkitTask runTaskAsynchronously(Plugin plugin, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTaskAsynchronously(plugin);
+        return scheduleOnce(() -> super.runTaskAsynchronously(plugin));
     }
 
     public synchronized BukkitTask runTaskLater(Plugin plugin, long delay, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTaskLater(plugin, delay);
+        return scheduleOnce(() -> super.runTaskLater(plugin, delay));
     }
 
     public synchronized BukkitTask runTaskLaterAsynchronously(Plugin plugin, long delay, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTaskLaterAsynchronously(plugin, delay);
+        return scheduleOnce(() -> super.runTaskLaterAsynchronously(plugin, delay));
     }
 
     public synchronized BukkitTask runTaskTimer(Plugin plugin, long delay, long period, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTaskTimer(plugin, delay, period);
+        return scheduleOnce(() -> super.runTaskTimer(plugin, delay, period));
     }
 
     public synchronized BukkitTask runTaskTimerAsynchronously(Plugin plugin, long delay, long period, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTaskTimerAsynchronously(plugin, delay, period);
+        return scheduleOnce(() -> super.runTaskTimerAsynchronously(plugin, delay, period));
     }
 
     public synchronized BukkitTask runTask(T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTask(MyPetApi.getPlugin());
+        return scheduleOnce(() -> super.runTask(MyPetApi.getPlugin()));
     }
 
     public synchronized BukkitTask runTaskAsynchronously(T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTaskAsynchronously(MyPetApi.getPlugin());
+        return scheduleOnce(() -> super.runTaskAsynchronously(MyPetApi.getPlugin()));
     }
 
     public synchronized BukkitTask runTaskLater(long delay, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTaskLater(MyPetApi.getPlugin(), delay);
+        return scheduleOnce(() -> super.runTaskLater(MyPetApi.getPlugin(), delay));
     }
 
     public synchronized BukkitTask runTaskLaterAsynchronously(long delay, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTaskLaterAsynchronously(MyPetApi.getPlugin(), delay);
+        return scheduleOnce(() -> super.runTaskLaterAsynchronously(MyPetApi.getPlugin(), delay));
     }
 
     public synchronized BukkitTask runTaskTimer(long delay, long period, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTaskTimer(MyPetApi.getPlugin(), delay, period);
+        return scheduleOnce(() -> super.runTaskTimer(MyPetApi.getPlugin(), delay, period));
     }
 
     public synchronized BukkitTask runTaskTimerAsynchronously(long delay, long period, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
-        return super.runTaskTimerAsynchronously(MyPetApi.getPlugin(), delay, period);
+        return scheduleOnce(() -> super.runTaskTimerAsynchronously(MyPetApi.getPlugin(), delay, period));
     }
 }
