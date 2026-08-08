@@ -22,6 +22,8 @@ package de.Keyle.MyPet.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 /**
@@ -82,6 +84,17 @@ public class VoxelInfo {
     public static String injectVersion() {
         load();
         return injectVersion;
+    }
+
+    /** URL-encoded query string carrying this jar's Voxel download evidence. */
+    public static String evidenceQuery() {
+        return "voxeluser=" + encode(user()) + "&nonce=" + encode(nonce())
+                + "&timestamp=" + encode(timestamp()) + "&agent=" + encode(agent())
+                + "&token=" + encode(verifyToken()) + "&injectver=" + encode(injectVersion());
+    }
+
+    private static String encode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 
     private static void load() {

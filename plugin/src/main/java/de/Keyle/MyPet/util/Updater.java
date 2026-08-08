@@ -140,15 +140,15 @@ public class Updater {
         }
 
         if (VoxelInfo.isInjected()) {
-            checkThread = new Thread(() -> {
-                String result = runVoxelCheck();
-                if (result != null) {
-                    MyPetApi.getLogger().info(result);
-                }
-            }, "MyPet-UpdateCheck");
-            checkThread.setDaemon(true);
-            checkThread.start();
-            return null;
+            if (!MyPetGlobal.Update.DOWNLOAD.get()) {
+                checkThread = new Thread(() -> {
+                    MyPetApi.getLogger().info(runVoxelCheck());
+                }, "MyPet-UpdateCheck");
+                checkThread.setDaemon(true);
+                checkThread.start();
+                return null;
+            }
+            return runVoxelCheck();
         }
 
         if (BuiltByBitInfo.sharedToken().isEmpty()) {
@@ -220,7 +220,7 @@ public class Updater {
         return "A newer dev build is available: " + newest + ". Grab it from the MyPet Discord (#alpha-builds).";
     }
 
-    /** Checks the Voxel.Shop listing for a newer release; auto-download arrives separately. */
+    /** Checks the Voxel.Shop listing for a newer release; auto-download when enabled. */
     private String runVoxelCheck() {
         String latestVersion = latestVoxelVersion();
         if (latestVersion == null) {
@@ -228,6 +228,15 @@ public class Updater {
         }
         if (!isNewerVersion(latestVersion, VersionUtil.getVersion())) {
             return "No update available.";
+        }
+        latest = new Update(latestVersion, null, null);
+        if (MyPetGlobal.Update.DOWNLOAD.get()) {
+            Optional<Update> hubUpdate = fetchHubManifest(latestVersion, VoxelInfo.evidenceQuery());
+            if (hubUpdate.isPresent() && hubUpdate.get().getDownloadURL() != null) {
+                latest = hubUpdate.get();
+                download();
+                return "A new version is available: " + latest;
+            }
         }
         latest = new Update(latestVersion, null, null);
         return "A new version is available: " + latestVersion
