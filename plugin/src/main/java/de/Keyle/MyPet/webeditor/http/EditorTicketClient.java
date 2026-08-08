@@ -25,6 +25,7 @@ import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.util.BuiltByBitInfo;
 import de.Keyle.MyPet.util.HubInfo;
+import de.Keyle.MyPet.util.VoxelInfo;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -84,6 +85,9 @@ public final class EditorTicketClient {
 
     /** Query string for whichever evidence this jar carries, or null when it carries none. */
     private static String buildQuery() {
+        if (VoxelInfo.isInjected()) {
+            return VoxelInfo.evidenceQuery();
+        }
         if (BuiltByBitInfo.isInjected()) {
             return "member=" + encode(BuiltByBitInfo.memberId())
                     + "&nonce=" + encode(BuiltByBitInfo.nonce())
