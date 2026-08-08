@@ -267,6 +267,22 @@ public class Updater {
         }
     }
 
+    /**
+     * Entitlement query for the Hub's release download endpoint, or null when this jar carries no evidence.
+     */
+    private static String hubEntitlementQuery() {
+        if (BuiltByBitInfo.isInjected()) {
+            return "member=" + urlEncode(BuiltByBitInfo.memberId())
+                    + "&nonce=" + urlEncode(BuiltByBitInfo.nonce())
+                    + "&timestamp=" + urlEncode(BuiltByBitInfo.timestamp());
+        }
+        if (HubInfo.isInjected()) {
+            return "discord=" + urlEncode(HubInfo.discordId())
+                    + "&nonce=" + urlEncode(HubInfo.nonce());
+        }
+        return null;
+    }
+
     protected Optional<Update> check() {
         checkFailed = false;
         try {
@@ -290,8 +306,9 @@ public class Updater {
                 return Optional.empty();
             }
 
-            if (BuiltByBitInfo.isInjected()) {
-                Optional<Update> hubUpdate = fetchHubManifest(latestVersion);
+            String query = hubEntitlementQuery();
+            if (query != null) {
+                Optional<Update> hubUpdate = fetchHubManifest(latestVersion, query);
                 if (hubUpdate.isPresent()) {
                     return hubUpdate;
                 }
@@ -307,10 +324,10 @@ public class Updater {
 
     /**
      * Looks up the download URL and SHA-512 hash for {@code version} from the Hub's public
-     * version manifest, and builds the entitled download URL from the BBB-injected member/
-     * nonce/timestamp placeholders. Only meaningful for BBB-injected copies.
+     * version manifest, and builds the entitled download URL from the provided entitlementQuery.
+     * Serves any Hub-entitled copy (BBB or Hub-stamped).
      */
-    private Optional<Update> fetchHubManifest(String version) {
+    private Optional<Update> fetchHubManifest(String version, String entitlementQuery) {
         try {
             String content = httpGet(HubInfo.HUB_BASE + "/api/v1/versions?channel=release", null);
             JsonObject root = new Gson().fromJson(content, JsonObject.class);
@@ -331,9 +348,7 @@ public class Updater {
                     return Optional.of(new Update(version, null, null));
                 }
                 String downloadUrl = HubInfo.HUB_BASE + "/api/v1/updater/download/" + urlEncode(version)
-                        + "?member=" + urlEncode(BuiltByBitInfo.memberId())
-                        + "&nonce=" + urlEncode(BuiltByBitInfo.nonce())
-                        + "&timestamp=" + urlEncode(BuiltByBitInfo.timestamp());
+                        + "?" + entitlementQuery;
                 return Optional.of(new Update(version, downloadUrl, sha512));
             }
         } catch (Exception e) {
