@@ -91,7 +91,7 @@ public class Updater {
     protected static volatile Update latest = null;
     protected String plugin;
     protected Thread thread;
-    /** Background thread running an async version check (dev checks, or BBB checks with auto-download off). */
+    /** Background thread running an async version check (dev checks, or BBB/Voxel checks with auto-download off). */
     protected Thread checkThread;
     private boolean checkFailed = false;
 
@@ -110,11 +110,11 @@ public class Updater {
 
     /**
      * Checks for updates and returns a status message for display in the splash screen.
-     * Dev-build checks (and BBB checks with auto-download disabled) run asynchronously on
-     * {@link #checkThread} and log their own result — including any auto-download they
-     * trigger, which runs on {@link #thread}. Only the BBB release path with auto-download
-     * enabled stays synchronous. {@link #waitForDownload()} waits for both threads before
-     * shutdown, regardless of which path was taken.
+     * Dev-build checks (including Hub-stamped auto-download) and BBB or Voxel checks with
+     * auto-download disabled run asynchronously on {@link #checkThread} and log their own
+     * result — including any auto-download they trigger, which runs on {@link #thread}. Only
+     * the BBB or Voxel release path with auto-download enabled stays synchronous. {@link #waitForDownload()}
+     * waits for both threads before shutdown, regardless of which path was taken.
      *
      * @return a status message, or null if update checking is disabled or runs asynchronously
      */
@@ -204,7 +204,19 @@ public class Updater {
             return "No newer build available.";
         }
         if (preReleaseTier(newest) == 2) {
+            if (HubInfo.isInjected() && MyPetGlobal.Update.DOWNLOAD.get()) {
+                Optional<Update> hubUpdate = fetchHubManifest(newest, hubEntitlementQuery());
+                if (hubUpdate.isPresent() && hubUpdate.get().getDownloadURL() != null) {
+                    latest = hubUpdate.get();
+                    MyPetApi.getLogger().info("A newer release is available: " + newest + ". Downloading from the MyPet Hub...");
+                    download();
+                    return null;
+                }
+            }
             latest = new Update(newest, null, null);
+            if (HubInfo.isInjected()) {
+                return "A newer release is available: " + newest + ". Grab it from the MyPet Discord.";
+            }
             return "A newer release is available: " + newest + ". Download it from " + RESOURCE_PAGE_URL;
         }
         if (HubInfo.isInjected() && MyPetGlobal.Update.DOWNLOAD.get()) {
@@ -425,6 +437,7 @@ public class Updater {
                 int responseCode = httpConn.getResponseCode();
 
                 if (responseCode != HttpURLConnection.HTTP_OK) {
+                    MyPetApi.getLogger().warning("Download aborted: HTTP " + responseCode + " from update server.");
                     httpConn.disconnect();
                     return;
                 }
