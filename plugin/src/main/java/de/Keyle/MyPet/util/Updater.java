@@ -84,6 +84,7 @@ public class Updater {
     /** BuiltByBit resource id for the MyPet resource page. */
     private static final long RESOURCE_ID = 115339;
     private static final String BBB_API_BASE = "https://api.builtbybit.com/v1";
+    private static final String VOXEL_API_BASE = "https://api.voxel.shop/v1";
     /** Public BuiltByBit resource page, shown to non-BBB copies instead of an auto-download. */
     public static final String RESOURCE_PAGE_URL = "https://builtbybit.com/resources/" + RESOURCE_ID + "/";
 
@@ -129,6 +130,18 @@ public class Updater {
         if (VersionUtil.isDevBuild()) {
             checkThread = new Thread(() -> {
                 String result = runDevCheck();
+                if (result != null) {
+                    MyPetApi.getLogger().info(result);
+                }
+            }, "MyPet-UpdateCheck");
+            checkThread.setDaemon(true);
+            checkThread.start();
+            return null;
+        }
+
+        if (VoxelInfo.isInjected()) {
+            checkThread = new Thread(() -> {
+                String result = runVoxelCheck();
                 if (result != null) {
                     MyPetApi.getLogger().info(result);
                 }
@@ -205,6 +218,37 @@ public class Updater {
         }
         latest = new Update(newest, null, null);
         return "A newer dev build is available: " + newest + ". Grab it from the MyPet Discord (#alpha-builds).";
+    }
+
+    /** Checks the Voxel.Shop listing for a newer release; auto-download arrives separately. */
+    private String runVoxelCheck() {
+        String latestVersion = latestVoxelVersion();
+        if (latestVersion == null) {
+            return "Update check failed.";
+        }
+        if (!isNewerVersion(latestVersion, VersionUtil.getVersion())) {
+            return "No update available.";
+        }
+        latest = new Update(latestVersion, null, null);
+        return "A new version is available: " + latestVersion
+                + ". Download it from https://voxel.shop/product/" + VoxelInfo.resource() + "/";
+    }
+
+    /** Newest version on the Voxel.Shop listing, or null when unavailable. */
+    private String latestVoxelVersion() {
+        try {
+            String content = httpGet(VOXEL_API_BASE + "/getResourceUpdates?resource_id="
+                    + urlEncode(VoxelInfo.resource()) + "&limit=1", null);
+            JsonObject root = new Gson().fromJson(content, JsonObject.class);
+            JsonArray updates = root.getAsJsonObject("response").getAsJsonArray("updates");
+            if (updates == null || updates.size() == 0) {
+                return null;
+            }
+            return optString(updates.get(0).getAsJsonObject(), "version");
+        } catch (Exception e) {
+            MyPetApi.getLogger().warning("Voxel.Shop version check failed: " + e.getMessage());
+            return null;
+        }
     }
 
     /** Newest version in the Hub manifest for {@code channel}, or null when unavailable. */

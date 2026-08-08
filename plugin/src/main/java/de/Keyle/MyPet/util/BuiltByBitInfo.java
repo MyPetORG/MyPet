@@ -62,9 +62,11 @@ public class BuiltByBitInfo {
 
     /**
      * True iff this jar was downloaded through BuiltByBit and all placeholders were replaced.
+     * Voxel.Shop replaces the same markers, so Voxel-injected jars are explicitly excluded.
      */
     public static boolean isInjected() {
-        return !MEMBER_ID.startsWith("%%__") && !NONCE.startsWith("%%__")
+        return !VoxelInfo.isInjected()
+                && !MEMBER_ID.startsWith("%%__") && !NONCE.startsWith("%%__")
                 && !TIMESTAMP.startsWith("%%__") && !RESOURCE_ID.startsWith("%%__");
     }
 
