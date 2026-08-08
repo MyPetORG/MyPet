@@ -369,7 +369,7 @@ public class Updater {
                     return Optional.of(new Update(version, null, null));
                 }
                 String downloadUrl = HubInfo.HUB_BASE + "/api/v1/updater/download/" + urlEncode(version)
-                        + "?" + entitlementQuery;
+                        + "?" + entitlementQuery + "&restamp=1";
                 return Optional.of(new Update(version, downloadUrl, sha512));
             }
         } catch (Exception e) {
@@ -442,16 +442,15 @@ public class Updater {
                     return;
                 }
 
-                // Personalized (Hub dev-download) copies have no public manifest hash — the
-                // per-user hash instead rides along on the response itself.
-                if (expectedHash == null) {
-                    String headerHash = httpConn.getHeaderField("X-Content-SHA512");
-                    if (headerHash == null || headerHash.isBlank()) {
-                        MyPetApi.getLogger().warning("Download aborted: server did not provide a verification hash.");
-                        httpConn.disconnect();
-                        return;
-                    }
+                // Prefer per-copy hash from header (personalized jars); fall back to manifest hash.
+                String headerHash = httpConn.getHeaderField("X-Content-SHA512");
+                if (headerHash != null && !headerHash.isBlank()) {
                     expectedHash = headerHash.trim();
+                }
+                if (expectedHash == null) {
+                    MyPetApi.getLogger().warning("Download aborted: server did not provide a verification hash.");
+                    httpConn.disconnect();
+                    return;
                 }
 
                 Hasher hasher = Hashing.sha512().newHasher();
