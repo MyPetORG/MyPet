@@ -29,7 +29,8 @@ import java.util.Properties;
  * BuiltByBit (BBB) replaces the {@code %%__..__%%} placeholder constants below with real
  * values, byte-for-byte, in jars downloaded through its resource system. Each constant must
  * stay a single {@code static final String} initialized directly with the literal marker —
- * no concatenation — or BBB's byte-level replacement won't find it.
+ * no concatenation — or BBB's byte-level replacement won't find it. The MyPet Hub can also
+ * re-stamp jars with evidence via {@code builtbybit.properties} as a fallback.
  */
 public class BuiltByBitInfo {
 
@@ -38,36 +39,67 @@ public class BuiltByBitInfo {
     private static final String TIMESTAMP = "%%__TIMESTAMP__%%";
     private static final String RESOURCE_ID = "%%__RESOURCE__%%";
 
+    private static String hubMember;
+    private static String hubNonce;
+    private static String hubTimestamp;
     private static String sharedToken;
-    private static boolean sharedTokenLoaded = false;
+    private static boolean loaded = false;
 
     private BuiltByBitInfo() {
     }
 
     public static String memberId() {
-        return MEMBER_ID;
+        return classInjected() ? MEMBER_ID : hubValueOr(hubMemberValue(), MEMBER_ID);
     }
 
     public static String nonce() {
-        return NONCE;
+        return classInjected() ? NONCE : hubValueOr(hubNonceValue(), NONCE);
     }
 
     public static String timestamp() {
-        return TIMESTAMP;
-    }
-
-    public static String resourceId() {
-        return RESOURCE_ID;
+        return classInjected() ? TIMESTAMP : hubValueOr(hubTimestampValue(), TIMESTAMP);
     }
 
     /**
-     * True iff this jar was downloaded through BuiltByBit and all placeholders were replaced.
-     * Voxel.Shop replaces the same markers, so Voxel-injected jars are explicitly excluded.
+     * True iff this jar carries BuiltByBit evidence — injected by BuiltByBit's downloader or
+     * re-stamped by the MyPet Hub. Voxel.Shop replaces the same class markers, so Voxel-injected
+     * jars are explicitly excluded.
      */
     public static boolean isInjected() {
-        return !VoxelInfo.isInjected()
-                && !MEMBER_ID.startsWith("%%__") && !NONCE.startsWith("%%__")
+        return !VoxelInfo.isInjected() && (classInjected() || hubStamped());
+    }
+
+    private static boolean classInjected() {
+        return !MEMBER_ID.startsWith("%%__") && !NONCE.startsWith("%%__")
                 && !TIMESTAMP.startsWith("%%__") && !RESOURCE_ID.startsWith("%%__");
+    }
+
+    private static boolean hubStamped() {
+        return isFilled(hubMemberValue()) && isFilled(hubNonceValue())
+                && isFilled(hubTimestampValue());
+    }
+
+    private static String hubValueOr(String value, String fallback) {
+        return isFilled(value) ? value : fallback;
+    }
+
+    private static boolean isFilled(String value) {
+        return value != null && !value.isEmpty() && !value.startsWith("%%__");
+    }
+
+    private static String hubMemberValue() {
+        load();
+        return hubMember;
+    }
+
+    private static String hubNonceValue() {
+        load();
+        return hubNonce;
+    }
+
+    private static String hubTimestampValue() {
+        load();
+        return hubTimestamp;
     }
 
     /**
@@ -75,22 +107,26 @@ public class BuiltByBitInfo {
      * or empty if none was injected (local builds, or CI runs missing the secret).
      */
     public static Optional<String> sharedToken() {
-        if (!sharedTokenLoaded) {
-            sharedToken = loadSharedToken();
-            sharedTokenLoaded = true;
-        }
+        load();
         return sharedToken.isEmpty() ? Optional.empty() : Optional.of(sharedToken);
     }
 
-    private static String loadSharedToken() {
+    private static synchronized void load() {
+        if (loaded) {
+            return;
+        }
         Properties props = new Properties();
         try (InputStream in = BuiltByBitInfo.class.getResourceAsStream("/builtbybit.properties")) {
             if (in != null) {
                 props.load(in);
             }
         } catch (IOException ignored) {
-            // Treated as no token bundled.
+            // Treated as not stamped / no token bundled.
         }
-        return props.getProperty("sharedToken", "");
+        sharedToken = props.getProperty("sharedToken", "");
+        hubMember = props.getProperty("hubMember", "");
+        hubNonce = props.getProperty("hubNonce", "");
+        hubTimestamp = props.getProperty("hubTimestamp", "");
+        loaded = true;
     }
 }
