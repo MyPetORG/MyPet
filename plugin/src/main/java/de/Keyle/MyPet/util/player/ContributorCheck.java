@@ -20,17 +20,25 @@
 
 package de.Keyle.MyPet.util.player;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.Util;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
+import de.Keyle.MyPet.util.HubInfo;
 import org.bukkit.Bukkit;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class ContributorCheck {
-    private static final Map<String, Character> contributorMap = new ConcurrentHashMap<>();
+    private static volatile Map<UUID, ContributorRank> uuidRanks = Map.of();
+    /** Fallback for legacy entries the Hub has no UUID for. */
+    private static volatile Map<String, ContributorRank> nameRanks = Map.of();
     private static volatile boolean contributorMapLoaded = false;
     private static volatile long lastFailedAttempt = 0L;
     private static final long REFRESH_INTERVAL_HOURS = 12L;
@@ -49,7 +57,7 @@ public class ContributorCheck {
     private static synchronized void refreshContributorMap() {
         contributorMapLoaded = false;
         lastFailedAttempt = 0L; // scheduled refresh always attempts, regardless of backoff
-        fillContributorMap();
+        fillContributorMaps();
     }
 
     public enum ContributorRank {
@@ -72,7 +80,7 @@ public class ContributorCheck {
         }
     }
 
-    private static synchronized void fillContributorMap() {
+    private static synchronized void fillContributorMaps() {
         if (contributorMapLoaded) {
             return;
         }
@@ -80,13 +88,27 @@ public class ContributorCheck {
             return; // back off after a failed fetch so offline servers don't retry per player check
         }
         try {
-            String content = Util.readUrlContent("https://raw.githubusercontent.com/MyPetORG/MyPet/particles/particles.csv");
-            contributorMap.clear();
-            for (String line : content.split("\n")) {
-                if (line.length() >= 2) {
-                    contributorMap.put(line.substring(0, line.length() - 1), line.charAt(line.length() - 1));
+            String content = Util.readUrlContent(HubInfo.HUB_BASE + "/api/v1/contributors");
+            JsonObject root = new Gson().fromJson(content, JsonObject.class);
+            JsonArray contributors = root.getAsJsonArray("contributors");
+            Map<UUID, ContributorRank> byUuid = new HashMap<>();
+            Map<String, ContributorRank> byName = new HashMap<>();
+            for (JsonElement element : contributors) {
+                JsonObject entry = element.getAsJsonObject();
+                ContributorRank rank = parseRank(entry.get("rank"));
+                if (rank == ContributorRank.None) {
+                    continue;
+                }
+                UUID uuid = parseUuid(entry.get("uuid"));
+                JsonElement name = entry.get("name");
+                if (uuid != null) {
+                    byUuid.put(uuid, rank);
+                } else if (name != null && !name.isJsonNull()) {
+                    byName.put(name.getAsString(), rank);
                 }
             }
+            uuidRanks = Map.copyOf(byUuid);
+            nameRanks = Map.copyOf(byName);
             contributorMapLoaded = true;
         } catch (Exception e) {
             lastFailedAttempt = System.currentTimeMillis();
@@ -94,32 +116,41 @@ public class ContributorCheck {
         }
     }
 
+    private static ContributorRank parseRank(JsonElement element) {
+        if (element == null || element.isJsonNull()) {
+            return ContributorRank.None;
+        }
+        try {
+            return ContributorRank.valueOf(element.getAsString());
+        } catch (IllegalArgumentException e) {
+            return ContributorRank.None; // unknown rank from a newer Hub
+        }
+    }
+
+    private static UUID parseUuid(JsonElement element) {
+        if (element == null || element.isJsonNull()) {
+            return null;
+        }
+        try {
+            return UUID.fromString(element.getAsString());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
     public static ContributorRank getContributorRank(MyPetPlayer player) {
         try {
-            String check;
-            if (player.getUniqueId() != null) {
-                check = player.getName() + "," + player.getUniqueId() + ",";
-            } else {
-                check = player.getName() + ",,";
-            }
-
             if (!contributorMapLoaded) {
-                fillContributorMap();
+                fillContributorMaps();
             }
-
-            Character contributorType = '0';
-            if (contributorMap.containsKey(check)) {
-                contributorType = contributorMap.get(check);
+            if (player.getUniqueId() != null) {
+                ContributorRank rank = uuidRanks.get(player.getUniqueId());
+                if (rank != null) {
+                    return rank;
+                }
             }
-            return switch (contributorType) {
-                case '1' -> ContributorRank.Donator;
-                case '2' -> ContributorRank.Developer;
-                case '3' -> ContributorRank.Translator;
-                case '4' -> ContributorRank.Helper;
-                case '5' -> ContributorRank.Creator;
-                case '6' -> ContributorRank.Premium;
-                default -> ContributorRank.None;
-            };
+            ContributorRank byName = nameRanks.get(player.getName());
+            return byName != null ? byName : ContributorRank.None;
         } catch (Exception ignored) {
             return ContributorRank.None;
         }
