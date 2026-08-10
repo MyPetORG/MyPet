@@ -663,7 +663,13 @@ public abstract class PetImpl implements Pet, NBTStorage {
     }
 
     public void dropEquipment() {
-        if (getStatus() == PetState.Here) {
+        // Guards on the raw status field, not getStatus(): getStatus() downgrades
+        // Here -> Dead once the entity is dead, and the death path calls this while
+        // the entity is dead by definition (PetDeathListener). The per-type overrides
+        // (PetHorse, PetLlama) and getLocation()/setLocation() read the raw field for
+        // the same reason. The bukkitEntity check keeps a despawned pet from dropping
+        // its gear at the owner's feet, since getLocation() falls back to the owner.
+        if (status == PetState.Here && bukkitEntity != null) {
             Location dropLocation = getLocation().get();
             for (ItemStack itemStack : equipment.values()) {
                 if (itemStack != null && itemStack.getType() != Material.AIR) {
