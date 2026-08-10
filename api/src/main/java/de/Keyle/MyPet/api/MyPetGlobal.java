@@ -51,7 +51,6 @@ public final class MyPetGlobal {
         public static final ConfigKey<Boolean> OWNER_CAN_ATTACK_PET = ConfigKey.globalBool("MyPet.OwnerCanAttackPet", false);
         public static final ConfigKey<Boolean> DISABLE_PET_VS_PLAYER = ConfigKey.globalBool("MyPet.DisablePetVersusPlayer", false);
         public static final ConfigKey<Boolean> PET_KILLS_GIVE_PLAYER_REWARDS = ConfigKey.globalBool("MyPet.PetKillsGivePlayerRewards", true);
-        public static final ConfigKey<Boolean> RETAIN_EQUIPMENT_ON_TAME = ConfigKey.globalBool("MyPet.RetainEquipmentOnTame", true);
         public static final ConfigKey<Boolean> INVISIBLE_LIKE_OWNER = ConfigKey.globalBool("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", true);
         public static final ConfigKey<Boolean> THROW_PLAYER_MOVE_EVENT_WHILE_RIDING = ConfigKey.globalBool("MyPet.Throw-PlayerMoveEvent-While-Riding", true);
         public static final ConfigKey<Boolean> DISABLE_ALL_ACTIONBAR_MESSAGES = ConfigKey.globalBool("MyPet.Disable-All-Actionbar-Messages", false);
