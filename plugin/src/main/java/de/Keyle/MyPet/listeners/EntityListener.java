@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.Pet.PetState;
+import de.Keyle.MyPet.api.entity.PetEquipment;
 import de.Keyle.MyPet.api.entity.PetType;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.entity.leashing.LeashFlag;
@@ -66,6 +67,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -382,6 +385,10 @@ public class EntityListener implements Listener {
                                     // setStatus(Here) from Despawned would call createEntity() and
                                     // spawn a DUPLICATE entity via VanillaMobSpawner.spawn().
                                     ((PetImpl) pet).updateStatus(Pet.PetState.Here);
+                                    // Runs last: setEquipment's live-entity write path is only
+                                    // active once the pet is Here, so the domain model and the
+                                    // mob cannot diverge.
+                                    applyTameEquipmentPolicy(pet, capturedMob);
                                 });
                                 if (owner.isCaptureHelperActive()) {
                                     owner.setCaptureHelperActive(false);
@@ -395,6 +402,53 @@ public class EntityListener implements Listener {
                         });
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Applies {@code MyPet.Pets.<Type>.RetainEquipmentOnTame} to a mob that was just
+     * converted in place by a leash tame.
+     * <p>
+     * Taming never destroys the wild mob, so its armor and weapons are still on the
+     * entity at this point — but MyPet's own equipment model knows nothing about them.
+     * With the flag on (the default) each allowed slot is imported through
+     * {@link PetEquipment#setEquipment}, which leaves the gear exactly where it is and
+     * additionally makes it real pet equipment, so it drops on death and release. With
+     * the flag off the same slots are cleared on the mob and the items are dropped at
+     * its feet instead, and nothing enters the domain model.
+     * <p>
+     * Slots outside {@link PetEquipment#getAllowedSlotNames()} are left untouched either
+     * way, and vanilla per-slot drop chances are deliberately ignored: whatever is
+     * visible on the mob is what taming acts on.
+     * <p>
+     * This lives here rather than in {@code VanillaMobSpawner.convertInPlace} on purpose —
+     * source-driven adoptions (MythicMobs and friends) carry gear authored by the source
+     * plugin and must keep it regardless of the flag.
+     */
+    private static void applyTameEquipmentPolicy(Pet pet, Mob mob) {
+        if (!(pet instanceof PetEquipment equipmentPet)) {
+            return;
+        }
+        EntityEquipment mobEquipment = mob.getEquipment();
+        if (mobEquipment == null) {
+            return;
+        }
+        boolean retain = equipmentPet.retainEquipmentOnTame();
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (!equipmentPet.canUseSlot(slot)) {
+                continue;
+            }
+            ItemStack item = mobEquipment.getItem(slot);
+            if (item == null || item.getType().isAir()) {
+                continue;
+            }
+            if (retain) {
+                equipmentPet.setEquipment(slot, item);
+            } else {
+                ItemStack dropped = item.clone();
+                mobEquipment.setItem(slot, null);
+                mob.getWorld().dropItem(mob.getLocation(), dropped);
             }
         }
     }

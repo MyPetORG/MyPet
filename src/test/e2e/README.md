@@ -94,7 +94,10 @@ bots ~25 blocks from the arena. Don't remove it.
                   release-confirm / trade navigation), players.ts (secondBot —
                   spawns + ops + arena-teleports an extra bot for multiplayer
                   specs, with a dispose() disconnect), config.ts (live
-                  config.yml flip + /mypet reload), economy.ts (fundBot via
+                  config.yml flip + /mypet reload), petconfig.ts (pet-config.yml
+                  parse + block-scoped per-pet flag flip + /mypet reload — every
+                  key repeats once per pet type there, so an edit must be scoped
+                  to a type block, unlike config.ts's flat config.yml), economy.ts (fundBot via
                   PlayerPoints /points, expectBalanceReply via a {since}-scoped
                   /points me), placeholder.ts (expectPlaceholder — reads a
                   placeholder back via /papi parse with a {since}-scoped,
@@ -113,7 +116,10 @@ bots ~25 blocks from the arena. Don't remove it.
                   postinstall port redirect (see above)
     smoke.spec.ts             MyPet enables; a pet can be created; its menu opens
     taming/                   vanilla-taming gate (cow+lead, wolf pre-tame requirement),
-                               leash-flags.spec.ts (per-flag LeashRequirements matrix)
+                               leash-flags.spec.ts (per-flag LeashRequirements matrix),
+                               retain-equipment.spec.ts (RetainEquipmentOnTame: key
+                               registration, keep/strip at tame time, drop on release
+                               and release-on-death, drop-chance independence)
     commands/                 call, player-commands, admin-commands, misc-commands
     gui/                      menus.spec.ts (pet hub, Stay toggle, pet-selection,
                                choose-skilltree, release, backpack),

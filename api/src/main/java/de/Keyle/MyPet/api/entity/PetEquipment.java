@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.api.entity;
 
+import de.Keyle.MyPet.api.config.PetConfigLookup;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,7 +35,7 @@ import java.util.Set;
  * zombies use the full humanoid set. Implementations override
  * {@link #getAllowedSlotNames()} to declare which slots are available.
  */
-public interface PetEquipment {
+public interface PetEquipment extends Pet {
 
     /** Returns all currently equipped items, indexed by slot ordinal. */
     ItemStack[] getEquipment();
@@ -68,5 +69,23 @@ public interface PetEquipment {
      */
     default boolean canUseSlot(EquipmentSlot slot) {
         return getAllowedSlotNames().contains(slot.name());
+    }
+
+    /**
+     * When {@code true} (the default), a wild mob tamed with a lead keeps whatever
+     * armor and weapons it was wearing, and that gear becomes real MyPet equipment —
+     * readable through {@link #getEquipment(EquipmentSlot)} and dropped by
+     * {@link #dropEquipment()} on death and release. When {@code false}, the allowed
+     * slots are stripped at tame time and the items drop at the mob's location.
+     * <p>
+     * Only the slots in {@link #getAllowedSlotNames()} are affected, vanilla per-slot
+     * drop chances are ignored, and pets created by other plugins (source-driven
+     * adoptions) are not covered — the flag applies to leash taming only.
+     * <p>
+     * Reads {@code MyPet.Pets.<Type>.RetainEquipmentOnTame} (default {@code true}),
+     * registered for every {@code PetEquipment} type in {@code ConfigurationLoader}.
+     */
+    default boolean retainEquipmentOnTame() {
+        return PetConfigLookup.boolValue(getClass(), "RetainEquipmentOnTame", true);
     }
 }

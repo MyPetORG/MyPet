@@ -170,6 +170,8 @@ public class ConfigurationLoader {
         // PetNaturallyRideable -> RequireRideSkill (true), AllowNonOwnerPrimaryMount (false)
         // PetMultiPassenger    -> AllowNonOwnerSecondaryMount (true)
         // PetSaddleable        -> RequireSaddle (false), AllowNonOwnerSaddle (false)
+        // PetBaby              -> PreventNaturalGrowup (true)
+        // PetEquipment         -> RetainEquipmentOnTame (true)
         //
         // ConfigKey.bool self-registers with ConfigKeyRegistry on each call, and setDefault()
         // re-runs on every reload, so these go through registerFlagIfAbsent — registering a
@@ -195,6 +197,9 @@ public class ConfigurationLoader {
             }
             if (PetBaby.class.isAssignableFrom(petClass)) {
                 registerFlagIfAbsent(name, "PreventNaturalGrowup", true);
+            }
+            if (PetEquipment.class.isAssignableFrom(petClass)) {
+                registerFlagIfAbsent(name, "RetainEquipmentOnTame", true);
             }
         }
 
