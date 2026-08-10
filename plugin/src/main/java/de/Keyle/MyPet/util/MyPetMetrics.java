@@ -25,8 +25,11 @@ import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.repository.PetManager;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
+import de.Keyle.MyPet.api.util.hooks.types.PetModelHook;
+import de.Keyle.MyPet.api.util.hooks.types.PetModelSourceHook;
 import de.Keyle.MyPet.api.util.service.RequiresPlugin;
 import de.Keyle.MyPet.api.util.service.ServiceContainer;
+import de.Keyle.MyPet.entity.model.PetModelService;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
@@ -36,7 +39,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Wires up MyPet's bStats charts so that opt-in servers report aggregate usage telemetry to
@@ -49,8 +55,8 @@ import java.util.Map;
  * telemetry hiccups cannot prevent the plugin from finishing enabling.</p>
  *
  * <p>Submitted charts: active pet count, build identifier, update-checker mode, activated
- * third-party hooks, distribution of pet types, database backend, and distribution of active
- * skills across all live pets.</p>
+ * third-party hooks, distribution of pet types, database backend, distribution of active
+ * skills across all live pets, and custom-model providers in use.</p>
  *
  * <p>Invoked once during plugin enable, after plugin hooks have been activated so the
  * "hooks" chart reports accurate values.</p>
@@ -88,6 +94,7 @@ public final class MyPetMetrics {
             metrics.addCustomChart(new AdvancedPie("pet_types", () -> petTypes(petManager)));
             metrics.addCustomChart(new SimplePie("database_type", MyPetMetrics::databaseType));
             metrics.addCustomChart(new AdvancedPie("active_skills", () -> activeSkills(petManager)));
+            metrics.addCustomChart(new AdvancedPie("custom_model_providers", MyPetMetrics::customModelProviders));
         } catch (Throwable e) {
             errorReporter.sendError(e, "Init Metrics failed");
         }
@@ -126,6 +133,36 @@ public final class MyPetMetrics {
             return "MySQL";
         }
         return null;
+    }
+
+    /**
+     * All model providers (ModelEngine, BetterModel, ItemsAdder, MythicMobs, …) that are both
+     * referenced by a configured {@code Model} block and installed; {@code "None"} otherwise.
+     */
+    private static Map<String, Integer> customModelProviders() {
+        Set<String> configured = new HashSet<>();
+        for (PetModelService.ModelConfig cfg : PetModelService.configs()) {
+            if (cfg.provider() != null) {
+                configured.add(cfg.provider().toLowerCase(Locale.ROOT));
+            }
+        }
+        Map<String, Integer> providers = new HashMap<>();
+        if (!configured.isEmpty()) {
+            for (PetModelHook hook : MyPetApi.getServiceManager().getServices(PetModelHook.class)) {
+                if (configured.contains(hook.getServiceName().toLowerCase(Locale.ROOT))) {
+                    providers.put(hook.getServiceName(), 1);
+                }
+            }
+            for (PetModelSourceHook source : MyPetApi.getServiceManager().getServices(PetModelSourceHook.class)) {
+                if (configured.contains(source.getServiceName().toLowerCase(Locale.ROOT))) {
+                    providers.put(source.getServiceName(), 1);
+                }
+            }
+        }
+        if (providers.isEmpty()) {
+            providers.put("None", 1);
+        }
+        return providers;
     }
 
     private static Map<String, Integer> activeSkills(PetManager petManager) {
