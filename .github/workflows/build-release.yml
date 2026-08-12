@@ -250,6 +250,15 @@ jobs:
           # back a short-lived pre-signed URL, then the jar is PUT to that URL. The jar is
           # deliberately NOT sent here — the metadata call does not accept it.
           #
+          # `message` and `description` carry the same body on purpose. doPostUpdate is
+          # undocumented, and 4.0.1 published with title AND message both stored as null while
+          # the jar landed fine; getResourceUpdates calls the stored field `description`, so
+          # that name is the better candidate. Sending both costs nothing — an unrecognised
+          # form field is ignored — and whichever one the endpoint reads will stick. Verify
+          # after the next release with:
+          #   curl -sS "https://api.voxel.shop/v1/getResourceUpdates?resource_id=<id>&stringify=0"
+          # and check the newest update's title/description are no longer null.
+          #
           # --form-string (not -F) for text fields: a changelog starting with '@' or '<'
           # would otherwise be read as a file path.
           # stringify=0 makes response.success a real boolean instead of a string.
@@ -259,7 +268,8 @@ jobs:
             --form-string "resource_id=${VOXEL_RESOURCE_ID}" \
             --form-string "version=${PROJECT_VERSION}" \
             --form-string "title=MyPet ${PROJECT_VERSION}" \
-            --form-string "message=${CHANGELOG}")
+            --form-string "message=${CHANGELOG}" \
+            --form-string "description=${CHANGELOG}")
 
           if [[ "$STATUS" != 2* ]]; then
             echo "Voxel.Shop upload failed with HTTP $STATUS" >&2
