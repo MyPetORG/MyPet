@@ -130,8 +130,11 @@ jobs:
 
       # No changelog field: the changelog file is BBCode for the BuiltByBit post;
       # the Hub's Discord embed falls back to a plain "Release {version}" description.
-      # 201 = fresh upload; 200 = the Hub already had this build from a previous run
-      # (same version + commit) and re-announced on Discord if the first attempt failed.
+      # 201 = fresh upload. 200 = the Hub already had this build from a previous run (same
+      # version + commit) and re-announced on Discord if the first attempt failed. 409 = the
+      # version exists from a *different* commit, so the Hub stores and announces nothing;
+      # that is reported as a warning rather than failing the job, so the run still reaches
+      # the store steps and the republish inputs can drive them.
       - name: Upload build to MyPet Hub
         id: hubupload
         env:
@@ -180,6 +183,12 @@ jobs:
             201) echo "fresh=true" >> "$GITHUB_OUTPUT" ;;
             200) echo "fresh=false" >> "$GITHUB_OUTPUT"
                  echo "Hub already has ${PROJECT_VERSION} from this commit (retry run)." ;;
+            # Not fatal: a 409 means the Hub won't take this build, but the release itself is
+            # real and the job must still reach the store steps so republish_bbb /
+            # republish_voxel can drive them. Without an explicit flag they stay skipped, so a
+            # 409 can never re-notify BuiltByBit or Voxel.Shop subscribers on its own.
+            409) echo "fresh=false" >> "$GITHUB_OUTPUT"
+                 echo "::warning::Hub already has ${PROJECT_VERSION} from a different commit and rejected this build (409). Nothing was stored and no Discord announcement was sent. Re-dispatch with republish_bbb / republish_voxel if the store posts still need to go out." ;;
             *)   echo "Hub upload failed with HTTP $STATUS" >&2; exit 1 ;;
           esac
 
@@ -246,18 +255,20 @@ jobs:
           : "${VOXEL_RESOURCE_ID:?VOXEL_RESOURCE_ID repository variable is not set}"
           JAR="${{ steps.findjar.outputs.jar }}"
 
-          # --form-string (not -F) for text fields: a changelog starting with '@' or
-          # '<' would otherwise be read as a file path. The jar streams from disk, so
-          # there is no base64/ARG_MAX dance like the BuiltByBit step above needs.
+          # Voxel.Shop publishes in two requests: this POST creates the update row and hands
+          # back a short-lived pre-signed URL, then the jar is PUT to that URL. The jar is
+          # deliberately NOT sent here — the metadata call does not accept it.
+          #
+          # --form-string (not -F) for text fields: a changelog starting with '@' or '<'
+          # would otherwise be read as a file path.
           # stringify=0 makes response.success a real boolean instead of a string.
           STATUS=$(curl -sS -o "$RUNNER_TEMP/voxel-response.json" -w '%{http_code}' \
-            -X POST "https://api.voxel.shop/v1/postUpdate?stringify=0" \
+            -X POST "https://api.voxel.shop/v1/doPostUpdate?stringify=0" \
             --form-string "api_key=${VOXEL_API_TOKEN}" \
             --form-string "resource_id=${VOXEL_RESOURCE_ID}" \
             --form-string "version=${PROJECT_VERSION}" \
             --form-string "title=MyPet ${PROJECT_VERSION}" \
-            --form-string "message=${CHANGELOG}" \
-            -F "file=@${JAR}")
+            --form-string "message=${CHANGELOG}")
 
           if [[ "$STATUS" != 2* ]]; then
             echo "Voxel.Shop upload failed with HTTP $STATUS" >&2
@@ -274,5 +285,42 @@ jobs:
             exit 1
           fi
 
-          jq -r '"Posted Voxel.Shop update #\(.response.update.id) for version \(.response.update.version)"' \
-            "$RUNNER_TEMP/voxel-response.json"
+          # success:true here only means the update row exists — the jar has not been sent yet.
+          UPDATE_ID=$(jq -r '.response.product.update // empty' "$RUNNER_TEMP/voxel-response.json")
+          UPLOAD_URL=$(jq -r '.response.upload.url // empty' "$RUNNER_TEMP/voxel-response.json")
+          MAX_SIZE=$(jq -r '.response.upload.max_size // empty' "$RUNNER_TEMP/voxel-response.json")
+
+          if [[ -z "$UPLOAD_URL" || -z "$UPDATE_ID" ]]; then
+            echo "Voxel.Shop reported success but returned no upload URL or update id:" >&2
+            cat "$RUNNER_TEMP/voxel-response.json" >&2 || true
+            exit 1
+          fi
+
+          # `fields` is null for a pre-signed PUT. A non-null value means Voxel.Shop switched to
+          # a POST-policy form, which this step does not build — fail loudly rather than PUT into
+          # an endpoint expecting multipart and call a silent no-op a success.
+          if jq -e '.response.upload.fields != null' "$RUNNER_TEMP/voxel-response.json" >/dev/null; then
+            echo "Voxel.Shop returned POST-policy upload fields, which this step cannot handle:" >&2
+            jq -r '.response.upload.fields' "$RUNNER_TEMP/voxel-response.json" >&2 || true
+            exit 1
+          fi
+
+          JAR_SIZE=$(wc -c < "$JAR" | tr -d ' ')
+          if [[ -n "$MAX_SIZE" ]] && (( JAR_SIZE > MAX_SIZE )); then
+            echo "Jar is ${JAR_SIZE} bytes, above Voxel.Shop's ${MAX_SIZE} byte limit." >&2
+            exit 1
+          fi
+
+          # Second request: the jar itself, to the pre-signed URL. Only `host` is signed, so
+          # curl's own headers don't invalidate the signature. The URL expires in ~20 minutes.
+          UPLOAD_STATUS=$(curl -sS -o "$RUNNER_TEMP/voxel-upload.txt" -w '%{http_code}' \
+            --upload-file "$JAR" "$UPLOAD_URL")
+          if [[ "$UPLOAD_STATUS" != 2* ]]; then
+            echo "Voxel.Shop jar upload failed with HTTP $UPLOAD_STATUS — update #${UPDATE_ID}" \
+                 "exists but has no file:" >&2
+            cat "$RUNNER_TEMP/voxel-upload.txt" >&2 || true
+            exit 1
+          fi
+
+          echo "Posted Voxel.Shop update #${UPDATE_ID} for version ${PROJECT_VERSION}" \
+               "(${JAR_SIZE} bytes uploaded)"
