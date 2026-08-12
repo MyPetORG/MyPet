@@ -7,6 +7,10 @@ on:
         description: 'Post to BuiltByBit even when the Hub already has this build (use to retry a failed BBB step)'
         type: boolean
         default: false
+      republish_voxel:
+        description: 'Post to Voxel.Shop even when the Hub already has this build (use to retry a failed Voxel.Shop step)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -138,6 +142,28 @@ jobs:
           set -euo pipefail
           JAR="${{ steps.findjar.outputs.jar }}"
           SHA512=$(sha512sum "$JAR" | cut -d' ' -f1)
+
+          # Range anchor for the Discord change list: the nearest *ancestor* release tag.
+          # `git describe` is used rather than a sorted `git tag -l` on purpose — tag creation
+          # dates don't track branch history (3.14.3 was tagged after 4.0.0 and isn't even an
+          # ancestor of v4), so a date sort anchors at the wrong release and lists the entire
+          # branch. This step runs after "Push release tag", so the current version's own tag
+          # already exists and has to be excluded.
+          PREV_RELEASE_TAG=$(git describe --tags --abbrev=0 \
+            --match '[0-9]*.[0-9]*.[0-9]*' \
+            --exclude "$PROJECT_VERSION" --exclude '*-alpha-*' --exclude '*-beta-*' \
+            --exclude '*SNAPSHOT*' HEAD 2>/dev/null || true)
+          if [[ -n "$PREV_RELEASE_TAG" ]]; then
+            RAW_COMMITS=$(git log --pretty='%h%x09%s' "${PREV_RELEASE_TAG}..${GITHUB_SHA}")
+            # grep exits 1 when every commit is filtered out — an empty list is valid, and the
+            # Hub falls back to the plain "MyPet <version>" embed when commits is empty.
+            COMMITS=$(grep -viE '\[(skip ci|ci skip|no ci|skip actions|actions skip)\]' \
+              <<< "$RAW_COMMITS" || true)
+          else
+            COMMITS=""
+          fi
+          echo "Change list anchored at: ${PREV_RELEASE_TAG:-<none>} ($(grep -c '' <<< "$COMMITS") commits)"
+
           STATUS=$(curl -sS -o "$RUNNER_TEMP/hub-response.json" -w '%{http_code}' \
             -X POST "${HUB_URL}/api/v1/builds" \
             -H "Authorization: Bearer ${HUB_UPLOAD_SECRET}" \
@@ -145,6 +171,7 @@ jobs:
             --form-string "version=${PROJECT_VERSION}" \
             --form-string "channel=release" \
             --form-string "commit=${GITHUB_SHA}" \
+            --form-string "commits=${COMMITS}" \
             --form-string "commitUrl=${{ github.server_url }}/${{ github.repository }}/commit/${GITHUB_SHA}" \
             --form-string "sha512=${SHA512}" \
             --form-string "mcVersions=1.20.5-26.2")
@@ -198,3 +225,54 @@ jobs:
             --data @"$RUNNER_TEMP/bbb-payload.json"
 
           rm -f "$RUNNER_TEMP/jar.b64" "$RUNNER_TEMP/bbb-payload.json"
+
+      # Skipped on retry runs (Hub already had the build) so a re-run can't double-post
+      # the Voxel.Shop update; dispatch with republish_voxel=true to retry a failed post.
+      # Voxel.Shop signals rejection (duplicate version, missing "Post Updates"
+      # permission) with HTTP 200 and response.success=false, so the body must be
+      # parsed — under continue-on-error a status-only check would render a
+      # non-publish as a green step.
+      - name: Publish version to Voxel.Shop
+        if: steps.hubupload.outputs.fresh == 'true' || inputs.republish_voxel
+        continue-on-error: true
+        env:
+          VOXEL_API_TOKEN: ${{ secrets.VOXEL_API_TOKEN }}
+          VOXEL_RESOURCE_ID: ${{ vars.VOXEL_RESOURCE_ID }}
+          CHANGELOG: ${{ steps.changelog.outputs.content }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          : "${VOXEL_API_TOKEN:?VOXEL_API_TOKEN secret is not set}"
+          : "${VOXEL_RESOURCE_ID:?VOXEL_RESOURCE_ID repository variable is not set}"
+          JAR="${{ steps.findjar.outputs.jar }}"
+
+          # --form-string (not -F) for text fields: a changelog starting with '@' or
+          # '<' would otherwise be read as a file path. The jar streams from disk, so
+          # there is no base64/ARG_MAX dance like the BuiltByBit step above needs.
+          # stringify=0 makes response.success a real boolean instead of a string.
+          STATUS=$(curl -sS -o "$RUNNER_TEMP/voxel-response.json" -w '%{http_code}' \
+            -X POST "https://api.voxel.shop/v1/postUpdate?stringify=0" \
+            --form-string "api_key=${VOXEL_API_TOKEN}" \
+            --form-string "resource_id=${VOXEL_RESOURCE_ID}" \
+            --form-string "version=${PROJECT_VERSION}" \
+            --form-string "title=MyPet ${PROJECT_VERSION}" \
+            --form-string "message=${CHANGELOG}" \
+            -F "file=@${JAR}")
+
+          if [[ "$STATUS" != 2* ]]; then
+            echo "Voxel.Shop upload failed with HTTP $STATUS" >&2
+            cat "$RUNNER_TEMP/voxel-response.json" >&2 || true
+            exit 1
+          fi
+
+          if ! jq -e '.response.success == true' "$RUNNER_TEMP/voxel-response.json" >/dev/null; then
+            echo "Voxel.Shop rejected the update:" >&2
+            jq -r '.response.errors
+                   | if type == "object" then to_entries[] | "  \(.key): \(.value)"
+                     elif type == "array" then .[]
+                     else . end' "$RUNNER_TEMP/voxel-response.json" >&2 || true
+            exit 1
+          fi
+
+          jq -r '"Posted Voxel.Shop update #\(.response.update.id) for version \(.response.update.version)"' \
+            "$RUNNER_TEMP/voxel-response.json"
