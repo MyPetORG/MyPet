@@ -128,74 +128,40 @@ jobs:
           git tag "$PROJECT_VERSION" "$GITHUB_SHA"
           git push origin "refs/tags/$PROJECT_VERSION"
 
-      # No changelog field: the changelog file is BBCode for the BuiltByBit post;
-      # the Hub's Discord embed falls back to a plain "Release {version}" description.
-      # 201 = fresh upload. 200 = the Hub already had this build from a previous run (same
-      # version + commit) and re-announced on Discord if the first attempt failed. 409 = the
-      # version exists from a *different* commit, so the Hub stores and announces nothing;
-      # that is reported as a warning rather than failing the job, so the run still reaches
-      # the store steps and the republish inputs can drive them.
-      - name: Upload build to MyPet Hub
-        id: hubupload
+      # The store steps used to gate on the Hub upload's `fresh` output, but the upload now runs
+      # last so it can carry the store update ids. This read-only check replaces that signal.
+      # A Hub that cannot be reached fails the job rather than defaulting either way: guessing
+      # "new" risks re-notifying every subscriber, guessing "published" silently skips the
+      # release.
+      - name: Check MyPet Hub for this version
+        id: hubcheck
         env:
           HUB_URL: ${{ secrets.HUB_URL }}
-          HUB_UPLOAD_SECRET: ${{ secrets.HUB_UPLOAD_SECRET }}
         shell: bash
         run: |
           set -euo pipefail
-          JAR="${{ steps.findjar.outputs.jar }}"
-          SHA512=$(sha512sum "$JAR" | cut -d' ' -f1)
-
-          # Range anchor for the Discord change list: the nearest *ancestor* release tag.
-          # `git describe` is used rather than a sorted `git tag -l` on purpose — tag creation
-          # dates don't track branch history (3.14.3 was tagged after 4.0.0 and isn't even an
-          # ancestor of v4), so a date sort anchors at the wrong release and lists the entire
-          # branch. This step runs after "Push release tag", so the current version's own tag
-          # already exists and has to be excluded.
-          PREV_RELEASE_TAG=$(git describe --tags --abbrev=0 \
-            --match '[0-9]*.[0-9]*.[0-9]*' \
-            --exclude "$PROJECT_VERSION" --exclude '*-alpha-*' --exclude '*-beta-*' \
-            --exclude '*SNAPSHOT*' HEAD 2>/dev/null || true)
-          if [[ -n "$PREV_RELEASE_TAG" ]]; then
-            RAW_COMMITS=$(git log --pretty='%h%x09%s' "${PREV_RELEASE_TAG}..${GITHUB_SHA}")
-            # grep exits 1 when every commit is filtered out — an empty list is valid, and the
-            # Hub falls back to the plain "MyPet <version>" embed when commits is empty.
-            COMMITS=$(grep -viE '\[(skip ci|ci skip|no ci|skip actions|actions skip)\]' \
-              <<< "$RAW_COMMITS" || true)
-          else
-            COMMITS=""
+          STATUS=$(curl -sS -o "$RUNNER_TEMP/hub-versions.json" -w '%{http_code}' \
+            "${HUB_URL}/api/v1/versions?channel=release")
+          if [[ "$STATUS" != 2* ]]; then
+            echo "Could not query the Hub for existing versions (HTTP $STATUS)" >&2
+            cat "$RUNNER_TEMP/hub-versions.json" >&2 || true
+            exit 1
           fi
-          echo "Change list anchored at: ${PREV_RELEASE_TAG:-<none>} ($(grep -c '' <<< "$COMMITS") commits)"
+          if jq -e --arg v "$PROJECT_VERSION" \
+              '.versions[]? | select(.version == $v)' \
+              "$RUNNER_TEMP/hub-versions.json" >/dev/null; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "Hub already lists ${PROJECT_VERSION}; a store post needs an explicit republish input."
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "Hub has no ${PROJECT_VERSION} yet."
+          fi
 
-          STATUS=$(curl -sS -o "$RUNNER_TEMP/hub-response.json" -w '%{http_code}' \
-            -X POST "${HUB_URL}/api/v1/builds" \
-            -H "Authorization: Bearer ${HUB_UPLOAD_SECRET}" \
-            -F "jar=@${JAR}" \
-            --form-string "version=${PROJECT_VERSION}" \
-            --form-string "channel=release" \
-            --form-string "commit=${GITHUB_SHA}" \
-            --form-string "commits=${COMMITS}" \
-            --form-string "commitUrl=${{ github.server_url }}/${{ github.repository }}/commit/${GITHUB_SHA}" \
-            --form-string "sha512=${SHA512}" \
-            --form-string "mcVersions=1.20.5-26.2")
-          cat "$RUNNER_TEMP/hub-response.json"; echo
-          case "$STATUS" in
-            201) echo "fresh=true" >> "$GITHUB_OUTPUT" ;;
-            200) echo "fresh=false" >> "$GITHUB_OUTPUT"
-                 echo "Hub already has ${PROJECT_VERSION} from this commit (retry run)." ;;
-            # Not fatal: a 409 means the Hub won't take this build, but the release itself is
-            # real and the job must still reach the store steps so republish_bbb /
-            # republish_voxel can drive them. Without an explicit flag they stay skipped, so a
-            # 409 can never re-notify BuiltByBit or Voxel.Shop subscribers on its own.
-            409) echo "fresh=false" >> "$GITHUB_OUTPUT"
-                 echo "::warning::Hub already has ${PROJECT_VERSION} from a different commit and rejected this build (409). Nothing was stored and no Discord announcement was sent. Re-dispatch with republish_bbb / republish_voxel if the store posts still need to go out." ;;
-            *)   echo "Hub upload failed with HTTP $STATUS" >&2; exit 1 ;;
-          esac
-
-      # Skipped on retry runs (Hub already had the build) so a re-run can't double-post
-      # the BBB update; dispatch with republish_bbb=true to retry a failed BBB post.
+      # Skipped when the Hub already lists this version, so a re-run can't double-post the BBB
+      # update; dispatch with republish_bbb=true to retry a failed BBB post.
       - name: Publish version to BuiltByBit
-        if: steps.hubupload.outputs.fresh == 'true' || inputs.republish_bbb
+        id: bbb
+        if: steps.hubcheck.outputs.published == 'false' || inputs.republish_bbb
         continue-on-error: true
         env:
           BBB_API_TOKEN: ${{ secrets.BBB_API_TOKEN }}
@@ -228,21 +194,46 @@ jobs:
 
           # Auth header form ("Token <...>") follows the only known working
           # client of this endpoint; verify against the response on first use.
-          curl -fsS -X POST "https://api.builtbybit.com/v2/resources/creator/update" \
+          HTTP=$(curl -sS -o "$RUNNER_TEMP/bbb-response.json" -w '%{http_code}' \
+            -X POST "https://api.builtbybit.com/v2/resources/creator/update" \
             -H "Authorization: Token ${BBB_API_TOKEN}" \
             -H "Content-Type: application/json" \
-            --data @"$RUNNER_TEMP/bbb-payload.json"
+            --data @"$RUNNER_TEMP/bbb-payload.json")
+          echo "BuiltByBit responded HTTP ${HTTP}:"
+          cat "$RUNNER_TEMP/bbb-response.json"; echo
+
+          if [[ "$HTTP" != 2* ]]; then
+            echo "BuiltByBit update failed with HTTP $HTTP" >&2
+            rm -f "$RUNNER_TEMP/jar.b64" "$RUNNER_TEMP/bbb-payload.json"
+            exit 1
+          fi
+
+          # The update id is only needed to deep-link the Discord button, and BuiltByBit's
+          # response shape is undocumented — the body is echoed above so the first real run
+          # reveals it. Guessing wrong here costs a link, not a release: an empty id makes the
+          # Hub fall back to the plain resource page.
+          BBB_UPDATE_ID=$(jq -r '[.. | objects
+                                   | (.update_id? // .updateId? // empty)] | first // empty' \
+            "$RUNNER_TEMP/bbb-response.json" 2>/dev/null || true)
+          if [[ -z "$BBB_UPDATE_ID" ]]; then
+            echo "::warning::Could not find an update id in the BuiltByBit response;" \
+                 "the Discord button will link to the resource page instead."
+          else
+            echo "BuiltByBit update id: ${BBB_UPDATE_ID}"
+          fi
+          echo "update_id=${BBB_UPDATE_ID}" >> "$GITHUB_OUTPUT"
 
           rm -f "$RUNNER_TEMP/jar.b64" "$RUNNER_TEMP/bbb-payload.json"
 
-      # Skipped on retry runs (Hub already had the build) so a re-run can't double-post
-      # the Voxel.Shop update; dispatch with republish_voxel=true to retry a failed post.
+      # Skipped when the Hub already lists this version, so a re-run can't double-post the
+      # Voxel.Shop update; dispatch with republish_voxel=true to retry a failed post.
       # Voxel.Shop signals rejection (duplicate version, missing "Post Updates"
       # permission) with HTTP 200 and response.success=false, so the body must be
       # parsed — under continue-on-error a status-only check would render a
       # non-publish as a green step.
       - name: Publish version to Voxel.Shop
-        if: steps.hubupload.outputs.fresh == 'true' || inputs.republish_voxel
+        id: voxel
+        if: steps.hubcheck.outputs.published == 'false' || inputs.republish_voxel
         continue-on-error: true
         env:
           VOXEL_API_TOKEN: ${{ secrets.VOXEL_API_TOKEN }}
@@ -322,5 +313,72 @@ jobs:
             exit 1
           fi
 
+          echo "update_id=${UPDATE_ID}" >> "$GITHUB_OUTPUT"
           echo "Posted Voxel.Shop update #${UPDATE_ID} for version ${PROJECT_VERSION}" \
                "(${JAR_SIZE} bytes uploaded)"
+
+      # No changelog field: the changelog file is BBCode for the BuiltByBit post;
+      # the Hub's Discord embed falls back to a plain "Release {version}" description.
+      # 201 = fresh upload. 200 = the Hub already had this build from a previous run (same
+      # version + commit) and re-announced on Discord if the first attempt failed. 409 = the
+      # version exists from a *different* commit, so the Hub stores and announces nothing;
+      # that is reported as a warning rather than failing the job, so the run still reaches
+      # the store steps and the republish inputs can drive them.
+      - name: Upload build to MyPet Hub
+        id: hubupload
+        env:
+          HUB_URL: ${{ secrets.HUB_URL }}
+          HUB_UPLOAD_SECRET: ${{ secrets.HUB_UPLOAD_SECRET }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          JAR="${{ steps.findjar.outputs.jar }}"
+          SHA512=$(sha512sum "$JAR" | cut -d' ' -f1)
+
+          # Range anchor for the Discord change list: the nearest *ancestor* release tag.
+          # `git describe` is used rather than a sorted `git tag -l` on purpose — tag creation
+          # dates don't track branch history (3.14.3 was tagged after 4.0.0 and isn't even an
+          # ancestor of v4), so a date sort anchors at the wrong release and lists the entire
+          # branch. This step runs after "Push release tag", so the current version's own tag
+          # already exists and has to be excluded.
+          PREV_RELEASE_TAG=$(git describe --tags --abbrev=0 \
+            --match '[0-9]*.[0-9]*.[0-9]*' \
+            --exclude "$PROJECT_VERSION" --exclude '*-alpha-*' --exclude '*-beta-*' \
+            --exclude '*SNAPSHOT*' HEAD 2>/dev/null || true)
+          if [[ -n "$PREV_RELEASE_TAG" ]]; then
+            RAW_COMMITS=$(git log --pretty='%h%x09%s' "${PREV_RELEASE_TAG}..${GITHUB_SHA}")
+            # grep exits 1 when every commit is filtered out — an empty list is valid, and the
+            # Hub falls back to the plain "MyPet <version>" embed when commits is empty.
+            COMMITS=$(grep -viE '\[(skip ci|ci skip|no ci|skip actions|actions skip)\]' \
+              <<< "$RAW_COMMITS" || true)
+          else
+            COMMITS=""
+          fi
+          echo "Change list anchored at: ${PREV_RELEASE_TAG:-<none>} ($(grep -c '' <<< "$COMMITS") commits)"
+
+          STATUS=$(curl -sS -o "$RUNNER_TEMP/hub-response.json" -w '%{http_code}' \
+            -X POST "${HUB_URL}/api/v1/builds" \
+            -H "Authorization: Bearer ${HUB_UPLOAD_SECRET}" \
+            -F "jar=@${JAR}" \
+            --form-string "version=${PROJECT_VERSION}" \
+            --form-string "channel=release" \
+            --form-string "commit=${GITHUB_SHA}" \
+            --form-string "commits=${COMMITS}" \
+            --form-string "bbbUpdateId=${{ steps.bbb.outputs.update_id }}" \
+            --form-string "voxelUpdateId=${{ steps.voxel.outputs.update_id }}" \
+            --form-string "commitUrl=${{ github.server_url }}/${{ github.repository }}/commit/${GITHUB_SHA}" \
+            --form-string "sha512=${SHA512}" \
+            --form-string "mcVersions=1.20.5-26.2")
+          cat "$RUNNER_TEMP/hub-response.json"; echo
+          case "$STATUS" in
+            201) echo "fresh=true" >> "$GITHUB_OUTPUT" ;;
+            200) echo "fresh=false" >> "$GITHUB_OUTPUT"
+                 echo "Hub already has ${PROJECT_VERSION} from this commit (retry run)." ;;
+            # Not fatal: a 409 means the Hub won't take this build, but the release itself is
+            # real and the job must still reach the store steps so republish_bbb /
+            # republish_voxel can drive them. Without an explicit flag they stay skipped, so a
+            # 409 can never re-notify BuiltByBit or Voxel.Shop subscribers on its own.
+            409) echo "fresh=false" >> "$GITHUB_OUTPUT"
+                 echo "::warning::Hub already has ${PROJECT_VERSION} from a different commit and rejected this build (409). Nothing was stored and no Discord announcement was sent. Re-dispatch with republish_bbb / republish_voxel if the store posts still need to go out." ;;
+            *)   echo "Hub upload failed with HTTP $STATUS" >&2; exit 1 ;;
+          esac
