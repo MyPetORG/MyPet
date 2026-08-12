@@ -1,0 +1,60 @@
+MyPet 4.0.1 is the first patch release for MyPet 4, and it's a big one for stability. Folia servers get two significant fixes, custom-model Pets no longer clone each other's identity, and upgrading from MyPet 3 on an offline-mode server no longer loses your players and their Pets.
+
+[B]MyPet 4.0.1 supports Minecraft 1.20.5 through 26.2[/B], unchanged from 4.0.0. Upgrading is a drop-in jar swap - your configs are migrated automatically on first startup. Take a backup first anyway.
+
+If MyPet is useful to you or your players, please consider buying me a coffee: https://ko-fi.com/UserDerezzed
+
+[HEADING=2]Pets keep their gear[/HEADING]
+
+Tamed mobs now keep the armor and weapons they were wearing when you tamed them, controlled by a new per-pet-type [ICODE]RetainEquipmentOnTame[/ICODE] flag in [ICODE]pet-config.yml[/ICODE]. It defaults to [B]true[/B] and is only registered for pet types that can actually wear equipment.
+
+This replaces the old global [ICODE]MyPet.RetainEquipmentOnTame[/ICODE] setting in [ICODE]config.yml[/ICODE], which no longer does anything. [B]You don't need to do anything[/B] - if you had set that global option, it's automatically copied onto every equipment-capable pet type the first time 4.0.1 starts.
+
+Equipment now also drops correctly when a Pet dies with [ICODE]ReleaseOnDeath[/ICODE] enabled. Previously the drop was attempted but an internal check could never pass for an already-dead Pet, so the gear was silently lost.
+
+[HEADING=2]Folia fixes[/HEADING]
+
+Two Folia problems are resolved. Pets no longer lose their saved appearance and equipment when respawning far from where they were dismissed, and Folia servers no longer log an error on every single Pet spawn - scoreboard teams aren't supported there, so Pets stay pushable and MyPet now notes this once at startup instead of erroring repeatedly.
+
+[HEADING=3]Full changelog:[/HEADING]
+
+[B]Added[/B]
+
+[LIST]
+[*]Added per-pet-type [ICODE]RetainEquipmentOnTame[/ICODE] to [ICODE]pet-config.yml[/ICODE] (default [ICODE]true[/ICODE]), so tamed mobs keep the armor and weapons they were wearing; registered only for pet types that can wear equipment
+[/LIST]
+
+[B]Changed[/B]
+
+[LIST]
+[*]Voxel.Shop copies now check for new releases and say so in the console
+[*]Voxel.Shop copies now auto-download release updates
+[*]Voxel.Shop copies can now open web editor sessions
+[*]Discord-stamped copies now auto-download release updates
+[*]Discord-stamped dev builds now auto-download newly shipped releases
+[*]Auto-updated copies now keep their update and editor access
+[*]Improved contributor icons to keep working after a player name change
+[*]Stopped substituting a plain mob when a custom-creature Pet can't be spawned - the Pet is no longer silently replaced by the wrong entity
+[/LIST]
+
+[B]Fixed[/B]
+
+[LIST]
+[*]Fixed offline-mode servers losing every player and Pet when upgrading from MyPet 3
+[*]Fixed Pets losing their saved appearance and equipment on Folia servers when respawning far from where they were dismissed
+[*]Fixed Folia servers logging errors on every Pet spawn (scoreboard teams are unsupported there - Pets stay pushable, and this is now noted once at startup)
+[*]Fixed every custom-creature Pet after the first showing the first one's model and identity
+[*]Fixed Pets not dropping their equipment on death when [ICODE]ReleaseOnDeath[/ICODE] is enabled
+[*]Fixed releasing a Pet not respecting region protection
+[*]Fixed a failed release corrupting the Pet
+[*]Fixed Ranged projectiles not despawning if they didn't hit an entity (they now despawn after 5 seconds)
+[*]Fixed auto-updates stopping after the first update on BuiltByBit copies
+[/LIST]
+
+[B]Removed[/B]
+
+[LIST]
+[*]Removed the global [ICODE]MyPet.RetainEquipmentOnTame[/ICODE] setting from [ICODE]config.yml[/ICODE] - it is migrated automatically onto the per-pet-type flags on first startup, and the old key no longer has any effect
+[/LIST]
+
+Thanks for choosing MyPet!
