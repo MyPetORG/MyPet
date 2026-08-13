@@ -12,6 +12,8 @@
 
 > [!WARNING]
 > **MyPet 3.x has reached end of life** and no longer receives substantive updates. Please migrate to [MyPet v4](https://builtbybit.com/resources/mypet-4.115339/).
+> 
+> **For developers (MyPet API):** [Migrating from v3.x](https://wiki.mypet-plugin.de/developer-guide/migrating-from-v3)
 
 ## MyPet - The extensive pet plugin
 MyPet is a highly customizable pet plugin with a lot of features.<br />
