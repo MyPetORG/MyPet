@@ -56,7 +56,6 @@ import de.Keyle.MyPet.util.hooks.ResidenceHook;
 import de.Keyle.MyPet.util.hooks.SimpleClansHook;
 import de.Keyle.MyPet.util.hooks.StackMobHook;
 import de.Keyle.MyPet.util.hooks.SuperVanishHook;
-import de.Keyle.MyPet.util.hooks.SurvivalGamesHook;
 import de.Keyle.MyPet.util.hooks.TownyHook;
 import de.Keyle.MyPet.util.hooks.VaultHook;
 import de.Keyle.MyPet.util.hooks.WorldGuardHook;
@@ -118,7 +117,6 @@ public final class BuiltInServices {
             SimpleClansHook.class,
             StackMobHook.class,
             SuperVanishHook.class,
-            SurvivalGamesHook.class,
             TownyHook.class,
             VaultHook.class,
             WorldGuardHook.class
