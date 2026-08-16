@@ -88,7 +88,6 @@ dependencies {
     compileOnly("com.herocraftonline.heroes:Heroes:1.10.7-RELEASE")
     compileOnly("me.clip:placeholderapi:2.12.2")
     compileOnly("com.github.LeonMangler:SuperVanish:6.2.18-3")
-    compileOnly("com.kirelcodes.miniaturepets:miniaturepets-api:1.5.4")
     compileOnly("com.ticxo.modelengine:ModelEngine:R4.0.4")
     // BetterModel is driven via reflection (its 3.x API is Java-25 bytecode, uncompilable on this
     // Java-21 build) — no compileOnly dependency. See BetterModelHook. Runtime support is Java-25 servers only.

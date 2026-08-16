@@ -20,7 +20,6 @@ softdepend:
   - Kingdoms
   - Lands
   - mcMMO
-  - MiniaturePets
   - MobArena
   - ModelEngine
   - Multiverse-Core
@@ -31,7 +30,6 @@ softdepend:
   - PlotSquared
   - PremiumVanish
   - ProtocolLib
-  - pvparena
   - PvPManager
   - RedProtect
   - Residence

@@ -41,7 +41,6 @@ import de.Keyle.MyPet.util.hooks.LandsHook;
 import de.Keyle.MyPet.util.hooks.McMMOHook;
 import de.Keyle.MyPet.util.hooks.BetterModelHook;
 import de.Keyle.MyPet.util.hooks.ItemsAdderHook;
-import de.Keyle.MyPet.util.hooks.MiniaturePetsHook;
 import de.Keyle.MyPet.util.hooks.MobArenaHook;
 import de.Keyle.MyPet.util.hooks.ModelEngineHook;
 import de.Keyle.MyPet.util.hooks.MythicMobsHook;
@@ -100,7 +99,6 @@ public final class BuiltInServices {
             KingdomsXHook.class,
             LandsHook.class,
             McMMOHook.class,
-            MiniaturePetsHook.class,
             MobArenaHook.class,
             ModelEngineHook.class,
             BetterModelHook.class,
