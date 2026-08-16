@@ -1150,7 +1150,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
         }
         if (respawnTime <= 0) {
             respawnPet();
-        } else if (MyPetApi.getServiceManager().isServiceActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime <= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.user.respawn")) {
+        } else if (MyPetApi.getServiceManager().isServiceActive(VaultHook.class) && getOwner().hasAutoRespawnEnabled() && respawnTime <= getOwner().getAutoRespawnMin() && Permissions.has(getOwner().getPlayer(), "MyPet.command.respawn")) {
             double cost = respawnTime * MyPetGlobal.Respawn.COSTS_FACTOR.get() + MyPetGlobal.Respawn.COSTS_FIXED.get();
             VaultHook vaultHook = MyPetApi.getServiceManager().getService(VaultHook.class).orElseThrow();
             if (vaultHook.canPay(getOwner().getPlayer(), cost)) {
