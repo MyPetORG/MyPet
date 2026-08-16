@@ -50,7 +50,6 @@ import de.Keyle.MyPet.util.hooks.PlaceholderApiHook;
 import de.Keyle.MyPet.util.hooks.PlotSquaredHook;
 import de.Keyle.MyPet.util.hooks.PremiumVanishHook;
 import de.Keyle.MyPet.util.hooks.ProtocolLibSoundHook;
-import de.Keyle.MyPet.util.hooks.PvPArenaHook;
 import de.Keyle.MyPet.util.hooks.PvPManagerHook;
 import de.Keyle.MyPet.util.hooks.RedProtectHook;
 import de.Keyle.MyPet.util.hooks.ResidenceHook;
@@ -113,7 +112,6 @@ public final class BuiltInServices {
             PlotSquaredHook.class,
             PremiumVanishHook.class,
             ProtocolLibSoundHook.class,
-            PvPArenaHook.class,
             PvPManagerHook.class,
             RedProtectHook.class,
             ResidenceHook.class,

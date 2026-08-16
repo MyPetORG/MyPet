@@ -69,7 +69,6 @@ dependencies {
     // (the jar is only in shadowRuntimeElements); artifact-only notation fetches the jar directly.
     compileOnly("com.github.garbagemule:MobArena:0.109@jar")
     compileOnly("org.battleplugins:arena:4.0.3-SNAPSHOT")
-    compileOnly("net.slipcor:pvparena:1.3.4.298")
     compileOnly("org.mcsg:survivalgames:0.6.7")
     compileOnly("com.github.Zrips:Residence:6.0.0.1") {
         isTransitive = false // don't drag in org.dynmap:dynmap-api (no public host)
