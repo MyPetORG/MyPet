@@ -287,7 +287,11 @@ public abstract class AbstractGatheringSkill extends AbstractSkill implements Sc
         mob.lookAt(target);
         long[] waited = {0};
         approachTask = mob.getScheduler().runAtFixedRate(MyPetApi.getPlugin(), task -> {
-            if (mob.isDead() || !mob.isValid() || pet.getStatus() != PetState.Here) {
+            // The entity scheduler follows the mob across worlds (the follow goal snap-teleports the
+            // pet to an owner who changed world), but `target` stays behind — and distanceSquared
+            // throws on a cross-world compare. An unreachable target is a dead chore: drop the focus.
+            if (mob.isDead() || !mob.isValid() || pet.getStatus() != PetState.Here
+                    || !mob.getWorld().equals(target.getWorld())) {
                 approachTask = null;
                 task.cancel();
                 releaseFocus();
@@ -731,7 +735,10 @@ public abstract class AbstractGatheringSkill extends AbstractSkill implements Sc
             // Hop onto each player's region thread before reading their location / sending the
             // packet — on Folia the crack task runs on the mob's region, not the player's.
             player.getScheduler().run(MyPetApi.getPlugin(), task -> {
-                if (player.getLocation().distanceSquared(loc) <= CRACK_VIEW_DISTANCE_SQUARED) {
+                // Re-check the world here, not at enumeration time: the player can leave loc's world
+                // between the two, and distanceSquared throws on a cross-world compare.
+                if (player.getWorld().equals(loc.getWorld())
+                        && player.getLocation().distanceSquared(loc) <= CRACK_VIEW_DISTANCE_SQUARED) {
                     player.sendBlockDamage(loc, progress, breakerId);
                 }
             }, null);
