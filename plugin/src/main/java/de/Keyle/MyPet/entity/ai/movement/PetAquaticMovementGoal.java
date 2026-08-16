@@ -47,8 +47,24 @@ import java.util.EnumSet;
  *   <li>Applying gentle sinking when idle in water</li>
  * </ul>
  *
- * <p>On land, this goal does nothing — the default MoveControl handles everything.
- * Uses {@code GoalType.UNKNOWN_BEHAVIOR} so it doesn't conflict with MOVE goals.
+ * <p>On land it drives the pet horizontally toward its owner, because a stranded
+ * water-breather has no movement of its own: vanilla's
+ * {@code WaterBoundPathNavigation#canUpdatePath} returns
+ * {@code allowBreaching || mob.isInLiquid()}, so a dry fish never follows its path,
+ * and {@code AbstractFish.FishMoveControl} then falls into its {@code else} branch and
+ * calls {@code setSpeed(0)} — which, via {@code Mob#setSpeed} → {@code setZza}, zeroes
+ * the forward input {@code LivingEntity#travelInAir} would have used. The only force
+ * left acting on it is the random flop impulse in {@code AbstractFish#aiStep}, so the
+ * pet hops in place until the follow goal gives up and teleports it.
+ *
+ * <p>The Y component is deliberately left untouched on land: goals tick inside
+ * {@code serverAiStep()}, which runs after that flop impulse and before
+ * {@code travel()}, so preserving Y keeps the vanilla flop hop (and the flop sound)
+ * intact while replacing its random horizontal nudge with a heading toward the owner.
+ * The hop also doubles as the pet's only way over a block — {@code FishMoveControl}
+ * has no jump branch.
+ *
+ * <p>Uses {@code GoalType.UNKNOWN_BEHAVIOR} so it doesn't conflict with MOVE goals.
  */
 public class PetAquaticMovementGoal implements Goal<Mob> {
 
@@ -56,6 +72,25 @@ public class PetAquaticMovementGoal implements Goal<Mob> {
     private static final double Y_FORCE_MULTIPLIER = 0.15D;
     private static final double MIN_Y_FORCE = 0.03D;
     private static final double RAD_TO_DEG = 57.2957763671875D;
+
+    /**
+     * Horizontal distance (blocks) at which the land push stops. Matches
+     * {@code PetFollowOwnerGoal.STATIONARY_MAX_DIST_SQ} (9.0 = 3 blocks) so the pet
+     * settles where the follow goal would rather than jittering against it.
+     */
+    private static final double LAND_STOP_DISTANCE = 3.0D;
+
+    /** Base horizontal speed (blocks/tick) of the land push, before distance scaling. */
+    private static final double LAND_BASE_SPEED = 0.10D;
+
+    /**
+     * Cap for the land push. A sprinting player covers ~0.13 blocks/tick, so this
+     * leaves enough headroom to close a gap without outrunning the owner.
+     */
+    private static final double LAND_MAX_SPEED = 0.22D;
+
+    /** Added to {@link #LAND_BASE_SPEED} per block of distance to the owner. */
+    private static final double LAND_SPEED_PER_BLOCK = 0.01D;
 
     private final Pet pet;
     private final Mob mob;
@@ -81,7 +116,8 @@ public class PetAquaticMovementGoal implements Goal<Mob> {
             return;
         }
         if (!isInWaterOrBubble()) {
-            return; // On land: default MoveControl handles everything
+            tickOnLand();
+            return;
         }
 
         Player owner = pet.getOwner().getPlayer();
@@ -134,6 +170,50 @@ public class PetAquaticMovementGoal implements Goal<Mob> {
             Vector vel = mob.getVelocity();
             mob.setVelocity(new Vector(vel.getX(), IDLE_SINK_VELOCITY, vel.getZ()));
         }
+    }
+
+    /**
+     * Pushes a stranded pet horizontally toward its owner, leaving the Y component —
+     * and therefore the vanilla flop hop — alone. Re-applied every tick because ground
+     * friction ({@code blockFriction * 0.91}, ~0.55 on most blocks) bleeds most of the
+     * horizontal velocity away between ticks.
+     */
+    private void tickOnLand() {
+        if (!pet.canMove()) {
+            return; // sitting, or otherwise pinned — don't drag it around
+        }
+        if (!mob.isEmpty()) {
+            return; // a rider steers it; setting velocity here would fight them
+        }
+        if (pet.getPetTarget() != null && !pet.getPetTarget().isDead()) {
+            return; // target goals own the movement while there's something to fight
+        }
+        if (pet.getOwner() == null) return;
+        Player owner = pet.getOwner().getPlayer();
+        if (owner == null) return;
+
+        Location petLoc = mob.getLocation();
+        Location ownerLoc = owner.getLocation();
+        // An owner who changed world is recovered by PlayerListener re-creating the pet
+        // there; measuring distance across worlds would throw. Same guard as
+        // PetFollowOwnerGoal.
+        if (!petLoc.getWorld().equals(ownerLoc.getWorld())) return;
+
+        double dx = ownerLoc.getX() - petLoc.getX();
+        double dz = ownerLoc.getZ() - petLoc.getZ();
+        double horizontalDist = Math.sqrt(dx * dx + dz * dz);
+        if (horizontalDist < LAND_STOP_DISTANCE) {
+            return; // close enough — let it flop in place
+        }
+
+        double speed = Math.min(LAND_MAX_SPEED, LAND_BASE_SPEED + horizontalDist * LAND_SPEED_PER_BLOCK);
+        Vector vel = mob.getVelocity();
+        mob.setVelocity(new Vector(dx / horizontalDist * speed, vel.getY(), dz / horizontalDist * speed));
+
+        float targetYaw = (float) (Math.atan2(dz, dx) * RAD_TO_DEG) - 90.0F;
+        float newYaw = rotlerp(petLoc.getYaw(), targetYaw, 90.0F);
+        mob.setRotation(newYaw, petLoc.getPitch());
+        mob.setBodyYaw(newYaw);
     }
 
     private boolean isInWaterOrBubble() {

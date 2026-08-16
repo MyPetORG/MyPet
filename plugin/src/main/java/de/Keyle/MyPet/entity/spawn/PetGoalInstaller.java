@@ -25,12 +25,14 @@ import com.destroystokyo.paper.entity.ai.MobGoals;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemovalRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetSwimmingEntity;
 import de.Keyle.MyPet.api.goal.PetGoalRetentionRegistry;
 import de.Keyle.MyPet.entity.ai.BrainAccess;
 import de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
+import de.Keyle.MyPet.entity.ai.movement.PetAquaticMovementGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetClimbGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetFlyingMovementGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetControlGoal;
@@ -84,6 +86,16 @@ public final class PetGoalInstaller {
         } else {
             flyingMovementGoal = new PetFlyingMovementGoal(pet, mob, 90.0f);
             goals.addGoal(mob, 0, flyingMovementGoal);
+        }
+        // Water-breathers only (PetAquaticEntity, not the amphibious siblings): their
+        // vanilla navigation is water-bound, so out of water they have no movement input
+        // at all and just flop. Amphibious pets (axolotl, frog, turtle, drowned) walk on
+        // land under their own pathfinding and must not be pushed around by velocity.
+        // Gated on `swimming` for the same reason Control/Melee below are: with CanSwim
+        // off the pet is treated as a ground pet everywhere, and the velocity push would
+        // fight the pathfinder-driven goals it gets instead.
+        if (swimming && pet instanceof PetAquaticEntity) {
+            goals.addGoal(mob, 0, new PetAquaticMovementGoal(pet, mob));
         }
         PetSitGoal sitGoal = new PetSitGoal(pet, mob);
         goals.addGoal(mob, 1, sitGoal);
