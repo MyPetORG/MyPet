@@ -1,8 +1,8 @@
-import { test, sleep } from '@drownek/plugwright';
+import { test, expect, sleep } from '@drownek/plugwright';
 import { expectCondition, expectConditionHolds, expectScore } from '../lib/oracle.js';
-import { msgPlain } from '../lib/locale.js';
+import { msgPlain, msgFragment } from '../lib/locale.js';
 import { createPet, removePet } from '../lib/pets.js';
-import { setupArena, ARENA } from '../lib/world.js';
+import { setupArena, ARENA, findEntity, sneakActivateEntity } from '../lib/world.js';
 import { releasePet } from '../lib/gui.js';
 
 // 4f4087f46 -- bats would not stay still when told to sit.
@@ -123,5 +123,35 @@ test('regression: owner death drops backpack contents exactly once', async ({ pl
     server.execute('kill @e[type=minecraft:item,nbt={Item:{id:"minecraft:diamond"}}]');
     server.execute(`kill @e[tag=${pet.tag}]`);
     removePet(server, player);
+  }
+});
+
+// Player#isSneaking() went permanently false on modern protocols: crouch moved out of the
+// entity-action packet into player_input's shift bitflag, so the server reported the player
+// as posed SNEAKING while isSneaking() said no. Every sneak-gated MyPet feature died with
+// it silently -- sit-toggle had no coverage, so nothing caught it.
+//
+// Guards the crouch read (Player#getCurrentInput().isSneak()) through the cheapest
+// sneak-gated behavior there is. If isSneaking() is ever put back, this fails again.
+test('regression: sneak + empty-hand right-click still toggles sit', async ({ player, server }) => {
+  await player.makeOp();
+  await setupArena(server, player);
+  const pet = await createPet(server, player, 'Zombie', { name: 'SneakSit' });
+  try {
+    // Poll for the mob: a just-spawned pet can be server-side confirmed before the bot's
+    // client has received its spawn packet.
+    let zombie = null;
+    for (let i = 0; i < 25 && !zombie; i++) {
+      zombie = findEntity(player, 'zombie');
+      if (!zombie) await sleep(200);
+    }
+    if (!zombie) throw new Error('bot cannot see the zombie pet');
+
+    await sneakActivateEntity(player, zombie);
+
+    await expect(player).toHaveReceivedMessage(msgFragment('Message.Sit.Stay'), { timeout: 5000 });
+  } finally {
+    removePet(server, player);
+    server.execute(`kill @e[tag=${pet.tag}]`);
   }
 });

@@ -348,7 +348,10 @@ public abstract class PetImpl implements Pet, NBTStorage {
 
         // Empty hand: sneak-toggle sit
         if (item == null || item.getType().isAir()) {
-            if (player.isSneaking()) {
+            // getCurrentInput().isSneak(), never isSneaking(): crouch moved out of the
+            // entity-action packet into player_input's shift bitflag, which leaves
+            // isSneaking() permanently false on modern clients.
+            if (player.getCurrentInput().isSneak()) {
                 // Pet types whose underlying mob has a vanilla shift-right-click
                 // gesture (e.g., Happy Ghast leash-transfer) can opt out so the
                 // gesture isn't consumed by sit-toggle.

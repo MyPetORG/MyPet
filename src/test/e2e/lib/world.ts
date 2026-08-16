@@ -98,6 +98,27 @@ export async function equipItem(player: any, itemName: string, timeoutMs = 5000)
 }
 
 /**
+ * Right-clicks an entity while the bot is crouching.
+ *
+ * Crouch travels in its own packet, separate from the use-entity click, so it has to be set
+ * first and given time to land. On this protocol mineflayer sends it as the `shift` bitflag
+ * of `player_input` (the old start/stop-sneaking entity actions no longer exist), which is
+ * why the plugin reads the crouch key via `Player#getCurrentInput()` rather than
+ * `isSneaking()`. The release afterwards keeps the bot from staying crouched into the next
+ * step of a test.
+ */
+export async function sneakActivateEntity(player: any, entity: any): Promise<void> {
+  player.bot.setControlState('sneak', true);
+  await sleep(300);
+  try {
+    await player.bot.activateEntity(entity);
+    await sleep(150);
+  } finally {
+    player.bot.setControlState('sneak', false);
+  }
+}
+
+/**
  * Teleports the tagged mob back into melee reach, then swings at it. AI-enabled victims
  * wander, and a swing outside server-side melee reach is silently rejected (no damage, no
  * tame). Also safe (a no-op re-pin) against a stationary NoAI victim.

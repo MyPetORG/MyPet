@@ -94,7 +94,7 @@ public class PetInteractionListener implements Listener {
         boolean skillRideMountTrigger = !(pet instanceof PetNaturallyRideable)
                 && pet.getSkills().isActive(Ride.class)
                 && holdingRideItem;
-        if (bareHand && !player.isSneaking() && isOwner(player, pet)
+        if (bareHand && !player.getCurrentInput().isSneak() && isOwner(player, pet)
                 && !(pet instanceof PetNaturallyRideable)
                 && !skillRideMountTrigger
                 && MyPetGlobal.Misc.RIGHT_CLICK_COMMAND.get().isEmpty()) {
