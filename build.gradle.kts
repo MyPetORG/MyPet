@@ -72,7 +72,6 @@ subprojects {
         maven { url = uri("https://nexus.sirblobman.xyz/public/") } // CombatLogX
         maven { url = uri("https://repo.battleplugins.org/snapshots") } // BattleArena
         maven { url = uri("https://jitpack.io") }
-        maven { url = uri("https://repo.mypet-plugin.de/") }
         maven { url = uri("https://mvn.lumine.io/repository/maven-public/") } // MythicMobs
     }
 
