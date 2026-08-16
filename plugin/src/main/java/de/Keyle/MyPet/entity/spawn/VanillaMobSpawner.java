@@ -574,16 +574,34 @@ public final class VanillaMobSpawner {
 
         PetGoalInstaller.install(pet, mob);
 
-        // Equipment sync: only when the mob lacks trustworthy persistent
-        // equipment of its own. Snapshot-restored and convert-in-place mobs
-        // carry the canonical equipment in their inventory, and the domain
-        // cache may be empty across server-restart cycles — applying it
-        // unconditionally would clobber the snapshot.
-        if (!mobHasPersistentState && pet instanceof PetEquipment equipmentPet) {
+        // A pet's armor is stored twice, because MyPet has to answer "what is
+        // this pet wearing?" even when the pet is not in the world. While the
+        // pet is out, the armor sits on the mob, and the mob's NBT is what gets
+        // saved and restored. But a stored or despawned pet has no mob to ask,
+        // so the Pet object keeps its own copy — that copy is what drops the
+        // gear when the pet dies or is released.
+        //
+        // Two copies can disagree, so spawning reconciles them, copying from
+        // whichever side actually knows:
+        //
+        //   brand new mob        -> spawns bare, so copy Pet -> mob
+        //   restored / converted -> came back wearing its saved gear, so copy
+        //                           mob -> Pet
+        //
+        // The second direction is the one that is easy to miss: the Pet's copy
+        // is empty every time the Pet is rebuilt from the database — a relog, a
+        // restart, a world-group switch. Skip it and MyPet believes the pet is
+        // naked for the rest of the session, so shears strip nothing and death
+        // or release drops nothing.
+        if (pet instanceof PetEquipment equipmentPet) {
             EntityEquipment eq = mob.getEquipment();
             if (eq != null) {
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
-                    eq.setItem(slot, equipmentPet.getEquipment(slot));
+                    if (!mobHasPersistentState) {
+                        eq.setItem(slot, equipmentPet.getEquipment(slot));
+                    } else if (equipmentPet.canUseSlot(slot)) {
+                        equipmentPet.setEquipment(slot, eq.getItem(slot));
+                    }
                 }
             }
         }

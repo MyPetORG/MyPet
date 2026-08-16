@@ -1,7 +1,7 @@
 import { test, expect } from '@drownek/plugwright';
 import { expectCondition, expectConditionHolds } from '../lib/oracle.js';
 import { createPet, removePet } from '../lib/pets.js';
-import { ARENA, setupArena, equipItem, findEntity } from '../lib/world.js';
+import { ARENA, setupArena, equipItem, findEntity, sneakActivateEntity } from '../lib/world.js';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
@@ -20,10 +20,13 @@ async function findEntityPolled(player: any, entityTypeName: string, timeoutMs =
   }
 }
 
-// (a) There is no MyPet-side "equip armor" handler. PetImpl#onInteract only branches on
-//     empty-hand, GrowUpItem, and Food; any other held item falls through unconsumed, and
-//     PetInteractionListener leaves the event uncancelled — armor equip is pure vanilla
-//     mob-equip behavior riding on MyPet never cancelling the event.
+// (a) Two separate equip paths, split by whether the owner is crouching:
+//     - NOT sneaking: PetImpl#onInteract only branches on empty-hand, GrowUpItem, and Food,
+//       so a held armor piece falls through unconsumed and PetInteractionListener leaves the
+//       event uncancelled — the horse tests below ride on pure vanilla mob-equip behavior.
+//     - Sneaking: PetImpl#onInteract's PetEquipment branch handles it (shears strip all
+//       slots, anything else equips into its Material slot). This is the only path for
+//       species vanilla will not equip by right-click at all, e.g. the zombie tests below.
 //
 // (b) PetHorse is the only species giving both an armor and a saddle test (BODY + SADDLE
 //     slots) while also being PetBaby + PetTameable, so it covers tests 1, 2, 3, and 5. On
@@ -101,6 +104,146 @@ test('shears removal: right-click with shears clears the armor and drops it', as
   } finally {
     removePet(server, player);
     server.execute('kill @e[type=minecraft:horse]');
+    server.execute('kill @e[type=minecraft:item]');
+  }
+});
+
+// Zombie, not horse, for the sneak path: vanilla never equips a zombie from a player
+// right-click, so a helmet landing in the head slot can only have come from MyPet's own
+// handler. PreventDaylightBurn defaults to true (PetZombie), so the lit open-air arena
+// won't cook the pet mid-test.
+test('sneak equip: crouch + right-click with an iron helmet arms a zombie pet\'s head slot', async ({ player, server }) => {
+  await player.makeOp();
+  await setupArena(server, player);
+  const pet = await createPet(server, player, 'Zombie', { name: 'EqHelm' });
+  try {
+    server.execute(`give ${player.username} minecraft:iron_helmet 1`);
+    await equipItem(player, 'iron_helmet');
+    const zombie = await findEntityPolled(player, 'zombie');
+    if (!zombie) throw new Error('bot cannot see the zombie pet');
+    await sneakActivateEntity(player, zombie);
+
+    await expectCondition(server, player,
+      `if entity @e[tag=${pet.tag},limit=1,nbt={equipment:{head:{id:"minecraft:iron_helmet"}}}]`);
+  } finally {
+    removePet(server, player);
+    server.execute('kill @e[type=minecraft:zombie]');
+  }
+});
+
+test('sneak equip: the helmet leaves the owner\'s hand', async ({ player, server }) => {
+  await player.makeOp();
+  await setupArena(server, player);
+  const pet = await createPet(server, player, 'Zombie', { name: 'EqCost' });
+  try {
+    server.execute(`give ${player.username} minecraft:iron_helmet 1`);
+    await equipItem(player, 'iron_helmet');
+    const zombie = await findEntityPolled(player, 'zombie');
+    if (!zombie) throw new Error('bot cannot see the zombie pet');
+    await sneakActivateEntity(player, zombie);
+
+    await expectCondition(server, player,
+      `if entity @e[tag=${pet.tag},limit=1,nbt={equipment:{head:{id:"minecraft:iron_helmet"}}}]`);
+    // Survival owner pays for the equip. Asserted after the equip landed so a helmet that
+    // simply never left the hand can't read as a pass.
+    await expect(player).not.toContainItem('iron_helmet', { timeout: 4000 });
+  } finally {
+    removePet(server, player);
+    server.execute('kill @e[type=minecraft:zombie]');
+  }
+});
+
+test('sneak unequip: crouch + right-click with shears strips the zombie pet and drops the gear', async ({ player, server }) => {
+  await player.makeOp();
+  await setupArena(server, player);
+  const pet = await createPet(server, player, 'Zombie', { name: 'EqStrip' });
+  try {
+    server.execute(`give ${player.username} minecraft:iron_helmet 1`);
+    await equipItem(player, 'iron_helmet');
+    let zombie = await findEntityPolled(player, 'zombie');
+    if (!zombie) throw new Error('bot cannot see the zombie pet');
+    await sneakActivateEntity(player, zombie);
+    // Baseline: prove the helmet is on before shearing it off.
+    await expectCondition(server, player,
+      `if entity @e[tag=${pet.tag},limit=1,nbt={equipment:{head:{id:"minecraft:iron_helmet"}}}]`);
+
+    server.execute(`give ${player.username} minecraft:shears 1`);
+    await equipItem(player, 'shears');
+    zombie = await findEntityPolled(player, 'zombie');
+    if (!zombie) throw new Error('bot cannot see the zombie pet');
+    await sneakActivateEntity(player, zombie);
+
+    await expectCondition(server, player,
+      `unless entity @e[tag=${pet.tag},limit=1,nbt={equipment:{head:{id:"minecraft:iron_helmet"}}}]`);
+    // Same auto-pickup race as the horse shear test above: the owner is in melee reach, so
+    // the dropped stack may reach the bot's inventory before the ground poll lands.
+    try {
+      await expectCondition(server, player,
+        `at @e[tag=${pet.tag},limit=1] if entity @e[type=minecraft:item,distance=..10,nbt={Item:{id:"minecraft:iron_helmet"}}]`,
+        { timeout: 4000 });
+    } catch {
+      await expect(player).toContainItem('iron_helmet', { timeout: 4000 });
+    }
+  } finally {
+    removePet(server, player);
+    server.execute('kill @e[type=minecraft:zombie]');
+    server.execute('kill @e[type=minecraft:item]');
+  }
+});
+
+// The gear a pet is wearing lives in two places: the mob's own inventory (persisted in the
+// NBT snapshot) and PetImpl's in-memory `equipment` map. A despawn/respawn restores the mob
+// from the snapshot but leaves the map empty -- VanillaMobSpawner only pushes the map ONTO a
+// fresh mob, never reads a restored one back IN. Since the strip loop reads the map, shears
+// used to clear only what had been equipped since the pet last spawned.
+//
+// It takes a RELOG, not just a despawn: /petsendaway + /petcall destroys and re-creates the
+// entity while the PetImpl object (and its map) stays in memory, so that cycle does not
+// reproduce this -- an earlier version of this test used it and passed against the bug.
+// Rejoining rebuilds the Pet from the repository, which is when the map starts empty.
+//
+// The entity is re-created too, so the scoreboard tag has to be reapplied afterwards.
+test('sneak unequip: shears strip gear the pet was wearing before the owner relogged', async ({ player, server }) => {
+  await player.makeOp();
+  await setupArena(server, player);
+  const pet = await createPet(server, player, 'Zombie', { name: 'EqPersist' });
+  try {
+    server.execute(`give ${player.username} minecraft:iron_helmet 1`);
+    await equipItem(player, 'iron_helmet');
+    let zombie = await findEntityPolled(player, 'zombie');
+    if (!zombie) throw new Error('bot cannot see the zombie pet');
+    await sneakActivateEntity(player, zombie);
+    await expectCondition(server, player,
+      `if entity @e[tag=${pet.tag},limit=1,nbt={equipment:{head:{id:"minecraft:iron_helmet"}}}]`);
+
+    // Relog: the helmet comes back on the mob from the saved NBT, but the rebuilt Pet
+    // object starts with an empty equipment map.
+    await player.rejoin();
+    await player.makeOp();
+    server.execute(`tp ${player.username} ${ARENA.x} ${ARENA.y} ${ARENA.z}`);
+    player.chat('/petcall');
+    await expectCondition(server, player,
+      `at ${player.username} if entity @e[type=minecraft:zombie,name=${pet.name},distance=..16]`,
+      { timeout: 6000 });
+    server.execute(
+      `execute at ${player.username} run ` +
+      `tag @e[type=minecraft:zombie,name=${pet.name},distance=..16,limit=1,sort=nearest] add ${pet.tag}`);
+    await expectCondition(server, player, `if entity @e[tag=${pet.tag}]`);
+    // The helmet survived the cycle -- otherwise this test would pass for the wrong reason.
+    await expectCondition(server, player,
+      `if entity @e[tag=${pet.tag},limit=1,nbt={equipment:{head:{id:"minecraft:iron_helmet"}}}]`);
+
+    server.execute(`give ${player.username} minecraft:shears 1`);
+    await equipItem(player, 'shears');
+    zombie = await findEntityPolled(player, 'zombie');
+    if (!zombie) throw new Error('bot cannot see the recalled zombie pet');
+    await sneakActivateEntity(player, zombie);
+
+    await expectCondition(server, player,
+      `unless entity @e[tag=${pet.tag},limit=1,nbt={equipment:{head:{id:"minecraft:iron_helmet"}}}]`);
+  } finally {
+    removePet(server, player);
+    server.execute('kill @e[type=minecraft:zombie]');
     server.execute('kill @e[type=minecraft:item]');
   }
 });

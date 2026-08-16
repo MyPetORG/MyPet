@@ -470,7 +470,134 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 return true;
             }
         }
+
+        // Equipment: the owner sneaks and right-clicks a PetEquipment pet, either holding
+        // gear (equip) or shears (strip everything). Restores the branch that lived in the
+        // v3 NMS EntityMyPet#mobInteract until the NMS modules were deleted (2844aea92);
+        // the player guide has documented it as player-facing behavior the whole time.
+        // Runs after Food so a sneaking owner can still feed a pet that eats the item —
+        // same precedence the v3 branch had.
+        if (this instanceof PetEquipment equipmentPet && player.getCurrentInput().isSneak()
+                && !defersSneakInteractToVanilla(player)
+                && Permissions.hasExtended(player, "MyPet.extended.equip")) {
+            if (item.getType() == Material.SHEARS) {
+                return stripEquipment(equipmentPet, player, item);
+            }
+            EquipmentSlot slot = resolveEquipmentSlot(item);
+            // A slot this species can't use falls through unconsumed, DIVERGING from v3,
+            // which consumed the click. v3's pets were custom NMS entities with no vanilla
+            // interactions to preserve; v4 pets are real vanilla mobs, so consuming here
+            // would eat gestures that have nothing to do with equipment — a sneaking owner
+            // holding a sword could no longer open their horse pet's inventory, since every
+            // durable item resolves to HAND and a horse allows only SADDLE/BODY.
+            if (slot != null && equipmentPet.canUseSlot(slot)) {
+                return equipItem(equipmentPet, player, item, hand, slot);
+            }
+        }
         return false;
+    }
+
+    /**
+     * Resolves the slot an item wants to occupy, or {@code null} when the item is not gear.
+     *
+     * <p>v3 answered this through NMS data components — EQUIPPABLE for wearables, else
+     * WEAPON/TOOL, else a hardcoded list of item classes. With NMS gone,
+     * {@link Material#getEquipmentSlot()} is the Bukkit-native equivalent: it reports the
+     * EQUIPPABLE slot and falls back to {@link EquipmentSlot#HAND} for everything else,
+     * including plain blocks. That makes a HAND answer ambiguous, so it needs the
+     * durability test to tell a sword from a stack of dirt — every tool and weapon carries
+     * durability and no ordinary block does. Against v3's list this drops only COMPASS and
+     * SIGN, which read as accidents there.
+     */
+    private static EquipmentSlot resolveEquipmentSlot(ItemStack item) {
+        EquipmentSlot slot = item.getType().getEquipmentSlot();
+        if (slot != EquipmentSlot.HAND || item.getType().getMaxDurability() > 0) {
+            return slot;
+        }
+        return null;
+    }
+
+    /**
+     * Moves one item from the owner's hand onto the pet, dropping whatever it displaces.
+     *
+     * <p>Creative keeps the stack, but has to give it up for a tick first: vanilla's own
+     * armor-equip runs on this same click, so an untouched helmet in hand would end up on
+     * the PLAYER's head. Blanking the hand makes that attempt find nothing, and the item is
+     * handed back on the next tick — through the player's own scheduler, since the global
+     * one throws on Folia and this plugin declares {@code folia-supported}.
+     *
+     * <p>The displaced item is dropped in every game mode. v3 dropped it only outside
+     * creative, which silently destroyed whatever the pet was already wearing; nothing about
+     * creative mode implies the pet's existing gear is disposable.
+     *
+     * <p>Both paths end in {@link Player#updateInventory()} on the next tick. The vanilla
+     * client predicts armor-equip locally the instant the click leaves it, so it draws the
+     * piece onto the PLAYER's armor slots before the server has any say. Cancelling the
+     * interaction stops the equip from ever happening server-side but sends nothing that
+     * contradicts the prediction, leaving a ghost set the player can see and even click —
+     * at which point the slot resyncs and the phantom vanishes. The explicit resync is what
+     * corrects the client; it has to be next tick, since a same-tick update is applied
+     * before the client runs its prediction and gets overwritten by it.
+     */
+    private boolean equipItem(PetEquipment equipmentPet, Player player, ItemStack item,
+                              EquipmentSlot hand, EquipmentSlot slot) {
+        ItemStack displaced = equipmentPet.getEquipment(slot);
+        if (displaced != null && !displaced.getType().isAir()) {
+            dropAtPet(displaced);
+        }
+        equipmentPet.setEquipment(slot, item);
+        ItemStack restored = player.getGameMode() == GameMode.CREATIVE ? item.clone() : null;
+        if (restored != null) {
+            player.getInventory().setItem(hand, null);
+        } else {
+            item.setAmount(item.getAmount() - 1);
+        }
+        player.getScheduler().run(MyPetApi.getPlugin(), task -> {
+            if (restored != null) {
+                player.getInventory().setItem(hand, restored);
+            }
+            player.updateInventory();
+        }, null);
+        updateVisuals();
+        return true;
+    }
+
+    /**
+     * Shears strip every slot at once and drop the gear at the pet's feet.
+     *
+     * <p>Returns {@code false} on an already-bare pet so the click stays unconsumed — there
+     * is nothing to show for it, and the shears keep their durability.
+     */
+    private boolean stripEquipment(PetEquipment equipmentPet, Player player, ItemStack shears) {
+        boolean strippedAny = false;
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            ItemStack equipped = equipmentPet.getEquipment(slot);
+            if (equipped == null || equipped.getType().isAir()) {
+                continue;
+            }
+            dropAtPet(equipped);
+            equipmentPet.setEquipment(slot, null);
+            strippedAny = true;
+        }
+        if (!strippedAny) {
+            return false;
+        }
+        // ItemStack#damage, not a hand-rolled Damageable edit like v3 used: it honours
+        // Unbreaking and the Unbreakable flag, skips creative, and fires the vanilla break
+        // sound and PlayerItemBreakEvent when the shears finally give out.
+        shears.damage(1, player);
+        updateVisuals();
+        return true;
+    }
+
+    /**
+     * Drops an item a block above the pet, so gear removed from a pet standing in a wall or
+     * on a slab doesn't land inside the floor. Callers are on the interaction thread, which
+     * owns the pet's region — the owner is by definition within interaction range.
+     */
+    private void dropAtPet(ItemStack item) {
+        Location dropLocation = bukkitEntity.getLocation().add(0, 1, 0);
+        dropLocation.getWorld().dropItem(dropLocation, item);
     }
 
     public CompoundBinaryTag getInfo() {

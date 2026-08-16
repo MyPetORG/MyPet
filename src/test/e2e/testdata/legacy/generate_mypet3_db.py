@@ -58,11 +58,15 @@ def offline_uuid(username: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Minimal Mojang-NBT writer (just enough for TAG_Compound/TAG_End/TAG_Int),
+# Minimal Mojang-NBT writer (TAG_Compound/TAG_End/TAG_Int, plus TAG_Byte,
+# TAG_String and TAG_List-of-compound for the legacy Equipment fixture),
 # GZIP-wrapped to match NbtUtil.writeCompressed's on-disk format exactly.
 # ---------------------------------------------------------------------------
 TAG_END = 0
+TAG_BYTE = 1
 TAG_INT = 3
+TAG_STRING = 8
+TAG_LIST = 9
 TAG_COMPOUND = 10
 
 
@@ -73,14 +77,65 @@ def _write_named(buf: io.BytesIO, tag_type: int, name: str):
     buf.write(name_bytes)
 
 
-def compound_bytes(int_fields: dict[str, int]) -> bytes:
-    """Root TAG_Compound (unnamed) containing only TAG_Int entries."""
+def _write_string_payload(buf: io.BytesIO, value: str):
+    encoded = value.encode("utf-8")
+    buf.write(struct.pack(">H", len(encoded)))
+    buf.write(encoded)
+
+
+class Byte(int):
+    """Marker so a dict value round-trips as TAG_Byte rather than TAG_Int."""
+
+
+def _write_payload(buf: io.BytesIO, value):
+    """Writes a value's payload; the caller has already written type + name."""
+    if isinstance(value, Byte):
+        buf.write(struct.pack(">b", int(value)))
+    elif isinstance(value, bool):
+        buf.write(struct.pack(">b", 1 if value else 0))
+    elif isinstance(value, int):
+        buf.write(struct.pack(">i", value))
+    elif isinstance(value, str):
+        _write_string_payload(buf, value)
+    elif isinstance(value, dict):
+        _write_compound_body(buf, value)
+    elif isinstance(value, list):
+        # TAG_List of TAG_Compound — the only list shape these fixtures need.
+        buf.write(struct.pack(">B", TAG_COMPOUND))
+        buf.write(struct.pack(">i", len(value)))
+        for entry in value:
+            _write_compound_body(buf, entry)
+    else:
+        raise TypeError(f"unsupported NBT value: {value!r}")
+
+
+def _tag_type_of(value) -> int:
+    if isinstance(value, Byte) or isinstance(value, bool):
+        return TAG_BYTE
+    if isinstance(value, int):
+        return TAG_INT
+    if isinstance(value, str):
+        return TAG_STRING
+    if isinstance(value, dict):
+        return TAG_COMPOUND
+    if isinstance(value, list):
+        return TAG_LIST
+    raise TypeError(f"unsupported NBT value: {value!r}")
+
+
+def _write_compound_body(buf: io.BytesIO, fields: dict):
+    for key, value in fields.items():
+        _write_named(buf, _tag_type_of(value), key)
+        _write_payload(buf, value)
+    buf.write(struct.pack(">B", TAG_END))
+
+
+def compound_bytes(fields: dict) -> bytes:
+    """Root TAG_Compound (unnamed). Values map to NBT types by Python type;
+    wrap an int in Byte(...) to force TAG_Byte."""
     buf = io.BytesIO()
     _write_named(buf, TAG_COMPOUND, "")  # root tag, empty name (Minecraft convention)
-    for key, value in int_fields.items():
-        _write_named(buf, TAG_INT, key)
-        buf.write(struct.pack(">i", value))
-    buf.write(struct.pack(">B", TAG_END))  # close root compound
+    _write_compound_body(buf, fields)
     return buf.getvalue()
 
 
@@ -112,6 +167,24 @@ MOJANG_UUID = offline_uuid(LEGACY_OWNER_NAME)  # what the bot's offline UUID res
 COW_UUID = "11111111-1111-1111-1111-111111111111"
 RABBIT_UUID = "22222222-2222-2222-2222-222222222222"
 FISH_UUID = "33333333-3333-3333-3333-333333333333"
+ZOMBIE_UUID = "99999999-9999-9999-9999-999999999999"
+
+# Zombie wearing armor, stored the way MyPet 3 stored it: an "Equipment" list of
+# item compounds, each being `itemStack.save(...)` output with an extra "Slot"
+# string. The item payload is the PRE-1.20.5 vanilla shape — capital "Count" and a
+# "tag" sub-compound — which is what any server that ran MyPet 3 on <=1.20.4 has
+# on disk, and what needs Mojang's DataFixerUpper to become a modern
+# count/components item. The enchantment lives in "tag" specifically so a decode
+# that silently drops it is visible: a helmet that arrives unenchanted proves the
+# fixer never ran, even though the item itself survived.
+ZOMBIE_EQUIPMENT = [
+    {
+        "id": "minecraft:iron_helmet",
+        "Count": Byte(1),
+        "tag": {"Damage": 0, "RepairCost": 0},
+        "Slot": "HEAD",
+    },
+]
 
 COW_EXP = 500.0
 
@@ -270,6 +343,8 @@ def insert_rows(conn: sqlite3.Connection):
     insert_pet(COW_UUID, "LegacyCow", "Cow", b"")  # empty info: no legacy visual state to migrate
     insert_pet(RABBIT_UUID, "LegacyRabbit", "Rabbit", legacy_info_blob({"Variant": RABBIT_VARIANT}))
     insert_pet(FISH_UUID, "LegacyFish", "TropicalFish", legacy_info_blob({"Variant": FISH_VARIANT}))
+    insert_pet(ZOMBIE_UUID, "LegacyZombie", "Zombie",
+               legacy_info_blob({"Equipment": ZOMBIE_EQUIPMENT}))
 
     # Offline-mode-shaped row: mojang_uuid NULL, name present -> recoverable.
     insert_player(OFFLINE_INTERNAL_UUID, None, OFFLINE_OWNER_NAME)

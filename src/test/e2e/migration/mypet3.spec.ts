@@ -68,3 +68,52 @@ test('legacy tropical fish keeps body colour, pattern and pattern colour', async
     server.execute(`petadmin remove ${player.username}`);
   }
 });
+
+// Reported symptom: pets' armor vanished when servers converted from MyPet 3 to 4.
+//
+// The fixture row carries armor in MyPet 3's exact storage shape: an "Equipment" list of
+// `itemStack.save(...)` compounds with an added "Slot" string, the item itself in the
+// PRE-1.20.5 layout (capital "Count", a "tag" sub-compound) that any server running
+// MyPet 3 on <=1.20.4 has on disk. LegacyNbtItemDecoder feeds that to
+// ItemStack.deserializeBytes without the DataVersion seed that MigratePetBackpackItems
+// uses for backpack items -- so the decode was the prime suspect, and this test was
+// written expecting it to fail. It does not: Paper decodes that shape unseeded. The
+// conversion is NOT where the armor is lost, and this test now pins that down.
+//
+// The loss is in the respawn afterwards, which the second half covers.
+test('legacy pet keeps the armor it was wearing in MyPet 3', async ({ createPlayer, server }) => {
+  const player = await createPlayer({ username: LEGACY_OWNER });
+  await ensureOp(player);
+  try {
+    await switchToStoredPet(player, 'LegacyZombie');
+    await expectCondition(server, player,
+      `at ${player.username} if entity @e[type=minecraft:zombie,name=LegacyZombie,distance=..16]`);
+
+    await expectCondition(server, player,
+      `at ${player.username} if entity @e[type=minecraft:zombie,name=LegacyZombie,` +
+      `nbt={equipment:{head:{id:"minecraft:iron_helmet"}}},distance=..16]`);
+
+    // Surviving the conversion is not enough -- the armor also has to survive a respawn.
+    // A recall runs VanillaMobSpawner#configureMob, which reconciles the domain equipment
+    // cache with the mob's slots; that cache is empty for a pet just rebuilt from the
+    // repository, so a sync in the wrong direction wipes the migrated gear, and the next
+    // snapshot capture makes the loss permanent.
+    //
+    // Both stages share one test because `petadmin remove` deletes the pet from storage,
+    // so a second test cannot reuse this fixture row.
+    player.chat('/petsendaway');
+    await expectCondition(server, player,
+      `at ${player.username} unless entity @e[type=minecraft:zombie,name=LegacyZombie,distance=..16]`,
+      { timeout: 6000 });
+    player.chat('/petcall');
+    await expectCondition(server, player,
+      `at ${player.username} if entity @e[type=minecraft:zombie,name=LegacyZombie,distance=..16]`,
+      { timeout: 6000 });
+
+    await expectCondition(server, player,
+      `at ${player.username} if entity @e[type=minecraft:zombie,name=LegacyZombie,` +
+      `nbt={equipment:{head:{id:"minecraft:iron_helmet"}}},distance=..16]`);
+  } finally {
+    server.execute(`petadmin remove ${player.username}`);
+  }
+});
