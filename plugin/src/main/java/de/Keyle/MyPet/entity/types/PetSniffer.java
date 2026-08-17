@@ -30,6 +30,7 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
+import java.util.List;
 import java.util.Set;
 
 @ShopInfo
@@ -38,6 +39,15 @@ public class PetSniffer extends PetImpl implements PetBaby, PetNaturalDrop {
 
     public static final ConfigKey<Boolean> CAN_DIG_SEEDS = ConfigKey.bool("Sniffer", "CanDigSeeds", true);
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Sniffer", "experience_bottle");
+
+    /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Empty by default — MyPet strips nothing from this species' brain. The key
+     * exists so an admin can disable brain AI here without a plugin change;
+     * entries are {@code activity:<name>} or {@code behavior:<SimpleClassName>}.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED =
+            ConfigKey.stringList("Sniffer", "Brain.Disabled");
 
 
     public PetSniffer(MyPetPlayer petOwner) {

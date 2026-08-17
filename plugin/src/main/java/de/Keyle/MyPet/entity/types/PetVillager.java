@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval;
 import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.Pet;
@@ -66,16 +65,13 @@ public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLi
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Villager", "experience_bottle");
 
     /**
-     * Strip {@code SleepInBed} so even if vanilla gets the villager onto a
-     * bed via some path we haven't enumerated, the sleep action itself can't
-     * fire. (Most VillagerGoalPackages walk-to-block-memory behaviors are
-     * {@code BehaviorBuilder}-wrapped — class-name matching misses them, so
-     * the per-tick {@link WanderSuppressor} below is the load-bearing piece.)
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Autonomous wandering is handled by the per-tick {@link WanderSuppressor}
+     * instead — {@code WALK_TARGET} has too many producers to enumerate here.
      */
-    public static final PetBrainBehaviorRemoval BRAIN_BEHAVIOR_REMOVAL = new PetBrainBehaviorRemoval(
-            "Villager",
-            "SleepInBed"
-    );
+    public static final ConfigKey<List<String>> BRAIN_DISABLED = ConfigKey.stringList(
+            "Villager", "Brain.Disabled",
+            "behavior:SleepInBed");
 
     /** Per-tick {@code WALK_TARGET} clear so brain behaviors can never autonomously walk the pet anywhere. */
     public static final PetLifecycleHook WANDER_SUPPRESSOR_HOOK = new PetLifecycleHook(
@@ -134,7 +130,7 @@ public class PetVillager extends PetImpl implements PetBaby, PetEquipment, PetLi
      * every vanilla VillagerAi behavior that would autonomously walk the pet
      * (bed-seeking, job-site walking, meeting-point socializing, raid hiding).
      * Most of those producers are {@code BehaviorBuilder}-wrapped factories,
-     * so {@link PetBrainBehaviorRemoval} class-name matching can't catch them
+     * so a {@code behavior:} entry in {@link #BRAIN_DISABLED} can't catch them
      * individually; clearing the downstream memory each tick catches them all.
      */
     public static final class WanderSuppressor {

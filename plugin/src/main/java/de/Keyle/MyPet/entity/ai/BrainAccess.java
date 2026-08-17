@@ -45,11 +45,11 @@ import java.util.Set;
  *       from the brain's priority schedule. Used by
  *       {@link de.Keyle.MyPet.entity.spawn.PetGoalInstaller} immediately
  *       after {@code Bukkit.getMobGoals().removeAllGoals(mob)}, driven by
- *       per-pet {@link de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval}
- *       declarations. This is the preferred shape — it's parallel to the
- *       existing goal sweep, doesn't require per-tick scheduler overhead,
- *       and the behavior simply doesn't exist on the brain for the pet's
- *       lifetime.</li>
+ *       each pet's {@code Brain.Disabled} config list, applied by
+ *       {@link BrainDisableSpec}. This is the preferred shape — it's
+ *       parallel to the existing goal sweep, doesn't require per-tick
+ *       scheduler overhead, and the behavior simply doesn't exist on the
+ *       brain for the pet's lifetime.</li>
  * </ol>
  *
  * <p>Bukkit's {@link org.bukkit.entity.memory.MemoryKey} catalogue intentionally
@@ -73,10 +73,16 @@ import java.util.Set;
  * behavior removal is surgically exact.
  *
  * <p><b>Fail-soft:</b> if any lookup breaks (rename in a future MC version,
- * class loader oddity, etc.), a single warning is logged and subsequent
- * calls become no-ops. The brain-driven behaviors return; affected pet
- * classes carry their own additional guards (projectile-launch suppressors
- * on combat-relevant pets) so player safety doesn't degrade silently.
+ * class loader oddity, etc.), a single warning is logged at startup and
+ * subsequent calls become no-ops. Pets whose vanilla hostility is
+ * suppressed only through {@code Brain.Disabled} — Piglin, Piglin Brute,
+ * Hoglin and Zoglin — will attack their owner for as long as that stays
+ * true; there is no downstream guard left to catch it for these pets. The
+ * operator is not left blind, though: {@link BrainDisableSpec} still logs a
+ * per-entry "matched no brain activity"/"matched no brain behavior" warning
+ * on every spawn in every reflection-failure path (an unmatched entry looks
+ * identical to a broken lookup, since both remove nothing), so the symptom
+ * surfaces immediately even before it's connected back to this class.
  */
 public final class BrainAccess {
 
@@ -94,6 +100,7 @@ public final class BrainAccess {
     private static volatile Method weightedEntryGetDataMethod;
     private static volatile Object attackTargetMemoryType;
     private static volatile Object walkTargetMemoryType;
+    private static volatile Method activityGetNameMethod;
 
     /**
      * Resolves the entity's NMS Brain (handle→brain, two reflective invokes). Not cached:
@@ -132,8 +139,17 @@ public final class BrainAccess {
                 availableBehaviorsByPriorityField = behaviorsField;
             } catch (NoSuchFieldException renamed) {
                 MyPetApi.getLogger().warning(
-                        "BrainAccess: 'availableBehaviorsByPriority' field not found on Brain — vanilla brain-behavior removal disabled for this server (memory-clearing still works). PetBrainBehaviorRemoval declarations will be silently ignored until the field-name lookup is updated.");
+                        "BrainAccess: 'availableBehaviorsByPriority' field not found on Brain — vanilla brain-behavior removal disabled for this server (memory-clearing still works). 'behavior:' entries in per-pet Brain.Disabled lists will be silently ignored until the field-name lookup is updated.");
                 availableBehaviorsByPriorityField = null;
+            }
+
+            try {
+                Class<?> nmsActivity = Class.forName("net.minecraft.world.entity.schedule.Activity");
+                activityGetNameMethod = nmsActivity.getMethod("getName");
+            } catch (Throwable renamed) {
+                MyPetApi.getLogger().warning(
+                        "BrainAccess: Activity#getName not found — vanilla brain-activity removal disabled for this server. 'activity:' entries in per-pet Brain.Disabled lists will be ignored until the lookup is updated. Cause: " + renamed);
+                activityGetNameMethod = null;
             }
 
             try {
@@ -158,7 +174,7 @@ public final class BrainAccess {
             available = true;
         } catch (Throwable t) {
             MyPetApi.getLogger().warning(
-                    "BrainAccess unavailable — brain-driven autonomous attacks/movement will not be suppressed at the brain level (projectile-launch suppressors still block actual damage on combat-relevant pets). Cause: " + t);
+                    "BrainAccess unavailable — brain-driven autonomous attacks/movement will not be suppressed at the brain level. Pets that rely solely on Brain.Disabled to stay peaceful (Piglin, Piglin Brute, Hoglin, Zoglin) will attack their owner until this is resolved. Per-entry 'matched no brain activity'/'matched no brain behavior' warnings will still fire for their Brain.Disabled entries on every spawn. Cause: " + t);
         }
     }
 
@@ -227,8 +243,10 @@ public final class BrainAccess {
      * whose runtime class's {@link Class#getSimpleName} matches one of the
      * supplied names. Called once at spawn from
      * {@link de.Keyle.MyPet.entity.spawn.PetGoalInstaller} after the
-     * {@code removeAllGoals} sweep, driven by the per-pet
-     * {@link de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval} declarations.
+     * {@code removeAllGoals} sweep, driven by the {@code behavior:} entries of
+     * the pet's {@code Brain.Disabled} config list (see {@link BrainDisableSpec}).
+     * Returns the number of behaviors removed, nested composite entries included,
+     * so the caller can report an entry that matched nothing.
      *
      * <p>Walks the brain's {@code availableBehaviorsByPriority} schedule:
      * {@code Map<Integer, Map<Activity, Set<BehaviorControl>>>}. For every
@@ -265,30 +283,135 @@ public final class BrainAccess {
      * <p>Safe to call on goal-only mobs: their brain is empty so the
      * inner iteration is a no-op.
      */
-    public static void removeBehaviorsByClassName(LivingEntity entity, Set<String> simpleClassNames) {
-        if (simpleClassNames.isEmpty()) return;
+    public static int removeBehaviorsByClassName(LivingEntity entity, Set<String> simpleClassNames) {
+        if (simpleClassNames.isEmpty()) return 0;
         if (!initialized) tryInit(entity);
-        if (!available) return;
-        if (availableBehaviorsByPriorityField == null) return;
+        if (!available) return 0;
+        if (availableBehaviorsByPriorityField == null) return 0;
+        int removed = 0;
         try {
             Object handle = getHandleMethod.invoke(entity);
             Object brain = getBrainMethod.invoke(handle);
             Object schedule = availableBehaviorsByPriorityField.get(brain);
-            if (!(schedule instanceof Map<?, ?> priorityMap)) return;
+            if (!(schedule instanceof Map<?, ?> priorityMap)) return removed;
             for (Object activityMap : priorityMap.values()) {
                 if (!(activityMap instanceof Map<?, ?> behaviorsByActivity)) continue;
                 for (Object behaviorSet : behaviorsByActivity.values()) {
                     if (!(behaviorSet instanceof Set<?> set)) continue;
+                    int before = set.size();
                     set.removeIf(behavior -> behavior != null
                             && simpleClassNames.contains(behavior.getClass().getSimpleName()));
+                    removed += before - set.size();
                     for (Object remaining : set) {
-                        stripFromComposite(remaining, simpleClassNames);
+                        removed += stripFromComposite(remaining, simpleClassNames);
                     }
                 }
             }
         } catch (Throwable t) {
             // Don't spam logs — drop silently after a successful init.
         }
+        return removed;
+    }
+
+    /**
+     * Clears every behavior registered under any of the named vanilla brain
+     * <b>activities</b> ({@code "idle"}, {@code "fight"}, …). Called once at
+     * spawn from {@link de.Keyle.MyPet.entity.spawn.PetGoalInstaller}, driven
+     * by the {@code activity:} entries of the pet's {@code Brain.Disabled}
+     * config list (see {@link BrainDisableSpec}). Returns the number of
+     * behaviors cleared, so the caller can report an entry that matched nothing.
+     *
+     * <p><b>Why this exists next to {@link #removeBehaviorsByClassName}.</b>
+     * Name matching only reaches behaviors that are real named classes. Vanilla
+     * assembles most modern behaviors with {@code BehaviorBuilder}, so they
+     * arrive as anonymous {@code OneShot} instances whose
+     * {@code Class#getSimpleName} is {@code ""} — and {@code StartAttacking} /
+     * {@code MeleeAttack} / {@code SetWalkTargetFromAttackTargetIfTargetOutOfReach}
+     * are static-factory holders that never appear as an instance class at all.
+     * Activities are the coarser level vanilla still keys by name, so this
+     * catches what the name-based strip structurally cannot.
+     *
+     * <p>Walks the same {@code availableBehaviorsByPriority} schedule
+     * ({@code Map<Integer, Map<Activity, Set<BehaviorControl>>>}) and empties
+     * the behavior {@code Set} for each matching {@code Activity}. The activity
+     * itself, its priority slots and its memory requirements are left in place,
+     * so the brain keeps switching activities normally — a matched activity
+     * simply has nothing left to run.
+     *
+     * <p>Matching is on {@code Activity#getName} (a stable lowercase id),
+     * case-insensitively. Empty input is a no-op with no reflection performed;
+     * an unmatched name is a harmless no-op, so one per-pet declaration stays
+     * valid across Minecraft versions where an activity may not exist.
+     *
+     * <p>Safe to call on goal-only mobs: their brain has no activities, so the
+     * iteration does nothing.
+     */
+    public static int removeBehaviorsByActivity(LivingEntity entity, Set<String> activityNames) {
+        if (activityNames.isEmpty()) return 0;
+        if (!initialized) tryInit(entity);
+        if (!available) return 0;
+        if (availableBehaviorsByPriorityField == null || activityGetNameMethod == null) return 0;
+        int removed = 0;
+        try {
+            Object brain = brainOf(entity);
+            Object schedule = availableBehaviorsByPriorityField.get(brain);
+            if (!(schedule instanceof Map<?, ?> priorityMap)) return removed;
+            for (Object activityMap : priorityMap.values()) {
+                if (!(activityMap instanceof Map<?, ?> behaviorsByActivity)) continue;
+                for (Map.Entry<?, ?> entry : behaviorsByActivity.entrySet()) {
+                    Object activity = entry.getKey();
+                    if (activity == null) continue;
+                    Object name = activityGetNameMethod.invoke(activity);
+                    if (!(name instanceof String activityName)) continue;
+                    boolean matched = false;
+                    for (String wanted : activityNames) {
+                        if (wanted.equalsIgnoreCase(activityName)) {
+                            matched = true;
+                            break;
+                        }
+                    }
+                    if (matched && entry.getValue() instanceof Set<?> set) {
+                        removed += set.size();
+                        set.clear();
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            // Don't spam logs — drop silently after a successful init.
+        }
+        return removed;
+    }
+
+    /**
+     * Activity names present on this entity's brain, in schedule order and
+     * de-duplicated. Used only to make an unmatched-entry warning actionable —
+     * a Piglin Brute has {@code core, idle, fight} while a Piglin also has
+     * {@code admire_item, avoid, celebrate, ride}, so a global catalogue would
+     * send an admin chasing an activity their pet does not have.
+     *
+     * <p>Returns an empty list for goal-only mobs and whenever reflection is
+     * unavailable.
+     */
+    public static List<String> activityNames(LivingEntity entity) {
+        if (!initialized) tryInit(entity);
+        if (!available) return List.of();
+        if (availableBehaviorsByPriorityField == null || activityGetNameMethod == null) return List.of();
+        java.util.LinkedHashSet<String> names = new java.util.LinkedHashSet<>();
+        try {
+            Object schedule = availableBehaviorsByPriorityField.get(brainOf(entity));
+            if (!(schedule instanceof Map<?, ?> priorityMap)) return List.of();
+            for (Object activityMap : priorityMap.values()) {
+                if (!(activityMap instanceof Map<?, ?> behaviorsByActivity)) continue;
+                for (Object activity : behaviorsByActivity.keySet()) {
+                    if (activity == null) continue;
+                    Object name = activityGetNameMethod.invoke(activity);
+                    if (name instanceof String s) names.add(s);
+                }
+            }
+        } catch (Throwable t) {
+            return List.copyOf(names);
+        }
+        return List.copyOf(names);
     }
 
     /**
@@ -296,15 +419,24 @@ public final class BrainAccess {
      * a {@code GateBehavior} composite's inner {@code ShufflingList}. No-op
      * if {@code behavior} isn't a {@code GateBehavior} or if composite
      * reflection isn't available.
+     *
+     * <p>Returns the number of entries removed — its own plus those of its
+     * recursive calls — so the caller's total covers nested removals. Without
+     * that, a strip that only matched inside a composite (e.g.
+     * {@code CamelAi$RandomSitting}, which vanilla nests in a {@code RunOne})
+     * would look like it matched nothing and be reported as a dead
+     * declaration.
      */
-    private static void stripFromComposite(Object behavior, Set<String> simpleClassNames) {
-        if (behavior == null) return;
-        if (gateBehaviorClass == null || !gateBehaviorClass.isInstance(behavior)) return;
+    private static int stripFromComposite(Object behavior, Set<String> simpleClassNames) {
+        if (behavior == null) return 0;
+        if (gateBehaviorClass == null || !gateBehaviorClass.isInstance(behavior)) return 0;
+        int removed = 0;
         try {
             Object shufflingList = gateBehaviorBehaviorsField.get(behavior);
-            if (shufflingList == null) return;
+            if (shufflingList == null) return removed;
             Object entries = shufflingListEntriesField.get(shufflingList);
-            if (!(entries instanceof List<?> list)) return;
+            if (!(entries instanceof List<?> list)) return removed;
+            int before = list.size();
             list.removeIf(entry -> {
                 try {
                     Object data = weightedEntryGetDataMethod.invoke(entry);
@@ -313,15 +445,17 @@ public final class BrainAccess {
                     return false;
                 }
             });
+            removed += before - list.size();
             for (Object entry : list) {
                 try {
                     Object data = weightedEntryGetDataMethod.invoke(entry);
-                    stripFromComposite(data, simpleClassNames);
+                    removed += stripFromComposite(data, simpleClassNames);
                 } catch (Throwable ignored) {
                 }
             }
         } catch (Throwable t) {
             // Don't spam logs — drop silently after a successful init.
         }
+        return removed;
     }
 }

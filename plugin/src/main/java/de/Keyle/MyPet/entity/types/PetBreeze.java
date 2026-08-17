@@ -36,6 +36,7 @@ import org.bukkit.entity.Breeze;
 import org.bukkit.entity.Mob;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +46,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PetBreeze extends PetImpl implements PetFlyingEntity {
 
     public static final ConfigKey<Boolean> CAN_FLY = ConfigKey.bool("Breeze", "CanFly", true);
+
+    /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Empty by default — MyPet strips nothing from this species' brain. The key
+     * exists so an admin can disable brain AI here without a plugin change;
+     * entries are {@code activity:<name>} or {@code behavior:<SimpleClassName>}.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED =
+            ConfigKey.stringList("Breeze", "Brain.Disabled");
 
     public static final PetLifecycleHook LIFECYCLE_HOOK = new PetLifecycleHook(
             "Breeze",

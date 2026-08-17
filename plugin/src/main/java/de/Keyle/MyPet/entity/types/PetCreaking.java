@@ -25,6 +25,7 @@ import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PersistedPet;
@@ -70,6 +71,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -80,6 +82,15 @@ import java.util.function.Supplier;
 @ShopInfo
 @DefaultInfo(food = {Material.RESIN_CLUMP}, leashFlags = {"HeartLinked"}, flySpeed = 0.8811D)
 public class PetCreaking extends PetImpl {
+
+    /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Empty by default — MyPet strips nothing from this species' brain. The key
+     * exists so an admin can disable brain AI here without a plugin change;
+     * entries are {@code activity:<name>} or {@code behavior:<SimpleClassName>}.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED =
+            ConfigKey.stringList("Creaking", "Brain.Disabled");
 
     public static final PetLifecycleHook LIFECYCLE_HOOK = new PetLifecycleHook(
             "Creaking",

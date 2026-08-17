@@ -50,6 +50,15 @@ public class PetHappyGhast extends PetImpl implements PetBaby, PetFlyingEntity, 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("HappyGhast", "experience_bottle");
 
     /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Empty by default — MyPet strips nothing from this species' brain. The key
+     * exists so an admin can disable brain AI here without a plugin change;
+     * entries are {@code activity:<name>} or {@code behavior:<SimpleClassName>}.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED =
+            ConfigKey.stringList("HappyGhast", "Brain.Disabled");
+
+    /**
      * Per-pet creation option spec — admins use
      * {@code /petadmin create <owner> HappyGhast harness:<color>} to spawn a
      * HappyGhast with the matching {@code <COLOR>_HARNESS} material equipped.

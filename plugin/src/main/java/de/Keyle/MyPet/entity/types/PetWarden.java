@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval;
+import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetLavaEntity;
@@ -44,6 +44,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,19 +62,20 @@ public class PetWarden extends PetImpl implements PetLavaEntity {
             new WildAngerCheck<>(Warden.class, warden -> warden.getAngerLevel() != Warden.AngerLevel.CALM);
 
     /**
-     * Strips the brain behaviors that drive autonomous targeting / attacks
-     * ({@code SetRoarTarget} is the load-bearing one) and the emerge/dig
-     * spawn-and-despawn animations.
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Strips the roar/sonic-boom attacks and the emerge/dig spawn animations.
+     *
+     * <p>Targeting suppression does NOT live here: {@code WardenSensor} writes
+     * {@code ATTACK_TARGET} from a Sensor, which is not reachable from the
+     * behavior schedule, so {@link OwnerRetaliationSuppressor} clears that
+     * memory per tick instead.
      */
-    public static final PetBrainBehaviorRemoval BRAIN_BEHAVIOR_REMOVAL = new PetBrainBehaviorRemoval(
-            "Warden",
-            "SetRoarTarget",
-            "Roar",
-            "SonicBoom",
-            "MeleeAttack",
-            "Emerging",
-            "Digging"
-    );
+    public static final ConfigKey<List<String>> BRAIN_DISABLED = ConfigKey.stringList(
+            "Warden", "Brain.Disabled",
+            "behavior:Roar",
+            "behavior:SonicBoom",
+            "behavior:Emerging",
+            "behavior:Digging");
 
     public static final Supplier<Listener> DARKNESS_EFFECT_SUPPRESSOR =
             PetListenerRegistry.register(DarknessEffectSuppressor::new);

@@ -33,6 +33,7 @@ import org.bukkit.entity.Armadillo;
 import org.bukkit.entity.Mob;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Set;
 
 @ShopInfo
@@ -41,6 +42,15 @@ public class PetArmadillo extends PetImpl implements PetBaby, PetNaturalDrop {
 
     public static final ConfigKey<Boolean> CAN_SHED_SCUTE = ConfigKey.bool("Armadillo", "CanShedScute", true);
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Armadillo", "experience_bottle");
+
+    /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Empty by default — MyPet strips nothing from this species' brain. The key
+     * exists so an admin can disable brain AI here without a plugin change;
+     * entries are {@code activity:<name>} or {@code behavior:<SimpleClassName>}.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED =
+            ConfigKey.stringList("Armadillo", "Brain.Disabled");
 
 
     // Paper 1.21.5+ exposes Armadillo#getState() returning an Armadillo.State enum

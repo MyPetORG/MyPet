@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval;
 import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
@@ -37,6 +36,7 @@ import org.bukkit.entity.CamelHusk;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Set;
 
 @ShopInfo
@@ -45,11 +45,14 @@ public class PetCamelHusk extends PetImpl implements PetBaby, PetEquipment, PetM
 
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("CamelHusk", "experience_bottle");
 
-    /** Mirrors {@link PetCamel#BRAIN_BEHAVIOR_REMOVAL} — CamelHusk shares the camel brain. */
-    public static final PetBrainBehaviorRemoval BRAIN_BEHAVIOR_REMOVAL = new PetBrainBehaviorRemoval(
-            "CamelHusk",
-            "RandomSitting"
-    );
+    /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Stops a pet camel autonomously parking itself in the sit pose;
+     * owner-driven sitting is unaffected.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED = ConfigKey.stringList(
+            "CamelHusk", "Brain.Disabled",
+            "behavior:RandomSitting");
 
 
     public PetCamelHusk(MyPetPlayer petOwner) {

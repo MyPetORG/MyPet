@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetApi;
-import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemoval;
 import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.Pet;
@@ -47,6 +46,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -59,13 +59,13 @@ public class PetCamel extends PetImpl implements PetBaby, PetEquipment, PetMulti
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Camel", "experience_bottle");
 
     /**
-     * Strip {@code CamelAi$RandomSitting} so a pet camel never autonomously
-     * parks itself in the sit pose. Owner-driven sitting is unaffected.
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Stops a pet camel autonomously parking itself in the sit pose;
+     * owner-driven sitting is unaffected.
      */
-    public static final PetBrainBehaviorRemoval BRAIN_BEHAVIOR_REMOVAL = new PetBrainBehaviorRemoval(
-            "Camel",
-            "RandomSitting"
-    );
+    public static final ConfigKey<List<String>> BRAIN_DISABLED = ConfigKey.stringList(
+            "Camel", "Brain.Disabled",
+            "behavior:RandomSitting");
 
     public static final PetLifecycleHook WANDER_SUPPRESSOR_HOOK = new PetLifecycleHook(
             "Camel",

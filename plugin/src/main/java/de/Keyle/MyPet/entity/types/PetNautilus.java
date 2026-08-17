@@ -35,6 +35,7 @@ import org.bukkit.inventory.ArmoredSaddledMountInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Set;
 
 @ShopInfo
@@ -43,6 +44,15 @@ public class PetNautilus extends PetImpl implements PetAquaticEntity, PetEquipme
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Nautilus", "CanSwim", true);
     public static final ConfigKey<Boolean> PREVENT_SUFFOCATION = ConfigKey.bool("Nautilus", "PreventSuffocation", true);
+
+    /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Empty by default — MyPet strips nothing from this species' brain. The key
+     * exists so an admin can disable brain AI here without a plugin change;
+     * entries are {@code activity:<name>} or {@code behavior:<SimpleClassName>}.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED =
+            ConfigKey.stringList("Nautilus", "Brain.Disabled");
 
 
     public PetNautilus(MyPetPlayer petOwner) {

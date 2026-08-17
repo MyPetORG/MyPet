@@ -20,9 +20,14 @@
 
 package de.Keyle.MyPet.api.config;
 
+import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.ConfigItem;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
 /**
@@ -159,6 +164,44 @@ public final class ConfigKey<T> {
                 (config, path) -> ConfigItem.createConfigItem(config.getString(path, defaultString)));
         ConfigKeyRegistry.register(ck);
         return ck;
+    }
+
+    /**
+     * Per-pet string-list key. The YAML default is a mutable {@link ArrayList}
+     * because {@code addDefault} serializes it directly; the published value is
+     * an immutable copy so hot-path readers can't mutate shared state.
+     *
+     * @param petType pet type name (e.g. {@code "PiglinBrute"})
+     * @param key     key path under the pet section; dots nest
+     *                (e.g. {@code "Brain.Disabled"})
+     */
+    public static ConfigKey<List<String>> stringList(String petType, String key, String... defaults) {
+        List<String> defaultValue = List.of(defaults);
+        ConfigKey<List<String>> ck = new ConfigKey<>(petType, key, null, defaultValue,
+                new ArrayList<>(defaultValue),
+                (config, path) -> {
+                    if (config.isSet(path) && !config.isList(path)) {
+                        warnNotAList(path);
+                    }
+                    return List.copyOf(config.getStringList(path));
+                });
+        ConfigKeyRegistry.register(ck);
+        return ck;
+    }
+
+    // Guards against a scalar value where a YAML list is expected (e.g. an admin
+    // writing "Disabled: activity:idle" and forgetting the list dash). Bukkit's
+    // getStringList silently returns an empty list for that case, which would
+    // otherwise be indistinguishable from a deliberately empty list — exactly the
+    // silent-failure class this key type exists to avoid. Warns at most once per
+    // path per session since loadFrom runs on every config load/reload.
+    private static final Set<String> NOT_A_LIST_WARNED = ConcurrentHashMap.newKeySet();
+
+    private static void warnNotAList(String path) {
+        if (!NOT_A_LIST_WARNED.add(path)) return;
+        MyPetApi.getLogger().warning(
+                "'" + path + "' is set but is not a YAML list — it must be written as a list "
+                        + "(e.g. lines starting with '- '). Treating it as empty.");
     }
 
     // =====================================================================

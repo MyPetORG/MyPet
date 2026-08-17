@@ -45,6 +45,15 @@ public class PetGoat extends PetImpl implements PetBaby, PetNaturalDrop, PetInte
     public static final ConfigKey<Boolean> CAN_GIVE_MILK = ConfigKey.bool("Goat", "CanGiveMilk", true);
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Goat", "experience_bottle");
 
+    /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Empty by default — MyPet strips nothing from this species' brain. The key
+     * exists so an admin can disable brain AI here without a plugin change;
+     * entries are {@code activity:<name>} or {@code behavior:<SimpleClassName>}.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED =
+            ConfigKey.stringList("Goat", "Brain.Disabled");
+
 
     public static final List<OptionSpec> CREATION_SPECS = PetCreationOptions.specs(
             () -> OptionSpec.ofFlag("screaming",   Goat.class, g -> g.setScreaming(true)),

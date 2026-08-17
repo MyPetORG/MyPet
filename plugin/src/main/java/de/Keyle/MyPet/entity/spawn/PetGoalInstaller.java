@@ -23,13 +23,12 @@ package de.Keyle.MyPet.entity.spawn;
 import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import de.Keyle.MyPet.api.MyPetGlobal;
-import de.Keyle.MyPet.api.brain.PetBrainBehaviorRemovalRegistry;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetSwimmingEntity;
 import de.Keyle.MyPet.api.goal.PetGoalRetentionRegistry;
-import de.Keyle.MyPet.entity.ai.BrainAccess;
+import de.Keyle.MyPet.entity.ai.BrainDisableSpec;
 import de.Keyle.MyPet.entity.ai.attack.PetMeleeAttackGoal;
 import de.Keyle.MyPet.entity.ai.attack.PetRangedAttackGoal;
 import de.Keyle.MyPet.entity.ai.movement.PetAquaticMovementGoal;
@@ -74,7 +73,7 @@ public final class PetGoalInstaller {
 
     public static void install(Pet pet, Mob mob) {
         stripVanillaGoals(mob, PetGoalRetentionRegistry.goalNamesFor(pet));
-        BrainAccess.removeBehaviorsByClassName(mob, PetBrainBehaviorRemovalRegistry.behaviorNamesFor(pet));
+        BrainDisableSpec.apply(pet, mob);
 
         boolean flying = pet instanceof PetFlyingEntity flyer && flyer.canFly();
         boolean swimming = pet instanceof PetSwimmingEntity swimmer && swimmer.canSwim();

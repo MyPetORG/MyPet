@@ -28,12 +28,23 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
+import java.util.List;
+
 @ShopInfo
 @DefaultInfo(food = {Material.SLIME_BALL}, flySpeed = 2.2026D)
 public class PetTadpole extends PetImpl implements PetAquaticEntity {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Tadpole", "CanSwim", true);
     public static final ConfigKey<Boolean> PREVENT_SUFFOCATION = ConfigKey.bool("Tadpole", "PreventSuffocation", true);
+
+    /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Empty by default — MyPet strips nothing from this species' brain. The key
+     * exists so an admin can disable brain AI here without a plugin change;
+     * entries are {@code activity:<name>} or {@code behavior:<SimpleClassName>}.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED =
+            ConfigKey.stringList("Tadpole", "Brain.Disabled");
 
 
     public PetTadpole(MyPetPlayer petOwner) {

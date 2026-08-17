@@ -36,6 +36,7 @@ import org.bukkit.inventory.ArmoredSaddledMountInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Set;
 
 @ShopInfo
@@ -44,6 +45,15 @@ public class PetZombieNautilus extends PetImpl implements PetAmphibiousEntity, P
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("ZombieNautilus", "CanSwim", true);
     public static final ConfigKey<Boolean> PREVENT_DAYLIGHT_BURN = ConfigKey.bool("ZombieNautilus", "PreventDaylightBurn", true);
+
+    /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     * Empty by default — MyPet strips nothing from this species' brain. The key
+     * exists so an admin can disable brain AI here without a plugin change;
+     * entries are {@code activity:<name>} or {@code behavior:<SimpleClassName>}.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED =
+            ConfigKey.stringList("ZombieNautilus", "Brain.Disabled");
 
 
     public PetZombieNautilus(MyPetPlayer petOwner) {
