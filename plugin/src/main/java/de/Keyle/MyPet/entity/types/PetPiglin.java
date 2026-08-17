@@ -31,12 +31,40 @@ import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
 import org.bukkit.Material;
 
+import java.util.List;
+
 @ShopInfo
 @DefaultInfo(food = {Material.GOLD_NUGGET}, flySpeed = 0.7709D)
 public class PetPiglin extends PetImpl implements PetEquipment, PetBaby, PetZombifiable {
 
     public static final ConfigKey<Boolean> ALLOW_ZOMBIFICATION = ConfigKey.bool("Piglin", "AllowZombification", false);
     public static final ConfigKey<ConfigItem> GROW_UP_ITEM = ConfigKey.growUpItem("Piglin", "experience_bottle");
+
+
+    /**
+     * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.
+     *
+     * <p>Both activities are required. {@code fight} holds the melee and chase
+     * behaviors; {@code idle} holds the {@code StartAttacking} that writes
+     * {@code ATTACK_TARGET}. Because {@code Mob#getTarget} falls through to
+     * {@code getTargetFromBrain}, leaving {@code idle} intact would leak the
+     * owner into MyPet's own goal stack as a target even with {@code fight}
+     * emptied. {@code core} is kept — {@code LookAtTargetSink} and
+     * {@code MoveToTargetSink} go inert once nothing writes their memories.
+     *
+     * <p>Activities, not behavior class names: vanilla builds these behaviors
+     * with {@code BehaviorBuilder}, so they reach the brain as anonymous
+     * instances with an empty simple name, and {@code StartAttacking} /
+     * {@code MeleeAttack} are static-factory holders that never appear as an
+     * instance class. A name-based strip removes nothing here — measured.
+     *
+     * <p>Emptying this list in pet-config.yml restores vanilla AI, which means
+     * the pet will attack its owner. That is intended.
+     */
+    public static final ConfigKey<List<String>> BRAIN_DISABLED = ConfigKey.stringList(
+            "Piglin", "Brain.Disabled",
+            "activity:idle",
+            "activity:fight");
 
 
     public PetPiglin(MyPetPlayer petOwner) {
