@@ -68,7 +68,8 @@ public final class ConfigApplier {
 
         if (changedConfigs.has("skilltrees")) {
             File dir = ensureDir("skilltrees");
-            JsonObject files = changedConfigs.getAsJsonObject("skilltrees").getAsJsonObject("files");
+            JsonObject skilltrees = changedConfigs.getAsJsonObject("skilltrees");
+            JsonObject files = skilltrees.getAsJsonObject("files");
             for (Map.Entry<String, JsonElement> entry : files.entrySet()) {
                 // .st.json files store the raw JSON object as written by the editor. A broken
                 // file that can't be parsed round-trips as a raw-text JSON string primitive
@@ -80,6 +81,12 @@ public final class ConfigApplier {
                             ? value.getAsString() : value.toString());
                 }
             }
+            // `files` is the set of files to WRITE, so a skilltree the admin deleted is
+            // merely absent from it — without this the file survives on disk and the next
+            // envelope serves the tree straight back ("it reappears after Review & Save").
+            // Deletions therefore arrive as their own explicit list. Absent from older
+            // editors, in which case nothing is deleted (the previous behaviour).
+            deleteListed(dir, skilltrees, ".st.json", files);
         }
 
         if (changedConfigs.has("locale")) {
@@ -89,6 +96,42 @@ public final class ConfigApplier {
                 File target = safeChildFile(dir, entry.getKey(), ".properties");
                 if (target != null) {
                     write(target, entry.getValue().getAsString());
+                }
+            }
+        }
+    }
+
+    /**
+     * Delete the files named by a bundle's optional {@code removed} array — the
+     * editor's explicit "this file is gone" signal, since {@code files} only ever
+     * says what to write.
+     *
+     * <p>Every name goes through the same {@link #safeChildFile} path-traversal and
+     * suffix guard as a write, so a hostile payload cannot delete outside the
+     * bundle's directory or take out a config/jar. A name that also appears in
+     * {@code written} is skipped: repairing {@code Broken.st.json} into a tree
+     * whose ID is "Broken" both drops it from the broken set and re-emits that
+     * exact filename, and the write must win. Deletion is best-effort — a failure
+     * is logged, never propagated, so it cannot abort an otherwise-good apply.
+     */
+    private void deleteListed(File dir, JsonObject bundle, String requiredSuffix, JsonObject written) {
+        if (!bundle.has("removed") || !bundle.get("removed").isJsonArray()) {
+            return;
+        }
+        for (JsonElement element : bundle.getAsJsonArray("removed")) {
+            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
+                continue;
+            }
+            String name = element.getAsString();
+            if (written.has(name)) {
+                continue;
+            }
+            File target = safeChildFile(dir, name, requiredSuffix);
+            if (target != null) {
+                try {
+                    Files.deleteIfExists(target.toPath());
+                } catch (IOException e) {
+                    MyPetApi.getLogger().warning("WebEditor: could not delete " + target.getPath() + ": " + e.getMessage());
                 }
             }
         }
