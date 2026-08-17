@@ -31,7 +31,6 @@ import de.Keyle.MyPet.commands.help.HelpRegistry;
 import de.Keyle.MyPet.api.player.AdminPermissions;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.util.ConfigItem;
-import de.Keyle.MyPet.api.util.ItemStrings;
 import de.Keyle.MyPet.api.util.locale.Locale;
 import de.Keyle.MyPet.util.MessageUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -44,21 +43,29 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Admin subcommand for inspecting item information relevant to MyPet configuration.
  *
  * <p>This command provides two sub-paths:
  * <ul>
- *   <li>{@code /petadmin info item} -- displays the serialized string representation of the
- *       item currently held in the executing player's main hand, with a clickable [Copy] button</li>
+ *   <li>{@code /petadmin info item} -- displays the material name of the item currently held in
+ *       the executing player's main hand, with a clickable [Copy] button, plus a
+ *       [Copy with NBT] button for the lossless form</li>
  *   <li>{@code /petadmin info leashitem <pettype>} -- displays the configured leash item for the
  *       specified pet type, with a clickable [Copy] button</li>
  * </ul>
  *
  * <p>The {@code item} subcommand can only be executed by a player (not from console).
- * The serialized item strings use the platform helper's {@code itemstackToString} format,
- * which can be pasted directly into MyPet configuration files.
+ *
+ * <p><b>Two output formats, both config-pasteable.</b> The [Copy] button yields a bare material
+ * name (e.g. {@code SHEARS}), which matches any item of that type — the right choice for leash,
+ * food, ride and control items, where a partially damaged tool should still count. The
+ * [Copy with NBT] button yields the dot-prefixed component string (e.g.
+ * {@code . minecraft:shears[minecraft:damage=6]}) for when the exact item must match. Both forms
+ * are parsed by {@link ConfigItem}, so either can be pasted into {@code config.yml} /
+ * {@code pet-config.yml}, and both are accepted in skilltree drop pools.
  *
  * <p>Requires the {@code MyPet.admin.info} permission (or the {@code MyPet.admin} bundle).
  */
@@ -125,11 +132,12 @@ public class CommandOptionInfo {
     }
 
     /**
-     * Displays the serialized string representation of the item held in the player's main hand.
+     * Displays the material name of the item held in the player's main hand.
      *
-     * <p>If the held item is air (empty hand), the string {@code "air"} is displayed.
-     * The output includes a clickable [Copy] button that copies the item string to the
-     * player's clipboard. This command cannot be run from the server console.
+     * <p>If the held item is air (empty hand), the string {@code "air"} is displayed with no
+     * copy buttons. Otherwise the output carries two: [Copy] for the material name, and
+     * [Copy with NBT] for the dot-prefixed component string. This command cannot be run from
+     * the server console.
      *
      * @param sender the command sender; must be a {@link Player} instance
      */
@@ -146,17 +154,56 @@ public class CommandOptionInfo {
             return;
         }
 
-        String itemString = ItemStrings.serialize(itemStack);
+        // Primary token: the plain material name. Matches loosely — any shears, not "a
+        // shears damaged exactly 6 points" — which is what leash/food/ride/control item
+        // comparisons want, since ConfigItem#compare only demands an exact meta match
+        // when the configured item carries meta of its own.
+        String itemString = itemStack.getType().name();
         Component copyButton = Component.text(" [Copy]").color(NamedTextColor.AQUA)
                 .clickEvent(ClickEvent.copyToClipboard(itemString))
                 .hoverEvent(HoverEvent.showText(
-                        Component.text("Click to copy the full item string (paste into a skilltree Sniff drop)")
-                                .color(NamedTextColor.YELLOW)));
+                        Component.text("Click to copy to clipboard").color(NamedTextColor.YELLOW)));
+
+        // Secondary token: the dot-prefixed component string, for when the exact item
+        // (custom name, lore, enchantments, damage) has to be matched rather than any
+        // item of that material. ConfigItem reads the dot prefix as "modern component
+        // string" and hands the remainder to ItemFactory#createItemStack.
+        Component copyNbtButton = Component.text(" [Copy with NBT]").color(NamedTextColor.DARK_AQUA)
+                .clickEvent(ClickEvent.copyToClipboard(toComponentString(itemStack)))
+                .hoverEvent(HoverEvent.showText(
+                        Component.text("Click to copy the full item incl. NBT").color(NamedTextColor.YELLOW)));
 
         sender.sendMessage(MessageUtil.prefixed(
                 Component.text("Item: ").color(NamedTextColor.GRAY)
-                        .append(itemStack.displayName().color(NamedTextColor.WHITE))
-                        .append(copyButton)));
+                        .append(Component.text(itemString).color(NamedTextColor.WHITE))
+                        .append(copyButton)
+                        .append(copyNbtButton)));
+    }
+
+    /**
+     * Builds the dot-prefixed component string for an item, e.g.
+     * {@code . minecraft:diamond_sword[minecraft:damage=53]}.
+     *
+     * <p>The leading {@code ". "} is MyPet's marker for "modern component string" —
+     * {@link ConfigItem} strips it and passes the rest to
+     * {@link org.bukkit.inventory.ItemFactory#createItemStack(String)}. The body follows Paper's
+     * documented recipe for {@link org.bukkit.inventory.meta.ItemMeta#getAsComponentString()}:
+     * the item type key concatenated with the component list.
+     *
+     * <p>Items with no meta yield a bare {@code . minecraft:shears} (Paper renders an empty
+     * component list as {@code []}, which is dropped here rather than pasted into a config).
+     *
+     * @param itemStack the item to describe; must not be air
+     * @return a string {@link ConfigItem} can parse back into an equivalent item
+     */
+    private String toComponentString(ItemStack itemStack) {
+        String typeKey = itemStack.getType().getKey().toString();
+        ItemMeta meta = itemStack.getItemMeta();
+        String components = meta == null ? "" : meta.getAsComponentString();
+        if (components == null || components.isBlank() || components.equals("[]")) {
+            return ". " + typeKey;
+        }
+        return ". " + typeKey + components;
     }
 
     /**
