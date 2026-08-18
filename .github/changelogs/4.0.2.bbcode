@@ -1,0 +1,57 @@
+MyPet 4.0.2 is here! Equipping armor and weapons onto Pets is back after being lost in the 4.0 rewrite, Piglins and Hoglins stop hunting the player who tamed them, and stranded fish finally follow you instead of flopping in place.
+
+[B]MyPet 4.0.2 supports Minecraft 1.20.5 through 26.2[/B], unchanged from 4.0.1. Upgrading is a drop-in jar swap.
+
+If MyPet is useful to you or your players, please consider buying me a coffee: https://ko-fi.com/UserDerezzed
+
+[HEADING=2]Equipping your Pet with armor/tools by hand is back[/HEADING]
+
+Sneak and right-click a Pet with armor or a weapon to put it on, and use shears to strip its gear back off. The interaction was lost when the old NMS modules were removed in 4.0 and is now reimplemented.
+
+Gear the Pet was already wearing is dropped rather than destroyed, in every game mode including creative, and shears take durability damage properly so Unbreaking and the Unbreakable flag are honoured. A slot the species cannot use leaves the click alone instead of swallowing it, so gestures like opening a horse Pet's inventory still work.
+
+[HEADING=2]New AI Brain Disabling options[/HEADING]
+
+Piglin, Piglin Brute, Hoglin and Zoglin Pets kept hunting their own owner. These four run their AI from the newer vanilla "brain" system which previously wasn't configurable and I had to account for aggressive behavior across every individual mob.
+
+Now, it is now a per-pet-type [ICODE]Brain.Disabled[/ICODE] list in [ICODE]pet-config.yml[/ICODE], declared for all 21 brain-driven Pet types, so you can choose which vanilla AI MyPet leaves alone or switch back on what it removes. Entries are [ICODE]activity:<name>[/ICODE] to empty a whole brain activity, or [ICODE]behavior:<ClassName>[/ICODE] for a single behaviour. Emptying the list for the four Pets above gives you the vanilla behaviour back, owner-hunting included.
+
+[HEADING=3]Full changelog:[/HEADING]
+
+[B]Added[/B]
+
+[LIST]
+[*]Added a per-pet-type [ICODE]Brain.Disabled[/ICODE] list to [ICODE]pet-config.yml[/ICODE] for switching a Pet's vanilla brain AI on or off, declared for all 21 brain-driven Pet types; entries are [ICODE]activity:<name>[/ICODE] or [ICODE]behavior:<ClassName>[/ICODE], and unmatched or malformed entries are reported instead of ignored
+[*]Re-added equipping armor and weapons onto a Pet by sneaking and right-clicking it, and stripping its gear with shears, behind [ICODE]MyPet.extended.equip[/ICODE]
+[*]Added a [ICODE]Copy with NBT[/ICODE] button to [ICODE]/petadmin info[/ICODE] for when a config needs to match one exact item rather than any item of that type
+[/LIST]
+
+[B]Changed[/B]
+
+[LIST]
+[*][ICODE]/petadmin info[/ICODE]'s [ICODE]Copy[/ICODE] button now gives you a plain item name that [ICODE]config.yml[/ICODE], [ICODE]pet-config.yml[/ICODE] and skilltree drop pools all accept
+[*]Voxel.Shop downloads now arrive correctly named, and update posts there render properly instead of showing raw formatting codes
+[/LIST]
+
+[B]Fixed[/B]
+
+[LIST]
+[*]Fixed Piglin, Piglin Brute, Hoglin and Zoglin Pets attacking their own owner
+[*]Fixed sneaking and right-clicking a Pet doing nothing on modern clients, which had broken the sit toggle and every other sneak-gated interaction
+[*]Fixed fish and other water-breathing Pets flopping in place on land instead of following their owner
+[*]Fixed aquatic Pets sinking instead of holding position when told to stay in water
+[*]Fixed Warden Pets' roar-target removal silently doing nothing for an entire release line
+[*]Fixed a Pet restored from the database losing track of the gear it was wearing, so nothing dropped on death or release and shears stripped only recently equipped items
+[*]On Folia: fixed the Mining, Lumberjack and Fishing skills erroring and leaving the Pet stuck when it follows its owner to another world
+[*]Fixed auto-respawn never paying out for players without op, even with the [ICODE]MyPet.command.respawn[/ICODE] permission
+[*]Fixed skilltrees deleted in the web editor coming back after Review & Save
+[*]Fixed [ICODE]/petadmin info[/ICODE]'s [ICODE]Copy[/ICODE] button producing a value configs reject with "is not a valid item ID!"
+[/LIST]
+
+[B]Removed[/B]
+
+[LIST]
+[*]Removed the MiniaturePets, PvPArena, UltimateSurvivalGames and SurvivalGames hooks; all four plugins are abandoned
+[/LIST]
+
+Thanks for choosing MyPet!
