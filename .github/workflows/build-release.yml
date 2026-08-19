@@ -54,12 +54,17 @@ jobs:
       # Two representations of the same changelog: `content` is the BBCode the file is
       # written in, for BuiltByBit's XenForo post; `content_html` is HTML for Voxel.Shop,
       # which stores update_description as HTML and does not parse BBCode (posting BBCode
-      # there renders literal "[B]…[/B]" to buyers).
+      # there renders literal "[B]…[/B]" to buyers); `content_discord` is Markdown for the
+      # Hub's Discord embed, and only the "Full changelog:" bullets — an embed description
+      # is capped at 4096 characters and a whole changelog is most of that on its own, so
+      # the prose sections stay on the store pages the announcement already links to.
       #
       # The conversion runs here, not in the Voxel.Shop step, so a changelog using a BBCode
-      # tag the converter doesn't know fails the run *before* the tag push, the Hub upload
+      # tag the converters don't know fails the run *before* the tag push, the Hub upload
       # and both store posts. Nothing is published at that point, so fixing the changelog
-      # (or the converter) and re-dispatching is clean — no republish flags needed.
+      # (or the converter) and re-dispatching is clean — no republish flags needed. The
+      # Discord converter fails the same way on an over-budget result, so a changelog too
+      # long for the embed is caught here rather than reaching players cut off mid-sentence.
       - name: Read changelog
         id: changelog
         shell: bash
@@ -68,6 +73,8 @@ jobs:
           CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}.bbcode"
           if [[ -f "$CHANGELOG_FILE" ]]; then
             CHANGELOG_HTML=$(python3 .github/scripts/bbcode-to-html.py "$CHANGELOG_FILE")
+            CHANGELOG_DISCORD=$(python3 .github/scripts/bbcode-to-discord.py "$CHANGELOG_FILE" \
+              --from-heading 'Full changelog:')
             {
               echo 'content<<EOF'
               cat "$CHANGELOG_FILE"
@@ -76,10 +83,16 @@ jobs:
               echo 'content_html<<EOF'
               echo "$CHANGELOG_HTML"
               echo 'EOF'
+              echo 'content_discord<<EOF'
+              echo "$CHANGELOG_DISCORD"
+              echo 'EOF'
             } >> "$GITHUB_OUTPUT"
           else
             echo "content=Release ${PROJECT_VERSION}" >> "$GITHUB_OUTPUT"
             echo "content_html=<p>Release ${PROJECT_VERSION}</p>" >> "$GITHUB_OUTPUT"
+            # Empty, not a placeholder: the Hub falls back to the commit-subject list, which
+            # is a better announcement than the words "Release 4.0.2" on their own.
+            echo "content_discord=" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build MyPet
@@ -355,8 +368,10 @@ jobs:
           echo "Posted Voxel.Shop update #${UPDATE_ID} for version ${PROJECT_VERSION}" \
                "(${JAR_SIZE} bytes uploaded)"
 
-      # No changelog field: the changelog file is BBCode for the BuiltByBit post;
-      # the Hub's Discord embed falls back to a plain "Release {version}" description.
+      # `changelog` is the Markdown rendering of the changelog's "Full changelog:" bullets
+      # and becomes the Discord embed's description; `commits` is still sent alongside it,
+      # both for the record and because the Hub falls back to a commit-subject list when a
+      # release has no changelog file.
       # 201 = fresh upload. 200 = the Hub already had this build from a previous run (same
       # version + commit) and re-announced on Discord if the first attempt failed. 409 = the
       # version exists from a *different* commit, so the Hub stores and announces nothing;
@@ -367,6 +382,11 @@ jobs:
         env:
           HUB_URL: ${{ secrets.HUB_URL }}
           HUB_UPLOAD_SECRET: ${{ secrets.HUB_UPLOAD_SECRET }}
+          # Through the environment, never inlined as ${{ }} into the script below: a
+          # changelog contains double quotes and backticks, and an expression is substituted
+          # into the bash source *before* the shell parses it, so inlining would break the
+          # quoting and run `pet-config.yml` as a command substitution.
+          CHANGELOG_DISCORD: ${{ steps.changelog.outputs.content_discord }}
         shell: bash
         run: |
           set -euo pipefail
@@ -402,6 +422,7 @@ jobs:
             --form-string "channel=release" \
             --form-string "commit=${GITHUB_SHA}" \
             --form-string "commits=${COMMITS}" \
+            --form-string "changelog=${CHANGELOG_DISCORD}" \
             --form-string "bbbUpdateId=${{ steps.bbb.outputs.update_id }}" \
             --form-string "voxelUpdateId=${{ steps.voxel.outputs.update_id }}" \
             --form-string "commitUrl=${{ github.server_url }}/${{ github.repository }}/commit/${GITHUB_SHA}" \
