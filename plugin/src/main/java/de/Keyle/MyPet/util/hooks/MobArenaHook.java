@@ -110,8 +110,14 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
         if (!ALLOW_PETS) {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(event.getPlayer())) {
                 MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(event.getPlayer());
-                if (player.hasPet() && player.getPet().getStatus() == Pet.PetState.Here) {
-                    player.getPet().removePet();
+                boolean despawnedAny = false;
+                for (Pet pet : player.getPets()) {
+                    if (pet.getStatus() == Pet.PetState.Here) {
+                        pet.removePet();
+                        despawnedAny = true;
+                    }
+                }
+                if (despawnedAny) {
                     player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player.getPlayer()));
                 }
             }

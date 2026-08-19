@@ -59,6 +59,12 @@ import java.util.List;
  * check: holding the command itself is the trigger, so the player does not need
  * to hold the configured {@code Skilltree.Skill.Ride.RIDE_ITEM}.
  */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
+ */
 public class CommandPetRide {
 
     /**

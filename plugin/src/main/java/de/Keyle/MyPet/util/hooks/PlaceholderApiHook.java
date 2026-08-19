@@ -362,6 +362,8 @@ public class PlaceholderApiHook implements ServiceContainer {
                 if (placeHolder.getHolderClass() == Pet.class) {
                     if (MyPetApi.getPlayerManager().isMyPetPlayer(p)) {
                         MyPetPlayer petPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(p);
+                        // Primary pet only: a placeholder expands to a single value, so
+                        // indexed variants (%mypet_name_2%) are Phase 2 -- MyPetORG/MyPet#1435.
                         if (petPlayer.hasPet()) {
                             return ((PlaceHolder<Pet>) placeHolder).getValue(petPlayer.getPet());
                         }

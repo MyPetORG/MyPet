@@ -76,8 +76,10 @@ public class SuperVanishHook implements PlayerVersusPlayerHook {
     public void on(PlayerHideEvent e) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(e.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(e.getPlayer());
-            if (player.hasPet() && player.getPet().getStatus() == Pet.PetState.Here) {
-                player.getPet().removePet(true);
+            for (Pet pet : player.getPets()) {
+                if (pet.getStatus() == Pet.PetState.Here) {
+                    pet.removePet(true);
+                }
             }
         }
     }
@@ -87,8 +89,10 @@ public class SuperVanishHook implements PlayerVersusPlayerHook {
     public void on(PlayerShowEvent e) {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(e.getPlayer())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(e.getPlayer());
-            if (player.hasPet() && player.getPet().getStatus() == Pet.PetState.Despawned && player.getPet().wantsToRespawn()) {
-                player.getPet().createEntity();
+            for (Pet pet : player.getPets()) {
+                if (pet.getStatus() == Pet.PetState.Despawned && pet.wantsToRespawn()) {
+                    pet.createEntity();
+                }
             }
         }
     }

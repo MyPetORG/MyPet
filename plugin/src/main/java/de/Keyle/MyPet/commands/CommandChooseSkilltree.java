@@ -73,6 +73,12 @@ import java.util.*;
  * @see Skilltree
  * @see PetSelectSkilltreeEvent
  */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
+ */
 public class CommandChooseSkilltree {
 
     /**
@@ -142,12 +148,13 @@ public class CommandChooseSkilltree {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
-        if (!MyPetApi.getPetManager().hasActivePet(player)) {
-            player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
-            return;
-        }
+        ActivePetChooser.withActivePet(player,
+                pet -> openSkilltreeChooser(player, pet),
+                () -> player.sendMessage(Locale.getComponent("Message.No.HasPet", player)));
+    }
 
-        final Pet pet = MyPetApi.getPetManager().getPet(player);
+    @SuppressWarnings("unchecked")
+    private void openSkilltreeChooser(Player player, final Pet pet) {
         final MyPetPlayer myPetOwner = pet.getOwner();
 
         if (MyPetGlobal.Skilltree.AUTOMATIC_SKILLTREE_ASSIGNMENT.get() && !Permissions.has(pet.getOwner(), AdminPermissions.BYPASS_SKILLTREE)) {

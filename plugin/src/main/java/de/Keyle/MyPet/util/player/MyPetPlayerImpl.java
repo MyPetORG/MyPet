@@ -20,8 +20,12 @@
 
 package de.Keyle.MyPet.util.player;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.WorldGroup;
@@ -39,6 +43,8 @@ import de.Keyle.MyPet.services.CreakingService;
 import de.Keyle.MyPet.util.CompatUtil;
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
+import net.kyori.adventure.nbt.StringBinaryTag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -68,8 +74,7 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     protected int autoRespawnMin = 1;
     protected volatile float petVolume = 1f;
 
-    protected BiMap<String, UUID> petWorldUUID = HashBiMap.create();
-    protected BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
+    protected final ListMultimap<String, UUID> petWorldUUID = ArrayListMultimap.create();
     protected CompoundBinaryTag extendedInfo = CompoundBinaryTag.empty();
     Map<Component, Long> sentMessages = new HashMap<>();
 
@@ -152,43 +157,85 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             return;
         }
         if (petUUID == null) {
-            petWorldUUID.remove(worldGroup);
-        } else {
-            try {
-                petWorldUUID.put(worldGroup, petUUID);
-            } catch (IllegalArgumentException ignored) {
-            }
+            petWorldUUID.removeAll(worldGroup);
+            return;
         }
+        // Replace, don't append. The BiMap this used to be enforced two things that
+        // ListMultimap does not, and both have to be restored by hand:
+        //
+        //  1. Key uniqueness -- BiMap.put replaced the group's binding, Multimap.put
+        //     appends. /petswitch and friends rebind a group without clearing it, so
+        //     appending would leave the stale pet at index 0, where getPetForWorldGroup
+        //     reads it, and grow the persisted list on every switch.
+        //  2. Value uniqueness -- BiMap rejected binding one pet to a second group
+        //     (the old catch (IllegalArgumentException) swallowed exactly that).
+        //     Without the unbind below, a pet moved between groups stays listed under
+        //     both, and getWorldGroupForPet then answers with whichever key iterates
+        //     first.
+        //
+        // Phase 2 needs a separate "bind an additional pet to this group" path; it must
+        // relax (1) while keeping (2).
+        unbindPetFromAllWorldGroups(petUUID);
+        petWorldUUID.replaceValues(worldGroup, List.of(petUUID));
     }
 
     public void setPetForWorldGroup(WorldGroup worldGroup, UUID petUUID) {
         if (worldGroup == null) {
             return;
         }
-        if (petUUID == null) {
-            petWorldUUID.remove(worldGroup.getName());
-        } else {
-            try {
-                petWorldUUID.put(worldGroup.getName(), petUUID);
-            } catch (IllegalArgumentException ignored) {
-            }
-        }
+        setPetForWorldGroup(worldGroup.getName(), petUUID);
+    }
+
+    /** Drops every binding for this pet, so it can only ever be bound to one world group. */
+    private void unbindPetFromAllWorldGroups(UUID petUUID) {
+        petWorldUUID.entries().removeIf(entry -> entry.getValue().equals(petUUID));
     }
 
     public UUID getPetForWorldGroup(String worldGroup) {
-        return petWorldUUID.get(worldGroup);
+        List<UUID> pets = petWorldUUID.get(worldGroup);
+        return pets.isEmpty() ? null : pets.get(0);
     }
 
     public UUID getPetForWorldGroup(WorldGroup worldGroup) {
-        return petWorldUUID.get(worldGroup.getName());
+        return getPetForWorldGroup(worldGroup.getName());
     }
 
+    public List<UUID> getPetsForWorldGroup(String worldGroup) {
+        // Snapshot, not a view — callers may rebind the group while iterating.
+        return List.copyOf(petWorldUUID.get(worldGroup));
+    }
+
+    public List<UUID> getPetsForWorldGroup(WorldGroup worldGroup) {
+        return getPetsForWorldGroup(worldGroup.getName());
+    }
+
+    public Multimap<String, UUID> getWorldGroupBindings() {
+        // Snapshot, not a view: this is read on the repository's background executor
+        // while the main thread can be rebinding groups.
+        return ImmutableListMultimap.copyOf(petWorldUUID);
+    }
+
+    @Deprecated
     public BiMap<String, UUID> getPetsForWorldGroups() {
-        return petWorldUUID;
+        // Lossy by construction -- a BiMap cannot hold two pets for one group, nor the
+        // same pet under two groups. Retained only so addons compiled against the
+        // pre-multi-pet API keep linking; take the first binding per group and skip any
+        // pet already present, since BiMap.put would throw on a duplicate value.
+        BiMap<String, UUID> primaryBindings = HashBiMap.create();
+        for (String worldGroup : petWorldUUID.keySet()) {
+            List<UUID> bound = petWorldUUID.get(worldGroup);
+            if (!bound.isEmpty() && !primaryBindings.containsValue(bound.get(0))) {
+                primaryBindings.put(worldGroup, bound.get(0));
+            }
+        }
+        return primaryBindings;
     }
 
     public String getWorldGroupForPet(UUID petUUID) {
-        return petUUIDWorld.get(petUUID);
+        for (Map.Entry<String, UUID> entry : petWorldUUID.entries()) {
+            if (entry.getValue().equals(petUUID)) return entry.getKey();
+        }
+        return null;
     }
 
     public boolean hasPetInWorldGroup(String worldGroup) {
@@ -244,6 +291,14 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
     public Pet getPet() {
         return MyPetApi.getPetManager().getPet(this);
+    }
+
+    public List<Pet> getPets() {
+        return MyPetApi.getPetManager().getPets(this);
+    }
+
+    public int getPetCount() {
+        return MyPetApi.getPetManager().getPets(this).size();
     }
 
     public Player getPlayer() {
@@ -304,7 +359,11 @@ public class MyPetPlayerImpl implements MyPetPlayer {
 
         CompoundBinaryTag.Builder multiWorldBuilder = CompoundBinaryTag.builder();
         for (String worldGroupName : petWorldUUID.keySet()) {
-            multiWorldBuilder.putString(worldGroupName, petWorldUUID.get(worldGroupName).toString());
+            List<StringBinaryTag> petTags = new ArrayList<>();
+            for (UUID petUUID : petWorldUUID.get(worldGroupName)) {
+                petTags.add(StringBinaryTag.stringBinaryTag(petUUID.toString()));
+            }
+            multiWorldBuilder.put(worldGroupName, ListBinaryTag.from(petTags));
         }
 
         return CompoundBinaryTag.builder()
@@ -367,8 +426,15 @@ public class MyPetPlayerImpl implements MyPetPlayer {
         if (myplayerNBT.keySet().contains("MultiWorld")) {
             CompoundBinaryTag worldGroups = myplayerNBT.getCompound("MultiWorld");
             for (String worldGroupName : worldGroups.keySet()) {
-                String petUUID = worldGroups.getString(worldGroupName);
-                setPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
+                BinaryTag tag = worldGroups.get(worldGroupName);
+                if (tag instanceof ListBinaryTag list) {
+                    for (BinaryTag petUUID : list) {
+                        setPetForWorldGroup(worldGroupName, UUID.fromString(((StringBinaryTag) petUUID).value()));
+                    }
+                } else if (tag instanceof StringBinaryTag single) {
+                    // Legacy scalar form.
+                    setPetForWorldGroup(worldGroupName, UUID.fromString(single.value()));
+                }
             }
         }
     }

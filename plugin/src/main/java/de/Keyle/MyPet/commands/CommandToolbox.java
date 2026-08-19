@@ -48,6 +48,12 @@ import java.util.List;
  *
  * @see ToolboxImpl
  */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
+ */
 public class CommandToolbox {
 
     /** Registers the {@code /pettoolbox} Brigadier command and its help entry. */

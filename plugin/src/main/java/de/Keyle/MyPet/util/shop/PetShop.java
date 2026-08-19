@@ -98,6 +98,7 @@ public class PetShop {
             if (owner == null) {
                 return;
             }
+            // hasPet(): the gate is "already has something out", not a specific pet.
             if (owner.hasPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
                 player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.HasPet", player));
                 return;

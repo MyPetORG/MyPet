@@ -452,6 +452,9 @@ public class PetRangedAttackGoal implements Goal<Mob> {
             return null;
         }
         MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
+        // Primary pet only: this resolves a player back to "their" pet for projectile
+        // attribution, which has no unambiguous answer once several are out.
+        // Phase 2 -- MyPetORG/MyPet#1435.
         return (myPetPlayer != null && myPetPlayer.hasPet()) ? myPetPlayer.getPet() : null;
     }
 

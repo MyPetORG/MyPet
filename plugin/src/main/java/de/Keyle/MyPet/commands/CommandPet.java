@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import com.mojang.brigadier.Command;
 import de.Keyle.MyPet.MyPetApi;
+import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.gui.MenuId;
 import de.Keyle.MyPet.api.gui.MenuIds;
 import de.Keyle.MyPet.commands.help.HelpEntry;
@@ -36,6 +37,12 @@ import java.util.List;
  * Handles the {@code /pet} command — opens the pet management menu for the player's
  * active pet, or delegates to {@link CommandSwitch#openSwitchMenu(Player)} when the
  * player has no active pet.
+ */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
  */
 public class CommandPet {
 
@@ -61,16 +68,18 @@ public class CommandPet {
         ));
     }
 
-    @SuppressWarnings("unchecked")
     private void executeOpen(Player viewer) {
-        if (MyPetApi.getPetManager().hasActivePet(viewer)) {
-            MyPetApi.getGuiService().openMenu(
-                    viewer,
-                    (MenuId<PetMenuContext>) (MenuId<?>) MenuIds.PET_MENU,
-                    new PetMenuContext(viewer, MyPetApi.getPetManager().getPet(viewer))
-            );
-            return;
-        }
-        CommandSwitch.openSwitchMenu(viewer);
+        ActivePetChooser.withActivePet(viewer,
+                pet -> openPetMenu(viewer, pet),
+                () -> CommandSwitch.openSwitchMenu(viewer));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void openPetMenu(Player viewer, Pet pet) {
+        MyPetApi.getGuiService().openMenu(
+                viewer,
+                (MenuId<PetMenuContext>) (MenuId<?>) MenuIds.PET_MENU,
+                new PetMenuContext(viewer, pet)
+        );
     }
 }

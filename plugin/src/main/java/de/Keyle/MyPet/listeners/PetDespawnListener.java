@@ -51,11 +51,10 @@ public class PetDespawnListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if (MyPetApi.getPetManager().hasActivePet(event.getPlayer())) {
-            Pet pet = MyPetApi.getPetManager().getPet(event.getPlayer());
-            if (pet != null) {
-                pet.removePet(false);
-            }
+        // Every Pet, not just the primary one: a Pet left behind here is an entity
+        // that stays in the world after its owner logs out.
+        for (Pet pet : MyPetApi.getPetManager().getPets(event.getPlayer())) {
+            pet.removePet(false);
         }
     }
 

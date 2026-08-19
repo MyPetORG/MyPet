@@ -90,7 +90,7 @@ public class PetDeathListener implements Listener {
 
             pet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Command.Release.Dead", owner, pet.getDisplayName()));
 
-            getPetManager().deactivatePet(owner, false);
+            getPetManager().deactivatePet(owner, pet, false);
             MyPetPlugin.getInstance().getRepository().removePet(pet.getUUID())
                     .thenRun(() -> getPetManager().refreshOwnership(owner));
 

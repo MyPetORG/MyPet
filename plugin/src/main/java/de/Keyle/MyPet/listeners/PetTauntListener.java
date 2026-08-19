@@ -55,20 +55,25 @@ public class PetTauntListener implements Listener {
         // Never rewire another MyPet's targeting.
         if (PetEntityMarker.isMarked(mob)) return;
 
-        Pet pet = getPetManager().getPet(targetPlayer);
-        if (pet == null || pet.getStatus() != PetState.Here) return;
-        Mob petMob = pet.getBukkitEntity();
-        if (petMob == null || petMob.isDead() || petMob.equals(mob)) return;
-        if (!petMob.getWorld().equals(mob.getWorld())) return;
+        // A mob can only be retargeted once, so the first Pet that is out, in range,
+        // and taunting takes it. Iterating rather than reading the owner's primary Pet
+        // means a taunting Pet is not ignored just because another was summoned first.
+        for (Pet pet : getPetManager().getPets(targetPlayer)) {
+            if (pet.getStatus() != PetState.Here) continue;
+            Mob petMob = pet.getBukkitEntity();
+            if (petMob == null || petMob.isDead() || petMob.equals(mob)) continue;
+            if (!petMob.getWorld().equals(mob.getWorld())) continue;
 
-        Taunt taunt = pet.getSkills().get(Taunt.class);
-        if (taunt == null || !taunt.isActive()) return;
-        if (TauntImpl.isFriendly(pet)) return;
+            Taunt taunt = pet.getSkills().get(Taunt.class);
+            if (taunt == null || !taunt.isActive()) continue;
+            if (TauntImpl.isFriendly(pet)) continue;
 
-        double range = taunt.getRange().getValue().doubleValue();
-        if (petMob.getLocation().distanceSquared(mob.getLocation()) > range * range) return;
+            double range = taunt.getRange().getValue().doubleValue();
+            if (petMob.getLocation().distanceSquared(mob.getLocation()) > range * range) continue;
 
-        event.setTarget(petMob);
-        TauntImpl.playGrowlCue(petMob);
+            event.setTarget(petMob);
+            TauntImpl.playGrowlCue(petMob);
+            return;
+        }
     }
 }

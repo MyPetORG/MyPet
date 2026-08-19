@@ -133,7 +133,7 @@ public class RebuildPlayersSchemaOnMojangUuid implements DatabaseMigration {
                         + "health_bar INTEGER, "
                         + "pet_idle_volume FLOAT, "
                         + "extended_info BLOB, "
-                        + "multi_world VARCHAR(2000), "
+                        + "multi_world TEXT, "
                         + "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
                         + ")");
 

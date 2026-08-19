@@ -324,7 +324,7 @@ public class CommandOptionCreate {
                     newOwner = MyPetApi.getPlayerManager().getMyPetPlayer(owner);
 
                     if (newOwner.hasPet() && force) {
-                        MyPetApi.getPetManager().deactivatePet(newOwner, true);
+                        MyPetApi.getPetManager().deactivatePet(newOwner, newOwner.getPet(), true);
                     }
                 } else {
                     newOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(owner);

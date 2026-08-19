@@ -56,6 +56,12 @@ import java.util.List;
  *
  * @see PetSendAwayEvent
  */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
+ */
 public class CommandSendAway {
 
     /**
@@ -131,6 +137,8 @@ public class CommandSendAway {
             sender.sendMessage(Locale.getComponent("Message.No.PlayerOnline", lang));
             return;
         }
+        // Primary pet only: /petsendaway targets one pet; the pet-name argument is
+        // Phase 2 -- MyPetORG/MyPet#1435.
         if (petOwner != null && petOwner.hasPet()) {
             Pet pet = petOwner.getPet();
             if (pet.getStatus() == PetState.Here) {

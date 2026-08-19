@@ -40,8 +40,7 @@ public class VehicleListener implements Listener {
         // that case via the PetEntityMarker check.
         if (event.getEntered() instanceof Player player
                 && !PetEntityMarker.isMarked(event.getVehicle())) {
-            if (MyPetApi.getPetManager().hasActivePet(player)) {
-                Pet pet = MyPetApi.getPetManager().getPet(player);
+            for (Pet pet : MyPetApi.getPetManager().getPets(player)) {
                 if (pet.getStatus() == Pet.PetState.Here) {
                     pet.removePet(true);
                 }

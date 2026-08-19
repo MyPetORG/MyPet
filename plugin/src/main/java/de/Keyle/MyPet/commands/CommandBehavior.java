@@ -64,6 +64,12 @@ import java.util.List;
  * @see BehaviorImpl
  * @see BehaviorMode
  */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
+ */
 public class CommandBehavior {
 
     /** The list of recognized behavior mode names used for tab-completion suggestions. */

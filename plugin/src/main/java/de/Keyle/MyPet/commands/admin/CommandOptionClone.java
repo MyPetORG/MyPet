@@ -117,6 +117,8 @@ public class CommandOptionClone {
 
         MyPetPlayer oldPetOwner = MyPetApi.getPlayerManager().getMyPetPlayer(oldOwner);
 
+        // Primary pet only: /petadmin clone copies one pet between owners.
+        // Phase 2 -- MyPetORG/MyPet#1435.
         if (!oldPetOwner.hasPet()) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, oldOwner.getName())));
             return;

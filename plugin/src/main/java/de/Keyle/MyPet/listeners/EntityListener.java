@@ -193,6 +193,8 @@ public class EntityListener implements Listener {
             if (WorldGroup.getGroupByWorld(player.getWorld()).isDisabled()) {
                 return;
             }
+            // hasPet(): a leash throw is only tagged when the thrower has NOTHING out,
+            // so this is a presence check, not a per-pet one.
             if (!MyPetApi.getPlayerManager().isMyPetPlayer(player) || !MyPetApi.getPlayerManager().getMyPetPlayer(player).hasPet()) {
                 ItemStack leashItem = usedItems.get(player.getUniqueId());
                 if (leashItem != null) {
@@ -488,8 +490,8 @@ public class EntityListener implements Listener {
                     if (target instanceof Tameable && source.equals(((Tameable) target).getOwner())) {
                         return;
                     }
-                    if (getPetManager().hasActivePet(player)) {
-                        Pet pet = getPetManager().getPet(player);
+                    // Every Pet the owner has out retaliates, not just the primary one.
+                    for (Pet pet : getPetManager().getPets(player)) {
                         if (pet.getStatus() == PetState.Here) {
                             Mob entity = pet.getBukkitEntity();
                             if (entity != null && target != entity) {
@@ -545,8 +547,9 @@ public class EntityListener implements Listener {
                         pet.getExperience().addExp(damagePercentMap.get(entity.getUniqueId()) * randomExp, true);
                     }
                 } else if (entity instanceof Player owner) {
-                    if (getPetManager().hasActivePet(owner)) {
-                        Pet pet = getPetManager().getPet(owner);
+                    // Credit every Pet the owner has out. `continue` now skips the Pet
+                    // that cannot be levelled rather than abandoning the whole damager.
+                    for (Pet pet : getPetManager().getPets(owner)) {
                         if (MyPetGlobal.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE.get() && pet.getSkilltree() == null) {
                             if (!pet.autoAssignSkilltree()) {
                                 continue;
@@ -563,8 +566,7 @@ public class EntityListener implements Listener {
                     }
                 } else if (entity instanceof Tameable tameable) {
                     if (tameable.isTamed() && tameable.getOwner() != null && tameable.getOwner() instanceof Player owner) {
-                        if (getPetManager().hasActivePet(owner)) {
-                            Pet pet = getPetManager().getPet(owner);
+                        for (Pet pet : getPetManager().getPets(owner)) {
                             if (MyPetGlobal.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE.get() && pet.getSkilltree() == null) {
                                 continue;
                             }
@@ -596,11 +598,10 @@ public class EntityListener implements Listener {
                 }
                 pet.getExperience().addExp(edbee.getEntity(), true);
             } else if (damager instanceof Player owner) {
-                if (getPetManager().hasActivePet(owner)) {
-                    Pet pet = getPetManager().getPet(owner);
+                for (Pet pet : getPetManager().getPets(owner)) {
                     if (MyPetGlobal.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE.get() && pet.getSkilltree() == null) {
                         if (!pet.autoAssignSkilltree()) {
-                            return;
+                            continue;
                         }
                     }
                     if (pet.isPassive() || MyPetGlobal.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP.get()) {
@@ -613,10 +614,9 @@ public class EntityListener implements Listener {
                 }
             } else if (damager instanceof Tameable tameable) {
                 if (tameable.isTamed() && tameable.getOwner() != null && tameable.getOwner() instanceof Player owner) {
-                    if (getPetManager().hasActivePet(owner)) {
-                        Pet pet = getPetManager().getPet(owner);
+                    for (Pet pet : getPetManager().getPets(owner)) {
                         if (MyPetGlobal.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE.get() && pet.getSkilltree() == null) {
-                            return;
+                            continue;
                         }
                         if (pet.isPassive() || MyPetGlobal.LevelSystem.Experience.ALWAYS_GRANT_PASSIVE_XP.get()) {
                             if (pet.getStatus() == PetState.Here) {

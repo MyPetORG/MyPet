@@ -56,6 +56,12 @@ import org.bukkit.entity.Player;
  *
  * <p>Requires the {@code MyPet.admin.respawn} permission (or the {@code MyPet.admin} bundle).
  */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
+ */
 public class CommandOptionRespawn {
 
     /**

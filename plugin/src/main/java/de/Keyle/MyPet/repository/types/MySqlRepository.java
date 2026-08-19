@@ -191,7 +191,9 @@ public class MySqlRepository extends AbstractSqlRepository {
                     "health_bar INTEGER, " +
                     "pet_idle_volume FLOAT, " +
                     "extended_info BLOB, " +
-                    "multi_world VARCHAR(2000), " +
+                    // Sized for the multi-pet array form. Existing installs are widened by
+                    // WidenMultiWorldColumnForMultiPet; SQLite ignores the declared width.
+                    "multi_world TEXT, " +
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " +
                     "PRIMARY KEY ( uuid )" +
                     ")");
@@ -221,6 +223,8 @@ public class MySqlRepository extends AbstractSqlRepository {
         switch (metaData.getColumnTypeName(column)) {
             case "BLOB":
                 try {
+                    // Pre-JSON NBT format. Always one pet per world group by construction —
+                    // it predates multi-pet, so no array form can appear here.
                     CompoundBinaryTag worldGroups = NbtUtil.readCompressed(
                             rs.getBlob(column).getBinaryStream());
                     for (String worldGroupName : worldGroups.keySet()) {

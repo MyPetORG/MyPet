@@ -227,6 +227,15 @@ plugwright {
     runDir.set(file("build/plugwright-run"))
     acceptEula.set(true)
 
+    // Multi-pet Phase 1 capacity proof only (MyPetORG/MyPet#1435). Absent by default,
+    // so a plain `./gradlew plugwrightTest` runs the whole suite at the shipped cap of 1
+    // -- booting every spec at a raised cap would change their behavior and void the
+    // phase's "no new failing spec" acceptance criterion.
+    //   ./gradlew plugwrightTest -PtestFiles="multi-pet-capacity" -PmultiPetCap=2
+    if (project.hasProperty("multiPetCap")) {
+        jvmArgs.add("-Dmypet.maxActivePets=${project.property("multiPetCap")}")
+    }
+
     // The economy suite (economy/*.spec.ts) needs a Vault economy provider for
     // /petshop, /petchooseskilltree's switch fee, and /petrespawn pay/auto
     // (both jars confirmed 1.21.11-compatible via Modrinth's version API):

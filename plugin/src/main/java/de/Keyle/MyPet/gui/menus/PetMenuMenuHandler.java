@@ -608,7 +608,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
 
         viewer.sendMessage(Locale.getFormattedComponent(
             "Message.Command.Release.Success", viewer, pet.getDisplayName()));
-        MyPetApi.getPetManager().deactivatePet(pet.getOwner(), false);
+        MyPetApi.getPetManager().deactivatePet(pet.getOwner(), pet, false);
         MyPetPlugin.getInstance().getRepository().removePet(pet.getUUID())
                 .thenRun(() -> MyPetApi.getPetManager().refreshOwnership(pet.getOwner()));
     }
@@ -748,6 +748,8 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
             viewer.sendMessage(Locale.getComponent("Message.No.Allowed", viewer));
             return;
         }
+        // Primary pet only: the pet menu acts on one pet at a time.
+        // Phase 2 -- MyPetORG/MyPet#1435.
         if (!owner.hasPet()) {
             viewer.sendMessage(Locale.getComponent("Message.Command.Switch.NoPet", viewer));
             return;
@@ -767,7 +769,7 @@ public final class PetMenuMenuHandler implements MenuHandler<PetMenuContext> {
                         "Message.Command.Switch.Limit", viewer, maxPetCount));
                     return;
                 }
-                if (MyPetApi.getPetManager().deactivatePet(owner, true)) {
+                if (MyPetApi.getPetManager().deactivatePet(owner, pet, true)) {
                     owner.setPetForWorldGroup(worldGroup, null);
                     viewer.sendMessage(Locale.getFormattedComponent(
                         "Message.Command.Switch.Success", viewer, pet.getDisplayName()));

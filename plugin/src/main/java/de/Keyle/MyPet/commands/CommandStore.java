@@ -57,6 +57,12 @@ import java.util.List;
  *   <li>{@code MyPet.admin} -- grants the maximum configured storage limit</li>
  * </ul>
  */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
+ */
 public class CommandStore {
 
     /**
@@ -115,6 +121,8 @@ public class CommandStore {
                 return;
             }
 
+            // Primary pet only: /petstore stores one pet; the pet-name argument is
+            // Phase 2 -- MyPetORG/MyPet#1435.
             if (owner.hasPet()) {
                 MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
                         if (owner.hasPet()) {
@@ -126,7 +134,7 @@ public class CommandStore {
                                 player.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Limit", player, maxPetCount));
                                 return;
                             }
-                            if (MyPetApi.getPetManager().deactivatePet(owner, true)) {
+                            if (MyPetApi.getPetManager().deactivatePet(owner, owner.getPet(), true)) {
                                 owner.setPetForWorldGroup(worldGroup, null);
                                 player.sendMessage(Locale.getFormattedComponent("Message.Command.Switch.Success", player, pet.getDisplayName()));
                             }

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.api.player;
 
 import com.google.common.collect.BiMap;
+import com.google.common.collect.Multimap;
 import de.Keyle.MyPet.api.WorldGroup;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.util.NBTStorage;
@@ -30,6 +31,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -91,13 +93,30 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
     /** Binds a pet UUID as the active pet for the given world group. */
     void setPetForWorldGroup(WorldGroup worldGroup, UUID petUUID);
 
-    /** Returns the active pet UUID for the given world group, or {@code null}. */
+    /** Returns the first (primary) pet bound to the given world group, or {@code null}. */
     UUID getPetForWorldGroup(String worldGroup);
 
-    /** Returns the active pet UUID for the given world group, or {@code null}. */
+    /** Returns the first (primary) pet bound to the given world group, or {@code null}. */
     UUID getPetForWorldGroup(WorldGroup worldGroup);
 
-    /** Returns the full world-group → pet UUID mapping (bidirectional). */
+    /** Returns all pets bound to the given world group, in binding order. */
+    List<UUID> getPetsForWorldGroup(String worldGroup);
+
+    /** Returns all pets bound to the given world group, in binding order. */
+    List<UUID> getPetsForWorldGroup(WorldGroup worldGroup);
+
+    /** Returns the full world-group → pet UUID bindings. */
+    Multimap<String, UUID> getWorldGroupBindings();
+
+    /**
+     * Returns the primary world-group → pet UUID binding for each group.
+     *
+     * @deprecated a world group may hold more than one pet binding, which a
+     *             {@link BiMap} cannot represent. Use {@link #getWorldGroupBindings()}.
+     *             This method returns a snapshot containing only the first binding
+     *             per group.
+     */
+    @Deprecated
     BiMap<String, UUID> getPetsForWorldGroups();
 
     /** Returns the world group name that a pet UUID is bound to. */
@@ -134,14 +153,26 @@ public interface MyPetPlayer extends Scheduler, NBTStorage {
     /** Returns the player's locale code (e.g. {@code "en_us"}). */
     String getLanguage();
 
-    /** Returns {@code true} if this player has an active (live) pet. */
+    /** Returns {@code true} if this player has at least one active (live) pet. */
     boolean hasPet();
 
     /**
-     * Returns the player's currently active pet, or {@code null} if no
-     * pet is active in the current world group.
+     * Returns the player's primary active pet — the first one activated that
+     * is still active — or {@code null} if none is active in the current world
+     * group.
+     * <p>
+     * Prefer {@link #getPets()} for anything that should affect every pet the
+     * player has out; this accessor is for call sites that genuinely mean one
+     * specific pet, and for compatibility with addons written before multi-pet
+     * support.
      */
     Pet getPet();
+
+    /** Returns all of this player's active pets, in activation order. Never {@code null}. */
+    List<Pet> getPets();
+
+    /** Returns the number of currently active pets for this player. */
+    int getPetCount();
 
     /**
      * Returns the underlying Bukkit player. Only valid when

@@ -116,6 +116,8 @@ public class CommandOptionRemove {
             return;
         }
         MyPetPlayer petOwner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
+        // Primary pet only: /petadmin remove targets one pet.
+        // Phase 2 -- MyPetORG/MyPet#1435.
         if (!petOwner.hasPet()) {
             sender.sendMessage(MessageUtil.prefixed(Locale.getFormattedComponent("Message.No.UserHavePet", lang, player.getName())));
             return;
@@ -126,7 +128,7 @@ public class CommandOptionRemove {
         Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
         pet.getOwner().setPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), null);
-        MyPetApi.getPetManager().deactivatePet(pet.getOwner(), false);
+        MyPetApi.getPetManager().deactivatePet(pet.getOwner(), pet, false);
         MyPetPlugin.getInstance().getRepository().removePet(pet.getUUID())
                 .thenRun(() -> MyPetApi.getPetManager().refreshOwnership(pet.getOwner()));
 

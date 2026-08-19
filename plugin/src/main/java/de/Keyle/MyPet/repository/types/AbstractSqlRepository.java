@@ -20,7 +20,10 @@
 
 package de.Keyle.MyPet.repository.types;
 
+import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import de.Keyle.MyPet.MyPetApi;
@@ -214,13 +217,38 @@ public abstract class AbstractSqlRepository implements Repository {
         try {
             JsonObject jsonObject = gson.fromJson(rs.getString("multi_world"), JsonObject.class);
             if (jsonObject == null) return;
-            for (String uuid : jsonObject.keySet()) {
-                String petUUID = jsonObject.get(uuid).getAsString();
-                player.setPetForWorldGroup(uuid, UUID.fromString(petUUID));
+            for (String worldGroup : jsonObject.keySet()) {
+                JsonElement value = jsonObject.get(worldGroup);
+                if (value.isJsonArray()) {
+                    for (JsonElement petUUID : value.getAsJsonArray()) {
+                        player.setPetForWorldGroup(worldGroup, UUID.fromString(petUUID.getAsString()));
+                    }
+                } else {
+                    // Legacy scalar form, written by every build before multi-pet Phase 1.
+                    player.setPetForWorldGroup(worldGroup, UUID.fromString(value.getAsString()));
+                }
             }
         } catch (JsonParseException e) {
             reportError(e);
         }
+    }
+
+    /**
+     * Serializes a player's world-group bindings for the {@code multi_world} column.
+     * Always emits the array form; {@link #readPlayerMultiWorld} still accepts the
+     * legacy scalar form written by pre-Phase-1 builds.
+     */
+    protected static JsonObject serializeMultiWorld(MyPetPlayer player) {
+        JsonObject multiWorldObject = new JsonObject();
+        Multimap<String, UUID> bindings = player.getWorldGroupBindings();
+        for (String group : bindings.keySet()) {
+            JsonArray petUUIDs = new JsonArray();
+            for (UUID petUUID : bindings.get(group)) {
+                petUUIDs.add(petUUID.toString());
+            }
+            multiWorldObject.add(group, petUUIDs);
+        }
+        return multiWorldObject;
     }
 
     /**
@@ -1025,11 +1053,7 @@ public abstract class AbstractSqlRepository implements Repository {
             stmt.setFloat(5, player.getPetVolume());
             bindBlob(stmt, 6, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
 
-            JsonObject multiWorldObject = new JsonObject();
-            for (String g : player.getPetsForWorldGroups().keySet()) {
-                multiWorldObject.addProperty(g, player.getPetsForWorldGroups().get(g).toString());
-            }
-            stmt.setString(7, gson.toJson(multiWorldObject));
+            stmt.setString(7, gson.toJson(serializeMultiWorld(player)));
             stmt.setString(8, player.getUniqueId().toString());
             return stmt.executeUpdate() > 0;
         } catch (SQLException | IOException e) {
@@ -1077,11 +1101,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setBoolean(5, player.isHealthBarActive());
                 stmt.setFloat(6, player.getPetVolume());
                 bindBlob(stmt, 7, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
-                JsonObject multiWorldObject = new JsonObject();
-                for (String g : player.getPetsForWorldGroups().keySet()) {
-                    multiWorldObject.addProperty(g, player.getPetsForWorldGroups().get(g).toString());
-                }
-                stmt.setString(8, gson.toJson(multiWorldObject));
+                stmt.setString(8, gson.toJson(serializeMultiWorld(player)));
                 return stmt.executeUpdate() > 0;
             } catch (SQLException | IOException e) {
                 reportError(e);
@@ -1225,11 +1245,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setBoolean(5, player.isHealthBarActive());
                 stmt.setFloat(6, player.getPetVolume());
                 bindBlob(stmt, 7, NbtUtil.writeCompressed(((MyPetPlayerImpl) player).getExtendedInfo()));
-                JsonObject multiWorldObject = new JsonObject();
-                for (String g : player.getPetsForWorldGroups().keySet()) {
-                    multiWorldObject.addProperty(g, player.getPetsForWorldGroups().get(g).toString());
-                }
-                stmt.setString(8, gson.toJson(multiWorldObject));
+                stmt.setString(8, gson.toJson(serializeMultiWorld(player)));
                 stmt.addBatch();
                 if (++i % 500 == 0 && i != players.size()) {
                     stmt.executeBatch();

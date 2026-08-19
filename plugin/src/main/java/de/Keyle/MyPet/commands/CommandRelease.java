@@ -72,6 +72,12 @@ import java.util.List;
  *   <li>{@code MyPet.command.release} -- required to release a pet</li>
  * </ul>
  */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
+ */
 public class CommandRelease {
     /**
      * Registers the {@code /petrelease} Brigadier command and its help entry.
@@ -220,7 +226,7 @@ public class CommandRelease {
             pet.getOwner().setPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()), null);
 
             petOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Release.Success", petOwner, pet.getDisplayName()));
-            MyPetApi.getPetManager().deactivatePet(pet.getOwner(), false);
+            MyPetApi.getPetManager().deactivatePet(pet.getOwner(), pet, false);
             MyPetPlugin.getInstance().getRepository().removePet(pet.getUUID())
                     .thenRun(() -> MyPetApi.getPetManager().refreshOwnership(pet.getOwner()));
         } else {

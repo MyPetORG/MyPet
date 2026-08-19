@@ -160,7 +160,11 @@ public class SqLiteRepository extends AbstractSqlRepository {
                     "health_bar INTEGER, " +
                     "pet_idle_volume FLOAT, " +
                     "extended_info BLOB, " +
-                    "multi_world VARCHAR(2000), " +
+                    // SQLite ignores declared column lengths (dynamic typing), so this is a
+                    // no-op for existing installs and simply documents the intended width for
+                    // the multi-pet array form. The enforced-width case is MySQL — see
+                    // MySqlRepository and docs/specs/2026-08-15-multi-pet-phase1.md §5.7.
+                    "multi_world TEXT, " +
                     "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                     ")");
             createTimestampTrigger("players", "last_update", "uuid");

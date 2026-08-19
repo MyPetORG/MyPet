@@ -99,8 +99,10 @@ public class PetSurvivalListener implements Listener {
             Player ownerPlayer = myPetPlayer.getPlayer();
             if (ownerPlayer == null) return;
             ownerPlayer.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> {
-                if (myPetPlayer.hasPet()) {
-                    Pet runPet = myPetPlayer.getPet();
+                // Re-summon the pet that suffocated, not whichever pet happens to be
+                // primary now — the owner may have others out.
+                if (myPetPlayer.getPets().contains(pet)) {
+                    Pet runPet = pet;
                     switch (runPet.createEntity()) {
                         case Canceled:
                             runPet.getOwner().sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", pet.getOwner(), runPet.getDisplayName()));

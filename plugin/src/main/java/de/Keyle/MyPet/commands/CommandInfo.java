@@ -162,6 +162,8 @@ public class CommandInfo {
             return;
         }
 
+        // Primary pet only: /petinfo prints one pet; the optional pet-name argument
+        // that disambiguates is Phase 2 -- MyPetORG/MyPet#1435.
         if (petOwner.hasPet()) {
             boolean infoShown = false;
             Pet pet = petOwner.getPet();

@@ -298,7 +298,7 @@ public class CommandOptionSwitch {
      */
     private void applySwitch(CommandSender sender, MyPetPlayer owner, StoredPet newPet) {
         if (owner.hasPet()) {
-            MyPetApi.getPetManager().deactivatePet(owner, true);
+            MyPetApi.getPetManager().deactivatePet(owner, owner.getPet(), true);
         }
 
         Optional<Pet> pet = MyPetApi.getPetManager().activatePet(newPet);

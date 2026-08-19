@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.api.repository;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PersistedPet;
@@ -41,16 +41,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manages the lifecycle of active (in-world) pets and provides access to
- * stored (inactive) pet records. Maintains a bidirectional mapping
- * between players and their active pet — at most one active pet per
- * player at any time.
+ * stored (inactive) pet records. Maps each player to their active pets, in
+ * activation order; how many a player may have at once is governed by
+ * {@link #getMaxActivePets(MyPetPlayer)}, not by this container.
  * <p>
  * The concrete implementation in the plugin module handles spawning,
  * despawning, repository I/O, and the active/inactive state transitions.
  */
 public abstract class PetManager {
-    protected final BiMap<MyPetPlayer, Pet> mActivePlayerPets = HashBiMap.create();
-    protected final BiMap<Pet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
+    protected final ListMultimap<MyPetPlayer, Pet> mActivePlayerPets = ArrayListMultimap.create();
     protected final Map<UUID, Pet> mActivePetsByEntityUuid = new ConcurrentHashMap<>();
 
     /**
@@ -64,19 +63,53 @@ public abstract class PetManager {
 
     // ─── Active Pets ────────────────────────────────────────────────────────────
 
-    /** Returns the active pet for the given player, or {@code null} if none. */
+    /**
+     * Returns the player's primary active pet — the first one activated that is
+     * still active — or {@code null} if none.
+     * <p>
+     * Prefer {@link #getPets(MyPetPlayer)} for anything that should affect every
+     * pet the player has out.
+     */
     public Pet getPet(MyPetPlayer owner) {
-        return mActivePlayerPets.get(owner);
+        List<Pet> pets = mActivePlayerPets.get(owner);
+        return pets.isEmpty() ? null : pets.get(0);
     }
 
-    /** Returns the active pet for the given Bukkit player, or {@code null}. */
+    /** Returns the primary active pet for the given Bukkit player, or {@code null}. */
     public Pet getPet(Player owner) {
-        return mActivePlayerPets.get(MyPetApi.getPlayerManager().getMyPetPlayer(owner));
+        return getPet(MyPetApi.getPlayerManager().getMyPetPlayer(owner));
+    }
+
+    /**
+     * Returns all of the player's active pets, in activation order. Never {@code null}.
+     * <p>
+     * This is an immutable <em>snapshot</em>, not a view: callers routinely iterate
+     * it while deactivating pets inside the loop, which would otherwise mutate the
+     * backing multimap mid-iteration.
+     */
+    public List<Pet> getPets(MyPetPlayer owner) {
+        return List.copyOf(mActivePlayerPets.get(owner));
+    }
+
+    /** Returns all active pets for the given Bukkit player, in activation order. */
+    public List<Pet> getPets(Player owner) {
+        return getPets(MyPetApi.getPlayerManager().getMyPetPlayer(owner));
+    }
+
+    /**
+     * Maximum simultaneously-active pets for a player. Phase 1 pins this at 1 so
+     * behavior is unchanged; the {@code mypet.maxActivePets} system property exists
+     * only so the e2e suite can prove the containers really hold more than one.
+     * Phase 2 replaces this with MyPetGlobal.Misc.MAX_ACTIVE_PET_COUNT plus the
+     * MyPet.petlimit.active.&lt;n&gt; permission ladder — see MyPetORG/MyPet#1435.
+     */
+    protected int getMaxActivePets(MyPetPlayer owner) {
+        return Integer.getInteger("mypet.maxActivePets", 1);
     }
 
     /** Returns a snapshot array of all currently active pets across all players. */
     public Pet[] getAllActivePets() {
-        return mActivePetsPlayer.keySet().toArray(new Pet[0]);
+        return mActivePlayerPets.values().toArray(new Pet[0]);
     }
 
     /**
@@ -170,14 +203,42 @@ public abstract class PetManager {
     public abstract Optional<Pet> activatePet(StoredPet storedPet);
 
     /**
-     * Deactivates the owner's active pet — despawns the entity and moves
-     * the pet back to a stored / inactive state.
+     * Deactivates one of the owner's active pets — despawns the entity and
+     * moves the pet back to a stored / inactive state.
      *
+     * @param pet    the pet to deactivate; must currently be active for {@code owner}
      * @param update if {@code true}, persists the pet's current state to
      *               the repository before deactivation
-     * @return {@code true} if a pet was deactivated
+     * @return {@code true} if the pet was deactivated
      */
-    public abstract boolean deactivatePet(MyPetPlayer owner, boolean update);
+    public abstract boolean deactivatePet(MyPetPlayer owner, Pet pet, boolean update);
+
+    /**
+     * Deactivates every pet the owner currently has active, in activation order.
+     *
+     * @param update if {@code true}, persists each pet's state before deactivating it
+     * @return {@code true} if at least one pet was deactivated
+     */
+    public boolean deactivatePets(MyPetPlayer owner, boolean update) {
+        boolean deactivatedAny = false;
+        for (Pet pet : getPets(owner)) {
+            deactivatedAny |= deactivatePet(owner, pet, update);
+        }
+        return deactivatedAny;
+    }
+
+    /**
+     * Deactivates the owner's pet.
+     *
+     * @deprecated a player may have more than one active pet. Use
+     *             {@link #deactivatePets(MyPetPlayer, boolean)} to deactivate all of
+     *             them, or {@link #deactivatePet(MyPetPlayer, Pet, boolean)} to name
+     *             the one you mean. This overload deactivates all of them.
+     */
+    @Deprecated
+    public boolean deactivatePet(MyPetPlayer owner, boolean update) {
+        return deactivatePets(owner, update);
+    }
 
     /**
      * Lists all pets — active or stored — owned by the given player.
@@ -201,6 +262,6 @@ public abstract class PetManager {
 
     /** Returns the total number of currently active pets across all players. */
     public int countActivePets() {
-        return mActivePetsPlayer.size();
+        return mActivePlayerPets.size();
     }
 }

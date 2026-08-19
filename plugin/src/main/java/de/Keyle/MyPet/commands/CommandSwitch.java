@@ -63,6 +63,12 @@ import java.util.stream.Collectors;
  *   <li>{@code MyPet.admin} -- grants the maximum configured storage limit</li>
  * </ul>
  */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
+ */
 public class CommandSwitch {
 
     /**
@@ -112,6 +118,8 @@ public class CommandSwitch {
             final MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
             MyPetPlugin.getInstance().getRepository().getPets(owner).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), schedTask -> {
+                    // hasPet() as a count of what is already out: /petswitch lists the
+                    // stored pets that are NOT active. Phase 2 -- MyPetORG/MyPet#1435.
                     if (pets.size() - (owner.hasPet() ? 1 : 0) == 0) {
                         owner.sendMessage(Locale.getComponent("Message.Command.Switch.NoStoredPets", owner));
                         return;

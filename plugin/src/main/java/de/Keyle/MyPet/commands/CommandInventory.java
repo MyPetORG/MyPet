@@ -61,6 +61,12 @@ import java.util.List;
  *       also bypasses the extended inventory permission check (granted by the {@code MyPet.admin} bundle)</li>
  * </ul>
  */
+/*
+ * Multi-Pet Phase 2 (MyPetORG/MyPet#1435): this command resolves the player to a
+ * single Pet via the manager. That has no unambiguous answer once a player can
+ * have several out -- it needs the optional pet-name argument the issue calls for,
+ * so it is deliberately left alone until that argument exists.
+ */
 public class CommandInventory {
     /**
      * Registers the {@code /petinventory} Brigadier command and its help entry.
@@ -116,33 +122,35 @@ public class CommandInventory {
             player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player));
             return;
         }
-        if (MyPetApi.getPetManager().hasActivePet(player)) {
-            Pet pet = MyPetApi.getPetManager().getPet(player);
-            if (pet.getStatus() == PetState.Despawned) {
-                player.sendMessage(Locale.getFormattedComponent("Message.Call.First", player, pet.getDisplayName()));
-                return;
+        ActivePetChooser.withActivePet(player,
+                pet -> openBackpack(player, pet),
+                () -> player.sendMessage(Locale.getComponent("Message.No.HasPet", player)));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void openBackpack(Player player, Pet pet) {
+        if (pet.getStatus() == PetState.Despawned) {
+            player.sendMessage(Locale.getFormattedComponent("Message.Call.First", player, pet.getDisplayName()));
+            return;
+        }
+        if (pet.getStatus() == PetState.Dead) {
+            player.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", player, pet.getDisplayName()));
+            return;
+        }
+        if (!Permissions.hasExtended(player, "MyPet.extended.inventory") && !Permissions.has(player, AdminPermissions.BYPASS_INVENTORY)) {
+            pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", player));
+            return;
+        }
+        if (pet.getSkills().has(BackpackImpl.class)) {
+            BackpackImpl bp = pet.getSkills().get(BackpackImpl.class);
+            if (bp.activate()) {
+                int rows = Math.max(1, Math.min(6, bp.getRows().getValue().intValue()));
+                MyPetApi.getGuiService().openMenu(
+                        player,
+                        (MenuId<BackpackContext>) (MenuId<?>) MenuIds.BACKPACK,
+                        new BackpackContext(player, pet, rows)
+                );
             }
-            if (pet.getStatus() == PetState.Dead) {
-                player.sendMessage(Locale.getFormattedComponent("Message.Action.Dead", player, pet.getDisplayName()));
-                return;
-            }
-            if (!Permissions.hasExtended(player, "MyPet.extended.inventory") && !Permissions.has(player, AdminPermissions.BYPASS_INVENTORY)) {
-                pet.getOwner().sendMessage(Locale.getComponent("Message.No.CanUse", player));
-                return;
-            }
-            if (pet.getSkills().has(BackpackImpl.class)) {
-                BackpackImpl bp = pet.getSkills().get(BackpackImpl.class);
-                if (bp.activate()) {
-                    int rows = Math.max(1, Math.min(6, bp.getRows().getValue().intValue()));
-                    MyPetApi.getGuiService().openMenu(
-                            player,
-                            (MenuId<BackpackContext>) (MenuId<?>) MenuIds.BACKPACK,
-                            new BackpackContext(player, pet, rows)
-                    );
-                }
-            }
-        } else {
-            player.sendMessage(Locale.getComponent("Message.No.HasPet", player));
         }
     }
 

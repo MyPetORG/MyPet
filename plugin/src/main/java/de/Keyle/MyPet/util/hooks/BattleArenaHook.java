@@ -66,8 +66,14 @@ public class BattleArenaHook implements AllowedHook {
         Player joined = event.getArenaPlayer().getPlayer();
         if (MyPetApi.getPlayerManager().isMyPetPlayer(joined.getName())) {
             MyPetPlayer player = MyPetApi.getPlayerManager().getMyPetPlayer(joined);
-            if (player.hasPet() && player.getPet().getStatus() == Pet.PetState.Here) {
-                player.getPet().removePet();
+            boolean despawnedAny = false;
+            for (Pet pet : player.getPets()) {
+                if (pet.getStatus() == Pet.PetState.Here) {
+                    pet.removePet();
+                    despawnedAny = true;
+                }
+            }
+            if (despawnedAny) {
                 player.sendMessage(Locale.getComponent("Message.No.AllowedHere", player.getPlayer()));
             }
         }

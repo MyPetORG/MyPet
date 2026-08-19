@@ -72,6 +72,8 @@ public class StorageTrait extends Trait {
         if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
             final MyPetPlayer myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
             assert myPetPlayer != null;
+            // Primary pet only: the Citizens storage NPC operates on one pet per
+            // interaction. Phase 2 gives the flow explicit selection -- MyPetORG/MyPet#1435.
             if (myPetPlayer.hasPet()) {
 
                 final NPC npc = this.npc;
@@ -118,7 +120,7 @@ public class StorageTrait extends Trait {
                                     new PetSelectionContext(player,
                                             () -> CompletableFuture.completedFuture(selectablePets),
                                             storedPet -> {
-                                                MyPetApi.getPetManager().deactivatePet(myPetPlayer, true);
+                                                MyPetApi.getPetManager().deactivatePet(myPetPlayer, myPetPlayer.getPet(), true);
                                                 Optional<Pet> activePet = MyPetApi.getPetManager().activatePet(storedPet);
                                                 if (activePet.isPresent() && myPetPlayer.isOnline()) {
                                                     Player p = myPetPlayer.getPlayer();
@@ -174,8 +176,9 @@ public class StorageTrait extends Trait {
                                         }
 
                                         if (store) {
-                                            StoredPet storedPet = myPetPlayer.getPet();
-                                            if (MyPetApi.getPetManager().deactivatePet(myPetPlayer, true)) {
+                                            Pet activePet = myPetPlayer.getPet();
+                                            StoredPet storedPet = activePet;
+                                            if (MyPetApi.getPetManager().deactivatePet(myPetPlayer, activePet, true)) {
                                                 String wg1 = myPetPlayer.getWorldGroupForPet(storedPet.getUUID());
                                                 myPetPlayer.setPetForWorldGroup(wg1, null);
                                                 MyPetPlugin.getInstance().getRepository().updateMyPetPlayer(myPetPlayer);

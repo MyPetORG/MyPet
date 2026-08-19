@@ -35,6 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -102,13 +103,14 @@ public final class OnlinePlayerPetLoader {
             return;
         }
 
-        if (onlinePlayer.hasPet()) {
-            Pet pet = onlinePlayer.getPet();
+        for (Pet pet : onlinePlayer.getPets()) {
             if (!pet.getWorldGroup().equals(joinGroup.getName())) {
-                petManager.deactivatePet(onlinePlayer, true);
+                petManager.deactivatePet(onlinePlayer, pet, true);
             }
         }
 
+        // hasPet() rather than a per-pet loop: restore the group's binding only when
+        // nothing survived the cross-group deactivation above.
         if (!onlinePlayer.hasPet() && onlinePlayer.hasPetInWorldGroup(joinGroup.getName())) {
             UUID petUUID = onlinePlayer.getPetForWorldGroup(joinGroup.getName());
             MyPetPlugin.getInstance().getRepository().getPet(petUUID).thenAccept(storedPet ->
@@ -121,17 +123,17 @@ public final class OnlinePlayerPetLoader {
     private static void activateAndMaybeRespawn(PetManager petManager,
                                                 MyPetPlayerImpl onlinePlayer,
                                                 StoredPet storedPet) {
-        petManager.activatePet(storedPet);
-        if (!onlinePlayer.hasPet()) {
+        // Act on the pet activatePet returned rather than re-reading the owner's
+        // primary pet, which need not be the one just activated.
+        Optional<Pet> activated = petManager.activatePet(storedPet);
+        if (activated.isEmpty()) {
             return;
         }
-        Pet pet = onlinePlayer.getPet();
-        MyPetPlayer myPetPlayer = pet.getOwner();
-        if (!pet.wantsToRespawn() || !myPetPlayer.hasPet()) {
+        Pet pet = activated.get();
+        if (!pet.wantsToRespawn()) {
             return;
         }
-        Pet runPet = myPetPlayer.getPet();
-        sendSpawnMessage(runPet, runPet.createEntity());
+        sendSpawnMessage(pet, pet.createEntity());
     }
 
     private static void sendSpawnMessage(Pet pet, Pet.SpawnFlags result) {

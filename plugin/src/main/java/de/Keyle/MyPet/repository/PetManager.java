@@ -90,10 +90,21 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
             return Optional.empty();
         }
 
-        if (storedPet.getOwner().hasPet()) {
-            if (!deactivatePet(storedPet.getOwner(), true)) {
+        // At cap, evict the oldest active pet rather than rejecting the activation.
+        // At the Phase 1 cap of 1 this is exactly today's swap behavior, which the
+        // e2e suite depends on (/petswitch, trade, shop, and NPC storage all rely
+        // on activation silently replacing the incumbent). Whether a full roster
+        // should reject instead is a Phase 2 policy decision.
+        MyPetPlayer owner = storedPet.getOwner();
+        // Clamp: a cap of 0 or less would make the condition true with nothing to
+        // evict and index an empty list.
+        int maxActive = Math.max(1, getMaxActivePets(owner));
+        List<Pet> active = getPets(owner);
+        while (active.size() >= maxActive) {
+            if (!deactivatePet(owner, active.get(0), true)) {
                 return Optional.empty();
             }
+            active = getPets(owner);
         }
 
         Event event = new PetLoadEvent(storedPet);
@@ -125,7 +136,7 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
         pet.setHealth(storedPet.getHealth());
         pet.setSaturation(storedPet.getSaturation());
 
-        mActivePetsPlayer.put(pet, pet.getOwner());
+        mActivePlayerPets.put(pet.getOwner(), pet);
 
 
         event = new PetActivatedEvent(pet);
@@ -135,21 +146,19 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
     }
 
     @Override
-    public boolean deactivatePet(MyPetPlayer owner, boolean update) {
-        if (mActivePlayerPets.containsKey(owner)) {
-            final Pet pet = owner.getPet();
-
-            PetSaveEvent event = new PetSaveEvent(pet);
-            Bukkit.getServer().getPluginManager().callEvent(event);
-
-            pet.removePet();
-            if (update) {
-                MyPetPlugin.getInstance().getRepository().updatePet(pet);
-            }
-            mActivePetsPlayer.remove(pet);
-            return true;
+    public boolean deactivatePet(MyPetPlayer owner, Pet pet, boolean update) {
+        if (pet == null || !mActivePlayerPets.containsEntry(owner, pet)) {
+            return false;
         }
-        return false;
+        PetSaveEvent event = new PetSaveEvent(pet);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+
+        pet.removePet();
+        if (update) {
+            MyPetPlugin.getInstance().getRepository().updatePet(pet);
+        }
+        mActivePlayerPets.remove(owner, pet);
+        return true;
     }
 
     @Override
@@ -257,10 +266,16 @@ public class PetManager extends de.Keyle.MyPet.api.repository.PetManager {
         }
         oldPet.setBukkitEntity(null);
 
-        // Swap the active-pets registry. mActivePetsPlayer is the inverse
-        // view of mActivePlayerPets, so updating one updates both.
-        mActivePetsPlayer.remove(oldPet);
-        mActivePetsPlayer.put(newPet, newPet.getOwner());
+        // Swap the active-pets registry in place. Replacing at the same index
+        // rather than remove-then-append preserves activation order, so a
+        // transformed pet keeps its position (and stays primary if it was).
+        List<Pet> ownerPets = mActivePlayerPets.get(newPet.getOwner());
+        int index = ownerPets.indexOf(oldPet);
+        if (index >= 0) {
+            ownerPets.set(index, newPet);
+        } else {
+            ownerPets.add(newPet);
+        }
 
         // Apply the Pet pipeline to the new entity: marks the entity,
         // strips vanilla AI, installs Pet goals, configures attributes

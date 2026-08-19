@@ -102,6 +102,8 @@ public class CommandCaptureHelper {
             if (MyPetApi.getPlayerManager().isMyPetPlayer(player)) {
                 myPetPlayer = MyPetApi.getPlayerManager().getMyPetPlayer(player);
 
+                // hasPet(): the capture helper is refused while anything is out,
+                // regardless of which pet.
                 if (myPetPlayer.hasPet()) {
                     player.sendMessage(Locale.getComponent("Message.Command.CaptureHelper.HasPet", player));
                     return;
