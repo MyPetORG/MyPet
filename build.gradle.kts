@@ -15,7 +15,7 @@ group = "de.keyle"
 
 val buildType = project.findProperty("buildType")?.toString() ?: "alpha"
 val buildNumber = project.findProperty("BUILD_NUMBER")?.toString() ?: "local"
-val baseVersion = "4.0.2"
+val baseVersion = "4.0.3"
 val versionSuffix = when (buildType) {
     "alpha", "beta" -> {
         val buildSuffix = if (buildNumber == "local") "-local" else "-${buildNumber.padStart(2, '0')}"
