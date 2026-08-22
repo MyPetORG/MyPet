@@ -208,7 +208,7 @@ public class ConfigurationLoader {
         // ConfigKeyRegistry on first reference. ensureLoaded() forces all
         // nested classes to initialize so the registry walk below sees every
         // key. Covers CanFly, CanSwim, AllowZombification,
-        // AllowLightningConversion, PreventDaylightBurn, PreventSuffocation,
+        // AllowLightningConversion, AllowMetamorphosis, PreventDaylightBurn, PreventSuffocation,
         // GrowUpItem, and every per-pet feature flag.
         // ConfigKeyRegistry methods force-load every pet class on first call,
         // so all per-pet ConfigKey static fields are registered before iteration.

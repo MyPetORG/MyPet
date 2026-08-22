@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
 import de.Keyle.MyPet.api.entity.PetBaby;
 import de.Keyle.MyPet.api.entity.PetEquipment;
+import de.Keyle.MyPet.api.entity.PetMetamorphic;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.entity.PetArmorApplier;
 import de.Keyle.MyPet.entity.PetAttributes;
@@ -48,6 +49,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Sittable;
+import org.bukkit.entity.Tadpole;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -463,6 +465,14 @@ public final class VanillaMobSpawner {
         newMob.setAI(true);
         newMob.setCanPickupItems(true);
 
+        // Release the tadpole age lock configureMob sets at spawn. The snapshot
+        // round-trips it through NBT, so without this a released tadpole would
+        // never become a frog — pet state leaking into a mob that is supposed
+        // to be wild again.
+        if (newMob instanceof Tadpole tadpole) {
+            tadpole.setAgeLock(false);
+        }
+
         // Clear brain memories that may have leaked from the pet's state —
         // a released villager shouldn't keep pathing toward the owner's bed,
         // a released breeze shouldn't keep the owner as an attack target.
@@ -539,6 +549,20 @@ public final class VanillaMobSpawner {
             Boolean override = PetGrowthLock.getOverride(mob);
             boolean frozen = override != null ? override : baby.preventNaturalGrowup();
             ageable.setAgeLock(frozen);
+        }
+
+        // Same precedence for metamorphosing pets, whose host isn't Ageable:
+        // Tadpole carries its own age timer that converts it into a Frog
+        // outright. Freezing it here is the primary enforcement of
+        // AllowMetamorphosis=false — PetMetamorphosisListener only has to catch
+        // a pet whose timer something else unlocked. The Tadpole cast is
+        // type-specific because setAgeLock lives on the concrete Bukkit
+        // interface, not on a shared one; it's the only vanilla mob of this
+        // shape.
+        if (pet instanceof PetMetamorphic metamorphic && mob instanceof Tadpole tadpole) {
+            Boolean override = PetGrowthLock.getOverride(mob);
+            boolean frozen = override != null ? override : !metamorphic.allowMetamorphosis();
+            tadpole.setAgeLock(frozen);
         }
 
         AttributeInstance health = mob.getAttribute(PetAttributes.MAX_HEALTH);

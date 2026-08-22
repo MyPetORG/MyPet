@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.config.ConfigKey;
 import de.Keyle.MyPet.api.entity.DefaultInfo;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
+import de.Keyle.MyPet.api.entity.PetMetamorphic;
 import de.Keyle.MyPet.api.entity.ShopInfo;
 import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.entity.PetImpl;
@@ -32,10 +33,19 @@ import java.util.List;
 
 @ShopInfo
 @DefaultInfo(food = {Material.SLIME_BALL}, flySpeed = 2.2026D)
-public class PetTadpole extends PetImpl implements PetAquaticEntity {
+public class PetTadpole extends PetImpl implements PetAquaticEntity, PetMetamorphic {
 
     public static final ConfigKey<Boolean> CAN_SWIM = ConfigKey.bool("Tadpole", "CanSwim", true);
     public static final ConfigKey<Boolean> PREVENT_SUFFOCATION = ConfigKey.bool("Tadpole", "PreventSuffocation", true);
+
+    /**
+     * Whether vanilla's 20-minute tadpole timer is allowed to turn this pet into a
+     * Frog pet. Default {@code false}: the age timer is locked at spawn so the pet
+     * stays the Tadpole its owner tamed (and keeps Tadpole-only skilltrees such as
+     * Metamorphosis). Set {@code true} to let it mature — the pet is re-typed to
+     * Frog, keeping its UUID, name, XP, level and skill state.
+     */
+    public static final ConfigKey<Boolean> ALLOW_METAMORPHOSIS = ConfigKey.bool("Tadpole", "AllowMetamorphosis", false);
 
     /**
      * Vanilla brain AI disabled for this pet, admin-overridable in pet-config.yml.

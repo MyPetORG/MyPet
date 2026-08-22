@@ -77,6 +77,7 @@ public final class PetListeners {
             PetEnvironmentListener::new,
             PetLightningStrikeListener::new,
             PetZombificationListener::new,
+            PetMetamorphosisListener::new,
             PetInfoOnLeashListener::new,
             PetSurvivalListener::new,
             PetXpAttributionListener::new,
