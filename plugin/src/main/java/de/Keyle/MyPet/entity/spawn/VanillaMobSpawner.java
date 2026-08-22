@@ -465,10 +465,14 @@ public final class VanillaMobSpawner {
         newMob.setAI(true);
         newMob.setCanPickupItems(true);
 
-        // Release the tadpole age lock configureMob sets at spawn. The snapshot
-        // round-trips it through NBT, so without this a released tadpole would
-        // never become a frog — pet state leaking into a mob that is supposed
-        // to be wild again.
+        // Release the pet-side age lock configureMob sets at spawn. The snapshot
+        // round-trips it through NBT, so without this a released baby could
+        // never grow up and a released tadpole never become a frog — pet state
+        // leaking into a mob that is supposed to be wild again. Reaches only
+        // the mob being released: this method has one caller, releaseToWild.
+        if (newMob instanceof Ageable ageable) {
+            ageable.setAgeLock(false);
+        }
         if (newMob instanceof Tadpole tadpole) {
             tadpole.setAgeLock(false);
         }
