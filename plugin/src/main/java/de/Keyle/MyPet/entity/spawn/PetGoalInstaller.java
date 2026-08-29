@@ -24,6 +24,7 @@ import com.destroystokyo.paper.entity.ai.Goal;
 import com.destroystokyo.paper.entity.ai.MobGoals;
 import de.Keyle.MyPet.api.MyPetGlobal;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.api.entity.PetAmphibiousEntity;
 import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import de.Keyle.MyPet.api.entity.PetFlyingEntity;
 import de.Keyle.MyPet.api.entity.PetSwimmingEntity;
@@ -77,6 +78,13 @@ public final class PetGoalInstaller {
 
         boolean flying = pet instanceof PetFlyingEntity flyer && flyer.canFly();
         boolean swimming = pet instanceof PetSwimmingEntity swimmer && swimmer.canSwim();
+        // Amphibians (Axolotl, Drowned, Frog, Turtle) swim, but they also walk on land
+        // under their own vanilla pathfinding — so the ground goal set below applies to
+        // them and only strict water-breathers are excluded from it. `swimming` still
+        // decides the swim-mode *follow* path, which PetFollowOwnerGoal evaluates
+        // dynamically against mob.isInWater(); amphibians therefore keep swim follow in
+        // water and gain the ground goals on land.
+        boolean waterBound = swimming && !(pet instanceof PetAmphibiousEntity);
 
         var goals = Bukkit.getMobGoals();
         PetFlyingMovementGoal flyingMovementGoal = null;
@@ -108,14 +116,15 @@ public final class PetGoalInstaller {
                     MyPetGlobal.Entity.MYPET_FOLLOW_START_DISTANCE.get(), 2.0F, 12F, flying, swimming));
         }
 
-        // Control + melee install for ground and flying pets (swimming pets
-        // excluded — that's tracked under the Frog/amphibian workstream). The
+        // Control + melee install for ground, flying and amphibian pets (strict
+        // water-breathers excluded — off their water-bound navigation they have no
+        // pathfinder to drive, and PetAquaticMovementGoal owns their land motion). The
         // higher walkSpeedModifier for flying pets (0.8F control, 0.7F melee
         // vs 0.1F ground) matches the pre-NMS EntityMyFlyingPet#setPathfinder
         // values: flying movement needs a steeper modifier to close on the
         // steered/melee target. Without these, on-hit skills (Fire, Poison,
         // Bleed, etc.) silently no-op on flying pets because melee never lands.
-        if (!swimming) {
+        if (!waterBound) {
             PetControlGoal controlGoal = new PetControlGoal(pet, mob, flying ? 0.8F : 0.1F);
             goals.addGoal(mob, 2, controlGoal);
             PetControlTargetGoal controlTargetGoal = new PetControlTargetGoal(pet, mob, (float) mob.getWidth() + 2.5F);
@@ -123,7 +132,7 @@ public final class PetGoalInstaller {
             goals.addGoal(mob, 12, controlTargetGoal);
             goals.addGoal(mob, 5, new PetMeleeAttackGoal(pet, mob, flying ? 0.7F : 0.1F, mob.getWidth() + 1.3, 20));
         }
-        if (!swimming && !flying) {
+        if (!waterBound && !flying) {
             goals.addGoal(mob, 7, new PetRandomStrollGoal(pet, mob));
             goals.addGoal(mob, 6, new PetClimbGoal(pet, mob));
         }

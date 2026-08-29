@@ -2,7 +2,7 @@ import { test, expect, sleep } from '@drownek/plugwright';
 import { expectCondition, expectConditionHolds, expectScore } from '../lib/oracle.js';
 import { msgPlain, msgFragment } from '../lib/locale.js';
 import { createPet, removePet } from '../lib/pets.js';
-import { setupArena, ARENA, findEntity, sneakActivateEntity } from '../lib/world.js';
+import { setupArena, ARENA, findEntity, sneakActivateEntity, spawnVictim, killTagged } from '../lib/world.js';
 import { releasePet } from '../lib/gui.js';
 
 // 4f4087f46 -- bats would not stay still when told to sit.
@@ -153,5 +153,41 @@ test('regression: sneak + empty-hand right-click still toggles sit', async ({ pl
   } finally {
     removePet(server, player);
     server.execute(`kill @e[tag=${pet.tag}]`);
+  }
+});
+
+// Amphibian pets froze the instant they acquired a target -- reported for
+// Axolotl ("once they target an enemy, they no longer walk towards it").
+//
+// PetGoalInstaller gated PetMeleeAttackGoal / PetControlGoal /
+// PetControlTargetGoal (and stroll/climb) behind `!swimming`, and
+// PetAmphibiousEntity extends PetSwimmingEntity -- so Axolotl, Drowned,
+// Frog and Turtle lost every one of those goals. The *target* goals install
+// unconditionally, so the pet still picked a target, and
+// PetFollowOwnerSupport bails while `pet.hasTarget()`. Result: nothing at
+// all drove movement once a target existed.
+//
+// The arena floor is sea lantern, so this is the on-land case specifically.
+// The husk is NoAI (spawnVictim default): it cannot walk into the pet, so
+// closing the 5-block gap can only be the pet's own doing.
+test('regression: an aggressive axolotl walks to its target on land and kills it', async ({ player, server }) => {
+  await player.makeOp();
+  await setupArena(server, player);
+  const pet = await createPet(server, player, 'Axolotl', { skilltree: 'test-behavior-modes' });
+
+  try {
+    player.chat('/petbehavior aggressive');
+    const victim = await spawnVictim(server, player, 'husk', 'v_axolotl', { dx: 5 });
+
+    // Split from the kill assertion on purpose: melee reach is ~3 blocks, so
+    // a pet that reaches the husk but never swings fails on the second
+    // check, not the first -- which distinguishes "movement still broken"
+    // from "movement fixed, damage broken".
+    await expectCondition(server, player,
+      `at ${victim} if entity @e[tag=${pet.tag},distance=..3]`, { timeout: 25000 });
+    await expectCondition(server, player, `unless entity ${victim}`, { timeout: 15000 });
+  } finally {
+    killTagged(server, 'v_axolotl');
+    removePet(server, player);
   }
 });
