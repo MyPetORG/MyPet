@@ -38,6 +38,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Keeps pets alive through vanilla environmental hazards:
  * <ul>
@@ -52,6 +56,24 @@ import org.bukkit.potion.PotionEffectType;
  * </ul>
  */
 public class PetSurvivalListener implements Listener {
+
+    /**
+     * Pet UUID -> timestamp of the last suffocation rescue (despawn + delayed re-summon).
+     * <p>
+     * The rescue only helps when the pet can land somewhere it fits. When it cannot -- the
+     * owner is standing in a fully walled-in spot -- the re-summoned pet suffocates again
+     * immediately and schedules another rescue, and the pet spawn/despawn cycles forever
+     * with a "Despawn" message per lap. A pet that suffocates again within
+     * {@link #SUFFOCATION_LOOP_WINDOW_MS} of its own last rescue is therefore treated as
+     * stuck: it stays away and the owner is told there is no space, instead of being
+     * rescued into the same block a second time.
+     * <p>
+     * Entries older than the window are pruned on every suffocation, so the map holds at
+     * most one entry per pet that suffocated in the last few seconds.
+     */
+    private static final Map<UUID, Long> LAST_SUFFOCATION_RESCUE = new ConcurrentHashMap<>();
+
+    private static final long SUFFOCATION_LOOP_WINDOW_MS = 10_000L;
 
     // JUMP was renamed to JUMP_BOOST in newer API versions
     private static final PotionEffectType JUMP_EFFECT;
@@ -93,11 +115,30 @@ public class PetSurvivalListener implements Listener {
             }
             final MyPetPlayer myPetPlayer = pet.getOwner();
 
-            pet.removePet();
+            long now = System.currentTimeMillis();
+            LAST_SUFFOCATION_RESCUE.values().removeIf(rescued -> now - rescued > SUFFOCATION_LOOP_WINDOW_MS);
+            // Only recent rescues survive the prune above, so a surviving entry means this
+            // pet was already rescued moments ago and suffocated right back.
+            boolean stuck = LAST_SUFFOCATION_RESCUE.remove(pet.getUUID()) != null;
+
+            // removePet(false), not the no-arg removePet(): the no-arg form leaves
+            // wantsToRespawn as it was, so a pet that got here after /petcall
+            // (CommandCall -> removePet(true)) stayed flagged and MyPetPlayerImpl#schedule
+            // re-summoned it once a second in parallel with the rescue below. Two
+            // respawners for one pet is what made the despawn messages double and triple.
+            pet.removePet(false);
             myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.Despawn", myPetPlayer.getLanguage(), pet.getDisplayName()));
+
+            if (stuck) {
+                // Second suffocation inside the window: the spot cannot hold the pet.
+                // Leave it away -- the owner can /petcall once they have moved.
+                myPetPlayer.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", myPetPlayer.getLanguage(), pet.getDisplayName()));
+                return;
+            }
 
             Player ownerPlayer = myPetPlayer.getPlayer();
             if (ownerPlayer == null) return;
+            LAST_SUFFOCATION_RESCUE.put(pet.getUUID(), now);
             ownerPlayer.getScheduler().runDelayed(MyPetApi.getPlugin(), t -> {
                 // Re-summon the pet that suffocated, not whichever pet happens to be
                 // primary now — the owner may have others out.

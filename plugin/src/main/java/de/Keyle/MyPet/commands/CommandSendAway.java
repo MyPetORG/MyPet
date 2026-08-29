@@ -155,6 +155,13 @@ public class CommandSendAway {
                     ));
                 }
             } else if (pet.getStatus() == PetState.Despawned) {
+                // The pet is already away, but it may still be flagged for auto-recall --
+                // e.g. a call that failed for lack of space, which leaves the flag set and
+                // has MyPetPlayerImpl#schedule retrying every second. /petsendaway is the
+                // player's "stop bringing it back" switch, so clear the flag here too;
+                // otherwise the command reports "already away" while the pet keeps
+                // re-appearing.
+                pet.setWantsToRespawn(false);
                 sender.sendMessage(MessageUtil.info(
                         Locale.getFormattedComponent(
                                 "Message.Command.SendAway.AlreadyAway",

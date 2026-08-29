@@ -90,7 +90,11 @@ public final class VanillaMobSpawner {
             return SpawnOutcome.FAILED;
         }
 
-        Location target = findValidSpawnLocation(loc, mobClass);
+        // Measure before placing: the pet's own collision box decides whether it fits,
+        // so a spot that would bury its head in a block is rejected up front instead of
+        // spawning it into a suffocation loop.
+        Mob probe = createSpawnProbe(loc, mobClass);
+        Location target = findValidSpawnLocation(loc, probe);
         if (target == null) {
             return SpawnOutcome.NO_SPACE;
         }
@@ -184,7 +188,10 @@ public final class VanillaMobSpawner {
         // is reachable only if a third-party MONITOR-priority listener cancels after ours
         // (intra-priority order is plugin load order) — keep the unwind; it is defense-in-depth,
         // not dead code.
-        Mob fresh = target.getWorld().createEntity(target, mobClass);
+        // Reuse the probe: it is the very entity this line would otherwise build, already
+        // constructed for the space test. spawnAt below places it at target regardless of
+        // where it was created, and configureMob reads no position.
+        Mob fresh = probe != null ? probe : target.getWorld().createEntity(target, mobClass);
         configureMob(pet, fresh, false);
         if (!fresh.spawnAt(target, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
             Timer.stopPetTicking(pet);
@@ -649,17 +656,18 @@ public final class VanillaMobSpawner {
     }
 
     /**
-     * Pre-spawn position search
+     * Pre-spawn position search. Every candidate is tested against the pet's whole
+     * collision box (see {@link #hasRoomFor}), not just the block its feet land in.
      */
-    private Location findValidSpawnLocation(Location origin, Class<? extends Mob> mobClass) {
-        if (origin != null && origin.getWorld() != null && canSpawnIn(origin.getBlock())) {
+    private Location findValidSpawnLocation(Location origin, Mob probe) {
+        if (origin != null && origin.getWorld() != null && hasRoomFor(probe, origin)) {
             return origin;
         }
         Location loc = origin.clone().subtract(1, 0, 1);
         for (double x = 0; x <= 2; x += 0.5) {
             for (double z = 0; z <= 2; z += 0.5) {
                 if (x != 1 && z != 1) {
-                    if (loc.getWorld() != null && canSpawnIn(loc.getBlock())) {
+                    if (loc.getWorld() != null && hasRoomFor(probe, loc)) {
                         Block below = loc.getBlock().getRelative(BlockFace.DOWN);
                         if (below.getType().isSolid()) {
                             return loc;
@@ -675,11 +683,67 @@ public final class VanillaMobSpawner {
     }
 
     /**
-     * Whether a pet can spawn inside this block without suffocating. Passable
-     * blocks (air, water, plants) qualify, and so do thin or partial blocks
-     * like carpet, snow layers and slabs — these report isPassable() == false
-     * only because of their slim collision box. Only full, vision-occluding
-     * blocks (stone, dirt, …) are rejected so pets never spawn trapped in terrain.
+     * Builds the pet's mob without putting it in the world, purely so the space test below
+     * has something with real dimensions to measure. {@code createEntity} constructs the
+     * entity and gives it the world's context but does not add it — nothing ticks, no event
+     * fires, and dropping the object is how the refused-spawn paths above already dispose of
+     * an entity that never made it in.
+     *
+     * @return the detached mob, or {@code null} if it could not be built — callers must
+     *         treat null as "no measurements available" and not as a failure
+     */
+    private Mob createSpawnProbe(Location origin, Class<? extends Mob> mobClass) {
+        if (origin == null || origin.getWorld() == null) {
+            return null;
+        }
+        try {
+            return origin.getWorld().createEntity(origin, mobClass);
+        } catch (Throwable t) {
+            MyPetApi.getLogger().warning("Could not measure spawn space for "
+                    + mobClass.getSimpleName() + " — falling back to a single-block check. "
+                    + t.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Whether the pet actually fits at {@code loc} — its full collision box, not just the
+     * block its feet are in.
+     * <p>
+     * This is the check the pre-4.0 NMS branch did through
+     * {@code PlatformHelper#canSpawn(Location, MyPetMinecraftEntity)}, which tested the
+     * entity's bounding box against every block shape inside it. Eliminating the NMS modules
+     * replaced it with a one-block {@code isPassable()} test, and a one-block test cannot see
+     * the pet's head: in a 1-high crawlspace the feet block is air, so the spawn was allowed,
+     * the pet materialised with its head inside stone and vanilla suffocation damage started
+     * immediately. Paper's {@link Mob#collidesAt(Location)} restores the real test (blocks,
+     * hard-collision entities and the world border) without NMS.
+     * <p>
+     * Touching a surface is not colliding with it, so a pet still spawns on the carpet, snow
+     * layer or slab its owner is standing on — the case
+     * {@code canSpawnIn} was introduced for.
+     *
+     * @param probe a detached or live mob of the pet's own type, or {@code null} when none
+     *              could be built — then the legacy single-block test is used
+     */
+    public static boolean hasRoomFor(Mob probe, Location loc) {
+        if (probe != null) {
+            try {
+                return !probe.collidesAt(loc);
+            } catch (Throwable t) {
+                // Detached entity without usable world context: fall through to the
+                // block test rather than refusing to spawn the pet at all.
+            }
+        }
+        return canSpawnIn(loc.getBlock());
+    }
+
+    /**
+     * Coarse single-block fallback for {@link #hasRoomFor} when no mob is available to
+     * measure. Passable blocks (air, water, plants) qualify, and so do thin or partial
+     * blocks like carpet, snow layers and slabs — these report isPassable() == false only
+     * because of their slim collision box. Only full, vision-occluding blocks (stone,
+     * dirt, …) are rejected.
      */
     public static boolean canSpawnIn(Block block) {
         return block.isPassable() || !block.getType().isOccluding();

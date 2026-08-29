@@ -723,7 +723,9 @@ public abstract class PetImpl implements Pet, NBTStorage {
     @Override
     public void setLocation(Location loc) {
         if (status == PetState.Here && bukkitEntity != null
-                && loc != null && loc.getWorld() != null && VanillaMobSpawner.canSpawnIn(loc.getBlock())) {
+                // Same full-box test the spawner uses: a teleport that drops the pet's head
+                // into a block suffocates it exactly like a bad spawn did.
+                && loc != null && loc.getWorld() != null && VanillaMobSpawner.hasRoomFor(bukkitEntity, loc)) {
             bukkitEntity.teleportAsync(loc);
         }
     }

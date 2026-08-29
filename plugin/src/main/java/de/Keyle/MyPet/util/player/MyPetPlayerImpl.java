@@ -70,6 +70,15 @@ public class MyPetPlayerImpl implements MyPetPlayer {
     protected int captureHelperTimer = 90;
     private int creakingSweepCounter = 0;
     protected boolean autoRespawn = false;
+    /**
+     * Scheduler passes (one per second) the auto-recall in {@link #schedule()} must wait
+     * before retrying a spawn that failed. createEntity() clears wantsToRespawn only on
+     * success, so without this back-off a pet the owner has no room for was re-attempted --
+     * and a PetCallEvent fired -- every single second for as long as the owner stood there.
+     */
+    private int respawnRetryDelay = 0;
+    /** Seconds to wait after a failed auto-recall spawn before trying again. */
+    private static final int FAILED_RESPAWN_RETRY_DELAY = 5;
     protected boolean showHealthBar = false;
     protected int autoRespawnMin = 1;
     protected volatile float petVolume = 1f;
@@ -481,7 +490,9 @@ public class MyPetPlayerImpl implements MyPetPlayer {
             } else if (cachedStatus == PetState.Dead) {
                 pet.tickRespawnTimer();
             } else if (cachedStatus == PetState.Despawned) {
-                if (pet.wantsToRespawn() && !p.isFlying()) {
+                if (respawnRetryDelay > 0) {
+                    respawnRetryDelay--;
+                } else if (pet.wantsToRespawn() && !p.isFlying()) {
                     boolean velocity = p.getVelocity().getY() >= 0;
                     boolean fall = p.getFallDistance() == 0;
 
@@ -501,8 +512,14 @@ public class MyPetPlayerImpl implements MyPetPlayer {
                             };
                         }
 
-                        if (spawn && pet.createEntity() == Pet.SpawnFlags.Success) {
-                            p.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", p, pet.getDisplayName()));
+                        if (spawn) {
+                            if (pet.createEntity() == Pet.SpawnFlags.Success) {
+                                p.sendMessage(Locale.getFormattedComponent("Message.Command.Call.Success", p, pet.getDisplayName()));
+                            } else {
+                                // NoSpace / NotAllowed / ... : back off instead of hammering
+                                // the same failing spawn (and PetCallEvent) once a second.
+                                respawnRetryDelay = FAILED_RESPAWN_RETRY_DELAY;
+                            }
                         }
                     }
                 }
