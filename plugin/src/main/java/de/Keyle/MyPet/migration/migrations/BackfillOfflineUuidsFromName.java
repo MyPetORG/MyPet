@@ -23,13 +23,13 @@ package de.Keyle.MyPet.migration.migrations;
 import de.Keyle.MyPet.migration.DatabaseMigration;
 import de.Keyle.MyPet.migration.Migration;
 import de.Keyle.MyPet.migration.MigrationException;
+import de.Keyle.MyPet.migration.SchemaIntrospector;
 import de.Keyle.MyPet.migration.SqlMigrationContext;
 import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 import org.bukkit.Bukkit;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -84,27 +84,46 @@ public class BackfillOfflineUuidsFromName implements DatabaseMigration {
         String playersTable = ctx.getTablePrefix() + "players";
 
         try {
+            // Check every column this migration touches, not just the two it writes.
+            // internal_uuid is read by the SELECT and the UPDATE's WHERE clause, and it
+            // used to be assumed present purely because MigrationService had classified
+            // the install as a 3.x upgrade. When that classification was wrong the
+            // assumption surfaced as a raw "Unknown column 'internal_uuid'" SQL error
+            // mid-migration rather than a skip — see SchemaIntrospector for how the
+            // misclassification happened. Verifying the shape here as well means a
+            // detection that is wrong for any reason costs a log line, not a failed
+            // migration and a disabled plugin.
+            boolean hasInternalUuid = hasColumn(connection, playersTable, "internal_uuid");
             boolean hasMojangUuid = hasColumn(connection, playersTable, "mojang_uuid");
             boolean hasName = hasColumn(connection, playersTable, "name");
-            if (!hasMojangUuid && !hasName) {
+
+            if (!hasInternalUuid && !hasMojangUuid && !hasName) {
                 LOG.info("players table is already on the v4 shape — nothing to backfill.");
                 return;
-            } else if (!hasMojangUuid || !hasName) {
-                // Partial-rebuild state, not a clean v4 shape. In practice only one half of
-                // this is reachable: RebuildPlayersSchemaOnMojangUuid#rebuildMysql drops "name"
-                // first, then internal_uuid, then renames mojang_uuid — so an interrupted rebuild
-                // leaves mojang_uuid without name. The mirror state cannot occur, because once
-                // mojang_uuid is renamed internal_uuid is already gone, making the install
-                // NORMAL_4X rather than UPGRADE_3X, so this migration is COMPLETE and never
-                // re-runs to observe it. The condition still covers both: nothing is derivable
-                // without a name either way, and skipping beats failing on a SELECT against a
-                // column that is not there.
-                String missing = hasName ? "mojang_uuid" : "name";
-                LOG.warning("players table is missing column \"" + missing + "\" but not the "
-                        + "other legacy column — this indicates a partially-completed "
-                        + "RebuildPlayersSchemaOnMojangUuid rebuild. Nothing to backfill without "
-                        + "a name; skipping. The pre-migration backup is the only route back to "
-                        + "this data.");
+            }
+            if (!hasInternalUuid || !hasMojangUuid || !hasName) {
+                // Some but not all of the legacy columns: a partial-rebuild state, not a
+                // clean v4 shape. In practice the reachable form is an interrupted
+                // RebuildPlayersSchemaOnMojangUuid#rebuildMysql, which drops "name"
+                // first, then internal_uuid, then renames mojang_uuid. Nothing is
+                // derivable without all three, and skipping beats failing on a statement
+                // against a column that is not there.
+                List<String> missing = new ArrayList<>(3);
+                if (!hasInternalUuid) {
+                    missing.add("internal_uuid");
+                }
+                if (!hasMojangUuid) {
+                    missing.add("mojang_uuid");
+                }
+                if (!hasName) {
+                    missing.add("name");
+                }
+                LOG.warning("players table is missing the legacy column(s) " + missing
+                        + " but still has the rest — this indicates a partially-completed "
+                        + "RebuildPlayersSchemaOnMojangUuid rebuild, or a players table that "
+                        + "was never on the 3.x shape. Nothing can be backfilled from an "
+                        + "incomplete identity triplet; skipping. The pre-migration backup is "
+                        + "the only route back to this data.");
                 return;
             }
         } catch (SQLException e) {
@@ -238,15 +257,6 @@ public class BackfillOfflineUuidsFromName implements DatabaseMigration {
     }
 
     private boolean hasColumn(Connection connection, String table, String column) throws SQLException {
-        DatabaseMetaData meta = connection.getMetaData();
-        try (ResultSet rs = meta.getColumns(null, null, table, column)) {
-            if (rs.next()) {
-                return true;
-            }
-        }
-        // Case sensitivity on some backends — try lowercase table name too.
-        try (ResultSet rs = meta.getColumns(null, null, table.toLowerCase(), column)) {
-            return rs.next();
-        }
+        return SchemaIntrospector.hasColumn(connection, table, column);
     }
 }

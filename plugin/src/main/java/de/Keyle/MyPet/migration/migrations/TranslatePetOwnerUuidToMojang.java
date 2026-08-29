@@ -23,8 +23,11 @@ package de.Keyle.MyPet.migration.migrations;
 import de.Keyle.MyPet.migration.DatabaseMigration;
 import de.Keyle.MyPet.migration.Migration;
 import de.Keyle.MyPet.migration.MigrationException;
+import de.Keyle.MyPet.migration.SchemaIntrospector;
 import de.Keyle.MyPet.migration.SqlMigrationContext;
+import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -61,6 +64,24 @@ public class TranslatePetOwnerUuidToMojang implements DatabaseMigration {
         String prefix = ctx.getTablePrefix();
         String petsTable = prefix + "pets";
         String playersTable = prefix + "players";
+
+        // Every statement below reads players.internal_uuid, so confirm the table is
+        // actually on the 3.x shape rather than trusting the install classification.
+        // BackfillOfflineUuidsFromName performs the mirror check; without this one a
+        // misclassified v4 install would simply move its "Unknown column" failure from
+        // that migration to this one. See SchemaIntrospector for how a v4 install came
+        // to be classified as a 3.x upgrade in the first place.
+        if (ctx instanceof SqlMigrationContextImpl impl) {
+            try {
+                if (!SchemaIntrospector.hasColumn(impl.getConnection(), playersTable, "internal_uuid")) {
+                    LOG.info("players table has no internal_uuid column — the v4 identity "
+                            + "model is already in place and there is nothing to translate.");
+                    return;
+                }
+            } catch (SQLException e) {
+                throw new MigrationException("Failed to inspect players columns", e);
+            }
+        }
 
         // "Translatable" = players with both internal_uuid and mojang_uuid populated.
         // Players with internal_uuid set but mojang_uuid NULL can't be translated —

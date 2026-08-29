@@ -23,12 +23,11 @@ package de.Keyle.MyPet.migration.migrations;
 import de.Keyle.MyPet.migration.DatabaseMigration;
 import de.Keyle.MyPet.migration.Migration;
 import de.Keyle.MyPet.migration.MigrationException;
+import de.Keyle.MyPet.migration.SchemaIntrospector;
 import de.Keyle.MyPet.migration.SqlMigrationContext;
 import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
@@ -147,15 +146,7 @@ public class DropLegacyInfoVersionColumn implements DatabaseMigration {
     }
 
     private boolean hasColumn(Connection connection, String table, String column) throws SQLException {
-        DatabaseMetaData meta = connection.getMetaData();
-        try (ResultSet rs = meta.getColumns(null, null, table, column)) {
-            if (rs.next()) {
-                return true;
-            }
-        }
-        try (ResultSet rs = meta.getColumns(null, null, table.toLowerCase(), column)) {
-            return rs.next();
-        }
+        return SchemaIntrospector.hasColumn(connection, table, column);
     }
 
     private void execute(Connection connection, String sql) throws SQLException {

@@ -23,6 +23,7 @@ package de.Keyle.MyPet.migration.migrations;
 import de.Keyle.MyPet.migration.DatabaseMigration;
 import de.Keyle.MyPet.migration.Migration;
 import de.Keyle.MyPet.migration.MigrationException;
+import de.Keyle.MyPet.migration.SchemaIntrospector;
 import de.Keyle.MyPet.migration.SqlMigrationContext;
 import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 
@@ -264,28 +265,11 @@ public class RebuildPlayersSchemaOnMojangUuid implements DatabaseMigration {
     }
 
     private boolean hasColumn(Connection connection, String table, String column) throws SQLException {
-        DatabaseMetaData meta = connection.getMetaData();
-        try (ResultSet rs = meta.getColumns(null, null, table, column)) {
-            if (rs.next()) {
-                return true;
-            }
-        }
-        // Case sensitivity on some backends — try lowercase table name too.
-        try (ResultSet rs = meta.getColumns(null, null, table.toLowerCase(), column)) {
-            return rs.next();
-        }
+        return SchemaIntrospector.hasColumn(connection, table, column);
     }
 
     private boolean hasPrimaryKey(Connection connection, String table) throws SQLException {
-        DatabaseMetaData meta = connection.getMetaData();
-        try (ResultSet rs = meta.getPrimaryKeys(null, null, table)) {
-            if (rs.next()) {
-                return true;
-            }
-        }
-        try (ResultSet rs = meta.getPrimaryKeys(null, null, table.toLowerCase())) {
-            return rs.next();
-        }
+        return SchemaIntrospector.hasPrimaryKey(connection, table);
     }
 
     private void execute(Connection connection, String sql) throws SQLException {

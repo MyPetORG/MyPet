@@ -39,7 +39,6 @@ import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -445,16 +444,7 @@ public class MigrationService implements ServiceContainer {
 
     private boolean tableExists(String tableName) {
         try (Connection connection = openSqlConnection()) {
-            DatabaseMetaData meta = connection.getMetaData();
-            try (ResultSet rs = meta.getTables(null, null, tableName, null)) {
-                if (rs.next()) {
-                    return true;
-                }
-            }
-            // MySQL lowercases table names on some platforms; retry.
-            try (ResultSet rs = meta.getTables(null, null, tableName.toLowerCase(), null)) {
-                return rs.next();
-            }
+            return SchemaIntrospector.hasTable(connection, tableName);
         } catch (SQLException e) {
             logger.log(Level.WARNING, "Failed to check if table " + tableName
                     + " exists; assuming it does not", e);
@@ -503,42 +493,24 @@ public class MigrationService implements ServiceContainer {
      *   <li>{@code players.internal_uuid} column present → pre-v4 shape, run migrations</li>
      *   <li>{@code players} present without {@code internal_uuid} → already on v4</li>
      * </ul>
+     * Every lookup goes through {@link SchemaIntrospector}, which scopes it to the
+     * database this connection is pointed at. Answering these three questions against
+     * <i>any</i> database on the server misclassifies a v4 install as a 3.x upgrade the
+     * moment a second MyPet 3 database shares the MySQL instance — and the migrations
+     * that follow this verdict delete rows.
      */
     private InstallType detectInstallType(String prefix) {
         try (Connection connection = openSqlConnection()) {
-            DatabaseMetaData meta = connection.getMetaData();
-            if (!schemaHasTable(meta, prefix + "players")) {
+            if (!SchemaIntrospector.hasTable(connection, prefix + "players")) {
                 return InstallType.FRESH;
             }
-            if (schemaHasColumn(meta, prefix + "players", "internal_uuid")) {
+            if (SchemaIntrospector.hasColumn(connection, prefix + "players", "internal_uuid")) {
                 return InstallType.UPGRADE_3X;
             }
             return InstallType.NORMAL_4X;
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Failed to detect install type", e);
             return null;
-        }
-    }
-
-    private boolean schemaHasTable(DatabaseMetaData meta, String table) throws SQLException {
-        try (ResultSet rs = meta.getTables(null, null, table, null)) {
-            if (rs.next()) {
-                return true;
-            }
-        }
-        try (ResultSet rs = meta.getTables(null, null, table.toLowerCase(), null)) {
-            return rs.next();
-        }
-    }
-
-    private boolean schemaHasColumn(DatabaseMetaData meta, String table, String column) throws SQLException {
-        try (ResultSet rs = meta.getColumns(null, null, table, column)) {
-            if (rs.next()) {
-                return true;
-            }
-        }
-        try (ResultSet rs = meta.getColumns(null, null, table.toLowerCase(), column)) {
-            return rs.next();
         }
     }
 

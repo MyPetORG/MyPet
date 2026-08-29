@@ -23,12 +23,11 @@ package de.Keyle.MyPet.migration.migrations;
 import de.Keyle.MyPet.migration.DatabaseMigration;
 import de.Keyle.MyPet.migration.Migration;
 import de.Keyle.MyPet.migration.MigrationException;
+import de.Keyle.MyPet.migration.SchemaIntrospector;
 import de.Keyle.MyPet.migration.SqlMigrationContext;
 import de.Keyle.MyPet.migration.context.SqlMigrationContextImpl;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
@@ -112,32 +111,12 @@ public class WidenMultiWorldColumnForMultiPet implements DatabaseMigration {
      * re-running it on an installation that started fresh with TEXT is a no-op.
      */
     private boolean isAlreadyWide(Connection connection, String table) throws SQLException {
-        DatabaseMetaData meta = connection.getMetaData();
-        try (ResultSet rs = meta.getColumns(null, null, table, "multi_world")) {
-            if (rs.next()) {
-                String type = rs.getString("TYPE_NAME");
-                return type != null && type.toUpperCase().contains("TEXT");
-            }
-        }
-        try (ResultSet rs = meta.getColumns(null, null, table.toLowerCase(), "multi_world")) {
-            if (rs.next()) {
-                String type = rs.getString("TYPE_NAME");
-                return type != null && type.toUpperCase().contains("TEXT");
-            }
-        }
-        return false;
+        String type = SchemaIntrospector.columnTypeName(connection, table, "multi_world");
+        return type != null && type.toUpperCase().contains("TEXT");
     }
 
     private boolean hasColumn(Connection connection, String table, String column) throws SQLException {
-        DatabaseMetaData meta = connection.getMetaData();
-        try (ResultSet rs = meta.getColumns(null, null, table, column)) {
-            if (rs.next()) {
-                return true;
-            }
-        }
-        try (ResultSet rs = meta.getColumns(null, null, table.toLowerCase(), column)) {
-            return rs.next();
-        }
+        return SchemaIntrospector.hasColumn(connection, table, column);
     }
 
     private void execute(Connection connection, String sql) throws SQLException {
