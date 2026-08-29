@@ -26,9 +26,13 @@ import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.skill.skills.Ride;
 import de.Keyle.MyPet.entity.PetClimbSupport;
 import de.Keyle.MyPet.entity.PetAttributes;
+import de.Keyle.MyPet.util.PetSaddleHelper;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Input;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
@@ -104,6 +108,35 @@ public class RideSkillFlightController {
      */
     private static final double MOVEMENT_SPEED_TO_DIRECT_VELOCITY = 1.0 / (1.0 - VANILLA_GROUND_FRICTION);
 
+    /**
+     * Vanilla's per-tick gravity acceleration for a {@code LivingEntity} in
+     * air ({@code LivingEntity#travel} subtracts this from {@code deltaMovement.y}
+     * before applying {@link #VANILLA_VERTICAL_DRAG}).
+     */
+    private static final double VANILLA_GRAVITY = 0.08;
+
+    /** Vanilla's per-tick vertical drag, applied after {@link #VANILLA_GRAVITY}. */
+    private static final double VANILLA_VERTICAL_DRAG = 0.98;
+
+    /**
+     * Key of the transient {@code jump_strength} modifier that carries the Ride
+     * skill's {@code JumpHeight} upgrade on mounts whose jump vanilla owns
+     * (see {@link #vanillaOwnsJump}). Keyed rather than UUID-tracked so
+     * re-application is idempotent — remove-then-add on a changed value can
+     * never stack, and a modifier leaked by an unclean shutdown is overwritten
+     * rather than compounded.
+     */
+    private static final NamespacedKey RIDE_JUMP_HEIGHT_KEY = new NamespacedKey("mypet", "ride_jump_height");
+
+    /**
+     * Key of the transient {@code movement_speed} modifier carrying the Ride
+     * skill's {@code SpeedIncrease} upgrade on vanilla-steered mounts. Those
+     * never receive a MyPet velocity write (see {@link #vanillaOwnsSteering}),
+     * so the upgrade has to reach them the way vanilla moves them — through the
+     * attribute vanilla's own travel integrator reads.
+     */
+    private static final NamespacedKey RIDE_SPEED_KEY = new NamespacedKey("mypet", "ride_speed");
+
     /** Fuel remaining (ticks) for this pet. */
     private double fuelTicks = -1;
 
@@ -157,6 +190,10 @@ public class RideSkillFlightController {
         UUID key = pet.getUUID();
         cancelTask(key);
         controllers.remove(key);
+        try {
+            clearJumpStrength(pet);
+        } catch (Throwable ignored) {
+        }
         UpgradeComputer.UpgradeCallback<Boolean> watcher = activationWatchers.remove(key);
         if (watcher != null) {
             Ride rideSkill = rideSkill(pet);
@@ -254,6 +291,9 @@ public class RideSkillFlightController {
             return;
         }
 
+        applyJumpStrength(rideSkill, mob);
+        applyRideSpeed(rideSkill, mob);
+
         Input input;
         try {
             input = rider.getCurrentInput();
@@ -264,7 +304,11 @@ public class RideSkillFlightController {
 
         float yaw = rider.getLocation().getYaw();
         float pitch = rider.getLocation().getPitch();
-        mob.setRotation(yaw, 0);
+        // Vanilla already turns a client-steered mount to match its rider's yaw;
+        // writing rotation too only adds jitter against the client's own value.
+        if (!vanillaOwnsSteering(mob)) {
+            mob.setRotation(yaw, 0);
+        }
 
         double baseSpeed = resolveBaseSpeed(pet, mob);
         int speedIncrease = rideSkill.getSpeedIncrease() != null && rideSkill.getSpeedIncrease().getValue() != null
@@ -308,7 +352,17 @@ public class RideSkillFlightController {
 
         boolean unlimitedFuel = flyLimitSeconds <= 0;
         if (input.isJump()) {
-            if (mob.isOnGround() || mob.isInWater() || mob.isInLava()) {
+            if (vanillaOwnsJump(mob) && mob.isOnGround()) {
+                // Vanilla owns this mount's jump: a saddled AbstractHorse charges
+                // its jump from the rider's held jump key and releases it through
+                // the jump-power bar (a Camel spends the same key on its dash).
+                // Writing our own impulse here raced that mechanic — the pet left
+                // the ground on our velocity before the bar had charged, and the
+                // charge then resolved against a pet already in the air. Write
+                // nothing and leave riderDroveY false; the JumpHeight upgrade is
+                // carried by the jump_strength modifier instead, so the bar itself
+                // produces the upgraded height.
+            } else if (mob.isOnGround() || mob.isInWater() || mob.isInLava()) {
                 double jumpHeight = rideSkill.getJumpHeight() != null && rideSkill.getJumpHeight().getValue() != null
                         ? rideSkill.getJumpHeight().getValue().doubleValue() : 0.5;
                 worldY = Math.max(0.42, jumpHeight * 0.2);
@@ -353,6 +407,56 @@ public class RideSkillFlightController {
             riderDroveY = true;
         }
 
+        // Idle tick: the rider is driving neither horizontal nor vertical
+        // motion, so there is nothing to write. Writing anyway would zero the
+        // pet's own horizontal drift AND re-broadcast a motion packet every
+        // tick -- CraftEntity#setVelocity sets hurtMarked, which makes the
+        // server send ClientboundSetEntityMotionPacket to every tracker,
+        // including the rider. Let vanilla own the tick instead.
+        if (fx == 0 && fz == 0 && !riderDroveY) {
+            return;
+        }
+
+        // Vanilla-steered mount: vanilla is already moving it from the rider's
+        // own input, so a MyPet write here is at best redundant and at worst
+        // destructive. setVelocity writes all three axes at once, so any tick we
+        // wrote X/Z we also had to invent a Y -- and on the tick the rider jumps,
+        // the Y we invent (0, because isOnGround() is still true as the mount
+        // leaves the ground) replaces the jump vanilla just applied and the
+        // motion packet snaps the client back down. That is why the jump only
+        // vanished while holding a movement key: with no horizontal input the
+        // early-out above already skipped the write.
+        //
+        // Write only when MyPet is supplying motion vanilla cannot -- flight,
+        // which is the sole reason riderDroveY can still be true here for these
+        // mounts. Speed and jump upgrades reach them through the movement_speed
+        // and jump_strength modifiers instead.
+        if (vanillaOwnsSteering(mob) && !riderDroveY) {
+            return;
+        }
+
+        // The rider is driving horizontal motion but not vertical, so worldY
+        // is still the value read at the top of this tick. Never echo it back:
+        //
+        //  - On a mount whose controlling passenger is the rider (a SADDLED
+        //    horse/camel/strider -- AbstractHorse#getControllingPassenger only
+        //    returns the rider when isSaddled()), the CLIENT simulates the
+        //    vehicle and the server stops integrating gravity for it. The
+        //    echoed motion packet then overwrote the client's own gravity
+        //    accumulation every tick, so Y velocity could never go negative
+        //    and the pet held its altitude forever. Removing the saddle
+        //    "fixed" it only because that handed simulation back to the server.
+        //  - On a server-simulated flyer the echo latches the AI's own motion,
+        //    so a ridden Phantom climbed indefinitely.
+        //
+        // Integrate gravity ourselves so the write stays honest on both paths.
+        if (!riderDroveY) {
+            boolean weightless = pet.getPetType().isFlyingPet() || !mob.hasGravity();
+            worldY = (weightless || mob.isOnGround())
+                    ? 0
+                    : (worldY - VANILLA_GRAVITY) * VANILLA_VERTICAL_DRAG;
+        }
+
         mob.setVelocity(new Vector(worldX, worldY, worldZ));
         // Reset fallDistance only when the rider actually drove vertical
         // motion this tick. Vanilla's accumulator would otherwise treat a
@@ -363,6 +467,122 @@ public class RideSkillFlightController {
         // the rider abandons mid-air still takes legitimate fall damage.
         if (riderDroveY) {
             mob.setFallDistance(0f);
+        }
+    }
+
+    /**
+     * Whether vanilla, not MyPet, owns this mount's response to the jump key.
+     *
+     * <p>True for a saddled {@link AbstractHorse} — horse, zombie/skeleton horse,
+     * donkey, mule, and camel. Those charge a jump from the held key and release
+     * it through the jump-power bar (the camel spends it on a dash instead), and
+     * the saddle is what makes the rider the controlling passenger in the first
+     * place, so the mechanic only exists while one is equipped. A llama is an
+     * {@code AbstractHorse} that cannot be saddled, so it never matches.
+     *
+     * <p>Unsaddled mounts deliberately fall through to MyPet's own impulse:
+     * vanilla will not jump them at all, so ours is the only jump available.
+     */
+    private static boolean vanillaOwnsJump(Mob mob) {
+        return vanillaOwnsSteering(mob);
+    }
+
+    /**
+     * Whether vanilla, not MyPet, drives this mount's movement from rider input.
+     *
+     * <p>Currently the same set as {@link #vanillaOwnsJump}: a saddled
+     * {@link AbstractHorse}. The saddle is what makes the rider the mount's
+     * controlling passenger, which is simultaneously what lets vanilla steer it
+     * and what makes the client -- not the server -- authoritative for its
+     * motion. Both facts point the same way: leave it alone.
+     *
+     * <p>Deliberately excludes {@code Steerable} pigs and striders. Vanilla
+     * steers those only while the rider holds a carrot/fungus on a stick, so
+     * MyPet's controller is what makes them rideable at all.
+     */
+    private static boolean vanillaOwnsSteering(Mob mob) {
+        return mob instanceof AbstractHorse && PetSaddleHelper.isSaddled(mob);
+    }
+
+    /**
+     * Carries the Ride skill's {@code JumpHeight} upgrade onto vanilla's
+     * {@code jump_strength} attribute for mounts whose jump vanilla owns, so the
+     * upgrade still raises the jump the rider charges on the bar.
+     *
+     * <p>The upgrade is scaled by the same {@code 0.2} factor the direct impulse
+     * used, keeping skilltree values that were tuned against the old behaviour
+     * roughly comparable, and added on top of the mob's natural jump strength
+     * rather than replacing it — so breed-to-breed variation between horses
+     * survives the upgrade.
+     *
+     * <p>Applied as a {@link AttributeInstance#addTransientModifier transient}
+     * modifier: transient modifiers are not serialized into entity NBT, so the
+     * full-NBT round-trip {@code PetEntitySnapshot} performs on despawn/respawn
+     * cannot persist this one and then add it a second time.
+     */
+    private static void applyJumpStrength(Ride rideSkill, Mob mob) {
+        if (!vanillaOwnsJump(mob)) return;
+        AttributeInstance attr = mob.getAttribute(PetAttributes.JUMP_STRENGTH);
+        if (attr == null) return;
+
+        double jumpHeight = rideSkill.getJumpHeight() != null && rideSkill.getJumpHeight().getValue() != null
+                ? rideSkill.getJumpHeight().getValue().doubleValue() : 0;
+        double amount = jumpHeight * 0.2;
+
+        AttributeModifier existing = attr.getModifier(RIDE_JUMP_HEIGHT_KEY);
+        if (existing != null) {
+            // Within a tick's worth of float noise the modifier is already correct;
+            // re-adding every tick would churn the attribute map for nothing.
+            if (Math.abs(existing.getAmount() - amount) < 1.0E-6) return;
+            attr.removeModifier(RIDE_JUMP_HEIGHT_KEY);
+        }
+        if (amount == 0) return;
+        attr.addTransientModifier(new AttributeModifier(
+                RIDE_JUMP_HEIGHT_KEY, amount, AttributeModifier.Operation.ADD_NUMBER));
+    }
+
+    /**
+     * Carries the Ride skill's {@code SpeedIncrease} upgrade onto vanilla's
+     * {@code movement_speed} attribute for vanilla-steered mounts, which never
+     * receive a MyPet velocity write and so would otherwise ignore the upgrade
+     * entirely.
+     *
+     * <p>{@code SpeedIncrease} is a percentage, so it maps onto
+     * {@link AttributeModifier.Operation#ADD_SCALAR} -- a {@code +20} upgrade
+     * becomes {@code +0.2}, i.e. 20% faster than the mount's natural speed,
+     * matching the {@code 1.0 + speedIncrease / 100.0} factor the velocity path
+     * applies for every other pet.
+     */
+    private static void applyRideSpeed(Ride rideSkill, Mob mob) {
+        if (!vanillaOwnsSteering(mob)) return;
+        AttributeInstance attr = mob.getAttribute(PetAttributes.MOVEMENT_SPEED);
+        if (attr == null) return;
+
+        int speedIncrease = rideSkill.getSpeedIncrease() != null && rideSkill.getSpeedIncrease().getValue() != null
+                ? rideSkill.getSpeedIncrease().getValue() : 0;
+        double amount = speedIncrease / 100.0;
+
+        AttributeModifier existing = attr.getModifier(RIDE_SPEED_KEY);
+        if (existing != null) {
+            if (Math.abs(existing.getAmount() - amount) < 1.0E-6) return;
+            attr.removeModifier(RIDE_SPEED_KEY);
+        }
+        if (amount == 0) return;
+        attr.addTransientModifier(new AttributeModifier(
+                RIDE_SPEED_KEY, amount, AttributeModifier.Operation.ADD_SCALAR));
+    }
+
+    /** Removes the Ride jump-height modifier applied by {@link #applyJumpStrength}. */
+    private static void clearJumpStrength(Pet pet) {
+        Mob mob = pet.getBukkitEntity();
+        if (mob == null) return;
+        AttributeInstance jump = mob.getAttribute(PetAttributes.JUMP_STRENGTH);
+        if (jump != null && jump.getModifier(RIDE_JUMP_HEIGHT_KEY) != null) {
+            jump.removeModifier(RIDE_JUMP_HEIGHT_KEY);
+        }
+        AttributeInstance speed = mob.getAttribute(PetAttributes.MOVEMENT_SPEED);
+        if (speed != null && speed.getModifier(RIDE_SPEED_KEY) != null) {
+            speed.removeModifier(RIDE_SPEED_KEY);
         }
     }
 
