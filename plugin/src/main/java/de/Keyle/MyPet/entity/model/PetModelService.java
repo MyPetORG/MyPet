@@ -138,10 +138,18 @@ public final class PetModelService {
      * parse-time flag and is always resolved against fully-loaded hooks by spawn time.
      */
     public static boolean isSourceDriven(Pet pet) {
-        if (pet == null) {
+        return pet != null && isSourceDriven(pet.getPetType());
+    }
+
+    /**
+     * Type-level variant of {@link #isSourceDriven(Pet)}, for callers that run before a
+     * {@link Pet} object exists (pet creation, petshop checkout).
+     */
+    public static boolean isSourceDriven(PetType petType) {
+        if (petType == null) {
             return false;
         }
-        ModelConfig cfg = MODELS.get(pet.getPetType().name().toLowerCase(Locale.ROOT));
+        ModelConfig cfg = MODELS.get(petType.name().toLowerCase(Locale.ROOT));
         if (cfg == null || cfg.provider() == null) {
             return false;
         }

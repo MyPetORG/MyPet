@@ -528,6 +528,35 @@ public final class PetCreationOptions {
     }
 
     /**
+     * The subset of {@code args} that a {@link #applyOptions} call would consume for this
+     * pet type — i.e. options that write to the host {@link Mob}. Matching mirrors
+     * {@link #applyOption} but resolves against the type's Bukkit class rather than a live
+     * instance, so it works before any mob exists. Options with no matching spec
+     * ({@code skilltree:}, {@code name:}) are excluded — they are applied elsewhere.
+     */
+    public static List<String> hostOptionsIn(PetType petType, String[] args) {
+        ensurePetsLoaded();
+        Class<? extends Mob> mobClass = petType.getBukkitEntityClass();
+        if (mobClass == null || args == null) {
+            return List.of();
+        }
+        List<String> matched = new ArrayList<>();
+        for (String arg : args) {
+            int colon = arg.indexOf(':');
+            boolean wantFlag = colon < 0;
+            String key = wantFlag ? arg : arg.substring(0, colon);
+            for (OptionSpec spec : SPECS) {
+                if (spec.isFlag() != wantFlag) continue;
+                if (!spec.key().equalsIgnoreCase(key)) continue;
+                if (!spec.mobType().isAssignableFrom(mobClass)) continue;
+                matched.add(arg);
+                break;
+            }
+        }
+        return matched;
+    }
+
+    /**
      * Applies a single option, returning {@code null} on success or a
      * human-readable error message if the value isn't recognized. Options
      * that don't match {@code mob}'s actual Bukkit type are silently

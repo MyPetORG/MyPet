@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.visual;
 
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.PetType;
+import de.Keyle.MyPet.entity.model.PetModelService;
 import de.Keyle.MyPet.entity.options.PetCreationOptions;
 import de.Keyle.MyPet.util.NbtUtil;
 import io.papermc.paper.entity.EntitySerializationFlag;
@@ -247,6 +248,10 @@ public final class PetEntitySnapshot {
      * admin command aborts and prints them; the petshop logs them and
      * proceeds.
      *
+     * <p>Source-driven types capture nothing: their entity comes from the provider
+     * plugin, and a snapshot here would divert the spawner off that path. Their
+     * host-mob options are skipped and logged, not treated as errors.
+     *
      * @param petType the {@link PetType} being created
      * @param options the creation-option strings (e.g., as parsed from
      *                pet-shops.yml or as the trailing args of {@code /petadmin create})
@@ -262,6 +267,21 @@ public final class PetEntitySnapshot {
             return Result.empty();
         }
         if (world == null || loc == null) {
+            return Result.empty();
+        }
+        // Source-driven types (e.g. a MythicMobs creature) are materialized by their
+        // provider, not deserialized from NBT — VanillaMobSpawner.spawn only reaches that
+        // provider branch when the pet has NO pending snapshot. A snapshot captured here
+        // would be a bare host mob carrying none of the source's identity, and restoring it
+        // would silently replace the real creature with its host. Capture nothing; the
+        // host-mob options are skipped and the pet keeps its source type.
+        if (PetModelService.isSourceDriven(petType)) {
+            List<String> skipped = PetCreationOptions.hostOptionsIn(petType, options);
+            if (!skipped.isEmpty()) {
+                MyPetApi.getLogger().info("Pet type " + petType.name()
+                        + " is provided by an external source — skipped host-mob creation option(s): "
+                        + String.join(", ", skipped));
+            }
             return Result.empty();
         }
         Class<? extends Mob> mobClass = petType.getBukkitEntityClass();
