@@ -50,11 +50,39 @@ import java.util.*;
 public class ConfigurationLoader {
 
     /**
+     * Whether config.yml was absent the first time {@link #setDefault()} ran — i.e. this boot
+     * materialized MyPet's configuration from scratch, so the admin has never tuned anything.
+     *
+     * <p>config.yml is the marker because nothing else creates it: MyPet ships no config.yml
+     * resource and never calls {@code saveDefaultConfig()}, so the file exists only once
+     * {@link #setDefault()} has saved it at least once.</p>
+     *
+     * <p>Latched on the first call and never reassigned: {@code setDefault()} also runs on
+     * {@code /mypet reload}, by which point the file always exists, and a reload must not
+     * retroactively turn a fresh install stale.</p>
+     */
+    private static Boolean freshInstall = null;
+
+    /**
+     * True when this boot created the plugin's configuration from scratch.
+     * False on every later boot, and before {@link #setDefault()} has run.
+     */
+    public static boolean isFreshInstall() {
+        return freshInstall != null && freshInstall;
+    }
+
+    /**
      * Materializes every default row into config.yml, exp-config.yml and pet-config.yml.
      * Runs on boot and on every reload, so a custom type added to pet-config.yml since boot
      * gets its rows written without waiting for a restart. Idempotent — existing values survive.
      */
     public static void setDefault() {
+        // Probe before anything below writes config.yml: no file means nobody has ever
+        // configured this server. Only the first call decides — see the field's javadoc.
+        if (freshInstall == null) {
+            freshInstall = !new File(MyPetApi.getPlugin().getDataFolder(), "config.yml").exists();
+        }
+
         // Re-read config.yml from disk first: this method saves it below, and on a reload the
         // cached copy would be stale, so saving it would clobber edits made since boot.
         MyPetApi.getPlugin().reloadConfig();

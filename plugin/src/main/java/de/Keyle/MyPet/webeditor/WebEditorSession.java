@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.MyPetGlobal;
+import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.webeditor.http.BytebinClient;
 import de.Keyle.MyPet.webeditor.http.EditorTicketClient;
 import de.Keyle.MyPet.webeditor.socket.SignatureAlgorithm;
@@ -111,6 +112,9 @@ public final class WebEditorSession {
         metadata.addProperty("pluginVersion", MyPetApi.getPlugin().getPluginMeta().getVersion());
         metadata.addProperty("serverVersion", Bukkit.getServer().getMinecraftVersion());
         metadata.addProperty("timestamp", System.currentTimeMillis());
+        // Lets the editor tell a never-configured server apart from a tuned one. Sent on every
+        // session (not only when true) so the browser can distinguish "false" from "old plugin".
+        metadata.addProperty("freshInstall", ConfigurationLoader.isFreshInstall());
 
         JsonObject socketInfo = new JsonObject();
         socketInfo.addProperty("protocolVersion", PROTOCOL_VERSION);
