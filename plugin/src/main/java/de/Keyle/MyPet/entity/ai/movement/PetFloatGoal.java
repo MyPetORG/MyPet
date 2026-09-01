@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.entity.Pet;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
+import de.Keyle.MyPet.api.entity.PetAquaticEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +48,9 @@ import java.util.EnumSet;
  * </ul>
  *
  * <p>While active, each tick applies a small upward velocity so the pet
- * rises to the surface. If the pet has been in lava for {@code ~0.5s} of
+ * rises to the surface — except for water-breathing pets ({@link PetAquaticEntity}
+ * with {@code CanSwim} on), which belong underwater and are left to their own
+ * navigation and vanilla move control. If the pet has been in lava for {@code ~0.5s} of
  * continuous ticks, the goal also issues a navigation request to the owner
  * so a pet that can't naturally escape the lava column gets pulled out.
  *
@@ -114,8 +117,22 @@ public class PetFloatGoal implements Goal<Mob> {
             return;
         }
 
-        Vector velocity = mob.getVelocity();
-        mob.setVelocity(velocity.add(new Vector(0, 0.05D, 0)));
+        // Water-breathers are exempt from the surface nudge. For a land mob this goal
+        // replaces vanilla FloatGoal — reaching air is survival. For a Cod, Guardian or
+        // Dolphin, being underwater IS the resting state, and a +0.05 Y push applied
+        // every tick fights the navigation the follow/melee goals are steering with:
+        // whatever depth the path asks for, the pet is shoved back to the waterline and
+        // bobs there. Vanilla's own move control holds their depth, so they need nothing
+        // from us. Gated on canSwim() too — with CanSwim off MyPet treats the pet as a
+        // ground mob everywhere, and a ground mob does want to surface.
+        //
+        // (PetType#specialFloat, the hook this check would once have gone through, is
+        // hardcoded false with no overrides anywhere, so it never exempted anything.)
+        boolean breathesWater = pet instanceof PetAquaticEntity aquatic && aquatic.canSwim();
+        if (!breathesWater) {
+            Vector velocity = mob.getVelocity();
+            mob.setVelocity(velocity.add(new Vector(0, 0.05D, 0)));
+        }
 
         if (inLava && lavaCounter-- <= 0) {
             Player owner = pet.getOwner().getPlayer();
