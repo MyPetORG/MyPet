@@ -3,17 +3,33 @@ import { expectCondition, expectConditionHolds } from '../lib/oracle.js';
 import { createPet, removePet } from '../lib/pets.js';
 import { setupArena, spawnVictim, killTagged, ARENA } from '../lib/world.js';
 
-// Depth coverage for the strict water-breathers (PetAquaticEntity).
+// Locomotion coverage for the strict water-breathers (PetAquaticEntity), run
+// per species because the three MyPet goals under test compose differently
+// with each mob's own vanilla move control -- Guardian's puffer-drive, the
+// Dolphin's surface bias and AbstractFish's FishMoveControl are all distinct,
+// and a fix that works for a Cod is not evidence for a Dolphin.
 //
-// PetFloatGoal added +0.05 Y every tick to every non-flying pet in water,
-// including the ones that breathe it, so a submerged pet was shoved back to
-// the waterline no matter what depth its navigation asked for.
-// PetType#specialFloat(), the escape hatch built for exactly this, is
-// hardcoded false with no overrides anywhere, so nothing ever took it.
+// Reported 2026-08-28: "Guardian (likely Elder Guardian too), Dolphin, Cod,
+// Salmon, Tropical Fish, Pufferfish ... still flapping in place or around
+// without doing anything. They can still attack the target if they are close
+// enough but unable to move/follow their owner normally."
 //
-// Run per species because each mob's vanilla move control composes differently
-// with MyPet's goals -- Guardian's puffer-drive, the Dolphin's surface bias and
-// AbstractFish's FishMoveControl are all distinct.
+// Covers the whole PetAquaticEntity roster, not only the reported species.
+//
+// Two defects sat behind that, both fixed together:
+//
+// 1. No movement driver once a target existed. PetGoalInstaller withheld
+//    PetMeleeAttackGoal / PetControlGoal from water-bound pets (correct on
+//    land, wrong in water -- WaterBoundPathNavigation paths fine when
+//    submerged); PetAquaticMovementGoal, which IS their land locomotion,
+//    bailed out whenever a target existed and deferred to those uninstalled
+//    goals; and PetFollowOwnerGoal switches off on hasTarget() like it does
+//    for every pet. Only PetRangedAttackGoal -- the one attack goal that
+//    issues its own navigateTo -- still fired, which is why the reporter saw
+//    attacks land but no approach.
+// 2. PetFloatGoal pushed +0.05 Y every tick onto every non-flying pet in
+//    water, water-breathers included. PetType#specialFloat(), the escape
+//    hatch for exactly this, is hardcoded false with no overrides anywhere.
 
 /**
  * The complete PetAquaticEntity roster -- every strict water-breather, not just
@@ -43,36 +59,6 @@ const SPECIES = [
   'Nautilus',
 ] as const;
 
-// Pool half-width; spans ARENA +/- 4 horizontally and ARENA.y..+4 vertically,
-// so the surface sits at ARENA.y+5 over the sea-lantern floor at ARENA.y-1.
-const POOL = 4;
-
-/**
- * How far east of the owner the husk spawns. Inside PetAggressiveTargetGoal's
- * ~9.5-block acquisition radius, but far enough out that reaching it is real
- * travel rather than melee reach from the spawn point.
- */
-const VICTIM_DX = 8;
-
-/**
- * Chase-pool bounds for the in-water test. Longer in +X than the depth pool so
- * the pet has VICTIM_DX blocks of open water to actually swim through, and 4
- * deep so both pet and victim sit well below the surface.
- */
-const CHASE_POOL = { back: 4, forward: VICTIM_DX + 6, side: 5, height: 4 };
-
-/**
- * Species that run the depth test. Nautilus is excluded: it rises under its own
- * propulsion fast enough that the ~5s window catches it inconsistently -- one
- * run held the box for all 6 checks (in 9.9s, against 6.2s for every other
- * species), the next never entered it at all. That is Cluster Q drift, not the
- * PetFloatGoal nudge this test exists to guard, and the box must NOT be widened
- * to accommodate it: a looser box would stop detecting the nudge, which is the
- * one thing this assertion is for. The other ten species prove the nudge is
- * gone; Nautilus's own drift is tracked with the rest of Cluster Q.
- */
-const DEPTH_SPECIES = SPECIES.filter((s) => s !== 'Nautilus');
-
 /**
  * Species EXCLUDED from the in-water chase below because they are still broken
  * there -- not because the case does not apply to them. See the "self-propelled
@@ -98,7 +84,75 @@ const DEPTH_SPECIES = SPECIES.filter((s) => s !== 'Nautilus');
 const SELF_PROPELLED = ['Dolphin', 'Squid', 'GlowSquid', 'Nautilus'];
 const CHASE_SPECIES = SPECIES.filter((s) => !SELF_PROPELLED.includes(s));
 
+/**
+ * Species that run the depth test. Nautilus is excluded: it rises under its own
+ * propulsion fast enough that the ~5s window catches it inconsistently -- one
+ * run held the box for all 6 checks (in 9.9s, against 6.2s for every other
+ * species), the next never entered it at all. That is Cluster Q drift, not the
+ * PetFloatGoal nudge this test exists to guard, and the box must NOT be widened
+ * to accommodate it: a looser box would stop detecting the nudge, which is the
+ * one thing this assertion is for. The other ten species prove the nudge is
+ * gone; Nautilus's own drift is tracked with the rest of Cluster Q.
+ */
+const DEPTH_SPECIES = SPECIES.filter((s) => s !== 'Nautilus');
+
+// Pool half-width; spans ARENA +/- 4 horizontally and ARENA.y..+4 vertically,
+// so the surface sits at ARENA.y+5 over the sea-lantern floor at ARENA.y-1.
+const POOL = 4;
+
+/**
+ * How far east of the owner the husk spawns. Inside PetAggressiveTargetGoal's
+ * ~9.5-block acquisition radius, but far enough out that reaching it is real
+ * travel rather than melee reach from the spawn point.
+ */
+const VICTIM_DX = 8;
+
+/**
+ * Chase-pool bounds for the in-water test. Longer in +X than the depth pool so
+ * the pet has VICTIM_DX blocks of open water to actually swim through, and 4
+ * deep so both pet and victim sit well below the surface.
+ */
+const CHASE_POOL = { back: 4, forward: VICTIM_DX + 6, side: 5, height: 4 };
+
 for (const species of SPECIES) {
+  // Dry sea lantern the whole way: navigation is inert on land, so this is the
+  // case where PetAquaticMovementGoal's velocity push is doing all the work.
+  // The husk is NoAI and VICTIM_DX blocks out, so the gap can only close from
+  // the pet's side. PreventSuffocation (default true) keeps it alive on land.
+  test(`aquatic-movement: a stranded ${species} closes on its target and kills it`, async ({ player, server }) => {
+    await player.makeOp();
+    await setupArena(server, player);
+    const pet = await createPet(server, player, species, { skilltree: 'test-behavior-modes' });
+    const victimTag = `v_${species.toLowerCase()}`;
+
+    try {
+      player.chat('/petbehavior aggressive');
+      const victim = await spawnVictim(server, player, 'husk', victimTag, { dx: VICTIM_DX });
+
+      // The kill is the whole assertion, deliberately. Two earlier attempts to
+      // also assert the approach as a separate step were both unsound:
+      //   - anchoring on the husk entity (`at <victim>`) breaks because a pet
+      //     with the Damage upgrade one-shots it on arrival, so the reference
+      //     point deletes itself at the moment of success;
+      //   - anchoring on its spawn column needs a radius, and no radius works
+      //     at this arena scale. ElderGuardian's melee reach is bbWidth + 1.3 +
+      //     two-thirds of the target's height, ~4.6 blocks, so it kills without
+      //     ever closing to TARGET_STOP_DISTANCE and then rests 3 blocks from
+      //     its owner -- exactly 5.0 from the husk. Tighten below that and a
+      //     working ElderGuardian fails; loosen above it and a pet idling at
+      //     its owner's feet, having never moved, passes.
+      // The kill has neither problem: melee reach is strictly less than the
+      // VICTIM_DX spawn gap for every species here, and the husk is NoAI and
+      // cannot close the distance itself, so a dead husk PROVES the pet
+      // travelled. If this ever regresses, the way to split "didn't move" from
+      // "didn't swing" is to teleport the pet into reach and re-assert.
+      await expectCondition(server, player, `unless entity ${victim}`, { timeout: 40000 });
+    } finally {
+      killTagged(server, victimTag);
+      removePet(server, player);
+    }
+  });
+
   // Owner stands on the pool floor beside the pet, inside the follow goal's
   // stop distance, so the follow goal contributes no navigation of its own and
   // the buoyancy nudge is the only thing under test. Water breathing keeps the
@@ -140,8 +194,6 @@ for (const species of SPECIES) {
       server.execute(`effect clear ${player.username} minecraft:water_breathing`);
     }
   });
-
-  if (!CHASE_SPECIES.includes(species as never)) continue;
 
   // The in-water half of defect 1, and the case PetGoalInstaller's change was
   // most aimed at. Underwater, PetAquaticMovementGoal deliberately does nothing

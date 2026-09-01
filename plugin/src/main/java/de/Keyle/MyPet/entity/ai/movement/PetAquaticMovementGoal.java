@@ -28,6 +28,7 @@ import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.entity.ai.PetGoalKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -39,8 +40,8 @@ import java.util.EnumSet;
  * out of water. In water it does nothing — swimming is left to vanilla physics and
  * {@link PetFloatGoal}, exactly as before this goal existed.
  *
- * <p>It drives the pet horizontally toward its owner on land, because a stranded
- * water-breather has no movement of its own: vanilla's
+ * <p>It drives the pet horizontally toward its owner — or toward its target, when it has
+ * one — on land, because a stranded water-breather has no movement of its own: vanilla's
  * {@code WaterBoundPathNavigation#canUpdatePath} returns
  * {@code allowBreaching || mob.isInLiquid()}, so a dry fish never follows its path,
  * and {@code AbstractFish.FishMoveControl} then falls into its {@code else} branch and
@@ -63,11 +64,21 @@ public class PetAquaticMovementGoal implements Goal<Mob> {
     private static final double RAD_TO_DEG = 57.2957763671875D;
 
     /**
-     * Horizontal distance (blocks) at which the land push stops. Matches
-     * {@code PetFollowOwnerGoal.STATIONARY_MAX_DIST_SQ} (9.0 = 3 blocks) so the pet
-     * settles where the follow goal would rather than jittering against it.
+     * Horizontal distance (blocks) at which the land push toward the owner stops.
+     * Matches {@code PetFollowOwnerGoal.STATIONARY_MAX_DIST_SQ} (9.0 = 3 blocks) so the
+     * pet settles where the follow goal would rather than jittering against it.
      */
     private static final double LAND_STOP_DISTANCE = 3.0D;
+
+    /**
+     * Horizontal distance at which the push toward a <em>target</em> stops. Tighter than
+     * {@link #LAND_STOP_DISTANCE} because it has to land inside
+     * {@code PetMeleeAttackGoal}'s reach ({@code mob.getWidth() + 1.3} plus two-thirds of
+     * the target's height — a shade over 3 blocks for a fish-sized attacker against a
+     * player-sized target). Stopping at 3.0 would park the pet right on the edge of that
+     * reach and let it drift out again.
+     */
+    private static final double TARGET_STOP_DISTANCE = 2.0D;
 
     /** Base horizontal speed (blocks/tick) of the land push, before distance scaling. */
     private static final double LAND_BASE_SPEED = 0.10D;
@@ -129,24 +140,39 @@ public class PetAquaticMovementGoal implements Goal<Mob> {
         if (!mob.isEmpty()) {
             return; // a rider steers it; setting velocity here would fight them
         }
-        if (pet.getPetTarget() != null && !pet.getPetTarget().isDead()) {
-            return; // target goals own the movement while there's something to fight
-        }
-        if (pet.getOwner() == null) return;
-        Player owner = pet.getOwner().getPlayer();
-        if (owner == null) return;
-
         Location petLoc = mob.getLocation();
-        Location ownerLoc = owner.getLocation();
-        // An owner who changed world is recovered by PlayerListener re-creating the pet
-        // there; measuring distance across worlds would throw. Same guard as
-        // PetFollowOwnerGoal.
-        if (!petLoc.getWorld().equals(ownerLoc.getWorld())) return;
+        // A live target outranks the owner. This goal cannot delegate to the target goals
+        // the way a land pet does: PetMeleeAttackGoal steers through the navigation, and
+        // a water-bound navigation is inert on land, so the velocity push here is the
+        // pet's ONLY way to close on something it has decided to fight. Bailing out on
+        // `hasTarget` (as this did originally) left a stranded pet frozen the moment it
+        // picked a target, with the follow goal also switched off for the same reason.
+        LivingEntity target = pet.getPetTarget();
+        boolean chasing = target != null && !target.isDead()
+                && Bukkit.isOwnedByCurrentRegion(target)
+                && target.getWorld().equals(petLoc.getWorld());
 
-        double dx = ownerLoc.getX() - petLoc.getX();
-        double dz = ownerLoc.getZ() - petLoc.getZ();
+        Location destination;
+        double stopDistance;
+        if (chasing) {
+            destination = target.getLocation();
+            stopDistance = TARGET_STOP_DISTANCE;
+        } else {
+            if (pet.getOwner() == null) return;
+            Player owner = pet.getOwner().getPlayer();
+            if (owner == null) return;
+            destination = owner.getLocation();
+            stopDistance = LAND_STOP_DISTANCE;
+            // An owner who changed world is recovered by PlayerListener re-creating the
+            // pet there; measuring distance across worlds would throw. Same guard as
+            // PetFollowOwnerGoal.
+            if (!petLoc.getWorld().equals(destination.getWorld())) return;
+        }
+
+        double dx = destination.getX() - petLoc.getX();
+        double dz = destination.getZ() - petLoc.getZ();
         double horizontalDist = Math.sqrt(dx * dx + dz * dz);
-        if (horizontalDist < LAND_STOP_DISTANCE) {
+        if (horizontalDist < stopDistance) {
             return; // close enough — let it flop in place
         }
 

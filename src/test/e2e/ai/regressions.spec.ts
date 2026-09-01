@@ -177,15 +177,15 @@ test('regression: an aggressive axolotl walks to its target on land and kills it
 
   try {
     player.chat('/petbehavior aggressive');
-    const victim = await spawnVictim(server, player, 'husk', 'v_axolotl', { dx: 5 });
+    const victim = await spawnVictim(server, player, 'husk', 'v_axolotl', { dx: 8 });
 
-    // Split from the kill assertion on purpose: melee reach is ~3 blocks, so
-    // a pet that reaches the husk but never swings fails on the second
-    // check, not the first -- which distinguishes "movement still broken"
-    // from "movement fixed, damage broken".
-    await expectCondition(server, player,
-      `at ${victim} if entity @e[tag=${pet.tag},distance=..3]`, { timeout: 25000 });
-    await expectCondition(server, player, `unless entity ${victim}`, { timeout: 15000 });
+    // The kill is the whole assertion: melee reach (~3.1 blocks against a husk)
+    // is well inside the 8-block spawn gap and the husk is NoAI, so a dead husk
+    // proves the axolotl travelled. Asserting the approach separately is not
+    // worth it -- anchoring on the husk breaks when the pet one-shots it, and
+    // anchoring on its spawn column has no radius that both passes a working
+    // pet and fails one idling at its owner's feet. See aquatic-movement.spec.ts.
+    await expectCondition(server, player, `unless entity ${victim}`, { timeout: 40000 });
   } finally {
     killTagged(server, 'v_axolotl');
     removePet(server, player);
