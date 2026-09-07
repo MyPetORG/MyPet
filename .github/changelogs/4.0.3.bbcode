@@ -1,0 +1,57 @@
+MyPet 4.0.3 brings multiple fixes and a new config option. Fish, guardians, axolotls and frogs finally swim, chase and fight instead of freezing or bobbing at the surface, Pets stop suffocating inside walls when you call them, and MyPet on a shared MySQL server stops reading another install's tables.
+
+[B]MyPet 4.0.3 supports Minecraft 1.20.5 through the upcoming 26.3 update[/B], unchanged from 4.0.2. Upgrading is a drop-in jar swap, but this one changes how your database stores Pet data, so there is not a downgrade path.
+
+If MyPet is useful to you or your players, please consider buying me a coffee: https://ko-fi.com/UserDerezzed
+
+[HEADING=2]Water Pets can swim, chase and fight[/HEADING]
+
+Aquatic Pets were badly broken and it took four separate fixes to sort out.
+
+Fish, Guardians, Squid and the rest could hit whatever swam into reach but could never chase anything - they simply had no way to close the distance. A Pet stranded on land stopped dead the moment it picked a target instead of walking to it. Axolotls, Drowned, Frogs and Turtles did the same thing on land. And every Pet in water was quietly pushed toward the surface each tick, so anything that tried to swim down bobbed back up to the waterline.
+
+All four are fixed. Water and amphibious Pets now follow you, chase what they're fighting on land and in water, and stay at the depth they swim to.
+
+[HEADING=2]Pets stop suffocating in walls[/HEADING]
+
+Since 4.0, calling a Pet only checked whether the block at its feet was clear. In a one-block-high gap, that passed, so the Pet appeared with its head in whatever block was above, started suffocating, and got despawned and re-summoned into the exact same block over and over, spamming despawn messages.
+
+MyPet now checks the Pet actually fits before spawning it, and before teleporting it to you. If there's genuinely no room you get a "no space" message instead of a loop, and [ICODE]/petsendaway[/ICODE] always cancels an auto-recall.
+
+[HEADING=2]MySQL: the right database, finally[/HEADING]
+
+If your MySQL server hosts more than one MyPet database (a MyPet 3 install, another server's tables, etc) MyPet could check the wrong one. A working 4.x install could spot MyPet 3 tables in someone else's database, decide it needed upgrading, and shut itself down partway through migrating a database that was already fine.
+
+MyPet now only ever looks at the database it's connected to. SQLite servers were never affected.
+
+[HEADING=3]Full changelog:[/HEADING]
+
+[B]Added[/B]
+
+[LIST]
+[*]Added [ICODE]AllowMetamorphosis[/ICODE] to [ICODE]pet-config.yml[/ICODE], off by default - turn it on and a Tadpole Pet grows into a Frog Pet, keeping its name, experience, skilltree, health and inventory
+[*]Added a fresh-install signal to the [ICODE]/mypet editor[/ICODE] session data, so the Configurator can tell a brand-new server from one you've already set up
+[/LIST]
+
+[B]Changed[/B]
+
+[LIST]
+[*]Prepared the plugin's codebase for having several Pets out at once
+[*]World group data is stored in a new format; migrated automatically from the old version
+[/LIST]
+
+[B]Fixed[/B]
+
+[LIST]
+[*]Fixed water-breathing Pets never attacking and never swimming to a target they had picked
+[*]Fixed water-breathing Pets floating to the surface instead of staying at the depth they swim to
+[*]Fixed stranded water-breathing Pets freezing in place the moment they picked a target
+[*]Fixed Axolotl, Drowned, Frog and Turtle Pets freezing in place instead of walking to their target
+[*]Fixed Pets suffocating in walls and looping through respawn when called, and [ICODE]/petsendaway[/ICODE] failing to stop it
+[*]Fixed MyPet reading its tables from another MyPet database on the same MySQL server
+[*]Fixed some ridden Pets never coming back down, and saddled horse Pets losing their jump
+[*]Fixed released baby Pets never growing up
+[*]Fixed Tadpole Pets turning into an unowned frog when they grow up
+[/LIST]
+
+Thanks again for choosing MyPet!
