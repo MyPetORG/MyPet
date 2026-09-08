@@ -550,6 +550,7 @@ public final class VanillaMobSpawner {
         mob.setFallDistance(0f);
         mob.setVelocity(new Vector(0, 0, 0));
         mob.setFreezeTicks(0);
+        mob.setGravity(true);
         PetEntityMarker.mark(mob);
 
         // Lock/unlock vanilla aging. A per-pet owner override (set in-game with a

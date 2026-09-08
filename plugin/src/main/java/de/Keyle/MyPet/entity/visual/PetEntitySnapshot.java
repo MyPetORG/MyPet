@@ -203,6 +203,7 @@ public final class PetEntitySnapshot {
         mob.setFallDistance(0f);
         mob.setVelocity(new Vector(0, 0, 0));
         mob.setFreezeTicks(0);
+        mob.setGravity(true);
         return mob;
     }
 
