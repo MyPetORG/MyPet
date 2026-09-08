@@ -44,6 +44,20 @@ public final class BundledModelInstaller {
     private static final Set<String> BUNDLED = Set.of("capybara", "chameleon");
 
     /**
+     * Whether {@code petTypeName} names one of MyPet's bundled default custom pets.
+     *
+     * <p>A bundled model's id doubles as a pet type name: MyPet's own shipped skilltrees list
+     * {@code Capybara}/{@code Chameleon} in their {@code MobTypes}, assuming the admin creates the
+     * custom pet under that default name. Unlike a built-in pet type, it exists only once that
+     * {@code pet-config.yml} section is there, so callers use this to tell "bundled pet not set up
+     * yet" (expected on a default install) apart from "genuinely unknown type" (a misconfiguration
+     * worth warning about).</p>
+     */
+    public static boolean isBundledDefaultType(String petTypeName) {
+        return petTypeName != null && BUNDLED.contains(petTypeName.toLowerCase(Locale.ROOT));
+    }
+
+    /**
      * Scans registered model configs; for any whose id is a bundled default and whose
      * provider is ModelEngine/BetterModel, copies the bundled {@code .bbmodel} into the
      * provider's folder if absent, then dispatches that provider's reload once. Fully

@@ -24,6 +24,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.PetType;
+import de.Keyle.MyPet.entity.model.BundledModelInstaller;
 
 import java.util.HashSet;
 import java.util.List;
@@ -64,7 +65,16 @@ public final class MobTypeParser {
                     }
                     PetType mobType = PetType.byNameOrNull(type);
                     if (mobType == null) {
-                        MyPetApi.getLogger().warning("Skilltree '" + skilltreeID + "': Unknown mob type '" + type + "' - skipping (not a valid Pet type or not available in this Minecraft version)");
+                        if (BundledModelInstaller.isBundledDefaultType(type)) {
+                            // MyPet's own bundled skilltrees list the Capybara/Chameleon that ship as
+                            // .bbmodel files only. Those pet types appear once an admin creates them in
+                            // pet-config.yml, so being absent is the default-install case, not a broken
+                            // config - warning would be MyPet complaining about its own shipped data.
+                            MyPetApi.getLogger().fine("Skilltree '" + skilltreeID + "': bundled pet type '" + type
+                                    + "' is not set up in pet-config.yml - skipping");
+                        } else {
+                            MyPetApi.getLogger().warning("Skilltree '" + skilltreeID + "': Unknown mob type '" + type + "' - skipping (not a valid Pet type or not available in this Minecraft version)");
+                        }
                     } else if (mobType.checkMinecraftVersion()) {
                         if (negative) {
                             mobTypes.remove(mobType);

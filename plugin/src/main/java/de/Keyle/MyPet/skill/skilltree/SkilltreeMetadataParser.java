@@ -27,6 +27,7 @@ import de.Keyle.MyPet.api.skill.skilltree.Skilltree;
 import de.Keyle.MyPet.api.skill.skilltree.SkilltreeIcon;
 import de.Keyle.MyPet.api.skill.skilltree.levelrule.LevelRule;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
+import de.Keyle.MyPet.entity.model.BundledModelInstaller;
 
 import static de.Keyle.MyPet.api.util.configuration.Try.tryToLoad;
 
@@ -64,6 +65,11 @@ public final class SkilltreeMetadataParser {
                         PetType type = PetType.byNameOrNull(key);
                         if (type != null) {
                             skilltree.setWeightOverride(type, value);
+                        } else if (BundledModelInstaller.isBundledDefaultType(key)) {
+                            // Same reasoning as MobTypeParser: a bundled Capybara/Chameleon weight
+                            // override is dormant until the admin sets that pet up, not an error.
+                            MyPetApi.getLogger().fine("Skilltree '" + skilltree.getName() + "': bundled pet type '"
+                                    + key + "' in Weight is not set up in pet-config.yml - ignored");
                         } else {
                             MyPetApi.getLogger().warning("Skilltree '" + skilltree.getName() + "': unknown pet type '" + key + "' in Weight - ignored");
                         }
