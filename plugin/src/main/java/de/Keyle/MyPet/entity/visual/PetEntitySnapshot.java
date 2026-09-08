@@ -248,7 +248,7 @@ public final class PetEntitySnapshot {
      * admin command aborts and prints them; the petshop logs them and
      * proceeds.
      *
-     * <p>Source-driven types capture nothing: their entity comes from the provider
+     * <p>Provider-supplied types capture nothing: their entity comes from the provider
      * plugin, and a snapshot here would divert the spawner off that path. Their
      * host-mob options are skipped and logged, not treated as errors.
      *
@@ -269,13 +269,20 @@ public final class PetEntitySnapshot {
         if (world == null || loc == null) {
             return Result.empty();
         }
-        // Source-driven types (e.g. a MythicMobs creature) are materialized by their
+        // Provider-supplied types (e.g. a MythicMobs creature) are materialized by their
         // provider, not deserialized from NBT — VanillaMobSpawner.spawn only reaches that
         // provider branch when the pet has NO pending snapshot. A snapshot captured here
         // would be a bare host mob carrying none of the source's identity, and restoring it
         // would silently replace the real creature with its host. Capture nothing; the
         // host-mob options are skipped and the pet keeps its source type.
-        if (PetModelService.isSourceDriven(petType)) {
+        //
+        // Keyed on isProviderSupplied, NOT isSourceDriven: the latter needs the source hook
+        // to be registered, so a pet created while the provider plugin is missing would still
+        // get a host snapshot baked in — and that one is permanent, because the spawner
+        // consumes it ahead of the provider branch and every despawn re-captures the host mob
+        // it produced. The cost is that a type whose RENDERER is missing also loses its
+        // host-mob options; that case is recoverable by re-creating the pet.
+        if (PetModelService.isProviderSupplied(petType)) {
             List<String> skipped = PetCreationOptions.hostOptionsIn(petType, options);
             if (!skipped.isEmpty()) {
                 MyPetApi.getLogger().info("Pet type " + petType.name()

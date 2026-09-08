@@ -146,24 +146,43 @@ public final class PetModelService {
      * {@link Pet} object exists (pet creation, petshop checkout).
      */
     public static boolean isSourceDriven(PetType petType) {
-        if (petType == null) {
+        if (!isProviderSupplied(petType)) {
             return false;
         }
         ModelConfig cfg = MODELS.get(petType.name().toLowerCase(Locale.ROOT));
-        if (cfg == null || cfg.provider() == null) {
-            return false;
-        }
-        for (PetModelHook hook : MyPetApi.getServiceManager().getServices(PetModelHook.class)) {
-            if (hook.getServiceName().equalsIgnoreCase(cfg.provider())) {
-                return false; // a renderer draws it -> rendered, not source-driven
-            }
-        }
         for (PetModelSourceHook src : MyPetApi.getServiceManager().getServices(PetModelSourceHook.class)) {
             if (src.getServiceName().equalsIgnoreCase(cfg.provider())) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Whether the type's entity is expected to come from a provider plugin rather than from a
+     * host mob MyPet spawns itself: it declares a {@code Model.Provider} that no installed
+     * {@link PetModelHook} renderer serves.
+     *
+     * <p>Unlike {@link #isSourceDriven(PetType)} this does not require the source hook to be
+     * registered, so it stays true while the provider plugin is missing or failed to enable.
+     * Creation-time callers must use this one: a host snapshot baked during that window is
+     * consumed by the spawner ahead of the provider branch and never clears itself, stranding
+     * the pet as its host mob even after the provider returns.
+     */
+    public static boolean isProviderSupplied(PetType petType) {
+        if (petType == null) {
+            return false;
+        }
+        ModelConfig cfg = MODELS.get(petType.name().toLowerCase(Locale.ROOT));
+        if (cfg == null || cfg.provider() == null || cfg.provider().isEmpty()) {
+            return false;
+        }
+        for (PetModelHook hook : MyPetApi.getServiceManager().getServices(PetModelHook.class)) {
+            if (hook.getServiceName().equalsIgnoreCase(cfg.provider())) {
+                return false; // a renderer draws it on a host mob MyPet spawns
+            }
+        }
+        return true;
     }
 
     /**

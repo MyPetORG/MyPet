@@ -535,9 +535,12 @@ public final class PetCreationOptions {
      * ({@code skilltree:}, {@code name:}) are excluded — they are applied elsewhere.
      */
     public static List<String> hostOptionsIn(PetType petType, String[] args) {
+        if (petType == null || args == null) {
+            return List.of();
+        }
         ensurePetsLoaded();
         Class<? extends Mob> mobClass = petType.getBukkitEntityClass();
-        if (mobClass == null || args == null) {
+        if (mobClass == null) {
             return List.of();
         }
         List<String> matched = new ArrayList<>();
