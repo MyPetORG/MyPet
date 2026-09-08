@@ -51,6 +51,7 @@ public final class AdminPermissions {
     public static final String SKILL_OTHER = "MyPet.command.skill.other";
     public static final String INVENTORY_OTHER = "MyPet.command.inventory.other";
     public static final String SENDAWAY_OTHER = "MyPet.command.sendaway.other";
+    public static final String SHOP_OTHER = "MyPet.command.shop.other";
     // bypass nodes (exempt from a player-facing restriction)
     public static final String BYPASS_SKILLTREE = "MyPet.bypass.skilltree";
     public static final String BYPASS_FEE = "MyPet.bypass.fee";

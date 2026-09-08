@@ -71,6 +71,7 @@ permissions:
       MyPet.command.skill.other: true
       MyPet.command.inventory.other: true
       MyPet.command.sendaway.other: true
+      MyPet.command.shop.other: true
       MyPet.admin.notify: true
       MyPet.bypass.skilltree: true
       MyPet.bypass.fee: true
@@ -98,6 +99,7 @@ permissions:
   MyPet.command.skill.other: {description: "Edit other players' pet skills.", default: op}
   MyPet.command.inventory.other: {description: "Open other players' pet inventories.", default: op}
   MyPet.command.sendaway.other: {description: "Send away other players' pets.", default: op}
+  MyPet.command.shop.other: {description: "Open a pet shop for another player (/petshop <shop> <player>).", default: op}
   MyPet.admin.notify:
     description: Receive web-editor apply notifications (changes applied via /mypet editor).
     default: op

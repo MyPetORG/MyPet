@@ -56,3 +56,22 @@ test('an unfunded bot cannot buy the expensive shop pet — denied, no pet creat
     removePet(server, player);
   }
 });
+
+// Regression: the Brigadier rewrite dropped the legacy `/petshop <shop> <player>` form and
+// gated the root literal on `sender instanceof Player`, so menu plugins that dispatch
+// `petshop <shop> %player%` from the console had no way to open a shop for the clicking
+// player. The target form is back, gated on MyPet.command.shop.other, which admits
+// non-player senders unconditionally.
+test('console opens a shop for a player who has no shop access of their own', async ({ player, server }) => {
+  await player.deOp();
+
+  // Establishes the premise: without op this bot fails the MyPet.shop.access.e2e check,
+  // so a GUI appearing below can only have come from the console-driven target form.
+  const since = player.getMessageBufferIndex();
+  player.chat('/petshop e2e');
+  await expect(player).toHaveReceivedMessage(msgPlain('Message.No.Allowed'), { since, timeout: 5000 });
+
+  server.execute(`petshop e2e ${player.username}`);
+  const shop = await player.gui({ title: new RegExp(msgPlain('Gui.PetShop.Title')), timeout: 8000 });
+  expect(shop).toBeTruthy();
+});
