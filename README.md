@@ -21,33 +21,8 @@ Take them on a lead, train them and make them a very powerful companion!
 [![Spigot][SpigotImage]][Spigot] <br/>
 
 ---
-## Building
+## Download
 Download the latest builds from [GitHub Releases](https://github.com/MyPetORG/MyPet/releases/).
-
-If you'd prefer to build the plugin yourself:
-### 🧩 Prerequisites
-
-- **Java 21** (required for compilation)
-- **Git** installed and available in your system PATH
-
-
-### 📥 Clone the Repository
-
-```bash
-git clone https://github.com/MyPetORG/MyPet.git
-cd MyPet
-```
-
-### ⚙️ Build the Plugin
-
-### Clean and Build
-Run the following command to build the plugin:
-
-```bash
-./gradlew clean build
-```
-
-The output will be located in the `build/libs` folder.
 
 ---
 ## The License
