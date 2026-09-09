@@ -50,6 +50,19 @@ jobs:
           BASE_PROJECT_VERSION=$(grep -Po 'baseVersion\s*=\s*"\K[^"]+' build.gradle.kts)
           echo "BASE_PROJECT_VERSION=$BASE_PROJECT_VERSION" >> "$GITHUB_ENV"
 
+          # Refuse to build an alpha for a version that has already shipped. Release tags carry no
+          # prerelease suffix, so the newest of them is the highest version that is out. This fires
+          # both when baseVersion was never bumped after a release (4.0.3 shipped, baseVersion
+          # still 4.0.3 — how 4.0.3-alpha-04 got published) and when it has fallen behind one
+          # (4.0.3 shipped, baseVersion still 4.0.2). Runs before the build, the tag push and the
+          # Hub upload, so a run that trips this leaves nothing behind.
+          NEWEST_RELEASE=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
+          if [[ -n "$NEWEST_RELEASE" ]] \
+            && [[ "$(printf '%s\n%s\n' "$BASE_PROJECT_VERSION" "$NEWEST_RELEASE" | sort -V | tail -1)" == "$NEWEST_RELEASE" ]]; then
+            echo "::error::baseVersion is $BASE_PROJECT_VERSION but $NEWEST_RELEASE is already released — bump baseVersion in build.gradle.kts before pushing to ${GITHUB_REF_NAME}."
+            exit 1
+          fi
+
           # Highest existing dev-build tag for this base version → next NN
           MAX_B=$(git tag -l "${BASE_PROJECT_VERSION}-alpha-*" \
             | sed -E "s/^${BASE_PROJECT_VERSION}-alpha-0*([0-9]+)$/\1/" \

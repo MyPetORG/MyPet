@@ -51,6 +51,18 @@ jobs:
           PROJECT_VERSION=$(grep -Po 'baseVersion\s*=\s*"\K[^"]+' build.gradle.kts)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> "$GITHUB_ENV"
 
+          # Refuse to release a version older than what is already out — dispatching from a ref
+          # whose baseVersion is still 4.0.2 after 4.0.3 shipped would push an older jar to the
+          # stores as the newest one. Strictly older, deliberately: PROJECT_VERSION equal to the
+          # newest release tag is a retry or a republish, which this workflow already supports
+          # through the republish_* inputs and its same-commit tag check below.
+          NEWEST_RELEASE=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
+          if [[ -n "$NEWEST_RELEASE" && "$NEWEST_RELEASE" != "$PROJECT_VERSION" ]] \
+            && [[ "$(printf '%s\n%s\n' "$PROJECT_VERSION" "$NEWEST_RELEASE" | sort -V | tail -1)" == "$NEWEST_RELEASE" ]]; then
+            echo "::error::baseVersion is $PROJECT_VERSION but $NEWEST_RELEASE is already released — releasing an older version would replace it on the stores."
+            exit 1
+          fi
+
       # Two representations of the same changelog: `content` is the BBCode the file is
       # written in, for BuiltByBit's XenForo post; `content_html` is HTML for Voxel.Shop,
       # which stores update_description as HTML and does not parse BBCode (posting BBCode
