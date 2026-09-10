@@ -24,7 +24,7 @@ Take them on a lead, train them and make them a very powerful companion!
 
 ---
 ## Download
-Download the latest builds from [GitHub Releases](https://github.com/MyPetORG/MyPet/releases/).
+Download the latest builds from [Modrinth](https://modrinth.com/plugin/mypet).
 
 ---
 ## The License
