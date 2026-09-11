@@ -6,8 +6,8 @@ import { setupArena, spawnVictim, killTagged, attackPinned } from '../lib/world.
 // `/petbehavior <mode>` refuses any mode not flagged usable on the pet's
 // skilltree (BehaviorImpl.setBehavior falls back to Normal). Neither Friend
 // nor Raid is enabled by any existing fixture, so a new skilltree
-// (test-behavior-modes.st.json: Aggro+Friend+Raid true, Duel+Farm false,
-// Damage +50) covers this file's Friendly/Aggressive/Raid tests; Normal
+// (test-behavior-modes.st.json: Aggro+Friend+Raid+Farm true, Duel false,
+// Damage +50) covers this file's Friendly/Aggressive/Raid/Farm tests; Normal
 // reuses the existing test-behavior fixture (always the default mode).
 
 // Raid has no unprovoked-scan goal (unlike Aggressive's
@@ -108,6 +108,31 @@ test('test-behavior-modes: Raid pet retaliates against a wild mob that hurts it,
     await expectCondition(server, player, `unless entity ${victim}`, { timeout: 15000 });
   } finally {
     killTagged(server, 'v_raid');
+    removePet(server, player);
+  }
+});
+
+// Farm's scan accepts Monsters near the pet, and a hostile species (Bogged,
+// Skeleton, Zombie, ...) is itself a Monster -- so a Farm pet used to lock onto
+// ITSELF and hit its own health away. The arena holds no other monster: with
+// Damage +50 a self-hit kills the pet (tag gone), and any lesser loss shows as
+// Health below the baseline.
+test('test-behavior-modes: Farm-mode hostile pet never targets itself', async ({ player, server }) => {
+  await player.makeOp();
+  await setupArena(server, player);
+  const pet = await createPet(server, player, 'Bogged', { skilltree: 'test-behavior-modes' });
+
+  try {
+    server.execute('scoreboard objectives add e2e dummy');
+    server.execute(`execute store result score fm_base e2e run data get entity ${pet.selector} Health 100`);
+    player.chat('/petbehavior farm');
+
+    // Farm rescans every 10-14 ticks and melee cools down in ~20, so 6 checks
+    // (~5s) give a self-target many chances to land.
+    await expectConditionHolds(server, player,
+      `if entity ${pet.selector} if score fm_cur e2e >= fm_base e2e`,
+      { checks: 6, pre: [`execute store result score fm_cur e2e run data get entity ${pet.selector} Health 100`] });
+  } finally {
     removePet(server, player);
   }
 });

@@ -25,6 +25,7 @@ import com.destroystokyo.paper.entity.ai.GoalKey;
 import com.destroystokyo.paper.entity.ai.GoalType;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.entity.Pet;
+import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import org.bukkit.entity.Mob;
 import de.Keyle.MyPet.api.entity.ai.target.TargetPriority;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
@@ -50,9 +51,10 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * <p>Candidate filtering is intentionally minimal: any non-dead
  * {@link Monster} within ~9.5 blocks (91 m²) of the pet that passes the
- * hook helper's {@code canHurt} check is accepted. Unlike
- * {@link PetAggressiveTargetGoal}, there's no ownership filter because
- * {@link Monster} excludes tamed/owned entities by definition.
+ * hook helper's {@code canHurt} check is accepted. The pet itself and other
+ * pets still need the same exclusion {@link PetAggressiveTargetGoal} uses:
+ * pets are real vanilla mobs, so a hostile-species pet (Bogged, Skeleton,
+ * Zombie, …) is itself a {@link Monster} and would otherwise target itself.
  *
  * <p>Declares {@link GoalType#TARGET}, making it mutually exclusive with
  * other target-acquisition goals.
@@ -113,7 +115,7 @@ public class PetFarmTargetGoal implements Goal<Mob> {
         // Scan no wider than the distanceSquared <= 91 accept check below (~9.5 blocks).
         double scanRadius = Math.min(range, 9.54);
         for (Entity entity : mob.getWorld().getNearbyEntities(petLoc, scanRadius, scanRadius, scanRadius)) {
-            if (!(entity instanceof Monster monster)) {
+            if (!(entity instanceof Monster monster) || entity.equals(mob)) {
                 continue;
             }
             if (monster.isDead()) {
@@ -121,6 +123,15 @@ public class PetFarmTargetGoal implements Goal<Mob> {
             }
             if (petLoc.distanceSquared(monster.getLocation()) > 91) {
                 continue;
+            }
+            // Another player's hostile-species pet is a Monster too: gate it on PvP,
+            // as PetAggressiveTargetGoal does (canHurt(owner, owner) is false).
+            if (PetEntityMarker.isMarked(entity)) {
+                Pet otherPet = MyPetApi.getPetManager().getPetFromEntity(entity);
+                if (otherPet != null && otherPet.getOwner() != null
+                        && !MyPetApi.getHookHelper().canHurt(owner, otherPet.getOwner().getPlayer(), true)) {
+                    continue;
+                }
             }
             if (!MyPetApi.getHookHelper().canHurt(owner, monster)) {
                 continue;

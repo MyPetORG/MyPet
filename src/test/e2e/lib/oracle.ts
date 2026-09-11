@@ -24,10 +24,10 @@ export async function expectCondition(
 /** Asserts the condition is true on `checks` consecutive polls (e.g. "pet stays put"). */
 export async function expectConditionHolds(
   server: any, player: any, condition: string,
-  { checks = 5, interval = 800 } = {},
+  { checks = 5, interval = 800, pre = [] as string[] } = {},
 ): Promise<void> {
   for (let i = 0; i < checks; i++) {
-    await expectCondition(server, player, condition, { timeout: interval + 2000, interval });
+    await expectCondition(server, player, condition, { pre, timeout: interval + 2000, interval });
     await sleep(interval);
   }
 }

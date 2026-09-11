@@ -15,7 +15,7 @@
           "Aggro": true,
           "Friend": true,
           "Duel": false,
-          "Farm": false,
+          "Farm": true,
           "Raid": true
         }
       }
