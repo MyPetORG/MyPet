@@ -70,7 +70,7 @@ public class ServiceManager {
                     "#######################################################################",
                     "          This is the hook/service configuration of MyPet           #",
                     "                 You can find more info on the wiki:                  #",
-                    "  https://wiki.mypet-plugin.de/setup/configurations/hooks-config.yml  #",
+                    "  https://wiki.mypet-plugin.com/setup/configurations/hooks-config.yml  #",
                     "#######################################################################"
             ));
             config.getConfig().options().copyDefaults(true);

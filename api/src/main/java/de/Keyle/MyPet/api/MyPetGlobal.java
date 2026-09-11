@@ -56,7 +56,7 @@ public final class MyPetGlobal {
         public static final ConfigKey<Boolean> DISABLE_ALL_ACTIONBAR_MESSAGES = ConfigKey.globalBool("MyPet.Disable-All-Actionbar-Messages", false);
         public static final ConfigKey<Boolean> RECALL_PET_AFTER_DESPAWN = ConfigKey.globalBool("MyPet.Recall-Pet-After-Despawn", true);
         public static final ConfigKey<String> OVERWRITE_LANGUAGE = ConfigKey.globalString("MyPet.OverwriteLanguages", "");
-        public static final ConfigKey<String> WIKI_URL = ConfigKey.globalString("MyPet.Info.Wiki-URL", "https://wiki.mypet-plugin.de");
+        public static final ConfigKey<String> WIKI_URL = ConfigKey.globalString("MyPet.Info.Wiki-URL", "https://wiki.mypet-plugin.com");
         // Strips a leading slash so the command is runnable via Bukkit.dispatchCommand.
         public static final ConfigKey<String> RIGHT_CLICK_COMMAND = ConfigKey.global("MyPet.Right-Click-Command", "", "",
                 (config, path) -> {
@@ -80,9 +80,9 @@ public final class MyPetGlobal {
     /** Browser-based config editor (`/mypet editor`) — relay endpoints + on/off. */
     public static final class WebEditor {
         public static final ConfigKey<Boolean> ENABLED = ConfigKey.globalBool("MyPet.WebEditor.Enabled", true);
-        public static final ConfigKey<String> BYTEBIN_URL = ConfigKey.globalString("MyPet.WebEditor.BytebinUrl", "https://bytebin.mypet-plugin.de");
-        public static final ConfigKey<String> BYTESOCKS_URL = ConfigKey.globalString("MyPet.WebEditor.BytesocksUrl", "wss://bytesocks.mypet-plugin.de");
-        public static final ConfigKey<String> EDITOR_URL = ConfigKey.globalString("MyPet.WebEditor.EditorUrl", "https://editor.mypet-plugin.de");
+        public static final ConfigKey<String> BYTEBIN_URL = ConfigKey.globalString("MyPet.WebEditor.BytebinUrl", "https://bytebin.mypet-plugin.com");
+        public static final ConfigKey<String> BYTESOCKS_URL = ConfigKey.globalString("MyPet.WebEditor.BytesocksUrl", "wss://bytesocks.mypet-plugin.com");
+        public static final ConfigKey<String> EDITOR_URL = ConfigKey.globalString("MyPet.WebEditor.EditorUrl", "https://editor.mypet-plugin.com");
     }
 
     public static final class Repository {

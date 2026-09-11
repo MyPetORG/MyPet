@@ -125,7 +125,7 @@ public class WorldGroup {
                 "######################################################################",
                 "          This is the world group configuration of MyPet             #",
                 "                You can find more info on the wiki:                  #",
-                "  https://wiki.mypet-plugin.de/setup/configurations/worldgroups.yml  #",
+                "  https://wiki.mypet-plugin.com/setup/configurations/worldgroups.yml  #",
                 "######################################################################"
         ));
 

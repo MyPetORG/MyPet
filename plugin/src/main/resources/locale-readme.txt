@@ -4,4 +4,4 @@ The default translations are included into the plugin file itself.
 
 If you are interested in translating MyPet visit:
 
-https://translation.mypet-plugin.de/
+https://translation.mypet-plugin.com/

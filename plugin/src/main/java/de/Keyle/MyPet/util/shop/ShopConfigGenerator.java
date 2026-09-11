@@ -58,7 +58,7 @@ public class ShopConfigGenerator {
             #####################################################################
             #             This is the shop configuration of MyPet               #
             #               You can find more info on the wiki:                 #
-            #  https://wiki.mypet-plugin.de/setup/configurations/pet-shops.yml  #
+            #  https://wiki.mypet-plugin.com/setup/configurations/pet-shops.yml  #
             #####################################################################
             """;
 

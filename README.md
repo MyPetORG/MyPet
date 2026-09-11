@@ -73,8 +73,8 @@ Developer documentation lives in the [Wiki].
 MyPet is licensed under the [GNU LGPL v3](LICENSE.txt).
 
 [Banner]: .github/readme-images/banner.png
-[Homepage]: https://mypet-plugin.de/
-[Wiki]: https://wiki.mypet-plugin.de/
+[Homepage]: https://mypet-plugin.com/
+[Wiki]: https://wiki.mypet-plugin.com/
 [Downloads]: https://github.com/MyPetORG/MyPet/releases
 [BuiltByBit]: https://builtbybit.com/resources/mypet-4.115339/
 [Discord]: https://discord.gg/GtcdWFw

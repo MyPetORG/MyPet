@@ -93,7 +93,7 @@ public class ConfigurationLoader {
                 #################################################################
                            This is the main configuration of MyPet              #
                              You can find more info on the wiki:                #
-                  https://wiki.mypet-plugin.de/setup/configurations/config.yml  #
+                  https://wiki.mypet-plugin.com/setup/configurations/config.yml  #
                 #################################################################
                 """);
         config.options().copyHeader(true);
@@ -118,7 +118,7 @@ public class ConfigurationLoader {
                 #####################################################################
                               This is the exp configuration of MyPet                #
                                 You can find more info on the wiki:                 #
-                  https://wiki.mypet-plugin.de/setup/configurations/exp-config.yml  #
+                  https://wiki.mypet-plugin.com/setup/configurations/exp-config.yml  #
                 #####################################################################
                 """);
         config.options().copyHeader(true);
@@ -164,7 +164,7 @@ public class ConfigurationLoader {
                 #####################################################################
                               This is the pet configuration of MyPet                #
                                 You can find more info on the wiki:                 #
-                  https://wiki.mypet-plugin.de/setup/configurations/pet-config.yml  #
+                  https://wiki.mypet-plugin.com/setup/configurations/pet-config.yml  #
                 #####################################################################
                 """);
         config.options().copyHeader(true);
