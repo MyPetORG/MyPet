@@ -405,17 +405,21 @@ public abstract class AbstractSqlRepository implements Repository {
     }
 
     /**
-     * Shutdown sequence: stop the periodic flush, flush pending saves
-     * synchronously (on the calling thread), then drain the executor, then
-     * close the backend. Order matters — saves must complete before the
-     * executor stops accepting work, and the backend must stay open until
-     * the executor's last task returns.
+     * Shutdown sequence: stop the periodic flush, drain the executor, then
+     * flush all live and pending state synchronously (on the calling thread),
+     * then close the backend. Order matters — the executor must have finished
+     * every in-flight write before {@link #saveData()} touches the connection
+     * (on SQLite both share the single JDBC Connection, and an updatePet
+     * submitted by a player quitting during shutdown would otherwise overlap
+     * the final save), and the backend must stay open until the last write
+     * returns. {@code saveData} never uses the executor, so draining first
+     * loses nothing.
      */
     @Override
     public void disable() {
         stopPeriodicFlush();
-        saveData();
         shutdownExecutor();
+        saveData();
         disableBackend();
     }
 
