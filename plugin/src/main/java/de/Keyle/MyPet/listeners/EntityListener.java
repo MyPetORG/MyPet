@@ -489,7 +489,8 @@ public class EntityListener implements Listener {
                 if (event.getDamage() == 0) {
                     return;
                 } else if (PetEntityMarker.isMarked(target)) {
-                    if (MyPetApi.getPetInfo().getLeashItem(getPetManager().getPetFromEntity(target).getPetType()).compare(player.getInventory().getItemInMainHand())) {
+                    Pet hitPet = getPetManager().getPetFromEntity(target);
+                    if (hitPet != null && MyPetApi.getPetInfo().getLeashItem(hitPet.getPetType()).compare(player.getInventory().getItemInMainHand())) {
                         return;
                     }
                 }
@@ -544,6 +545,9 @@ public class EntityListener implements Listener {
                 Entity entity = Bukkit.getEntity(entityUUID);
                 if (PetEntityMarker.isMarked(entity)) {
                     Pet pet = getPetManager().getPetFromEntity(entity);
+                    if (pet == null) {
+                        continue; // marked entity with no live pet (orphaned or mid-despawn)
+                    }
                     if (MyPetGlobal.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE.get() && pet.getSkilltree() == null) {
                         if (!pet.autoAssignSkilltree()) {
                             continue;
@@ -598,6 +602,9 @@ public class EntityListener implements Listener {
             }
             if (PetEntityMarker.isMarked(damager)) {
                 Pet pet = getPetManager().getPetFromEntity(damager);
+                if (pet == null) {
+                    return; // marked entity with no live pet (orphaned or mid-despawn)
+                }
                 if (pet.getSkilltree() == null && MyPetGlobal.Skilltree.PREVENT_LEVELLING_WITHOUT_SKILLTREE.get()) {
                     if (!pet.autoAssignSkilltree()) {
                         return;
@@ -650,7 +657,7 @@ public class EntityListener implements Listener {
         }
         if (PetEntityMarker.isMarked(event.getEntity())) {
             Pet pet = getPetManager().getPetFromEntity(event.getEntity());
-            if (pet.getSkills().isActive(Behavior.class)) {
+            if (pet != null && pet.getSkills().isActive(Behavior.class)) {
                 Behavior behaviorSkill = pet.getSkills().get(Behavior.class);
                 if (behaviorSkill.getBehavior() == BehaviorMode.Friendly) {
                     event.setCancelled(true);
@@ -669,7 +676,7 @@ public class EntityListener implements Listener {
         } else if (event.getEntity() instanceof Tameable tameable) {
             if (PetEntityMarker.isMarked(event.getTarget())) {
                 Pet pet = getPetManager().getPetFromEntity(event.getTarget());
-                if (pet.getOwner().equals(tameable.getOwner())) {
+                if (pet != null && pet.getOwner().equals(tameable.getOwner())) {
                     event.setCancelled(true);
                 }
             }

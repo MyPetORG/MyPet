@@ -120,7 +120,7 @@ public class PetDeathListener implements Listener {
                 pet.setRespawnTime((MyPetGlobal.Respawn.TIME_PLAYER_FIXED.get() + MyPetApi.getPetInfo().getCustomRespawnTimeFixed(pet.getPetType())) + (pet.getExperience().getLevel() * (MyPetGlobal.Respawn.TIME_PLAYER_FACTOR.get() + MyPetApi.getPetInfo().getCustomRespawnTimeFactor(pet.getPetType()))));
             } else if (PetEntityMarker.isMarked(e.getDamager())) {
                 Pet killerPet = getPetManager().getPetFromEntity(e.getDamager());
-                if (pet.getSkills().isActive(Behavior.class) && killerPet.getSkills().isActive(Behavior.class)) {
+                if (killerPet != null && pet.getSkills().isActive(Behavior.class) && killerPet.getSkills().isActive(Behavior.class)) {
                     Behavior killerBehaviorSkill = killerPet.getSkills().get(Behavior.class);
                     Behavior deadBehaviorSkill = pet.getSkills().get(Behavior.class);
                     if (deadBehaviorSkill.getBehavior() == BehaviorMode.Duel && killerBehaviorSkill.getBehavior() == BehaviorMode.Duel) {
