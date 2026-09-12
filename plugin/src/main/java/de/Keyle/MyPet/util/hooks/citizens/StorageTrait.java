@@ -79,9 +79,16 @@ public class StorageTrait extends Trait {
                 final NPC npc = this.npc;
 
                 MyPetPlugin.getInstance().getRepository().getPets(myPetPlayer).thenAccept(pets -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
+                        // The pet may have been stored, traded or despawned by a world
+                        // change while the repository query was running.
+                        Pet activeAtCallback = myPetPlayer.getPet();
+                        if (activeAtCallback == null || !myPetPlayer.isOnline()) {
+                            myPetPlayer.sendMessage(Locale.getComponent("Message.No.HasPet", myPetPlayer), 5000);
+                            return;
+                        }
                         WorldGroup wg = WorldGroup.getGroupByWorld(myPetPlayer.getPlayer().getWorld().getName());
                         int inactivePetCount = 0;
-                        UUID activePetUUID = myPetPlayer.getPet().getUUID();
+                        UUID activePetUUID = activeAtCallback.getUUID();
 
                         for (StoredPet storedPet : pets) {
                             if (activePetUUID.equals(storedPet.getUUID()) || (!storedPet.getWorldGroup().isEmpty() && !storedPet.getWorldGroup().equals(wg.getName()))) {
@@ -108,10 +115,9 @@ public class StorageTrait extends Trait {
                         }
 
                         if (inactivePetCount >= maxPetCount) {
-                            UUID activePetUUID2 = myPetPlayer.getPet().getUUID();
                             List<StoredPet> selectablePets = pets.stream()
                                     .filter(p -> !p.getWorldGroup().isEmpty() && p.getWorldGroup().equals(wg.getName()))
-                                    .filter(p -> !activePetUUID2.equals(p.getUUID()))
+                                    .filter(p -> !activePetUUID.equals(p.getUUID()))
                                     .collect(Collectors.toList());
 
                             MyPetApi.getGuiService().openMenu(
