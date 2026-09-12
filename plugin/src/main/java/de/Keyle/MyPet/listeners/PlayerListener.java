@@ -340,9 +340,11 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    // HIGHEST, not MONITOR: this cancels ride fall damage and lets Shield rewrite
+    // the damage amount, neither of which a MONITOR handler may do.
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {
-        if (!event.isCancelled() && event.getEntity() instanceof Player victim) {
+        if (event.getEntity() instanceof Player victim) {
             if (WorldGroup.getGroupByWorld(victim.getWorld()).isDisabled()) {
                 return;
             }

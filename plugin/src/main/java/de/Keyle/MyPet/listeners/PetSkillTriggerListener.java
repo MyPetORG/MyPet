@@ -97,13 +97,14 @@ public class PetSkillTriggerListener implements Listener {
     }
 
     /**
-     * At MONITOR priority, when a marked pet deals damage:
+     * At HIGHEST priority (it rewrites or cancels the damage, so it cannot be
+     * MONITOR), when a marked pet deals damage:
      * <ol>
      *   <li>Emits {@link PetDamageEvent} so other plugins can adjust pet damage</li>
      *   <li>Dispatches {@link OnHitSkill} skills (Poison, Bleed, Fire, etc.)</li>
      * </ol>
      */
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPetDealsDamage(final EntityDamageByEntityEvent event) {
         @SuppressWarnings("ConstantConditions")
         boolean nullEntity = event.getEntity() == null;

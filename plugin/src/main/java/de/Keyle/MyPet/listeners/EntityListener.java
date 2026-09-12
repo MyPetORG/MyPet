@@ -205,7 +205,10 @@ public class EntityListener implements Listener {
     }
 
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    // HIGHEST, not MONITOR: a successful capture cancels the damage, and MONITOR
+    // handlers must not change an event's outcome. ignoreCancelled: a hit that a
+    // protection plugin already blocked must not tame the mob either.
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void on(final EntityDamageByEntityEvent event) {
         //noinspection ConstantConditions
         if (event.getEntity() == null) {
