@@ -82,28 +82,29 @@ public class HealImpl extends AbstractSkill implements Heal {
     }
 
     public void schedule() {
-        if (pet.getStatus() == PetState.Here) {
-            if (pet.getBukkitEntity() != null) {
-                if (heal.getValue().doubleValue() > 0) {
-                    if (timeCounter-- <= 0) {
-                        if (pet.getHealth() < pet.getMaxHealth() - 0.01f) {
-                            if (!particles) {
-                                particles = true;
-                                pet.showPotionParticles(Color.LIME);
-                            }
-                            pet.setHealth(pet.getHealth() + heal.getValue().doubleValue());
-                        }
-                        timeCounter = timer.getValue();
-                    } else {
-                        particles = false;
-                    }
+        if (pet.getStatus() == PetState.Here && pet.getBukkitEntity() != null) {
+            boolean healed = false;
+            if (heal.getValue().doubleValue() > 0 && timeCounter-- <= 0) {
+                if (pet.getHealth() < pet.getMaxHealth() - 0.01f) {
+                    pet.setHealth(pet.getHealth() + heal.getValue().doubleValue());
+                    healed = true;
                 }
-                if (particles) {
-                    particles = false;
-                    pet.hidePotionParticles();
+                timeCounter = timer.getValue();
+            }
+            // Show the green potion swirl on a heal tick and take it down again on
+            // the next schedule() call (one second later) — the old code showed and
+            // hid it inside the same call, so it was never visible.
+            if (healed) {
+                if (!particles) {
+                    particles = true;
+                    pet.showPotionParticles(Color.LIME);
                 }
+            } else if (particles) {
+                particles = false;
+                pet.hidePotionParticles();
             }
         } else if (particles) {
+            // Entity is gone; nothing to hide, just forget the state.
             particles = false;
         }
     }
