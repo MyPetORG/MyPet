@@ -1310,17 +1310,25 @@ public abstract class PetImpl implements Pet, NBTStorage {
                         Bukkit.getServer().getPluginManager().callEvent(event);
                         trySelfFeeding();
                         if (!event.isCancelled()) {
-                            saturation--;
-                            if (saturation == 66) {
+                            // Saturation is a double (feeding adds the configurable
+                            // SaturationPerFeed, which need not be whole), so clamp
+                            // like setSaturation does and detect the thresholds as
+                            // crossings rather than exact hits — otherwise a value
+                            // like 66.5 skips every message and can sink below 1,
+                            // where neither the tick guard nor the starvation check
+                            // below ever fires again.
+                            double before = saturation;
+                            saturation = Math.max(1, saturation - 1);
+                            if (before > 66 && saturation <= 66) {
                                 getOwner().sendMessage(Locale.getFormattedComponent("Message.Hunger.Rumbling", getOwner(), getDisplayName()));
-                            } else if (saturation == 33) {
+                            } else if (before > 33 && saturation <= 33) {
                                 getOwner().sendMessage(Locale.getFormattedComponent("Message.Hunger.Hungry", getOwner(), getDisplayName()));
-                            } else if (saturation == 1) {
+                            } else if (before > 1 && saturation <= 1) {
                                 getOwner().sendMessage(Locale.getFormattedComponent("Message.Hunger.Starving", getOwner(), getDisplayName()));
                             }
                         }
                     }
-                    if (saturation == 1 && (getHealth() >= 2 || MyPetGlobal.HungerSystem.HUNGER_SYSTEM_CAN_KILL.get())
+                    if (saturation <= 1 && (getHealth() >= 2 || MyPetGlobal.HungerSystem.HUNGER_SYSTEM_CAN_KILL.get())
                             && this.bukkitEntity != null
                             && this.bukkitEntity.getTicksLived() >= MyPetGlobal.HungerSystem.HUNGER_SYSTEM_TIME_BEFORE_DAMAGE.get() * 20) {
                         Mob entity = this.bukkitEntity;
