@@ -58,6 +58,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
@@ -71,8 +72,6 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.*;
@@ -104,6 +103,33 @@ public class EntityListener implements Listener {
     }
 
     private static final NamespacedKey SPAWN_REASON_KEY = new NamespacedKey("mypet", "spawn_reason");
+
+    // Ranged-leash tags live in the projectile's PDC, not in Bukkit's entity
+    // metadata store. The metadata store is keyed by entity UUID and only ever
+    // shrinks when the owning plugin is disabled, so an ItemStack clone per
+    // player-fired arrow, trident, snowball, egg, pearl or fishing bobber
+    // accumulated for the life of the server. A PDC entry dies with the entity.
+    private static final NamespacedKey LEASH_ITEM_KEY = new NamespacedKey("mypet", "leash_item");
+    private static final NamespacedKey LEASH_ITEM_ARROW_KEY = new NamespacedKey("mypet", "leash_item_arrow");
+
+    private static void tagLeashItem(Projectile projectile, NamespacedKey key, ItemStack item) {
+        projectile.getPersistentDataContainer().set(key, PersistentDataType.BYTE_ARRAY, item.serializeAsBytes());
+    }
+
+    /** Reads and clears the tag; null when the projectile carries none. */
+    private static ItemStack takeLeashItem(Projectile projectile, NamespacedKey key) {
+        PersistentDataContainer pdc = projectile.getPersistentDataContainer();
+        byte[] bytes = pdc.get(key, PersistentDataType.BYTE_ARRAY);
+        if (bytes == null) {
+            return null;
+        }
+        pdc.remove(key);
+        try {
+            return ItemStack.deserializeBytes(bytes);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void on(final PlayerInteractEvent event) {
@@ -143,7 +169,7 @@ public class EntityListener implements Listener {
                     PlayerInventory inventory = player.getInventory();
 
                     if (event.getBow() != null) {
-                        projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), event.getBow().clone()));
+                        tagLeashItem(projectile, LEASH_ITEM_KEY, event.getBow());
                     }
 
                     ItemStack arrow = null;
@@ -173,7 +199,7 @@ public class EntityListener implements Listener {
                         }
                     }
                     if (arrow != null) {
-                        projectile.setMetadata("MyPetLeashItemArrow", new FixedMetadataValue(MyPetApi.getPlugin(), arrow.clone()));
+                        tagLeashItem(projectile, LEASH_ITEM_ARROW_KEY, arrow);
                     }
 
                 }
@@ -198,7 +224,7 @@ public class EntityListener implements Listener {
             if (!MyPetApi.getPlayerManager().isMyPetPlayer(player) || !MyPetApi.getPlayerManager().getMyPetPlayer(player).hasPet()) {
                 ItemStack leashItem = usedItems.get(player.getUniqueId());
                 if (leashItem != null) {
-                    projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), leashItem));
+                    tagLeashItem(projectile, LEASH_ITEM_KEY, leashItem);
                 }
             }
         }
@@ -228,34 +254,8 @@ public class EntityListener implements Listener {
                         return;
                     }
                     player = (Player) projectile.getShooter();
-
-                    List<MetadataValue> metaList;
-                    if (projectile.hasMetadata("MyPetLeashItem")) {
-                        metaList = projectile.getMetadata("MyPetLeashItem");
-                        for (MetadataValue meta : metaList) {
-                            if (meta.getOwningPlugin().getName().equals("MyPet")) {
-                                leashItem = (ItemStack) meta.value();
-                                break;
-                            }
-                        }
-                        if (leashItem == null) {
-                            return;
-                        }
-                        projectile.removeMetadata("MyPetLeashItem", MyPetApi.getPlugin());
-                    }
-                    if (projectile.hasMetadata("MyPetLeashItemArrow")) {
-                        metaList = projectile.getMetadata("MyPetLeashItemArrow");
-                        for (MetadataValue meta : metaList) {
-                            if (meta.getOwningPlugin().getName().equals("MyPet")) {
-                                leashItemArrow = (ItemStack) meta.value();
-                                break;
-                            }
-                        }
-                        if (leashItemArrow == null) {
-                            return;
-                        }
-                        projectile.removeMetadata("MyPetLeashItemArrow", MyPetApi.getPlugin());
-                    }
+                    leashItem = takeLeashItem(projectile, LEASH_ITEM_KEY);
+                    leashItemArrow = takeLeashItem(projectile, LEASH_ITEM_ARROW_KEY);
                 } else if (event.getDamager() instanceof Player) {
                     player = (Player) event.getDamager();
                     leashItem = player.getEquipment().getItemInMainHand();
