@@ -397,9 +397,13 @@ public class EntityListener implements Listener {
                                     owner.sendMessage(Locale.getFormattedComponent("Message.Command.CaptureHelper.Mode", owner, Locale.getComponent("Name.Disabled", owner)));
                                 }
                                 justLeashed.remove(player.getUniqueId());
-                            }, null);
+                            // Retired callback: the player left before the task could run.
+                            // Without it the guard entry outlived the session and that
+                            // player could never leash again until a restart.
+                            }, () -> justLeashed.remove(player.getUniqueId()));
                         }).exceptionally(err -> {
                             MyPetApi.getLogger().warning("Failed to save captured pet: " + err);
+                            justLeashed.remove(player.getUniqueId());
                             return null;
                         });
                     }
