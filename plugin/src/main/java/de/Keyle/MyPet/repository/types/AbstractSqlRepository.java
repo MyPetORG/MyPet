@@ -67,6 +67,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Base class for SQL-backed {@link Repository} implementations (SQLite, MySQL).
@@ -128,6 +129,33 @@ public abstract class AbstractSqlRepository implements Repository {
     private volatile Future<?> pendingFlush;
 
     private static final long FLUSH_INTERVAL_SECONDS = 60;
+
+    /**
+     * Tail of the in-flight write chain per row key (pet UUID or player UUID).
+     * On MySQL the executor is a pool, so two writes for the same row submitted
+     * back to back could run concurrently and the older one could commit last,
+     * persisting stale state. Chaining every row write behind the previous one
+     * for the same key keeps them in submission order; unrelated rows still run
+     * in parallel. On SQLite (single-thread executor) the chain is a no-op.
+     */
+    private final Map<UUID, CompletableFuture<?>> writeTails = new ConcurrentHashMap<>();
+
+    /** Runs {@code work} on {@link #executor} after every earlier write for {@code key} has finished. */
+    private CompletableFuture<Boolean> serializedWrite(UUID key, Supplier<Boolean> work) {
+        @SuppressWarnings("unchecked")
+        CompletableFuture<Boolean>[] holder = new CompletableFuture[1];
+        writeTails.compute(key, (k, tail) -> {
+            CompletableFuture<?> base = tail == null ? CompletableFuture.completedFuture(null) : tail;
+            // handle(): a failed predecessor must not poison the chain.
+            CompletableFuture<Boolean> next = base.handle((r, t) -> null).thenApplyAsync(v -> work.get(), executor);
+            holder[0] = next;
+            return next;
+        });
+        CompletableFuture<Boolean> next = holder[0];
+        // Drop the map entry once this write is the tail and has completed.
+        next.whenComplete((r, t) -> writeTails.remove(key, next));
+        return next;
+    }
 
     // --- Connection lifecycle ---
 
@@ -513,7 +541,7 @@ public abstract class AbstractSqlRepository implements Repository {
      */
     @Override
     public CompletableFuture<Boolean> removePet(final UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
+        return serializedWrite(uuid, () -> {
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(
                          "DELETE FROM " + qualifyTable("pets") + " WHERE uuid=?;")) {
@@ -523,7 +551,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 reportError(e);
                 return false;
             }
-        }, executor);
+        });
     }
 
     /** Convenience overload; delegates to {@link #removePet(UUID)}. */
@@ -535,7 +563,7 @@ public abstract class AbstractSqlRepository implements Repository {
     /** Delete a player row. Same failure semantics as {@link #removePet(UUID)}. */
     @Override
     public CompletableFuture<Boolean> removeMyPetPlayer(final MyPetPlayer player) {
-        return CompletableFuture.supplyAsync(() -> {
+        return serializedWrite(player.getUniqueId(), () -> {
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(
                          "DELETE FROM " + qualifyTable("players") + " WHERE uuid=?;")) {
@@ -545,7 +573,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 reportError(e);
                 return false;
             }
-        }, executor);
+        });
     }
 
     /**
@@ -925,7 +953,7 @@ public abstract class AbstractSqlRepository implements Repository {
      */
     @Override
     public CompletableFuture<Boolean> addPet(final StoredPet storedPet) {
-        return CompletableFuture.supplyAsync(() -> {
+        return serializedWrite(storedPet.getUUID(), () -> {
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(
                          "INSERT INTO " + qualifyTable("pets") + " (uuid, owner_uuid, exp, health, " +
@@ -952,7 +980,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 reportError(e);
                 return false;
             }
-        }, executor).thenApply(inserted -> {
+        }).thenApply(inserted -> {
             // Central create chokepoint: any newly stored pet means its owner now owns
             // at least one, so we can flip the cache without re-querying.
             if (inserted) {
@@ -975,7 +1003,7 @@ public abstract class AbstractSqlRepository implements Repository {
     @Override
     public CompletableFuture<Boolean> updatePet(final StoredPet storedPet) {
         petsToBeSaved.put(storedPet.getUUID(), storedPet);
-        return CompletableFuture.supplyAsync(() -> {
+        return serializedWrite(storedPet.getUUID(), () -> {
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(
                          "UPDATE " + qualifyTable("pets") + " SET " +
@@ -1000,19 +1028,21 @@ public abstract class AbstractSqlRepository implements Repository {
                 stmt.setString(14, storedPet.getUUID().toString());
                 int result = stmt.executeUpdate();
                 if (result > 0) {
-                    petsToBeSaved.remove(storedPet.getUUID());
+                    // Value-conditional: a newer updatePet may already have replaced
+                    // the pending entry; that one still has to be written.
+                    petsToBeSaved.remove(storedPet.getUUID(), storedPet);
                 }
                 return result > 0;
             } catch (SQLException | IOException e) {
                 reportError(e);
                 return false;
             }
-        }, executor);
+        });
     }
 
     @Override
     public CompletableFuture<Boolean> updatePetInfo(final UUID petUuid, final CompoundBinaryTag info) {
-        return CompletableFuture.supplyAsync(() -> {
+        return serializedWrite(petUuid, () -> {
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(
                          "UPDATE " + qualifyTable("pets") + " SET info=? WHERE uuid=?;")) {
@@ -1023,7 +1053,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 reportError(e);
                 return false;
             }
-        }, executor);
+        });
     }
 
     // Players (writes) ------------------------------------------------------------------------------------------------
@@ -1074,11 +1104,11 @@ public abstract class AbstractSqlRepository implements Repository {
     @Override
     public CompletableFuture<Boolean> updateMyPetPlayer(final MyPetPlayer player) {
         playersToBeSaved.put(player.getUniqueId(), player);
-        return CompletableFuture.supplyAsync(() -> {
+        return serializedWrite(player.getUniqueId(), () -> {
             boolean ok = updatePlayer(player);
-            if (ok) playersToBeSaved.remove(player.getUniqueId());
+            if (ok) playersToBeSaved.remove(player.getUniqueId(), player);
             return ok;
-        }, executor);
+        });
     }
 
     private boolean savePlayer(MyPetPlayer player) {
@@ -1092,7 +1122,7 @@ public abstract class AbstractSqlRepository implements Repository {
      */
     @Override
     public CompletableFuture<Boolean> addMyPetPlayer(final MyPetPlayer player) {
-        return CompletableFuture.supplyAsync(() -> {
+        return serializedWrite(player.getUniqueId(), () -> {
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(
                          "INSERT INTO " + qualifyTable("players") + " (uuid, auto_respawn, " +
@@ -1111,7 +1141,7 @@ public abstract class AbstractSqlRepository implements Repository {
                 reportError(e);
                 return false;
             }
-        }, executor);
+        });
     }
 
     // Save / batch ----------------------------------------------------------------------------------------------------
