@@ -1074,8 +1074,10 @@ public abstract class PetImpl implements Pet, NBTStorage {
                     return SpawnFlags.WrongWorldGroup;
                 }
 
-                int ownerX = owner.getLocation().getChunk().getX();
-                int ownerZ = owner.getLocation().getChunk().getZ();
+                // Chunk coordinates by arithmetic: Location#getChunk() loads the
+                // chunk, which made the isChunkLoaded check below always true.
+                int ownerX = owner.getLocation().getBlockX() >> 4;
+                int ownerZ = owner.getLocation().getBlockZ() >> 4;
                 if (!owner.getWorld().isChunkLoaded(ownerX, ownerZ)) {
                     return SpawnFlags.InvalidPosition;
                 }
