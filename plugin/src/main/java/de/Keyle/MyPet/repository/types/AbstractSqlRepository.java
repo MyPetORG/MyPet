@@ -468,14 +468,20 @@ public abstract class AbstractSqlRepository implements Repository {
      */
     @Override
     public CompletableFuture<Integer> cleanup(final long timestamp) {
+        // Snapshot on the calling (server) thread: the active-pets multimap is not
+        // thread-safe, and the executor thread would otherwise iterate it while
+        // the server mutates it.
+        List<String> activeUuids = new ArrayList<>();
+        for (Pet pet : MyPetApi.getPetManager().getAllActivePets()) {
+            activeUuids.add(pet.getUUID().toString());
+        }
         return CompletableFuture.supplyAsync(() -> {
-            Pet[] activePets = MyPetApi.getPetManager().getAllActivePets();
             StringBuilder sql = new StringBuilder("DELETE FROM ")
                     .append(qualifyTable("pets"))
                     .append(" WHERE last_used<?");
-            if (activePets.length > 0) {
+            if (!activeUuids.isEmpty()) {
                 sql.append(" AND uuid NOT IN (");
-                for (int i = 0; i < activePets.length; i++) {
+                for (int i = 0; i < activeUuids.size(); i++) {
                     if (i > 0) sql.append(',');
                     sql.append('?');
                 }
@@ -485,8 +491,8 @@ public abstract class AbstractSqlRepository implements Repository {
             try (ConnectionHolder h = acquireConnection();
                  PreparedStatement stmt = h.connection().prepareStatement(sql.toString())) {
                 stmt.setLong(1, timestamp);
-                for (int i = 0; i < activePets.length; i++) {
-                    stmt.setString(2 + i, activePets[i].getUUID().toString());
+                for (int i = 0; i < activeUuids.size(); i++) {
+                    stmt.setString(2 + i, activeUuids.get(i));
                 }
                 return stmt.executeUpdate();
             } catch (SQLException e) {
