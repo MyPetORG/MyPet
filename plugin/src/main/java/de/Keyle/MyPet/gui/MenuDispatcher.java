@@ -28,6 +28,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -149,10 +151,19 @@ public final class MenuDispatcher implements Listener {
         int slotsInTop = inst.getInventory().getSize();
 
         // Click in player's own inventory: allow free interaction so they can
-        // rearrange their items. Shift-click into a menu with no storage region
-        // would dump items onto buttons — block that specific case.
+        // rearrange their items — except for the two vanilla gestures that reach
+        // into the top inventory from below:
+        //  - shift-click moves the item into the first free top slot, which is a
+        //    button unless every top slot is storage;
+        //  - double-click (COLLECT_TO_CURSOR) sweeps every matching stack out of
+        //    BOTH inventories into the cursor, so a player holding one glass pane
+        //    could pull the menu's border panes out of the GUI (item duplication).
+        // Both are safe only when the whole top inventory is a storage region.
         if (rawSlot >= slotsInTop) {
-            if (event.isShiftClick() && !hasStorageSection(inst)) {
+            boolean reachesIntoTop = event.isShiftClick()
+                    || event.getAction() == InventoryAction.COLLECT_TO_CURSOR
+                    || event.getClick() == ClickType.DOUBLE_CLICK;
+            if (reachesIntoTop && hasNonStorageSlot(inst, slotsInTop)) {
                 event.setCancelled(true);
                 viewer.updateInventory();
             }
@@ -161,6 +172,12 @@ public final class MenuDispatcher implements Listener {
 
         Section maybeStorage = findStorageSectionForSlot(inst, rawSlot, slotsInTop);
         if (maybeStorage != null) {
+            // Same double-click sweep as above, started from a storage slot: it would
+            // still collect matching button items out of any non-storage slot.
+            if (event.getAction() == InventoryAction.COLLECT_TO_CURSOR && hasNonStorageSlot(inst, slotsInTop)) {
+                event.setCancelled(true);
+                viewer.updateInventory();
+            }
             return;
         }
 
@@ -366,9 +383,10 @@ public final class MenuDispatcher implements Listener {
         return null;
     }
 
-    private static boolean hasStorageSection(MenuInstanceImpl inst) {
-        for (Section s : inst.definition().sections().values()) {
-            if (s instanceof StorageSection) return true;
+    /** True if any top-inventory slot is NOT part of a storage region (i.e. a button, border or fill). */
+    private static boolean hasNonStorageSlot(MenuInstanceImpl inst, int slotsInTop) {
+        for (int slot = 0; slot < slotsInTop; slot++) {
+            if (findStorageSectionForSlot(inst, slot, slotsInTop) == null) return true;
         }
         return false;
     }
