@@ -87,4 +87,16 @@ public final class PetWorkFocus {
     static void clearReservation(Pet pet, Object skill) {
         RESERVED.remove(pet.getUUID(), skill);
     }
+
+    /**
+     * Forgets every claim and reservation for {@code pet}, whoever holds them. Called when the
+     * pet's entity goes away (despawn, logout, storage, world change). Both maps are keyed by the
+     * pet UUID but the values are skill <em>instances</em>; a re-activated pet gets fresh skill
+     * instances, so a reservation left behind by the old ones could never be released by anyone
+     * and the pet would refuse to follow its owner until the next restart.
+     */
+    public static void clear(Pet pet) {
+        HOLDER.remove(pet.getUUID());
+        RESERVED.remove(pet.getUUID());
+    }
 }

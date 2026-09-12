@@ -100,6 +100,7 @@ public class LumberjackImpl extends AbstractGatheringSkill implements Lumberjack
         Player owner = pet.getOwner().getPlayer();
         // Stay on the tree we're already felling while it still has logs and the pet is near it.
         if (reservedTree != null) {
+            PetWorkFocus.reserve(pet, this); // idempotent — re-arms a reservation PetWorkFocus.clear dropped on despawn
             Block base = reservedTreeBase(mob);
             if (base == null) {
                 // Tree's down (or the pet was pulled away following the owner) — drop the claim so

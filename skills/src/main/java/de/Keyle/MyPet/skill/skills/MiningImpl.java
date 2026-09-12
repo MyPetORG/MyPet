@@ -88,6 +88,7 @@ public class MiningImpl extends AbstractGatheringSkill implements Mining {
         Player owner = pet.getOwner().getPlayer();
         // Stay on the vein we're already mining while ore remains and the pet is near it.
         if (reservedVein != null) {
+            PetWorkFocus.reserve(pet, this); // idempotent — re-arms a reservation PetWorkFocus.clear dropped on despawn
             Block ore = nextVeinBlock(mob);
             if (ore == null) {
                 // Vein's mined out (or the pet was pulled away following the owner) — drop the claim.

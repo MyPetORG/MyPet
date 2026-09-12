@@ -58,6 +58,7 @@ import de.Keyle.MyPet.entity.visual.PetVisualSyncer;
 import de.Keyle.MyPet.skill.skills.BackpackImpl;
 import de.Keyle.MyPet.skill.skills.DamageImpl;
 import de.Keyle.MyPet.skill.skills.LifeImpl;
+import de.Keyle.MyPet.skill.skills.PetWorkFocus;
 import de.Keyle.MyPet.skill.skills.RangedImpl;
 import de.Keyle.MyPet.util.StackTraces;
 import de.Keyle.MyPet.util.translation.PetDefaultNameResolver;
@@ -247,6 +248,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
         RideSkillFlightController.stopForPet(this);
         PetLifecycleHookRegistry.forPet(this).forEach(hook -> hook.onDespawn(this));
         PetNoPushSuppressor.stopForPet(this);
+        PetWorkFocus.clear(this);
         if (bukkitEntity != null) {
             // Unregister from the entity→pet index; setBukkitEntity's unregister
             // only fires on rebind, not on this direct clear.
@@ -1186,6 +1188,7 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 RideSkillFlightController.stopForPet(this);
                 PetLifecycleHookRegistry.forPet(this).forEach(hook -> hook.onDespawn(this));
                 PetNoPushSuppressor.stopForPet(this);
+                PetWorkFocus.clear(this);
 
                 // Safely-delayable despawn (store / remove, not recall): let the model play its
                 // despawn animation before the host is removed. tryAnimate gates on owner-online,
