@@ -205,49 +205,54 @@ public class CommandTrade {
                 final PersistedPet originalPet = MyPetApi.getPetManager().snapshot(offer.pet());
 
                 final Repository repo = MyPetPlugin.getInstance().getRepository();
-                repo.removePet(originalPet).thenAccept(value -> player.getScheduler().run(MyPetApi.getPlugin(), folaTask -> {
-                        PersistedPet persistedPet = originalPet.withOwner(newOwner);
-                        PetSaveEvent event = new PetSaveEvent(persistedPet);
-                        Bukkit.getServer().getPluginManager().callEvent(event);
-                        repo.addPet(persistedPet);
-                        Optional<Pet> pet = MyPetApi.getPetManager().activatePet(persistedPet);
+                PersistedPet persistedPet = originalPet.withOwner(newOwner);
+                PetSaveEvent event = new PetSaveEvent(persistedPet);
+                Bukkit.getServer().getPluginManager().callEvent(event);
+                // One UPDATE flips owner_uuid on the existing row. The old remove+add
+                // pair deleted the row first and re-inserted it from a player-scheduler
+                // callback with no retired handler, so a disconnect (or shutdown)
+                // between the two lost the pet for good — after the price had already
+                // been transferred. updatePet also enqueues the pet in the pending-write
+                // map, so nothing below has to wait for the database.
+                repo.updatePet(persistedPet);
+                MyPetApi.getPetManager().setOwnsPet(newOwner.getUniqueId(), true);
+                Optional<Pet> pet = MyPetApi.getPetManager().activatePet(persistedPet);
 
-                        oldOwner.setPetForWorldGroup(worldGroup, null);
-                        newOwner.setPetForWorldGroup(worldGroup, persistedPet.getUUID());
-                        repo.updateMyPetPlayer(oldOwner);
-                        repo.updateMyPetPlayer(newOwner);
-                        // New owner is covered by the addPet cache hook; re-derive the
-                        // losing side, who may still own other stored pets.
-                        MyPetApi.getPetManager().refreshOwnership(oldOwner);
+                oldOwner.setPetForWorldGroup(worldGroup, null);
+                newOwner.setPetForWorldGroup(worldGroup, persistedPet.getUUID());
+                repo.updateMyPetPlayer(oldOwner);
+                repo.updateMyPetPlayer(newOwner);
+                // New owner was flagged above; re-derive the
+                // losing side, who may still own other stored pets.
+                MyPetApi.getPetManager().refreshOwnership(oldOwner);
 
-                        if (pet.isPresent()) {
+                if (pet.isPresent()) {
 
-                            newOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Success", newOwner, oldOwner.getName(), pet.get().getDisplayName()));
-                            oldOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Success", oldOwner, newOwner.getName(), pet.get().getDisplayName()));
+                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Receiver.Success", newOwner, oldOwner.getName(), pet.get().getDisplayName()));
+                    oldOwner.sendMessage(Locale.getFormattedComponent("Message.Command.Trade.Owner.Success", oldOwner, newOwner.getName(), pet.get().getDisplayName()));
 
-                            switch (pet.get().createEntity()) {
-                                case Canceled:
-                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", newOwner, pet.get().getDisplayName()));
-                                    break;
-                                case NoSpace:
-                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", newOwner, pet.get().getDisplayName()));
-                                    break;
-                                case NotAllowed:
-                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", newOwner, pet.get().getDisplayName()));
-                                    break;
-                                case Dead:
-                                    if (!MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
-                                        newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", newOwner, pet.get().getDisplayName(), pet.get().getRespawnTime()));
-                                    }
-                                    break;
-                                case Spectator:
-                                    newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Spectator", newOwner, pet.get().getDisplayName()));
-                                    break;
+                    switch (pet.get().createEntity()) {
+                        case Canceled:
+                            newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Prevent", newOwner, pet.get().getDisplayName()));
+                            break;
+                        case NoSpace:
+                            newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.NoSpace", newOwner, pet.get().getDisplayName()));
+                            break;
+                        case NotAllowed:
+                            newOwner.sendMessage(Locale.getFormattedComponent("Message.No.AllowedHere", newOwner, pet.get().getDisplayName()));
+                            break;
+                        case Dead:
+                            if (!MyPetGlobal.Respawn.DISABLE_AUTO_RESPAWN.get()) {
+                                newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Respawn.In", newOwner, pet.get().getDisplayName(), pet.get().getRespawnTime()));
                             }
-                        } else {
-                            newOwner.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.Error", newOwner));
-                        }
-                }, null));
+                            break;
+                        case Spectator:
+                            newOwner.sendMessage(Locale.getFormattedComponent("Message.Spawn.Spectator", newOwner, pet.get().getDisplayName()));
+                            break;
+                    }
+                } else {
+                    newOwner.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.Error", newOwner));
+                }
             } else {
                 player.sendMessage(Locale.getComponent("Message.Command.Trade.Receiver.PetUnavailable", player));
                 OFFERS.remove(player.getUniqueId());
