@@ -35,9 +35,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Timer {
-    private static final List<Scheduler> tasksToSchedule = new ArrayList<>();
+    // Copy-on-write: entries are added/removed rarely (Control goal start/stop,
+    // repository registration) but the list is iterated every second, and a task
+    // may remove itself from inside schedule() — an ArrayList would throw.
+    private static final List<Scheduler> tasksToSchedule = new CopyOnWriteArrayList<>();
     private static final List<ScheduledTask> miscTasks = new ArrayList<>();
     private static final Map<UUID, ScheduledTask> petTasks = new ConcurrentHashMap<>();
     private static final Map<UUID, ScheduledTask> playerTasks = new ConcurrentHashMap<>();

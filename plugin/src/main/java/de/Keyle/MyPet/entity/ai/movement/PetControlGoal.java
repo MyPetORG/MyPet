@@ -158,6 +158,15 @@ public class PetControlGoal implements Goal<Mob>, Scheduler {
         // modifier. New control clicks are now picked up via
         // shouldStayActive(), which ends the current activation and lets
         // the selector re-enter with the fresh target.
+        if (!mob.isValid()) {
+            // The entity despawned while this goal was active. Paper does not
+            // call stop() for a removed mob, so without this the goal (and the
+            // dead mob it references) stayed in Timer's task list for the
+            // server's uptime.
+            Timer.removeTask(this);
+            isRunning = false;
+            return;
+        }
         timeToMove--;
     }
 
