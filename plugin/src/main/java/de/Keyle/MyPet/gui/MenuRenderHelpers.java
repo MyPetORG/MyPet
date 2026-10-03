@@ -28,6 +28,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.TranslationArgument;
 import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -52,7 +53,13 @@ public final class MenuRenderHelpers {
 
     private MenuRenderHelpers() {}
 
-    /** Build a Bukkit {@link ItemStack} from an {@link ItemAppearance}, resolving placeholders. */
+    /**
+     * Build a Bukkit {@link ItemStack} from an {@link ItemAppearance}, resolving placeholders.
+     *
+     * <p>Titles and lore lines explicitly opt out of italic: vanilla renders lore in
+     * italics unless a component's style says otherwise, which would otherwise italicize
+     * every translated {@code <lang:...>} string that carries no formatting of its own.</p>
+     */
     public static ItemStack toItemStack(ItemAppearance a, RenderContext ctx) {
         ItemStack stack = new ItemStack(a.material(), a.amount());
         ItemMeta meta = stack.getItemMeta();
@@ -60,14 +67,15 @@ public final class MenuRenderHelpers {
 
         TagResolver resolvers = ctx.catalog().build();
         java.util.Locale viewerLocale = ctx.viewer().locale();
-        meta.displayName(renderForViewer(a.title(), resolvers, viewerLocale));
+        meta.displayName(renderForViewer(a.title(), resolvers, viewerLocale)
+            .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
         if (!a.lore().isEmpty()) {
             List<Component> lore = new ArrayList<>(a.lore().size());
             for (String line : a.lore()) {
                 Component rendered = renderForViewer(line, resolvers, viewerLocale);
                 for (Component piece : splitNewlines(rendered)) {
                     if (isBlank(piece)) continue;
-                    lore.add(piece);
+                    lore.add(piece.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
                 }
             }
             meta.lore(lore);
