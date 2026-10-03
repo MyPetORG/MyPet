@@ -60,6 +60,24 @@ import static de.Keyle.MyPet.MyPetApi.getPetManager;
  */
 public class PetDeathListener implements Listener {
 
+    /**
+     * Strip vanilla drops at the earliest priority. The MONITOR handler clears them
+     * anyway, but drop-vacuuming enchantments (e.g. EcoEnchants Telekinesis) read the
+     * drop list at HIGH — by MONITOR they have already moved the pet's equipment into
+     * the killer's inventory while the respawn snapshot restores it, duplicating the
+     * items. Guards mirror the MONITOR handler so only deaths it would handle are
+     * affected; the equipment itself stays on the dying entity for snapshot capture.
+     */
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPetDeathStripDropsEarly(final EntityDeathEvent event) {
+        Pet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
+        if (pet == null) return;
+        if (WorldGroup.getGroupByWorld(event.getEntity().getWorld()).isDisabled()) return;
+        if (pet.getHealth() > 0) return;
+        event.getDrops().clear();
+        event.setDroppedExp(0);
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPetDeath(final EntityDeathEvent event) {
         Pet pet = PetListenerGuards.markedPet(event.getEntity()).orElse(null);
