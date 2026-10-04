@@ -23,11 +23,13 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.entity.spawn.PetEntityMarker;
 import de.Keyle.MyPet.entity.spawn.PetSpawnGuard;
 import org.bukkit.Material;
+import org.bukkit.PortalType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 
 /**
@@ -67,6 +69,24 @@ public class PetEnvironmentListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityPortal(EntityPortalEvent event) {
+        if (PetEntityMarker.isMarked(event.getEntity())) {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Blocks pets from entering END portals. The dimension transfer behind an
+     * END portal moves the entity without a (cancellable) {@link EntityPortalEvent}
+     * — {@link #onEntityPortal} above never sees it — leaving MyPet holding a stale
+     * entity reference while an untracked, still-marked copy wanders the destination
+     * world with its equipment. {@link EntityPortalEnterEvent} fires on the entity's
+     * region thread before the transfer and is cancellable, so the pet is simply held
+     * back at the portal, mirroring the nether-portal behavior above. Anything that
+     * still slips through is cleaned up by {@link PetDespawnListener}'s safety net.
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityPortalEnter(EntityPortalEnterEvent event) {
+        if (event.getPortalType() != PortalType.ENDER) return;
         if (PetEntityMarker.isMarked(event.getEntity())) {
             event.setCancelled(true);
         }

@@ -1163,8 +1163,15 @@ public abstract class PetImpl implements Pet, NBTStorage {
                 // trip Folia's thread check and log (even when the exception is caught). If we
                 // can't read, fall back to the last cached health/state on this object.
                 if (ownedByCurrentRegion) {
-                    health = entityRef.getHealth();
                     try {
+                        // The entity can already be detached here when this removal runs from
+                        // EntityRemoveFromWorldEvent's safety net (END-portal dimension transfer,
+                        // external plugin remove). A detached entity still serializes its NBT —
+                        // the snapshot below stays meaningful — but reading live attributes from
+                        // it throws, hence the validity guard.
+                        if (entityRef.isValid()) {
+                            health = entityRef.getHealth();
+                        }
                         // Stash raw bytes into pendingSnapshot — covers both
                         // save-while-detached (consumed by getInfo()) and
                         // in-memory respawn (consumed by VanillaMobSpawner).
