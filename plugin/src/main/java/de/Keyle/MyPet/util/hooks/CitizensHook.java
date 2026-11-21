@@ -103,7 +103,8 @@ public class CitizensHook implements PlayerVersusEntityHook, PlayerVersusPlayerH
                 }
                 return !npc.data().get("protected", true);
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(CitizensHook.class, t);
         }
         return true;
     }

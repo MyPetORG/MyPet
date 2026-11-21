@@ -53,6 +53,13 @@ public class ProtocolLibHook implements PluginHook {
     @Override
     public boolean onEnable() {
         try {
+            // All listeners below only fix Ender Dragon pets (the dragon parts and the rotation).
+            // Ender Dragon pets can't be activated on 1.21.4+ so there is nothing to fix there,
+            // and listening to every entity movement packet would only cost performance.
+            if (MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.21.4") >= 0) {
+                return true;
+            }
+
         	if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) {
         		//This is async
         		registerEnderDragonInteractionFix();
@@ -193,6 +200,9 @@ public class ProtocolLibHook implements PluginHook {
     }
 
     private void registerEnderDragonRotationFix19() {
+        // Cache version check result — it never changes at runtime
+        final boolean isAtLeast1_17 = MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0;
+
         ProtocolLibrary.getProtocolManager().addPacketListener(
                 new PacketAdapter(MyPetApi.getPlugin(), getFixedPackets()) {
                     @Override
@@ -205,14 +215,14 @@ public class ProtocolLibHook implements PluginHook {
                         int id = packet.getIntegers().read(0);
 
                         Entity entity = null;
-                        if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") < 0) {
+                        if (!isAtLeast1_17) {
                             try {
                                entity = packet.getEntityModifier(event).readSafely(0);
                             } catch (RuntimeException ignored) {
                             }
                         }
                         if (entity == null) {
-                            if(MyPetApi.getCompatUtil().compareWithMinecraftVersion("1.17") >= 0) { //1.17+ does not like async
+                            if (isAtLeast1_17) {
                                 try {
                                     entity = ensureMainThread(() -> MyPetApi.getPlatformHelper().getEntity(id, event.getPlayer().getWorld()));
                                 } catch (TimeoutException e) {

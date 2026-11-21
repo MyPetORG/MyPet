@@ -52,8 +52,11 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.NPC;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowman;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityInteractEvent;
@@ -218,23 +221,34 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
 
     public StateFlag.State getState(Location loc, Player player, StateFlag... flags) {
         try {
-            if (is7) {
-                RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
-                if (rc != null) {
-                    return rc.createQuery().queryState(
-                            BukkitAdapter.adapt(loc),
-                            player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
-                            flags);
-                }
-            } else {
-                RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
-                ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
-                return set.queryState(player != null ? wgp.wrapPlayer(player) : null, flags);
-            }
+            return queryState(loc, player, flags);
         } catch (Throwable ignored) {
             // WorldGuard may be mid-reload or its jar already closed (e.g. via PlugManX) -> the lazy
             // class load throws "zip file closed" / NoClassDefFoundError. Fail open (ALLOW) instead of
             // propagating into the caller (BeaconImpl.schedule, pet-allowed checks, etc.).
+        }
+        return StateFlag.State.ALLOW;
+    }
+
+    /**
+     * Like {@link #getState(Location, Player, StateFlag...)} but lets WorldGuard errors propagate,
+     * so damage checks can fail closed. Returns ALLOW when there are no regions to ask.
+     */
+    public StateFlag.State queryState(Location loc, Player player, StateFlag... flags) throws Exception {
+        if (is7) {
+            RegionContainer rc = WorldGuard.getInstance().getPlatform().getRegionContainer();
+            if (rc != null) {
+                return rc.createQuery().queryState(
+                        BukkitAdapter.adapt(loc),
+                        player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null,
+                        flags);
+            }
+        } else {
+            RegionManager mgr = (RegionManager) METHOD_getRegionManager.invoke(wgp, loc.getWorld());
+            if (mgr != null) {
+                ApplicableRegionSet set = (ApplicableRegionSet) METHOD_getApplicableRegions.invoke(mgr, loc);
+                return set.queryState(player != null ? wgp.wrapPlayer(player) : null, flags);
+            }
         }
         return StateFlag.State.ALLOW;
     }
@@ -264,16 +278,25 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             try {
                 Location location = defender.getLocation();
                 StateFlag.State s;
-                if (defender instanceof Animals) {
-                    s = getState(location, null, DAMAGE_ANIMALS, DAMAGE_FLAG);
+                if (defender instanceof Animals || isPassiveMob(defender)) {
+                    s = queryState(location, null, DAMAGE_ANIMALS, DAMAGE_FLAG);
                 } else {
-                    s = getState(location, null, DAMAGE_FLAG);
+                    s = queryState(location, null, DAMAGE_FLAG);
                 }
                 return s == null || s == StateFlag.State.ALLOW;
-            } catch (Throwable ignored) {
+            } catch (Throwable t) {
+                return ProtectionHookErrors.failClosed(WorldGuardHook.class, t);
             }
         }
         return true;
+    }
+
+    /**
+     * WorldGuard guards every non-hostile creature with the damage-animals flag, not just animals.
+     * Villagers, wandering traders and iron/snow golems are not {@link Animals} in the Bukkit API.
+     */
+    protected static boolean isPassiveMob(Entity entity) {
+        return entity instanceof NPC || entity instanceof IronGolem || entity instanceof Snowman;
     }
 
     @Override
@@ -282,14 +305,14 @@ public class WorldGuardHook implements PlayerVersusPlayerHook, PlayerVersusEntit
             Location location = defender.getLocation();
             StateFlag.State s;
             if (customFlags) {
-                s = getState(location, defender, PVP, DAMAGE_FLAG);
+                s = queryState(location, defender, PVP, DAMAGE_FLAG);
             } else {
-                s = getState(location, defender, PVP);
+                s = queryState(location, defender, PVP);
             }
             return s == null || s == StateFlag.State.ALLOW;
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(WorldGuardHook.class, t);
         }
-        return true;
     }
 
     public boolean canFly(Location location) {

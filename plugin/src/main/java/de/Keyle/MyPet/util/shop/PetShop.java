@@ -55,6 +55,8 @@ import static de.Keyle.MyPet.api.util.configuration.Try.tryToLoad;
 
 public class PetShop {
 
+    private static final Set<UUID> PURCHASES_IN_PROGRESS = Collections.synchronizedSet(new HashSet<>());
+
     protected String name;
     protected String displayName = "Pet - Shop";
     protected Map<Integer, ShopMyPet> pets = new HashMap<>();
@@ -109,60 +111,53 @@ public class PetShop {
                     final BukkitRunnable confirmRunner = new BukkitRunnable() {
                         @Override
                         public void run() {
+                            final boolean[] confirmed = {false};
                             IconMenu menu = new IconMenu(Util.formatText(Translation.getString("Message.Shop.Confirm.Title", player), pet.getPetName(), economyHook.getEconomy().format(pet.getPrice())), event1 -> {
                                 if (event1.getPosition() == 3) {
-                                    if (pet.getPrice() > 0) {
-                                        if (economyHook.canPay(p.getUniqueId(), pet.getPrice())) {
-                                            if (economyHook.getEconomy().withdrawPlayer(p, pet.getPrice()).transactionSuccess()) {
-                                                switch (wallet) {
-                                                    case Bank:
-                                                        economyHook.getEconomy().bankDeposit(walletOwner, pet.getPrice());
-                                                        break;
-                                                    case Player:
-                                                        economyHook.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(walletOwner)), pet.getPrice());
-                                                    case Private:
-                                                        depositPrivate(pet.getPrice());
-                                                        break;
+                                    // The menu only closes a tick after the click and the database work is
+                                    // async, so a double click could buy (and charge for) the pet twice.
+                                    // Accept one confirm per menu and one running purchase per player.
+                                    if (confirmed[0] || !PURCHASES_IN_PROGRESS.add(p.getUniqueId())) {
+                                        return;
+                                    }
+                                    confirmed[0] = true;
+                                    try {
+                                        if (owner != null && owner.hasMyPet()) {
+                                            // Re-check the storage limit now, not when the menu was opened
+                                            MyPetApi.getRepository().getMyPets(owner, new RepositoryCallback<List<StoredMyPet>>() {
+                                                @Override
+                                                public void callback(List<StoredMyPet> value) {
+                                                    try {
+                                                        if (!p.isOnline()) {
+                                                            releasePurchase(p.getUniqueId());
+                                                            return;
+                                                        }
+                                                        if (owner.hasMyPet() && !Permissions.has(owner, "MyPet.shop.storage")) {
+                                                            p.sendMessage(Translation.getString("Message.Command.Trade.Receiver.HasPet", player));
+                                                            releasePurchase(p.getUniqueId());
+                                                            return;
+                                                        }
+                                                        int petCount = getInactivePetCount(value, WorldGroup.getGroupByWorld(player.getWorld().getName()).getName()) - 1;
+                                                        int limit = getMaxPetCount(p);
+                                                        if (petCount >= limit) {
+                                                            p.sendMessage(Util.formatText(Translation.getString("Message.Command.Switch.Limit", player), limit));
+                                                            releasePurchase(p.getUniqueId());
+                                                            return;
+                                                        }
+                                                        purchase(p, player, owner, pet, economyHook);
+                                                    } catch (RuntimeException e) {
+                                                        releasePurchase(p.getUniqueId());
+                                                        throw e;
+                                                    }
                                                 }
-                                            } else {
-                                                p.sendMessage(Translation.getString("Message.No.Money", player));
-                                                return;
-                                            }
+                                            });
                                         } else {
-                                            p.sendMessage(Translation.getString("Message.Shop.NoMoney", player));
-                                            return;
+                                            purchase(p, player, owner, pet, economyHook);
                                         }
+                                    } catch (RuntimeException e) {
+                                        releasePurchase(p.getUniqueId());
+                                        throw e;
                                     }
-
-                                    final MyPetPlayer petOwner;
-                                    if (owner == null) {
-                                        petOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(player);
-                                    } else {
-                                        petOwner = owner;
-                                    }
-
-                                    pet.setOwner(petOwner);
-                                    final StoredMyPet clonedPet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(pet);
-
-                                    clonedPet.setOwner(petOwner);
-                                    clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
-                                    clonedPet.setUUID(null);
-
-                                    MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<Boolean>() {
-                                        @Override
-                                        public void callback(Boolean value) {
-                                            p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), clonedPet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
-                                            MyPetCreateEvent createEvent = new MyPetCreateEvent(clonedPet, MyPetCreateEvent.Source.PetShop);
-                                            Bukkit.getServer().getPluginManager().callEvent(createEvent);
-                                            if (petOwner.hasMyPet()) {
-                                                p.sendMessage(Util.formatText(Translation.getString("Message.Shop.SuccessStorage", player), clonedPet.getPetName()));
-                                            } else {
-                                                petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
-                                                MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
-                                                MyPetApi.getMyPetManager().activateMyPet(clonedPet).ifPresent(MyPet::createEntity);
-                                            }
-                                        }
-                                    });
                                 }
                                 event1.setWillClose(true);
                                 event1.setWillDestroy(true);
@@ -215,6 +210,72 @@ public class PetShop {
         }
 
         shop.open(player);
+    }
+
+    private void purchase(final Player p, final Player player, final MyPetPlayer owner, final ShopMyPet pet, final VaultHook economyHook) {
+        if (!p.isOnline()) {
+            releasePurchase(p.getUniqueId());
+            return;
+        }
+        if (pet.getPrice() > 0) {
+            if (economyHook.canPay(p.getUniqueId(), pet.getPrice())) {
+                if (economyHook.getEconomy().withdrawPlayer(p, pet.getPrice()).transactionSuccess()) {
+                    switch (wallet) {
+                        case Bank:
+                            economyHook.getEconomy().bankDeposit(walletOwner, pet.getPrice());
+                            break;
+                        case Player:
+                            economyHook.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(walletOwner)), pet.getPrice());
+                        case Private:
+                            depositPrivate(pet.getPrice());
+                            break;
+                    }
+                } else {
+                    p.sendMessage(Translation.getString("Message.No.Money", player));
+                    releasePurchase(p.getUniqueId());
+                    return;
+                }
+            } else {
+                p.sendMessage(Translation.getString("Message.Shop.NoMoney", player));
+                releasePurchase(p.getUniqueId());
+                return;
+            }
+        }
+
+        final MyPetPlayer petOwner;
+        if (owner == null) {
+            petOwner = MyPetApi.getPlayerManager().registerMyPetPlayer(player);
+        } else {
+            petOwner = owner;
+        }
+
+        pet.setOwner(petOwner);
+        final StoredMyPet clonedPet = MyPetApi.getMyPetManager().getInactiveMyPetFromMyPet(pet);
+
+        clonedPet.setOwner(petOwner);
+        clonedPet.setWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName());
+        clonedPet.setUUID(null);
+
+        MyPetApi.getRepository().addMyPet(clonedPet, new RepositoryCallback<Boolean>() {
+            @Override
+            public void callback(Boolean value) {
+                releasePurchase(p.getUniqueId());
+                p.sendMessage(Util.formatText(Translation.getString("Message.Shop.Success", player), clonedPet.getPetName(), economyHook.getEconomy().format(pet.getPrice())));
+                MyPetCreateEvent createEvent = new MyPetCreateEvent(clonedPet, MyPetCreateEvent.Source.PetShop);
+                Bukkit.getServer().getPluginManager().callEvent(createEvent);
+                if (petOwner.hasMyPet()) {
+                    p.sendMessage(Util.formatText(Translation.getString("Message.Shop.SuccessStorage", player), clonedPet.getPetName()));
+                } else {
+                    petOwner.setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()), clonedPet.getUUID());
+                    MyPetApi.getRepository().updateMyPetPlayer(petOwner, null);
+                    MyPetApi.getMyPetManager().activateMyPet(clonedPet).ifPresent(MyPet::createEntity);
+                }
+            }
+        });
+    }
+
+    public static void releasePurchase(UUID playerUUID) {
+        PURCHASES_IN_PROGRESS.remove(playerUUID);
     }
 
     public int getMaxPetCount(Player p) {

@@ -68,9 +68,10 @@ public class Updater {
         }
     }
 
-    protected static Update latest = null;
+    // written by the startup check thread, read on the main thread (join message, /mypet update)
+    protected static volatile Update latest = null;
     protected String plugin;
-    protected Thread thread;
+    protected volatile Thread thread;
 
     public Updater(String plugin) {
         this.plugin = plugin;
@@ -78,9 +79,9 @@ public class Updater {
     }
 
     /**
-     * Checks for updates and returns a status message for display in the splash screen.
-     * The check is always synchronous so the result can be shown at startup.
-     * Downloads, if enabled, are started asynchronously.
+     * Checks for updates and returns a status message to log at startup.
+     * Blocks on the network, so MyPet calls it from a background thread. Downloads,
+     * if enabled, run on their own thread when "async" is set, otherwise on the caller's.
      *
      * @return a status message, or null if update checking is disabled
      */
@@ -95,13 +96,14 @@ public class Updater {
 
         Optional<Update> update = check();
         if (update.isPresent()) {
-            latest = update.get();
+            Update found = update.get();
+            latest = found;
 
             if (Configuration.Update.DOWNLOAD) {
                 download();
             }
 
-            String msg = "A new " + (MyPetVersion.isDevBuild() ? "build" : "version") + " is available: " + latest;
+            String msg = "A new " + (MyPetVersion.isDevBuild() ? "build" : "version") + " is available: " + found;
             return msg;
         }
         return "No update available.";

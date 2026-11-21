@@ -35,6 +35,7 @@ import de.Keyle.MyPet.api.repository.RepositoryCallback;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.skill.skills.Ride;
+import de.Keyle.MyPet.api.util.ConfigItem;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
 import de.Keyle.MyPet.repository.types.SqLiteRepository;
@@ -43,7 +44,9 @@ import de.Keyle.MyPet.skill.skills.BeaconImpl;
 import de.Keyle.MyPet.skill.skills.ControlImpl;
 import de.Keyle.MyPet.skill.skills.ShieldImpl;
 import de.Keyle.MyPet.util.Updater;
+import de.Keyle.MyPet.util.V4Notice;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
+import de.Keyle.MyPet.util.shop.PetShop;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -63,6 +66,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -121,12 +125,25 @@ public class PlayerListener implements Listener {
         }
     }
 
+    /**
+     * The control item is null when the config sets it to "none" (MyPet's convention for "no item
+     * needed") or the item could not be loaded. Treat that as an empty hand instead of crashing on
+     * every right-click (MYPET-DT0).
+     */
+    private static boolean isControlItem(ItemStack item) {
+        ConfigItem controlItem = Configuration.Skilltree.Skill.CONTROL_ITEM;
+        if (controlItem == null) {
+            return item == null || item.getType() == Material.AIR;
+        }
+        return controlItem.compare(item);
+    }
+
     @EventHandler
     public void on(PlayerInteractEvent event) {
         if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
             return;
         }
-        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Configuration.Skilltree.Skill.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && isControlItem(event.getPlayer().getItemInHand()) && MyPetApi.getMyPetManager().hasActiveMyPet(event.getPlayer())) {
             MyPet myPet = MyPetApi.getMyPetManager().getMyPet(event.getPlayer());
             if (myPet.getStatus() == MyPet.PetState.Here && myPet.getEntity().isPresent() && myPet.getEntity().get().canMove()) {
                 if (myPet.getSkills().isActive(ControlImpl.class)) {
@@ -286,12 +303,14 @@ public class PlayerListener implements Listener {
             }
         }.runTaskLater(MyPetApi.getPlugin(), delay);
 
-        if (Configuration.Update.SHOW_OP && event.getPlayer().isOp() && Updater.isUpdateAvailable()) {
-            String versionUrl = "https://modrinth.com/plugin/mypet/version/" + Updater.getLatest().getVersion();
+        // the update check runs in the background; read its result once, it may still be null
+        Updater.Update latestUpdate = Updater.getLatest();
+        if (Configuration.Update.SHOW_OP && event.getPlayer().isOp() && latestUpdate != null) {
+            String versionUrl = "https://modrinth.com/plugin/mypet/version/" + latestUpdate.getVersion();
 
             TextComponent updateMsg = new TextComponent(Translation.getString("Message.Update.Available", event.getPlayer()) + " ");
 
-            TextComponent versionPart = new TextComponent("[" + Updater.getLatest().getVersion() + "]");
+            TextComponent versionPart = new TextComponent("[" + latestUpdate.getVersion() + "]");
             versionPart.setColor(net.md_5.bungee.api.ChatColor.GREEN);
             versionPart.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, versionUrl));
 
@@ -302,6 +321,24 @@ public class PlayerListener implements Listener {
 
             updateMsg.addExtra(versionPart);
             event.getPlayer().spigot().sendMessage(updateMsg);
+        }
+
+        if (V4Notice.showSaleIfDue(event.getPlayer())) {
+            return;
+        }
+        String latestV4 = V4Notice.getLatest();
+        if (Configuration.Update.SHOW_OP && event.getPlayer().isOp() && latestV4 != null) {
+            TextComponent v4Msg = new TextComponent("MyPet " + latestV4 + " is available: ");
+            v4Msg.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+            TextComponent link = new TextComponent(V4Notice.URL);
+            link.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+            link.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, V4Notice.URL));
+            v4Msg.addExtra(link);
+            String sale = V4Notice.getSaleText();
+            if (sale != null) {
+                v4Msg.addExtra(" (" + sale + ")");
+            }
+            event.getPlayer().spigot().sendMessage(v4Msg);
         }
     }
 
@@ -367,6 +404,8 @@ public class PlayerListener implements Listener {
     public void on(PlayerQuitEvent event) {
         // Clean up beacon zone state
         beaconZoneStates.remove(event.getPlayer().getUniqueId());
+        // Never leave a pet shop purchase guard behind
+        PetShop.releasePurchase(event.getPlayer().getUniqueId());
 
         if (WorldGroup.getGroupByWorld(event.getPlayer().getWorld()).isDisabled()) {
             return;
@@ -572,7 +611,10 @@ public class PlayerListener implements Listener {
         if (!mpPlayer.hasMyPet() || mpPlayer.getMyPet().getStatus() != MyPet.PetState.Here) {
             return;
         }
-        if (!mpPlayer.getMyPet().getSkills().has(BeaconImpl.class)) {
+        // Every pet has a Beacon skill object, so check if it is actually active before running the region queries
+        if (!mpPlayer.getMyPet().getSkills().isActive(BeaconImpl.class)) {
+            // Forget the old zone so the first check after the Beacon becomes active doesn't send a message
+            beaconZoneStates.remove(player.getUniqueId());
             return;
         }
 

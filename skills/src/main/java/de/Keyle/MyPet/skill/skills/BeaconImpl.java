@@ -477,6 +477,17 @@ public class BeaconImpl implements Beacon {
         return true;
     }
 
+    /**
+     * HealthBoost is saved with id -1 because it has no slot in the beacon menu, so it can't be
+     * looked up by id. Every other buff's id is its vanilla effect id.
+     */
+    private static PotionEffectType getEffectType(Buff buff) {
+        if (buff == Buff.HealthBoost) {
+            return PotionEffectType.HEALTH_BOOST;
+        }
+        return PotionEffectType.getById(buff.getId());
+    }
+
     public String toPrettyString(String locale) {
         StringBuilder availableBuffs = new StringBuilder();
         for (Buff buff : Buff.values()) {
@@ -553,7 +564,11 @@ public class BeaconImpl implements Beacon {
             List<PotionEffect> potionEffects = new ArrayList<>();
             for (Buff buff : selectedBuffs) {
                 int amplification = Math.max(0, getBuffLevel(buff) - 1 + amplifierMod);
-                PotionEffect effect = new PotionEffect(PotionEffectType.getById(buff.getId()), duration, amplification, true, true);
+                PotionEffectType effectType = getEffectType(buff);
+                if (effectType == null) {
+                    continue;
+                }
+                PotionEffect effect = new PotionEffect(effectType, duration, amplification, true, true);
                 potionEffects.add(effect);
             }
 

@@ -77,7 +77,22 @@ public class MyPetSelectionGui {
             if (petSlotList.containsKey(event.getPosition())) {
                 StoredMyPet storedMyPet = petSlotList.get(event.getPosition());
                 if (storedMyPet != null && callback != null) {
-                    callback.callback(storedMyPet);
+                    // The menu shows the pets as they were when it opened. Reload the clicked
+                    // pet before using it: since then it may have been stored with different
+                    // contents, traded to another player, released, or activated elsewhere.
+                    // getMyPet waits for pending saves and answers on the main thread.
+                    MyPetApi.getRepository().getMyPet(storedMyPet.getUUID(), new RepositoryCallback<StoredMyPet>() {
+                        @Override
+                        public void callback(StoredMyPet current) {
+                            if (current == null || !current.getOwner().getInternalUUID().equals(player.getInternalUUID()) || !player.isOnline()) {
+                                return;
+                            }
+                            if (player.hasMyPet() && player.getMyPet().getUUID().equals(current.getUUID())) {
+                                return;
+                            }
+                            callback.callback(current);
+                        }
+                    });
                 }
             }
 

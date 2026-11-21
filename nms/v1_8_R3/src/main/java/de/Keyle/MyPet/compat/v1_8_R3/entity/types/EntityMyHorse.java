@@ -154,7 +154,7 @@ public class EntityMyHorse extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (itemStack.getItem() == Items.SHEARS && getOwner().equals(entityhuman) && getOwner().getPlayer().isSneaking() && canEquip()) {
                 if (getMyPet().hasArmor()) {
                     EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getArmor()), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);

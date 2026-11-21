@@ -98,19 +98,22 @@ public class SqLiteRepository implements Repository {
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
 
 
-            PreparedStatement statement = connection.prepareStatement("SELECT name FROM sqlite_master WHERE type='table' AND name='info';");
-            ResultSet resultSet = statement.executeQuery();
+            boolean hasInfoTable;
+            try (PreparedStatement statement = connection.prepareStatement("SELECT name FROM sqlite_master WHERE type='table' AND name='info';");
+                 ResultSet resultSet = statement.executeQuery()) {
+                hasInfoTable = resultSet.next();
+            }
 
-            if (resultSet.next()) {
-                resultSet.close();
-                statement = connection.prepareStatement("SELECT * FROM info;");
-                resultSet = statement.executeQuery();
-                updateStructure(resultSet);
+            if (hasInfoTable) {
+                try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM info;");
+                     ResultSet resultSet = statement.executeQuery()) {
+                    updateStructure(resultSet);
+                }
                 updateInfo();
             } else {
                 initStructure();
             }
-            resultSet.close();
+            createIndexes();
         } catch (Exception | LinkageError e) {
             // LinkageError (e.g. UnsatisfiedLinkError) is thrown when the server-provided
             // sqlite-jdbc native library can't be linked — typically a version conflict with
@@ -140,9 +143,7 @@ public class SqLiteRepository implements Repository {
     }
 
     private void initStructure() {
-        try {
-            Statement create = connection.createStatement();
-
+        try (Statement create = connection.createStatement()) {
             create.executeUpdate("CREATE TABLE pets (" +
                     "uuid VARCHAR(36) NOT NULL PRIMARY KEY, " +
                     "owner_uuid VARCHAR(36) NOT NULL , " +
@@ -186,19 +187,31 @@ public class SqLiteRepository implements Repository {
             createTimestampTrigger("info", "last_update", "version");
 
 
-            PreparedStatement insert = connection.prepareStatement("INSERT INTO info (version, mypet_version, mypet_build) VALUES (?,?,?);");
-            insert.setInt(1, version);
-            insert.setString(2, MyPetVersion.getVersion());
-            insert.setString(3, MyPetVersion.getBuild());
-            insert.executeUpdate();
+            try (PreparedStatement insert = connection.prepareStatement("INSERT INTO info (version, mypet_version, mypet_build) VALUES (?,?,?);")) {
+                insert.setInt(1, version);
+                insert.setString(2, MyPetVersion.getVersion());
+                insert.setString(3, MyPetVersion.getBuild());
+                insert.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Runs on every start (new and existing databases) so that older databases get the
+     * index on pets.owner_uuid, which every per-player pet lookup filters by.
+     */
+    private void createIndexes() {
+        try (Statement create = connection.createStatement()) {
+            create.executeUpdate("CREATE INDEX IF NOT EXISTS pets_owner_uuid_index ON pets (owner_uuid);");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     private void createTimestampTrigger(String table, String column, String id) {
-        try {
-            Statement create = connection.createStatement();
+        try (Statement create = connection.createStatement()) {
             create.execute("CREATE TRIGGER [update_time_trigger_" + table + "] " +
                     "AFTER UPDATE ON " + table + " FOR EACH ROW " +
                     "WHEN NEW." + column + " < OLD." + column + " " +
@@ -228,8 +241,7 @@ public class SqLiteRepository implements Repository {
                     sql.append(')');
                 }
                 sql.append(';');
-                try {
-                    PreparedStatement statement = connection.prepareStatement(sql.toString());
+                try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
                     statement.setLong(1, timestamp);
                     for (int i = 0; i < activePets.length; i++) {
                         statement.setString(2 + i, activePets[i].getUUID().toString());
@@ -257,9 +269,8 @@ public class SqLiteRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try {
-                    PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets;");
-                    ResultSet resultSet = statement.executeQuery();
+                try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets;");
+                     ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
                     callback.setValue(resultSet.getInt(1));
                     callback.runTask(MyPetApi.getPlugin());
@@ -275,13 +286,13 @@ public class SqLiteRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try {
-                    PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE type=?;");
+                try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE type=?;")) {
                     statement.setString(1, type.name());
-                    ResultSet resultSet = statement.executeQuery();
-                    resultSet.next();
-                    callback.setValue(resultSet.getInt(1));
-                    callback.runTask(MyPetApi.getPlugin());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        resultSet.next();
+                        callback.setValue(resultSet.getInt(1));
+                        callback.runTask(MyPetApi.getPlugin());
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -296,8 +307,7 @@ public class SqLiteRepository implements Repository {
     }
 
     private void updateInfo() {
-        try {
-            PreparedStatement update = connection.prepareStatement("UPDATE info SET version=?, mypet_version=?, mypet_build=?;");
+        try (PreparedStatement update = connection.prepareStatement("UPDATE info SET version=?, mypet_version=?, mypet_build=?;")) {
             update.setInt(1, version);
             update.setString(2, MyPetVersion.getVersion());
             update.setString(3, MyPetVersion.getBuild());
@@ -317,8 +327,7 @@ public class SqLiteRepository implements Repository {
     }
 
     public boolean savePet(StoredMyPet myPet) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE pets SET " +
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE pets SET " +
                     "owner_uuid=?, " +
                     "exp=?, " +
                     "health=?, " +
@@ -332,7 +341,7 @@ public class SqLiteRepository implements Repository {
                     "skilltree=?, " +
                     "skills=?, " +
                     "info=? " +
-                    "WHERE uuid=?;");
+                    "WHERE uuid=?;")) {
             statement.setString(1, myPet.getOwner().getInternalUUID().toString());
             statement.setDouble(2, myPet.getExp());
             statement.setDouble(3, myPet.getHealth());
@@ -370,8 +379,7 @@ public class SqLiteRepository implements Repository {
     }
 
     private void savePlayer(MyPetPlayer player) {
-        try {
-            PreparedStatement statement = connection.prepareStatement(
+        try (PreparedStatement statement = connection.prepareStatement(
                     "UPDATE players SET " +
                             "mojang_uuid=?, " +
                             "name=?, " +
@@ -382,7 +390,7 @@ public class SqLiteRepository implements Repository {
                             "pet_idle_volume=?, " +
                             "extended_info=?, " +
                             "multi_world=? " +
-                            "WHERE internal_uuid=?;");
+                            "WHERE internal_uuid=?;")) {
             statement.setString(1, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
             statement.setString(2, player.getName());
             statement.setBoolean(3, player.hasAutoRespawnEnabled());
@@ -475,54 +483,55 @@ public class SqLiteRepository implements Repository {
                 owners.put(player.getInternalUUID(), player);
             }
 
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM pets;");
             List<StoredMyPet> pets = new ArrayList<>();
-            while (resultSet.next()) {
-                if (!owners.containsKey(UUID.fromString(resultSet.getString("owner_uuid")))) {
-                    continue;
-                }
-                MyPetPlayer owner = owners.get(UUID.fromString(resultSet.getString("owner_uuid")));
-
-                InactiveMyPet pet = new InactiveMyPet(owner);
-                pet.setUUID(UUID.fromString(resultSet.getString("uuid")));
-                pet.setWorldGroup(resultSet.getString("world_group"));
-                pet.setExp(resultSet.getDouble("exp"));
-                pet.setHealth(resultSet.getDouble("health"));
-                pet.setRespawnTime(resultSet.getInt("respawn_time"));
-                pet.setPetName(resultSet.getString("name"));
-                pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
-                pet.setLastUsed(resultSet.getLong("last_used"));
-                pet.setSaturation(resultSet.getInt("hunger"));
-                pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");
-
-                String skillTreeName = resultSet.getString("skilltree");
-                if (skillTreeName != null) {
-                    Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skillTreeName);
-                    if (skilltree != null) {
-                        pet.setSkilltree(skilltree);
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery("SELECT * FROM pets;")) {
+                while (resultSet.next()) {
+                    if (!owners.containsKey(UUID.fromString(resultSet.getString("owner_uuid")))) {
+                        continue;
                     }
-                }
+                    MyPetPlayer owner = owners.get(UUID.fromString(resultSet.getString("owner_uuid")));
 
-                byte[] skillsData = resultSet.getBytes("skills");
-                try {
-                    pet.setSkills(TagStream.readTag(skillsData, true));
-                } catch (IOException e) {
-                    MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
-                    backupCorruptedData(pet, "skills", skillsData);
-                    pet.setSkills(new TagCompound());
-                }
+                    InactiveMyPet pet = new InactiveMyPet(owner);
+                    pet.setUUID(UUID.fromString(resultSet.getString("uuid")));
+                    pet.setWorldGroup(resultSet.getString("world_group"));
+                    pet.setExp(resultSet.getDouble("exp"));
+                    pet.setHealth(resultSet.getDouble("health"));
+                    pet.setRespawnTime(resultSet.getInt("respawn_time"));
+                    pet.setPetName(resultSet.getString("name"));
+                    pet.setPetType(MyPetType.valueOf(resultSet.getString("type")));
+                    pet.setLastUsed(resultSet.getLong("last_used"));
+                    pet.setSaturation(resultSet.getInt("hunger"));
+                    pet.wantsToRespawn = resultSet.getBoolean("wants_to_spawn");
 
-                byte[] infoData = resultSet.getBytes("info");
-                try {
-                    pet.setInfo(TagStream.readTag(infoData, true));
-                } catch (IOException e) {
-                    MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
-                    backupCorruptedData(pet, "info", infoData);
-                    pet.setInfo(new TagCompound());
-                }
+                    String skillTreeName = resultSet.getString("skilltree");
+                    if (skillTreeName != null) {
+                        Skilltree skilltree = MyPetApi.getSkilltreeManager().getSkilltree(skillTreeName);
+                        if (skilltree != null) {
+                            pet.setSkilltree(skilltree);
+                        }
+                    }
 
-                pets.add(pet);
+                    byte[] skillsData = resultSet.getBytes("skills");
+                    try {
+                        pet.setSkills(TagStream.readTag(skillsData, true));
+                    } catch (IOException e) {
+                        MyPetApi.getLogger().warning("Failed to load skills for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                        backupCorruptedData(pet, "skills", skillsData);
+                        pet.setSkills(new TagCompound());
+                    }
+
+                    byte[] infoData = resultSet.getBytes("info");
+                    try {
+                        pet.setInfo(TagStream.readTag(infoData, true));
+                    } catch (IOException e) {
+                        MyPetApi.getLogger().warning("Failed to load info for " + pet.getOwner().getName() + "'s Pet " + pet.getPetName() + " - the data was likely corrupted.");
+                        backupCorruptedData(pet, "info", infoData);
+                        pet.setInfo(new TagCompound());
+                    }
+
+                    pets.add(pet);
+                }
             }
 
             return pets;
@@ -541,14 +550,14 @@ public class SqLiteRepository implements Repository {
                     if (myPetPlayer == null) {
                         return;
                     }
-                    try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE owner_uuid=?;");
+                    try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(uuid) FROM pets WHERE owner_uuid=?;")) {
                         statement.setString(1, myPetPlayer.getInternalUUID().toString());
-                        ResultSet resultSet = statement.executeQuery();
-                        resultSet.next();
-                        //MyPetLogger.write("HAS pet: " + (resultSet.getInt(1) > 0));
+                        try (ResultSet resultSet = statement.executeQuery()) {
+                            resultSet.next();
+                            //MyPetLogger.write("HAS pet: " + (resultSet.getInt(1) > 0));
 
-                        callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
+                            callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
+                        }
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -566,11 +575,12 @@ public class SqLiteRepository implements Repository {
                     if (owner == null) {
                         return;
                     }
-                    try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE owner_uuid=?;");
+                    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE owner_uuid=?;")) {
                         statement.setString(1, owner.getInternalUUID().toString());
-                        ResultSet resultSet = statement.executeQuery();
-                        List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet, true);
+                        List<StoredMyPet> pets;
+                        try (ResultSet resultSet = statement.executeQuery()) {
+                            pets = resultSetToMyPet(owner, resultSet, true);
+                        }
                         //MyPetLogger.write("LOAD pets: " + pets);
                         callback.runTask(MyPetApi.getPlugin(), pets);
                     } catch (SQLException e) {
@@ -604,18 +614,17 @@ public class SqLiteRepository implements Repository {
                     }
 
                     StoredMyPet result = null;
-                    try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE uuid=?;");
+                    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE uuid=?;")) {
                         statement.setString(1, uuid.toString());
 
-                        ResultSet resultSet = statement.executeQuery();
-
-                        if (resultSet.next()) {
-                            MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(resultSet.getString("owner_uuid")));
-                            if (owner != null) {
-                                List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet, false);
-                                if (!pets.isEmpty()) {
-                                    result = pets.get(0);
+                        try (ResultSet resultSet = statement.executeQuery()) {
+                            if (resultSet.next()) {
+                                MyPetPlayer owner = MyPetApi.getPlayerManager().getMyPetPlayer(UUID.fromString(resultSet.getString("owner_uuid")));
+                                if (owner != null) {
+                                    List<StoredMyPet> pets = resultSetToMyPet(owner, resultSet, false);
+                                    if (!pets.isEmpty()) {
+                                        result = pets.get(0);
+                                    }
                                 }
                             }
                         }
@@ -633,8 +642,7 @@ public class SqLiteRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try {
-                    PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE uuid=?;");
+                try (PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE uuid=?;")) {
                     statement.setString(1, uuid.toString());
 
                     int result = statement.executeUpdate();
@@ -664,8 +672,7 @@ public class SqLiteRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try {
-                    PreparedStatement statement = connection.prepareStatement(
+                try (PreparedStatement statement = connection.prepareStatement(
                             "INSERT INTO pets (uuid, " +
                                     "owner_uuid, " +
                                     "exp, " +
@@ -680,7 +687,7 @@ public class SqLiteRepository implements Repository {
                                     "skilltree, " +
                                     "skills, " +
                                     "info) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
                     statement.setString(1, storedMyPet.getUUID().toString());
                     statement.setString(2, storedMyPet.getOwner().getInternalUUID().toString());
                     statement.setDouble(3, storedMyPet.getExp());
@@ -715,8 +722,7 @@ public class SqLiteRepository implements Repository {
     }
 
     public boolean addMyPets(List<StoredMyPet> pets) {
-        try {
-            PreparedStatement statement = connection.prepareStatement(
+        try (PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO pets (uuid, " +
                             "owner_uuid, " +
                             "exp, " +
@@ -731,9 +737,7 @@ public class SqLiteRepository implements Repository {
                             "skilltree, " +
                             "skills, " +
                             "info) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-
-
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
             int i = 0;
             for (StoredMyPet storedMyPet : pets) {
                 statement.setString(1, storedMyPet.getUUID().toString());
@@ -780,8 +784,7 @@ public class SqLiteRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try {
-                    PreparedStatement statement = connection.prepareStatement("UPDATE pets SET " +
+                try (PreparedStatement statement = connection.prepareStatement("UPDATE pets SET " +
                             "owner_uuid=?, " +
                             "exp=?, " +
                             "health=?, " +
@@ -795,7 +798,7 @@ public class SqLiteRepository implements Repository {
                             "skilltree=?, " +
                             "skills=?, " +
                             "info=? " +
-                            "WHERE uuid=?;");
+                            "WHERE uuid=?;")) {
                     statement.setString(1, storedMyPet.getOwner().getInternalUUID().toString());
                     statement.setDouble(2, storedMyPet.getExp());
                     statement.setDouble(3, storedMyPet.getHealth());
@@ -879,10 +882,8 @@ public class SqLiteRepository implements Repository {
 
     @Override
     public List<MyPetPlayer> getAllMyPetPlayers() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM players;");
-
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM players;")) {
             List<MyPetPlayer> players = new ArrayList<>();
             MyPetPlayer player;
             while (true) {
@@ -905,16 +906,16 @@ public class SqLiteRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(internal_uuid) FROM players WHERE mojang_uuid=? OR name=?;");
+                    try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(internal_uuid) FROM players WHERE mojang_uuid=? OR name=?;")) {
                         statement.setString(1, player.getUniqueId().toString());
                         statement.setString(2, player.getName());
-                        ResultSet resultSet = statement.executeQuery();
-                        resultSet.next();
+                        try (ResultSet resultSet = statement.executeQuery()) {
+                            resultSet.next();
 
-                        //MyPetLogger.write("IS player: " + (resultSet.getInt(1) > 0));
+                            //MyPetLogger.write("IS player: " + (resultSet.getInt(1) > 0));
 
-                        callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
+                            callback.runTask(MyPetApi.getPlugin(), resultSet.getInt(1) > 0);
+                        }
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -928,11 +929,12 @@ public class SqLiteRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE internal_uuid=?;");
+                    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE internal_uuid=?;")) {
                         statement.setString(1, uuid.toString());
-                        ResultSet resultSet = statement.executeQuery();
-                        MyPetPlayer player = resultSetToMyPetPlayer(resultSet);
+                        MyPetPlayer player;
+                        try (ResultSet resultSet = statement.executeQuery()) {
+                            player = resultSetToMyPetPlayer(resultSet);
+                        }
                         if (player != null) {
                             //MyPetLogger.write("LOAD player: " + player);
                             callback.runTask(MyPetApi.getPlugin(), player);
@@ -951,13 +953,14 @@ public class SqLiteRepository implements Repository {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    try {
-                        PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE mojang_uuid=? OR name=?;");
+                    try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE mojang_uuid=? OR name=?;")) {
                         statement.setString(1, player.getUniqueId().toString());
                         statement.setString(2, player.getName());
-                        ResultSet resultSet = statement.executeQuery();
 
-                        MyPetPlayer player = resultSetToMyPetPlayer(resultSet);
+                        MyPetPlayer player;
+                        try (ResultSet resultSet = statement.executeQuery()) {
+                            player = resultSetToMyPetPlayer(resultSet);
+                        }
                         if (player != null) {
                             //MyPetLogger.write("LOAD player: " + player);
                             callback.runTask(MyPetApi.getPlugin(), player);
@@ -991,8 +994,7 @@ public class SqLiteRepository implements Repository {
 
     @SuppressWarnings("unchecked")
     public boolean updatePlayer(final MyPetPlayer player) {
-        try {
-            PreparedStatement statement = connection.prepareStatement(
+        try (PreparedStatement statement = connection.prepareStatement(
                     "UPDATE players SET " +
                             "mojang_uuid=?, " +
                             "name=?, " +
@@ -1003,7 +1005,7 @@ public class SqLiteRepository implements Repository {
                             "pet_idle_volume=?, " +
                             "extended_info=?, " +
                             "multi_world=? " +
-                            "WHERE internal_uuid=?;");
+                            "WHERE internal_uuid=?;")) {
             statement.setString(1, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
             statement.setString(2, player.getName());
             statement.setBoolean(3, player.hasAutoRespawnEnabled());
@@ -1037,8 +1039,7 @@ public class SqLiteRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try {
-                    PreparedStatement statement = connection.prepareStatement(
+                try (PreparedStatement statement = connection.prepareStatement(
                             "INSERT INTO players (" +
                                     "internal_uuid, " +
                                     "mojang_uuid, " +
@@ -1050,7 +1051,7 @@ public class SqLiteRepository implements Repository {
                                     "pet_idle_volume, " +
                                     "extended_info, " +
                                     "multi_world) " +
-                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
                     statement.setString(1, player.getInternalUUID().toString());
                     statement.setString(2, player.getMojangUUID() != null ? player.getMojangUUID().toString() : null);
                     statement.setString(3, player.getName());
@@ -1087,8 +1088,7 @@ public class SqLiteRepository implements Repository {
 
     @SuppressWarnings("unchecked")
     public boolean addMyPetPlayers(List<MyPetPlayer> players) {
-        try {
-            PreparedStatement statement = connection.prepareStatement(
+        try (PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO players (" +
                             "internal_uuid, " +
                             "mojang_uuid, " +
@@ -1100,8 +1100,7 @@ public class SqLiteRepository implements Repository {
                             "pet_idle_volume, " +
                             "extended_info, " +
                             "multi_world) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
             int i = 0;
 
             HashSet<String> playerNames = new HashSet<>();
@@ -1148,8 +1147,7 @@ public class SqLiteRepository implements Repository {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try {
-                    PreparedStatement statement = connection.prepareStatement("DELETE FROM players WHERE internal_uuid=?;");
+                try (PreparedStatement statement = connection.prepareStatement("DELETE FROM players WHERE internal_uuid=?;")) {
                     statement.setString(1, player.getInternalUUID().toString());
 
                     int result = statement.executeUpdate();

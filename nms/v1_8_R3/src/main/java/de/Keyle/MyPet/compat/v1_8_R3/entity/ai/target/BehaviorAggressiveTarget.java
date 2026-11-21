@@ -39,11 +39,13 @@ import org.bukkit.entity.Player;
 
 @Compat("v1_8_R3")
 public class BehaviorAggressiveTarget implements AIGoal {
+    private static final int TARGET_SEARCH_COOLDOWN = 10;
     private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityPlayer petOwnerEntity;
     private EntityLiving target;
     private float range;
+    private int lastTargetSearch = -TARGET_SEARCH_COOLDOWN;
 
     public BehaviorAggressiveTarget(EntityMyPet petEntity, float range) {
         this.petEntity = petEntity;
@@ -67,6 +69,12 @@ public class BehaviorAggressiveTarget implements AIGoal {
         if (petEntity.hasTarget()) {
             return false;
         }
+        // Only look for a new target every few ticks, every candidate triggers protection plugin queries
+        int ticksLived = petEntity.getBukkitEntity().getTicksLived();
+        if (ticksLived >= lastTargetSearch && ticksLived - lastTargetSearch < TARGET_SEARCH_COOLDOWN) {
+            return false;
+        }
+        lastTargetSearch = ticksLived;
 
         for (EntityLiving entityLiving : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
             if (entityLiving != petEntity && !(entityLiving instanceof EntityArmorStand) && entityLiving.isAlive() && petEntity.h(entityLiving) <= 91) {
@@ -92,6 +100,9 @@ public class BehaviorAggressiveTarget implements AIGoal {
                         } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
                             continue;
                         }
+                    }
+                    if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
+                        continue;
                     }
                 } else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
                     continue;

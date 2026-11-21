@@ -56,24 +56,32 @@ public class WorldGuardCustomFlagsHook implements PlayerVersusPlayerHook, Player
 
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
+        if (wgHook == null) {
+            // the WorldGuard hook is disabled, so there are no MyPet flags to check
+            return true;
+        }
         try {
             Location location = defender.getLocation();
-            StateFlag.State s = wgHook.getState(location, null, WorldGuardHook.DAMAGE_FLAG);
+            StateFlag.State s = wgHook.queryState(location, null, WorldGuardHook.DAMAGE_FLAG);
             return s == null || s == StateFlag.State.ALLOW;
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(WorldGuardCustomFlagsHook.class, t);
         }
-        return true;
     }
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {
+        if (wgHook == null) {
+            // the WorldGuard hook is disabled, so there are no MyPet flags to check
+            return true;
+        }
         try {
             Location location = defender.getLocation();
-            StateFlag.State s = wgHook.getState(location, defender, WorldGuardHook.DAMAGE_FLAG);
+            StateFlag.State s = wgHook.queryState(location, defender, WorldGuardHook.DAMAGE_FLAG);
             return s == null || s == StateFlag.State.ALLOW;
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(WorldGuardCustomFlagsHook.class, t);
         }
-        return true;
     }
 
     public boolean canFly(Location location) {

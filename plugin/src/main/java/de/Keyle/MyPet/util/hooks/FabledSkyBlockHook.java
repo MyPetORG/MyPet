@@ -63,7 +63,8 @@ public class FabledSkyBlockHook implements PlayerVersusPlayerHook, PlayerVersusE
                     return false;
                 }
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(FabledSkyBlockHook.class, t);
         }
         return true;
     }
@@ -76,7 +77,8 @@ public class FabledSkyBlockHook implements PlayerVersusPlayerHook, PlayerVersusE
                     return false;
                 }
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(FabledSkyBlockHook.class, t);
         }
         return true;
     }

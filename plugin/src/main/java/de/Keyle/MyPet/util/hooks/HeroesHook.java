@@ -48,6 +48,10 @@ public class HeroesHook implements PlayerVersusPlayerHook, PartyHook {
         try {
             Hero heroAttacker = heroes.getCharacterManager().getHero(attacker);
             Hero heroDefender = heroes.getCharacterManager().getHero(defender);
+            if (heroAttacker == null || heroDefender == null) {
+                // not a Heroes character (e.g. an NPC), so Heroes' level range does not apply
+                return true;
+            }
             int attackerLevel = heroAttacker.getTieredLevel(false);
             int defenderLevel = heroDefender.getTieredLevel(false);
 
@@ -61,7 +65,8 @@ public class HeroesHook implements PlayerVersusPlayerHook, PartyHook {
             if ((party != null) && (party.isNoPvp()) && party.isPartyMember(heroAttacker)) {
                 return false;
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(HeroesHook.class, t);
         }
         return true;
     }

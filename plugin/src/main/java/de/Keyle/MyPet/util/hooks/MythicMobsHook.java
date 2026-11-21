@@ -222,7 +222,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
                 }
             } catch (NumberFormatException ignored) {
             } catch (Throwable t) {
-                t.printStackTrace();
+                return ProtectionHookErrors.failClosed(MythicMobsHook.class, t);
             }
             return true;
         }
@@ -343,7 +343,7 @@ public class MythicMobsHook implements LeashHook, PlayerVersusEntityHook, Monste
                 }
             } catch (NumberFormatException ignored) {
             } catch (Throwable t) {
-                t.printStackTrace();
+                return ProtectionHookErrors.failClosed(MythicMobsHook.class, t);
             }
             return true;
         }

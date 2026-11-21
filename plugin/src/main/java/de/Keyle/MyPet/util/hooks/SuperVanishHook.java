@@ -53,9 +53,9 @@ public class SuperVanishHook implements PlayerVersusPlayerHook {
     public boolean canHurt(Player attacker, Player defender) {
         try {
             return !VanishAPI.isInvisible(defender);
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(SuperVanishHook.class, t);
         }
-        return true;
     }
 
     @EventHandler

@@ -62,6 +62,8 @@ public class Timer {
                 player.schedule();
             }
         }, 10L, 20L));
+        // drop metadata from mobs/projectiles that despawned or unloaded without dying
+        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetApi.getPlugin(), EntityMetadataTracker::sweep, 1200L, 1200L));
     }
 
     public static void reset() {

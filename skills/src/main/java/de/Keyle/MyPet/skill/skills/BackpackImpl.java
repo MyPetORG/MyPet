@@ -29,7 +29,10 @@ import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.api.skill.UpgradeComputer;
 import de.Keyle.MyPet.api.util.inventory.CustomInventory;
 import de.Keyle.MyPet.api.util.locale.Translation;
+import de.keyle.knbt.TagBase;
+import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagList;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -183,9 +186,34 @@ public class BackpackImpl implements de.Keyle.MyPet.api.skill.skills.Backpack {
      * @param tag the tag to load from
      */
     public void load(TagCompound tag) {
-        // Ensure the underlying inventory exists with correct capacity before loading items
-        inventory.setSize(rows.getValue().intValue() * 9);
+        // Ensure the underlying inventory exists with correct capacity before loading items. A
+        // backpack that shrank while it was full is saved with more slots than its rows, so make
+        // room for every saved slot instead of dropping the ones past the last row.
+        int size = rows.getValue().intValue() * 9;
+        int highestSlot = highestSavedSlot(tag);
+        if (highestSlot >= size) {
+            size = ((highestSlot + 1 + 8) / 9) * 9;
+        }
+        inventory.setSize(size);
         inventory.load(tag);
+    }
+
+    private static int highestSavedSlot(TagCompound tag) {
+        int highest = -1;
+        TagList items = tag.getAs("Items", TagList.class);
+        if (items == null) {
+            return highest;
+        }
+        for (int i = 0; i < items.size(); i++) {
+            TagBase item = items.getReadOnlyList().get(i);
+            if (item instanceof TagCompound) {
+                TagBase slot = ((TagCompound) item).getCompoundData().get("Slot");
+                if (slot instanceof TagByte) {
+                    highest = Math.max(highest, ((TagByte) slot).getByteData());
+                }
+            }
+        }
+        return highest;
     }
 
     /**

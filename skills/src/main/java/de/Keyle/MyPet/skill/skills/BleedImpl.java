@@ -57,6 +57,7 @@ public class BleedImpl implements Bleed {
 
     private final Map<UUID, BleedEffect> activeEffects = new ConcurrentHashMap<>();
     private BukkitTask bleedTask = null;
+    private boolean ticking = false;
 
     public BleedImpl(MyPet myPet) {
         this.myPet = myPet;
@@ -103,6 +104,10 @@ public class BleedImpl implements Bleed {
 
     @Override
     public boolean trigger() {
+        // A bleed tick is a pet-attributed hit; it must not start or extend a bleed itself.
+        if (ticking) {
+            return false;
+        }
         return random.nextDouble() <= chance.getValue() / 100.;
     }
 
@@ -116,8 +121,10 @@ public class BleedImpl implements Bleed {
 
         if (existing != null) {
             // Refresh + extend: add remaining duration to new duration
+            // Never more than twice the configured duration, so repeated hits cannot keep
+            // a target bleeding forever.
             int remainingSeconds = existing.remainingTicks / 20;
-            int newDurationSeconds = duration.getValue() + remainingSeconds;
+            int newDurationSeconds = Math.min(duration.getValue() + remainingSeconds, duration.getValue() * 2);
             existing.refresh(target, damageValue, intervalTicks, newDurationSeconds * 20);
         } else {
             // Create new bleed effect and apply first damage immediately
@@ -180,8 +187,20 @@ public class BleedImpl implements Bleed {
                 continue;
             }
 
+            // Re-check protection every tick: the target may have moved into a PvP-off or
+            // protected area since the hit, where the pet could not attack it.
+            if (!SkillDamageCheck.canDamage(myPet, effect.target)) {
+                iterator.remove();
+                continue;
+            }
+
             // Process tick (petEntity may be null if pet died - damage continues without attribution)
-            effect.tick(petEntity);
+            ticking = true;
+            try {
+                effect.tick(petEntity);
+            } finally {
+                ticking = false;
+            }
         }
     }
 

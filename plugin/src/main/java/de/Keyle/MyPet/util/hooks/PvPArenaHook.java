@@ -56,7 +56,8 @@ public class PvPArenaHook implements PlayerVersusPlayerHook, AllowedHook {
                     return PVPArenaAPI.getArenaTeam(attacker) != PVPArenaAPI.getArenaTeam(defender);
                 }
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(PvPArenaHook.class, t);
         }
         return true;
     }

@@ -17,6 +17,22 @@ tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
 }
 
+// Pure-logic unit tests (no Bukkit or NMS classes at runtime). The root build turns tests
+// off for every module; this module turns them back on.
+dependencies {
+    testImplementation("de.keyle:knbt:0.0.6")
+    testImplementation(platform("org.junit:junit-bom:5.11.4"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.named("compileTestJava") { enabled = true }
+tasks.named("processTestResources") { enabled = true }
+tasks.named<Test>("test") {
+    enabled = true
+    useJUnitPlatform()
+}
+
 val buildType = rootProject.findProperty("buildType")?.toString() ?: "local"
 val versionSuffix = when (buildType) {
     "release" -> ""

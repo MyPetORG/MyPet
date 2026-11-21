@@ -23,6 +23,7 @@ package de.Keyle.MyPet.compat.v1_21_R3.util.inventory;
 import com.mojang.serialization.Dynamic;
 import de.Keyle.MyPet.MyPetApi;
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.inventory.ItemDataVersion;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.keyle.knbt.TagType;
 import de.keyle.knbt.*;
@@ -52,7 +53,10 @@ public class ItemStackNBTConverter {
     }
 
     public static TagCompound itemStackToCompound(ItemStack itemStack) {
-        return (TagCompound) vanillaCompoundToCompound(itemStackToVanillaCompound(itemStack));
+        // Record which data version wrote this item (see ItemDataVersion). Only the saved
+        // compound is stamped; itemStackToVanillaCompound stays unstamped because item
+        // comparisons and config items use it.
+        return ItemDataVersion.stamp((TagCompound) vanillaCompoundToCompound(itemStackToVanillaCompound(itemStack)), currentDataVersion());
     }
 
     public static CompoundTag itemStackToVanillaCompound(ItemStack itemStack) {
@@ -66,6 +70,26 @@ public class ItemStackNBTConverter {
     }
 
     public static ItemStack compoundToItemStack(TagCompound compound) {
+        int stored = ItemDataVersion.read(compound);
+        if (stored != ItemDataVersion.NONE) {
+            // Stamped item: run the data fixers from the version that saved it, then parse it
+            // without the stamp. If anything goes wrong, use the unchanged path below.
+            try {
+                CompoundTag tag = (CompoundTag) compoundToVanillaCompound(ItemDataVersion.withoutStamp(compound));
+                int server = currentDataVersion();
+                int start = ItemDataVersion.startVersion(stored, server);
+                if (start < server) {
+                    tag = convertOldVanillaCompound(tag, start);
+                }
+                ItemStack stack = vanillaCompoundToItemStack(tag);
+                if (stack != null && !stack.isEmpty()) {
+                    return stack;
+                }
+            } catch (RuntimeException ignored) {
+                // fall through to the unchanged path below
+            }
+            compound = ItemDataVersion.withoutStamp(compound);
+        }
         CompoundTag tagCompound = (CompoundTag) compoundToVanillaCompound(compound);
         return vanillaCompoundToItemStack(tagCompound);
     }
@@ -198,10 +222,18 @@ public class ItemStackNBTConverter {
     }
 
     public static CompoundTag convertOldVanillaCompound(CompoundTag oldTag) {
+        return convertOldVanillaCompound(oldTag, 1519);
+    }
+
+    public static CompoundTag convertOldVanillaCompound(CompoundTag oldTag, int fromDataVersion) {
         Dynamic<Tag> dyn = new Dynamic<>(NbtOps.INSTANCE, oldTag);
         Dynamic<Tag> updatedDyn = DataFixers.getDataFixer().update(References.ITEM_STACK, dyn,
-                1519, SharedConstants.getCurrentVersion().getDataVersion().getVersion());
+                fromDataVersion, currentDataVersion());
         return (CompoundTag) updatedDyn.getValue();
+    }
+
+    private static int currentDataVersion() {
+        return SharedConstants.getCurrentVersion().getDataVersion().getVersion();
     }
 
     public static Tag compoundToVanillaCompound(TagBase tag) {

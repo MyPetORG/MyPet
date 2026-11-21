@@ -37,11 +37,13 @@ import org.bukkit.entity.LivingEntity;
 
 @Compat("v1_8_R3")
 public class BehaviorFarmTarget implements AIGoal {
+    private static final int TARGET_SEARCH_COOLDOWN = 10;
     private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityPlayer petOwnerEntity;
     private EntityLiving target;
     private float range;
+    private int lastTargetSearch = -TARGET_SEARCH_COOLDOWN;
 
     public BehaviorFarmTarget(EntityMyPet petEntity, float range) {
         this.petEntity = petEntity;
@@ -65,6 +67,12 @@ public class BehaviorFarmTarget implements AIGoal {
         if (petEntity.hasTarget()) {
             return false;
         }
+        // Only look for a new target every few ticks, every candidate triggers protection plugin queries
+        int ticksLived = petEntity.getBukkitEntity().getTicksLived();
+        if (ticksLived >= lastTargetSearch && ticksLived - lastTargetSearch < TARGET_SEARCH_COOLDOWN) {
+            return false;
+        }
+        lastTargetSearch = ticksLived;
 
         for (EntityMonster entityMonster : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
             if (!entityMonster.isAlive() || petEntity.h(entityMonster) > 91) {

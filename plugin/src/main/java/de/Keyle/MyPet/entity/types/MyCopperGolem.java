@@ -69,7 +69,8 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
         if (info.containsKey("Poppy")) {
             TagCompound poppyCompound = info.getAs("Poppy", TagCompound.class);
             try {
-                poppy = MyPetApi.getPlatformHelper().compundToItemStack(poppyCompound);
+                // through setPoppy, so a stack saved before the poppy dupe was fixed becomes one poppy
+                setPoppy(MyPetApi.getPlatformHelper().compundToItemStack(poppyCompound));
             } catch (Exception e) {
                 poppy = null;
             }
@@ -125,6 +126,12 @@ public class MyCopperGolem extends MyPet implements de.Keyle.MyPet.api.entity.ty
 
     @Override
     public void setPoppy(ItemStack item) {
+        // Store a single poppy. The interaction takes one poppy from the player's stack, so
+        // keeping the whole stack would hand all of it back when the poppy is sheared off.
+        if (item != null) {
+            item = item.clone();
+            item.setAmount(1);
+        }
         this.poppy = item;
         if (status == PetState.Here) {
             getEntity().ifPresent(entity -> entity.getHandle().updateVisuals());

@@ -46,6 +46,10 @@ public class KingdomsHook implements PlayerVersusPlayerHook {
             }
 
             KingdomPlayer damaged = GameManagement.getPlayerManager().getSession(defender);
+            if (damaged == null) {
+                // no Kingdoms session (e.g. an NPC), so Kingdoms does not protect it
+                return true;
+            }
             if (Kingdoms.config.freePvPInWarZone) {
                 Land att = GameManagement.getLandManager().getOrLoadLand(damaged.getLoc());
                 if (att.getOwner() != null && att.getOwner().equals("WarZone")) {
@@ -53,8 +57,8 @@ public class KingdomsHook implements PlayerVersusPlayerHook {
                 }
             }
             return damaged.getKingdom() == null || !attacked.getKingdom().isAllianceWith(damaged.getKingdom());
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(KingdomsHook.class, t);
         }
-        return true;
     }
 }

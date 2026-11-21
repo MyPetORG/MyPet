@@ -85,7 +85,8 @@ public class SimpleClansHook implements PlayerVersusPlayerHook {
             } else if (simpleClans.getSettingsManager().getSafeCivilians()) {
                 return false;
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(SimpleClansHook.class, t);
         }
         return true;
     }

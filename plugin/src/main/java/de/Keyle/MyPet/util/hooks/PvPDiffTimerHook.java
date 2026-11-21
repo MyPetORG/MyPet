@@ -36,7 +36,8 @@ public class PvPDiffTimerHook implements PlayerVersusPlayerHook {
             if (!attacker.hasPermission("pvpdifftimer.bypass") && Worlds.isEnabled(w) && !Worlds.isNight(w)) {
                 return false;
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(PvPDiffTimerHook.class, t);
         }
         return true;
     }

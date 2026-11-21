@@ -23,29 +23,52 @@ package de.Keyle.MyPet.api.util;
 import org.bukkit.ChatColor;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Colorizer {
 
     private static Map<String, String> colorCodes = new HashMap<>();
     private static final Map<Character, String> ANSI_CODES = new HashMap<>();
+    // Matches every <colorname> tag, compiled once instead of one regex per color on every call
+    private static final Pattern COLOR_NAME_TAG_PATTERN;
+    private static final Pattern COLOR_CODE_TAG_PATTERN = Pattern.compile("(?i)<([0-9a-fk-or])>");
 
     public static String setColors(String text) {
-        for (String color : colorCodes.keySet()) {
-            text = text.replaceAll("(?i)<" + color + ">", ChatColor.COLOR_CHAR + colorCodes.get(color));
+        if (text.indexOf('<') != -1) {
+            text = replaceColorNameTags(text, true);
+            text = COLOR_CODE_TAG_PATTERN.matcher(text).replaceAll(ChatColor.COLOR_CHAR + "$1");
         }
-        text = text.replaceAll("(?i)<([0-9a-fk-or])>", ChatColor.COLOR_CHAR + "$1");
         text = ChatColor.translateAlternateColorCodes('&', text);
         return text;
     }
 
     public static String stripColors(String text) {
-        for (String color : colorCodes.keySet()) {
-            text = text.replaceAll("(?i)<" + color + ">", "");
+        if (text.indexOf('<') != -1) {
+            text = replaceColorNameTags(text, false);
+            text = COLOR_CODE_TAG_PATTERN.matcher(text).replaceAll("");
         }
-        text = text.replaceAll("(?i)<[0-9a-fk-or]>", "");
         text = ChatColor.stripColor(text);
         return text;
+    }
+
+    private static String replaceColorNameTags(String text, boolean colorize) {
+        Matcher matcher = COLOR_NAME_TAG_PATTERN.matcher(text);
+        if (!matcher.find()) {
+            return text;
+        }
+        StringBuffer sb = new StringBuffer(text.length());
+        do {
+            String replacement = "";
+            if (colorize) {
+                replacement = ChatColor.COLOR_CHAR + colorCodes.get(matcher.group(1).toUpperCase(Locale.ROOT));
+            }
+            matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
+        } while (matcher.find());
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 
     public static String toAnsi(String text) {
@@ -79,6 +102,14 @@ public class Colorizer {
             colorCodes.put(color.name().replace("_", ""), String.valueOf(color.getChar()));
             colorCodes.put(color.name(), String.valueOf(color.getChar()));
         }
+        StringBuilder names = new StringBuilder();
+        for (String color : colorCodes.keySet()) {
+            if (names.length() > 0) {
+                names.append('|');
+            }
+            names.append(Pattern.quote(color));
+        }
+        COLOR_NAME_TAG_PATTERN = Pattern.compile("(?i)<(" + names + ")>");
 
         // Colors
         ANSI_CODES.put('0', "\u001b[30m");   // BLACK

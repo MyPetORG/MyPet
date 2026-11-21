@@ -127,15 +127,16 @@ public class CompatUtil {
     }
 
     public int compareWithMinecraftVersion(String version) {
-        if (VERSION_MATCHER.matcher(version).find()) {
-            if (compareCache.containsKey(minecraftVersion + "-::-" + version)) {
-                return compareCache.get(minecraftVersion + "-::-" + version);
-            }
-            int compare = Util.versionCompare(minecraftVersion, version);
-            compareCache.put(minecraftVersion + "-::-" + version, compare);
-            return compare;
+        Integer cached = compareCache.get(version);
+        if (cached != null) {
+            return cached;
         }
-        throw new IllegalArgumentException("\"version\" must be a valid Minecraft version. \"" + version + "\" given.");
+        if (!VERSION_MATCHER.matcher(version).find()) {
+            throw new IllegalArgumentException("\"version\" must be a valid Minecraft version. \"" + version + "\" given.");
+        }
+        int compare = Util.versionCompare(minecraftVersion, version);
+        compareCache.put(version, compare);
+        return compare;
     }
 
     private String getBukkitVersionFromMinecraftVersion() {

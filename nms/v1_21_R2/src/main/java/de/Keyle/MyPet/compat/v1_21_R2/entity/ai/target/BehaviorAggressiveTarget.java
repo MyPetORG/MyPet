@@ -40,11 +40,14 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 @Compat("v1_21_R2")
 public class BehaviorAggressiveTarget implements AIGoal {
 
+	private static final int TARGET_SEARCH_COOLDOWN = 10;
+
 	private final MyPet myPet;
 	private final EntityMyPet petEntity;
 	private final ServerPlayer petOwnerEntity;
 	private net.minecraft.world.entity.LivingEntity target;
 	private final float range;
+	private int lastTargetSearch = -TARGET_SEARCH_COOLDOWN;
 
 	public BehaviorAggressiveTarget(EntityMyPet petEntity, float range) {
 		this.petEntity = petEntity;
@@ -68,6 +71,12 @@ public class BehaviorAggressiveTarget implements AIGoal {
 		if (petEntity.hasTarget()) {
 			return false;
 		}
+		// Only look for a new target every few ticks, every candidate triggers protection plugin queries
+		int ticksLived = petEntity.getBukkitEntity().getTicksLived();
+		if (ticksLived >= lastTargetSearch && ticksLived - lastTargetSearch < TARGET_SEARCH_COOLDOWN) {
+			return false;
+		}
+		lastTargetSearch = ticksLived;
 
 		for (net.minecraft.world.entity.LivingEntity entityLiving : this.petEntity.level().getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class, this.petOwnerEntity.getBoundingBox().inflate(range, range, range))) {
 			if (entityLiving != petEntity && !(entityLiving instanceof ArmorStand) && entityLiving.isAlive() && petEntity.distanceToSqr(entityLiving) <= 91) {
@@ -93,6 +102,9 @@ public class BehaviorAggressiveTarget implements AIGoal {
 						} else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
 							continue;
 						}
+					}
+					if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
+						continue;
 					}
 				} else if (!MyPetApi.getHookHelper().canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
 					continue;

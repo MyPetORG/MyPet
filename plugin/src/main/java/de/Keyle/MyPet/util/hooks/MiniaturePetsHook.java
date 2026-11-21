@@ -33,9 +33,9 @@ public class MiniaturePetsHook implements PlayerVersusEntityHook, LeashHook {
     public boolean canHurt(Player attacker, Entity defender) {
         try {
             return !APIUtils.isPet(defender);
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(MiniaturePetsHook.class, t);
         }
-        return true;
     }
 
     @Override

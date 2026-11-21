@@ -81,7 +81,8 @@ public class GriefPreventionHook implements PlayerVersusEntityHook, PlayerVersus
                     }
                 }
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(GriefPreventionHook.class, t);
         }
         return true;
     }
@@ -130,7 +131,8 @@ public class GriefPreventionHook implements PlayerVersusEntityHook, PlayerVersus
                     }
                 }
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(GriefPreventionHook.class, t);
         }
         return true;
     }

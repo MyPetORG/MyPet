@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.commands.CommandCategory;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.api.player.Permissions;
 import de.Keyle.MyPet.util.Updater;
+import de.Keyle.MyPet.util.V4Notice;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -58,12 +59,18 @@ public class CommandOptionUpdate implements CommandOption {
 
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (Updater.isUpdateAvailable()) {
-            sender.sendMessage("A new version is available: " + ChatColor.GOLD + Updater.getLatest());
+        // the startup check runs in the background; until it finishes both results are null
+        Updater.Update latest = Updater.getLatest();
+        if (latest != null) {
+            sender.sendMessage("A new version is available: " + ChatColor.GOLD + latest);
         } else if (MyPetVersion.isLocalBuild()) {
             sender.sendMessage("You are running a " + ChatColor.YELLOW + "local build" + ChatColor.RESET + ". Update checks are skipped.");
         } else {
             sender.sendMessage("Your version of MyPet is up to date.");
+        }
+        String v4Notice = V4Notice.getMessage();
+        if (v4Notice != null) {
+            sender.sendMessage(ChatColor.GOLD + v4Notice);
         }
         return true;
     }

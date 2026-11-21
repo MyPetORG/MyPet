@@ -1,4 +1,5 @@
 import java.time.LocalDateTime
+import java.util.zip.ZipFile
 import java.time.format.DateTimeFormatter
 import org.gradle.api.attributes.Usage
 
@@ -18,7 +19,7 @@ val minecraftVersion by extra("26.2")
 val bukkitPackets by extra("v1_8_R3;v1_12_R1;v1_16_R3;v1_17_R1;v1_18_R1;v1_18_R2;v1_19_R2;v1_19_R3;v1_20_R1;v1_20_R2;v1_20_R3;v1_20_R4;v1_21_R1;v1_21_R2;v1_21_R3;v1_21_R4;v1_21_R5;v1_21_R6;v1_21_R7;v26_1_R1;v26_2_R1")
 val specialVersions by extra("")
 
-version = "3.14.3"
+version = "3.15.0"
 
 @Suppress("UNCHECKED_CAST")
 val nmsModules: List<String> = gradle.extra["nmsModules"] as List<String>
@@ -30,7 +31,6 @@ allprojects {
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
         maven("https://repo.userderezzed.dev/releases")
         maven("https://repo.userderezzed.dev/snapshots")
-        maven("https://repo.mypet-plugin.de/")
     }
 }
 
@@ -195,11 +195,56 @@ dependencies {
     add("shade", "com.zaxxer:HikariCP:3.4.2")
 }
 
+// Fork detection for error reporting: list every class under MyPet's package that goes into the
+// jar, so SentryErrorReporter can tell a jar as built here from one that was repackaged with extra
+// classes and still carries our DSN (see BuildIntegrity). Only the module jars contribute entries;
+// the external libs in `shade` have nothing under de/Keyle/MyPet until shadowJar relocates them,
+// and BuildIntegrity leaves the relocated paths out of the comparison.
+abstract class GenerateClassIndex : DefaultTask() {
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val jars: ConfigurableFileCollection
+
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun generate() {
+        val names = sortedSetOf<String>()
+        val isMyPetClass = { name: String -> name.startsWith("de/Keyle/MyPet/") && name.endsWith(".class") }
+        jars.files.forEach { source ->
+            if (source.isDirectory) {
+                // The root project's own compiled classes (Main), which shadowJar adds as well.
+                source.walkTopDown().filter { it.isFile }
+                    .map { it.relativeTo(source).invariantSeparatorsPath }
+                    .filter(isMyPetClass)
+                    .forEach { names.add(it) }
+            } else if (source.isFile && source.name.endsWith(".jar")) {
+                ZipFile(source).use { zip ->
+                    zip.entries().asSequence()
+                        .map { it.name }
+                        .filter(isMyPetClass)
+                        .forEach { names.add(it) }
+                }
+            }
+        }
+        val file = outputDir.get().file("de/Keyle/MyPet/class-index.txt").asFile
+        file.parentFile.mkdirs()
+        file.writeText(names.joinToString("\n", postfix = "\n"))
+    }
+}
+
+val generateClassIndex by tasks.registering(GenerateClassIndex::class) {
+    jars.from(shade, sourceSets.main.get().output.classesDirs)
+    outputDir.set(layout.buildDirectory.dir("generated/class-index"))
+}
+
 // Build the shaded jar strictly from the 'shade' configuration
 val shadowJar = tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     archiveBaseName.set(archivesBaseName)
     archiveVersion.set(fullVersion)
     archiveClassifier.set("")
+    from(generateClassIndex)
     exclude("META-INF/**")
     manifest { attributesForMyPet() }
 

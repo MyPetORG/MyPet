@@ -72,9 +72,9 @@ public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntity
         try {
             FlagPermissions flagPermissions = residence.getPermsByLoc(defender.getLocation());
             return flagPermissions.has(Flags.pvp, true) && flagPermissions.has("mypet-damage", true);
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(ResidenceHook.class, t);
         }
-        return true;
     }
 
     @Override
@@ -92,9 +92,9 @@ public class ResidenceHook implements PlayerVersusPlayerHook, PlayerVersusEntity
         try {
             FlagPermissions flagPermissions = residence.getPermsByLoc(defender.getLocation());
             return flagPermissions.has("mypet-damage", true);
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(ResidenceHook.class, t);
         }
-        return true;
     }
 
     @Override

@@ -67,7 +67,7 @@ public class CommandShop implements CommandTabCompleter {
         }
 
         if (args.length > 1) {
-            if (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin")) {
+            if (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin", false)) {
                 player = Bukkit.getPlayer(args[1]);
                 if (player == null || !player.isOnline()) {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Translation.getString("Message.No.PlayerOnline", sender));
@@ -183,7 +183,7 @@ public class CommandShop implements CommandTabCompleter {
                 if (strings.length == 1) {
                     return filterTabCompletionResults(getAvailablePetShops(player), strings[0]);
                 } else if (strings.length == 2) {
-                    if (Permissions.has(player, "MyPet.admin")) {
+                    if (Permissions.has(player, "MyPet.admin", false)) {
                         return null;
                     }
                 }

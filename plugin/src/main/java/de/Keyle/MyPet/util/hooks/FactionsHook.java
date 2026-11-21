@@ -106,7 +106,8 @@ public class FactionsHook implements PlayerVersusPlayerHook {
                 case Savage:
                     return engineMethod.invoke(engine, sub, false).equals(true);
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(FactionsHook.class, t);
         }
         return true;
     }

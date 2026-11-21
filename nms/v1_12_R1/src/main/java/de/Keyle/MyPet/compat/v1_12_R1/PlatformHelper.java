@@ -337,7 +337,13 @@ public class PlatformHelper extends de.Keyle.MyPet.api.PlatformHelper {
     @Override
     public String itemstackToString(org.bukkit.inventory.ItemStack itemStack) {
         ItemDatabase itemDatabase = MyPetApi.getServiceManager().getService(ItemDatabase.class).get();
-        String itemstack = itemDatabase.getByLegacyId(itemStack.getTypeId(), itemStack.getData().getData()).getId();
+        // Modded or custom items aren't in MyPet's item database. Try the base item, then fall
+        // back to the material name instead of crashing (MYPET-E6Q).
+        MaterialHolder material = itemDatabase.getByLegacyId(itemStack.getTypeId(), itemStack.getData().getData());
+        if (material == null) {
+            material = itemDatabase.getByLegacyId(itemStack.getTypeId());
+        }
+        String itemstack = material != null ? material.getId() : itemStack.getType().name().toLowerCase(java.util.Locale.ROOT);
         if (itemStack.hasItemMeta()) {
             itemstack += " " + CraftItemStack.asNMSCopy(itemStack).getTag().toString();
         }

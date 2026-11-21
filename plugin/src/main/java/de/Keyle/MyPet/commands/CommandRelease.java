@@ -88,14 +88,25 @@ public class CommandRelease implements CommandTabCompleter {
                     Bukkit.getServer().getPluginManager().callEvent(removeEvent);
 
                     if (!MyPetApi.getMyPetInfo().getRemoveAfterRelease(myPet.getPetType())) {
-                        LivingEntity normalEntity = (LivingEntity) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.valueOf(myPet.getPetType().getBukkitName()));
-
-                        Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
+                        LivingEntity normalEntity = null;
                         try {
-                            converter.ifPresent(entityConverterService -> entityConverterService.convertEntity(myPet, normalEntity));
-                        } catch (Exception e) {
-                            normalEntity.remove();
-                            return true;
+                            normalEntity = (LivingEntity) myPet.getLocation().get().getWorld().spawnEntity(myPet.getLocation().get(), EntityType.valueOf(myPet.getPetType().getBukkitName()));
+                        } catch (RuntimeException e) {
+                            // The server refused to spawn the mob, e.g. a hostile mob in Peaceful
+                            // difficulty. The remove event has already fired, so finish releasing the
+                            // Pet instead of stopping halfway (MYPET-DXR). It just doesn't come back
+                            // as a wild mob.
+                        }
+
+                        if (normalEntity != null) {
+                            final LivingEntity releasedEntity = normalEntity;
+                            Optional<EntityConverterService> converter = MyPetApi.getServiceManager().getService(EntityConverterService.class);
+                            try {
+                                converter.ifPresent(entityConverterService -> entityConverterService.convertEntity(myPet, releasedEntity));
+                            } catch (Exception e) {
+                                releasedEntity.remove();
+                                return true;
+                            }
                         }
                     }
 

@@ -18,12 +18,9 @@ jobs:
     env:
       JAVA_VERSION: '25'
       PROJECT_VERSION: ""
-      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
       GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-      HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
 
     steps:
       - name: Checkout
@@ -71,7 +68,15 @@ jobs:
           ignore_missing: true
 
       - name: Publish API release to Reposilite
-        run: ./gradlew --no-daemon :api:publish -PbuildType=release
+        # A re-run after a later step failed must not stop here: release versions can't be
+        # overwritten, so skip the publish when this version is already in the repository.
+        run: |
+          POM_URL="https://repo.userderezzed.dev/releases/de/keyle/mypet-api/${PROJECT_VERSION}/mypet-api-${PROJECT_VERSION}.pom"
+          if curl -sfI "$POM_URL" > /dev/null; then
+            echo "mypet-api ${PROJECT_VERSION} is already published, skipping"
+          else
+            ./gradlew --no-daemon :api:publish -PbuildType=release
+          fi
         env:
           REPOSILITE_TOKEN: ${{ secrets.REPOSILITE_TOKEN }}
 
@@ -112,10 +117,14 @@ jobs:
           CHANGELOG_FILE=".github/changelogs/${PROJECT_VERSION}.md"
           if [[ -f "$CHANGELOG_FILE" ]]; then
             echo "Found changelog: $CHANGELOG_FILE"
+            # The closing delimiter must start its own line, so end the content with a newline
+            # even when the changelog file has none.
+            DELIMITER="CHANGELOG_$(date +%s%N)"
             {
-              echo 'content<<EOF'
+              echo "content<<${DELIMITER}"
               cat "$CHANGELOG_FILE"
-              echo 'EOF'
+              [[ -n "$(tail -c 1 "$CHANGELOG_FILE")" ]] && echo
+              echo "${DELIMITER}"
             } >> "$GITHUB_OUTPUT"
           else
             echo "No changelog found at $CHANGELOG_FILE"
@@ -145,83 +154,3 @@ jobs:
             Supported NMS versions: ${{ steps.modules.outputs.list }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish to Modrinth
-        uses: cloudnode-pro/modrinth-publish@v2
-        with:
-          token: ${{ env.MODRINTH_TOKEN }}
-          project: SnE2iTno
-          version: ${{ env.PROJECT_VERSION }}
-          name: v${{ env.PROJECT_VERSION }}
-          changelog: ${{ steps.changelog.outputs.content }}
-          channel: release
-          featured: true
-          loaders: |-
-            paper                                                                                                                                                                                       
-            spigot
-          game-versions: |-
-            1.8.8
-            1.12.2
-            1.16.5
-            1.17.1
-            1.18.2
-            1.19.x
-            1.20.x
-            1.21.x
-            26.1
-          files: ${{ steps.findjar.outputs.jar }}
-
-      - name: Publish to Hangar
-        run: |
-          ./gradlew publishPluginPublicationToHangar --no-daemon \
-            -PbuildType=release \
-            -PHANGAR_VERSION=${PROJECT_VERSION} \
-            -PHANGAR_FILE=${{ steps.findjar.outputs.jar }} \
-            -PHANGAR_CHANGELOG="${{ steps.changelog.outputs.content }}"
-
-      - name: Send a Discord webhook notification
-        env:
-          FULL_CHANGELOG: ${{ steps.changelog.outputs.content }}
-        run: |
-          VERSION="${{ env.PROJECT_VERSION }}"
-          MODRINTH_URL="https://modrinth.com/plugin/mypet/version/${VERSION}"
-
-          # Extract only the "Full changelog" section for Discord (after "### Full changelog:" or "## Full changelog:")
-          CHANGELOG=$(echo "$FULL_CHANGELOG" | sed -n '/^##\?#\? Full [Cc]hangelog/,$p' | tail -n +2)
-
-          # If no "Full changelog" section found, use the full changelog
-          if [[ -z "$CHANGELOG" ]]; then
-            CHANGELOG="$FULL_CHANGELOG"
-          fi
-
-          # Truncate changelog if it exceeds Discord's 4096 char limit
-          if [[ ${#CHANGELOG} -gt 4000 ]]; then
-            CHANGELOG="${CHANGELOG:0:3997}..."
-          fi
-
-          # Build JSON payload safely with jq
-          PAYLOAD=$(jq -n \
-            --arg version "$VERSION" \
-            --arg changelog "$CHANGELOG" \
-            --arg modrinth_url "$MODRINTH_URL" \
-            '{
-              content: ("MyPet **" + $version + "** has released!\n<@&1428362555084116131>"),
-              embeds: [
-                {
-                  title: "Changelog",
-                  description: $changelog,
-                  color: 4429633,
-                  fields: []
-                },
-                {
-                  title: "Download from Modrinth",
-                  url: $modrinth_url
-                }
-              ],
-              components: [],
-              username: "MyPet Release",
-              avatar_url: "https://raw.githubusercontent.com/MyPetORG/MyPet/master/.github/readme-images/logo.png"
-            }')
-
-          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" ${{ secrets.WEBHOOK_URL }})
-          echo "Webhook server response: $RESPONSE"

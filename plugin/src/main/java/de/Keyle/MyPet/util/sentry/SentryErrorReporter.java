@@ -26,8 +26,10 @@ import de.Keyle.MyPet.api.MyPetVersion;
 import de.Keyle.MyPet.api.util.ErrorReporter;
 import de.Keyle.MyPet.api.util.hooks.PluginHookName;
 import io.sentry.Breadcrumb;
+import io.sentry.Hint;
 import io.sentry.Sentry;
 import io.sentry.SentryLevel;
+import io.sentry.SentryOptions;
 import io.sentry.protocol.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,20 +40,35 @@ import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class SentryErrorReporter implements ErrorReporter {
 
+    /**
+     * Marks an event as captured by this reporter. The Sentry SDK keeps one global hub per JVM, so
+     * anything else on the server that calls into {@code Sentry} (Pufferfish's log appender, another
+     * plugin that bundles the SDK) lands in the same hub and would otherwise be sent to MyPet's
+     * project. {@link #onEnable} drops every event that does not carry this mark.
+     */
+    private static final String HINT_MYPET_CAPTURE = "mypet:capture";
+
     @Getter @Setter private static UUID serverUUID = UUID.randomUUID();
 
     protected Appender loggerAppender = null;
-    protected boolean enabled = false;
-    protected boolean hooksLoaded = false;
+    // sendError runs on whichever thread logged or caught the error, so the flags it reads are volatile.
+    protected volatile boolean enabled = false;
+    protected volatile boolean hooksLoaded = false;
+
+    /**
+     * The options this reporter installed into the global hub. If another SDK user re-initialises
+     * Sentry afterwards, the hub's options are no longer these, and MyPet must stop capturing
+     * rather than file its errors against someone else's DSN.
+     */
+    private volatile SentryOptions ownOptions = null;
+    private final AtomicBoolean hubTakeoverLogged = new AtomicBoolean(false);
 
     public void onEnable() {
         // Don't report errors from self-compiled builds. Only CI builds set a non-"local"
@@ -69,8 +86,16 @@ public class SentryErrorReporter implements ErrorReporter {
             return;
         }
 
+        // A release jar repackaged with extra classes still carries the DSN. Its errors are the
+        // fork's to look at, not ours: stay silent instead of reporting them upstream.
+        if (!BuildIntegrity.isUnmodified(MyPetApi.getPlugin().getFile())) {
+            MyPetApi.getLogger().info("This MyPet jar was modified after it was built, error reporting stays off.");
+            return;
+        }
+
         // Initialize Sentry with modern 8.0.0+ API
         Sentry.init(options -> {
+            ownOptions = options;
             options.setDsn(dsn);
             options.setSendDefaultPii(true);
             options.setTracesSampleRate(1.0);
@@ -83,13 +108,10 @@ public class SentryErrorReporter implements ErrorReporter {
             // Set server name (appears as server_name in Sentry)
             options.setServerName(Bukkit.getServer().getVersion());
 
-            // Ignored exception types (filtered before beforeSend)
-            options.addIgnoredExceptionForType(IOException.class);
-            options.addIgnoredExceptionForType(VirtualMachineError.class);
-            options.addIgnoredExceptionForType(OutOfMemoryError.class); // Server memory config issue, not plugin bug
-            options.addIgnoredExceptionForType(LinkageError.class);
-            options.addIgnoredExceptionForType(FileNotFoundException.class);
-            options.addIgnoredExceptionForType(InvalidConfigurationException.class);
+            // No addIgnoredExceptionForType here: the SDK matches those by exact class and only on
+            // the outermost exception, so a NoClassDefFoundError walked past an entry for
+            // LinkageError and an OutOfMemoryError inside a CommandException was sent. ErrorFilter
+            // checks the whole type family across the cause chain in beforeSend instead.
 
             // Filter noisy breadcrumbs
             options.setBeforeBreadcrumb((breadcrumb, hint) -> {
@@ -108,21 +130,30 @@ public class SentryErrorReporter implements ErrorReporter {
                 return breadcrumb;
             });
 
+            // MyPet starts no transactions, so any that reach this hub came from another SDK
+            // user on the same JVM.
+            options.setBeforeSendTransaction((transaction, hint) -> null);
+
             // beforeSend hook - filter and enrich events before sending
             options.setBeforeSend((event, hint) -> {
+                // Only what this reporter captured; see HINT_MYPET_CAPTURE.
+                if (hint.get(HINT_MYPET_CAPTURE) == null) {
+                    return null;
+                }
+
                 Throwable throwable = event.getThrowable();
                 if (throwable == null) {
-                    return event;
+                    return null;
                 }
 
-                // Check if MyPet is involved in the error
-                if (!isMyPetRelated(throwable)) {
-                    return null; // drop event
+                // MyPet's own code has to be what threw, not a plugin that called into MyPet
+                if (!ErrorFilter.isMyPetError(throwable)) {
+                    return null;
                 }
 
-                // Filter out noisy/irrelevant exception types
-                if (shouldFilterException(throwable)) {
-                    return null; // drop event
+                // Errors MyPet cannot act on: link failures, host file systems, hot-swapped jars
+                if (ErrorFilter.isIgnored(throwable)) {
+                    return null;
                 }
 
                 // Lazy-load plugin hooks on first error
@@ -230,105 +261,21 @@ public class SentryErrorReporter implements ErrorReporter {
     }
 
     /**
-     * Checks if the throwable is related to MyPet.
+     * Whether the global hub still runs on the options this reporter installed. Another plugin or
+     * the server itself may call {@code Sentry.init} later and replace them; from then on anything
+     * MyPet captured would go to that DSN under that project's rules.
      */
-    protected boolean isMyPetRelated(Throwable t) {
-        // Check the main exception and every cause in the chain.
-        Throwable current = t;
-        while (current != null) {
-            if (isMyPetOrigin(current)) {
-                return true;
-            }
-            current = current.getCause();
+    private boolean ownsGlobalHub() {
+        SentryOptions options = ownOptions;
+        if (options == null) {
+            // Not initialised, or already shut down: nothing to own and nothing to say.
+            return false;
         }
-        return false;
-    }
-
-    /**
-     * True only if MyPet is the <i>origin</i> of this throwable: a MyPet frame appears at or above
-     * the first Bukkit listener-dispatch boundary ({@code RegisteredListener.callEvent}).
-     * <p>
-     * MyPet appearing only <i>below</i> such a boundary means MyPet merely fired a Bukkit event and
-     * a third-party plugin's listener threw while handling it. Those are the other plugin's bugs.
-     */
-    private boolean isMyPetOrigin(Throwable t) {
-        for (StackTraceElement frame : t.getStackTrace()) {
-            String className = frame.getClassName();
-            if (className.contains("de.Keyle.MyPet")) {
-                return true;
-            }
-            // Reached the listener-invoke boundary before any MyPet frame: whatever threw above
-            // this is a (non-MyPet) event listener, so MyPet is at most the code that fired the
-            // event - not the fault.
-            if (className.equals("org.bukkit.plugin.RegisteredListener")) {
-                return false;
-            }
+        if (Sentry.getCurrentScopes().getOptions() == options) {
+            return true;
         }
-        return false;
-    }
-
-    /**
-     * Determines if an exception should be filtered out (not sent to Sentry).
-     * Note: Common exception types are handled by ignoredExceptions in init().
-     * This method handles more complex filtering logic.
-     */
-    protected boolean shouldFilterException(Throwable t) {
-        Throwable current = t;
-        while (current != null) {
-            // Filter by class name for exceptions we can't import
-            String className = current.getClass().getSimpleName();
-            if ("AuthenticationException".equals(className)) {
-                return true;
-            }
-
-            // Filter out MySQL/database connection errors (server config issues, not plugin bugs)
-            if ("CommunicationsException".equals(className) ||
-                    "CJCommunicationsException".equals(className)) {
-                return true;
-            }
-            if (current instanceof java.sql.SQLException) {
-                String message = current.getMessage();
-                if (message != null && (
-                        message.contains("Access denied") ||
-                        message.contains("is not allowed to connect"))) {
-                    return true;
-                }
-            }
-            if (current instanceof java.net.ConnectException) {
-                // Only filter ConnectException if it's database-related
-                boolean isDatabaseRelated = Arrays.stream(current.getStackTrace())
-                        .anyMatch(frame -> {
-                            String frameName = frame.getClassName();
-                            return frameName.contains("mysql") ||
-                                    frameName.contains("hikari") ||
-                                    frameName.contains("mariadb") ||
-                                    frameName.contains("jdbc");
-                        });
-                if (isDatabaseRelated) {
-                    return true;
-                }
-            }
-
-            // Filter out WorldEdit/WorldGuard adapter issues
-            if (current instanceof NullPointerException) {
-                boolean hasBukkitAdapter = Arrays.stream(current.getStackTrace())
-                        .anyMatch(frame -> frame.toString().contains("BukkitAdapter.adapt"));
-                if (hasBukkitAdapter) {
-                    return true;
-                }
-            }
-
-            // Filter out NPC-related errors from Citizens etc.
-            boolean hasNpcTrace = Arrays.stream(current.getStackTrace())
-                    .anyMatch(frame -> {
-                        String name = frame.getClassName().toLowerCase();
-                        return name.contains("mypet") && name.contains("npc");
-                    });
-            if (hasNpcTrace) {
-                return true;
-            }
-
-            current = current.getCause();
+        if (hubTakeoverLogged.compareAndSet(false, true)) {
+            MyPetApi.getLogger().info("Another plugin re-initialised the Sentry SDK, MyPet error reporting is off for this session.");
         }
         return false;
     }
@@ -370,17 +317,22 @@ public class SentryErrorReporter implements ErrorReporter {
             loggerAppender.stop();
             logger.removeAppender(loggerAppender);
         }
+        boolean wasEnabled = enabled;
         enabled = false;
 
-        // End session for release health tracking
-        Sentry.endSession();
+        // Only tear down a hub that is still ours; closing someone else's would end their reporting.
+        if (wasEnabled && ownsGlobalHub()) {
+            // End session for release health tracking
+            Sentry.endSession();
 
-        // Close Sentry connection and flush pending events
-        Sentry.close();
+            // Close Sentry connection and flush pending events
+            Sentry.close();
+        }
+        ownOptions = null;
     }
 
     public void sendError(Throwable t, String... breadcrumbs) {
-        if (!enabled) {
+        if (!enabled || !ownsGlobalHub()) {
             return;
         }
 
@@ -395,7 +347,9 @@ public class SentryErrorReporter implements ErrorReporter {
         });
 
         // Send exception to Sentry (beforeSend hook will filter if needed)
-        Sentry.captureException(t);
+        Hint hint = new Hint();
+        hint.set(HINT_MYPET_CAPTURE, Boolean.TRUE);
+        Sentry.captureException(t, hint);
 
         // Clear breadcrumbs after sending
         Sentry.configureScope(scope -> scope.clearBreadcrumbs());
@@ -419,9 +373,9 @@ public class SentryErrorReporter implements ErrorReporter {
 
         @Override
         public Result filter(LogEvent event) {
-            // Accept only events MyPet actually originated, dropping third-party listener errors
-            // that merely pass through a MyPet-fired event.
-            if (event.getThrown() != null && isMyPetRelated(event.getThrown())) {
+            // Quick pre-filter: only accept if MyPet's package is on the stack at all.
+            // beforeSend then checks that MyPet is what threw, not just what was called.
+            if (event.getThrown() != null && ErrorFilter.touchesMyPet(event.getThrown())) {
                 return Result.ACCEPT;
             }
             return Result.DENY;

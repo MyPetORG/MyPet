@@ -25,9 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 
 import de.Keyle.MyPet.api.util.Compat;
+import de.Keyle.MyPet.api.util.inventory.ItemDataVersion;
 import de.Keyle.MyPet.api.util.ReflectionUtil;
 import de.keyle.knbt.TagBase;
 import de.keyle.knbt.TagByte;
@@ -70,10 +72,23 @@ public class ItemStackNBTConverter {
     public static TagCompound itemStackToCompound(ItemStack itemStack) {
         CompoundTag tagCompound = new CompoundTag();
         itemStack.save(tagCompound);
-        return (TagCompound) vanillaCompoundToCompound(tagCompound);
+        // Record which data version wrote this item (see ItemDataVersion).
+        return ItemDataVersion.stamp((TagCompound) vanillaCompoundToCompound(tagCompound), Bukkit.getUnsafe().getDataVersion());
     }
 
     public static ItemStack compoundToItemStack(TagCompound compound) {
+        // The DataVersion stamp is MyPet's, not vanilla's: parse the item without it. This
+        // version never ran data fixers on saved items, so the stamp changes nothing else.
+        if (ItemDataVersion.read(compound) != ItemDataVersion.NONE) {
+            try {
+                ItemStack stack = ItemStack.of((CompoundTag) compoundToVanillaCompound(ItemDataVersion.withoutStamp(compound)));
+                if (stack != null && !stack.isEmpty()) {
+                    return stack;
+                }
+            } catch (RuntimeException ignored) {
+                // fall through to the unchanged path below
+            }
+        }
         CompoundTag tagCompound = (CompoundTag) compoundToVanillaCompound(compound);
         return ItemStack.of(tagCompound);
     }

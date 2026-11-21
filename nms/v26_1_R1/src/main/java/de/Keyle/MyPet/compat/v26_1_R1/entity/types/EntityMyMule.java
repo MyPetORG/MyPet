@@ -120,7 +120,7 @@ public class EntityMyMule extends EntityMyPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+			} else if (itemStack.getItem() == Items.SHEARS && getOwner().equals(entityhuman) && getOwner().getPlayer().isSneaking() && canEquip()) {
 				if (getMyPet().hasChest()) {
 					ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getChest()));
 					entityitem.pickupDelay = 10;

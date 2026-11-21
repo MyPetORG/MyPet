@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.entity.MyPetType;
 import de.Keyle.MyPet.api.entity.StoredMyPet;
 import de.Keyle.MyPet.api.event.MyPetActivatedEvent;
 import de.Keyle.MyPet.api.event.MyPetLoadEvent;
+import de.Keyle.MyPet.api.player.MyPetPlayer;
 import de.Keyle.MyPet.api.skill.skilltree.Skill;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.entity.InactiveMyPet;
@@ -35,6 +36,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
@@ -73,6 +75,14 @@ public class MyPetManager extends de.Keyle.MyPet.api.repository.MyPetManager {
         
         if (!storedMyPet.getOwner().isOnline()) {
             return Optional.empty();
+        }
+
+        // A pet can only be active for one player. Activating a pet that another player
+        // already has active would give both of them the same pet and its backpack.
+        for (Map.Entry<MyPet, MyPetPlayer> active : mActivePetsPlayer.entrySet()) {
+            if (active.getKey().getUUID().equals(storedMyPet.getUUID()) && !active.getValue().getInternalUUID().equals(storedMyPet.getOwner().getInternalUUID())) {
+                return Optional.empty();
+            }
         }
 
         if (storedMyPet.getOwner().hasMyPet()) {

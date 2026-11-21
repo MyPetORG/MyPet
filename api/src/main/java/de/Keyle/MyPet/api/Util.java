@@ -41,7 +41,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.regex.Matcher;
 
 public class Util {
 
@@ -115,7 +114,7 @@ public class Util {
     public static String formatText(String text, Object... values) {
         for (int i = 0; i < values.length; i++) {
             if (values[i] != null) {
-                text = text.replaceAll("\\{" + i + "}", Matcher.quoteReplacement(values[i].toString()));
+                text = text.replace("{" + i + "}", values[i].toString());
             }
         }
         return text;

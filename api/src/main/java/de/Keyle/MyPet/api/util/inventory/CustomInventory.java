@@ -155,14 +155,62 @@ public class CustomInventory implements InventoryHolder {
     public void setSize(int newSize) {
         newSize = (int) (newSize / 9.);
         newSize *= 9;
-        this.size = Util.clamp(newSize, 9, 54);
+        newSize = Util.clamp(newSize, 9, 54);
+
+        // Close every view of the old inventory before copying it. A viewer left on the
+        // old inventory keeps taking the original items out while the new inventory
+        // holds copies of them, which duplicates the whole backpack.
+        List<HumanEntity> viewers = bukkitInventory != null
+                ? new ArrayList<>(bukkitInventory.getViewers())
+                : Collections.<HumanEntity>emptyList();
+        for (HumanEntity viewer : viewers) {
+            viewer.closeInventory();
+        }
+
         ItemStack[] old = bukkitInventory != null ? bukkitInventory.getContents() : null;
+
+        // Never shrink below what is needed to keep every stored stack.
+        if (old != null) {
+            int used = 0;
+            for (ItemStack item : old) {
+                if (item != null && item.getType() != Material.AIR) {
+                    used++;
+                }
+            }
+            if (used > newSize) {
+                newSize = Util.clamp(((used + 8) / 9) * 9, 9, 54);
+            }
+        }
+        this.size = newSize;
 
         this.bukkitInventory = Bukkit.createInventory(this, this.size, this.name);
         this.bukkitInventory.setMaxStackSize(this.stackSize);
         if (old != null) {
-            for (int i = 0; i < Math.min(old.length, this.size); i++) {
-                this.bukkitInventory.setItem(i, old[i]);
+            List<ItemStack> moved = new ArrayList<>();
+            for (int i = 0; i < old.length; i++) {
+                ItemStack item = old[i];
+                if (item == null || item.getType() == Material.AIR) {
+                    continue;
+                }
+                if (i < this.size) {
+                    this.bukkitInventory.setItem(i, item);
+                } else {
+                    moved.add(item);
+                }
+            }
+            // Stacks from removed rows go into the first free slots.
+            for (ItemStack item : moved) {
+                int free = this.bukkitInventory.firstEmpty();
+                if (free < 0) {
+                    break;
+                }
+                this.bukkitInventory.setItem(free, item);
+            }
+        }
+
+        for (HumanEntity viewer : viewers) {
+            if (viewer instanceof Player && ((Player) viewer).isOnline()) {
+                viewer.openInventory(this.bukkitInventory);
             }
         }
     }

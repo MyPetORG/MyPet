@@ -43,17 +43,17 @@ public class PreciousStonesHook implements PlayerVersusPlayerHook, PlayerVersusE
             } else {
                 return !PreciousStones.API().flagAppliesToPlayer(attacker, FieldFlag.PROTECT_MOBS, defender.getLocation());
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(PreciousStonesHook.class, t);
         }
-        return true;
     }
 
     @Override
     public boolean canHurt(Player attacker, Player defender) {
         try {
             return !PreciousStones.API().flagAppliesToPlayer(defender, FieldFlag.PREVENT_PVP, defender.getLocation());
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(PreciousStonesHook.class, t);
         }
-        return true;
     }
 }

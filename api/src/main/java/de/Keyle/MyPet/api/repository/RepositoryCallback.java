@@ -55,6 +55,15 @@ public abstract class RepositoryCallback<T> extends BukkitRunnable {
         callback(value);
     }
 
+    /**
+     * The count queries set the value first and then call this plain Bukkit overload, which skipped
+     * the duplicate-schedule guard and threw "Already scheduled" (MYPET-CCC).
+     */
+    @Override
+    public synchronized BukkitTask runTask(Plugin plugin) throws IllegalArgumentException, IllegalStateException {
+        return scheduleOnce(() -> super.runTask(plugin));
+    }
+
     public synchronized BukkitTask runTask(Plugin plugin, T value) throws IllegalArgumentException, IllegalStateException {
         this.setValue(value);
         return scheduleOnce(() -> super.runTask(plugin));

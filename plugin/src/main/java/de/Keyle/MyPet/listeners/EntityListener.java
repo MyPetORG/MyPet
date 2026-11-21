@@ -41,6 +41,7 @@ import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.skill.skills.Behavior;
 import de.Keyle.MyPet.api.skill.skills.Behavior.BehaviorMode;
 import de.Keyle.MyPet.api.util.ConfigItem;
+import de.Keyle.MyPet.api.util.EntityMetadataTracker;
 import de.Keyle.MyPet.api.util.configuration.settings.Settings;
 import de.Keyle.MyPet.api.util.hooks.types.LeashEntityHook;
 import de.Keyle.MyPet.api.util.hooks.types.LeashHook;
@@ -128,7 +129,7 @@ public class EntityListener implements Listener {
                     PlayerInventory inventory = player.getInventory();
 
                     if (event.getBow() != null) {
-                        projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), event.getBow().clone()));
+                        EntityMetadataTracker.setMetadata(projectile, "MyPetLeashItem", event.getBow().clone());
                     }
 
                     ItemStack arrow = null;
@@ -168,7 +169,7 @@ public class EntityListener implements Listener {
                         }
                     }
                     if (arrow != null) {
-                        projectile.setMetadata("MyPetLeashItemArrow", new FixedMetadataValue(MyPetApi.getPlugin(), arrow.clone()));
+                        EntityMetadataTracker.setMetadata(projectile, "MyPetLeashItemArrow", arrow.clone());
                     }
 
                 }
@@ -192,13 +193,16 @@ public class EntityListener implements Listener {
             if (!MyPetApi.getPlayerManager().isMyPetPlayer(player) || !MyPetApi.getPlayerManager().getMyPetPlayer(player).hasMyPet()) {
                 ItemStack leashItem = usedItems.get(player.getUniqueId());
                 if (leashItem != null) {
-                    projectile.setMetadata("MyPetLeashItem", new FixedMetadataValue(MyPetApi.getPlugin(), leashItem));
+                    EntityMetadataTracker.setMetadata(projectile, "MyPetLeashItem", leashItem);
                 }
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    // ignoreCancelled: a hit that a protection plugin (region, claim, PvE flag) cancelled
+    // must not capture the mob either, or players could take villagers and animals out of
+    // areas where they are not allowed to hurt them.
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void on(final EntityDamageByEntityEvent event) {
         //noinspection ConstantConditions
         if (event.getEntity() == null) {
@@ -232,7 +236,7 @@ public class EntityListener implements Listener {
                         if (leashItem == null) {
                             return;
                         }
-                        projectile.removeMetadata("MyPetLeashItem", MyPetApi.getPlugin());
+                        EntityMetadataTracker.removeMetadata(projectile, "MyPetLeashItem");
                     }
                     if (projectile.hasMetadata("MyPetLeashItemArrow")) {
                         metaList = projectile.getMetadata("MyPetLeashItemArrow");
@@ -245,7 +249,7 @@ public class EntityListener implements Listener {
                         if (leashItemArrow == null) {
                             return;
                         }
-                        projectile.removeMetadata("MyPetLeashItemArrow", MyPetApi.getPlugin());
+                        EntityMetadataTracker.removeMetadata(projectile, "MyPetLeashItemArrow");
                     }
                 } else if (event.getDamager() instanceof Player) {
                     player = (Player) event.getDamager();
@@ -279,6 +283,12 @@ public class EntityListener implements Listener {
                         if (!hook.canLeash(player, leashTarget)) {
                             return;
                         }
+                    }
+                    // Capturing a mob in someone's claim must be allowed there. A player's own tamed
+                    // animal is skipped: protection hooks stop pets hurting their owner's animals,
+                    // which would otherwise stop owners capturing their own wolf, cat or horse.
+                    if (!isOwnTamedAnimal(player, leashTarget) && !MyPetApi.getHookHelper().canHurt(player, leashTarget)) {
+                        return;
                     }
 
                     boolean willBeLeashed = true;
@@ -562,7 +572,7 @@ public class EntityListener implements Listener {
                     }
                 }
             }
-            deadEntity.removeMetadata("MyPetDamageCount", MyPetApi.getPlugin());
+            EntityMetadataTracker.removeMetadata(deadEntity, "MyPetDamageCount");
         } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
 
@@ -660,5 +670,14 @@ public class EntityListener implements Listener {
                 }
             }
         }
+    }
+
+    private static boolean isOwnTamedAnimal(Player player, LivingEntity entity) {
+        if (!(entity instanceof Tameable)) {
+            return false;
+        }
+        Tameable tameable = (Tameable) entity;
+        AnimalTamer owner = tameable.isTamed() ? tameable.getOwner() : null;
+        return owner != null && owner.getUniqueId().equals(player.getUniqueId());
     }
 }

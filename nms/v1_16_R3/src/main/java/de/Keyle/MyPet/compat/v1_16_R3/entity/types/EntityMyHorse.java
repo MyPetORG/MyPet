@@ -130,7 +130,7 @@ public class EntityMyHorse extends EntityMyPet {
 					}
 				}
 				return EnumInteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+			} else if (itemStack.getItem() == Items.SHEARS && getOwner().equals(entityhuman) && getOwner().getPlayer().isSneaking() && canEquip()) {
 				if (getMyPet().hasArmor()) {
 					EntityItem entityitem = new EntityItem(this.world, this.locX(), this.locY() + 1, this.locZ(), CraftItemStack.asNMSCopy(getMyPet().getArmor()));
 					entityitem.pickupDelay = 10;

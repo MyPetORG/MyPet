@@ -108,3 +108,18 @@ fun getVersionFromName(filename: String): String {
     return """\d+(\.\d+)+(-SNAPSHOT)?""".toRegex().find(filename)?.value
         ?: throw GradleException("Failed to get PE version from: '$filename'")
 }
+
+// Pure-logic unit tests for the error reporter's filters (JDK only, no Bukkit at runtime). The
+// root build turns tests off for every module; this module turns them back on.
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.11.4"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.named("compileTestJava") { enabled = true }
+tasks.named("processTestResources") { enabled = true }
+tasks.named<Test>("test") {
+    enabled = true
+    useJUnitPlatform()
+}

@@ -103,7 +103,7 @@ public class EntityMyDonkey extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (itemStack.getItem() == Items.SHEARS && getOwner().equals(entityhuman) && getOwner().getPlayer().isSneaking() && canEquip()) {
                 if (getMyPet().hasChest()) {
                     EntityItem entityitem = new EntityItem(this.world, this.locX, this.locY + 1, this.locZ, CraftItemStack.asNMSCopy(getMyPet().getChest()));
                     entityitem.pickupDelay = 10;

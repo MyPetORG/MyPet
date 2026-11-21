@@ -467,6 +467,8 @@ public class FollowOwner implements AIGoal {
 	private final boolean flyingPet;
 
 	private int lookAtTimer = 0;
+	protected int setPathTimer = 0;
+	private boolean hasPathToOwner = false;
 
 	// Track owner position to calculate actual movement (getDeltaMovement is unreliable for players)
 	private double lastOwnerX = 0;
@@ -585,12 +587,14 @@ public class FollowOwner implements AIGoal {
     public void start() {
         double distance = Math.sqrt(this.petEntity.distanceToSqr(owner));
 		applyWalkSpeed(distance);
+		this.setPathTimer = 0;
 	}
 
 	@Override
 	public void finish() {
 		nav.getParameters().removeSpeedModifier("FollowOwner");
 		this.nav.stop();
+		this.setPathTimer = 0;
 	}
 
 	@Override
@@ -704,6 +708,7 @@ public class FollowOwner implements AIGoal {
                                     // Teleport without collision checks
                                     this.petEntity.teleportTo(owner.getX(), owner.getY(), owner.getZ());
                                     this.petEntity.fallDistance = 0;
+                                    this.setPathTimer = 0;
 									return;
 								}
 							}
@@ -716,7 +721,7 @@ public class FollowOwner implements AIGoal {
                 waitForGround = true;
             }
 
-            // Pathfind every tick if owner has moved enough
+            // Follow the owner once outside the full stop distance
             if (distanceSqr > FULL_STOP_DIST_SQ) {
                 // Apply velocity control to ALL Pets to prevent overshooting
                 // Ground Pets were previously too fast because walk speed doesn't limit actual velocity
@@ -889,12 +894,18 @@ public class FollowOwner implements AIGoal {
                         }
                     }
                 }
-                if (this.nav.navigateTo(owner.getBukkitEntity())) {
+                // Re-path only every 10 ticks, recomputing the path every tick is expensive
+                if (--this.setPathTimer <= 0) {
+                    this.setPathTimer = 10;
+                    this.hasPathToOwner = this.nav.navigateTo(owner.getBukkitEntity());
+                }
+                if (this.hasPathToOwner) {
                     applyWalkSpeed(distance);
                 }
             } else {
                 // Very close - stop navigation and clear momentum for all Pets
                 this.nav.stop();
+                this.setPathTimer = 0;
                 this.petEntity.setDeltaMovement(Vec3.ZERO);
             }
         }

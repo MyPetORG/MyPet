@@ -46,7 +46,8 @@ public class TownyHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
             if (CombatUtil.preventDamageCall(towny, attacker, defender)) {
                 return false;
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(TownyHook.class, t);
         }
         return true;
     }

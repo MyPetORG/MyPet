@@ -102,10 +102,14 @@ public class Translation {
         if (translatedPhrase.equals(key)) {
             translatedPhrase = language.translate(key);
         }
-        if (translatedPhrase.equals(key) && !languageCode.equals("en")) {
-            translatedPhrase = getText(key, "en");
+        if (translatedPhrase.equals(key)) {
+            if (!languageCode.equals("en")) {
+                return getText(key, "en");
+            }
+            return Colorizer.setColors(translatedPhrase);
         }
-        return Colorizer.setColors(translatedPhrase);
+        // translations are already colored when the locale is loaded
+        return translatedPhrase;
     }
 
     public static TranslationBundle loadLocale(String localeString) {

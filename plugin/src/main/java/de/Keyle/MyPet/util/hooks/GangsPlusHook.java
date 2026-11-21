@@ -73,8 +73,8 @@ public class GangsPlusHook implements PlayerVersusPlayerHook {
                 }
             }
             return false;
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(GangsPlusHook.class, t);
         }
-        return true;
     }
 }

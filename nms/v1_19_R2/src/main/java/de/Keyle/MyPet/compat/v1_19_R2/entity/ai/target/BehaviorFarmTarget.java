@@ -38,11 +38,14 @@ import net.minecraft.world.entity.monster.Monster;
 @Compat("v1_19_R2")
 public class BehaviorFarmTarget implements AIGoal {
 
+	private static final int TARGET_SEARCH_COOLDOWN = 10;
+
 	private final MyPet myPet;
 	private final EntityMyPet petEntity;
 	private final ServerPlayer petOwnerEntity;
 	private net.minecraft.world.entity.LivingEntity target;
 	private final float range;
+	private int lastTargetSearch = -TARGET_SEARCH_COOLDOWN;
 
 	public BehaviorFarmTarget(EntityMyPet petEntity, float range) {
 		this.petEntity = petEntity;
@@ -66,6 +69,12 @@ public class BehaviorFarmTarget implements AIGoal {
 		if (petEntity.hasTarget()) {
 			return false;
 		}
+		// Only look for a new target every few ticks, every candidate triggers protection plugin queries
+		int ticksLived = petEntity.getBukkitEntity().getTicksLived();
+		if (ticksLived >= lastTargetSearch && ticksLived - lastTargetSearch < TARGET_SEARCH_COOLDOWN) {
+			return false;
+		}
+		lastTargetSearch = ticksLived;
 
 		for (Monster entityMonster : this.petEntity.level.getEntitiesOfClass(Monster.class, this.petOwnerEntity.getBoundingBox().inflate(range, range, range))) {
 			if (!entityMonster.isAlive() || petEntity.distanceToSqr(entityMonster) > 91) {

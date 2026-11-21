@@ -100,7 +100,10 @@ public class MySqlRepository implements Repository {
         dataSource.setPassword(Configuration.Repository.MySQL.PASSWORD);
         dataSource.setMaximumPoolSize(Configuration.Repository.MySQL.POOL_SIZE);
         dataSource.addDataSourceProperty("cachePrepStmts", true);
-        dataSource.setLeakDetectionThreshold(10000);
+        // Only a warning, never a real leak by itself: loading a player's Pets keeps the connection
+        // while their saved data is decoded, which took over 10s on busy servers (MYPET-D82).
+        // A minute still catches a connection that is never returned.
+        dataSource.setLeakDetectionThreshold(60000);
 
         // Read the schema version, then release the connection *before* running any
         // migrations. The migration methods each borrow their own connection, so holding

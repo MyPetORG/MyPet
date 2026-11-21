@@ -48,7 +48,8 @@ public class GuildsHook implements PlayerVersusPlayerHook {
             if (!ConfigUtils.getBoolean("allow-ally-damage") && areAllies(playerGuild, damagerGuild)) {
                 return false;
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(GuildsHook.class, t);
         }
         return true;
     }

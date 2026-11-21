@@ -74,9 +74,9 @@ public class PvPManagerHook implements PlayerVersusPlayerHook, AllowedHook {
                 return false;
             }
             return true;
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(PvPManagerHook.class, t);
         }
-        return true;
     }
 
     @Override

@@ -144,7 +144,8 @@ public class SkillApiHook implements PluginHook, PlayerVersusPlayerHook {
                     }
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Exception t) {
+            return ProtectionHookErrors.failClosed(SkillApiHook.class, t);
         }
         return true;
     }

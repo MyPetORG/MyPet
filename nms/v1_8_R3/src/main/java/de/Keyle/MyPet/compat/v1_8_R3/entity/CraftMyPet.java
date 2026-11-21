@@ -118,7 +118,9 @@ public class CraftMyPet extends CraftCreature implements MyPetBukkitEntity {
     }
 
     public MyPetType getPetType() {
-        return getMyPet().getPetType();
+        // getMyPet() is null for a leftover Pet entity whose MyPet is already gone.
+        de.Keyle.MyPet.api.entity.MyPet myPet = getMyPet();
+        return myPet != null ? myPet.getPetType() : null;
     }
 
     //I saw other plugins do it this way - it should be fine and solve problems with p2 and wg

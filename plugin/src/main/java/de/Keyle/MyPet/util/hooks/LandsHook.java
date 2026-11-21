@@ -29,7 +29,10 @@ import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.role.enums.RoleSetting;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.NPC;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowman;
 
 @PluginHookName("Lands")
 public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook {
@@ -51,7 +54,7 @@ public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
 
     @Override
     public boolean canHurt(Player attacker, Entity defender) {
-        if (!(defender instanceof Animals)) {
+        if (!(defender instanceof Animals) && !isPassiveMob(defender)) {
             return true;
         }
         try {
@@ -60,9 +63,17 @@ public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
                 return true;
             }
             return land.canSetting(attacker.getUniqueId(), RoleSetting.ATTACK_ANIMAL);
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(LandsHook.class, t);
         }
-        return true;
+    }
+
+    /**
+     * Lands protects passive mobs with the attack-animals setting. Villagers, wandering traders
+     * and iron/snow golems are not {@link Animals} in the Bukkit API.
+     */
+    private static boolean isPassiveMob(Entity entity) {
+        return entity instanceof NPC || entity instanceof IronGolem || entity instanceof Snowman;
     }
 
     @Override
@@ -73,8 +84,8 @@ public class LandsHook implements PlayerVersusEntityHook, PlayerVersusPlayerHook
                 return true;
             }
             return land.canSetting(attacker.getUniqueId(), RoleSetting.ATTACK_PLAYER);
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(LandsHook.class, t);
         }
-        return true;
     }
 }

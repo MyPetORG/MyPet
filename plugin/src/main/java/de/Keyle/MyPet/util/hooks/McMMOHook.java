@@ -80,9 +80,9 @@ public class McMMOHook implements PlayerVersusPlayerHook, PartyHook {
     public boolean canHurt(Player attacker, Player defender) {
         try {
             return !PartyAPI.inSameParty(attacker, defender);
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(McMMOHook.class, t);
         }
-        return true;
     }
 
     @Override

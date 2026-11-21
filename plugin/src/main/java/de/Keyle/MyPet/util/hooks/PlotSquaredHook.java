@@ -238,7 +238,8 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
                         }
                     }
                 }
-            } catch (Throwable ignored) {
+            } catch (Throwable t) {
+                return ProtectionHookErrors.failClosed(PlotSquaredHook.class, t);
             }
             return true;
         }
@@ -329,9 +330,9 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
                     }
                     return com.github.intellectualsites.plotsquared.plot.util.Permissions.hasPermission(plotPlayer, "plots.admin.pve." + stub);
                 }
-            } catch (Throwable ignored) {
+            } catch (Throwable t) {
+                return ProtectionHookErrors.failClosed(PlotSquaredHook.class, t);
             }
-            return true;
         }
     }
 
@@ -461,9 +462,9 @@ public class PlotSquaredHook implements PlayerVersusPlayerHook, PlayerVersusEnti
                     }
                     return (Boolean) hasPermissionMethod.invoke(plotPlayer, "plots.admin.pve." + stub);
                 }
-            } catch (Throwable ignored) {
+            } catch (Throwable t) {
+                return ProtectionHookErrors.failClosed(PlotSquaredHook.class, t);
             }
-            return true;
         }
 
         private static boolean checkBooleanFlag(Object plot, String flagName) {

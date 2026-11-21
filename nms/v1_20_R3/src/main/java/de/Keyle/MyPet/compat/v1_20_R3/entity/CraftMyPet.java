@@ -104,7 +104,9 @@ public class CraftMyPet extends CraftMob implements MyPetBukkitEntity {
 
 	@Override
 	public MyPetType getPetType() {
-		return getMyPet().getPetType();
+		// getMyPet() is null for a leftover Pet entity whose MyPet is already gone.
+		de.Keyle.MyPet.api.entity.MyPet myPet = getMyPet();
+		return myPet != null ? myPet.getPetType() : null;
 	}
 
 	/* This doesn't work rn as getType was made final...

@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.api.util.locale;
 
+import de.Keyle.MyPet.api.util.Colorizer;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
@@ -44,8 +46,9 @@ public class TranslationBundle {
             e.printStackTrace();
         }
 
+        // Colors are applied once here so lookups don't have to convert them every time
         for (Object o : properties.keySet()) {
-            translations.put(o.toString().toLowerCase(), properties.get(o).toString());
+            translations.put(o.toString().toLowerCase(), Colorizer.setColors(properties.get(o).toString()));
         }
     }
 

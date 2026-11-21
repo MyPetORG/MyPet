@@ -32,11 +32,11 @@ import de.Keyle.MyPet.api.skill.experience.MonsterExperience;
 import de.Keyle.MyPet.api.skill.experience.modifier.ExperienceModifier;
 import de.Keyle.MyPet.api.skill.experience.modifier.GlobalModifier;
 import de.Keyle.MyPet.api.skill.experience.modifier.PermissionModifier;
+import de.Keyle.MyPet.api.util.EntityMetadataTracker;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import java.util.HashMap;
@@ -264,7 +264,7 @@ public class MyPetExperience {
         } else {
             damageMap = new WeakHashMap<>();
             damageMap.put(damager.getUniqueId(), victim.getHealth() < damage ? victim.getHealth() : damage);
-            victim.setMetadata("MyPetDamageCount", new FixedMetadataValue(MyPetApi.getPlugin(), damageMap));
+            EntityMetadataTracker.setMetadata(victim, "MyPetDamageCount", damageMap);
         }
     }
 

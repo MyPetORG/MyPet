@@ -110,7 +110,7 @@ public class EntityMyCamel extends EntityMyPet {
 					}
 				}
 				return InteractionResult.CONSUME;
-			} else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+			} else if (itemStack.getItem() == Items.SHEARS && getOwner().equals(entityhuman) && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
 				ItemEntity entityitem = new ItemEntity(this.level(), this.getX(), this.getY() + 1, this.getZ(), CraftItemStack.asNMSCopy(getMyPet().getSaddle()));
 				entityitem.pickupDelay = 10;
 				entityitem.setDeltaMovement(entityitem.getDeltaMovement().add(0, this.random.nextFloat() * 0.05F, 0));

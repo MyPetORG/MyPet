@@ -50,7 +50,8 @@ public class AncientHook implements PlayerVersusPlayerHook, PartyHook {
                     return false;
                 }
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            return ProtectionHookErrors.failClosed(AncientHook.class, t);
         }
         return true;
     }

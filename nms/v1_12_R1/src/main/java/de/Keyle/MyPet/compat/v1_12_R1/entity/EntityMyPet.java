@@ -214,7 +214,7 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal, MyP
     
     @Override
     public void setMyPetTarget(LivingEntity entity, TargetPriority priority) {
-        if (entity == null || entity.isDead() || entity instanceof ArmorStand || !(entity instanceof CraftLivingEntity)) {
+        if (myPet == null || entity == null || entity.isDead() || entity instanceof ArmorStand || !(entity instanceof CraftLivingEntity)) {
             forgetTarget();
             return;
         }

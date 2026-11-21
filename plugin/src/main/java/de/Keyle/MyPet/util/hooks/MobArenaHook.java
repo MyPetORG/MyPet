@@ -92,7 +92,8 @@ public class MobArenaHook implements PlayerVersusPlayerHook, AllowedHook {
                 if (mobArenaHandler.isPlayerInArena(defender)) {
                     return mobArenaHandler.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
                 }
-            } catch (Throwable ignored) {
+            } catch (Throwable t) {
+                return ProtectionHookErrors.failClosed(MobArenaHook.class, t);
             }
         }
         return true;

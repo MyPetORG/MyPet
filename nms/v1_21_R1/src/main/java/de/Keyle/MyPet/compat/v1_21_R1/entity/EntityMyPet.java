@@ -301,7 +301,7 @@ public abstract class EntityMyPet extends PathfinderMob implements MyPetMinecraf
 
 	@Override
 	public void setMyPetTarget(org.bukkit.entity.LivingEntity entity, TargetPriority priority) {
-		if (entity == null || entity.isDead() || entity instanceof ArmorStand || !(entity instanceof CraftLivingEntity)) {
+		if (myPet == null || entity == null || entity.isDead() || entity instanceof ArmorStand || !(entity instanceof CraftLivingEntity)) {
 			forgetTarget();
 			return;
 		}

@@ -60,6 +60,7 @@ import de.Keyle.MyPet.skill.skilltree.requirements.PetLevelRequirement;
 import de.Keyle.MyPet.skill.skilltree.requirements.SkilltreeRequirement;
 import de.Keyle.MyPet.util.ConfigurationLoader;
 import de.Keyle.MyPet.util.Updater;
+import de.Keyle.MyPet.util.V4Notice;
 import de.Keyle.MyPet.util.hooks.*;
 import de.Keyle.MyPet.util.player.MyPetPlayerImpl;
 import de.Keyle.MyPet.util.sentry.SentryErrorReporter;
@@ -181,6 +182,12 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         registerServices();
 
         compatManager = compatUtil.getCompatInstance(CompatManager.class, "", "CompatManager");
+        if (petInfo == null || platformHelper == null || entityRegistry == null || compatManager == null) {
+            // A compat class could not be loaded on this server (getCompatInstance already logged
+            // which one). onEnable disables MyPet with an explanation, so stop here instead of
+            // crashing on the missing piece (MYPET-E84, MYPET-D57).
+            return;
+        }
         compatManager.init();
 
         serviceManager.activate(Load.State.OnLoad);
@@ -188,17 +195,69 @@ public final class MyPetPlugin extends JavaPlugin implements de.Keyle.MyPet.api.
         registerHooks();
     }
 
+    /**
+     * Whether the server runs a Minecraft version newer than the last one MyPet 3 supports (26.2).
+     * No MyPet 3 update will ever support it, so there is nothing to check or download.
+     */
+    private boolean isNewerThanMyPet3() {
+        String minecraftVersion = compatUtil.getMinecraftVersion();
+        boolean unsupported = compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion());
+        return unsupported && minecraftVersion != null && !minecraftVersion.equals("0.0.0")
+                && compatUtil.compareWithMinecraftVersion("26.3") >= 0;
+    }
+
     public void onEnable() {
         this.isReady = false;
 
-        Updater updater = new Updater("MyPet");
-        String updateStatus = updater.update();
-        printSplashScreen(updateStatus);
+        // MyPet 3 ends at Minecraft 26.2. On anything newer, say so and point at MyPet 4, without
+        // the splash screen, the update check or the end-of-life notice: no MyPet 3 update can help.
+        if (isNewerThanMyPet3()) {
+            String minecraftVersion = compatUtil.getMinecraftVersion();
+            getLogger().warning("This version of MyPet is not compatible with Minecraft " + minecraftVersion + ".");
+            getLogger().warning("MyPet 3 does not support Minecraft " + minecraftVersion + ", but MyPet 4 does: " + V4Notice.URL);
+            setEnabled(false);
+            return;
+        }
 
-        getLogger().warning("MyPet 3 has reached end of life and will no longer receive substantive updates. If your server version supports it, please migrate to MyPet v4: https://builtbybit.com/resources/mypet-4.115339/");
+        Updater updater = new Updater("MyPet");
+        printSplashScreen(Configuration.Update.CHECK ? "Checking for updates..." : null);
+
+        // Both checks block on the network (several seconds when it is slow or unreachable), so
+        // they run in the background and log their results when done. Only the logger is used
+        // there; the results are read on the main thread through volatile fields.
+        Thread startupChecks = new Thread(() -> {
+            try {
+                String updateStatus = updater.update();
+                if (updateStatus != null) {
+                    getLogger().info(updateStatus);
+                }
+
+                V4Notice.check();
+                String v4Notice = V4Notice.getMessage();
+                if (v4Notice != null) {
+                    getLogger().warning("MyPet 3 has reached end of life. " + v4Notice);
+                } else {
+                    getLogger().warning("MyPet 3 has reached end of life and will no longer receive substantive updates. If your server version supports it, please migrate to MyPet 4: " + V4Notice.URL);
+                }
+            } catch (Throwable t) {
+                // MyPet may have been disabled or reloaded while the check was still running
+                getLogger().fine("Update check stopped: " + t);
+            }
+        }, "MyPet Update Check");
+        // Not a daemon thread: an update download started from here must be allowed to finish
+        // writing its file before the JVM exits, as it was before the check moved off the main thread.
+        startupChecks.setDaemon(false);
+        startupChecks.start();
+        V4Notice.startSaleTask();
 
         if (compatUtil.getInternalVersion() == null || !MyPetVersion.isValidBukkitPacket(compatUtil.getInternalVersion())) {
             getLogger().warning("This version of MyPet is not compatible with \"" + compatUtil.getInternalVersion() + " on " + compatUtil.getMinecraftVersion() + "\". Is MyPet up to date?");
+            // MyPet can't run here, so give the update check the chance to fetch a compatible version
+            try {
+                startupChecks.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             updater.waitForDownload();
             setEnabled(false);
             return;

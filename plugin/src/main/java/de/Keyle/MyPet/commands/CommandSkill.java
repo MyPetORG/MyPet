@@ -45,7 +45,7 @@ public class CommandSkill implements CommandTabCompleter {
         Player petOwner;
         if (args.length == 0 && sender instanceof Player) {
             petOwner = (Player) sender;
-        } else if (args.length > 0 && (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin"))) {
+        } else if (args.length > 0 && (!(sender instanceof Player) || Permissions.has((Player) sender, "MyPet.admin", false))) {
             petOwner = Bukkit.getServer().getPlayer(args[0]);
 
             if (petOwner == null || !petOwner.isOnline()) {
@@ -89,7 +89,7 @@ public class CommandSkill implements CommandTabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         if (strings.length == 1) {
             if (sender instanceof Player) {
-                if (Permissions.has((Player) sender, "MyPet.admin")) {
+                if (Permissions.has((Player) sender, "MyPet.admin", false)) {
                     return null;
                 }
             } else {
